@@ -1,4 +1,4 @@
-import { userService } from '@server/src/core/services/user.service';
+import { userService } from '@core/services/user.service';
 /**
  * Treasury Routes
  *
@@ -15,7 +15,7 @@ import { eq } from 'drizzle-orm';
 import { isAdmin } from '../auth/middleware/auth.middleware';
 import { getUserId } from '../auth/services/auth.service';
 import { logger } from "../../core/logger";
-import { sendSuccessResponse, sendErrorResponse } from "@server/src/core/utils/transformer.helpers";
+import { sendSuccessResponse, sendErrorResponse } from "@core/utils/transformer.helpers";
 
 /**
  * Format DGT amount from storage format (BIGINT with 6 decimal precision) to display format

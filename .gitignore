@@ -40,3 +40,6 @@ test-results/
 UIVERSE/
 zen-mcp-server
 scripts/codemods/logger-migration.ts
+
+# Claude audit logs
+.claude/audit/

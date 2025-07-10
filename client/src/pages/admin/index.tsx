@@ -8,7 +8,7 @@
  * - Featured modules based on priority
  */
 
-import AdminDashboard from '@/components/admin/AdminDashboard';
+import AdminDashboard from '@/features/admin/components/AdminDashboard';
 import { RequireAdmin } from '@/components/auth';
 
 export default function AdminDashboardPage() {

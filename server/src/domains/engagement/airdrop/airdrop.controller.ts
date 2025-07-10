@@ -1,4 +1,4 @@
-import { userService } from '@server/src/core/services/user.service';
+import { userService } from '@core/services/user.service';
 /**
  * Airdrop Controller
  *
@@ -16,7 +16,7 @@ import type { EntityId } from '@shared/types/ids';
 import { 
 	sendSuccessResponse,
 	sendErrorResponse
-} from '@server/src/core/utils/transformer.helpers';
+} from '@core/utils/transformer.helpers';
 
 /**
  * Controller for airdrop functionality

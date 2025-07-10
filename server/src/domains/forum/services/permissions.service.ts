@@ -1,4 +1,4 @@
-import { userService } from '@server/src/core/services/user.service';
+import { userService } from '@core/services/user.service';
 /**
  * Forum Permissions Service
  *
@@ -9,9 +9,9 @@ import { userService } from '@server/src/core/services/user.service';
 import { db } from '@db';
 import { posts, threads, forumStructure } from '@schema';
 import { eq } from 'drizzle-orm';
-import { logger } from '@server/src/core/logger';
+import { logger } from '@core/logger';
 import type { EntityId, ForumId, UserId, PostId, ThreadId } from '@shared/types/ids';
-import { sendErrorResponse } from '@server/src/core/utils/transformer.helpers';
+import { sendErrorResponse } from '@core/utils/transformer.helpers';
 
 export interface User {
 	id: UserId;

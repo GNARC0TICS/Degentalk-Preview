@@ -5,7 +5,7 @@
  * Handles forum configuration parsing, validation, and zone type determination
  */
 
-import { logger } from '@server/src/core/logger';
+import { logger } from '@core/logger';
 import {
 	forumMap,
 	type Forum as ConfigForum,

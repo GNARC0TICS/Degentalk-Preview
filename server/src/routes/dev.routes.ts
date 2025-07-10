@@ -6,14 +6,14 @@
  */
 
 import { Router } from 'express';
-import { cacheService } from '@server/src/core/cache.service';
-import { logger } from '@server/src/core/logger';
-import { isDevMode } from '@server/src/utils/environment';
-import { devSecurity } from '@server/src/middleware/dev-security.middleware';
+import { cacheService } from '@core/cache.service';
+import { logger } from '@core/logger';
+import { isDevMode } from '@server-utils/environment';
+import { devSecurity } from '@server-middleware/dev-security.middleware';
 import { 
 	sendSuccessResponse,
 	sendErrorResponse 
-} from '@server/src/core/utils/transformer.helpers';
+} from '@core/utils/transformer.helpers';
 
 const router = Router();
 

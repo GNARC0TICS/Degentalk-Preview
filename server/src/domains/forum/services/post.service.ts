@@ -6,7 +6,7 @@
  */
 
 import { db } from '@db';
-import { logger } from '@server/src/core/logger';
+import { logger } from '@core/logger';
 import { eventLogger } from '../../activity/services/event-logger.service';
 import { AchievementEventEmitter } from '../../../core/events/achievement-events.service';
 import { posts, threads, users as usersTable, postReactions } from '@schema';
@@ -345,6 +345,18 @@ export class PostService {
 			logger.error('PostService', 'Error unliking post', { postId, userId, error });
 			throw error;
 		}
+	}
+
+	/**
+	 * Tip a post
+	 * TODO: Implement tipping logic with DGT service integration
+	 */
+	async tipPost(postId: PostId, tipperId: UserId, amount: number): Promise<void> {
+		logger.info('PostService', 'Tipping post (Not Implemented)', { postId, tipperId, amount });
+		// This is a placeholder. The actual implementation will call the DGT/economy service
+		// to handle the transaction and record it.
+		// For now, it does nothing but log the intent.
+		return Promise.resolve();
 	}
 
 	/**

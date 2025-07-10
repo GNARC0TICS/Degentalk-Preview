@@ -8,13 +8,13 @@
 import { Router } from 'express';
 import type { Request, Response } from 'express';
 import { forumStructureService } from '../services/structure.service';
-import { logger } from '@server/src/core/logger';
-import { asyncHandler } from '@server/src/core/errors';
+import { logger } from '@core/logger';
+import { asyncHandler } from '@core/errors';
 import { ForumTransformer } from '../transformers/forum.transformer';
 import { 
 	sendSuccessResponse,
 	sendErrorResponse
-} from '@server/src/core/utils/transformer.helpers';
+} from '@core/utils/transformer.helpers';
 
 const router = Router();
 

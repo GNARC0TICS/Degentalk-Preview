@@ -1,375 +1,125 @@
-import { userService } from '@server/src/core/services/user.service';
 /**
  * Thread Routes
- *
- * QUALITY IMPROVEMENT: Extracted from forum.routes.ts god object
- * Handles thread-specific API endpoints with proper separation of concerns
+ * Handles all thread-specific API endpoints.
  */
 
 import { Router } from 'express';
-import type { Request, Response } from 'express';
-import { z } from 'zod';
 import {
-	isAuthenticated as requireAuth,
+	isAuthenticated,
 	isAdminOrModerator
 } from '../../auth/middleware/auth.middleware';
 import {
 	requireThreadSolvePermission,
 	requireThreadTagPermission
 } from '../services/permissions.service';
-import { forumController } from '../forum.controller';
-import { threadService } from '../services/thread.service';
-import { postService } from '../services/post.service';
-import { logger } from '@server/src/core/logger';
-import { asyncHandler } from '@server/src/core/errors';
-import type { ThreadId, StructureId } from '@shared/types/ids';
-import { ForumTransformer } from '../transformers/forum.transformer';
-import { 
-	sendSuccessResponse,
-	sendErrorResponse
-} from '@server/src/core/utils/transformer.helpers';
+import { threadController } from '../controllers/thread.controller';
+import { threadValidation } from '../validation/thread.validation';
+import { validateRequest } from '@server-middleware/validate-request';
+import { asyncHandler } from '@core/errors';
 
 const router = Router();
 
-// Validation schemas
-const createThreadSchema = z.object({
-	title: z.string().min(1).max(200),
-	content: z.string().min(1),
-	structureId: z.string().uuid('Invalid structureId format'),
-	tags: z.array(z.string()).optional(),
-	isLocked: z.boolean().optional(),
-	isPinned: z.boolean().optional(),
-	prefix: z.string().optional()
-});
-
-const updateThreadSolvedSchema = z.object({
-	solvingPostId: z.string().uuid('Invalid postId format').optional().nullable()
-});
-
-const addTagsSchema = z.object({
-	tags: z.array(z.string().min(1)).min(1).max(10)
-});
-
-// Thread search and listing
-router.get('/search', forumController.searchThreads);
-
+// --- Public Routes ---
 router.get(
-	'/',
-	asyncHandler(async (req: Request, res: Response) => {
-		try {
-			const page = parseInt(req.query.page as string) || 1;
-			const limit = Math.min(parseInt(req.query.limit as string) || 20, 100);
-			const structureId = req.query.structureId
-				? (req.query.structureId as StructureId)
-				: undefined;
-			const sortBy = (req.query.sortBy as string) || 'newest';
-			const search = req.query.search as string;
-
-			// Log search parameters for debugging
-			logger.debug('ThreadRoutes', 'Searching threads with parameters', {
-				structureId,
-				page,
-				limit,
-				sortBy,
-				search
-			});
-
-			const result = await threadService.searchThreads({
-				structureId,
-				page,
-				limit,
-				sortBy: sortBy as any,
-				search
-			});
-
-			// Get user context for permissions and personalization
-			const requestingUser = userService.getUserFromRequest(req);
-			
-			// Transform threads using ForumTransformer based on user context
-			const transformedThreads = result.threads.map(thread => {
-				if (requestingUser) {
-					return ForumTransformer.toSlimThread(thread);
-				} else {
-					return ForumTransformer.toPublicThread(thread);
-				}
-			});
-
-			logger.debug('ThreadRoutes', 'Thread search results', {
-				threadCount: transformedThreads.length,
-				total: result.total,
-				page: result.page,
-				totalPages: result.totalPages
-			});
-
-			sendSuccessResponse(res, {
-				threads: transformedThreads,
-				pagination: {
-					page,
-					limit: limit,
-					totalThreads: result.total,
-					totalPages: result.totalPages
-				}
-			});
-		} catch (error) {
-			logger.error('ThreadRoutes', 'Error in GET /threads', {
-				error: error.message,
-				stack: error.stack,
-				query: req.query
-			});
-			return sendErrorResponse(res, 'Failed to fetch threads', 500);
-		}
-	})
+	'/search',
+	asyncHandler(threadController.searchThreads.bind(threadController))
 );
 
-// Get thread by ID
+router.get(
+	'/', 
+	asyncHandler(threadController.searchThreads.bind(threadController))
+);
+
 router.get(
 	'/:id',
-	asyncHandler(async (req: Request, res: Response) => {
-		try {
-			const threadId = req.params.id as ThreadId;
-			const thread = await threadService.getThreadById(threadId);
-
-			if (!thread) {
-				return sendErrorResponse(res, 'Thread not found', 404);
-			}
-
-			// Get user context for permissions and personalization
-			const requestingUser = userService.getUserFromRequest(req);
-			
-			// Transform thread using ForumTransformer based on user context
-			const transformedThread = requestingUser ? 
-				ForumTransformer.toAuthenticatedThread(thread, requestingUser) :
-				ForumTransformer.toPublicThread(thread);
-
-			sendSuccessResponse(res, transformedThread);
-		} catch (error) {
-			logger.error('ThreadRoutes', 'Error in GET /threads/:id', { error });
-			return sendErrorResponse(res, 'Failed to fetch thread', 500);
-		}
-	})
+	validateRequest(threadValidation.threadParams),
+	asyncHandler(threadController.getThreadById.bind(threadController))
 );
 
-// Get thread by slug
 router.get(
 	'/slug/:slug',
-	asyncHandler(async (req: Request, res: Response) => {
-		try {
-			const slug = req.params.slug;
-			const thread = await threadService.getThreadBySlug(slug);
-
-			if (!thread) {
-				return sendErrorResponse(res, 'Thread not found', 404);
-			}
-
-			// Increment view count
-			await threadService.incrementViewCount(thread.id);
-
-			// Get user context for permissions and personalization
-			const requestingUser = userService.getUserFromRequest(req);
-			
-			// Transform thread using ForumTransformer based on user context
-			const transformedThread = requestingUser ? 
-				ForumTransformer.toAuthenticatedThread(thread, requestingUser) :
-				ForumTransformer.toPublicThread(thread);
-
-			sendSuccessResponse(res, transformedThread);
-		} catch (error) {
-			logger.error('ThreadRoutes', 'Error in GET /threads/slug/:slug', { error });
-			return sendErrorResponse(res, 'Failed to fetch thread', 500);
-		}
-	})
+	asyncHandler(threadController.getThreadBySlug.bind(threadController))
 );
 
-// Create new thread
+// --- Authenticated User Routes ---
 router.post(
 	'/',
-	requireAuth,
-	asyncHandler(async (req: Request, res: Response) => {
-		try {
-			const validatedData = createThreadSchema.parse(req.body);
-			const userId = (userService.getUserFromRequest(req) as any)?.id;
-
-			if (!userId) {
-				return sendErrorResponse(res, 'User not authenticated', 401);
-			}
-
-			const newThread = await threadService.createThread({
-				...validatedData,
-				userId: userId
-			});
-
-			// Transform the created thread for response
-			const requestingUser = userService.getUserFromRequest(req);
-			const transformedThread = requestingUser ? 
-				ForumTransformer.toAuthenticatedThread(newThread, requestingUser) :
-				ForumTransformer.toPublicThread(newThread);
-
-			res.status(201);
-			sendSuccessResponse(res, transformedThread);
-		} catch (error) {
-			logger.error('ThreadRoutes', 'Error in POST /threads', { error });
-
-			if (error instanceof z.ZodError) {
-				return sendErrorResponse(res, 'Invalid input data', 400);
-			}
-
-			return sendErrorResponse(res, 'Failed to create thread', 500);
-		}
-	})
+	isAuthenticated,
+	validateRequest(threadValidation.createThread),
+	asyncHandler(threadController.createThread.bind(threadController))
 );
 
-// Update thread solved status
 router.put(
 	'/:threadId/solve',
-	requireAuth,
+	isAuthenticated,
 	requireThreadSolvePermission,
-	asyncHandler(async (req: Request, res: Response) => {
-		try {
-			const threadId = req.params.threadId as ThreadId;
-			const validatedData = updateThreadSolvedSchema.parse(req.body);
-			const _userId = (userService.getUserFromRequest(req) as any)?.id;
-
-			const updatedThread = await threadService.updateThreadSolvedStatus({
-				threadId,
-				solvingPostId: validatedData.solvingPostId
-			});
-
-			if (!updatedThread) {
-				return sendErrorResponse(res, 'Thread not found', 404);
-			}
-
-			// Transform the updated thread for response
-			const requestingUser = userService.getUserFromRequest(req);
-			const transformedThread = requestingUser ? 
-				ForumTransformer.toAuthenticatedThread(updatedThread, requestingUser) :
-				ForumTransformer.toPublicThread(updatedThread);
-
-			sendSuccessResponse(res, transformedThread);
-		} catch (error) {
-			logger.error('ThreadRoutes', 'Error in PUT /threads/:threadId/solve', { error });
-
-			if (error instanceof z.ZodError) {
-				return sendErrorResponse(res, 'Invalid input data', 400);
-			}
-
-			return sendErrorResponse(res, 'Failed to update thread', 500);
-		}
-	})
+	validateRequest(threadValidation.updateThreadSolved),
+	asyncHandler(threadController.updateThreadSolvedStatus.bind(threadController))
 );
 
-// Add tags to thread
 router.post(
 	'/:threadId/tags',
-	requireAuth,
+	isAuthenticated,
 	requireThreadTagPermission,
-	asyncHandler(async (req: Request, res: Response) => {
-		try {
-			const threadId = req.params.threadId as ThreadId;
-			const validatedData = addTagsSchema.parse(req.body);
-			const _userId = (userService.getUserFromRequest(req) as any)?.id;
-
-			// Permission check is handled by middleware
-			// TODO: Implement tag addition logic
-
-			sendSuccessResponse(res, null, 'Tags added successfully');
-		} catch (error) {
-			logger.error('ThreadRoutes', 'Error in POST /threads/:threadId/tags', { error });
-
-			if (error instanceof z.ZodError) {
-				return sendErrorResponse(res, 'Invalid input data', 400);
-			}
-
-			return sendErrorResponse(res, 'Failed to add tags', 500);
-		}
-	})
+	validateRequest(threadValidation.addTags),
+	asyncHandler(threadController.addTagsToThread.bind(threadController))
 );
 
-// Remove tag from thread
 router.delete(
 	'/:threadId/tags/:tagId',
-	requireAuth,
+	isAuthenticated,
 	requireThreadTagPermission,
-	asyncHandler(async (req: Request, res: Response) => {
-		try {
-			const threadId = req.params.threadId as ThreadId;
-			const tagId = req.params.tagId; // TagId conversion TODO if needed
-
-			// TODO: Implement tag removal logic
-
-			sendSuccessResponse(res, null, 'Tag removed successfully');
-		} catch (error) {
-			logger.error('ThreadRoutes', 'Error in DELETE /threads/:threadId/tags/:tagId', { error });
-			return sendErrorResponse(res, 'Failed to remove tag', 500);
-		}
-	})
+	validateRequest(threadValidation.tagParams),
+	asyncHandler(threadController.removeTagFromThread.bind(threadController))
 );
 
-// Get posts for a thread
-router.get(
-	'/:threadId/posts',
-	asyncHandler(async (req: Request, res: Response) => {
-		try {
-			const threadId = req.params.threadId as ThreadId;
-			const page = parseInt(req.query.page as string) || 1;
-			const limit = Math.min(parseInt(req.query.limit as string) || 20, 100);
-			const sortBy = (req.query.sortBy as string) || 'oldest';
-
-			if (!threadId) {
-				return sendErrorResponse(res, 'Invalid thread ID', 400);
-			}
-
-			const result = await postService.getPostsByThread({
-				threadId,
-				page,
-				limit,
-				sortBy: sortBy as any
-			});
-
-			// Get user context for permissions and personalization
-			const requestingUser = userService.getUserFromRequest(req);
-			
-			// Transform posts using ForumTransformer based on user context
-			const transformedPosts = result.posts.map(post => {
-				return requestingUser ? 
-					ForumTransformer.toAuthenticatedPost(post, requestingUser) :
-					ForumTransformer.toPublicPost(post);
-			});
-
-			sendSuccessResponse(res, {
-				posts: transformedPosts,
-				pagination: {
-					page: result.page,
-					limit,
-					totalPosts: result.total,
-					totalPages: result.totalPages
-				}
-			});
-		} catch (error) {
-			logger.error('ThreadRoutes', 'Error in GET /threads/:threadId/posts', {
-				error: error.message,
-				stack: error.stack,
-				threadId: req.params.threadId
-			});
-			return sendErrorResponse(res, 'Failed to fetch thread posts', 500);
-		}
-	})
+// --- Admin & Moderator Routes ---
+router.post(
+	'/:threadId/feature',
+	isAuthenticated,
+	isAdminOrModerator,
+	validateRequest(threadValidation.threadParams),
+	asyncHandler(threadController.toggleThreadFeature.bind(threadController))
 );
 
-// Get thread tags
-router.get(
-	'/:threadId/tags',
-	asyncHandler(async (req: Request, res: Response) => {
-		try {
-			const threadId = req.params.threadId as ThreadId;
+router.delete(
+	'/:threadId/feature',
+	isAuthenticated,
+	isAdminOrModerator,
+	validateRequest(threadValidation.threadParams),
+	asyncHandler(threadController.toggleThreadFeature.bind(threadController))
+);
 
-			// TODO: Implement get thread tags logic
+router.post(
+	'/:threadId/lock',
+	isAuthenticated,
+	isAdminOrModerator,
+	validateRequest(threadValidation.threadParams),
+	asyncHandler(threadController.toggleThreadLock.bind(threadController))
+);
 
-			sendSuccessResponse(res, []);
-		} catch (error) {
-			logger.error('ThreadRoutes', 'Error in GET /threads/:threadId/tags', { error });
-			return sendErrorResponse(res, 'Failed to fetch thread tags', 500);
-		}
-	})
+router.delete(
+	'/:threadId/lock',
+	isAuthenticated,
+	isAdminOrModerator,
+	validateRequest(threadValidation.threadParams),
+	asyncHandler(threadController.toggleThreadLock.bind(threadController))
+);
+
+router.post(
+	'/:threadId/pin',
+	isAuthenticated,
+	isAdminOrModerator,
+	validateRequest(threadValidation.threadParams),
+	asyncHandler(threadController.toggleThreadPin.bind(threadController))
+);
+
+router.delete(
+	'/:threadId/pin',
+	isAuthenticated,
+	isAdminOrModerator,
+	validateRequest(threadValidation.threadParams),
+	asyncHandler(threadController.toggleThreadPin.bind(threadController))
 );
 
 export default router;

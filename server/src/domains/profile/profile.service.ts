@@ -10,7 +10,7 @@ import { eq, sql, count } from 'drizzle-orm'; // Removed 'and' and 'InferModel'
 // type User = InferModel<typeof users, 'select'>; // Removed as ESLint flagged as unused, Drizzle types are inferred.
 
 import { eventEmitter } from '../notifications/event-notification-listener'; // Import eventEmitter
-import { logger } from '@server/src/core/logger'; // For logging event emission errors
+import { logger } from '@core/logger'; // For logging event emission errors
 
 // Event name constant for profile updates
 export const PROFILE_UPDATED_EVENT = 'profile_updated_event';
@@ -212,7 +212,7 @@ export const profileService = {
 				.returning({ updatedId: users.id }); // Ensure the update happened
 
 			if (result.length === 0) {
-				logger.warn(`User with ID ${userId} not found for media URL update.`);
+				logger.warn({ context: 'PROFILE_SERVICE', userId }, `User with ID ${userId} not found for media URL update.`);
 				// Consider throwing a "User not found" error or returning a specific failure message
 				return { success: false, message: `User not found. Couldn't update ${mediaType}.` };
 			}
@@ -233,12 +233,11 @@ export const profileService = {
 					timestamp: new Date().toISOString()
 				};
 				eventEmitter.emit(PROFILE_UPDATED_EVENT, eventPayload);
-				logger.info('PROFILE_SERVICE', `Emitted ${PROFILE_UPDATED_EVENT} for user ${userId}`);
+				logger.info({ context: 'PROFILE_SERVICE', userId, event: PROFILE_UPDATED_EVENT }, `Emitted ${PROFILE_UPDATED_EVENT} for user ${userId}`);
 			} catch (eventError) {
 				logger.error(
-					'PROFILE_SERVICE',
-					`Error emitting ${PROFILE_UPDATED_EVENT} for user ${userId}:`,
-					eventError
+					{ context: 'PROFILE_SERVICE', userId, event: PROFILE_UPDATED_EVENT, err: eventError },
+					`Error emitting ${PROFILE_UPDATED_EVENT} for user ${userId}`
 				);
 				// Do not re-throw; allow the main operation to succeed even if event emission fails.
 			}
@@ -249,7 +248,7 @@ export const profileService = {
 			};
 		} catch (error) {
 			// console.error has been replaced by logger.error for consistency
-			logger.error('PROFILE_SERVICE', `Error updating ${mediaType} URL for user ${userId}:`, error);
+			logger.error({ context: 'PROFILE_SERVICE', userId, mediaType, err: error }, `Error updating ${mediaType} URL for user ${userId}`);
 			// This should ideally be a more specific error
 			throw new Error(`Failed to update ${mediaType} URL. The server gods are displeased.`);
 		}

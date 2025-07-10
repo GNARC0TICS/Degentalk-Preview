@@ -53,29 +53,13 @@ export const getQueryFn: <T>(options: { on401: UnauthorizedBehavior }) => QueryF
 		return await res.json();
 	};
 
-// Type for XP gain response
-interface XpGainResponse {
-	xpGained?: boolean;
-	xpAmount?: number;
-	xpAction?: string;
-	xpDescription?: string;
-	levelUp?: boolean;
-	newLevel?: number;
-	levelTitle?: string;
-	rewards?: Array<{
-		type: 'badge' | 'title' | 'feature' | 'dgt';
-		name: string;
-		description?: string;
-	}>;
-}
-
 // Function to check for XP gain in API responses and trigger toast
 function checkForXpGain(data: any) {
 	// Check if the response indicates XP was gained
 	if (data && data.xpGained === true) {
 		// We need to get the XP toast context to show the toast
 		// Since we're in a non-React context, we'll use a custom event
-		const xpData: XpGainResponse = {
+		const xpData = {
 			xpGained: true,
 			xpAmount: data.xpAmount,
 			xpAction: data.xpAction,
@@ -106,52 +90,20 @@ function checkForXpGain(data: any) {
 	}
 }
 
-// Listen for the XP gain event (this should be called in a React component)
-export function setupXpGainListener(showXpToast: Function) {
-	const handleXpGain = (event: CustomEvent<XpGainResponse>) => {
-		const { xpAmount, xpAction, xpDescription, levelUp, newLevel } = event.detail;
+// Re-export the canonical QueryClient instance to avoid duplicate caches
+export { queryClient } from '@/core/queryClient';
 
-		if (xpAmount && xpAction && xpDescription) {
-			showXpToast({
-				action: xpAction,
-				amount: xpAmount,
-				description: xpDescription,
-				isLevelUp: levelUp,
-				newLevel: newLevel
-			});
-		}
-	};
-
-	// Add event listener
-	window.addEventListener('xp-gained', handleXpGain as EventListener);
-
-	// Return cleanup function
-	return () => {
-		window.removeEventListener('xp-gained', handleXpGain as EventListener);
-	};
-}
-
-// Listen for level up events
-export function setupLevelUpListener(showLevelUp: Function) {
-	const handleLevelUp = (
-		event: CustomEvent<{
-			level: number;
-			title?: string;
-			rewards?: any[];
-		}>
-	) => {
+// Level up event listener setup
+export function setupLevelUpListener(callback: (level: number, title?: string, rewards?: any[]) => void) {
+	const handleLevelUp = (event: CustomEvent) => {
 		const { level, title, rewards } = event.detail;
-		showLevelUp(level, title, rewards);
+		callback(level, title, rewards);
 	};
 
-	// Add event listener
 	window.addEventListener('level-up', handleLevelUp as EventListener);
-
+	
 	// Return cleanup function
 	return () => {
 		window.removeEventListener('level-up', handleLevelUp as EventListener);
 	};
 }
-
-// Re-export the canonical QueryClient instance to avoid duplicate caches
-export { queryClient } from '@/core/queryClient';

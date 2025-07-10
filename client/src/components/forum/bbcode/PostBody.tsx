@@ -68,15 +68,15 @@ export function PostBody({
 			'height'
 		],
 		ADD_ATTR: ['target'],
-		HOOK_ATTRIBUTES: {
-			a: function (node) {
-				const href = node.getAttribute('href');
-				if (href && (href.startsWith('http') || href.startsWith('//'))) {
-					node.setAttribute('target', '_blank');
-					node.setAttribute('rel', 'noopener noreferrer');
-				}
-			}
-		}
+							HOOK_ATTRIBUTES: {
+						a: function (node: Element) {
+							const href = node.getAttribute('href');
+							if (href && (href.startsWith('http') || href.startsWith('//'))) {
+								node.setAttribute('target', '_blank');
+								node.setAttribute('rel', 'noopener noreferrer');
+							}
+						}
+					}
 	});
 
 	// Sanitize signature if provided
@@ -87,7 +87,7 @@ export function PostBody({
 					ALLOWED_ATTR: ['href', 'src', 'alt', 'title', 'style', 'target', 'rel'],
 					ADD_ATTR: ['target'],
 					HOOK_ATTRIBUTES: {
-						a: function (node) {
+						a: function (node: Element) {
 							const href = node.getAttribute('href');
 							if (href && (href.startsWith('http') || href.startsWith('//'))) {
 								node.setAttribute('target', '_blank');

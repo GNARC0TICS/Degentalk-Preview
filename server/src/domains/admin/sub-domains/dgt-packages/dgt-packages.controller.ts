@@ -1,6 +1,6 @@
 import type { Request, Response, NextFunction } from 'express';
 import { dgtPackageService } from './dgt-packages.service';
-import { sendSuccessResponse, sendErrorResponse } from "@server/src/core/utils/transformer.helpers";
+import { sendSuccessResponse, sendErrorResponse } from "@core/utils/transformer.helpers";
 
 export const listPackages = async (req: Request, res: Response, next: NextFunction) => {
 	try {

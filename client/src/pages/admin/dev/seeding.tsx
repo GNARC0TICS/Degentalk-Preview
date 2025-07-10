@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { AdminPageShell } from '@/components/admin/layout/AdminPageShell';
+import { AdminPageShell } from '@/features/admin/components/layout/AdminPageShell';
 
 interface SeedConfig {
 	id: string;

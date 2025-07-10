@@ -2,8 +2,8 @@ import { cn } from '@/lib/utils';
 import { Sparkles } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import type { LevelVisualConfig } from '@/components/economy/xp/LevelBadge';
-import { LevelBadge } from '@/components/economy/xp/LevelBadge';
+import type { LevelVisualConfig } from '@/features/gamification/components/LevelBadge';
+import { LevelBadge } from '@/features/gamification/components/LevelBadge';
 
 type UserLevelDisplayProps = {
 	level?: number;

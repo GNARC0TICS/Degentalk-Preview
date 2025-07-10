@@ -6,7 +6,7 @@
 
 import { Router } from 'express';
 import { stickerController } from './stickers.controller';
-import { isAdmin } from '@server/src/domains/admin/admin.middleware';
+import { isAdmin } from '@server/domains/admin/admin.middleware';
 
 export const stickerRoutes = Router();
 

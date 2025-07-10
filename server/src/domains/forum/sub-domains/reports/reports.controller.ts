@@ -7,12 +7,12 @@
 import type { Request, Response } from 'express';
 import { reportsService } from './reports.service';
 import { CreateReportSchema } from './reports.validators';
-import { getUserIdFromRequest } from '@server/src/utils/auth';
+import { getUserIdFromRequest } from '@server-utils/auth';
 import { logger } from "../../../../core/logger";
 import { 
 	sendSuccessResponse,
 	sendErrorResponse
-} from '@server/src/core/utils/transformer.helpers';
+} from '@core/utils/transformer.helpers';
 
 export class ReportsController {
 	async createReport(req: Request, res: Response) {

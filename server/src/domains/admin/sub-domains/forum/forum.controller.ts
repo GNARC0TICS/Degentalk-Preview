@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express';
-import { userService } from '@server/src/core/services/user.service';
+import { userService } from '@core/services/user.service';
 import type { CategoryId, TagId, ThreadId, EntityId } from '@shared/types/ids';
 import { adminForumService } from './forum.service';
 import { AdminError, AdminErrorCodes } from '../../admin.errors';
@@ -15,16 +15,16 @@ import {
 	updateEntitySchema,
 	type ModerateThreadInput
 } from './forum.validators';
-import { logger } from '@server/src/core/logger';
+import { logger } from '@core/logger';
 import { validateRequestBody, validateQueryParams } from '../../admin.validation';
-import { ForumTransformer } from '@server/src/domains/forum/transformers/forum.transformer';
+import { ForumTransformer } from '@server/domains/forum/transformers/forum.transformer';
 import { 
 	toPublicList,
 	sendSuccessResponse,
 	sendErrorResponse,
 	sendTransformedResponse,
 	sendTransformedListResponse
-} from '@server/src/core/utils/transformer.helpers';
+} from '@core/utils/transformer.helpers';
 import { sendSuccess, sendError, sendValidationError, handleAdminError } from '../../admin.response';
 
 export class AdminForumController {

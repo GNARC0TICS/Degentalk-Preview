@@ -40,7 +40,7 @@ import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
-import { AdminPageShell } from '@/components/admin/layout/AdminPageShell';
+import { AdminPageShell } from '@/features/admin/components/layout/AdminPageShell';
 import { type PackageId } from "@shared/types/ids";
 
 // Package interface

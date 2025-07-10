@@ -9,8 +9,9 @@ import {
 	// type GetPresignedUploadUrlParams, // This type is for storageService, not directly used here
 	// type PresignedUrlInfo // This type is for storageService, not directly used here
 } from '../../core/storage.service';
-import type { PackId, StickerId } from '@shared/types/ids';
+import type { PackId, StickerId, UserId } from '@shared/types/ids';
 import { logger } from "../../core/logger";
+import { profileService, type ProfileMediaUpdateParams } from '../profile/profile.service';
 
 // --- Types specific to this Upload Domain Service ---
 export type UploadType =
@@ -23,7 +24,7 @@ export type UploadType =
 	| 'sticker_pack_preview';
 
 export interface CreatePresignedUrlServiceParams {
-	userId: string;
+	userId: UserId;
 	fileName: string;
 	fileType: string;
 	fileSize: number;
@@ -33,10 +34,14 @@ export interface CreatePresignedUrlServiceParams {
 	packId?: PackId; // For pack cover/preview images
 }
 
-export interface PresignedUploadServiceResult {
-	uploadUrl: string;
-	publicUrl: string;
-	relativePath: string;
+export interface PresignedUploadResult {
+	success: boolean;
+	message: string;
+	presignedUrlInfo?: {
+		uploadUrl: string;
+		publicUrl: string;
+		relativePath: string;
+	};
 }
 
 export interface ConfirmUploadServiceParams {
@@ -44,7 +49,7 @@ export interface ConfirmUploadServiceParams {
 	uploadType: UploadType;
 }
 
-export interface UploadConfirmationServiceResult {
+export interface UploadConfirmationResult {
 	success: boolean;
 	message: string;
 	newPublicUrl?: string;
@@ -83,7 +88,7 @@ export class UploadService {
 
 	async createPresignedUploadUrl(
 		params: CreatePresignedUrlServiceParams
-	): Promise<PresignedUploadServiceResult> {
+	): Promise<PresignedUploadResult> {
 		const { userId, fileName, fileType, fileSize, uploadType, stickerId, packId } = params;
 
 		// Determine bucket based on upload type
@@ -147,9 +152,13 @@ export class UploadService {
 			);
 
 			return {
-				uploadUrl: presignedInfoFromStorage.uploadUrl,
-				publicUrl: publicUrl,
-				relativePath: presignedInfoFromStorage.relativePath
+				success: true,
+				message: 'Presigned URL generated successfully.',
+				presignedUrlInfo: {
+					uploadUrl: presignedInfoFromStorage.uploadUrl,
+					publicUrl: publicUrl,
+					relativePath: presignedInfoFromStorage.relativePath
+				}
 			};
 		} catch (err) {
 			if (err instanceof DegenUploadError) {
@@ -172,9 +181,9 @@ export class UploadService {
 	}
 
 	async confirmUpload(
-		userId: string,
+		userId: UserId,
 		params: ConfirmUploadServiceParams
-	): Promise<UploadConfirmationServiceResult> {
+	): Promise<UploadConfirmationResult> {
 		const { relativePath, uploadType } = params;
 
 		// Determine bucket based on upload type
@@ -201,52 +210,69 @@ export class UploadService {
 				);
 			}
 		} else {
-			// Original user folder security check for avatars/banners
-			const expectedUserFolder = `users/${userId}/`;
-			if (!relativePath.startsWith(expectedUserFolder)) {
-				logger.error(`UploadService: Security check failed. User ${userId} trying to confirm path ${relativePath} not matching their folder.`);
+			// Original security validation for user uploads
+			if (!relativePath.startsWith(`users/${userId}/`)) {
+				logger.error(
+					`UploadService: User ${userId} attempted to confirm upload for unauthorized path ${relativePath}`
+				);
 				throw new DegenUploadError(
-					`Hold your horses, degenerate! That path (${relativePath}) ain't yours to confirm. Nice try, script kiddie.`,
+					`Unauthorized upload path confirmation. You can only confirm uploads within your own user directory.`,
 					403
 				);
 			}
 		}
 
 		try {
-			const fileExists = await storageService.verifyFileExists(bucketName, relativePath);
+			// Check if file actually exists in storage
+			const fileExists = await storageService.fileExists(bucketName, relativePath);
 
 			if (!fileExists) {
-				logger.warn(`UploadService: File not found in storage at path ${relativePath} during confirmation for user ${userId}.`);
+				logger.warn(`UploadService: Confirmation failed for non-existent file: ${relativePath}`);
 				throw new DegenUploadError(
-					`We checked the blockchain (our storage, lol) and your file at ${relativePath} is pure vaporware. Upload it first, genius.`,
+					`Upload confirmation failed. The file at path ${relativePath} does not exist in our system. Did it get rugged?`,
 					404
 				);
 			}
 
-			const publicUrl = storageService.getPublicUrl(bucketName, relativePath);
+			const newPublicUrl = storageService.getPublicUrl(bucketName, relativePath);
 
+			// If this is an avatar or banner, update the user's profile
+			if (uploadType === 'avatar' || uploadType === 'banner') {
+				const mediaUpdateParams: ProfileMediaUpdateParams = {
+					userId: userId,
+					mediaType: uploadType,
+					relativePath: relativePath
+				};
+
+				const profileUpdateResult = await profileService.updateMediaUrl(mediaUpdateParams);
+
+				if (!profileUpdateResult.success) {
+					logger.error(`Failed to update profile for user ${userId} after upload confirmation: ${profileUpdateResult.message}`);
+					// Even if profile update fails, the file is uploaded. Return a partial success with a warning.
+					return {
+						success: false,
+						message: `Upload confirmed, but we fumbled updating your profile. Your ${uploadType} is in the void, but not on your page. Our bad.`,
+						newPublicUrl: newPublicUrl,
+						relativePath: relativePath
+					};
+				}
+			}
+
+			logger.info(`UploadService: Upload confirmed successfully for ${relativePath}`);
 			return {
 				success: true,
-				message: `Your ${uploadType} at ${relativePath} is confirmed and looking fire on the permaweb!`,
-				newPublicUrl: publicUrl,
-				relativePath: relativePath
+				message: 'Upload confirmed successfully.',
+				newPublicUrl,
+				relativePath
 			};
-		} catch (err) {
-			if (err instanceof DegenUploadError) {
-				// Catch DegenUploadError from storageService
-				throw err;
+		} catch (error) {
+			if (error instanceof DegenUploadError) {
+				throw error;
 			}
-			logger.error(`UploadService: Unexpected error in confirmUpload for path ${relativePath} (user ${userId}):`, err);
-			const statusCode =
-				typeof err === 'object' &&
-				err !== null &&
-				'statusCode' in err &&
-				typeof err.statusCode === 'number'
-					? err.statusCode
-					: 500;
+			logger.error(`UploadService: Unexpected error confirming upload for ${relativePath}:`, error);
 			throw new DegenUploadError(
-				`Something went intergalactically wrong confirming your upload of ${relativePath}. Server's probably rugged.`,
-				statusCode // Propagate status code if available
+				`An unexpected error occurred during upload confirmation. The server might be having a moment.`,
+				500
 			);
 		}
 	}

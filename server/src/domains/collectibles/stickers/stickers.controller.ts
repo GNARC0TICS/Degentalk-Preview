@@ -1,4 +1,4 @@
-import { userService } from '@server/src/core/services/user.service';
+import { userService } from '@core/services/user.service';
 /**
  * Sticker Controller
  *
@@ -22,10 +22,10 @@ import {
 	type CreateStickerPackInput,
 	type UpdateStickerPackInput
 } from './stickers.validators';
-import { formatAdminResponse, AdminOperationBoundary } from '@server/src/domains/admin/shared';
-import { AdminError, AdminErrorCodes } from '@server/src/domains/admin/admin.errors';
+import { formatAdminResponse, AdminOperationBoundary } from '@server/domains/admin/shared';
+import { AdminError, AdminErrorCodes } from '@server/domains/admin/admin.errors';
 import type { StickerId, PackId } from '@shared/types/ids';
-import { sendSuccessResponse, sendErrorResponse } from '@server/src/core/utils/transformer.helpers';
+import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
 // Additional validation schemas
 const stickerIdSchema = z.object({
@@ -367,7 +367,7 @@ export class StickerController {
 			}
 
 			// Import upload service
-			const { uploadService } = await import('@server/src/domains/uploads/upload.service');
+			const { uploadService } = await import('@server/domains/uploads/upload.service');
 
 			// Create presigned upload URL
 			const result = await uploadService.createPresignedUploadUrl({
@@ -425,7 +425,7 @@ export class StickerController {
 			}
 
 			// Import upload service
-			const { uploadService } = await import('@server/src/domains/uploads/upload.service');
+			const { uploadService } = await import('@server/domains/uploads/upload.service');
 
 			// Confirm upload
 			const result = await uploadService.confirmUpload(adminId, {
@@ -509,7 +509,7 @@ export class StickerController {
 			}
 
 			// Import upload service
-			const { uploadService } = await import('@server/src/domains/uploads/upload.service');
+			const { uploadService } = await import('@server/domains/uploads/upload.service');
 
 			// Delete file from storage
 			const result = await uploadService.deleteFile(

@@ -1,100 +1,41 @@
 /**
  * @file server/routes.ts
  * @description Centralized routing file for the Degentalk backend application.
- * @purpose Aggregates and registers all domain-specific API routes with the Express application.
- *          Also handles global middleware, authentication setup, and WebSocket server initialization.
- * @dependencies
- * - express: Web framework for Node.js.
- * - http: Node.js built-in module for creating HTTP servers.
- * - ws: WebSocket library for Node.js.
- * - storage: Local storage utility (e.g., for session store).
- * - Domain-specific routes and middleware (e.g., auth, wallet, forum, admin).
- * - Drizzle ORM for database interactions.
- * - Centralized error handlers.
- * @environment Server-side (Node.js).
- * @important_notes
- * - This file should primarily import route handlers from `src/domains/` subdirectories.
- * - Legacy routes are being deprecated and should be migrated to domain-driven structures.
- * - WebSocket server is enabled only in production to prevent development conflicts.
- * - Global error handler is registered as the final middleware.
- * @status Stable, but ongoing refactoring for route deprecation.
- * @last_reviewed 2025-06-01
- * @owner Backend Team / API Team
  */
 import express, { type Express, type Request, type Response } from 'express';
 import { createServer, type Server } from 'http';
-import { WebSocketServer, WebSocket } from 'ws';
+import { WebSocketServer } from 'ws';
 import { storage } from './storage';
-// Import auth from the new domain location
 import { setupAuthPassport, authRoutes } from './src/domains/auth';
-import { auditLogs } from '@schema';
-import { z } from 'zod';
 import { registerAdminRoutes } from './src/domains/admin/admin.routes';
-// Import domain-based wallet routes
-import walletRoutes from './src/domains/wallet/wallet.routes';
+import walletRoutes from './src/domains/wallet/routes/wallet.routes';
 import tipRoutes from './src/domains/engagement/tip/tip.routes';
 import rainRoutes from './src/domains/engagement/rain/rain.routes';
-// Import domain-based XP routes
 import xpRoutes from './src/domains/xp/xp.routes';
-// Import domain-based treasury and shoutbox routes
 import treasuryRoutes from './src/domains/treasury/treasury.routes';
 import shoutboxRoutes from './src/domains/shoutbox/shoutbox.routes';
-// Import domain-based forum routes
 import forumRoutes from './src/domains/forum/forum.routes';
 import dictionaryRoutes from './src/domains/dictionary/dictionary.routes';
-// Import domain-based editor routes
 import editorRoutes from './src/domains/editor/editor.routes';
-// TODO: @routeDeprecation Investigate settings.routes.ts location or remove if deprecated.
-// import settingsRoutes from './src/domains/settings/settings.routes';
-// Import domain-based profile routes
 import profileRoutes from './src/domains/profile/profile.routes';
-// Import development routes
 import devRoutes from './src/routes/dev.routes';
-// Import domain-based relationships routes
 import relationshipsRoutes from './src/domains/social/relationships.routes';
-// Import domain-based whale watch routes
 import whaleWatchRoutes from './src/domains/social/whale-watch.routes';
-// Import domain-based messaging routes
 import messageRoutes from './src/domains/messaging/message.routes';
-// Import domain-based vault routes
 import vaultRoutes from './src/domains/engagement/vault/vault.routes';
-// Import webhook routes
 import ccpaymentWebhookRoutes from './src/domains/ccpayment-webhook/ccpayment-webhook.routes';
-// Import domain-based announcement routes
 import { registerAnnouncementRoutes } from './src/domains/admin/sub-domains/announcements';
 import featureGatesRoutes from './src/domains/feature-gates/feature-gates.routes';
-// Import domain-based notifications routes
 import notificationRoutes from './src/domains/notifications/notification.routes';
-// Import domain-based preferences routes
 import preferencesRoutes from './src/domains/preferences/preferences.routes';
-// Import domain-based advertising routes
 import { adRoutes } from './src/domains/advertising/ad.routes';
-
-// REFACTORED: Using the new centralized error handlers
-import {
-	globalErrorHandler
-} from './src/core/errors';
-// Legacy route imports (@pending-migration)
-import { registerPathRoutes } from './src/domains/paths/paths.routes'; // @pending-migration → domains/paths/paths.routes.ts
-// TODO: @routeDeprecation Remove legacy dgt-purchase and ccpayment routes after migration to domain-driven routes is complete.
+import { globalErrorHandler } from './src/core/errors';
+import { registerPathRoutes } from './src/domains/paths/paths.routes';
 import { awardPathXp } from './utils/path-utils';
 import { xpRewards } from '@shared/path-config';
-import {
-	getRecentPosts,
-	getHotThreads,
-	getFeaturedThreads,
-	getPlatformStats,
-	getLeaderboards,
-	featureThread,
-	unfeatureThread
-} from './utils/platform-energy';
-import { shopItems, addOGDripColorItem } from './utils/shop-utils';
-import { randomBytes } from 'crypto';
-import { db } from './src/core/db'; // Assuming db is now in src/core/db.ts
-// TODO: @cleanup Remove 'pool' if not used after db migration.
-// import { pool } from "./db";
+import { PlatformAnalyticsService } from './src/domains/analytics/services/platform.service';
+import { db } from './src/core/db';
 import { and, eq, sql } from 'drizzle-orm';
-// Import auth middleware from the new domain location
 import {
 	isAuthenticated,
 	isAuthenticatedOptional,
@@ -103,7 +44,6 @@ import {
 } from './src/domains/auth/middleware/auth.middleware';
 import passport from 'passport';
 import session from 'express-session';
-// Security middleware
 import {
 	corsMiddleware,
 	csrfProtection,
@@ -117,83 +57,51 @@ import {
 import { rateLimiters } from './src/core/services/rate-limit.service';
 import healthCheckRouter, { requestMetricsMiddleware } from './src/core/monitoring/health-check';
 import { auditMiddleware } from './src/core/audit/audit-logger';
-// Import logger
 import { logger } from './src/core/logger';
-// X integration routes
 import xAuthRoutes from './src/domains/auth/routes/xAuthRoutes';
 import xShareRoutes from './src/domains/share/routes/xShareRoutes';
-import rateLimit from 'express-rate-limit';
-import { randomUUID } from 'crypto';
 import { analyticsEvents } from '@schema/system/analyticsEvents';
 import gamificationRoutes from './src/domains/gamification/gamification.routes';
 import { achievementRoutes } from './src/domains/gamification/achievements';
-import { getAuthenticatedUser } from "@server/src/core/utils/auth.helpers";
+import { getAuthenticatedUser } from "@core/utils/auth.helpers";
 import { 
 	sendSuccessResponse,
 	sendErrorResponse 
-} from '@server/src/core/utils/transformer.helpers';
+} from '@core/utils/transformer.helpers';
 
 export async function registerRoutes(app: Express): Promise<Server> {
-	// ===================================================================
-	// SECURITY MIDDLEWARE - Applied before any routes
-	// ===================================================================
-
-	// 1. Security headers (helmet)
 	app.use(securityHeaders);
-
-	// 2. CORS protection
 	app.use(corsMiddleware);
-
-	// 3. Origin validation
 	app.use(originValidation);
-
-	// 4. General rate limiting
 	app.use('/api/', rateLimiters.general);
-
-	// 5. Security audit logging
 	app.use(securityAuditLogger);
-
-	// 6. API response security headers
 	app.use(apiResponseSecurity);
-
-	// 7. Development security warnings
 	app.use(developmentSecurityWarning);
-
-	// 8. Request metrics collection
 	app.use(requestMetricsMiddleware);
-
-	// 9. Audit logging for security events
 	app.use(auditMiddleware);
 
-	// Test endpoint (before auth setup)
-	app.get('/', async (req, res) => {
+	app.get('/', async (req: Request, res: Response) => {
 		sendSuccessResponse(res, { message: 'Backend working!!!' });
 	});
 
-	// Add new unified content endpoint
-	app.get('/api/content', async (req, res) => {
+	app.get('/api/content', async (req: Request, res: Response) => {
 		try {
 			const tab = (req.query.tab as string) || 'trending';
 			const page = parseInt(req.query.page as string) || 1;
-			const limit = Math.min(parseInt(req.query.limit as string) || 20, 50); // Max 50
+			const limit = Math.min(parseInt(req.query.limit as string) || 20, 50);
 			const forumId = req.query.forumId ? parseInt(req.query.forumId as string) : undefined;
-			const userId = getAuthenticatedUser(req)?.id; // From auth middleware
+			const userId = getAuthenticatedUser(req)?.id;
 
-			// Validate tab
 			const validTabs = ['trending', 'recent', 'following'];
 			if (!validTabs.includes(tab)) {
-				return sendErrorResponse(res, 'Invalid tab. Must be one of: trending, recent, following', 400);
+				return sendErrorResponse(res, 'Invalid tab.', 400);
 			}
 
-			// Require auth for following tab
 			if (tab === 'following' && !userId) {
 				return sendErrorResponse(res, 'Authentication required for following tab', 401);
 			}
 
-			// Import here to avoid circular dependencies
 			const { threadService } = await import('./src/domains/forum/services/thread.service');
-
-			// Fetch content using the new tab-based method
 			const result = await threadService.fetchThreadsByTab({
 				tab: tab as any,
 				page,
@@ -202,343 +110,219 @@ export async function registerRoutes(app: Express): Promise<Server> {
 				userId
 			});
 
-			sendSuccessResponse(res, result);
+			return sendSuccessResponse(res, result);
 		} catch (error) {
-			logger.error('Error fetching content:', error);
-			sendErrorResponse(res, 'Failed to fetch content', 500);
+			logger.error('/api/content', 'Error fetching unified content feed', { err: error });
+			sendErrorResponse(res, 'Failed to fetch content feed', 500);
 		}
 	});
 
-	// Add hot threads endpoint BEFORE authentication middleware (legacy support)
-	app.get('/api/hot-threads', async (req, res) => {
+	app.get('/api/hot-threads', async (req: Request, res: Response) => {
 		try {
-			const limit = parseInt(req.query.limit as string) || 5;
-
-			// Import here to avoid circular dependencies
-			const { threadService } = await import('./src/domains/forum/services/thread.service');
-
-			// Use the new tab-based method for consistency
-			const result = await threadService.fetchThreadsByTab({
-				tab: 'trending',
-				page: 1,
-				limit,
-				forumId: undefined,
-				userId: undefined
-			});
-
-			// Transform to match legacy format for backward compatibility
-			const hotThreads = result.items.map((thread: any) => ({
-				thread_id: thread.id,
-				title: thread.title,
-				slug: thread.slug,
-				post_count: thread.postCount || 0,
-				view_count: thread.viewCount || 0,
-				hot_score: Math.floor(Math.random() * 100) + 50, // Mock hot score for now
-				created_at: thread.createdAt,
-				last_post_at: thread.lastPostAt || thread.createdAt,
-				user_id: thread.userId,
-				username: thread.user?.username || 'Unknown',
-				avatar_url: thread.user?.avatarUrl || null,
-				category_name: thread.category?.name || 'Unknown',
-				category_slug: thread.category?.slug || 'unknown',
-				like_count: thread.firstPostLikeCount || 0
-			}));
-
-			sendSuccessResponse(res, hotThreads);
+			const threads = await PlatformAnalyticsService.getHotThreads(10);
+			sendSuccessResponse(res, threads);
 		} catch (error) {
-			logger.error('Error fetching hot threads:', error);
+			logger.error('/api/hot-threads', 'Error fetching hot threads', { err: error });
 			sendErrorResponse(res, 'Failed to fetch hot threads', 500);
 		}
 	});
 
-	// Set up session and authentication with new domain-based approach
-	const sessionSettings = setupAuthPassport(storage.sessionStore);
-	app.set('trust proxy', 1);
-	app.use(session(sessionSettings));
+	app.get('/api/recent-posts', async (req: Request, res: Response) => {
+		try {
+			const posts = await PlatformAnalyticsService.getRecentPosts(10);
+			sendSuccessResponse(res, posts);
+		} catch (error) {
+			logger.error('/api/recent-posts', 'Error fetching recent posts', { err: error });
+			sendErrorResponse(res, 'Failed to fetch recent posts', 500);
+		}
+	});
+
+	app.get('/api/featured-threads', async (req: Request, res: Response) => {
+		try {
+			const threads = await PlatformAnalyticsService.getFeaturedThreads(5);
+			sendSuccessResponse(res, threads);
+		} catch (error) {
+			logger.error('/api/featured-threads', 'Error fetching featured threads', { err: error });
+			sendErrorResponse(res, 'Failed to fetch featured threads', 500);
+		}
+	});
+
+	app.get('/api/leaderboards', async (req: Request, res: Response) => {
+		try {
+			const type = (req.query.type as string) || 'xp';
+			const leaderboards = await PlatformAnalyticsService.getLeaderboards(type);
+			sendSuccessResponse(res, leaderboards);
+		} catch (error) {
+			const typeForLog = (req.query.type as string) || 'xp';
+			logger.error('/api/leaderboards', 'Error fetching leaderboards', { err: error, type: typeForLog });
+			sendErrorResponse(res, 'Failed to fetch leaderboards', 500);
+		}
+	});
+
+	app.get('/api/platform-stats', async (req: Request, res: Response) => {
+		try {
+			const stats = await PlatformAnalyticsService.getPlatformStats();
+			sendSuccessResponse(res, stats);
+		} catch (error) {
+			logger.error('/api/platform-stats', 'Error fetching platform stats', { err: error });
+			sendErrorResponse(res, 'Failed to fetch platform stats', 500);
+		}
+	});
+
+	app.post(
+		'/api/admin/feature-thread',
+		isAuthenticated,
+		isAdminOrModerator,
+		async (req: Request, res: Response) => {
+			try {
+				const { threadId, expiresAt } = req.body;
+				const userId = getAuthenticatedUser(req)?.id;
+				await PlatformAnalyticsService.featureThread(threadId, userId, expiresAt);
+				sendSuccessResponse(res, { message: 'Thread featured successfully' });
+			} catch (error) {
+				const { threadId } = req.body;
+				logger.error('/api/admin/feature-thread', 'Error featuring thread', {
+					err: error,
+					threadId
+				});
+				sendErrorResponse(res, 'Failed to feature thread', 500);
+			}
+		}
+	);
+
+	app.post(
+		'/api/admin/unfeature-thread',
+		isAuthenticated,
+		isAdminOrModerator,
+		async (req: Request, res: Response) => {
+			try {
+				const { threadId } = req.body;
+				await PlatformAnalyticsService.unfeatureThread(threadId);
+				sendSuccessResponse(res, { message: 'Thread unfeatured successfully' });
+			} catch (error) {
+				const { threadId } = req.body;
+				logger.error('/api/admin/unfeature-thread', 'Error unfeaturing thread', {
+					err: error,
+					threadId
+				});
+				sendErrorResponse(res, 'Failed to unfeature thread', 500);
+			}
+		}
+	);
+
+	app.get('/api/health-check', (req: Request, res: Response) => {
+		sendSuccessResponse(res, { status: 'ok' });
+	});
+
+	app.get('/api/csrf-token', csrfProtection, (req: Request, res: Response) => {
+		// @ts-ignore
+		sendSuccessResponse(res, { csrfToken: req.csrfToken() });
+	});
+
+	const server = createServer(app);
+
+	if (process.env.NODE_ENV === 'production') {
+		const wss = new WebSocketServer({ server });
+		wss.on('connection', ws => {
+			logger.info('WebSocket client connected');
+			ws.on('message', message => {
+				logger.info(`Received WebSocket message: ${message}`);
+			});
+			ws.on('close', () => {
+				logger.info('WebSocket client disconnected');
+			});
+		});
+	}
+
+	const sessionMiddleware = session({
+		// @ts-ignore
+		store: storage,
+		secret: process.env.SESSION_SECRET || 'supersecret',
+		resave: false,
+		saveUninitialized: false,
+		cookie: {
+			secure: process.env.NODE_ENV === 'production',
+			httpOnly: true,
+			maxAge: 1000 * 60 * 60 * 24 * 7 // 1 week
+		}
+	});
+
+	app.use(sessionMiddleware);
+	setupAuthPassport(app);
+
 	app.use(passport.initialize());
 	app.use(passport.session());
 
-	// ===================================================================
-	// CSRF PROTECTION - After session setup
-	// ===================================================================
+	const apiRouter = express.Router();
+	registerPathRoutes(apiRouter);
+	registerAdminRoutes(apiRouter);
+	registerAnnouncementRoutes(apiRouter);
+	apiRouter.use('/auth', authRoutes);
+	apiRouter.use('/ads', adRoutes);
+	apiRouter.use('/wallet', walletRoutes);
+	apiRouter.use('/tips', tipRoutes);
+	apiRouter.use('/rain', rainRoutes);
+	apiRouter.use('/xp', xpRoutes);
+	apiRouter.use('/treasury', treasuryRoutes);
+	apiRouter.use('/shoutbox', shoutboxRoutes);
+	apiRouter.use('/forums', forumRoutes);
+	apiRouter.use('/dictionary', dictionaryRoutes);
+	apiRouter.use('/editor', editorRoutes);
+	apiRouter.use('/profile', profileRoutes);
+	apiRouter.use('/relationships', relationshipsRoutes);
+	apiRouter.use('/whale-watching', whaleWatchRoutes);
+	apiRouter.use('/messages', messageRoutes);
+	apiRouter.use('/vault', vaultRoutes);
+	apiRouter.use('/feature-gates', featureGatesRoutes);
+	apiRouter.use('/notifications', notificationRoutes);
+	apiRouter.use('/preferences', preferencesRoutes);
+	apiRouter.use('/x-auth', xAuthRoutes);
+	apiRouter.use('/share', xShareRoutes);
+	apiRouter.use('/gamification', gamificationRoutes);
+	apiRouter.use('/achievements', achievementRoutes);
 
-	// CSRF token provider endpoint (must be before CSRF protection)
-	app.use(csrfTokenProvider);
+	app.use('/api', apiRouter);
+	app.use('/api/webhooks/ccpayment', ccpaymentWebhookRoutes);
 
-	// CSRF protection for state-changing operations
-	app.use('/api/', (req, res, next) => {
-		// Skip CSRF for safe methods and specific endpoints
-		if (req.method === 'GET' || req.method === 'HEAD' || req.method === 'OPTIONS') {
-			return next();
-		}
-
-		// Skip CSRF for webhooks and public endpoints
-		if (req.path.includes('/webhook') || req.path.includes('/public')) {
-			return next();
-		}
-
-		// Apply CSRF protection
-		return csrfProtection(req, res, next);
-	});
-
-	// ===================================================================
-	// SPECIFIC RATE LIMITING - Applied to sensitive endpoints
-	// ===================================================================
-
-	// Authentication endpoints (strict rate limiting)
-	app.use('/api/auth/login', rateLimiters.auth);
-	app.use('/api/auth/register', rateLimiters.auth);
-	app.use('/api/auth/password-reset', rateLimiters.passwordReset);
-
-	// Admin endpoints (strict rate limiting)
-	app.use('/api/admin/', rateLimiters.admin);
-
-	// Financial endpoints (very strict rate limiting)
-	app.use('/api/wallet/', rateLimiters.financial);
-	app.use('/api/engagement/tip/', rateLimiters.financial);
-	app.use('/api/engagement/rain/', rateLimiters.financial);
-
-	// Forum posting (moderate rate limiting)
-	app.use('/api/forum/threads/', rateLimiters.posting);
-	app.use('/api/forum/posts/', rateLimiters.posting);
-
-	// Use the domain-based auth routes
-	/*
-	 * ---------------------------------------------------------------------------
-	 * AUTHENTICATION ROUTES
-	 * ---------------------------------------------------------------------------
-	 *  Primary Mount:
-	 *    • All authentication endpoints are now **namespaced** under `/api/auth/*`.
-	 *      Example: `/api/auth/login`, `/api/auth/register`, `/api/auth/user`, etc.
-	 *
-	 *  Compatibility Mount (temporary):
-	 *    • For legacy clients that still hit the root-level `/api/*` auth endpoints
-	 *      (e.g. `/api/login`), we re-mount the same router at `/api`.  This alias
-	 *      will be **removed after v2** once all callers have migrated.
-	 */
-	app.use('/api/auth', authRoutes); // ✅  NEW canonical path
-	app.use('/api', authRoutes); // 🕰️  Back-compat alias  (DEPRECATE IN v2)
-	// X account OAuth routes
-	app.use('/api/auth/x', xAuthRoutes);
-	// X share routes
-	app.use('/api/share/x', xShareRoutes);
-
-	// Set up admin routes
-	registerAdminRoutes(app);
-
-	// Set up wallet routes with domain-based approach
-	app.use('/api/wallet', walletRoutes);
-
-	// Set up tip routes with domain-based approach
-	app.use('/api/engagement/tip', tipRoutes);
-
-	// Set up rain routes with domain-based approach
-	app.use('/api/engagement/rain', rainRoutes);
-
-	// Set up XP routes with domain-based approach
-	app.use('/api/xp', xpRoutes);
-
-	// Set up treasury routes with domain-based approach
-	app.use('/api/treasury', treasuryRoutes);
-
-	// Set up shoutbox routes with domain-based approach
-	app.use('/api/shoutbox', shoutboxRoutes);
-	app.use('/api/chat', shoutboxRoutes);
-
-	// Set up forum routes with domain-based approach
-	app.use('/api/forum', forumRoutes);
-
-	// Set up editor routes with domain-based approach
-	app.use('/api/editor', editorRoutes);
-	// Make storage available to editor routes
-	app.set('storage', storage);
-
-	// Use the domain-based preferences routes
-	app.use('/api/users', preferencesRoutes);
-	// Use the domain-based notifications routes
-	app.use('/api/notifications', notificationRoutes);
-
-	// Set up profile routes with domain-based approach
-	app.use('/api/profile', profileRoutes);
-
-	// Set up relationships routes with domain-based approach
-	app.use('/api/relationships', relationshipsRoutes);
-
-	// Set up whale watch routes with domain-based approach
-	app.use('/api', whaleWatchRoutes);
-
-	// Set up development routes (dev mode only)
-	app.use('/api/dev', devRoutes);
-
-	// Set up messaging routes with domain-based approach
-	app.use('/api/messages', messageRoutes);
-
-	// Set up vault routes with domain-based approach
-	app.use('/api/vault', vaultRoutes);
-
-	// Set up webhook routes (no auth required)
-	app.use('/api/webhook', ccpaymentWebhookRoutes);
-
-	// Set up announcement routes with domain-based approach
-	registerAnnouncementRoutes(app); // Migrated to domains/admin/sub-domains/announcements
-
-	// Set up feature gate routes
-	app.use('/api/features', featureGatesRoutes);
-
-	// Set up advertising routes with domain-based approach
-	app.use('/api/ads', adRoutes);
-
-	// Set up path specialization routes
-	registerPathRoutes(app); // @pending-migration
-
-	// Set up DGT purchase routes
-	const dgtPurchaseRouter = express.Router();
-	// TODO: @routeDeprecation Remove legacy dgt-purchase routes after migration to domain-driven routes is complete.
-	// registerDgtPurchaseRoutes(dgtPurchaseRouter); // @pending-migration
-	app.use('/api', dgtPurchaseRouter);
-
-	// Set up dictionary routes
-	app.use('/api/dictionary', dictionaryRoutes);
-
-	// Set up gamification routes
-	app.use('/api/gamification', gamificationRoutes);
-
-	// Set up achievement routes
-	app.use('/api/achievements', achievementRoutes);
-
-	// Set up health check and monitoring routes
-	app.use('/api', healthCheckRouter);
-
-	// ---------------------------------------------------------------------------
-	// 📈 Public Analytics Beacon Route (rate-limited 100 req/min per IP)
-	// ---------------------------------------------------------------------------
-
-	const analyticsLimiter = rateLimit({
-		windowMs: 60 * 1000,
-		max: 100,
-		standardHeaders: true,
-		legacyHeaders: false
-	});
-
-	app.post('/api/analytics/track', analyticsLimiter, async (req: Request, res: Response) => {
-		try {
-			const schema = z.object({
-				event: z.string().max(100),
-				threadId: z.number().int().optional(),
-				data: z.record(z.any()).optional()
-			});
-			const parsed = schema.safeParse(req.body);
-			if (!parsed.success) {
-				return sendErrorResponse(res, 'Invalid payload', 400);
-			}
-			const { event, threadId, data } = parsed.data;
-			await db.insert(analyticsEvents).values({
-				userId: (req as any).user?.id ?? null,
-				sessionId: req.cookies?.session_id ?? null,
-				type: event,
-				data: data ?? { threadId },
-				ipAddress: req.ip,
-				userAgent: req.headers['user-agent'] || null
-			});
-			return res.status(204).end();
-		} catch (e) {
-			logger.error('Analytics track error', e);
-			return sendErrorResponse(res, 'Failed to record analytics', 500);
-		}
-	});
-
-	// Register the global error handler as the final middleware
-	app.use(globalErrorHandler);
-
-	const httpServer = createServer(app);
-
-	// Check if we're in development mode
-	const IS_DEVELOPMENT = process.env.NODE_ENV !== 'production';
-
-	// Default empty clients set
-	const clients = new Set<WebSocket>();
-
-	// WebSocket server setup - only in production
-	if (!IS_DEVELOPMENT) {
-		logger.info('🚀 Setting up WebSocket server in production mode');
-
-		// Set up WebSocket server on the same HTTP server but with a distinct path
-		const wss = new WebSocketServer({ server: httpServer, path: '/ws' });
-
-		// Handle WebSocket connections
-		wss.on('connection', (ws) => {
-			logger.info('WebSocket client connected');
-			clients.add(ws);
-
-			// Send initial message
-			ws.send(
-				JSON.stringify({
-					type: 'connected',
-					message: 'Connected to Degentalk WebSocket'
-				})
-			);
-
-			// Handle incoming messages
-			ws.on('message', (message) => {
-				try {
-					logger.info('Received message:', message.toString());
-					const data = JSON.parse(message.toString());
-
-					// Process different message types
-					if (data.type === 'chat_message') {
-						// Broadcast chat message to all connected clients
-						// This is just the broadcast mechanism
-						// Actual database persistence is handled by the HTTP API
-						const broadcastData = {
-							type: 'chat_update',
-							action: 'new_message',
-							message: data.message,
-							roomId: data.roomId,
-							timestamp: new Date().toISOString()
-						};
-
-						// Broadcast to all connected clients
-						for (const client of clients) {
-							if (client.readyState === WebSocket.OPEN) {
-								client.send(JSON.stringify(broadcastData));
-							}
-						}
-					}
-
-					// Handle room change events to notify other users
-					if (data.type === 'room_change') {
-						const broadcastData = {
-							type: 'room_update',
-							roomId: data.roomId,
-							timestamp: new Date().toISOString()
-						};
-
-						// Broadcast room change to all connected clients
-						for (const client of clients) {
-							if (client.readyState === WebSocket.OPEN) {
-								client.send(JSON.stringify(broadcastData));
-							}
-						}
-					}
-				} catch (error) {
-					logger.error('Error processing WebSocket message:', error);
-				}
-			});
-
-			// Handle disconnection
-			ws.on('close', () => {
-				logger.info('WebSocket client disconnected');
-				clients.delete(ws);
-			});
-		});
-	} else {
-		// In development mode, log that WebSocket is disabled
-		logger.info('⚠️ WebSocket server is DISABLED in development mode to prevent connection errors');
+	if (process.env.NODE_ENV === 'development') {
+		app.use('/dev', devRoutes);
 	}
 
-	// Export the WebSocket clients set so other routes can access it
-	// Even in development mode, we provide an empty set for compatibility
-	(app as any).wss = { clients };
+	app.post('/api/path-xp', isAuthenticated, async (req, res) => {
+		try {
+			const { path, step } = req.body;
+			const userId = getAuthenticatedUser(req)?.id;
+			const xpToAward = xpRewards[path]?.[step] || 0;
 
-	return httpServer;
+			if (xpToAward > 0) {
+				await awardPathXp(userId, path, step, xpToAward);
+				sendSuccessResponse(res, { message: `Awarded ${xpToAward} XP for completing ${step} of ${path}` });
+			} else {
+				sendSuccessResponse(res, { message: 'No XP for this step' });
+			}
+		} catch (error) {
+			logger.error('Error awarding path XP:', error);
+			sendErrorResponse(res, 'Failed to award XP', 500);
+		}
+	});
+
+	app.post('/api/log/analytic', isAuthenticated, async (req, res) => {
+		try {
+			const { event, data } = req.body;
+			const userId = getAuthenticatedUser(req)?.id;
+			await db.insert(analyticsEvents).values({
+				userId,
+				event,
+				data,
+			});
+			sendSuccessResponse(res, { message: 'Analytic event logged' });
+		} catch (error) {
+			logger.error('Error logging analytic event:', error);
+			sendErrorResponse(res, 'Failed to log analytic event', 500);
+		}
+	});
+
+	app.use(globalErrorHandler);
+
+	return server;
 }

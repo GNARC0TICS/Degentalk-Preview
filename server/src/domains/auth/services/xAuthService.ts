@@ -1,11 +1,11 @@
-import { userService } from '@server/src/core/services/user.service';
+import { userService } from '@core/services/user.service';
 import type { Request, Response, NextFunction } from 'express';
 import { TwitterApi } from 'twitter-api-v2';
-import { db } from '@server/src/core/db';
+import { db } from '@core/db';
 import { users } from '@schema/user/users';
 import { eq } from 'drizzle-orm';
-import { logger } from '@server/src/core/logger';
-import { sendSuccessResponse, sendErrorResponse } from "@server/src/core/utils/transformer.helpers";
+import { logger } from '@core/logger';
+import { sendSuccessResponse, sendErrorResponse } from "@core/utils/transformer.helpers";
 
 // Environment variables required
 const { X_CLIENT_ID, X_CLIENT_SECRET, X_CALLBACK_URL } = process.env as Record<string, string>;

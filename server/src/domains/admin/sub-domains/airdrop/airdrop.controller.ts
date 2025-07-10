@@ -1,10 +1,10 @@
 import type { Request, Response, NextFunction } from 'express';
-import { userService } from '@server/src/core/services/user.service';
+import { userService } from '@core/services/user.service';
 import { airdropAdminService } from './airdrop.service';
 import { logger } from '../../../../core/logger';
 import { z } from 'zod';
 import { validateRequestBody } from '../../admin.validation';
-import { sendSuccessResponse, sendErrorResponse } from '@server/src/core/utils/transformer.helpers';
+import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
 const airdropRequestSchema = z.object({
 	tokenType: z.enum(['XP', 'DGT']),

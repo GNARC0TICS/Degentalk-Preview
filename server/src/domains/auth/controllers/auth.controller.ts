@@ -1,19 +1,18 @@
-import { userService } from '@server/src/core/services/user.service';
+import { userService } from '@core/services/user.service';
 import type { Request, Response, NextFunction } from 'express';
 import { z } from 'zod';
 import { createHash, randomBytes } from 'crypto';
 import passport from 'passport';
 import { insertUserSchema } from '@schema';
 import { users } from '@schema';
-import { logger } from '@server/src/core/logger';
-import { storage } from '@server/src/storage'; // Will be refactored in a future step
+import { logger } from '@core/logger';
+import { storage } from '@server/storage'; // Will be refactored in a future step
 import { hashPassword, storeTempDevMetadata, verifyEmailToken } from '../services/auth.service';
 import { isDevMode } from '../../../utils/environment';
-import { walletService } from '../../wallet/wallet.service';
-import { dgtService } from '../../wallet/dgt.service';
+import { walletService } from '../../wallet';
 import { walletConfig } from '@shared/wallet.config';
-import { UserTransformer } from "@server/src/domains/users/transformers/user.transformer";
-import { sendSuccessResponse, sendErrorResponse } from "@server/src/core/utils/transformer.helpers";
+import { UserTransformer } from "@server/domains/users/transformers/user.transformer";
+import { sendSuccessResponse, sendErrorResponse } from "@core/utils/transformer.helpers";
 
 type User = typeof users.$inferSelect;
 
@@ -56,7 +55,7 @@ export async function register(req: Request, res: Response, next: NextFunction) 
 		if (walletConfig.WALLET_ENABLED) {
 			try {
 				// Initialize DGT wallet
-				await dgtService.initializeUserWallet(user.id);
+				await walletService.initializeWallet(user.id);
 				logger.info('AuthController', 'DGT wallet initialized for new user', { userId: user.id });
 
 				// Initialize CCPayment wallet
@@ -150,7 +149,7 @@ export function login(req: Request, res: Response, next: NextFunction) {
 			if (walletConfig.WALLET_ENABLED && user.id) {
 				try {
 					// Initialize DGT wallet if needed
-					await dgtService.initializeUserWallet(user.id);
+					await walletService.initializeWallet(user.id);
 
 					// Initialize CCPayment wallet if needed
 					await walletService.ensureCcPaymentWallet(user.id);

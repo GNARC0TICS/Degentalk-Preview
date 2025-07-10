@@ -1,4 +1,4 @@
-import { userService } from '@server/src/core/services/user.service';
+import { userService } from '@core/services/user.service';
 // REFACTORED: Updated auth middleware imports to use canonical path
 /**
  * Preferences Routes
@@ -34,9 +34,9 @@ import { WebSocket } from 'ws';
 import { isAuthenticated, isAuthenticatedOptional } from '../auth/middleware/auth.middleware';
 import { logger, LogLevel, LogAction } from '../../../src/core/logger';
 import { displayPreferencesSchema } from './preferences.validators';
-import { getUserIdFromRequest } from '@server/src/utils/auth';
+import { getUserIdFromRequest } from '@server-utils/auth';
 import { UserPreferencesService } from '../user/user-preferences.service';
-import { sendSuccessResponse, sendErrorResponse } from "@server/src/core/utils/transformer.helpers";
+import { sendSuccessResponse, sendErrorResponse } from "@core/utils/transformer.helpers";
 
 // Define validation schema for the shoutbox position
 const updateShoutboxPositionSchema = z.object({

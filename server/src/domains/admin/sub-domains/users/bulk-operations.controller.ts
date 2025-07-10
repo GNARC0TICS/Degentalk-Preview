@@ -1,4 +1,4 @@
-import { userService } from '@server/src/core/services/user.service';
+import { userService } from '@core/services/user.service';
 import type { Request, Response } from 'express';
 import { z } from 'zod';
 import { adminUserBulkOperationsService } from './bulk-operations.service';

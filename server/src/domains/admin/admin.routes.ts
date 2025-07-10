@@ -7,7 +7,7 @@
 import { Router, type Express } from 'express'; // Import Express as type
 import { adminController } from './admin.controller';
 import { isAdmin, asyncHandler } from './admin.middleware';
-import { logger } from '@server/src/core/logger';
+import { logger } from '@core/logger';
 
 // Import sub-domain routes
 import userRoutes from './sub-domains/users/users.routes';
@@ -38,13 +38,13 @@ import moderatorNotesRoutes from './sub-domains/moderator-notes/moderator-notes.
 import brandConfigRoutes from './sub-domains/brand-config/brand.routes';
 import socialRoutes from './sub-domains/social/social.routes';
 import cacheRoutes from './sub-domains/cache/cache.routes';
-import { adminWalletRoutes } from './sub-domains/wallet/wallet.routes';
+import { adminWalletRoutes } from '../../domains/wallet/admin/wallet.routes';
 import { emailTemplateRoutes } from './sub-domains/email-templates/email-templates.routes';
 import { backupRestoreRoutes } from './sub-domains/backup-restore/backup-restore.routes';
-import { stickerRoutes } from '../collectibles/stickers/stickers.routes';
+import { stickerRoutes } from '../../domains/collectibles/stickers/stickers.routes';
 import subscriptionAdminRoutes from './sub-domains/subscriptions/subscription.admin.routes';
 import databaseRoutes from './sub-domains/database/database.routes';
-import { sendSuccessResponse, sendErrorResponse } from "@server/src/core/utils/transformer.helpers";
+import { sendSuccessResponse, sendErrorResponse } from "@core/utils/transformer.helpers";
 
 // import userAdminRoutes from './users/users.admin.routes'; // DEPRECATED
 // import economyAdminRoutes from './settings/economy.routes'; // Placeholder for future

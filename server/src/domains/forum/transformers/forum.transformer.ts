@@ -357,6 +357,32 @@ export class ForumTransformer {
     });
   }
 
+  static toPublicUser(user: { id: string; username: string; avatar: string | null; }) {
+    return {
+      id: user.id,
+      username: user.username,
+      avatar: user.avatar,
+    };
+  }
+
+  static toPublicPrefix(prefix: { id: string; name: string; slug: string; color: string | null; icon: string | null; }) {
+    return {
+      id: prefix.id,
+      name: prefix.name,
+      slug: prefix.slug,
+      color: prefix.color,
+      icon: prefix.icon,
+    };
+  }
+
+  static toPublicTag(tag: { id: string; name: string; slug: string; }) {
+    return {
+      id: tag.id,
+      name: tag.name,
+      slug: tag.slug,
+    };
+  }
+
   // Private utility methods
   
   private static filterPublicTags(tags: any[]): string[] {

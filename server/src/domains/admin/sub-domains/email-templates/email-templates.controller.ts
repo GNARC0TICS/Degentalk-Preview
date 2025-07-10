@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express';
-import { userService } from '@server/src/core/services/user.service';
+import { userService } from '@core/services/user.service';
 import { z } from 'zod';
 import { emailTemplateService, emailTemplateSchema } from './email-templates.service';
 import { formatAdminResponse, AdminOperationBoundary } from '../../shared';

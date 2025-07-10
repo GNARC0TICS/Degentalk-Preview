@@ -9,7 +9,7 @@
  * - Failed message retry logic
  */
 
-import { logger } from '@server/src/core/logger';
+import { logger } from '@core/logger';
 import type { UserId } from '@shared/types/ids';
 import { EventEmitter } from 'events';
 import type { RoomId, MessageId } from '@shared/types/ids';

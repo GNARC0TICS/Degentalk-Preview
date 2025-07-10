@@ -1,15 +1,15 @@
 import type { Request, Response } from 'express';
-import { userService } from '@server/src/core/services/user.service';
+import { userService } from '@core/services/user.service';
 import { DatabaseService } from './database.service';
 import { QueryService } from './query.service';
-import { logger } from '@server/src/core/logger';
+import { logger } from '@core/logger';
 import { adminCreateAuditLogEntry } from '../../shared/admin-operation-utils';
 import { getUserId } from '../../admin.middleware';
 import { z } from 'zod';
 import { 
 	sendSuccessResponse,
 	sendErrorResponse
-} from '@server/src/core/utils/transformer.helpers';
+} from '@core/utils/transformer.helpers';
 import { sendSuccess, sendError, sendValidationError, handleAdminError } from '../../admin.response';
 
 const databaseService = new DatabaseService();

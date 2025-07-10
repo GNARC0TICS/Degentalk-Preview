@@ -1,14 +1,14 @@
 import { Router } from 'express';
-import { userService } from '@server/src/core/services/user.service';
+import { userService } from '@core/services/user.service';
 import { z } from 'zod';
 import { db } from '@db';
 import { moderatorNotes, moderatorNoteTypeEnum } from '@schema';
 import { eq, and, desc } from 'drizzle-orm';
 import { isAdminOrModerator } from '../../../auth/middleware/auth.middleware';
-import { getUserIdFromRequest } from '@server/src/utils/auth';
-import { logger } from '@server/src/core/logger';
+import { getUserIdFromRequest } from '@server-utils/auth';
+import { logger } from '@core/logger';
 import type { EntityId } from '@shared/types/ids';
-import { sendSuccessResponse, sendErrorResponse } from "@server/src/core/utils/transformer.helpers";
+import { sendSuccessResponse, sendErrorResponse } from "@core/utils/transformer.helpers";
 
 const router = Router();
 

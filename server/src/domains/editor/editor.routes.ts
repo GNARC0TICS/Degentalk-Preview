@@ -11,7 +11,7 @@ import { z } from 'zod';
 import { isAuthenticated } from '../../domains/auth/middleware/auth.middleware.ts';
 import type { IStorage } from '../../../storage';
 import { logger } from '../../core/logger';
-import { sendSuccessResponse, sendErrorResponse } from '@server/src/core/utils/transformer.helpers';
+import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
 /**
  * Initialize editor routes

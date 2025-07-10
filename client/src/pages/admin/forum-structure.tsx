@@ -11,14 +11,14 @@ import {
 	SelectTrigger,
 	SelectValue
 } from '@/components/ui/select';
-import { AdminPageShell } from '@/components/admin/layout/AdminPageShell';
-import { AdminDataTable } from '@/components/admin/common/AdminDataTable';
-import type { ColumnDef } from '@/components/admin/layout/EntityTable';
+import { AdminPageShell } from '@/features/admin/components/layout/AdminPageShell';
+import { AdminDataTable } from '@/features/admin/components/common/AdminDataTable';
+import type { ColumnDef } from '@/features/admin/components/layout/EntityTable';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { AdminAccessSelector } from '@/components/admin/inputs/AdminAccessSelector';
-import { AdminToggle } from '@/components/admin/inputs/AdminToggle';
+import { AdminAccessSelector } from '@/features/admin/components/inputs/AdminAccessSelector';
+import { AdminToggle } from '@/features/admin/components/inputs/AdminToggle';
 import type { ForumId, CategoryId, ZoneId, UserId } from '@shared/types/ids';
 
 const EntitySchema = z.object({

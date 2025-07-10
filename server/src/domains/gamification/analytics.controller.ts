@@ -7,7 +7,7 @@
 
 import type { Request, Response } from 'express';
 import { z } from 'zod';
-import { gamificationAnalyticsService, GamificationAnalyticsService } from './analytics.service';
+import { gamificationAnalyticsService, GamificationAnalyticsService } from './services/analytics.service';
 import { CloutTransformer } from './transformers/clout.transformer';
 import { 
 	toPublicList,
@@ -15,7 +15,7 @@ import {
 	sendErrorResponse,
 	sendTransformedResponse,
 	sendTransformedListResponse 
-} from '@server/src/core/utils/transformer.helpers';
+} from '@core/utils/transformer.helpers';
 import { logger } from '../../core/logger';
 import { AppError } from '../../core/errors';
 

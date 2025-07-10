@@ -12,7 +12,7 @@ import { getUserId } from '../../admin.middleware';
 import { adminController } from '../../admin.controller';
 import { UserGroupSchema, ListGroupUsersQuerySchema } from './user-groups.validators';
 import { validateRequestBody, validateQueryParams } from '../../admin.validation';
-import { sendSuccessResponse, sendErrorResponse } from "@server/src/core/utils/transformer.helpers";
+import { sendSuccessResponse, sendErrorResponse } from "@core/utils/transformer.helpers";
 
 export class AdminUserGroupsController {
 	async getAllGroups(req: Request, res: Response) {

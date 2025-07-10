@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { mediaApiService, type MediaItem } from '@/features/admin/services/media-api.service';
-import { AdminPageShell } from '@/components/admin/layout/AdminPageShell';
+import { AdminPageShell } from '@/features/admin/components/layout/AdminPageShell';
 import { MediaAsset } from '@/components/media/MediaAsset';
 import { Button } from '@/components/ui/button';
-import { MediaLibraryModal } from '@/components/admin/media/MediaLibraryModal';
+import { MediaLibraryModal } from '@/features/admin/components/media/MediaLibraryModal';
 import { useToast } from '@/hooks/use-toast';
 import {
 	Dialog,

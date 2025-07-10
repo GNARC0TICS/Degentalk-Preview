@@ -24,6 +24,11 @@ export interface BaseTransaction {
   metadata?: Record<string, unknown>;
   createdAt: string;
   updatedAt: string;
+  /**
+   * TEMPORARY BACK-COMPAT field for legacy wallet UI.  Will be removed once
+   * client components are migrated to use `createdAt` consistently.
+   */
+  timestamp?: string;
 }
 
 /**
@@ -76,6 +81,11 @@ export interface RewardTransaction extends BaseTransaction {
   source: 'xp' | 'rain' | 'tip' | 'airdrop' | 'mission' | 'achievement';
   sourceId?: string;
 }
+
+/**
+ * Legacy alias used by client wallet components.  Remove after migration.
+ */
+export type TransactionItem = BaseTransaction;
 
 /**
  * Transaction filter options

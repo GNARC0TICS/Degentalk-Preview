@@ -13,8 +13,8 @@ import { rainController } from './rain.controller';
 import {
 	isAuthenticated as requireAuth,
 	isAdmin as requireAdmin
-} from '../../auth/middleware/auth.middleware';
-import { validateRequest } from '../../wallet/wallet.validators';
+} from '@server/domains/auth/middleware/auth.middleware';
+import { validateRequest } from '@server-middleware/validate-request';
 import { z } from 'zod';
 
 // Create the router

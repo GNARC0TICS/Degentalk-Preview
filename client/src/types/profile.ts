@@ -86,4 +86,11 @@ export interface ProfileData {
 		tipperRank: number | null;
 		likerRank: number | null;
 	};
+	levelConfig?: {
+		level: number;
+		name: string;
+		minXp: number;
+		maxXp: number;
+		color: string;
+	};
 }

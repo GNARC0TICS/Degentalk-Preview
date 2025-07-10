@@ -11,7 +11,7 @@
 
 import { db } from '@db';
 import type { UserId } from '@shared/types/ids';
-import { logger } from '@server/src/core/logger';
+import { logger } from '@core/logger';
 import { ShoutboxCacheService } from './cache.service';
 import { eq, and, desc, asc, sql, gte, lte, inArray } from 'drizzle-orm';
 import { shoutboxMessages, chatRooms, users, shoutboxConfig } from '@schema';

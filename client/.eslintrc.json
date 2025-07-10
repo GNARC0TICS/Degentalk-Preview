@@ -1,0 +1,7 @@
+{
+  "extends": "../../.eslintrc.cjs",
+  "plugins": ["degen"],
+  "rules": {
+    "degen/no-cross-domain-imports": "warn"
+  }
+}

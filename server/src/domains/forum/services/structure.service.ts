@@ -6,11 +6,12 @@
  */
 
 import { db } from '@db';
-import { logger } from '@server/src/core/logger';
-import { forumStructure, threads, posts, users as usersTable } from '@schema';
-import { sql, desc, eq, count, isNull } from 'drizzle-orm';
+import { logger } from '@core/logger';
+import { forumStructure, threads, posts } from '@schema';
+import { sql, desc, eq, count, isNull, and, inArray, gt } from 'drizzle-orm';
 import type { ForumStructureWithStats } from '../../../../db/types/forum.types';
 import type { StructureId } from '@shared/types/ids';
+import { forumMap, type Zone, type Forum } from '@shared/config/forum.config';
 
 // Simple in-memory cache for forum structure
 const CACHE_DURATION_MS = 30 * 1000; // 30 seconds
@@ -200,6 +201,65 @@ export class ForumStructureService {
 		}
 	}
 
+	async getZoneStats(slug: string) {
+		// Fetch the zone node
+		const [zone] = await db
+			.select()
+			.from(forumStructure)
+			.where(eq(forumStructure.slug, slug))
+			.limit(1);
+		if (!zone || zone.type !== 'zone') {
+			return null;
+		}
+
+		// Find forums under this zone
+		const forumRows = await db
+			.select({ id: forumStructure.id })
+			.from(forumStructure)
+			.where(eq(forumStructure.parentId, zone.id));
+
+		const forumIds = forumRows.map((row) => row.id);
+
+		if (forumIds.length === 0) {
+			return {
+				totalPostsToday: 0,
+				trendingThreads: [],
+			};
+		}
+
+		// Get total posts today
+		const today = new Date();
+		today.setHours(0, 0, 0, 0);
+
+		const postsTodayResult = await db
+			.select({ count: sql<number>`count(*)` })
+			.from(posts)
+			.where(
+				and(
+					inArray(
+						posts.threadId,
+						db.select({ id: threads.id }).from(threads).where(inArray(threads.structureId, forumIds))
+					),
+					gt(posts.createdAt, today)
+				)
+			);
+
+		const totalPostsToday = postsTodayResult[0]?.count || 0;
+
+		// Get trending threads (simplified: latest 5 for now)
+		const trendingThreads = await db
+			.select()
+			.from(threads)
+			.where(inArray(threads.structureId, forumIds))
+			.orderBy(desc(threads.lastPostAt))
+			.limit(5);
+
+		return {
+			totalPostsToday,
+			trendingThreads,
+		};
+	}
+
 	/**
 	 * Get structure statistics
 	 */
@@ -321,11 +381,139 @@ export class ForumStructureService {
 	/**
 	 * Sync forum configuration to database (from forumMap.config.ts)
 	 */
-	async syncFromConfig(): Promise<void> {
-		// This method will be implemented to replace the old sync script
-		// For now, we reference the existing sync functionality
-		logger.info('ForumStructureService', 'Forum config sync not yet implemented in service layer');
-		throw new Error('Use npm run sync:forums script for now');
+	async syncFromConfig(dryRun = false): Promise<{
+		created: number;
+		updated: number;
+		archived: number;
+	}> {
+		logger.info('ForumStructureService', `Starting forum config sync (Dry Run: ${dryRun})`);
+
+		const results = {
+			created: 0,
+			updated: 0,
+			archived: 0
+		};
+
+		// 1. Flatten the config structure
+		const configForums = new Map<string, any>();
+		const flattenForums = (forums: Forum[], parentSlug: string | null = null, zoneSlug: string) => {
+			forums.forEach((forum) => {
+				const flatForum = {
+					...forum,
+					parentForumSlug: parentSlug,
+					zoneSlug: zoneSlug,
+					type: 'forum'
+				};
+				configForums.set(forum.slug, flatForum);
+				if (forum.forums) {
+					flattenForums(forum.forums, forum.slug, zoneSlug);
+				}
+			});
+		};
+
+		forumMap.zones.forEach((zone) => {
+			configForums.set(zone.slug, { ...zone, type: 'zone', parentForumSlug: null });
+			if (zone.forums) {
+				flattenForums(zone.forums, zone.slug, zone.slug);
+			}
+		});
+
+		return await db.transaction(async (tx) => {
+			// 2. Get all existing structures from the DB
+			const dbStructures = await tx.select().from(forumStructure);
+			const dbStructuresMap = new Map(dbStructures.map((s) => [s.slug, s]));
+
+			// 3. Diff and process updates/creates
+			for (const [slug, configNode] of configForums.entries()) {
+				const dbNode = dbStructuresMap.get(slug);
+
+				const nodeData = {
+					name: configNode.name,
+					slug: configNode.slug,
+					description: configNode.description,
+					parentForumSlug: configNode.parentForumSlug,
+					type: configNode.type,
+					position: configNode.position || 0,
+					isVip: configNode.rules?.accessLevel === 'vip',
+					isLocked: configNode.rules?.allowPosting === false,
+					isHidden: false,
+					minXp: configNode.rules?.minXpRequired || 0,
+					color: configNode.theme?.color || configNode.themeOverride?.color || 'gray',
+					icon: configNode.theme?.icon || configNode.themeOverride?.icon || 'hash',
+					colorTheme: configNode.theme?.colorTheme || configNode.themeOverride?.colorTheme,
+					tippingEnabled: configNode.rules?.tippingEnabled === true,
+					xpMultiplier: configNode.rules?.xpMultiplier || 1.0,
+					pluginData: {
+						...configNode.rules?.customRules,
+						availablePrefixes: configNode.rules?.availablePrefixes,
+						requiredPrefix: configNode.rules?.requiredPrefix,
+						landingComponent: configNode.theme?.landingComponent
+					}
+				};
+
+				if (dbNode) {
+					// UPDATE
+					const hasChanged = Object.keys(nodeData).some(
+						(key) => JSON.stringify(dbNode[key]) !== JSON.stringify(nodeData[key])
+					);
+					if (hasChanged) {
+						results.updated++;
+						logger.info(`Updating forum/zone: ${slug}`);
+						if (!dryRun) {
+							await tx.update(forumStructure).set(nodeData).where(eq(forumStructure.id, dbNode.id));
+						}
+					}
+				} else {
+					// CREATE
+					results.created++;
+					logger.info(`Creating forum/zone: ${slug}`);
+					if (!dryRun) {
+						await tx.insert(forumStructure).values(nodeData);
+					}
+				}
+			}
+
+			// 4. Diff and process archives
+			for (const [slug, dbNode] of dbStructuresMap.entries()) {
+				if (!configForums.has(slug)) {
+					if (!dbNode.isHidden) {
+						results.archived++;
+						logger.info(`Archiving forum/zone: ${slug}`);
+						if (!dryRun) {
+							await tx
+								.update(forumStructure)
+								.set({ isHidden: true })
+								.where(eq(forumStructure.id, dbNode.id));
+						}
+					}
+				}
+			}
+
+			// 5. Second pass to link parentId
+			const allNodes = await tx.select({ id: forumStructure.id, slug: forumStructure.slug }).from(forumStructure);
+			const slugToIdMap = new Map(allNodes.map(n => [n.slug, n.id]));
+
+			for (const node of allNodes) {
+				const configNode = configForums.get(node.slug);
+				if (configNode && configNode.parentForumSlug) {
+					const parentId = slugToIdMap.get(configNode.parentForumSlug);
+					if (parentId) {
+						await tx.update(forumStructure).set({ parentId }).where(eq(forumStructure.id, node.id));
+					}
+				}
+			}
+
+			if (dryRun) {
+				logger.info('Dry run finished. No changes were made.');
+				// In a dry run, we must rollback to not commit any potential changes.
+				tx.rollback();
+			} else {
+				this.clearCache();
+			}
+			
+			logger.info('ForumStructureService', 'Forum config sync finished.', results);
+			return results;
+		});
 	}
 }
 

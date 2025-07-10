@@ -6,9 +6,9 @@
  */
 
 import type { Request, Response, NextFunction } from 'express';
-import { logger } from '@server/src/core/logger';
-import { userService } from '@server/src/core/services/user.service';
-import { isDevMode } from '@server/src/utils/environment';
+import { logger } from '@core/logger';
+import { userService } from '@core/services/user.service';
+import { isDevMode } from '@server-utils/environment';
 
 interface DevSecurityConfig {
 	allowedIPs?: string[];

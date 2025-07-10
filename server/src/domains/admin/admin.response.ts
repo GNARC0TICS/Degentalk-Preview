@@ -5,7 +5,7 @@
  */
 
 import type { Response } from 'express';
-import { sendSuccessResponse, sendErrorResponse } from '@server/src/core/utils/transformer.helpers';
+import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
 export interface StandardResponse<T = any> {
 	success: boolean;

@@ -11,12 +11,12 @@ import { logger } from "../src/core/logger";
 
 dotenv.config();
 
-const runMigration = async () => {
+const runMigration = async (): Promise<void> => {
   // Create a new Postgres connection pool
   const connectionString = process.env.DATABASE_URL;
   
   if (!connectionString) {
-    logger.error("DATABASE_URL environment variable is not set");
+    logger.error({ context: 'DGT_MIGRATION' }, "DATABASE_URL environment variable is not set");
     process.exit(1);
   }
   
@@ -28,7 +28,7 @@ const runMigration = async () => {
     // Create a Drizzle client instance
     const db = drizzle(pool, { schema });
     
-    logger.info("Connected to the database. Starting dgt_purchase_orders table migration...");
+    logger.info({ context: 'DGT_MIGRATION' }, "Connected to the database. Starting dgt_purchase_orders table migration...");
     
     // Check if the table already exists to avoid duplicate migrations
     const tableExists = await db.execute(sql`
@@ -40,7 +40,7 @@ const runMigration = async () => {
     `);
     
     if (tableExists.rows[0]?.exists) {
-      logger.info("dgt_purchase_orders table already exists. Skipping migration.");
+      logger.info({ context: 'DGT_MIGRATION' }, "dgt_purchase_orders table already exists. Skipping migration.");
       return;
     }
     
@@ -65,21 +65,24 @@ const runMigration = async () => {
       CREATE INDEX "idx_dgt_purchase_orders_created_at" ON "dgt_purchase_orders"("created_at");
     `);
     
-    logger.info("Successfully created dgt_purchase_orders table");
+    logger.info({ context: 'DGT_MIGRATION' }, "Successfully created dgt_purchase_orders table");
     
   } catch (error: unknown) {
-    logger.error("Error executing migration:", error);
+    logger.error({ context: 'DGT_MIGRATION', err: error }, "Error executing migration");
     process.exit(1);
   } finally {
     await pool.end();
-    logger.info("Migration complete");
+    logger.info({ context: 'DGT_MIGRATION' }, "Migration complete");
   }
 };
 
 // Execute the migration when this file is run directly
 if (require.main === module) {
   runMigration()
-    .catch(console.error);
+    .catch((error) => {
+      logger.error({ context: 'DGT_MIGRATION', err: error }, "Migration failed");
+      process.exit(1);
+    });
 }
 
 export { runMigration }; 

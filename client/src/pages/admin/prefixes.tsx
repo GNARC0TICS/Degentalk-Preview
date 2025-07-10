@@ -44,7 +44,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import type { ThreadPrefix } from '@/types/compat/forum';
 import type { PrefixId, CategoryId } from '@shared/types/ids';
-import { AdminPageShell } from '@/components/admin/layout/AdminPageShell';
+import { AdminPageShell } from '@/features/admin/components/layout/AdminPageShell';
 
 // Define validation schema for prefixes
 const prefixSchema = z.object({

@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express';
-import { userService } from '@server/src/core/services/user.service';
+import { userService } from '@core/services/user.service';
 import { emojiService } from './emojis.service';
 import {
 	CreateEmojiSchema,
@@ -20,7 +20,7 @@ import {
 	sendErrorResponse,
 	sendTransformedResponse,
 	sendTransformedListResponse
-} from '@server/src/core/utils/transformer.helpers';
+} from '@core/utils/transformer.helpers';
 import { sendSuccess, sendError, sendValidationError, handleAdminError } from '../../admin.response';
 
 // Removed redundant getUserId helper - use userService.getUserFromRequest(req)?.id directly

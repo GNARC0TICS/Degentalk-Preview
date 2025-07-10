@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useXP } from '@/hooks/useXP';
-import { XPProgressBar } from '@/components/economy/xp/XPProgressBar';
-import { XPHistoryLog } from '@/components/economy/xp/XPHistoryLog';
-import { BadgeShowcase } from '@/components/economy/badges/BadgeShowcase';
-import { TitleSelector } from '@/components/economy/xp/TitleSelector';
-import { LevelUpNotification } from '@/components/economy/xp/LevelUpNotification';
+import { XPProgressBar } from '@/features/gamification/components/XPProgressBar';
+import { XPHistoryLog } from '@/features/gamification/components/XPHistoryLog';
+import { BadgeShowcase } from '@/features/gamification/components/BadgeShowcase';
+import { TitleSelector } from '@/features/gamification/components/TitleSelector';
+import { LevelUpNotification } from '@/features/gamification/components/LevelUpNotification';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card } from '@/components/ui/card';
 

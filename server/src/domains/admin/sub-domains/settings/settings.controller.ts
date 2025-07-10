@@ -8,7 +8,7 @@ import type { Request, Response } from 'express';
 import { adminSettingsService } from './settings.service.refactored';
 import { AdminError, AdminErrorCodes } from '../../admin.errors';
 import { adminController } from '../../admin.controller';
-import { sendSuccessResponse, sendErrorResponse } from '@server/src/core/utils/transformer.helpers';
+import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 import { validateRequestBody, validateQueryParams } from '../../admin.validation';
 import {
 	UpdateSettingSchema,

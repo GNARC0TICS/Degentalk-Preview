@@ -53,7 +53,7 @@ import { useDebounce } from '@/hooks/use-debounce';
 import { apiRequest } from '@/lib/queryClient';
 import { getLevelForXp, getXpForLevel } from '@shared/economy/reward-calculator';
 import { XP_EASTER_EGGS } from '@/config/easter-eggs.config';
-import { BankruptcyEffect } from '@/components/admin/effects/BankruptcyEffect';
+import { BankruptcyEffect } from '@/features/admin/components/effects/BankruptcyEffect';
 
 // Types
 interface User {

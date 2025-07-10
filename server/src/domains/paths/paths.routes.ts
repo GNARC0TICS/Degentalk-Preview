@@ -1,4 +1,4 @@
-import { userService } from '@server/src/core/services/user.service';
+import { userService } from '@core/services/user.service';
 import type { UserId } from '@shared/types/ids';
 /**
  * XP Path Routes
@@ -7,7 +7,7 @@ import type { UserId } from '@shared/types/ids';
 import { Router } from 'express';
 import type { Request, Response } from 'express';
 import { PathService } from '../../../services/path-service';
-// import { XpProcessor } from '@server/src/utils/xpProcessor';  // File doesn't exist - commenting out
+// import { XpProcessor } from '@server-utils/xpProcessor';  // File doesn't exist - commenting out
 import { db } from '@db';
 import { sql } from 'drizzle-orm';
 
@@ -15,7 +15,7 @@ import { isAuthenticated, isAdminOrModerator, isAdmin } from '../auth/middleware
 import { getUserId } from '../auth/services/auth.service';
 import { isValidId } from '@shared/utils/id';
 import { logger } from "../../core/logger";
-import { sendSuccessResponse, sendErrorResponse } from "@server/src/core/utils/transformer.helpers";
+import { sendSuccessResponse, sendErrorResponse } from "@core/utils/transformer.helpers";
 
 // Using shared isAuthenticated middleware from middleware/auth.ts
 

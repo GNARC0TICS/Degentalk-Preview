@@ -22,7 +22,7 @@ import {
 	customEmojis
 } from '@schema';
 import { eq, and, or, desc, asc, sql, gt, lt, isNull, inArray, not } from 'drizzle-orm';
-import { logger } from '@server/src/core/logger';
+import { logger } from '@core/logger';
 import { createId } from '@paralleldrive/cuid2';
 import type { NewShoutboxConfig, ShoutboxConfig } from '@schema/admin/shoutboxConfig';
 import type { RoomId } from '@shared/types/ids';

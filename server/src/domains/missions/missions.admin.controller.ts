@@ -10,7 +10,7 @@ import { MissionsService } from './missions.service';
 // import { MissionAlreadyExistsError } from './missions.errors'; // Removed as file not found and error not used
 import { logger } from '../../core/logger';
 import { asyncHandler } from '../../core/errors';
-import { sendSuccessResponse, sendErrorResponse } from '@server/src/core/utils/transformer.helpers';
+import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
 /**
  * Admin-specific functions for mission management

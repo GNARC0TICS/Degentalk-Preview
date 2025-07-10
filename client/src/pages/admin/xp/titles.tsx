@@ -34,8 +34,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useDebounce } from '@/hooks/use-debounce';
 import { apiRequest } from '@/lib/queryClient';
-import { AdminPageShell } from '@/components/admin/layout/AdminPageShell';
-import { TitleMediaInput } from '@/components/admin/forms/xp/TitleMediaInput';
+import { AdminPageShell } from '@/features/admin/components/layout/AdminPageShell';
+import { TitleMediaInput } from '@/features/admin/components/forms/xp/TitleMediaInput';
 import { MediaAsset } from '@/components/media/MediaAsset';
 
 // Title types

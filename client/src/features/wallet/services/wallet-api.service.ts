@@ -9,6 +9,8 @@ export interface WalletBalance {
 	pendingDgt: number;
 }
 
+export type CryptoBalance = WalletBalance;
+
 export interface TransactionItem {
 	id: string;
 	type: string;
@@ -19,7 +21,11 @@ export interface TransactionItem {
 	metadata?: Record<string, any>;
 	createdAt: string;
 	updatedAt: string;
+	/** temp back-compat */
+	timestamp?: string;
 }
+
+export type Transaction = TransactionItem;
 
 export interface WalletConfig {
 	features: {
@@ -61,6 +67,10 @@ export class WalletApiService {
 		});
 	}
 
+	static async getBalance(): Promise<WalletBalance> {
+		return this.getBalances();
+	}
+
 	static async getTransactions(filters?: {
 		type?: string;
 		status?: string;
@@ -78,11 +88,23 @@ export class WalletApiService {
 		});
 	}
 
+	static async getTransactionHistory(): Promise<{ transactions: TransactionItem[]; total: number }> {
+		const transactions = await this.getTransactions();
+		return {
+			transactions,
+			total: transactions.length
+		};
+	}
+
 	static async getConfig(): Promise<WalletConfig> {
 		return apiRequest<WalletConfig>({
 			url: '/api/wallet/config',
 			method: 'GET'
 		});
+	}
+
+	static async getWalletConfig(): Promise<WalletConfig> {
+		return this.getConfig();
 	}
 
 	static async transferDgt(data: {
@@ -95,6 +117,45 @@ export class WalletApiService {
 			method: 'POST',
 			data
 		});
+	}
+
+	static async transferDgt(toUserId: UserId, amount: number, note?: string): Promise<void> {
+		return apiRequest<void>({
+			url: '/api/wallet/transfer-dgt',
+			method: 'POST',
+			data: { toUserId, amount, note }
+		});
+	}
+
+	static async createPurchaseOrder(data: {
+		cryptoAmount: number;
+		cryptoCurrency: string;
+	}): Promise<{
+		success: boolean;
+		orderId: string;
+		depositAddress: string;
+		dgtAmount: number;
+		message: string;
+	}> {
+		return apiRequest({
+			url: '/api/wallet/purchase-dgt',
+			method: 'POST',
+			data
+		});
+	}
+
+	// Instance wrapper for createPurchaseOrder (legacy API)
+	async createPurchaseOrder(data: { cryptoAmount: number; cryptoCurrency: string }) {
+		return WalletApiService.createPurchaseOrder(data);
+	}
+
+	// Legacy overload that accepts packageId string and returns depositUrl
+	async createPurchaseOrder(packageId: string) {
+		const result = await WalletApiService.createPurchaseOrder({
+			cryptoAmount: 0,
+			cryptoCurrency: 'USDT'
+		});
+		return { depositUrl: `/wallet/deposit/${result.orderId}` } as { depositUrl: string };
 	}
 
 	static async getDepositAddresses(): Promise<DepositAddress[]> {
@@ -120,6 +181,27 @@ export class WalletApiService {
 			url: '/api/wallet/withdraw',
 			method: 'POST',
 			data
+		});
+	}
+
+	// Legacy positional API used by WithdrawButton
+	static async requestWithdrawal(
+		amount: number,
+		currency: string,
+		address: string
+	): Promise<void>;
+	static async requestWithdrawal(
+		arg1: number | { amount: number; currency: string; address: string },
+		arg2?: string,
+		arg3?: string
+	): Promise<void> {
+		if (typeof arg1 === 'object') {
+			return apiRequest<void>({ url: '/api/wallet/withdraw', method: 'POST', data: arg1 });
+		}
+		return apiRequest<void>({
+			url: '/api/wallet/withdraw',
+			method: 'POST',
+			data: { amount: arg1, currency: arg2!, address: arg3! }
 		});
 	}
 }

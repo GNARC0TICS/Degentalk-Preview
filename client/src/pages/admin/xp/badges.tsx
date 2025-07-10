@@ -9,14 +9,14 @@ import { useDebounce } from '@/hooks/use-debounce';
 import { apiRequest } from '@/lib/queryClient';
 import { useCrudMutation } from '@/hooks/useCrudMutation';
 
-import { AdminPageShell } from '@/components/admin/layout/AdminPageShell';
-import { AdminDataTable } from '@/components/admin/common/AdminDataTable';
+import { AdminPageShell } from '@/features/admin/components/layout/AdminPageShell';
+import { AdminDataTable } from '@/features/admin/components/common/AdminDataTable';
 import {
 	BadgeFormDialogComponent,
 	DeleteBadgeConfirmationDialog,
 	getBadgeRarityDisplay
-} from '@/components/admin/forms/xp/BadgeFormDialogs';
-import type { Badge, BadgeFormData } from '@/components/admin/forms/xp/BadgeFormDialogs';
+} from '@/features/admin/components/forms/xp/BadgeFormDialogs';
+import type { Badge, BadgeFormData } from '@/features/admin/components/forms/xp/BadgeFormDialogs';
 
 interface PageBadge extends Badge {
 	createdAt: string;

@@ -5,24 +5,18 @@
  * It handles deposit confirmations, purchase fulfillment, and other events.
  */
 
-import { WalletService } from '../wallet/wallet.service';
-import { WebhookService } from '../wallet/webhook.service';
+// Wallet imports handled via singleton service below
 import { dgtPurchaseOrders, users, transactions } from '@schema';
 import { eq, and } from 'drizzle-orm';
-import { db } from '../../core/db';
-import { logger } from '../../core/logger'; // Corrected path
+import { db } from '@core/database';
+import { logger } from '@core/logger';
 import type { CCPaymentWebhookEvent } from '../wallet/ccpayment.service';
-import { dgtService } from '../wallet/dgt.service';
+import { walletService } from '../wallet/services/wallet.service';
 
 /**
  * CCPayment webhook service for processing webhook events
  */
 export class CCPaymentWebhookService {
-	private walletWebhookService: WebhookService;
-
-	constructor() {
-		this.walletWebhookService = new WebhookService();
-	}
 	/**
 	 * Process a webhook event from CCPayment
 	 * @param event Webhook event data
@@ -40,18 +34,7 @@ export class CCPaymentWebhookService {
 				currency: event.currency
 			});
 
-			// First try processing with the enhanced wallet webhook service
-			const walletResult = await this.walletWebhookService.processWebhookEvent(
-				event,
-				'signature_placeholder' // The signature is verified in the controller
-			);
-
-			// If wallet service handles it successfully, return
-			if (walletResult.success) {
-				return walletResult;
-			}
-
-			// Fallback to legacy DGT purchase processing
+			// Process the webhook event directly
 			switch (event.eventType) {
 				case 'deposit_completed':
 					return await this.handleDepositCompleted(event);
@@ -116,12 +99,14 @@ export class CCPaymentWebhookService {
 				};
 			}
 
-			// Update the purchase order status and fulfill it
-			await dgtService.fulfillDgtPurchase(purchaseOrder.id, 'confirmed', {
-				webhookEventId: event.orderId,
+			// Credit DGT to user for successful deposit
+			await walletService.creditDgt(purchaseOrder.userId, event.actualAmount, {
+				source: 'crypto_deposit',
+				reason: 'Cryptocurrency deposit conversion',
+				originalToken: event.coinSymbol,
+				usdtAmount: event.actualAmount,
 				txHash: event.txHash,
-				actualAmount: event.actualAmount,
-				processedAt: new Date().toISOString()
+				webhookEventId: event.orderId
 			});
 
 			return {
@@ -164,11 +149,11 @@ export class CCPaymentWebhookService {
 				};
 			}
 
-			// Mark the purchase order as failed
-			await dgtService.fulfillDgtPurchase(purchaseOrder.id, 'failed', {
+			// TODO: Mark the purchase order as failed in database
+			logger.warn('CCPaymentWebhook', 'Purchase order failed', {
+				orderId: purchaseOrder.id,
 				webhookEventId: event.orderId,
-				failureReason: event.status,
-				processedAt: new Date().toISOString()
+				failureReason: event.status
 			});
 
 			return {
@@ -333,13 +318,10 @@ export class CCPaymentWebhookService {
 					// Award welcome bonus DGT for new wallet
 					const welcomeAmount = 10; // 10 DGT welcome bonus
 
-					await dgtService.awardDGT(user.id, welcomeAmount, {
-						reason: 'WELCOME_BONUS',
-						metadata: {
-							source: 'ccpayment_webhook',
-							event: 'wallet_created',
-							webhookEventId: event.orderId
-						}
+					await walletService.creditDgt(user.id, welcomeAmount, {
+						source: 'welcome_bonus',
+						reason: 'Welcome bonus for new wallet',
+						webhookEventId: event.orderId
 					});
 
 					logger.info('Welcome bonus awarded for new wallet', {

@@ -1,6 +1,6 @@
 import { db } from '@db';
 import { notifications } from '@schema';
-import { logger } from '@server/src/core/logger';
+import { logger } from '@core/logger';
 import { eq, desc, and } from 'drizzle-orm';
 import type { InsertNotification } from '@schema';
 import type { EventLog } from '@schema';

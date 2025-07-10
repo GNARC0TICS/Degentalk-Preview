@@ -1,10 +1,10 @@
-import { userService } from '@server/src/core/services/user.service';
+import { userService } from '@core/services/user.service';
 import type { Request, Response, NextFunction } from 'express';
 import { logger, LogLevel } from '../../core/logger';
 import { featureGatesService } from './feature-gates.service';
 import { isValidId } from '@shared/utils/id';
 import type { UserId } from '@shared/types/ids';
-import { sendSuccessResponse, sendErrorResponse } from '@server/src/core/utils/transformer.helpers';
+import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
 /**
  * Get all feature gates

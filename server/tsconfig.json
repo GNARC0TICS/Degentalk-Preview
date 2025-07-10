@@ -1,10 +1,61 @@
 {
 	"extends": "../tsconfig.json",
+	"include": [
+		"**/*",
+		"../db/**/*",
+		"../shared/**/*",
+		"../scripts/migration/identify-numeric-ids.ts",
+		"../scripts/migration/check-ids-ci.ts"
+	],
+	"exclude": [
+		"../node_modules",
+		"build",
+		"dist",
+		"../client/**/*",
+		"**/*.bak.ts",
+		"**/*.bak.tsx",
+		"../UIVERSE",
+		"../archive/**/*",
+		"../shared/fixtures/**",
+		"../scripts/templates/**",
+        "../scripts/auth/auth-refactor.ts",
+        "../scripts/codemods/**",
+        "../scripts/wallet/**",
+        "../scripts/validate-*.ts",
+        "../scripts/ops/validate-safe-migrations.ts",
+        "../scripts/testing/validate-forum-fks.ts",
+        "../scripts/migration/cleanup-old-category-schema.ts",
+        "../scripts/migration/generate-id-aliases.ts",
+        "../scripts/migration/generate-uuid-audit.ts",
+		"test/**",
+		"tests/**",
+		"**/*.test.ts",
+		"**/*.spec.ts",
+		"utils/**",
+		"src/domains/_new-wallet/**"
+	],
 	"compilerOptions": {
-		"noEmit": true,
-		"tsBuildInfoFile": "./.tscache/.tsbuildinfo",
-		"types": ["node"]
-	},
-	"include": ["./**/*.ts"],
-	"exclude": ["node_modules", "dist", "**/*.test.ts", "**/*.spec.ts"]
+		"baseUrl": ".",
+		"paths": {
+			"@shared/types": ["../shared/types/index.ts"],
+			"@shared/types/ids": ["../shared/types/ids.ts"],
+			"@shared/*": ["../shared/*"],
+			"@server/*": ["src/*", "./*"],
+			"@server-core/*": ["src/core/*"],
+			"@core/*": ["src/core/*"],
+			"@server-utils/*": ["src/utils/*"],
+			"@server-middleware/*": ["src/middleware/*"],
+			"@db": ["../db/index.ts"],
+			"@db/schema": ["../db/schema/index.ts"],
+			"@schema": ["../db/schema/index.ts"],
+			"@schema/*": ["../db/schema/*"],
+			"@db_types/*": ["../db/types/*"],
+			"@db/types": ["../db/types/index.ts"],
+			"@db/types/*": ["../db/types/*"],
+			"@db/schema/core/enums": ["../db/schema/core/enums/index.ts"],
+			"@degentalk/db/types": ["../db/types/index.ts"],
+			"@lib/*": ["../lib/*"],
+			"@forum-sdk/*": ["../forum-sdk/*"]
+		}
+	}
 }

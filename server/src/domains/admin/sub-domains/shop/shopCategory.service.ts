@@ -1,5 +1,5 @@
 import { db } from '@db';
-import { shopCategories } from '@schema';
+import { productCategories as shopCategories } from '@schema';
 import { eq, desc, asc } from 'drizzle-orm';
 import { AdminError } from '../../admin.errors';
 import type { Id } from '@shared/types/ids';

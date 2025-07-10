@@ -1,6 +1,6 @@
 import type { Request, Response } from 'express';
 import { AdminPermissionsService } from './permissions.service';
-import { sendSuccessResponse, sendErrorResponse } from "@server/src/core/utils/transformer.helpers";
+import { sendSuccessResponse, sendErrorResponse } from "@core/utils/transformer.helpers";
 
 const service = new AdminPermissionsService();
 

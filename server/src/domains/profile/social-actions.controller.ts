@@ -1,9 +1,9 @@
-import { userService } from '@server/src/core/services/user.service';
+import { userService } from '@core/services/user.service';
 import type { Request, Response } from 'express';
 import { SocialActionsService } from './social-actions.service';
 import { handleControllerError } from '../../lib/error-handler';
 import { z } from 'zod';
-import { sendSuccessResponse, sendErrorResponse } from "@server/src/core/utils/transformer.helpers";
+import { sendSuccessResponse, sendErrorResponse } from "@core/utils/transformer.helpers";
 
 // Request validation schemas
 const FollowUserSchema = z.object({

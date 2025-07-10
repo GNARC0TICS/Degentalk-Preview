@@ -34,7 +34,7 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import { Trash2, Edit, Plus, Eye, Users as UsersIcon } from 'lucide-react';
 import { FramedAvatar } from '@/components/users/framed-avatar';
-import { GrantFrameModal } from '@/components/admin/GrantFrameModal';
+import { GrantFrameModal } from '@/features/admin/components/GrantFrameModal';
 import type { AvatarFrame } from '@/types/compat/avatar';
 import type { FrameId } from '@shared/types/ids';
 

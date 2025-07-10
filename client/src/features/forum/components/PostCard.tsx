@@ -24,7 +24,7 @@ import { SignatureRenderer } from '@/components/forum/SignatureRenderer';
 import { useAuth } from '@/hooks/use-auth';
 import { ButtonTooltip } from '@/components/ui/tooltip-utils';
 import { ModeratorActions } from '@/components/forum/ModeratorActions';
-import TipButton from '@/components/economy/wallet/tip-button';
+import TipButton from '@/features/wallet/components/tip-button';
 import { cn } from '@/lib/utils';
 import { useBreakpoint } from '@/hooks/useMediaQuery';
 import { getAdaptiveConfig } from '@/utils/adaptiveSpacing';

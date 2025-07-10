@@ -5,9 +5,9 @@
  * Implements security restrictions and query analysis to prevent dangerous operations.
  */
 
-import { db } from '@server/src/core/db';
+import { db } from '@core/db';
 import type { UserId } from '@shared/types/ids';
-import { logger } from '@server/src/core/logger';
+import { logger } from '@core/logger';
 import { sql } from 'drizzle-orm';
 
 // Dangerous SQL keywords that are completely forbidden

@@ -5,7 +5,7 @@ import { EventLogFilters } from '@/features/activity/services/activityApi';
 import { format } from 'date-fns';
 import { useAuth } from '@/hooks/use-auth';
 import { Link } from 'wouter';
-import { AdminPageShell } from '@/components/admin/layout/AdminPageShell';
+import { AdminPageShell } from '@/features/admin/components/layout/AdminPageShell';
 import { Wide } from '@/layout/primitives';
 
 /**

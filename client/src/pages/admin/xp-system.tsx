@@ -19,14 +19,14 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { apiRequest } from '@/lib/queryClient';
 
-import { AdminPageShell } from '@/components/admin/layout/AdminPageShell';
-import { AdminDataTable } from '@/components/admin/common/AdminDataTable';
+import { AdminPageShell } from '@/features/admin/components/layout/AdminPageShell';
+import { AdminDataTable } from '@/features/admin/components/common/AdminDataTable';
 import {
 	LevelFormDialogComponent,
 	DeleteLevelConfirmationDialog
-} from '@/components/admin/forms/xp/LevelFormDialogs';
-import type { Level, LevelFormData } from '@/components/admin/forms/xp/LevelFormDialogs';
-import ProtectedAdminRoute from '@/components/admin/protected-admin-route';
+} from '@/features/admin/components/forms/xp/LevelFormDialogs';
+import type { Level, LevelFormData } from '@/features/admin/components/forms/xp/LevelFormDialogs';
+import ProtectedAdminRoute from '@/features/admin/components/protected-admin-route';
 import { useAdminModule } from '@/hooks/use-admin-modules';
 import { useXpActions, useUpdateXpAction } from '@/features/admin/services/xpActionsService';
 import {

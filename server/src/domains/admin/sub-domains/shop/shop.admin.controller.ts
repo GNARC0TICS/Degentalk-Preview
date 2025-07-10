@@ -1,9 +1,9 @@
 import { db } from '@db'; // Adjust path to your db instance
 import { products } from '@schema'; // Adjust path to your schema
 import { eq, desc, and } from 'drizzle-orm';
-import { ShopTransformer } from '../../transformers/shop.transformer';
+import { ShopTransformer } from '@server/domains/shop/transformers/shop.transformer';
 import { logger } from '../../../../core/logger';
-import { sendSuccessResponse, sendErrorResponse } from "@server/src/core/utils/transformer.helpers";
+import { sendSuccessResponse, sendErrorResponse } from "@core/utils/transformer.helpers";
 
 export const shopAdminController = {
 	// List all products

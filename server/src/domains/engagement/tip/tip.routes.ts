@@ -8,9 +8,9 @@
 
 import express from 'express';
 import { tipController } from './tip.controller';
-import { isAuthenticated as requireAuth } from '../../auth/middleware/auth.middleware';
-import { isAdmin as requireAdmin } from '../../auth/middleware/auth.middleware';
-import { validateRequest } from '../../../domains/wallet/wallet.validators';
+import { isAuthenticated as requireAuth } from '@server/domains/auth/middleware/auth.middleware';
+import { isAdmin as requireAdmin } from '@server/domains/auth/middleware/auth.middleware';
+import { validateRequest } from '@server-middleware/validate-request';
 import { z } from 'zod';
 
 // Create the router

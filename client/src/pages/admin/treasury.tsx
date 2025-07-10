@@ -25,7 +25,7 @@ import {
 	TableRow
 } from '@/components/ui/table';
 import type { Transaction } from '@/types/wallet';
-import { AdminPageShell } from '@/components/admin/layout/AdminPageShell';
+import { AdminPageShell } from '@/features/admin/components/layout/AdminPageShell';
 import type { SettingId, WalletId, UserId } from '@shared/types/ids';
 
 type TreasurySetting = {

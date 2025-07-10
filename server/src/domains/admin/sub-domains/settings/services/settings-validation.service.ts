@@ -5,7 +5,7 @@
  * Focused on data integrity, business rules, and constraint validation
  */
 
-import { logger } from '@server/src/core/logger';
+import { logger } from '@core/logger';
 import { AdminError, AdminErrorCodes } from '../../../admin.errors';
 import { settingsQueryService } from './settings-query.service';
 import type { CreateSettingInput, UpdateSettingMetadataInput } from '../settings.validators';

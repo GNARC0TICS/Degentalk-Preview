@@ -15,7 +15,7 @@ This repository is protected by an **advanced boundary enforcement system** that
 ### 🚨 **Breaking the Rules?**
 
 - **PRs will be automatically rejected** if they violate boundaries
-- Run `npm run validate-everything:fix` to fix issues locally
+- Run `pnpm format` and `pnpm lint --fix` to fix issues locally
 - See `CONTRIBUTING.md` for the complete rule system
 
 # Degentalk - Next-Generation Crypto Forum Platform
@@ -57,7 +57,7 @@ Degentalk is a modern, highly satirical crypto forum platform designed for gambl
 cp env.local.example env.local  # Edit with your database credentials
 
 # 2. Start development with enhanced dev environment
-npm run dev:seed                # Full stack with dev user and wallet data
+pnpm run dev:seed                # Full stack with dev user and wallet data
 
 # 3. Optional: Load with SuperClaude
 sc /user:load --depth deep --plan
@@ -163,16 +163,14 @@ For the best development experience, set up the enhanced admin user:
 > • **Username:** `cryptoadmin`  
 > • **Password:** `password123`
 >
-> These credentials are seeded by `npm run seed:dev-complete` and work in both the `/auth` page and API requests.
+> These credentials are seeded by `pnpm run seed:all` and work in both the `/auth` page and API requests.
 
 ```bash
 # Complete dev user setup (recommended for first-time setup)
-npm run seed:dev-complete
+pnpm run seed:all
 
-# Individual components
-npm run seed:users              # Basic users including cryptoadmin
-npm run seed:dev-wallet         # Wallet with crypto balances
-npm run seed:dev-subscriptions  # VIP subscription data
+# You can also run individual seed scripts, for example:
+pnpm run seed:users              # Basic users including cryptoadmin
 ```
 
 This creates a realistic development environment where you can:
@@ -199,11 +197,11 @@ If you need to manually clear ports:
 
 ```bash
 # Clear both development ports
-npm run kill-ports
+pnpm run kill-ports
 
 # Clear specific ports
-npm run kill-port:5001  # Backend
-npm run kill-port:5173  # Frontend
+pnpm run kill-port:5001  # Backend
+pnpm run kill-port:5173  # Frontend
 ```
 
 ### Development Features
@@ -231,45 +229,31 @@ Clear startup logs show which services are starting:
 
 #### Development
 
-- `npm run dev` - Start both frontend and backend
-- `npm run dev:seed` - Start with full database seeding
-- `npm run dev:quick` - Start without seeding (faster)
-- `npm run dev:frontend` - Frontend only (Vite dev server)
-- `npm run dev:backend` - Backend only (tsx with hot reload)
+- `pnpm run dev` - Start both frontend and backend
+- `pnpm run dev:seed` - Start with full database seeding
+- `pnpm run dev:quick` - Start without seeding (faster)
+- `pnpm run dev:client` - Frontend only (Vite dev server)
+- `pnpm run dev:server` - Backend only (tsx with hot reload)
 
 #### Database Management
 
-- `npm run db:migrate` - Generate new migrations
-- `npm run db:migrate:apply` - Apply migrations to database
-- `npm run db:studio` - Open Drizzle Studio (database GUI)
-- `npm run db:drop` - Drop all database tables
-
-#### Database Synchronization (Neon)
-
-- `npm run spawn -- --task neon-sync-agent --env dev --watch` - Start Neon sync agent with file watching
-- `npm run migration:validate [env]` - Validate migration safety (dev/staging/prod)
-- `npm run migration:template <name>` - Generate safe migration template
-- `npm run sync:forums` - Sync forum configuration to database
-
-See `NEON-SYNC.md` for detailed information about the database synchronization system.
+- `pnpm run db:migrate` - Generate new migrations
+- `pnpm run db:migrate:apply` - Apply migrations to database
+- `pnpm run db:studio` - Open Drizzle Studio (database GUI)
+- `pnpm run db:drop` - Drop all database tables
 
 #### Seeding
 
-- `npm run seed:all` - Run all seed scripts
-- `npm run seed:forum` - Seed forum structure
-- `npm run seed:threads` - Seed example threads
-- `npm run seed:dev-complete` - **Enhanced dev user setup** (admin + wallet + VIP)
-- `npm run seed:dev-wallet` - Seed wallet balances for dev user
-- `npm run seed:dev-subscriptions` - Seed VIP subscription data
-- `npm run seed:xp` - Seed XP system data
-- `npm run seed:levels` - Seed user levels
-- `npm run seed:economy` - Seed economy settings
+- `pnpm run seed:all` - Run all seed scripts
+- `pnpm run seed:forums:only` - Seed forum structure
+- `pnpm run seed:users` - Seed users including the admin
+- `pnpm run sync:forums` - Sync forum configuration from `forumMap.config.ts` to the database
 
 #### Production
 
-- `npm run build` - **Builds the client only.** The server now runs directly via `tsx`, so no TypeScript compile step is necessary.
-- `npm run start` - Starts the backend with `tsx` (hot-reload disabled) and serves the pre-built client assets.
-- `npm run preview` - Preview the client build locally
+- `pnpm run build` - **Builds the client only.** The server now runs directly via `tsx`, so no TypeScript compile step is necessary.
+- `pnpm run start` - Starts the backend with `tsx` (hot-reload disabled) and serves the pre-built client assets.
+- `pnpm run preview` - Preview the client build locally
 
 > **Why no server build?** We temporarily disabled `tsc` during the build step to unblock deployments while large type-safety refactors are in progress. Server/package.json has:
 >
@@ -279,13 +263,13 @@ See `NEON-SYNC.md` for detailed information about the database synchronization s
 > ```
 >
 > • `tsx` transpiles TypeScript on-the-fly at runtime.  
-> • Use `npm run lint:types` (server only) or `npm run check` (root) in CI to surface type errors without blocking the build.
+> • Use `pnpm run typecheck` in CI to surface type errors without blocking the build.
 
 #### Utilities
 
-- `npm run check` - TypeScript type checking
-- `npm run lint` - ESLint code checking
-- `npm run generate:tree` - Generate directory tree documentation
+- `pnpm run typecheck` - TypeScript type checking
+- `pnpm run lint` - ESLint code checking
+- `pnpm run generate:tree` - Generate directory tree documentation
 
 ## 🏗️ Architecture
 
@@ -320,8 +304,8 @@ See `NEON-SYNC.md` for detailed information about the database synchronization s
 │   └── validators/       # Shared Zod validators
 ├── scripts/              # Build, deployment, and utility scripts
 ├── db/                   # Database-related files
-│   └── schema/           # Drizzle ORM schema definitions (organized by domain)
-├── migrations/           # Database migration files (managed by Drizzle Kit)
+│   ├── schema/           # Drizzle ORM schema definitions (organized by domain)
+│   └── migrations/       # Database migration files (managed by Drizzle Kit)
 └── public/               # Static assets served by the client
 ```
 
@@ -421,17 +405,17 @@ STRIPE_SECRET_KEY=your_stripe_key
 
    ```bash
    # Reset database
-   npm run db:drop
-   npm run db:migrate:apply
-   npm run seed:all
+   pnpm run db:drop
+   pnpm run db:migrate:apply
+   pnpm run seed:all
    ```
 
 3. **Module Not Found**
 
    ```bash
    # Clear node_modules and reinstall
-   rm -rf node_modules package-lock.json
-   npm install
+   rm -rf node_modules
+   pnpm install --force
    ```
 
 4. **TSX Watch Issues**
@@ -440,13 +424,13 @@ STRIPE_SECRET_KEY=your_stripe_key
 
 ### 🔥 **Critical: NPM Script Infinite Loop Recovery**
 
-If you encounter `npm run dev` spawning infinite processes or your system becomes unresponsive:
+If you encounter `pnpm run dev` spawning infinite processes or your system becomes unresponsive:
 
 #### **Emergency Stop:**
 
 ```bash
-# Kill all npm processes immediately
-pkill -f "npm run dev"
+# Kill all pnpm processes immediately
+pkill -f "pnpm run dev"
 
 # Kill all node processes (CAUTION: This will kill ALL Node.js processes)
 killall node
@@ -475,7 +459,7 @@ kill -9 <PID>
 
 #### **Prevention:**
 
-- Never create self-referencing npm scripts
+- Never create self-referencing pnpm scripts
 - Always use direct commands instead of script delegation when possible
 - Verify subdirectories have package.json files before delegating to them
 
@@ -516,13 +500,13 @@ To incentivize user participation, the platform awards Experience Points (XP) an
 
 1.  A user creates a new thread through the client application.
 2.  Upon successful thread creation, the client makes a `POST` request to `/api/xp/award-action`.
-    - **Payload**: `{ userId: number, action: 'create_thread', entityId: number (threadId) }`
-    - **Backend Logic**: The XP service (`server/src/domains/xp/xp.service.ts` using `server/src/domains/xp/events/xp.events.ts`) looks up `xpActionSettings` for `'create_thread'`, awards the `baseValue` XP to the user, updates their total XP and level (if applicable), and logs the adjustment in `xpAdjustmentLogs`.
-    - **Response**: `{ xpAwarded: number, newTotalXp: number, leveledUp: boolean, currentLevel: number }`
-3.  The client then (or in parallel) makes a `POST` request to `/api/wallet/transactions/create` (actual path for DGT rewards, routed via `server/src/domains/wallet/wallet.routes.ts`).
-    - **Payload**: `{ userId: number, currency: 'DGT', amount: number (determined by backend config, e.g., DGT_REWARD_CREATE_THREAD), type: 'reward', reason: string, relatedEntityId: number (threadId), context: 'create_thread' }`
-    - **Backend Logic**: The DGT service (`server/src/domains/wallet/dgt.service.ts`) credits the user's DGT wallet balance (stored on the `users` table as `dgtWalletBalance`), and logs the transaction in the `transactions` table.
-    - **Response**: `{ dgtAwarded: number, newBalance: string }`
+- **Payload**: `{ userId: string, action: 'create_thread', entityId: string (threadId) }`
+- **Backend Logic**: The XP service (`server/src/domains/xp/xp.service.ts` using `server/src/domains/xp/events/xp.events.ts`) looks up `xpActionSettings` for `'create_thread'`, awards the `baseValue` XP to the user, updates their total XP and level (if applicable), and logs the adjustment in `xpAdjustmentLogs`.
+- **Response**: `{ xpAwarded: number, newTotalXp: number, leveledUp: boolean, currentLevel: number }`
+3.  The client then (or in parallel) makes a `POST` request to `/api/wallet/transactions/create` (actual path for DGT rewards, routed via `server/src/domains/wallet/routes/wallet.routes.ts`).
+- **Payload**: `{ userId: string, currency: 'DGT', amount: number (determined by backend config, e.g., DGT_REWARD_CREATE_THREAD), type: 'reward', reason: string, relatedEntityId: string (threadId), context: 'create_thread' }`
+- **Backend Logic**: The DGT service (`server/src/domains/wallet/services/dgt.service.ts`) credits the user's DGT wallet balance (stored on the `users` table as `dgtWalletBalance`), and logs the transaction in the `transactions` table.
+- **Response**: `{ dgtAwarded: number, newBalance: string }`
 4.  The client displays toasts to inform the user of the XP and DGT awarded.
 
 **Key Backend Components & Endpoints:**
@@ -539,9 +523,9 @@ To incentivize user participation, the platform awards Experience Points (XP) an
   - **Transfers**: `POST /api/wallet/transfer-dgt` - User-to-user DGT transfers with validation
   - **Transactions**: `GET /api/wallet/transactions` - Complete transaction history with DGT-specific types
   - **Configuration**: `GET /api/wallet/config` - Admin-configurable feature gates and limits
-  - **Withdrawals**: `POST /api/wallet/withdraw` - Crypto withdrawal requests (feature-gated)
-  - Core Logic: `server/src/domains/wallet/` with CCPayment v2 integration, automatic deposit processing, and comprehensive transaction management
-  - Frontend: `client/src/features/wallet/` with real-time updates, pending state management, and feature gate integration
+- **Withdrawals**: `POST /api/wallet/withdraw` - Crypto withdrawal requests (feature-gated)
+- Core Logic: `server/src/domains/wallet/` with CCPayment v2 integration, automatic deposit processing, and comprehensive transaction management
+- Frontend: `client/src/features/wallet/` with real-time updates, pending state management, and feature gate integration
 
 **Configuration:**
 
@@ -634,15 +618,15 @@ Complete API documentation is available in the `/docs/api/` directory:
 
    ```bash
    # Install dependencies
-   npm install
+   pnpm install
 
    # Set up database
-   npm run db:migrate
-   npm run db:migrate:apply
-   npm run seed:all
+   pnpm run db:migrate
+   pnpm run db:migrate:apply
+   pnpm run seed:all
 
    # Start development
-   npm run dev
+   pnpm run dev
    ```
 
 ### Development Workflow
@@ -654,7 +638,7 @@ Complete API documentation is available in the `/docs/api/` directory:
    git checkout -b feature/new-feature
 
    # Start development servers
-   npm run dev
+   pnpm run dev
 
    # Make changes with hot reload
    # Test with role switcher (bottom-right)
@@ -666,29 +650,23 @@ Complete API documentation is available in the `/docs/api/` directory:
    # Modify schema files in db/schema/
 
    # Generate migration
-   npm run db:migrate
+   pnpm run db:migrate
 
    # Apply to development database
-   npm run db:migrate:apply
+   pnpm run db:migrate:apply
 
    # Update seed data if needed
-   npm run seed:all
+   pnpm run seed:all
    ```
 
 3. **Testing & Validation**
 
    ```bash
    # Type checking
-   npm run check
+   pnpm run typecheck
 
    # Linting
-   npm run lint
-
-   # Test XP system
-   npm run test:xp
-
-   # Test forum endpoints
-   npm run test:forum-endpoints
+   pnpm run lint
    ```
 
 ### Mobile Development
@@ -720,10 +698,10 @@ Test mobile responsiveness:
 
    ```bash
    # Build frontend (backend uses tsx runtime)
-   npm run build
+   pnpm run build
 
    # Verify build
-   npm run preview
+   pnpm run preview
    ```
 
 2. **Environment Variables**
@@ -746,17 +724,14 @@ Test mobile responsiveness:
 
    ```bash
    # Apply migrations to production
-   npm run db:migrate:apply
-
-   # Verify database health
-   npm run db:validate
+   pnpm run db:migrate:apply
    ```
 
 4. **Start Production Server**
 
    ```bash
    # Start with PM2 for process management
-   npm run start
+   pnpm run start
 
    # Or with PM2 cluster mode
    pm2 start ecosystem.config.js
@@ -777,12 +752,6 @@ Test mobile responsiveness:
 ```bash
 # Check system health
 curl http://localhost:5001/api/health
-
-# Monitor database connections
-npm run db:status
-
-# Check cache hit rates
-curl http://localhost:5001/api/admin/cache/status
 ```
 
 ### Key Metrics
@@ -828,7 +797,7 @@ Access the admin dashboard at `/admin` with appropriate permissions:
 1. Fork the repository
 2. Create a feature branch: `git checkout -b feature/amazing-feature`
 3. Follow the development workflow above
-4. Ensure all tests pass: `npm run test`
+4. Ensure all tests pass: `pnpm run test`
 5. Submit a pull request with detailed description
 
 ### Code Standards

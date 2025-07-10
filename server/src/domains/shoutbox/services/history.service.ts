@@ -13,7 +13,7 @@ import type { UserId } from '@shared/types/ids';
 import { db } from '@db';
 import { shoutboxMessages, shoutboxConfig, chatRooms, users, shoutboxAnalytics } from '@schema';
 import { eq, and, or, desc, asc, sql, gt, lt, gte, lte, isNull, inArray, not } from 'drizzle-orm';
-import { logger } from '@server/src/core/logger';
+import { logger } from '@core/logger';
 import { createWriteStream } from 'fs';
 import { pipeline } from 'stream/promises';
 import { Transform } from 'stream';

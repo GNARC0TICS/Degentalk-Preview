@@ -2,16 +2,16 @@ import React from 'react';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
 import { Table, TableHeader, TableRow, TableHead, TableBody } from '@/components/ui/table';
 import { RefreshCw, ToggleLeft } from 'lucide-react';
-import ProtectedAdminRoute from '@/components/admin/protected-admin-route';
+import ProtectedAdminRoute from '@/features/admin/components/protected-admin-route';
 import { useAdminModule } from '@/hooks/use-admin-modules';
-import { VisualJsonTabs } from '@/components/admin/VisualJsonTabs';
+import { VisualJsonTabs } from '@/features/admin/components/VisualJsonTabs';
 import { useJsonConfig } from '@/hooks/useJsonConfig';
 import {
 	featureFlagsSchema,
 	type FeatureFlags,
 	type FeatureFlag
 } from '@/schemas/featureFlags.schema';
-import { SwitchRow } from '@/components/admin/form-controls';
+import { SwitchRow } from '@/features/admin/components/form-controls';
 import { Slider } from '@/components/ui/slider';
 import { Input } from '@/components/ui/input';
 

@@ -8,7 +8,7 @@
 import NodeCache from 'node-cache';
 import { AdminError, AdminErrorCodes } from '../admin.errors';
 import type { EntityId } from '@shared/types/ids';
-import { logger } from '../../../../core/logger';
+import { logger } from '@core/logger';
 
 export interface CacheConfig {
 	defaultTTL: number; // Time to live in seconds

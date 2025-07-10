@@ -25,13 +25,22 @@ module.exports = {
     sourceType: 'module',
     project: ['tsconfig.eslint.json'],
   },
-  plugins: ['@typescript-eslint', 'degen', 'react-hooks'],
+  plugins: ['@typescript-eslint', 'react-hooks'],
   extends: [
     'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
     'plugin:react-hooks/recommended',
   ],
   overrides: [
+    {
+      files: ['*.cjs'],
+      env: {
+        node: true,
+      },
+      parserOptions: {
+        sourceType: 'script',
+      },
+    },
     {
       files: ['client/src/**/*.{ts,tsx}'],
       rules: {
@@ -133,6 +142,7 @@ module.exports = {
     'degen/no-direct-req-user': 'error',
     'degen/no-number-id': 'warn',
     'degen/no-missing-branded-id-import': 'error',
+    'degen/no-cross-domain-imports': 'warn',
     '@typescript-eslint/ban-types': 'warn',
     'react-hooks/rules-of-hooks': 'warn',
     'no-useless-catch': 'warn',
@@ -145,4 +155,4 @@ module.exports = {
     'prefer-const': 'warn',
     'no-constant-condition': 'warn',
   },
-}; 
+};

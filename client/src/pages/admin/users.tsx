@@ -27,18 +27,18 @@ import {
 	Package
 } from 'lucide-react';
 
-import { AdminPageShell } from '@/components/admin/layout/AdminPageShell';
-import { AdminDataTable } from '@/components/admin/common/AdminDataTable';
-import type { AdminDataTableProps } from '@/components/admin/common/AdminDataTable';
-import { EntityFilters } from '@/components/admin/layout/EntityFilters';
-import type { FilterConfig, FilterValue } from '@/components/admin/layout/EntityFilters'; // Type-only imports
-import UserFormDialog from '@/components/admin/forms/users/UserFormDialog';
+import { AdminPageShell } from '@/features/admin/components/layout/AdminPageShell';
+import { AdminDataTable } from '@/features/admin/components/common/AdminDataTable';
+import type { AdminDataTableProps } from '@/features/admin/components/common/AdminDataTable';
+import { EntityFilters } from '@/features/admin/components/layout/EntityFilters';
+import type { FilterConfig, FilterValue } from '@/features/admin/components/layout/EntityFilters'; // Type-only imports
+import UserFormDialog from '@/features/admin/components/forms/users/UserFormDialog';
 import {
 	BanUserDialog,
 	UnbanUserDialog,
 	DeleteUserDialog,
 	ChangeUserRoleDialog
-} from '@/components/admin/forms/users/UserActionDialogs';
+} from '@/features/admin/components/forms/users/UserActionDialogs';
 import { ROUTES } from '@/constants/routes';
 
 // Define user type for type safety

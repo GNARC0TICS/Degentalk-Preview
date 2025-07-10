@@ -6,7 +6,7 @@
  */
 
 import { db } from '@db';
-import { logger } from '@server/src/core/logger';
+import { logger } from '@core/logger';
 import { forumStructure, threads, posts, users as usersTable } from '@schema';
 import { sql, desc, eq, count, isNull } from 'drizzle-orm';
 import type { ForumCategoryWithStats } from '../../../../db/types/forum.types';

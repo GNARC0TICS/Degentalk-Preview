@@ -4,7 +4,7 @@ import type { EventLog, EventLogFilters } from '@/features/activity/services/act
 import { format } from 'date-fns';
 // TODO: Replace with actual auth hook when available
 // import { useAuth } from '@/hooks/use-auth';
-import { AdminPageShell } from '@/components/admin/layout/AdminPageShell';
+import { AdminPageShell } from '@/features/admin/components/layout/AdminPageShell';
 import { Wide } from '@/layout/primitives';
 
 /**

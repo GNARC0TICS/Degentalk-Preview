@@ -18,7 +18,7 @@ import {
 } from '@schema';
 import { eq, desc } from 'drizzle-orm';
 import { logger } from '../../../core/logger';
-import { dgtService } from '../../wallet/dgt.service';
+import { walletService } from '../../wallet/services/wallet.service';
 import { PgTransaction } from 'drizzle-orm/pg-core';
 import type { UserId } from '@shared/types/ids';
 
@@ -164,14 +164,13 @@ export async function handleLevelUp(
 		if (levelData[0].rewardDgt && levelData[0].rewardDgt > 0) {
 			rewards.dgt = levelData[0].rewardDgt;
 
-			// Award DGT to user wallet using dgtService
-			await dgtService.addDgt(
+			// Award DGT to user wallet using walletService
+			await walletService.creditDgt(
 				userId,
-				BigInt(levelData[0].rewardDgt), // Ensure amount is BigInt
-				'REWARD', // DgtTransactionType
+				levelData[0].rewardDgt,
 				{
-					reason: 'level_up_reward',
-					source: `level:${newLevel}`,
+					source: 'level_up_reward',
+					reason: `Level ${newLevel} reward`,
 					levelAchieved: newLevel
 				}
 			);

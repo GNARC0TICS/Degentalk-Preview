@@ -3,7 +3,7 @@ import { Link } from 'wouter';
 import { cn } from '@/lib/utils';
 import { AvatarFrame } from '@/components/identity/AvatarFrame';
 import { UserName } from '@/components/users/Username';
-import { LevelBadge } from '@/components/economy/xp/LevelBadge';
+import { LevelBadge } from '@/features/gamification/components/LevelBadge';
 import { useIdentityDisplay } from '@/hooks/useIdentityDisplay';
 import type { User } from '@shared/types/core/user.types';
 

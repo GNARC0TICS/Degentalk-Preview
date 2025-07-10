@@ -21,9 +21,7 @@ import {
 import { eq, and, gt, sql, desc, inArray } from 'drizzle-orm';
 import { logger } from '../../../core/logger';
 import { WalletError, ErrorCodes as WalletErrorCodes } from '../../../core/errors';
-import { dgtService } from '../../../domains/wallet/dgt.service';
-import { walletService } from '../../../domains/wallet/wallet.service';
-import { WalletService } from '../../wallet/wallet.service';
+import { walletService } from '../../wallet/services/wallet.service';
 import { vanitySinkAnalyzer } from '../../shop/services/vanity-sink.analyzer';
 import type { ActionId } from '@shared/types/ids';
 
@@ -36,11 +34,6 @@ const MAX_RECIPIENTS = 15; // Maximum number of recipients
  * Service for handling "rain" functionality (distributing tokens to random active users)
  */
 export class RainService {
-	private walletService: WalletService;
-
-	constructor() {
-		this.walletService = new WalletService();
-	}
 
 	/**
 	 * Process a rain distribution to random active users
@@ -297,10 +290,16 @@ export class RainService {
 	): Promise<void> {
 		// Process rain for each recipient individually
 		for (const recipientId of recipientIds) {
-			// Use dgtService to handle the transfer
-			await dgtService.transferDgt(senderUserId, recipientId, BigInt(perUserAmount), 'RAIN', {
-				parentTransactionId: transactionId,
-				isRain: true
+			// Use walletService to handle the transfer
+			await walletService.transferDgt({
+				from: senderUserId,
+				to: recipientId,
+				amount: perUserAmount,
+				reason: `Rain distribution`,
+				metadata: {
+					parentTransactionId: transactionId,
+					isRain: true
+				}
 			});
 		}
 	}

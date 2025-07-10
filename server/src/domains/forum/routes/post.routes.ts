@@ -1,228 +1,64 @@
-import { userService } from '@server/src/core/services/user.service';
 /**
  * Post Routes
- *
- * QUALITY IMPROVEMENT: Extracted from forum.routes.ts god object
- * Handles post-specific API endpoints with proper separation of concerns
+ * Handles all post-specific API endpoints.
  */
 
 import { Router } from 'express';
-import type { Request, Response } from 'express';
-import { z } from 'zod';
-import { isAuthenticated as requireAuth } from '../../auth/middleware/auth.middleware';
-import { postService } from '../services/post.service';
-import { logger } from '@server/src/core/logger';
+import { isAuthenticated } from '../../auth/middleware/auth.middleware';
 import {
 	requirePostEditPermission,
 	requirePostDeletePermission
 } from '../services/permissions.service';
-import { asyncHandler } from '@server/src/core/errors';
-import type { PostId } from '@shared/types/ids';
-import { ForumTransformer } from '../transformers/forum.transformer';
-import { 
-	sendSuccessResponse,
-	sendErrorResponse
-} from '@server/src/core/utils/transformer.helpers';
+import { postController } from '../controllers/post.controller';
+import { postValidation } from '../validation/post.validation';
+import { validateRequest } from '@server-middleware/validate-request';
+import { asyncHandler } from '@core/errors';
 
 const router = Router();
 
-// Validation schemas
-const createPostSchema = z.object({
-	threadId: z.string().uuid('Invalid threadId format'),
-	content: z.string().min(1),
-	replyToPostId: z.string().uuid('Invalid postId format').optional().nullable(),
-	editorState: z.any().optional()
-});
-
-const updatePostSchema = z.object({
-	content: z.string().min(1),
-	editorState: z.any().optional(),
-	editReason: z.string().optional()
-});
-
-const postReactionSchema = z.object({
-	reactionType: z.enum(['like', 'dislike'])
-});
-
-const tipPostSchema = z.object({
-	amount: z.number().positive().min(0.000001)
-});
-
-// Create new post (reply)
-router.post(
-	'/',
-	requireAuth,
-	asyncHandler(async (req: Request, res: Response) => {
-		try {
-			const validatedData = createPostSchema.parse(req.body);
-			const userId = (userService.getUserFromRequest(req) as any)?.id;
-
-			if (!userId) {
-				return sendErrorResponse(res, 'User not authenticated', 401);
-			}
-
-			const newPost = await postService.createPost({
-				content: validatedData.content,
-				threadId: validatedData.threadId,
-				userId: userId,
-				replyToPostId: validatedData.replyToPostId
-			});
-
-			// Transform post response using ForumTransformer for authenticated user
-			const requestingUser = userService.getUserFromRequest(req);
-			const transformedPost = ForumTransformer.toAuthenticatedPost(newPost, requestingUser);
-
-			res.status(201);
-			sendSuccessResponse(res, transformedPost);
-		} catch (error) {
-			logger.error('PostRoutes', 'Error in POST /posts', { error });
-
-			if (error instanceof z.ZodError) {
-				return sendErrorResponse(res, 'Invalid input data', 400);
-			}
-
-			return sendErrorResponse(res, 'Failed to create post', 500);
-		}
-	})
-);
-
-// Update post
-router.put(
-	'/:id',
-	requireAuth,
-	requirePostEditPermission,
-	asyncHandler(async (req: Request, res: Response) => {
-		try {
-			const postId = req.params.id as PostId;
-			const validatedData = updatePostSchema.parse(req.body);
-			const userId = (userService.getUserFromRequest(req) as any)?.id;
-
-			const updatedPost = await postService.updatePost(postId, {
-				content: validatedData.content
-			});
-
-			// Transform post response using ForumTransformer for authenticated user
-			const requestingUser = userService.getUserFromRequest(req);
-			const transformedPost = ForumTransformer.toAuthenticatedPost(updatedPost, requestingUser);
-
-			sendSuccessResponse(res, transformedPost);
-		} catch (error) {
-			logger.error('PostRoutes', 'Error in PUT /posts/:id', { error });
-
-			if (error instanceof z.ZodError) {
-				return sendErrorResponse(res, 'Invalid input data', 400);
-			}
-
-			return sendErrorResponse(res, 'Failed to update post', 500);
-		}
-	})
-);
-
-// Delete post
-router.delete(
-	'/:id',
-	requireAuth,
-	requirePostDeletePermission,
-	asyncHandler(async (req: Request, res: Response) => {
-		try {
-			const postId = req.params.id as PostId;
-			const userId = (userService.getUserFromRequest(req) as any)?.id;
-
-			await postService.deletePost(postId);
-
-			sendSuccessResponse(res, null, 'Post deleted successfully');
-		} catch (error) {
-			logger.error('PostRoutes', 'Error in DELETE /posts/:id', { error });
-			return sendErrorResponse(res, 'Failed to delete post', 500);
-		}
-	})
-);
-
-// React to post (like/dislike)
-router.post(
-	'/:postId/react',
-	requireAuth,
-	asyncHandler(async (req: Request, res: Response) => {
-		try {
-			const postId = req.params.postId as PostId;
-			const validatedData = postReactionSchema.parse(req.body);
-			const userId = (userService.getUserFromRequest(req) as any)?.id;
-
-			if (!userId) {
-				return sendErrorResponse(res, 'User not authenticated', 401);
-			}
-
-			if (validatedData.reactionType === 'like') {
-				await postService.likePost(postId, userId);
-			} else {
-				await postService.unlikePost(postId, userId);
-			}
-
-			sendSuccessResponse(res, null, 'Reaction updated successfully');
-		} catch (error) {
-			logger.error('PostRoutes', 'Error in POST /posts/:postId/react', { error });
-
-			if (error instanceof z.ZodError) {
-				return sendErrorResponse(res, 'Invalid input data', 400);
-			}
-
-			return sendErrorResponse(res, 'Failed to update reaction', 500);
-		}
-	})
-);
-
-// Tip post
-router.post(
-	'/:postId/tip',
-	requireAuth,
-	asyncHandler(async (req: Request, res: Response) => {
-		try {
-			const postId = req.params.postId as PostId;
-			const validatedData = tipPostSchema.parse(req.body);
-			const userId = (userService.getUserFromRequest(req) as any)?.id;
-
-			if (!userId) {
-				return sendErrorResponse(res, 'User not authenticated', 401);
-			}
-
-			// TODO: Implement tipping logic with DGT service integration
-
-			sendSuccessResponse(res, null, 'Post tipped successfully');
-		} catch (error) {
-			logger.error('PostRoutes', 'Error in POST /posts/:postId/tip', { error });
-
-			if (error instanceof z.ZodError) {
-				return sendErrorResponse(res, 'Invalid input data', 400);
-			}
-
-			return sendErrorResponse(res, 'Failed to tip post', 500);
-		}
-	})
-);
-
-// Get post replies
+// --- Public Routes ---
 router.get(
 	'/:postId/replies',
-	asyncHandler(async (req: Request, res: Response) => {
-		try {
-			const postId = req.params.postId as PostId;
+	validateRequest(postValidation.postParams),
+	asyncHandler(postController.getPostReplies.bind(postController))
+);
 
-			const replies = await postService.getPostReplies(postId);
+// --- Authenticated User Routes ---
+router.post(
+	'/',
+	isAuthenticated,
+	validateRequest(postValidation.createPost),
+	asyncHandler(postController.createPost.bind(postController))
+);
 
-			// Transform post replies using ForumTransformer based on user context
-			const requestingUser = userService.getUserFromRequest(req);
-			const transformedReplies = replies.map(reply => {
-				return requestingUser ? 
-					ForumTransformer.toAuthenticatedPost(reply, requestingUser) :
-					ForumTransformer.toPublicPost(reply);
-			});
+router.put(
+	'/:id',
+	isAuthenticated,
+	requirePostEditPermission,
+	validateRequest(postValidation.updatePost),
+	asyncHandler(postController.updatePost.bind(postController))
+);
 
-			sendSuccessResponse(res, transformedReplies);
-		} catch (error) {
-			logger.error('PostRoutes', 'Error in GET /posts/:postId/replies', { error });
-			return sendErrorResponse(res, 'Failed to fetch post replies', 500);
-		}
-	})
+router.delete(
+	'/:id',
+	isAuthenticated,
+	requirePostDeletePermission,
+	validateRequest(postValidation.postParams),
+	asyncHandler(postController.deletePost.bind(postController))
+);
+
+router.post(
+	'/:postId/react',
+	isAuthenticated,
+	validateRequest(postValidation.postReaction),
+	asyncHandler(postController.handleReaction.bind(postController))
+);
+
+router.post(
+	'/:postId/tip',
+	isAuthenticated,
+	validateRequest(postValidation.tipPost),
+	asyncHandler(postController.tipPost.bind(postController))
 );
 
 export default router;

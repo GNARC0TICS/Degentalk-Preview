@@ -6,7 +6,11 @@ import type {
   DgtTransaction,
   WithdrawalResponse,
   PurchaseOrder,
-  WalletConfigPublic
+  WalletConfigPublic,
+  SupportedCoin,
+  SupportedNetwork,
+  DgtTransfer,
+  CCPaymentWithdrawFee,
 } from './wallet.types';
 
 /**
@@ -170,6 +174,75 @@ export function fromCCPaymentDepositAddress(ccAddress: {
     memo: ccAddress.memo,
     qrCode: ccAddress.qrCode
   };
+}
+
+export function fromDbCryptoWallet(wallet: any): DepositAddress {
+  return {
+    address: wallet.address,
+    memo: wallet.memo || undefined,
+    qrCode: wallet.qrCodeUrl || undefined,
+    coin: wallet.coinSymbol,
+    network: wallet.chain,
+    status: 'active', // Assuming all DB entries are active
+  };
+}
+
+/**
+ * Transform CCPayment token info to SupportedCoin
+ */
+export function fromCCPaymentTokenInfo(token: any, price?: string): SupportedCoin {
+  const networks: SupportedNetwork[] = Object.values(token.networks || {}).map((net: any) => ({
+    network: net.chain,
+    chain: net.chain,
+    displayName: net.chainFullName,
+    canDeposit: net.canDeposit,
+    canWithdraw: net.canWithdraw,
+    minDepositAmount: net.minimumDepositAmount,
+    minWithdrawAmount: net.minimumWithdrawAmount,
+    fee: '0', // Fee is not part of this response, would need another call
+  }));
+
+  let status: 'online' | 'maintenance' | 'degraded' = 'online';
+  if (token.status === 'Maintain') {
+    status = 'maintenance';
+  } else if (token.status === 'Pre-delisting' || token.status === 'Delisted') {
+    status = 'degraded';
+  }
+
+  const coin: SupportedCoin = {
+    id: token.symbol.toLowerCase(),
+    name: token.coinFullName,
+    symbol: token.symbol,
+    logoUrl: token.logoUrl,
+    status,
+    isDegraded: status !== 'online',
+    networks,
+    currentPrice: price || '0',
+    priceLastUpdated: price ? new Date().toISOString() : undefined,
+  };
+
+  return coin;
+}
+
+export function toPublicSupportedCoin(coin: SupportedCoin): any {
+  return {
+    id: coin.id,
+    name: coin.name,
+    symbol: coin.symbol,
+    logoUrl: coin.logoUrl,
+    status: coin.status,
+    networks: coin.networks.map(net => ({
+      network: net.network,
+      displayName: net.displayName,
+      canDeposit: net.canDeposit,
+      canWithdraw: net.canWithdraw,
+    })),
+  };
+}
+
+export function toPublicWithdrawFeeInfo(feeInfo: CCPaymentWithdrawFee): Omit<CCPaymentWithdrawFee, 'coinId'> {
+  const { coinId: _coinId, ...publicFeeInfo } = feeInfo;
+  return publicFeeInfo;
 }
 
 /**

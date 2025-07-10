@@ -16,12 +16,12 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 
-import { AdminPageShell } from '@/components/admin/layout/AdminPageShell'; // Import TabConfig
-import type { TabConfig } from '@/components/admin/layout/AdminPageShell'; // Type-only import
-import { AdminDataTable } from '@/components/admin/common/AdminDataTable';
-import type { ColumnDef } from '@/components/admin/layout/EntityTable'; // Type-only import
-import ManualDgtAdjustmentDialog from '@/components/admin/forms/wallets/ManualDgtAdjustmentDialog';
-import { MockWebhookTrigger } from '@/components/admin/wallet/mock-webhook-trigger';
+import { AdminPageShell } from '@/features/admin/components/layout/AdminPageShell'; // Import TabConfig
+import type { TabConfig } from '@/features/admin/components/layout/AdminPageShell'; // Type-only import
+import { AdminDataTable } from '@/features/admin/components/common/AdminDataTable';
+import type { ColumnDef } from '@/features/admin/components/layout/EntityTable'; // Type-only import
+import ManualDgtAdjustmentDialog from '@/features/admin/components/forms/wallets/ManualDgtAdjustmentDialog';
+import { MockWebhookTrigger } from '@/features/admin/components/wallet/mock-webhook-trigger';
 import { type UserId } from "@shared/types/ids";
 
 // Type definitions

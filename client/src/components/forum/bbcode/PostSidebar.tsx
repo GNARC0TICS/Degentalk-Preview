@@ -3,7 +3,7 @@ import { Crown, Shield, User, Calendar, MessageSquare, Award, TrendingUp } from 
 import { Badge } from '@/components/ui/badge';
 import { AvatarFrame } from '@/components/identity/AvatarFrame';
 import { UserName } from '@/components/users/Username';
-import { LevelBadge } from '@/components/economy/xp/LevelBadge';
+import { LevelBadge } from '@/features/gamification/components/LevelBadge';
 import { useQuery } from '@tanstack/react-query';
 import { formatDistanceToNow } from 'date-fns';
 import { brandConfig } from '@/config/brand.config';

@@ -7,11 +7,13 @@ import subscriptionRoutes from '../../domains/subscriptions/subscription.routes'
 import uiRoutes from './ui.routes';
 import storeAvatarFrameRoutes from './store/avatar-frames';
 import userFramesRoutes from './user/frames';
+import shoutboxRoutes from '../../domains/shoutbox/shoutbox.routes';
 
 const router = Router();
 
 // Mount forum routes
 router.use('/forum', forumRoutes);
+router.use('/shoutbox', shoutboxRoutes);
 
 // Mount shop routes
 router.use('/shop', shopRoutes);

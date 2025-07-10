@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import ChartMenu from '@/components/ui/candlestick-menu';
-import { WalletSheet } from '@/components/economy/wallet/WalletSheet';
+import { WalletSheet } from '@/features/wallet/components/WalletSheet';
 import { useAuthWrapper } from '@/hooks/wrappers/use-auth-wrapper';
 import { HeaderThemeWrapper } from './HeaderThemeWrapper';
 import { HeaderPluginSlot } from './HeaderPluginSlot';

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui';
-import { VisualJsonTabs } from '@/components/admin/VisualJsonTabs';
+import { VisualJsonTabs } from '@/features/admin/components/VisualJsonTabs';
 import { useJsonConfig } from '@/hooks/useJsonConfig';
 import { brandSchema, type BrandConfig } from '@/schemas/brand.schema';
 

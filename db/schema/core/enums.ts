@@ -41,6 +41,11 @@ export const notificationTypeEnum = pgEnum('notification_type', [
 	'mission_complete'
 ]);
 export const reactionTypeEnum = pgEnum('reaction_type', ['like', 'helpful']);
+export const walletStatusEnum = pgEnum('wallet_status', [
+	'active',
+	'frozen', 
+	'suspended'
+]);
 export const transactionTypeEnum = pgEnum('transaction_type', [
 	'TIP',
 	'DEPOSIT',

@@ -59,9 +59,9 @@ import {
 	type QuoteFilters,
 	type PaginationOptions
 } from '@/features/admin/services/uiConfigApi';
-import ProtectedAdminRoute from '@/components/admin/protected-admin-route';
+import ProtectedAdminRoute from '@/features/admin/components/protected-admin-route';
 import { useAdminModule } from '@/hooks/use-admin-modules';
-import { VisualJsonTabs } from '@/components/admin/VisualJsonTabs';
+import { VisualJsonTabs } from '@/features/admin/components/VisualJsonTabs';
 import { useJsonConfig } from '@/hooks/useJsonConfig';
 import { uiQuotesSchema, type UIQuotes } from '@/schemas/uiQuotes.schema';
 

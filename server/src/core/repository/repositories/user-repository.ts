@@ -12,7 +12,7 @@ import { BaseRepository, RepositoryError } from '../base-repository';
 import type { IUserRepository } from '../interfaces';
 import type { User } from '@schema';
 import type { UserId } from '@shared/types/ids';
-import { logger } from '@server/src/core/logger';
+import { logger } from '@core/logger';
 
 export class UserRepository extends BaseRepository<User> implements IUserRepository {
 	protected table = users;

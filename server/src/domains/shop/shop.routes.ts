@@ -1,21 +1,21 @@
 import type { UserId } from '@shared/types/ids';
-import { userService } from '@server/src/core/services/user.service';
+import { userService } from '@core/services/user.service';
 import { Router } from 'express';
 import { shopItems } from '../../../utils/shop-utils';
 import { db } from '@db';
 import { products, userInventory, transactions } from '@schema';
 import { eq, isNull, or, and, gte, lte } from 'drizzle-orm';
-import { dgtService } from '../wallet/dgt.service';
+import { walletService } from '../wallet/services/wallet.service';
 import { isAuthenticated } from '../auth/middleware/auth.middleware';
 import { walletConfig } from '@shared/wallet.config';
 import { logger } from '../../core/logger';
 import { z } from 'zod';
-import { EconomyTransformer } from '../economy/transformers/economy.transformer';
+import { WalletTransformer } from '../wallet/transformers/wallet.transformer';
 import { ShopTransformer } from './transformers/shop.transformer';
 import { vanitySinkAnalyzer } from './services/vanity-sink.analyzer';
 import type { DgtAmount, UserId, ItemId, OrderId } from '@shared/types/ids';
 import type { EntityId } from "@shared/types/ids";
-import { sendSuccessResponse, sendErrorResponse } from "@server/src/core/utils/transformer.helpers";
+import { sendSuccessResponse, sendErrorResponse } from "@core/utils/transformer.helpers";
 
 const router = Router();
 
@@ -221,13 +221,13 @@ router.post('/purchase', isAuthenticated, async (req, res) => {
 
 		// For DGT payments, check balance and process
 		if (paymentMethod === 'DGT') {
-			const dgtAmountRequired = BigInt(Math.floor(price * 100000000)); // Convert to smallest unit
-			const userBalance = await dgtService.getUserBalance(userId);
+			const dgtAmountRequired = price; // Use price directly as DGT amount
+			const userBalance = await walletService.getUserBalance(userId);
 
-			if (userBalance < dgtAmountRequired) {
+			if (userBalance.dgtBalance < dgtAmountRequired) {
 				return sendErrorResponse(res, 'Insufficient DGT balance', 400, {
 					required: price,
-					available: Number(userBalance) / 100000000
+					available: userBalance.dgtBalance
 				});
 			}
 
@@ -243,12 +243,14 @@ router.post('/purchase', isAuthenticated, async (req, res) => {
 			};
 
 			// Deduct DGT with enhanced audit trail
-			const transactionResult = await dgtService.deductDGT(
+			const transactionResult = await walletService.debitDgt(
 				userId,
 				dgtAmountRequired,
-				'SHOP_PURCHASE',
-				`Purchased ${item.name}`,
-				transactionMetadata
+				{
+					source: 'shop_purchase',
+					reason: `Purchased ${item.name}`,
+					...transactionMetadata
+				}
 			);
 
 			// Add item to user's inventory
@@ -288,9 +290,9 @@ router.post('/purchase', isAuthenticated, async (req, res) => {
 				}
 			});
 
-			// Transform response using both EconomyTransformer and ShopTransformer
+			// Transform response using both WalletTransformer and ShopTransformer
 			const transformedTransaction = transactionResult?.transaction 
-				? EconomyTransformer.toAuthenticatedTransaction(transactionResult.transaction, { id: userId })
+				? WalletTransformer.toAuthenticatedTransaction(transactionResult.transaction, { id: userId })
 				: undefined;
 
 			const requestingUser = userService.getUserFromRequest(req);

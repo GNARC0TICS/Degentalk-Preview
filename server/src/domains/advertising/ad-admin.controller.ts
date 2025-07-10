@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { adConfigurationService } from './ad-configuration.service';
 import { campaignManagementService } from './campaign-management.service';
 import { logger } from '../../core/logger';
-import { sendSuccessResponse, sendErrorResponse } from '@server/src/core/utils/transformer.helpers';
+import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
 // Admin validation schemas
 const placementConfigSchema = z.object({

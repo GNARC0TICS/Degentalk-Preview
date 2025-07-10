@@ -20,7 +20,7 @@ const mockDb = {
 };
 
 // Mock logger
-vi.mock('@server/src/core/logger', () => ({
+vi.mock('@core/logger', () => ({
 	logger: {
 		info: vi.fn(),
 		error: vi.fn(),

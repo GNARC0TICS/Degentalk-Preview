@@ -1,17 +1,17 @@
-import { userService } from '@server/src/core/services/user.service';
+import { userService } from '@core/services/user.service';
 import { Router } from 'express';
 import { MentionsService } from './mentions.service';
 import { requireAuth } from '../../../middleware/auth';
 import { z } from 'zod';
 import { logger } from "../../core/logger";
-import { UserTransformer } from '@server/src/domains/users/transformers/user.transformer';
+import { UserTransformer } from '@server/domains/users/transformers/user.transformer';
 import { 
 	toPublicList,
 	sendSuccessResponse,
 	sendErrorResponse,
 	sendTransformedResponse,
 	sendTransformedListResponse
-} from '@server/src/core/utils/transformer.helpers';
+} from '@core/utils/transformer.helpers';
 
 const router = Router();
 

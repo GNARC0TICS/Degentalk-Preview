@@ -11,6 +11,7 @@ import {
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users';
+import { walletStatusEnum } from '../core/enums';
 
 // This table represents the user's internal DGT balance, as distinct from external crypto wallets.
 export const wallets = pgTable(
@@ -21,6 +22,7 @@ export const wallets = pgTable(
 			.notNull()
 			.references(() => users.id, { onDelete: 'cascade' }),
 		balance: doublePrecision('balance').notNull().default(0), // This is the DGT balance
+		status: walletStatusEnum('status').notNull().default('active'), // Wallet status for admin controls
 		lastTransaction: timestamp('last_transaction'), // Renamed in refactor plan to lastTransactionAt for clarity
 		isDeleted: boolean('is_deleted').notNull().default(false),
 		deletedAt: timestamp('deleted_at'),

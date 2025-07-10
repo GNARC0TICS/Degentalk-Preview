@@ -2,8 +2,8 @@
 
 import type { Request, Response } from 'express';
 import type { EntityId, RequestId, UserId } from '@shared/types/ids';
-import { userService } from '@server/src/core/services/user.service';
-import { logger } from '@server/src/core/logger';
+import { userService } from '@core/services/user.service';
+import { logger } from '@core/logger';
 import { AdminError, AdminErrorCodes } from '../admin.errors';
 
 // Enhanced error types with context

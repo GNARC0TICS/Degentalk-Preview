@@ -1,340 +1,306 @@
-import { userService } from '@server/src/core/services/user.service';
+import { userService } from '@core/services/user.service';
+import type { UserId } from '@shared/types/ids';
 /**
- * Shoutbox Routes
+ * Enhanced Shoutbox Routes
  *
- * Defines API routes for the shoutbox messaging system.
+ * Complete implementation with:
+ * - Command processing (/tip, /rain, /airdrop, moderation)
+ * - Admin configuration management
+ * - User ignore system
+ * - Enhanced message filtering and caching
+ * - Analytics tracking
+ * - Room management
  */
 
 import { Router } from 'express';
 import type { Request, Response } from 'express';
-import type { MessageId, UserId } from '@shared/types/ids';
+import type { MessageId, RoomId, UserId } from '@shared/types/ids';
 import { db } from '@db';
 import {
 	shoutboxMessages,
-	insertShoutboxMessageSchema,
-	users,
+	shoutboxConfig,
+	shoutboxUserIgnores,
+	shoutboxAnalytics,
 	chatRooms,
-	customEmojis
+	users
 } from '@schema';
-import { sql, desc, eq, and, isNull, inArray, asc, not, or } from 'drizzle-orm';
-import { ZodError } from 'zod';
+import { sql, desc, eq, and, isNull, inArray, asc, not, or, gt } from 'drizzle-orm';
+import { z } from 'zod';
 import {
 	isAuthenticated,
 	isAuthenticatedOptional,
-	isAdminOrModerator
+	isAdminOrModerator,
+	isAdmin
 } from '../auth/middleware/auth.middleware';
 import { getUserId } from '../auth/services/auth.service';
-import { canUser } from '@lib/auth/canUser.ts';
-import { logger } from '@server/src/core/logger';
-import { MentionsService } from '../social/mentions.service';
-import type { RoomId, GroupId } from '@shared/types/ids';
+import { logger } from '@core/logger';
+import { ShoutboxService } from './services/shoutbox.service';
+import { RoomService } from './services/room.service';
+import { MessageHistoryService } from './services/history.service';
+import { ShoutboxCacheService } from './services/cache.service';
+import { messageQueue, MessageQueueService } from './services/queue.service';
+import { PerformanceService } from './services/performance.service';
+import { createCustomRateLimiter } from '@core/services/rate-limit.service';
+import { isValidId } from '@shared/utils/id';
 import { ShoutboxTransformer } from './transformers/shoutbox.transformer';
+import { UserTransformer } from '@server/domains/users/transformers/user.transformer';
 import { 
 	toPublicList,
 	sendSuccessResponse,
 	sendErrorResponse,
 	sendTransformedResponse,
 	sendTransformedListResponse
-} from '@server/src/core/utils/transformer.helpers';
-
-// Rate limiting for shoutbox messages (10 seconds cooldown)
-const userLastMessageTime = new Map<UserId, number>();
-const COOLDOWN_MS = 10000; // 10 seconds
-
-// Check if user has access to a specific chat room
-async function userHasRoomAccess(userId: UserId, roomId: RoomId): Promise<boolean> {
-	try {
-		// Get the room info
-		const roomInfo = await db.select().from(chatRooms).where(eq(chatRooms.id, roomId)).limit(1);
-
-		if (roomInfo.length === 0 || roomInfo[0].isDeleted) {
-			return false;
-		}
-
-		const room = roomInfo[0];
-
-		// If the room is not private, or if the user created the room, they have access
-		if (!room.isPrivate || room.createdBy === userId) {
-			return true;
-		}
-
-		// Check if the user meets the minimum XP requirement
-		if (room.minXpRequired && room.minXpRequired > 0) {
-			const userInfo = await db
-				.select({ xp: users.xp })
-				.from(users)
-				.where(eq(users.id, userId))
-				.limit(1);
-
-			if (userInfo.length === 0 || !userInfo[0].xp || userInfo[0].xp < room.minXpRequired) {
-				return false;
-			}
-		}
-
-		// Check if the user meets the minimum group requirement
-		if (room.minGroupIdRequired) {
-			const userInfo = await db
-				.select({ groupId: users.groupId })
-				.from(users)
-				.where(eq(users.id, userId))
-				.limit(1);
-
-			if (userInfo.length === 0 || !userInfo[0].groupId) {
-				return false;
-			}
-
-			// Lower group IDs typically have higher permissions
-			// Admin = 1, Moderator = 2, Regular user = 3+
-			if (userInfo[0].groupId > room.minGroupIdRequired) {
-				return false;
-			}
-		}
-
-		return true;
-	} catch (error) {
-		logger.error('ShoutboxRoutes', 'Error checking room access', { err: error, roomId, userId });
-		return false;
-	}
-}
+} from '@core/utils/transformer.helpers';
 
 const router = Router();
 
-// Get available chat rooms
-router.get('/rooms', async (req: Request, res: Response) => {
+// Enhanced rate limiting for different user types
+const userRateLimiters = {
+	// VIP users get reduced cooldown
+	vip: createCustomRateLimiter({
+		windowMs: 5 * 1000, // 5 seconds
+		max: 1,
+		message: { error: 'Please wait 5 seconds between messages (VIP)' }
+	}),
+
+	// Regular users
+	regular: createCustomRateLimiter({
+		windowMs: 10 * 1000, // 10 seconds
+		max: 1,
+		message: { error: 'Please wait 10 seconds between messages' }
+	}),
+
+	// New users (level < 5) get longer cooldown
+	newUser: createCustomRateLimiter({
+		windowMs: 15 * 1000, // 15 seconds
+		max: 1,
+		message: { error: 'Please wait 15 seconds between messages (new user)' }
+	})
+};
+
+// Message validation schema
+const messageSchema = z.object({
+	content: z.string().min(1).max(500),
+	roomId: z.string().uuid().optional(),
+	replyTo: z.string().uuid().optional(),
+	mentions: z.array(z.string()).optional()
+});
+
+// Room creation schema
+const createRoomSchema = z.object({
+	name: z.string().min(3).max(50),
+	description: z.string().max(200).optional(),
+	isPrivate: z.boolean().default(false),
+	minXpRequired: z.number().min(0).optional(),
+	minGroupIdRequired: z.number().min(1).optional(),
+	accessRoles: z.array(z.string()).optional(),
+	themeConfig: z.record(z.any()).optional(),
+	maxUsers: z.number().min(1).max(10000).optional()
+});
+
+/**
+ * Get shoutbox configuration for admin panel
+ */
+router.get('/config', isAdmin, async (req: Request, res: Response) => {
+	try {
+		const roomId = req.query.roomId ? (req.query.roomId as string) : undefined;
+		const config = await ShoutboxService.getConfig(roomId);
+
+		sendSuccessResponse(res, config);
+	} catch (error) {
+		logger.error('Enhanced Shoutbox', 'Error fetching config', { error });
+		sendErrorResponse(res, 'Failed to fetch configuration', 500);
+	}
+});
+
+/**
+ * Update shoutbox configuration (admin only)
+ */
+router.patch('/config', isAdmin, async (req: Request, res: Response) => {
+	try {
+		const roomId = req.query.roomId ? (req.query.roomId as string) : undefined;
+		const userId = userService.getUserFromRequest(req);
+
+		const updatedConfig = await ShoutboxService.updateConfig(
+			{
+				...req.body,
+				updatedBy: userId?.toString()
+			},
+			roomId
+		);
+
+		sendSuccessResponse(res, updatedConfig, 'Configuration updated successfully');
+	} catch (error) {
+		logger.error('Enhanced Shoutbox', 'Error updating config', { error });
+		sendErrorResponse(res, 'Failed to update configuration', 500);
+	}
+});
+
+/**
+ * Get rooms with comprehensive statistics
+ */
+router.get('/rooms', isAuthenticatedOptional, async (req: Request, res: Response) => {
 	try {
 		const userId = userService.getUserFromRequest(req);
-		const isAdminOrMod = userService.getUserFromRequest(req)
-			? await canUser(
-					{
-						id: (userService.getUserFromRequest(req) as any).id,
-						primaryRoleId: (userService.getUserFromRequest(req) as any).primaryRoleId,
-						secondaryRoleIds: (userService.getUserFromRequest(req) as any).secondaryRoleIds
-					},
-					'canModerateChat'
-				)
-			: false;
+		const includeStats = req.query.includeStats === 'true';
 
-		// Base query - get non-deleted rooms
-		let query = db
-			.select({
-				id: chatRooms.id,
-				name: chatRooms.name,
-				description: chatRooms.description,
-				isPrivate: chatRooms.isPrivate,
-				minXpRequired: chatRooms.minXpRequired,
-				createdAt: chatRooms.createdAt,
-				createdBy: chatRooms.createdBy,
-				order: chatRooms.order
-			})
-			.from(chatRooms)
-			.where(eq(chatRooms.isDeleted, false))
-			.orderBy(asc(chatRooms.order));
+		if (includeStats) {
+			const roomsWithStats = await RoomService.getRoomsWithStats(userId);
+			sendTransformedListResponse(res, roomsWithStats, ShoutboxTransformer.toPublicRoom);
+		} else {
+			// Use existing simplified logic for backwards compatibility
+			const rooms = await db
+				.select()
+				.from(chatRooms)
+				.where(eq(chatRooms.isDeleted, false))
+				.orderBy(asc(chatRooms.order));
 
-		// If user is not admin/mod, exclude private rooms they don't have access to
-		if (!isAdminOrMod && userId) {
-			// For logged-in regular users, filter rooms they can access:
-			// 1. Public rooms (not private)
-			// 2. Private rooms where they meet the group requirement
-			query = db
-				.select({
-					id: chatRooms.id,
-					name: chatRooms.name,
-					description: chatRooms.description,
-					isPrivate: chatRooms.isPrivate,
-					minXpRequired: chatRooms.minXpRequired,
-					createdAt: chatRooms.createdAt,
-					createdBy: chatRooms.createdBy,
-					order: chatRooms.order
-				})
-				.from(chatRooms)
-				.where(
-					and(
-						eq(chatRooms.isDeleted, false),
-						or(
-							eq(chatRooms.isPrivate, false),
-							and(
-								eq(chatRooms.isPrivate, true),
-								or(
-									// User created the room
-									eq(chatRooms.createdBy, userId),
-									// User meets minimum group requirement (lower groupId = higher permission)
-									sql`(
-                  SELECT ${users.groupId} FROM ${users} 
-                  WHERE ${users.id} = ${userId}
-                ) <= ${chatRooms.minGroupIdRequired}`
-								)
-							)
-						)
-					)
-				)
-				.orderBy(asc(chatRooms.order));
-		} else if (!userId) {
-			// For guests, only show public rooms
-			query = db
-				.select({
-					id: chatRooms.id,
-					name: chatRooms.name,
-					description: chatRooms.description,
-					isPrivate: chatRooms.isPrivate,
-					minXpRequired: chatRooms.minXpRequired,
-					createdAt: chatRooms.createdAt,
-					createdBy: chatRooms.createdBy,
-					order: chatRooms.order
-				})
-				.from(chatRooms)
-				.where(and(eq(chatRooms.isDeleted, false), eq(chatRooms.isPrivate, false)))
-				.orderBy(asc(chatRooms.order));
+			sendTransformedListResponse(res, rooms, ShoutboxTransformer.toPublicShoutbox);
 		}
-
-		const rooms = await query;
-
-		// Add accessibility information for the current user
-		const roomsWithAccess = rooms.map((room) => {
-			const accessible = !room.isPrivate || isAdminOrMod || (userId && room.createdBy === userId);
-
-			return {
-				...room,
-				accessible,
-				locked: !accessible
-			};
-		});
-
-		sendTransformedListResponse(res, roomsWithAccess, ShoutboxTransformer.toPublicShoutbox);
 	} catch (error) {
-		logger.error('ShoutboxRoutes', 'Error fetching chat rooms', { err: error });
-		sendErrorResponse(res, 'Failed to fetch chat rooms', 500);
+		logger.error('Enhanced Shoutbox', 'Error fetching rooms', { error });
+		sendErrorResponse(res, 'Failed to fetch rooms', 500);
 	}
 });
 
-// Moderation endpoint: Delete (soft delete) a shoutbox message with WebSocket notification
-router.delete('/messages/:id', isAdminOrModerator, async (req: Request, res: Response) => {
+/**
+ * Create new chat room (admin only)
+ */
+router.post('/rooms', isAdmin, async (req: Request, res: Response) => {
 	try {
-		const messageId = req.params.id as MessageId;
-
-		// Check if message exists
-		const existingMessage = await db
-			.select()
-			.from(shoutboxMessages)
-			.where(eq(shoutboxMessages.id, messageId))
-			.limit(1);
-
-		if (existingMessage.length === 0) {
-			return sendErrorResponse(res, 'Message not found', 404);
-		}
-
-		// Soft delete the message (mark as deleted)
-		const result = await db
-			.update(shoutboxMessages)
-			.set({
-				isDeleted: true,
-				editedAt: new Date()
-			})
-			.where(eq(shoutboxMessages.id, messageId))
-			.returning();
-
-		// Log the moderation action
-		const moderatorId = userService.getUserFromRequest(req);
-		logger.info('ShoutboxRoutes', `User ${moderatorId} deleted shoutbox message ${messageId}`, {
-			moderatorId,
-			messageId,
-			action: 'delete_shoutbox_message'
+		const userId = userService.getUserFromRequest(req);
+		const roomData = createRoomSchema.parse({
+			...req.body,
+			createdBy: userId
 		});
 
-		const deletedMessage = result[0];
+		const result = await RoomService.createRoom(roomData);
 
-		// Notify connected clients about the deletion
-		if (req.app && (req.app as any).wss && (req.app as any).wss.clients) {
-			const clients = (req.app as any).wss.clients;
-			const broadcastData = {
-				type: 'chat_update',
-				action: 'message_deleted',
-				messageId: messageId,
-				roomId: deletedMessage.roomId,
-				timestamp: new Date().toISOString()
-			};
-
-			for (const client of clients) {
-				if (client.readyState === 1) {
-					// WebSocket.OPEN
-					client.send(JSON.stringify(broadcastData));
-				}
-			}
+		if (result.success) {
+			res.status(201);
+			sendSuccessResponse(res, result);
+		} else {
+			res.status(400);
+			sendErrorResponse(res, result.message || 'Failed to create room');
 		}
-
-		sendTransformedResponse(res, deletedMessage, ShoutboxTransformer.toAdminShout, 'Message deleted successfully');
 	} catch (error) {
-		// console.error('Error deleting shoutbox message:', error); // Original console.error removed
-		const messageIdForLog = req.params.id as MessageId; // Ensure messageId is available for logging
-		logger.error('ShoutboxRoutes', 'Error deleting shoutbox message', {
-			err: error,
-			messageId: messageIdForLog
-		});
-		sendErrorResponse(res, 'Failed to delete message', 500);
+		if (error instanceof z.ZodError) {
+			return sendErrorResponse(res, 'Invalid room data', 400);
+		}
+
+		logger.error('Enhanced Shoutbox', 'Error creating room', { error });
+		sendErrorResponse(res, 'Failed to create room', 500);
 	}
 });
 
-// Get latest shoutbox messages - now with room support
-router.get('/messages', async (req: Request, res: Response) => {
+/**
+ * Update chat room (admin only)
+ */
+router.patch('/rooms/:roomId', isAdmin, async (req: Request, res: Response) => {
 	try {
-		const limit = req.query.limit ? parseInt(req.query.limit as string) : 50;
-		const roomId = req.query.roomId ? (req.query.roomId as string) as RoomId : null;
-		const currentUserId = userService.getUserFromRequest(req);
+		const roomId = req.params.roomId as RoomId;
+		const userId = userService.getUserFromRequest(req);
 
-		// Check if the user has access to the specified room
-		if (roomId && currentUserId) {
-			const hasAccess = await userHasRoomAccess(currentUserId, roomId);
-			if (!hasAccess) {
-				return sendErrorResponse(res, 'You do not have access to this room', 403);
-			}
-		} else if (roomId && !currentUserId) {
-			// If guest tries to access a specific room, check if it's public
-			const roomInfo = await db
-				.select({ isPrivate: chatRooms.isPrivate })
-				.from(chatRooms)
-				.where(eq(chatRooms.id, roomId))
-				.limit(1);
-			if (roomInfo.length === 0 || roomInfo[0].isPrivate) {
-				return sendErrorResponse(res, 'You do not have access to this room', 403);
+		const result = await RoomService.updateRoom(roomId, req.body, userId);
+
+		if (result.success) {
+			sendSuccessResponse(res, result);
+		} else {
+			res.status(400);
+			sendErrorResponse(res, result.message || 'Failed to update room');
+		}
+	} catch (error) {
+		logger.error('Enhanced Shoutbox', 'Error updating room', { error });
+		sendErrorResponse(res, 'Failed to update room', 500);
+	}
+});
+
+/**
+ * Delete chat room (admin only)
+ */
+router.delete('/rooms/:roomId', isAdmin, async (req: Request, res: Response) => {
+	try {
+		const roomId = req.params.roomId as RoomId;
+		const userId = userService.getUserFromRequest(req);
+
+		const result = await RoomService.deleteRoom(roomId, userId);
+
+		if (result.success) {
+			sendSuccessResponse(res, result);
+		} else {
+			res.status(400);
+			sendErrorResponse(res, result.message || 'Failed to delete room');
+		}
+	} catch (error) {
+		logger.error('Enhanced Shoutbox', 'Error deleting room', { error });
+		sendErrorResponse(res, 'Failed to delete room', 500);
+	}
+});
+
+/**
+ * Reorder rooms (admin only)
+ */
+router.patch('/rooms/reorder', isAdmin, async (req: Request, res: Response) => {
+	try {
+		const { roomOrders } = req.body;
+
+		if (!Array.isArray(roomOrders)) {
+			return sendErrorResponse(res, 'roomOrders must be an array', 400);
+		}
+
+		const result = await RoomService.reorderRooms(roomOrders);
+
+		if (result.success) {
+			sendSuccessResponse(res, result);
+		} else {
+			res.status(400);
+			sendErrorResponse(res, result.message || 'Failed to reorder rooms');
+		}
+	} catch (error) {
+		logger.error('Enhanced Shoutbox', 'Error reordering rooms', { error });
+		sendErrorResponse(res, 'Failed to reorder rooms', 500);
+	}
+});
+
+/**
+ * Get messages with enhanced filtering and pagination
+ */
+router.get('/messages', isAuthenticatedOptional, async (req: Request, res: Response) => {
+	try {
+		const userId = userService.getUserFromRequest(req);
+		const roomId = req.query.roomId ? (req.query.roomId as string) : null;
+		const limit = Math.min(parseInt(req.query.limit as string) || 50, 100);
+		const before = req.query.before ? parseInt(req.query.before as string) : null;
+		const after = req.query.after ? parseInt(req.query.after as string) : null;
+		const includeDeleted = req.query.includeDeleted === 'true';
+
+		// Check room access if specified
+		if (roomId && userId) {
+			const accessCheck = await RoomService.checkRoomAccess(userId, roomId);
+			if (!accessCheck.hasAccess) {
+				return sendErrorResponse(res, 'Access denied', 403);
 			}
 		}
 
-		// Variable to hold our where condition
-		let whereCondition;
-		let targetRoomId: RoomId | null = roomId;
+		// Get user's ignore list
+		const ignoredUsers = userId
+			? await RoomService.getUserIgnoreList(userId, roomId || undefined)
+			: [];
 
-		// Determine the target room ID if not explicitly provided
-		if (!targetRoomId) {
-			try {
-				const defaultRoom = await db
-					.select({ id: chatRooms.id })
-					.from(chatRooms)
-					.where(and(eq(chatRooms.name, 'degen-lounge'), eq(chatRooms.isDeleted, false)))
-					.limit(1);
-				if (defaultRoom.length > 0) {
-					targetRoomId = defaultRoom[0].id;
-				} else {
-					// If no default room, maybe return empty or fetch from all public rooms?
-					// For now, let's return empty if no room is specified and default doesn't exist.
-					return sendSuccessResponse(res, []);
-				}
-			} catch (error) {
-				logger.warn('ShoutboxRoutes', 'Error fetching default room', { err: error });
-				return sendErrorResponse(res, 'Failed to determine chat room', 500);
-			}
-		}
+		// Build query conditions
+		const conditions = [
+			roomId ? eq(shoutboxMessages.roomId, roomId) : undefined,
+			!includeDeleted ? eq(shoutboxMessages.isDeleted, false) : undefined,
+			before ? sql`${shoutboxMessages.id} < ${before}` : undefined,
+			after ? sql`${shoutboxMessages.id} > ${after}` : undefined,
+			ignoredUsers.length > 0 ? not(inArray(shoutboxMessages.userId, ignoredUsers)) : undefined
+		].filter(Boolean);
 
-		// Ensure we have a target room ID to filter by
-		if (!targetRoomId) {
-			// This case should ideally not be reached if the logic above is sound
-			return sendErrorResponse(res, 'Could not determine the target chat room', 400);
-		}
+		const whereCondition = conditions.length > 0 ? and(...conditions) : undefined;
 
-		whereCondition = eq(shoutboxMessages.roomId, targetRoomId);
-
-		// Perform a single query with LEFT JOIN
-		const messagesWithUsers = await db
+		// Get messages with user data
+		const messages = await db
 			.select({
-				// Message fields
 				id: shoutboxMessages.id,
 				userId: shoutboxMessages.userId,
 				roomId: shoutboxMessages.roomId,
@@ -344,292 +310,689 @@ router.get('/messages', async (req: Request, res: Response) => {
 				isDeleted: shoutboxMessages.isDeleted,
 				isPinned: shoutboxMessages.isPinned,
 				tipAmount: shoutboxMessages.tipAmount,
-				// User fields (prefixed)
-				u_id: users.id,
-				u_username: users.username,
-				u_avatarUrl: users.avatarUrl,
-				u_activeAvatarUrl: users.activeAvatarUrl,
-				u_level: users.level,
-				u_groupId: users.groupId,
-				u_isActive: users.isActive, // Include flags to check status
-				u_isBanned: users.isBanned
-			})
-			.from(shoutboxMessages)
-			.leftJoin(users, eq(shoutboxMessages.userId, users.id))
-			.where(
-				and(
-					whereCondition // Filter by the target room
-					// Optionally hide deleted messages unless requested?
-					// For now, include deleted messages and let frontend handle visibility
-				)
-			)
-			.orderBy(desc(shoutboxMessages.createdAt))
-			.limit(limit);
-
-		// Process the results
-		const messages = messagesWithUsers.map((row) => {
-			let user = null;
-			// Check if user exists and is active/not banned
-			if (row.u_id && row.u_isActive && !row.u_isBanned) {
-				user = {
-					id: row.u_id,
-					username: row.u_username,
-					avatarUrl: row.u_avatarUrl,
-					activeAvatarUrl: row.u_activeAvatarUrl,
-					level: row.u_level,
-					groupId: row.u_groupId
-				};
-			} else if (row.u_id) {
-				// User exists but is inactive or banned
-				user = {
-					id: row.u_id,
-					username: row.u_username || '[Inactive User]',
-					avatarUrl: null,
-					activeAvatarUrl: null,
-					level: 1,
-					groupId: null, // Indicate inactive/banned status
-					isInactiveOrBanned: true
-				};
-			} else {
-				// User ID was likely null in the message, or user truly deleted
-				user = {
-					id: row.userId, // Keep original ID if available
-					username: '[Deleted User]',
-					avatarUrl: null,
-					activeAvatarUrl: null,
-					level: 1,
-					groupId: null,
-					isDeleted: true
-				};
-			}
-
-			return {
-				id: row.id,
-				roomId: row.roomId,
-				content: row.content,
-				createdAt: row.createdAt,
-				editedAt: row.editedAt,
-				isDeleted: row.isDeleted,
-				isPinned: row.isPinned,
-				tipAmount: row.tipAmount,
-				user // Attach the processed user object
-			};
-		});
-
-		sendSuccessResponse(res, messages);
-	} catch (error) {
-		const roomIdForLog = req.query.roomId ? (req.query.roomId as string) as RoomId : null;
-		const limitForLog = req.query.limit ? parseInt(req.query.limit as string) : 50;
-		logger.error('ShoutboxRoutes', 'Error fetching shoutbox messages', {
-			err: error,
-			roomId: roomIdForLog,
-			limit: limitForLog
-		});
-		sendErrorResponse(res, 'Failed to fetch shoutbox messages', 500);
-	}
-});
-
-// Post a new shoutbox message - now with room support and WebSocket broadcast
-router.post('/messages', isAuthenticated, async (req: Request, res: Response) => {
-	try {
-		const userId = userService.getUserFromRequest(req);
-		const { roomId } = req.body;
-
-		// Check rate limiting
-		const lastMessageTime = userLastMessageTime.get(userId) || 0;
-		const now = Date.now();
-
-		if (now - lastMessageTime < COOLDOWN_MS) {
-			const waitTime = Math.ceil((COOLDOWN_MS - (now - lastMessageTime)) / 1000);
-			return sendErrorResponse(res, `Please wait ${waitTime} seconds before sending another message`, 429);
-		}
-
-		// If roomId is provided, check if user has access to this room
-		if (roomId) {
-			const hasAccess = await userHasRoomAccess(userId, roomId);
-			if (!hasAccess) {
-				return sendErrorResponse(res, 'You do not have access to this room', 403);
-			}
-		} else {
-			// If no roomId specified, get the default room (degen-lounge)
-			const defaultRoom = await db
-				.select()
-				.from(chatRooms)
-				.where(eq(chatRooms.name, 'degen-lounge'))
-				.limit(1);
-
-			if (defaultRoom.length > 0) {
-				req.body.roomId = defaultRoom[0].id;
-			}
-		}
-
-		// Validate message data
-		const messageData = insertShoutboxMessageSchema.parse({
-			...req.body,
-			userId
-		});
-
-		// Insert message
-		const result = await db.insert(shoutboxMessages).values(messageData).returning();
-		const newMessage = result[0];
-
-		// Update rate limit tracking
-		userLastMessageTime.set(userId, now);
-
-		// Process mentions in the shoutbox message
-		try {
-			await MentionsService.processMentions({
-				content: messageData.content,
-				mentioningUserId: userId.toString(),
-				type: 'shoutbox',
-				messageId: newMessage.id.toString(),
-				context: `Shoutbox message in room ${newMessage.roomId}`
-			});
-		} catch (mentionError) {
-			logger.error('ShoutboxRoutes', 'Error processing mentions for shoutbox message', {
-				err: mentionError,
-				messageId: newMessage.id,
-				userId
-			});
-			// Don't fail the message creation if mentions fail
-		}
-
-		// Get user data to return with the message
-		const userData = await db
-			.select({
-				id: users.id,
+				// User data
 				username: users.username,
 				avatarUrl: users.avatarUrl,
 				activeAvatarUrl: users.activeAvatarUrl,
 				level: users.level,
-				groupId: users.groupId
+				groupId: users.groupId,
+				roles: users.roles,
+				usernameColor: users.usernameColor
 			})
-			.from(users)
-			.where(eq(users.id, userId))
-			.limit(1);
+			.from(shoutboxMessages)
+			.leftJoin(users, eq(shoutboxMessages.userId, users.id))
+			.where(whereCondition)
+			.orderBy(desc(shoutboxMessages.createdAt))
+			.limit(limit);
 
-		const responseData = {
-			...newMessage,
-			user: userData[0]
-		};
+		// Transform messages using ShoutboxTransformer
+		const transformedMessages = messages.map((msg) => 
+			ShoutboxTransformer.toAuthenticatedShout(msg)
+		);
 
-		// Broadcast the message to all connected WebSocket clients
-		if (req.app && (req.app as any).wss && (req.app as any).wss.clients) {
-			const clients = (req.app as any).wss.clients;
-			const broadcastData = {
-				type: 'chat_update',
-				action: 'new_message',
-				message: responseData,
-				roomId: newMessage.roomId,
-				timestamp: new Date().toISOString()
-			};
-
-			for (const client of clients) {
-				if (client.readyState === 1) {
-					// WebSocket.OPEN
-					client.send(JSON.stringify(broadcastData));
-				}
+		sendSuccessResponse(res, {
+			data: transformedMessages,
+			meta: {
+				count: messages.length,
+				hasMore: messages.length === limit,
+				oldestId: messages.length > 0 ? messages[messages.length - 1].id : null,
+				newestId: messages.length > 0 ? messages[0].id : null
 			}
-		}
-
-		res.status(201);
-		sendSuccessResponse(res, responseData);
-	} catch (error) {
-		if (error instanceof ZodError) {
-			return sendErrorResponse(res, 'Invalid message data', 400);
-		}
-
-		const userIdForLog = userService.getUserFromRequest(req); // Ensure userId is available
-		const roomIdForLog = req.body.roomId; // Get roomId from request body for logging context
-		logger.error('ShoutboxRoutes', 'Error creating shoutbox message', {
-			err: error,
-			userId: userIdForLog,
-			roomId: roomIdForLog
 		});
-		sendErrorResponse(res, 'Failed to create shoutbox message', 500);
+	} catch (error) {
+		logger.error('Enhanced Shoutbox', 'Error fetching messages', { error });
+		sendErrorResponse(res, 'Failed to fetch messages', 500);
 	}
 });
 
-// Update a shoutbox message (for pinning/unpinning) - admin/mod only with WebSocket notification
-router.patch('/messages/:id', isAdminOrModerator, async (req: Request, res: Response) => {
+// Dynamic rate-limiter middleware that picks limiter based on user role/level
+async function dynamicRateLimiter(req: Request, res: Response, next: Function) {
 	try {
-		const messageId = req.params.id as MessageId;
+		const userId = userService.getUserFromRequest(req);
+		if (!userId) return sendErrorResponse(res, 'Unauthorized', 401);
 
-		// Check if message exists
-		const existingMessage = await db
-			.select()
-			.from(shoutboxMessages)
-			.where(eq(shoutboxMessages.id, messageId))
-			.limit(1);
+		const user = await db.query.users.findFirst({
+			where: eq(users.id, userId),
+			columns: {
+				id: true,
+				username: true,
+				level: true,
+				roles: true,
+				groupId: true
+			}
+		});
 
-		if (existingMessage.length === 0) {
-			return sendErrorResponse(res, 'Message not found', 404);
+		if (!user) return sendErrorResponse(res, 'User not found', 401);
+
+		let rateLimiter = userRateLimiters.regular;
+		if (
+			user.roles?.includes('vip') ||
+			user.roles?.includes('admin') ||
+			user.roles?.includes('moderator')
+		) {
+			rateLimiter = userRateLimiters.vip;
+		} else if (user.level && user.level < 5) {
+			rateLimiter = userRateLimiters.newUser;
 		}
 
-		// Validate update data - currently only supporting isPinned
-		const { isPinned } = req.body;
+		// Attach user to request for downstream handlers
+		(req as any).currentUser = user;
+		return rateLimiter(req, res, next);
+	} catch (err) {
+		logger.error('Enhanced Shoutbox', 'Rate-limit middleware failed', { err });
+		return sendErrorResponse(res, 'Rate limit exceeded', 429);
+	}
+}
 
-		// Check if isPinned is a boolean
-		if (typeof isPinned !== 'boolean') {
-			return sendErrorResponse(res, 'isPinned must be a boolean value', 400);
+// Revised POST /messages endpoint: middleware chain enforces rate limiting before handler
+
+router.post(
+	'/messages',
+	isAuthenticated,
+	dynamicRateLimiter,
+	async (req: Request, res: Response) => {
+		try {
+			const userId = userService.getUserFromRequest(req);
+			const user = (req as any).currentUser;
+			const messageData = messageSchema.parse(req.body);
+
+			// Determine room ID
+			let roomId = messageData.roomId;
+			if (!roomId) {
+				const defaultRoom = await db.query.chatRooms.findFirst({
+					where: and(eq(chatRooms.name, 'degen-lounge'), eq(chatRooms.isDeleted, false))
+				});
+				roomId = defaultRoom?.id || 1;
+			}
+
+			const accessCheck = await RoomService.checkRoomAccess(userId, roomId);
+
+			if (!accessCheck.hasAccess) {
+				return sendErrorResponse(res, 'Access denied', 403);
+			}
+
+			// Process message through enhanced service
+			const context = {
+				userId,
+				username: user.username,
+				roomId,
+				content: messageData.content,
+				userRoles: user.roles || [],
+				userLevel: user.level || 1,
+				ipAddress: req.ip,
+				sessionId: req.sessionID
+			};
+
+			const result = await ShoutboxService.processMessage(context);
+
+			if (result.success) {
+				// Broadcast to WebSocket clients if available
+				if (result.broadcastData && req.app && (req.app as any).wss) {
+					const clients = (req.app as any).wss.clients;
+					for (const client of clients) {
+						if (client.readyState === 1) {
+							client.send(JSON.stringify(result.broadcastData));
+						}
+					}
+				}
+
+				res.status(201);
+				sendSuccessResponse(res, result.data, result.message);
+			} else {
+				sendErrorResponse(res, result.message, 400);
+			}
+		} catch (error) {
+			if (error instanceof z.ZodError) {
+				return sendErrorResponse(res, 'Invalid message data', 400);
+			}
+
+			logger.error('Enhanced Shoutbox', 'Error in message endpoint', { error });
+			sendErrorResponse(res, 'Failed to send message', 500);
 		}
+	}
+);
 
-		// Update the message
-		const result = await db
+/**
+ * Pin/Unpin message (moderator+)
+ */
+router.patch(
+	'/messages/:messageId/pin',
+	isAdminOrModerator,
+	async (req: Request, res: Response) => {
+		try {
+			const messageId = req.params.messageId as MessageId;
+			const { isPinned } = req.body;
+			const userId = userService.getUserFromRequest(req);
+
+			if (typeof isPinned !== 'boolean') {
+				return sendErrorResponse(res, 'Invalid parameters', 400);
+			}
+
+			// Check if message exists
+			const message = await db.query.shoutboxMessages.findFirst({
+				where: eq(shoutboxMessages.id, messageId)
+			});
+
+			if (!message) {
+				return sendErrorResponse(res, 'Message not found', 404);
+			}
+
+			// Check room configuration for pinning limits
+			const config = await ShoutboxService.getConfig(message.roomId);
+
+			if (isPinned && config.maxPinnedMessages) {
+				const pinnedCount = await db
+					.select({ count: sql<number>`COUNT(*)` })
+					.from(shoutboxMessages)
+					.where(
+						and(
+							eq(shoutboxMessages.roomId, message.roomId),
+							eq(shoutboxMessages.isPinned, true),
+							eq(shoutboxMessages.isDeleted, false)
+						)
+					);
+
+				if (pinnedCount[0].count >= config.maxPinnedMessages) {
+					return sendErrorResponse(res, `Maximum ${config.maxPinnedMessages} pinned messages allowed`, 400);
+				}
+			}
+
+			// Update message
+			const [updatedMessage] = await db
+				.update(shoutboxMessages)
+				.set({
+					isPinned,
+					editedAt: new Date()
+				})
+				.where(eq(shoutboxMessages.id, messageId))
+				.returning();
+
+			// Log action
+			logger.info('Enhanced Shoutbox', `Message ${isPinned ? 'pinned' : 'unpinned'}`, {
+				messageId,
+				userId,
+				roomId: message.roomId
+			});
+
+			// Broadcast update
+			if (req.app && (req.app as any).wss) {
+				const broadcastData = {
+					type: 'chat_update',
+					action: isPinned ? 'message_pinned' : 'message_unpinned',
+					messageId,
+					roomId: message.roomId,
+					timestamp: new Date().toISOString()
+				};
+
+				const clients = (req.app as any).wss.clients;
+				for (const client of clients) {
+					if (client.readyState === 1) {
+						client.send(JSON.stringify(broadcastData));
+					}
+				}
+			}
+
+			sendTransformedResponse(res, updatedMessage, ShoutboxTransformer.toAuthenticatedShoutbox, `Message ${isPinned ? 'pinned' : 'unpinned'} successfully`);
+		} catch (error) {
+			logger.error('Enhanced Shoutbox', 'Error pinning/unpinning message', { error });
+			sendErrorResponse(res, 'Failed to update message', 500);
+		}
+	}
+);
+
+/**
+ * Delete message (moderator+)
+ */
+router.delete('/messages/:messageId', isAdminOrModerator, async (req: Request, res: Response) => {
+	try {
+		const messageId = req.params.messageId as MessageId;
+		const userId = userService.getUserFromRequest(req);
+
+		// Soft delete message
+		const [deletedMessage] = await db
 			.update(shoutboxMessages)
 			.set({
-				isPinned,
-				editedAt: new Date() // Update the edited timestamp
+				isDeleted: true,
+				editedAt: new Date()
 			})
 			.where(eq(shoutboxMessages.id, messageId))
 			.returning();
 
-		// Log the moderation action
-		const moderatorId = userService.getUserFromRequest(req);
-		logger.info(
-			'ShoutboxRoutes',
-			`User ${moderatorId} ${isPinned ? 'pinned' : 'unpinned'} shoutbox message ${messageId}`,
-			{
-				moderatorId,
-				messageId,
-				action: isPinned ? 'pin_shoutbox_message' : 'unpin_shoutbox_message',
-				isPinned
-			}
-		);
+		if (!deletedMessage) {
+			return sendErrorResponse(res, 'Message not found', 404);
+		}
 
-		const updatedMessage = result[0];
+		// Log action
+		logger.info('Enhanced Shoutbox', 'Message deleted', {
+			messageId,
+			userId,
+			roomId: deletedMessage.roomId
+		});
 
-		// Notify connected clients about the pin/unpin action
-		if (req.app && (req.app as any).wss && (req.app as any).wss.clients) {
-			const clients = (req.app as any).wss.clients;
+		// Broadcast update
+		if (req.app && (req.app as any).wss) {
 			const broadcastData = {
 				type: 'chat_update',
-				action: isPinned ? 'message_pinned' : 'message_unpinned',
-				messageId: messageId,
-				roomId: updatedMessage.roomId,
+				action: 'message_deleted',
+				messageId,
+				roomId: deletedMessage.roomId,
 				timestamp: new Date().toISOString()
 			};
 
+			const clients = (req.app as any).wss.clients;
 			for (const client of clients) {
 				if (client.readyState === 1) {
-					// WebSocket.OPEN
 					client.send(JSON.stringify(broadcastData));
 				}
 			}
 		}
 
-		sendTransformedResponse(res, updatedMessage, ShoutboxTransformer.toAdminShout, isPinned ? 'Message pinned successfully' : 'Message unpinned successfully');
+		sendSuccessResponse(res, null, 'Message deleted successfully');
 	} catch (error) {
-		// console.error('Error updating shoutbox message:', error); // Original console.error removed
-		const messageIdForLog = req.params.id as MessageId; // Ensure messageId is available
-		const isPinnedForLog = req.body.isPinned; // Ensure isPinned is available
-		logger.error('ShoutboxRoutes', 'Error updating shoutbox message', {
-			err: error,
-			messageId: messageIdForLog,
-			isPinned: isPinnedForLog
-		});
-		sendErrorResponse(res, 'Failed to update message', 500);
+		logger.error('Enhanced Shoutbox', 'Error deleting message', { error });
+		sendErrorResponse(res, 'Failed to delete message', 500);
 	}
 });
+
+/**
+ * User ignore system
+ */
+router.post('/ignore', isAuthenticated, async (req: Request, res: Response) => {
+	try {
+		const userId = userService.getUserFromRequest(req);
+		const { targetUserId, roomId, options } = req.body;
+
+		if (!targetUserId || !isValidId(targetUserId)) {
+			return sendErrorResponse(res, 'Invalid target user ID', 400);
+		}
+
+		const result = await RoomService.ignoreUser(
+			userId,
+			targetUserId as UserId,
+			roomId ? (roomId as RoomId) : undefined,
+			options
+		);
+
+		sendSuccessResponse(res, result);
+	} catch (error) {
+		logger.error('Enhanced Shoutbox', 'Error ignoring user', { error });
+		sendErrorResponse(res, 'Failed to ignore user', 500);
+	}
+});
+
+router.delete('/ignore/:targetUserId', isAuthenticated, async (req: Request, res: Response) => {
+	try {
+		const userId = userService.getUserFromRequest(req);
+		const targetUserId = req.params.targetUserId as UserId;
+		const roomId = req.query.roomId ? (req.query.roomId as string) : undefined;
+
+		if (typeof targetUserId !== 'string') {
+			return sendErrorResponse(res, 'Invalid target user ID', 400);
+		}
+
+		const result = await RoomService.unignoreUser(userId, targetUserId, roomId);
+
+		sendSuccessResponse(res, result);
+	} catch (error) {
+		logger.error('Enhanced Shoutbox', 'Error unignoring user', { error });
+		sendErrorResponse(res, 'Failed to unignore user', 500);
+	}
+});
+
+/**
+ * Get shoutbox analytics (admin only)
+ */
+router.get('/analytics', isAdmin, async (req: Request, res: Response) => {
+	try {
+		const period = (req.query.period as string) || '24h';
+		const roomId = req.query.roomId ? (req.query.roomId as string) : undefined;
+
+		let timeFilter: any;
+		switch (period) {
+			case '1h':
+				timeFilter = sql`${shoutboxAnalytics.timestamp} >= NOW() - INTERVAL '1 hour'`;
+				break;
+			case '24h':
+				timeFilter = sql`${shoutboxAnalytics.timestamp} >= NOW() - INTERVAL '24 hours'`;
+				break;
+			case '7d':
+				timeFilter = sql`${shoutboxAnalytics.timestamp} >= NOW() - INTERVAL '7 days'`;
+				break;
+			case '30d':
+				timeFilter = sql`${shoutboxAnalytics.timestamp} >= NOW() - INTERVAL '30 days'`;
+				break;
+			default:
+				timeFilter = sql`${shoutboxAnalytics.timestamp} >= NOW() - INTERVAL '24 hours'`;
+		}
+
+		const conditions = [
+			timeFilter,
+			roomId ? eq(shoutboxAnalytics.roomId, roomId) : undefined
+		].filter(Boolean);
+
+		// Get event counts by type
+		const eventCounts = await db
+			.select({
+				eventType: shoutboxAnalytics.eventType,
+				count: sql<number>`COUNT(*)`
+			})
+			.from(shoutboxAnalytics)
+			.where(and(...conditions))
+			.groupBy(shoutboxAnalytics.eventType);
+
+		// Get hourly activity
+		const hourlyActivity = await db
+			.select({
+				hour: sql<number>`EXTRACT(hour FROM ${shoutboxAnalytics.timestamp})`,
+				count: sql<number>`COUNT(*)`
+			})
+			.from(shoutboxAnalytics)
+			.where(and(...conditions))
+			.groupBy(sql`EXTRACT(hour FROM ${shoutboxAnalytics.timestamp})`)
+			.orderBy(sql`EXTRACT(hour FROM ${shoutboxAnalytics.timestamp})`);
+
+		// Get top users by activity
+		const topUsers = await db
+			.select({
+				userId: shoutboxAnalytics.userId,
+				username: users.username,
+				count: sql<number>`COUNT(*)`
+			})
+			.from(shoutboxAnalytics)
+			.leftJoin(users, eq(shoutboxAnalytics.userId, users.id))
+			.where(and(...conditions))
+			.groupBy(shoutboxAnalytics.userId, users.username)
+			.orderBy(desc(sql`COUNT(*)`))
+			.limit(10);
+
+		sendSuccessResponse(res, {
+			period,
+			roomId,
+			eventCounts,
+			hourlyActivity,
+			topUsers: topUsers.map(user => ({
+				userId: user.userId,
+				username: user.username,
+				count: user.count
+			}))
+		});
+	} catch (error) {
+		logger.error('Enhanced Shoutbox', 'Error fetching analytics', { error });
+		sendErrorResponse(res, 'Failed to fetch analytics', 500);
+	}
+});
+
+/**
+ * Export message history (admin only)
+ */
+router.get('/export', isAdmin, async (req: Request, res: Response) => {
+	try {
+		const format = (req.query.format as string) || 'json';
+		const roomId = req.query.roomId ? (req.query.roomId as string) : undefined;
+		const dateFrom = req.query.dateFrom as string;
+		const dateTo = req.query.dateTo as string;
+
+		// Build query conditions
+		const conditions = [
+			roomId ? eq(shoutboxMessages.roomId, roomId) : undefined,
+			dateFrom ? sql`${shoutboxMessages.createdAt} >= ${dateFrom}` : undefined,
+			dateTo ? sql`${shoutboxMessages.createdAt} <= ${dateTo}` : undefined
+		].filter(Boolean);
+
+		// Get messages
+		const messages = await db
+			.select({
+				id: shoutboxMessages.id,
+				userId: shoutboxMessages.userId,
+				username: users.username,
+				roomId: shoutboxMessages.roomId,
+				roomName: chatRooms.name,
+				content: shoutboxMessages.content,
+				createdAt: shoutboxMessages.createdAt,
+				isDeleted: shoutboxMessages.isDeleted,
+				isPinned: shoutboxMessages.isPinned
+			})
+			.from(shoutboxMessages)
+			.leftJoin(users, eq(shoutboxMessages.userId, users.id))
+			.leftJoin(chatRooms, eq(shoutboxMessages.roomId, chatRooms.id))
+			.where(conditions.length > 0 ? and(...conditions) : undefined)
+			.orderBy(asc(shoutboxMessages.createdAt));
+
+		// Format based on requested format
+		if (format === 'csv') {
+			const csv = [
+				'ID,User ID,Username,Room ID,Room Name,Content,Created At,Is Deleted,Is Pinned',
+				...messages.map(
+					(msg) =>
+						`${msg.id},"${msg.userId}","${msg.username}","${msg.roomId}","${msg.roomName}","${msg.content?.replace(/"/g, '""')}","${msg.createdAt}","${msg.isDeleted}","${msg.isPinned}"`
+				)
+			].join('\n');
+
+			res.setHeader('Content-Type', 'text/csv');
+			res.setHeader(
+				'Content-Disposition',
+				`attachment; filename="shoutbox-export-${Date.now()}.csv"`
+			);
+			res.end(csv);
+		} else {
+			sendSuccessResponse(res, {
+				exportedAt: new Date().toISOString(),
+				totalMessages: messages.length,
+				filters: { roomId, dateFrom, dateTo },
+				messages: toPublicList(messages, ShoutboxTransformer.toAdminShout)
+			});
+		}
+	} catch (error) {
+		logger.error('Enhanced Shoutbox', 'Error exporting messages', { error });
+		sendErrorResponse(res, 'Failed to export messages', 500);
+	}
+});
+
+/**
+ * Performance monitoring endpoints
+ */
+
+// Get performance statistics (admin only)
+router.get('/performance/stats', isAdmin, async (req: Request, res: Response) => {
+	try {
+		const stats = PerformanceService.getPerformanceStats();
+		const cacheStats = ShoutboxCacheService.getCacheStats();
+		const queueStats = messageQueue.getStats();
+
+		sendSuccessResponse(res, {
+			performance: stats,
+			cache: cacheStats,
+			queue: queueStats,
+			generatedAt: new Date().toISOString()
+		});
+	} catch (error) {
+		logger.error('Enhanced Shoutbox', 'Error fetching performance stats', { error });
+		sendErrorResponse(res, 'Failed to fetch performance statistics', 500);
+	}
+});
+
+// Get optimization suggestions (admin only)
+router.get('/performance/analyze', isAdmin, async (req: Request, res: Response) => {
+	try {
+		const suggestions = PerformanceService.analyzeQueryPerformance();
+
+		sendSuccessResponse(res, {
+			suggestions,
+			analyzedAt: new Date().toISOString()
+		});
+	} catch (error) {
+		logger.error('Enhanced Shoutbox', 'Error analyzing performance', { error });
+		sendErrorResponse(res, 'Failed to analyze performance', 500);
+	}
+});
+
+// Get optimized messages with caching
+router.get('/messages/optimized', isAuthenticatedOptional, async (req: Request, res: Response) => {
+	try {
+		const roomId = req.query.roomId ? (req.query.roomId as string) : undefined;
+		const limit = req.query.limit ? parseInt(req.query.limit as string) : 50;
+		const cursor = req.query.cursor ? parseInt(req.query.cursor as string) : undefined;
+		const direction = (req.query.direction as 'before' | 'after') || 'before';
+		const userId = userService.getUserFromRequest(req);
+
+		if (!roomId) {
+			return sendErrorResponse(res, 'Room ID is required', 400);
+		}
+
+		const result = await PerformanceService.getOptimizedMessages({
+			roomId,
+			limit,
+			cursor,
+			direction,
+			userId: userId || undefined
+		});
+
+		sendSuccessResponse(res, result);
+	} catch (error) {
+		logger.error('Enhanced Shoutbox', 'Error fetching optimized messages', { error });
+		sendErrorResponse(res, 'Failed to fetch messages', 500);
+	}
+});
+
+// Queue management endpoints (admin only)
+router.get('/queue/status', isAdmin, async (req: Request, res: Response) => {
+	try {
+		const userId = req.query.userId ? (req.query.userId as string) : undefined;
+		const roomId = req.query.roomId ? (req.query.roomId as string) : undefined;
+
+		const queuedMessages = messageQueue.getQueuedMessages(userId, roomId);
+		const stats = messageQueue.getStats();
+
+		sendSuccessResponse(res, {
+			stats,
+			queuedMessages: queuedMessages.slice(0, 50), // Limit for performance
+			totalQueued: queuedMessages.length
+		});
+	} catch (error) {
+		logger.error('Enhanced Shoutbox', 'Error fetching queue status', { error });
+		sendErrorResponse(res, 'Failed to fetch queue status', 500);
+	}
+});
+
+// Remove message from queue (admin only)
+router.delete('/queue/:messageId', isAdmin, async (req: Request, res: Response) => {
+	try {
+		const messageId = req.params.messageId;
+		const removed = await messageQueue.removeMessage(messageId);
+
+		if (removed) {
+			sendSuccessResponse(res, null, 'Message removed from queue');
+		} else {
+			sendErrorResponse(res, 'Message not found in queue', 404);
+		}
+	} catch (error) {
+		logger.error('Enhanced Shoutbox', 'Error removing message from queue', { error });
+		sendErrorResponse(res, 'Failed to remove message from queue', 500);
+	}
+});
+
+// Cache management endpoints (admin only)
+router.post('/cache/clear', isAdmin, async (req: Request, res: Response) => {
+	try {
+		const { type, roomId } = req.body;
+
+		switch (type) {
+			case 'messages':
+				if (roomId) {
+					ShoutboxCacheService.invalidateMessages(roomId);
+				} else {
+					// Clear all message caches
+					ShoutboxCacheService.clearAll();
+				}
+				break;
+			case 'config':
+				ShoutboxCacheService.invalidateRoomConfig(roomId);
+				break;
+			case 'all':
+				ShoutboxCacheService.clearAll();
+				break;
+			default:
+				return sendErrorResponse(res, 'Invalid cache type', 400);
+		}
+
+		sendSuccessResponse(res, null, `Cache cleared for type: ${type}`);
+	} catch (error) {
+		logger.error('Enhanced Shoutbox', 'Error clearing cache', { error });
+		sendErrorResponse(res, 'Failed to clear cache', 500);
+	}
+});
+
+// Enhanced message history with performance optimization
+router.get('/history/advanced', isAdminOrModerator, async (req: Request, res: Response) => {
+	try {
+		const roomId = req.query.roomId ? (req.query.roomId as string) : undefined;
+		const userId = req.query.userId ? (req.query.userId as string) : undefined;
+		const limit = req.query.limit ? parseInt(req.query.limit as string) : 50;
+		const cursor = req.query.cursor ? parseInt(req.query.cursor as string) : undefined;
+		const direction = (req.query.direction as 'before' | 'after') || 'before';
+		const includeDeleted = req.query.includeDeleted === 'true';
+
+		const result = await MessageHistoryService.getMessageHistory({
+			roomId,
+			userId,
+			limit,
+			cursor,
+			direction,
+			includeDeleted
+		});
+
+		sendSuccessResponse(res, {
+			...result,
+			messages: result.messages ? toPublicList(result.messages, ShoutboxTransformer.toAdminShout) : []
+		});
+	} catch (error) {
+		logger.error('Enhanced Shoutbox', 'Error fetching message history', { error });
+		sendErrorResponse(res, 'Failed to fetch message history', 500);
+	}
+});
+
+// Message statistics for analytics
+router.get('/stats/messages', isAdminOrModerator, async (req: Request, res: Response) => {
+	try {
+		const roomId = req.query.roomId ? (req.query.roomId as string) : undefined;
+		const dateFrom = req.query.dateFrom ? new Date(req.query.dateFrom as string) : undefined;
+		const dateTo = req.query.dateTo ? new Date(req.query.dateTo as string) : undefined;
+		const groupBy = (req.query.groupBy as 'hour' | 'day' | 'week' | 'month') || 'day';
+
+		const stats = await MessageHistoryService.getMessageStatistics({
+			roomId,
+			dateFrom,
+			dateTo,
+			groupBy
+		});
+
+		sendSuccessResponse(res, stats);
+	} catch (error) {
+		logger.error('Enhanced Shoutbox', 'Error fetching message statistics', { error });
+		sendErrorResponse(res, 'Failed to fetch message statistics', 500);
+	}
+});
+
+// Active users in room with performance optimization
+router.get(
+	'/users/active/:roomId',
+	isAuthenticatedOptional,
+	async (req: Request, res: Response) => {
+		try {
+			const roomId = req.params.roomId as RoomId;
+
+			if (!roomId) {
+				return sendErrorResponse(res, 'Invalid room ID', 400);
+			}
+
+			const activeUsers = await PerformanceService.getActiveUsersInRoom(roomId);
+
+			sendTransformedListResponse(res, activeUsers, UserTransformer.toPublicUser);
+		} catch (error) {
+			logger.error('Enhanced Shoutbox', 'Error fetching active users', { error });
+			sendErrorResponse(res, 'Failed to fetch active users', 500);
+		}
+	}
+);
 
 export default router;

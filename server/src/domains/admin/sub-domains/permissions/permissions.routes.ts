@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import { userService } from '@server/src/core/services/user.service';
+import { userService } from '@core/services/user.service';
 import { AdminPermissionsController } from './permissions.controller';
 import { canUser } from '@lib/auth/canUser';
-import { sendErrorResponse } from '@server/src/core/utils/transformer.helpers';
+import { sendErrorResponse } from '@core/utils/transformer.helpers';
 
 const controller = new AdminPermissionsController();
 const router = Router();

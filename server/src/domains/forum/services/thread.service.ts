@@ -6,9 +6,9 @@
  */
 
 import { db } from '@db';
-import { logger } from '@server/src/core/logger';
+import { logger } from '@core/logger';
 import { postService } from './post.service';
-import { cacheService } from '@server/src/core/cache.service';
+import { cacheService } from '@core/cache.service';
 import { AchievementEventEmitter } from '../../../core/events/achievement-events.service';
 import { getZoneInfoBatch } from './thread.service.batch-optimization';
 import {

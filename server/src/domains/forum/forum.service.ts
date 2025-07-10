@@ -6,7 +6,7 @@
  */
 
 import { db } from '@db';
-import { logger } from '@server/src/core/logger';
+import { logger } from '@core/logger';
 import { forumStructure, threads, threadPrefixes, tags } from '@schema';
 import { sql, desc, asc, and, eq, inArray } from 'drizzle-orm';
 import type {

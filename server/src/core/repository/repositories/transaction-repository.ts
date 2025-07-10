@@ -17,7 +17,7 @@ import {
 } from '../base-repository';
 import type { ITransactionRepository } from '../interfaces';
 import type { Transaction } from '@schema';
-import { logger } from '@server/src/core/logger';
+import { logger } from '@core/logger';
 
 export class TransactionRepository
 	extends BaseRepository<Transaction>

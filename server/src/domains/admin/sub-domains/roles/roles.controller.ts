@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express';
-import { userService } from '@server/src/core/services/user.service';
+import { userService } from '@core/services/user.service';
 import { AdminRolesService } from './roles.service';
 import { createRoleSchema, updateRoleSchema } from './roles.validators';
 import {

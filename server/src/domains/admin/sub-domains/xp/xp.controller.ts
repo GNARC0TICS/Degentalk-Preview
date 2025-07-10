@@ -1,5 +1,5 @@
 import type { Request, Response, NextFunction } from 'express';
-import { userService } from '@server/src/core/services/user.service';
+import { userService } from '@core/services/user.service';
 import { xpAdminService } from './xp.service';
 import { logger } from '../../../../core/logger';
 import { xpService } from '../../../xp/xp.service';

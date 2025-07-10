@@ -1,10 +1,10 @@
-import { userService } from '@server/src/core/services/user.service';
+import { userService } from '@core/services/user.service';
 import type { Request, Response, NextFunction } from 'express';
-import { env, isDevelopment, isProduction } from '@server/src/core/config/environment';
+import { env, isDevelopment, isProduction } from '@core/config/environment';
 import { createMockUser } from '../services/auth.service';
-import { logger } from '@server/src/core/logger';
-import { shouldBypassAuth } from '@server/src/utils/environment';
-import { sendSuccessResponse, sendErrorResponse } from "@server/src/core/utils/transformer.helpers";
+import { logger } from '@core/logger';
+import { shouldBypassAuth } from '@server-utils/environment';
+import { sendSuccessResponse, sendErrorResponse } from "@core/utils/transformer.helpers";
 
 /**
  * Determines if a user has a specific role

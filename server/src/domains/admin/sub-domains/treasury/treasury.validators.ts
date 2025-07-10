@@ -56,7 +56,7 @@ export const TreasurySettingsUpdateSchema = z.object({
 	tipsGiveXp: z.boolean().optional(),
 	likeXpAmount: z.number().int().optional(),
 	tipXpMultiplier: z.number().optional()
-});
+}).partial();
 
 // Schema for mass airdrop
 export const MassAirdropSchema = z.object({

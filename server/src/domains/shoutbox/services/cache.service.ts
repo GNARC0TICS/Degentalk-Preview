@@ -10,7 +10,7 @@ import type { UserId } from '@shared/types/ids';
  * - Typing indicators
  */
 
-import { logger } from '@server/src/core/logger';
+import { logger } from '@core/logger';
 import { createHash } from 'crypto';
 import type { RoomId, MessageId } from '@shared/types/ids';
 import type { EntityId } from "@shared/types/ids";

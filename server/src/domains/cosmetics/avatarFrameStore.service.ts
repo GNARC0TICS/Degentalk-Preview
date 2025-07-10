@@ -2,7 +2,7 @@ import { db } from '@db';
 import { products, avatarFrames, userOwnedFrames } from '@schema';
 import type { UserId } from '@shared/types/ids';
 import { eq, and } from 'drizzle-orm';
-import { dgtService } from '../wallet/dgt.service';
+import { walletService } from '../wallet/services/wallet.service';
 import type { EntityId, ProductId, FrameId } from "@shared/types/ids";
 import { logger } from "../../core/logger";
 

@@ -45,7 +45,7 @@ import { z } from 'zod';
 import type { ForumTag } from '@/types/compat/forum';
 import type { TagId } from '@shared/types/ids';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { AdminPageShell } from '@/components/admin/layout/AdminPageShell';
+import { AdminPageShell } from '@/features/admin/components/layout/AdminPageShell';
 
 // Define validation schema for tags
 const tagSchema = z.object({

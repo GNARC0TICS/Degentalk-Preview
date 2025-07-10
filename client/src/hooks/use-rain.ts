@@ -6,6 +6,7 @@ import type { RoomId, ActionId, UserId } from '@shared/types/ids';
 export interface RainParams {
 	amount: number;
 	userCount?: number;
+	eligibleUserCount?: number;
 	roomId?: RoomId;
 	currency?: string;
 }
@@ -48,7 +49,7 @@ export function useRain() {
 					method: 'POST',
 					data: {
 						amount: params.amount,
-						userCount: params.userCount || 10,
+						userCount: params.eligibleUserCount ?? params.userCount ?? 10,
 						roomId: params.roomId,
 						currency: params.currency || 'DGT'
 					}

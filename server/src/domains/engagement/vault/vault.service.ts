@@ -16,7 +16,7 @@ import {
 import { eq, and, lt, sql, gte } from 'drizzle-orm';
 import { logger } from '../../../core/logger';
 import { WalletError, ErrorCodes } from '../../../core/errors';
-import { dgtService } from '../../wallet/dgt.service';
+import { walletService } from '../../wallet';
 import type { UnlockTransactionId, VaultLockId, ActionId } from '@shared/types/ids';
 
 /**
@@ -70,19 +70,19 @@ export class VaultService {
 			const transactionId: ActionId | null = null; // This will be lockTransactionId in vaults table
 
 			if (currency === 'DGT') {
-				const deductResult = await dgtService.deductDgt(
-					userId,
-					BigInt(Math.floor(amount)),
-					'ADMIN_ADJUST', // Using ADMIN_ADJUST as VAULT_LOCK is not in DgtTransactionType
-					{
+				// Transfer DGT from user to vault (system)
+				const vaultTransfer = await walletService.transferDgt({
+					from: userId,
+					to: 'system-vault' as UserId, // System vault user
+					amount: Math.floor(amount),
+					type: 'vault-lock',
+					metadata: {
 						lockDurationDays,
 						unlockDate: unlockDate.toISOString(),
 						reason: reason || 'Vault Lock'
 					}
-				);
-				// transactionId = deductResult.transactionId; // Assuming dgtService.deductDgt returns an object with transactionId
-				// This needs to be confirmed from dgt.service.ts structure.
-				// For now, keeping it null if not directly returned.
+				});
+				// transactionId = vaultTransfer.id;
 			} else {
 				throw new WalletError(
 					`Vaulting of ${currency} is not supported yet`,
@@ -172,19 +172,21 @@ export class VaultService {
 			const vaultCurrency = (vaultLock.metadata as any)?.currency || 'DGT';
 
 			if (vaultCurrency === 'DGT') {
-				const grantResult = await dgtService.addDgt(
-					vaultLock.userId,
-					BigInt(Math.floor(vaultLock.amount)),
-					'ADMIN_ADJUST', // Using ADMIN_ADJUST as VAULT_UNLOCK is not in DgtTransactionType
-					{
+				// Transfer DGT back from vault to user
+				const unlockTransfer = await walletService.transferDgt({
+					from: 'system-vault' as UserId, // System vault user
+					to: vaultLock.userId,
+					amount: Math.floor(vaultLock.amount),
+					type: 'vault-unlock',
+					metadata: {
 						vaultLockId: vaultLock.id,
 						lockDuration: vaultLock.lockedAt
 							? Math.floor((now.getTime() - vaultLock.lockedAt.getTime()) / (1000 * 60 * 60 * 24))
 							: undefined,
 						originalLockTransaction: vaultLock.lockTransactionId
 					}
-				);
-				// unlockTransactionId = grantResult.transactionId; // Assuming addDgt returns transactionId
+				});
+				// unlockTransactionId = unlockTransfer.id;
 			}
 
 			const [updatedVaultLock] = await db

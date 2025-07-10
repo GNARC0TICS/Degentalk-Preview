@@ -1,4 +1,4 @@
-import { userService } from '@server/src/core/services/user.service';
+import { userService } from '@core/services/user.service';
 /**
  * Bulk Operations Controller
  *
@@ -7,14 +7,14 @@ import { userService } from '@server/src/core/services/user.service';
 
 import type { Request, Response } from 'express';
 import { DatabaseService } from './database.service';
-import { logger } from '@server/src/core/logger';
+import { logger } from '@core/logger';
 import { adminCreateAuditLogEntry } from '../../shared/admin-operation-utils';
 import { getUserId } from '../../admin.middleware';
 import { z } from 'zod';
 import multer from 'multer';
 import csvParser from 'csv-parser';
 import { Readable } from 'stream';
-import { sendSuccessResponse, sendErrorResponse } from "@server/src/core/utils/transformer.helpers";
+import { sendSuccessResponse, sendErrorResponse } from "@core/utils/transformer.helpers";
 
 const databaseService = new DatabaseService();
 

@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express';
-import { userService } from '@server/src/core/services/user.service';
+import { userService } from '@core/services/user.service';
 import { adminTreasuryService } from './treasury.service';
 import { AdminError, AdminErrorCodes } from '../../admin.errors';
 import { getUserId } from '../../admin.middleware';
@@ -15,7 +15,7 @@ import {
 	type MassAirdropInput
 } from './treasury.validators';
 import { validateRequestBody } from '../../admin.validation';
-import { sendSuccessResponse, sendErrorResponse } from "@server/src/core/utils/transformer.helpers";
+import { sendSuccessResponse, sendErrorResponse } from "@core/utils/transformer.helpers";
 
 export class AdminTreasuryController {
 	async getDgtSupplyStats(req: Request, res: Response) {

@@ -7,7 +7,7 @@ import { eq } from 'drizzle-orm';
 // Mock the logger to prevent actual logging during tests and allow assertions
 const mockLoggerWarn = vi.fn();
 const mockLoggerError = vi.fn();
-vi.mock('@server/src/core/logger', () => ({
+vi.mock('@core/logger', () => ({
 	logger: {
 		info: vi.fn(),
 		warn: (...args: any[]) => mockLoggerWarn(...args),

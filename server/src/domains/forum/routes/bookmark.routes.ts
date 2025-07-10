@@ -1,4 +1,4 @@
-import { userService } from '@server/src/core/services/user.service';
+import { userService } from '@core/services/user.service';
 /**
  * Bookmark Routes
  *
@@ -13,12 +13,12 @@ import { db } from '@db';
 import { userThreadBookmarks } from '@schema';
 import { eq, and } from 'drizzle-orm';
 import { isAuthenticated as requireAuth } from '../../auth/middleware/auth.middleware';
-import { logger } from '@server/src/core/logger';
-import { asyncHandler } from '@server/src/core/errors';
+import { logger } from '@core/logger';
+import { asyncHandler } from '@core/errors';
 import { 
 	sendSuccessResponse,
 	sendErrorResponse
-} from '@server/src/core/utils/transformer.helpers';
+} from '@core/utils/transformer.helpers';
 
 const router = Router();
 

@@ -1,4 +1,4 @@
-import { userService } from '@server/src/core/services/user.service';
+import { userService } from '@core/services/user.service';
 /**
  * Profile Routes
  *
@@ -26,7 +26,7 @@ import { authenticate } from '../../middleware/authenticate';
 import { profileService } from './profile.service';
 import { referralsService } from './referrals.service';
 import { logger } from "../../core/logger";
-import { sendSuccessResponse, sendErrorResponse } from "@server/src/core/utils/transformer.helpers";
+import { sendSuccessResponse, sendErrorResponse } from "@core/utils/transformer.helpers";
 
 const router = Router();
 

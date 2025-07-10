@@ -9,10 +9,10 @@ import { apiRequest } from '@/lib/queryClient';
 import { useCrudMutation } from '@/hooks/useCrudMutation'; // Import the new hook
 import { Plus, Pencil, Trash2 } from 'lucide-react';
 
-import { AdminPageShell } from '@/components/admin/layout/AdminPageShell';
-import { AdminDataTable } from '@/components/admin/common/AdminDataTable';
-import { RoleFormDialog, roleSchema } from '@/components/admin/forms/roles/RoleFormDialog';
-import type { RoleFormValues } from '@/components/admin/forms/roles/RoleFormDialog';
+import { AdminPageShell } from '@/features/admin/components/layout/AdminPageShell';
+import { AdminDataTable } from '@/features/admin/components/common/AdminDataTable';
+import { RoleFormDialog, roleSchema } from '@/features/admin/components/forms/roles/RoleFormDialog';
+import type { RoleFormValues } from '@/features/admin/components/forms/roles/RoleFormDialog';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'; // Keep Card for now
 import type { RoleId } from '@shared/types/ids';

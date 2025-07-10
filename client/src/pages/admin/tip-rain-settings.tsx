@@ -18,7 +18,7 @@ import { AlertCircle, Loader2, Settings, CloudRain, Gift, Save } from 'lucide-re
 import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { AdminPageShell } from '@/components/admin/layout/AdminPageShell';
+import { AdminPageShell } from '@/features/admin/components/layout/AdminPageShell';
 
 type TipSettings = {
 	enabled: boolean;

@@ -19,7 +19,7 @@ import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import FeatureGate from '@/components/ui/feature-gate';
 import { Username } from '@/components/users/Username';
-import RainButton from '@/components/economy/wallet/rain-button';
+import RainButton from '@/features/wallet/components/rain-button';
 import type { UserId } from "@shared/types/ids";
 
 // ShoutMessage type definition

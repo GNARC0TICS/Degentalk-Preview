@@ -4,7 +4,7 @@ import { adServingService } from './ad-serving.service';
 import { campaignManagementService } from './campaign-management.service';
 import { adConfigurationService } from './ad-configuration.service';
 import { logger } from "../../core/logger";
-import { sendSuccessResponse, sendErrorResponse } from "@server/src/core/utils/transformer.helpers";
+import { sendSuccessResponse, sendErrorResponse } from "@core/utils/transformer.helpers";
 
 // Request validation schemas
 const adRequestSchema = z.object({

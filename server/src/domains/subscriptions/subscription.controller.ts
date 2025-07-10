@@ -1,4 +1,4 @@
-import { userService } from '@server/src/core/services/user.service';
+import { userService } from '@core/services/user.service';
 /**
  * Subscription Controller
  *
@@ -9,7 +9,7 @@ import type { Request, Response } from 'express';
 import type { EntityId } from '@shared/types/ids';
 import { subscriptionService } from './subscription.service';
 import { logger } from '../../core/logger';
-import { sendSuccessResponse, sendErrorResponse } from "@server/src/core/utils/transformer.helpers";
+import { sendSuccessResponse, sendErrorResponse } from "@core/utils/transformer.helpers";
 
 export class SubscriptionController {
 	/**

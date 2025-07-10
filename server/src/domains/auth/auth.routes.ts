@@ -25,9 +25,9 @@ import {
 	devModeAuthHandler
 } from './middleware/auth.middleware';
 import { isDevMode } from '../../utils/environment';
-import { logger } from '@server/src/core/logger';
-import { getAuthenticatedUser } from "@server/src/core/utils/auth.helpers";
-import { sendSuccessResponse, sendErrorResponse } from "@server/src/core/utils/transformer.helpers";
+import { logger } from '@core/logger';
+import { getAuthenticatedUser } from "@core/utils/auth.helpers";
+import { sendSuccessResponse, sendErrorResponse } from "@core/utils/transformer.helpers";
 
 const router = Router();
 

@@ -1,4 +1,4 @@
-import { userService } from '@server/src/core/services/user.service';
+import { userService } from '@core/services/user.service';
 /**
  * Forum Rules Routes
  *
@@ -21,12 +21,12 @@ import crypto from 'crypto';
 import { z } from 'zod';
 import { isAuthenticated } from '../../auth/middleware/auth.middleware';
 import { storage } from '../../../../storage';
-import { asyncHandler } from '@server/src/core/errors'; // Assuming asyncHandler is in core errors
-import { getUserIdFromRequest } from '@server/src/utils/auth';
+import { asyncHandler } from '@core/errors'; // Assuming asyncHandler is in core errors
+import { getUserIdFromRequest } from '@server-utils/auth';
 import { 
 	sendSuccessResponse,
 	sendErrorResponse
-} from '@server/src/core/utils/transformer.helpers';
+} from '@core/utils/transformer.helpers';
 import { logger } from "../../../core/logger";
 
 const router = Router();

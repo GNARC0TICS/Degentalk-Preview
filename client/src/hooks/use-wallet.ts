@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { walletApiService } from '@/features/wallet/services/wallet-api.service';
 import { apiRequest } from '@/lib/api-request';
@@ -25,6 +25,22 @@ export function useWallet() {
 		queryFn: () => walletApiService.getBalance(),
 		staleTime: 30 * 1000 // 30 seconds before refetching
 	});
+
+	// ---------- COMPATIBILITY LAYER ----------
+	const compatBalance: WalletBalance | undefined = useMemo(() => {
+		const raw = balanceQuery.data;
+		if (!raw) return undefined;
+
+		// If legacy shape already present, return as-is
+		if (typeof raw.dgt === 'object' && raw.crypto) return raw as any;
+
+		return {
+			...raw,
+			dgt: { balance: (raw as any).dgtBalance ?? 0 },
+			crypto:
+				raw.cryptoBalances?.map((c) => ({ balance: c.balance })) ?? [],
+		} as any;
+	}, [balanceQuery.data]);
 
 	// Query transaction history
 	const transactionHistoryQuery = useQuery({
@@ -135,7 +151,7 @@ export function useWallet() {
 
 	return {
 		// Data
-		balance: balanceQuery.data,
+		balance: compatBalance,
 		transactions: transactionHistoryQuery.data?.transactions || [],
 		transactionCount: transactionHistoryQuery.data?.total || 0,
 		depositAddresses: depositAddressesQuery.data || [],

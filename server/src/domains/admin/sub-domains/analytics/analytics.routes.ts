@@ -12,7 +12,7 @@ import platformStatsRoutes from './routes/stats.routes';
 // import { systemAnalyticsRoutes } from './system-analytics.routes';
 import { Router } from 'express';
 import { AdminAnalyticsController } from './analytics.controller';
-import { validateQuery } from '@server/src/middleware/validate';
+import { validateQuery } from '@server-middleware/validate';
 import { AnalyticsQuerySchema } from './analytics.validators';
 
 const router = express.Router();

@@ -1,6 +1,6 @@
 import type { Request } from 'express';
-import { userService } from '@server/src/core/services/user.service';
-import { logger } from '@server/src/core/logger'; // Using central logger
+import { userService } from '@core/services/user.service';
+import { logger } from '@core/logger'; // Using central logger
 
 /**
  * @deprecated Use userService.getUserFromRequest() instead

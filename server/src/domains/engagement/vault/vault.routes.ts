@@ -18,9 +18,9 @@ import {
 	isAdminOrModerator,
 	isAdmin
 } from '../../auth/middleware/auth.middleware';
-import { getUserIdFromRequest } from '@server/src/utils/auth';
+import { getUserIdFromRequest } from '@server-utils/auth';
 import { isValidId } from '@shared/utils/id';
-import { sendSuccessResponse, sendErrorResponse } from "@server/src/core/utils/transformer.helpers";
+import { sendSuccessResponse, sendErrorResponse } from "@core/utils/transformer.helpers";
 
 // Initialize the service
 const vaultService = new VaultService();

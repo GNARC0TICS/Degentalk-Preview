@@ -1,15 +1,15 @@
-import { userService } from '@server/src/core/services/user.service';
+import { userService } from '@core/services/user.service';
 import type { Request, Response } from 'express';
 import { forumService } from './forum.service';
 import type { ThreadSearchParams } from './forum.service';
-import { logger } from '@server/src/core/logger';
+import { logger } from '@core/logger';
 import type { StructureId, ThreadId } from '@shared/types/ids';
-import { ForumTransformer } from '@server/src/domains/forum/transformers/forum.transformer';
+import { ForumTransformer } from '@server/domains/forum/transformers/forum.transformer';
 import { 
 	toPublicList,
 	sendSuccessResponse,
 	sendErrorResponse
-} from '@server/src/core/utils/transformer.helpers';
+} from '@core/utils/transformer.helpers';
 // import { isAuthenticated } from "@server/src/domains/auth/middleware/auth.middleware"; // Removed as unused
 
 // TODO: @syncSchema threads

@@ -17,7 +17,7 @@
 		"sourceMap": true,
 		"baseUrl": "../",
 		"paths": {
-			"@server/*": ["server/src/*"],
+			"@server/*": ["server/src/*", "server/*"],
 			"@shared/*": ["shared/*"],
 			"@db": ["db/index.ts"],
 			"@schema": ["db/schema/index.ts"]

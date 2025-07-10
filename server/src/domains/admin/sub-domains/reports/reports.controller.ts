@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express';
-import { userService } from '@server/src/core/services/user.service';
+import { userService } from '@core/services/user.service';
 import type { ReportId, MessageId } from '@shared/types/ids';
 import { adminReportsService } from './reports.service';
 import { AdminError, AdminErrorCodes } from '../../admin.errors';
@@ -12,7 +12,7 @@ import {
 	DeleteContentSchema
 } from './reports.validators';
 import { validateRequestBody, validateQueryParams } from '../../admin.validation';
-import { sendSuccessResponse, sendErrorResponse } from "@server/src/core/utils/transformer.helpers";
+import { sendSuccessResponse, sendErrorResponse } from "@core/utils/transformer.helpers";
 
 export class AdminReportsController {
 	async getReports(req: Request, res: Response) {

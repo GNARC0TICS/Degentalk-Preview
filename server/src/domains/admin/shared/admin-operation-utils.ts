@@ -5,7 +5,7 @@
  * Reduces code duplication across admin services
  */
 
-import { logger } from '@server/src/core/logger';
+import { logger } from '@core/logger';
 import { AdminError, AdminErrorCodes } from '../admin.errors';
 import type { AdminId, EntityId } from '@shared/types/ids';
 

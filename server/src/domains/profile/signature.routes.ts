@@ -10,10 +10,10 @@ import type { Request, Response } from 'express';
 import { SignatureService } from './signature.service';
 import { z } from 'zod';
 import { validateRequest } from '../../middleware/validate-request';
-import { getUserIdFromRequest } from '@server/src/utils/auth';
+import { getUserIdFromRequest } from '@server-utils/auth';
 import { isValidId } from '@shared/utils/id';
 import { logger } from "../../core/logger";
-import { sendSuccessResponse, sendErrorResponse } from "@server/src/core/utils/transformer.helpers";
+import { sendSuccessResponse, sendErrorResponse } from "@core/utils/transformer.helpers";
 
 const router = Router();
 

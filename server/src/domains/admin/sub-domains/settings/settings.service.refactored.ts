@@ -11,7 +11,7 @@
  * - SettingsGroupService: Group management operations
  */
 
-import { logger } from '@server/src/core/logger';
+import { logger } from '@core/logger';
 import { AdminError, AdminErrorCodes } from '../../admin.errors';
 
 // Import specialized services

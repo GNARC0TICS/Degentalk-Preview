@@ -1,4 +1,4 @@
-import { userService } from '@server/src/core/services/user.service';
+import { userService } from '@core/services/user.service';
 /**
  * XP Controller
  *
@@ -17,7 +17,7 @@ import { desc, eq, and, gte, sql } from 'drizzle-orm';
 import { xpActionSettings, users, xpAdjustmentLogs, levels } from '@schema'; // Adjusted path
 import { handleXpAward } from './events/xp.events'; // Assuming this handles level ups and logging
 import { isValidId } from '@shared/utils/id';
-import { sendSuccessResponse, sendErrorResponse } from '@server/src/core/utils/transformer.helpers';
+import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 // import { z } from 'zod'; // Removed as unused
 // import { x } from 'drizzle-orm/select-builder/select'; // Removed as unused
 

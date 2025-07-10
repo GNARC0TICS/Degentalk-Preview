@@ -5,11 +5,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Plus, Settings, Crown, Shield, Palette } from 'lucide-react';
-import { AdminPageShell } from '@/components/admin/layout/AdminPageShell';
+import { AdminPageShell } from '@/features/admin/components/layout/AdminPageShell';
 import { apiRequest } from '@/lib/queryClient';
-import { RolesSection } from '@/components/admin/roles/RolesSection';
-import { TitlesSection } from '@/components/admin/titles/TitlesSection';
-import { PermissionsOverview } from '@/components/admin/permissions/PermissionsOverview';
+import { RolesSection } from '@/features/admin/components/roles/RolesSection';
+import { TitlesSection } from '@/features/admin/components/titles/TitlesSection';
+import { PermissionsOverview } from '@/features/admin/components/permissions/PermissionsOverview';
 import type { TitleId, PermissionId } from '@shared/types/ids';
 
 // Types

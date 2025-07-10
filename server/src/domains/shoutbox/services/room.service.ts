@@ -9,7 +9,7 @@ import { db } from '@db';
 import type { UserId } from '@shared/types/ids';
 import { chatRooms, users, shoutboxConfig, shoutboxMessages, shoutboxUserIgnores } from '@schema';
 import { eq, and, or, desc, asc, sql, gt, lt, isNull, inArray, not, count } from 'drizzle-orm';
-import { logger } from '@server/src/core/logger';
+import { logger } from '@core/logger';
 import { createId } from '@paralleldrive/cuid2';
 import type { RoomId, GroupId } from '@shared/types/ids';
 import type { EntityId } from "@shared/types/ids";

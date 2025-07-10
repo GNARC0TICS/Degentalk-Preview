@@ -16,7 +16,7 @@ import {
 	titles
 } from '@schema';
 import { eq, and, sql, desc, gte, lt } from 'drizzle-orm';
-import { dgtService } from '../wallet/dgt.service';
+import { walletService } from '../wallet/services/wallet.service';
 import { logger } from '../../core/logger';
 import type { CosmeticId, ItemId, SubscriptionId } from '@shared/types/ids';
 import type { EntityId } from "@shared/types/ids";

@@ -1,4 +1,4 @@
-import { userService } from '@server/src/core/services/user.service';
+import { userService } from '@core/services/user.service';
 import { Router } from 'express';
 import type { EntityId } from '@shared/types/ids';
 import { DictionaryService, DictionaryStatus } from './dictionary.service';
@@ -9,7 +9,7 @@ import {
 import { insertDictionaryEntrySchema } from '@schema';
 import rateLimit from 'express-rate-limit';
 import { logger } from '../../core/logger';
-import { sendSuccessResponse, sendErrorResponse } from '@server/src/core/utils/transformer.helpers';
+import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
 const router = Router();
 

@@ -6,7 +6,7 @@
  * Essential for understanding user spending behavior and economic health
  */
 
-import { logger } from '@server/src/core/logger';
+import { logger } from '@core/logger';
 import { db } from '@db';
 import { transactions, userInventory, products } from '@schema';
 import { eq, and, gte, lte, desc, sql, inArray } from 'drizzle-orm';

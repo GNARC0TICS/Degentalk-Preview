@@ -9,7 +9,7 @@ import bcrypt from 'bcryptjs';
 import { config } from 'dotenv';
 
 export async function seedDevUser() {
-	logger.info('SEED_DEV_USER', 'Starting dev user seeding process...');
+	logger.info({ context: 'SEED_DEV_USER' }, 'Starting dev user seeding process...');
 	try {
 		// Ensure default admin role (role_id = 1) exists
 		const roleCheck = await pool.query(`SELECT role_id FROM roles WHERE role_id = 1`);
@@ -19,8 +19,8 @@ export async function seedDevUser() {
         VALUES (1, 'Administrator', 'admin', true, true, '{"admin": true, "manage_users": true, "manage_content": true}') 
         ON CONFLICT (role_id) DO NOTHING
       `);
-			logger.info('SEED_DEV_USER', 'Ensured default admin role (ID: 1) exists.');
-			logger.info('USER_SEED', '✅ Ensured default admin role (ID: 1) exists.');
+			logger.info({ context: 'SEED_DEV_USER' }, 'Ensured default admin role (ID: 1) exists.');
+			logger.info({ context: 'USER_SEED' }, '✅ Ensured default admin role (ID: 1) exists.');
 		}
 
 		const existingResult = await pool.query(`SELECT user_id FROM users WHERE username = 'DevUser'`);
@@ -56,20 +56,20 @@ export async function seedDevUser() {
 
 			const userId = result.rows[0]?.user_id;
 			if (userId) {
-				logger.info('SEED_DEV_USER', `DevUser seeded successfully with ID: ${userId}`);
-				logger.info('USER_SEED', `✅ DevUser seeded with ID: ${userId}`);
+				logger.info({ context: 'SEED_DEV_USER', userId }, `DevUser seeded successfully with ID: ${userId}`);
+				logger.info({ context: 'USER_SEED', userId }, `✅ DevUser seeded with ID: ${userId}`);
 			} else {
-				logger.error('SEED_DEV_USER', 'Failed to seed DevUser, no ID returned.');
-				logger.error('USER_SEED', '❌ Failed to seed DevUser, no ID returned.');
+				logger.error({ context: 'SEED_DEV_USER' }, 'Failed to seed DevUser, no ID returned.');
+				logger.error({ context: 'USER_SEED' }, '❌ Failed to seed DevUser, no ID returned.');
 			}
 		} else {
 			const userId = existingResult.rows[0]?.user_id;
-			logger.info('SEED_DEV_USER', `DevUser already exists with ID: ${userId}. Skipped.`);
-			logger.info('USER_SEED', `ℹ️ DevUser already exists with ID: ${userId}`);
+			logger.info({ context: 'SEED_DEV_USER', userId }, `DevUser already exists with ID: ${userId}. Skipped.`);
+			logger.info({ context: 'USER_SEED', userId }, `ℹ️ DevUser already exists with ID: ${userId}`);
 		}
 	} catch (error) {
-		logger.error('SEED_DEV_USER', 'Error during dev user seeding:', error);
-		logger.error('USER_SEED', '❌ Failed to seed DevUser', error as any);
+		logger.error({ context: 'SEED_DEV_USER', err: error }, 'Error during dev user seeding');
+		logger.error({ context: 'USER_SEED', err: error }, '❌ Failed to seed DevUser');
 		throw error;
 	}
 }

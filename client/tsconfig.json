@@ -1,10 +1,33 @@
 {
 	"extends": "../tsconfig.json",
+	"include": [
+		"src/**/*",
+		"**/*.test.ts",
+		"**/*.test.tsx",
+		"**/*.spec.ts",
+		"**/*.spec.tsx",
+		"vitest.config.ts",
+		"../shared/**/*"
+	],
+	"exclude": [
+		"../node_modules",
+		"build",
+		"dist",
+		"../server/**/*",
+		"../db/**/*",
+		"../scripts/**/*",
+		"**/*.bak.ts",
+		"**/*.bak.tsx",
+		"../UIVERSE",
+		"../archive/**/*",
+		"../shared/fixtures/**"
+	],
 	"compilerOptions": {
-		"noEmit": true,
-		"jsx": "react-jsx",
-		"tsBuildInfoFile": "./.tscache/.tsbuildinfo"
-	},
-	"include": ["src/**/*", "vite-env.d.ts"],
-	"exclude": ["node_modules", "dist", "build", "src/__tests__/**/*", "src/**/*.test.*", "src/**/*.spec.*"]
+		"baseUrl": ".",
+		"paths": {
+			"@/*": ["src/*"],
+			"@shared/types": ["../shared/types/index.ts"],
+			"@shared/*": ["../shared/*"]
+		}
+	}
 }

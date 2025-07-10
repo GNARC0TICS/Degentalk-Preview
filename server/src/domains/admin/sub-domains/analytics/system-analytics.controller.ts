@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express';
-import { userService } from '@server/src/core/services/user.service';
+import { userService } from '@core/services/user.service';
 import { systemAnalyticsService } from './system-analytics.service';
 import {
 	systemMetricsQuerySchema,
@@ -13,9 +13,9 @@ import {
 	type RealtimeAnalyticsQuery,
 	type CacheOperation
 } from './system-analytics.validators';
-import { formatAdminResponse, AdminOperationBoundary } from '@server/src/domains/admin/shared';
-import { AdminError, AdminErrorCodes } from '@server/src/domains/admin/admin.errors';
-import { adminCacheService } from '@server/src/domains/admin/shared/admin-cache.service';
+import { formatAdminResponse, AdminOperationBoundary } from '@server/domains/admin/shared';
+import { AdminError, AdminErrorCodes } from '@server/domains/admin/admin.errors';
+import { adminCacheService } from '@server/domains/admin/shared/admin-cache.service';
 
 export class SystemAnalyticsController {
 	/**

@@ -1,11 +1,11 @@
 import type { Request, Response, NextFunction } from 'express';
-import { userService } from '@server/src/core/services/user.service';
+import { userService } from '@core/services/user.service';
 import { users } from '@schema';
 import { eq } from 'drizzle-orm';
 import { WalletError, ErrorCodes as WalletErrorCodes } from '../../core/errors';
-import { db } from '@server/src/core/db';
-import { logger } from '@server/src/core/logger';
-import { sendErrorResponse } from '@server/src/core/utils/transformer.helpers';
+import { db } from '@core/db';
+import { logger } from '@core/logger';
+import { sendErrorResponse } from '@core/utils/transformer.helpers';
 
 /**
  * Extract userId from request consistently

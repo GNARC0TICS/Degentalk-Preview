@@ -7,7 +7,7 @@
 import type { Request, Response } from 'express';
 import { rainAnalyticsService } from './rain-analytics.service';
 import { logger } from '../../../../../core/logger';
-import { sendSuccessResponse, sendErrorResponse } from '@server/src/core/utils/transformer.helpers';
+import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
 class RainAnalyticsController {
 	/**

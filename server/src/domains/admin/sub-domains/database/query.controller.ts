@@ -1,4 +1,4 @@
-import { userService } from '@server/src/core/services/user.service';
+import { userService } from '@core/services/user.service';
 /**
  * Query Controller
  *
@@ -7,11 +7,11 @@ import { userService } from '@server/src/core/services/user.service';
 
 import type { Request, Response } from 'express';
 import { QueryService } from './query.service';
-import { logger } from '@server/src/core/logger';
+import { logger } from '@core/logger';
 import { adminCreateAuditLogEntry } from '../../shared/admin-operation-utils';
 import { getUserId } from '../../admin.middleware';
 import { z } from 'zod';
-import { sendSuccessResponse, sendErrorResponse } from "@server/src/core/utils/transformer.helpers";
+import { sendSuccessResponse, sendErrorResponse } from "@core/utils/transformer.helpers";
 
 const queryService = new QueryService();
 

@@ -1,4 +1,4 @@
-import { userService } from '@server/src/core/services/user.service';
+import { userService } from '@core/services/user.service';
 /**
  * Content Routes
  *
@@ -11,13 +11,13 @@ import type { Request, Response } from 'express';
 import { logger } from '../../../core/logger';
 import { isAuthenticatedOptional } from '../../auth/middleware/auth.middleware';
 import { threadService } from '../services/thread.service';
-import { asyncHandler } from '@server/src/core/errors';
+import { asyncHandler } from '@core/errors';
 import type { ForumId } from '@shared/types/ids';
 import { ForumTransformer } from '../transformers/forum.transformer';
 import { 
 	sendSuccessResponse,
 	sendErrorResponse
-} from '@server/src/core/utils/transformer.helpers';
+} from '@core/utils/transformer.helpers';
 
 const router = Router();
 

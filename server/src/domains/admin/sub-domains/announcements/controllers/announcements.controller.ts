@@ -1,4 +1,4 @@
-import { userService } from '@server/src/core/services/user.service';
+import { userService } from '@core/services/user.service';
 import type { Request, Response } from 'express';
 import type { EntityId } from '@shared/types/ids';
 import { z } from 'zod';
@@ -12,7 +12,7 @@ import {
 	deactivateAnnouncement
 } from '../services/announcements.service';
 import { logger } from '../../../../core/logger';
-import { sendSuccessResponse, sendErrorResponse } from '@server/src/core/utils/transformer.helpers';
+import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
 // Removed redundant getUserId helper - use userService.getUserFromRequest(req)?.id directly
 

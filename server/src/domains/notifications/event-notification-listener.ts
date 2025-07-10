@@ -5,7 +5,7 @@
  */
 import { EventEmitter } from 'events';
 import { generateNotificationFromEvent } from './notification-generator.service';
-import { logger } from '@server/src/core/logger';
+import { logger } from '@core/logger';
 import type { EventLog } from '@schema';
 
 // Create a global event emitter for event logs

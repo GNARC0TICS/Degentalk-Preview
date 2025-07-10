@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express';
-import { userService } from '@server/src/core/services/user.service';
+import { userService } from '@core/services/user.service';
 import { adminUsersService } from './users.service';
 import { AdminError } from '../../admin.errors';
 import { adminController } from '../../admin.controller';
@@ -13,14 +13,14 @@ import { ilike } from 'drizzle-orm';
 import type { UserId, AdminId } from '@shared/types/ids';
 import { toId, isValidId } from '@shared/utils/id';
 import { logger } from '../../../../core/logger';
-import { UserTransformer } from '@server/src/domains/users/transformers/user.transformer';
+import { UserTransformer } from '@server/domains/users/transformers/user.transformer';
 import { 
 	toPublicList,
 	sendSuccessResponse,
 	sendErrorResponse,
 	sendTransformedResponse,
 	sendTransformedListResponse
-} from '@server/src/core/utils/transformer.helpers';
+} from '@core/utils/transformer.helpers';
 import { sendSuccess, sendError, sendValidationError, handleAdminError } from '../../admin.response';
 
 export class AdminUsersController {

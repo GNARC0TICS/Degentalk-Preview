@@ -22,8 +22,8 @@ import { Plus, Pencil, Trash2 } from 'lucide-react';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { AdminPageShell } from '@/components/admin/layout/AdminPageShell';
-import { AdminAccessSelector } from '@/components/admin/inputs/AdminAccessSelector';
+import { AdminPageShell } from '@/features/admin/components/layout/AdminPageShell';
+import { AdminAccessSelector } from '@/features/admin/components/inputs/AdminAccessSelector';
 import { cn } from '@/lib/utils';
 
 interface Rarity {

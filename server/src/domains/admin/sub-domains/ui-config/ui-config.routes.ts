@@ -7,7 +7,7 @@
 import { Router } from 'express';
 import { uiConfigController } from './ui-config.controller';
 import { asyncHandler } from '../../admin.middleware';
-import { sendSuccessResponse, sendErrorResponse } from "@server/src/core/utils/transformer.helpers";
+import { sendSuccessResponse, sendErrorResponse } from "@core/utils/transformer.helpers";
 
 // Create router instance
 const router = Router();

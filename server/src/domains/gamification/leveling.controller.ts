@@ -1,4 +1,4 @@
-import { userService } from '@server/src/core/services/user.service';
+import { userService } from '@core/services/user.service';
 /**
  * Leveling API Controller
  *
@@ -8,7 +8,7 @@ import { userService } from '@server/src/core/services/user.service';
 
 import type { Request, Response } from 'express';
 import { z } from 'zod';
-import { levelingService, LevelingService } from './leveling.service';
+import { levelingService, LevelingService } from './services/leveling.service';
 import { CloutTransformer } from './transformers/clout.transformer';
 import { 
 	toPublicList,
@@ -16,7 +16,7 @@ import {
 	sendErrorResponse,
 	sendTransformedResponse,
 	sendTransformedListResponse 
-} from '@server/src/core/utils/transformer.helpers';
+} from '@core/utils/transformer.helpers';
 import { logger } from '../../core/logger';
 import { AppError } from '../../core/errors';
 

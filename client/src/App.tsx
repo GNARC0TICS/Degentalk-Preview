@@ -97,6 +97,9 @@ import InvitePage from './pages/invite/[code]';
 import UIPlaygroundPage from './pages/ui-playground';
 import { DevPlaygroundShortcut } from '@/components/dev/dev-playground-shortcut';
 
+// Import the new XP events hook
+import { useXpEvents } from '@/hooks/useXpEvents';
+
 // Import Legacy Redirect Component
 import LegacyForumRedirect from '@/components/forum/LegacyForumRedirect';
 
@@ -108,6 +111,9 @@ function RequireMod({ children }: { children: React.ReactNode }) {
 }
 
 function App() {
+	// Initialize the XP event listeners
+	useXpEvents();
+
 	// Use location to conditionally show SiteHeader
 	const [location] = useLocation();
 	const isAdminRoute = location.startsWith('/admin');

@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express';
-import { userService } from '@server/src/core/services/user.service';
+import { userService } from '@core/services/user.service';
 import { z } from 'zod';
 import { adminCacheService } from '../../shared/admin-cache.service';
 import {

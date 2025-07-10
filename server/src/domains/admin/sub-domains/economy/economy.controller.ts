@@ -1,9 +1,9 @@
 import type { Request, Response, NextFunction } from 'express';
-import { loadEconomyConfig, saveEconomyOverrides } from '@server/src/utils/economy-loader';
+import { loadEconomyConfig, saveEconomyOverrides } from '@server-utils/economy-loader';
 import { economyConfig as canonicalEconomyConfig } from '@shared/economy/economy.config';
 import { z } from 'zod';
 import { validateRequestBody } from '../../admin.validation';
-import { sendSuccessResponse, sendErrorResponse } from "@server/src/core/utils/transformer.helpers";
+import { sendSuccessResponse, sendErrorResponse } from "@core/utils/transformer.helpers";
 
 /**
  * GET /api/admin/economy/config

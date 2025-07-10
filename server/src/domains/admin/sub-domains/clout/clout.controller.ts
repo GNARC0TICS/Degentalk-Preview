@@ -3,9 +3,9 @@ import { db } from '@db';
 import { cloutAchievements, userCloutLog, users } from '@schema';
 import { eq, desc } from 'drizzle-orm';
 import { logger } from '../../../../core/logger';
-import { CloutService } from '../../../economy/services/cloutService';
+import { CloutService } from '../../../gamification/services/cloutService';
 import { CloutTransformer } from '../../../gamification/transformers/clout.transformer';
-import { sendSuccessResponse, sendErrorResponse } from "@server/src/core/utils/transformer.helpers";
+import { sendSuccessResponse, sendErrorResponse } from "@core/utils/transformer.helpers";
 
 // Instantiate once – can be swapped with dependency injection later
 const cloutService = new CloutService();

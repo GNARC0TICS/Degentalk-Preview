@@ -3,7 +3,7 @@ import { eventLogService } from '../services/event-log.service';
 import { z } from 'zod';
 import { eventTypeEnum } from '@schema/system/event_logs';
 import { logger } from "../../../core/logger";
-import { sendSuccessResponse, sendErrorResponse } from '@server/src/core/utils/transformer.helpers';
+import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
 /**
  * Controller for event log endpoints

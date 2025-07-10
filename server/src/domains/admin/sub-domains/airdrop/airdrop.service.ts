@@ -1,7 +1,7 @@
 import { db } from '@db';
 import { users, adminManualAirdropLogs, type NewAdminManualAirdropLog } from '@schema';
 import { xpService } from '../../../xp/xp.service'; // Core XP service for XP adjustments
-import { dgtService } from '../../../wallet/dgt.service'; // Core DGT service for DGT adjustments
+import { adminWalletService } from '../../../wallet/admin/services/wallet.service'; // Admin wallet service for DGT adjustments
 import { eq, inArray } from 'drizzle-orm';
 import { logger } from '../../../../core/logger';
 import { v4 as uuidv4 } from 'uuid';

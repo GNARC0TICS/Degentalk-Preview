@@ -7,7 +7,7 @@ import type { UserId } from '@shared/types/ids';
  */
 
 import { Router } from 'express';
-import { userService } from '@server/src/core/services/user.service';
+import { userService } from '@core/services/user.service';
 import { isAuthenticated } from '../auth/middleware/auth.middleware';
 import { logger } from '../../core/logger';
 import { sendSuccessResponse, sendErrorResponse } from '../../core/utils/transformer.helpers';

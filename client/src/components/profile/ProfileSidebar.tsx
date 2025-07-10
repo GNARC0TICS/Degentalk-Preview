@@ -24,7 +24,7 @@ import type { ProfileData } from '@/types/profile';
 import { useIdentityDisplay } from '@/hooks/useIdentityDisplay';
 import { AvatarFrame } from '@/components/identity/AvatarFrame';
 import { UserName } from '@/components/users/Username';
-import { LevelBadge } from '@/components/economy/xp/LevelBadge';
+import { LevelBadge } from '@/features/gamification/components/LevelBadge';
 import { FollowButton } from '@/components/social/FollowButton';
 import { getAvatarUrl } from '@/utils/avatar';
 

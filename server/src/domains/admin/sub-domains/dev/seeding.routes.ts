@@ -5,7 +5,7 @@ import { spawn } from 'child_process';
 // IMPORTANT: Adjust relative path based on file location (three levels up to auth middleware)
 import { isAdmin } from '../../../auth/middleware/auth.middleware';
 import { asyncHandler } from '../../admin.middleware';
-import { sendSuccessResponse, sendErrorResponse } from "@server/src/core/utils/transformer.helpers";
+import { sendSuccessResponse, sendErrorResponse } from "@core/utils/transformer.helpers";
 
 const router = Router();
 

@@ -5,7 +5,7 @@
  * Handles caching logic for forum data with proper invalidation
  */
 
-import { logger } from '@server/src/core/logger';
+import { logger } from '@core/logger';
 import type { ForumCategoryWithStats } from '../../../../db/types/forum.types';
 
 // Cache configuration

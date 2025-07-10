@@ -7,7 +7,7 @@
 
 import type { Request, Response, NextFunction } from 'express';
 import { logger } from './logger';
-import { getAuthenticatedUser } from "@server/src/core/utils/auth.helpers";
+import { getAuthenticatedUser } from "@core/utils/auth.helpers";
 
 // Error severity for monitoring and alerting
 export enum ErrorSeverity {

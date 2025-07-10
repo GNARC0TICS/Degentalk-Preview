@@ -1,4 +1,4 @@
-import { userService } from '@server/src/core/services/user.service';
+import { userService } from '@core/services/user.service';
 /**
  * Vault Controller
  *
@@ -10,14 +10,14 @@ import { userService } from '@server/src/core/services/user.service';
 import type { Request, Response } from 'express';
 import { vaultService, VaultLockOptions } from './vault.service';
 import { WalletError, ErrorCodes } from '../../../core/errors'; // Changed WalletErrorCodes to ErrorCodes
-import { asyncHandler } from '@server/src/core/errors';
+import { asyncHandler } from '@core/errors';
 import { logger } from '../../../core/logger';
 import { VaultService } from './vault.service';
 import type { EntityId } from '@shared/types/ids';
 import { 
 	sendSuccessResponse,
 	sendErrorResponse
-} from '@server/src/core/utils/transformer.helpers';
+} from '@core/utils/transformer.helpers';
 // import { VaultError, VaultErrorCodes } from './vault.errors'; // Removed as file not found and errors not used
 
 /**

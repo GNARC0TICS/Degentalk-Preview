@@ -70,7 +70,7 @@ import { promisify } from 'util';
 import { xpCloutService } from './services/xp-clout-service';
 import { logger, LogLevel, LogAction } from './src/core/logger';
 import { PgTransaction } from 'drizzle-orm/pg-core';
-import { ConversationId, ProductId, GroupId, StructureId, ThreadId, PostId, EmojiId, CategoryId } from "@shared/types/ids";
+import type { CategoryId, ConversationId, ProductId, GroupId, StructureId, ThreadId, PostId, EmojiId } from "../shared/types/ids";
 
 // import multerS3 from "multer-s3"; // Removed as not a dependency
 // import { S3Client } from "@aws-sdk/client-s3"; // Removed as not a dependency

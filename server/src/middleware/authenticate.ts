@@ -1,11 +1,11 @@
 import type { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import { db } from '../core/db';
+import { db } from '@core/database';
 import { users } from '@schema';
 import { eq } from 'drizzle-orm';
 import type { GroupId, UserId } from '@shared/types/ids';
-import { getAuthenticatedUser } from "@server/src/core/utils/auth.helpers";
-import { logger } from "../core/logger";
+import { getAuthenticatedUser } from "@core/utils/auth.helpers";
+import { logger } from '@core/logger';
 
 /* eslint-disable @typescript-eslint/no-namespace */
 

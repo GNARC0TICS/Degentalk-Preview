@@ -13,4 +13,4 @@ export const validateRequest =
 		} catch (error) {
 			return res.status(400).json(error);
 		}
-	};
+	}; 

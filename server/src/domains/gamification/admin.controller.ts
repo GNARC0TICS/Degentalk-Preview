@@ -1,4 +1,4 @@
-import { userService } from '@server/src/core/services/user.service';
+import { userService } from '@core/services/user.service';
 /**
  * Gamification Admin Controller
  *
@@ -11,10 +11,10 @@ import { userService } from '@server/src/core/services/user.service';
 
 import type { Request, Response } from 'express';
 import { z } from 'zod';
-import { levelingService } from './leveling.service';
-import { achievementService } from './achievement.service';
+import { levelingService } from './services/leveling.service';
+import { achievementService } from './services/achievement.service';
 import { missionsService } from '../missions/missions.service';
-import { gamificationAnalyticsService } from './analytics.service';
+import { gamificationAnalyticsService } from './services/analytics.service';
 import { CloutTransformer } from './transformers/clout.transformer';
 import { MissionsTransformer } from '../missions/transformers/missions.transformer';
 import { 
@@ -23,7 +23,7 @@ import {
 	sendErrorResponse,
 	sendTransformedResponse,
 	sendTransformedListResponse 
-} from '@server/src/core/utils/transformer.helpers';
+} from '@core/utils/transformer.helpers';
 import { logger } from '../../core/logger';
 import { AppError } from '../../core/errors';
 

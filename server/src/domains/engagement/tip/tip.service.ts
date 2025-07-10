@@ -11,12 +11,9 @@ import type { UserId, TipId, TransactionId } from '@shared/types/ids';
 import { users, transactions } from '@schema';
 import { eq, and, sql } from 'drizzle-orm';
 import { logger } from '../../../core/logger';
-import { dgtService } from '../../wallet/dgt.service';
-import { ccpaymentService } from '../../wallet/ccpayment.service';
-import { walletService } from '../../wallet/wallet.service';
+import { walletService } from '../../wallet/services/wallet.service';
 import { WalletError, ErrorCodes as WalletErrorCodes } from '../../../core/errors';
 import { v4 as uuidv4 } from 'uuid';
-import { WalletService } from '../../wallet/wallet.service';
 import { XP_ACTION } from '../../xp/xp-actions';
 import { xpService } from '../../xp/xp.service';
 
@@ -123,13 +120,18 @@ export class TipService {
 
 			if (currency === 'DGT') {
 				// Handle DGT tip using internal transfer
-				const result = await dgtService.transferDgt(fromUserId, toUserId, BigInt(amount), 'TIP', {
-					source,
-					contextId,
-					message
+				const result = await walletService.transferDgt({
+					from: fromUserId,
+					to: toUserId,
+					amount: amount,
+					reason: message || `Tip from user`,
+					metadata: {
+						source,
+						contextId
+					}
 				});
 
-				transactionIds = [result.transactionId];
+				transactionIds = [result.id];
 			} else {
 				// For crypto: Not directly supported - we'd need to simulate it
 				// since CCPayment likely doesn't support direct wallet-to-wallet transfers
