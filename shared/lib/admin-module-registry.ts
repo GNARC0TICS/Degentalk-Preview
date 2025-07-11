@@ -1,5 +1,6 @@
 import { adminConfig, type AdminModule, type AdminPermission } from '../config/admin.config';
-import { logger } from "../../server/src/core/logger";
+// TODO: Replace with proper shared logger
+// import { logger } from "../../server/src/core/logger";
 
 // Simple User interface for admin module registry
 interface User {
@@ -39,7 +40,7 @@ export class AdminModuleRegistry {
 		this.initialized = true;
 
 		if (this.options.devMode) {
-			logger.info('AdminModuleRegistry', `Initialized with ${this.modules.size} modules`);
+			console.log('AdminModuleRegistry', `Initialized with ${this.modules.size} modules`);
 		}
 	}
 
@@ -62,7 +63,7 @@ export class AdminModuleRegistry {
 		}
 
 		if (this.options.devMode) {
-			logger.info('AdminModuleRegistry', `Registered module: ${module.id}`);
+			console.log('AdminModuleRegistry', `Registered module: ${module.id}`);
 		}
 	}
 
@@ -80,7 +81,7 @@ export class AdminModuleRegistry {
 		const existed = this.modules.delete(moduleId);
 
 		if (existed && this.options.devMode) {
-			logger.info('AdminModuleRegistry', `Unregistered module: ${moduleId}`);
+			console.log('AdminModuleRegistry', `Unregistered module: ${moduleId}`);
 		}
 
 		return existed;
@@ -176,7 +177,7 @@ export class AdminModuleRegistry {
 		module.enabled = enabled;
 
 		if (this.options.devMode) {
-			logger.info('AdminModuleRegistry', `Module ${moduleId} ${enabled ? 'enabled' : 'disabled'}`);
+			console.log('AdminModuleRegistry', `Module ${moduleId} ${enabled ? 'enabled' : 'disabled'}`);
 		}
 
 		return true;
@@ -194,7 +195,7 @@ export class AdminModuleRegistry {
 		module.settings = { ...module.settings, ...settings };
 
 		if (this.options.devMode) {
-			logger.info('AdminModuleRegistry', `Updated settings for module: ${moduleId}`);
+			console.log('AdminModuleRegistry', `Updated settings for module: ${moduleId}`);
 		}
 
 		return true;
@@ -205,8 +206,8 @@ export class AdminModuleRegistry {
 	 */
 	getNavigationStructure(user: User | null): AdminModule[] {
 		const userModules = this.getModulesForUser(user);
-		logger.info('AdminModuleRegistry', 'DEBUG userModules count', { count: userModules.length });
-		logger.info('AdminModuleRegistry', 'DEBUG userModules sample', userModules.slice(0, 2).map((m) => ({
+		console.log('AdminModuleRegistry', 'DEBUG userModules count', { count: userModules.length });
+		console.log('AdminModuleRegistry', 'DEBUG userModules sample', userModules.slice(0, 2).map((m) => ({
         				id: m.id,
         				hasSubModules: !!m.subModules,
         				subModulesCount: m.subModules?.length || 0
@@ -235,14 +236,14 @@ export class AdminModuleRegistry {
 					this.hasPermission(subModule.id, user)
 				);
 				moduleWithSubs.subModules = accessibleSubModules;
-				logger.info(`DEBUG: Module ${module.id} has ${module.subModules.length} total subModules, ${accessibleSubModules.length} accessible`);
+				console.log(`DEBUG: Module ${module.id} has ${module.subModules.length} total subModules, ${accessibleSubModules.length} accessible`);
 			}
 
 			rootModules.push(moduleWithSubs);
 		}
 
-		logger.info('DEBUG: rootModules count:', rootModules.length);
-		logger.info('DEBUG: rootModules with subModules:', rootModules
+		console.log('DEBUG: rootModules count:', rootModules.length);
+		console.log('DEBUG: rootModules with subModules:', rootModules
         				.filter((m) => m.subModules && m.subModules.length > 0)
         				.map((m) => ({ id: m.id, subModulesCount: m.subModules?.length })));
 

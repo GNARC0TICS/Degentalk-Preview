@@ -1,5 +1,5 @@
-import { db } from '@/db';
-import { xpActionSettings, type InsertXpActionSetting } from '@/schema/economy/xpActionSettings';
+import { db } from '../../db';
+import { xpActionSettings, type InsertXpActionSetting } from '../../db/schema/economy/xpActionSettings';
 import { eq } from 'drizzle-orm';
 
 // ACTION ENUM – source-of-truth lives in server domain, but re-declare subset here to avoid heavy imports

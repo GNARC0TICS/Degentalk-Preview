@@ -64,9 +64,9 @@ import { analyticsEvents } from '@schema/system/analyticsEvents';
 import gamificationRoutes from './src/domains/gamification/gamification.routes';
 import { achievementRoutes } from './src/domains/gamification/achievements';
 import { getAuthenticatedUser } from "@core/utils/auth.helpers";
-import { 
+import {
 	sendSuccessResponse,
-	sendErrorResponse 
+	sendErrorResponse
 } from '@core/utils/transformer.helpers';
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -89,7 +89,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 			const tab = (req.query.tab as string) || 'trending';
 			const page = parseInt(req.query.page as string) || 1;
 			const limit = Math.min(parseInt(req.query.limit as string) || 20, 50);
-			const forumId = req.query.forumId ? parseInt(req.query.forumId as string) : undefined;
+			const forumId = req.query.forumId ? parseInt(req.query.forumId as string) as any : undefined;
 			const userId = getAuthenticatedUser(req)?.id;
 
 			const validTabs = ['trending', 'recent', 'following'];
@@ -102,13 +102,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
 			}
 
 			const { threadService } = await import('./src/domains/forum/services/thread.service');
-			const result = await threadService.fetchThreadsByTab({
+			const params = {
 				tab: tab as any,
 				page,
 				limit,
 				forumId,
-				userId
-			});
+				...(userId !== undefined ? { userId } : {})
+			};
+			const result = await threadService.fetchThreadsByTab(params);
 
 			return sendSuccessResponse(res, result);
 		} catch (error) {
@@ -177,6 +178,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 			try {
 				const { threadId, expiresAt } = req.body;
 				const userId = getAuthenticatedUser(req)?.id;
+				if (!userId) {
+					return sendErrorResponse(res, 'Authentication required', 401);
+				}
 				await PlatformAnalyticsService.featureThread(threadId, userId, expiresAt);
 				sendSuccessResponse(res, { message: 'Thread featured successfully' });
 			} catch (error) {
@@ -215,7 +219,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 	});
 
 	app.get('/api/csrf-token', csrfProtection, (req: Request, res: Response) => {
-		// @ts-ignore
+		// @ts-expect-error - csurf middleware adds csrfToken() to the request object
 		sendSuccessResponse(res, { csrfToken: req.csrfToken() });
 	});
 
@@ -235,8 +239,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 	}
 
 	const sessionMiddleware = session({
-		// @ts-ignore
-		store: storage,
+		store: storage.sessionStore,
 		secret: process.env.SESSION_SECRET || 'supersecret',
 		resave: false,
 		saveUninitialized: false,

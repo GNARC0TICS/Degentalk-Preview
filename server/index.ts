@@ -36,14 +36,14 @@ import './config/loadEnv'; // Ensures environment variables are loaded first
 // All other imports follow
 import express, { type Request, type Response, type NextFunction } from 'express';
 import { createServer } from 'http';
-// import { registerRoutes } from './routes'; // TEMP: Commented out to debug hanging
-// import { runScheduledTasks } from './utils/task-scheduler'; // TEMP: Commented out to debug hanging 
-// import { seedDevUser } from './utils/seed-dev-user'; // TEMP: Commented out to debug hanging
+import { registerRoutes } from './routes';
+import { runScheduledTasks } from './utils/task-scheduler';
+import { seedDevUser } from './utils/seed-dev-user';
 import { traceMiddleware } from './src/middleware/trace.middleware';
-// import { initEventNotificationListener } from './src/domains/notifications/event-notification-listener'; // TEMP: Commented out to debug hanging
-// import './src/core/background-processor'; // TEMP: Commented out to debug hanging
+import { initEventNotificationListener } from './src/domains/notifications/event-notification-listener';
+import './src/core/background-processor';
 import { logger } from "./src/core/logger";
-// import { sendErrorResponse } from '@core/utils/transformer.helpers'; // TEMP: Commented out to debug hanging
+import { sendErrorResponse } from './src/core/utils/transformer.helpers';
 
 // Startup logging helper
 const startupLog = (message: string, type: 'info' | 'success' | 'error' | 'warning' = 'info') => {
@@ -97,13 +97,13 @@ app.use(traceMiddleware);
 				const { seedXpActions } = await import('../scripts/db/seed-xp-actions');
 				const { seedDefaultLevels } = await import('../scripts/db/seed-default-levels');
 				const { seedEconomySettings } = await import('../scripts/db/seed-economy-settings');
-				const { seedForumsFromConfig } = await import('../scripts/seed/seedForumsFromConfig');
+				const { forumStructureService } = await import('./src/domains/forum/services/structure.service');
 				
 				await seedXpActions();
 				await seedDefaultLevels();
 				await seedEconomySettings();
 				// Seed zones & forums using config-driven seeder
-				await seedForumsFromConfig();
+				await forumStructureService.syncFromConfig();
 				startupLog('All seed scripts completed successfully.', 'success');
 			} catch (seedError) {
 				startupLog(`Error during seeding: ${seedError}`, 'error');
@@ -122,6 +122,13 @@ app.use(traceMiddleware);
 			res.json({ status: 'healthy', uptime: process.uptime() });
 		});
 
+		// Register API routes
+		startupLog('Registering API routes...');
+		const routeStartTime = Date.now();
+		await registerRoutes(app);
+		const routeEndTime = Date.now();
+		startupLog(`API routes registered in ${routeEndTime - routeStartTime}ms.`, 'success');
+
 		const server = createServer(app);
 
 		app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
@@ -130,7 +137,7 @@ app.use(traceMiddleware);
 
 			startupLog(`Express error handler caught: ${err.message}`, 'error');
 			if (err.stack) {
-				logger.error(err.stack);
+				logger.error('ExpressErrorHandler', err.stack);
 			}
 
 			res.status(status).json({ success: false, error: message });
@@ -139,12 +146,11 @@ app.use(traceMiddleware);
 		// Pure API server - no client serving
 		startupLog('API server configured (client served separately)', 'success');
 
-		// TEMP: Commented out to debug hanging
-		// startupLog('Initializing event notification listener...');
-		// initEventNotificationListener();
-		// startupLog('Event notification listener initialized.', 'success');
+		startupLog('Initializing event notification listener...');
+		initEventNotificationListener();
+		startupLog('Event notification listener initialized.', 'success');
 
-		// startupLog('Achievement background processor started.', 'success');
+		startupLog('Achievement background processor started.', 'success');
 
 		// Start the server
 		const port = process.env.PORT ? parseInt(process.env.PORT) : 5001;
@@ -165,16 +171,15 @@ app.use(traceMiddleware);
 		server.on('listening', () => {
 			startupLog(`Backend API running on http://localhost:${port}`, 'success');
 
-			// TEMP: Commented out to debug hanging
-			// startupLog('Initializing scheduled tasks...');
-			// runScheduledTasks();
+			startupLog('Initializing scheduled tasks...');
+			runScheduledTasks();
 
-			// setInterval(
-			// 	() => {
-			// 		runScheduledTasks();
-			// 	},
-			// 	5 * 60 * 1000
-			// );
+			setInterval(
+				() => {
+					runScheduledTasks();
+				},
+				5 * 60 * 1000
+			);
 
 			startupLog('Server initialization complete!', 'success');
 		});

@@ -11,7 +11,7 @@ import type { UserId, TipId, TransactionId } from '@shared/types/ids';
 import { users, transactions } from '@schema';
 import { eq, and, sql } from 'drizzle-orm';
 import { logger } from '../../../core/logger';
-import { walletService } from '../../wallet/services/wallet.service';
+import { walletService, WalletService } from '../../wallet/services/wallet.service';
 import { WalletError, ErrorCodes as WalletErrorCodes } from '../../../core/errors';
 import { v4 as uuidv4 } from 'uuid';
 import { XP_ACTION } from '../../xp/xp-actions';
@@ -20,20 +20,22 @@ import { xpService } from '../../xp/xp.service';
 // Create local table definitions until we update the schema
 import {
 	pgTable,
-	serial,
-	integer,
+	uuid,
 	text,
 	timestamp,
 	jsonb,
 	varchar,
-	decimal
+	decimal,
+	serial,
+	integer
 } from 'drizzle-orm/pg-core';
+import { ErrorCodes } from '../../../core/errors';
 
 // Temporary tip records table definition until it's added to the schema
 const tipRecords = pgTable('tip_records', {
-	id: serial('id').primaryKey(),
-	fromUserId: integer('from_user_id').notNull(),
-	toUserId: integer('to_user_id').notNull(),
+	id: uuid('id').primaryKey(),
+	fromUserId: text('from_user_id').notNull(),
+	toUserId: text('to_user_id').notNull(),
 	amount: decimal('amount', { precision: 18, scale: 6 }).notNull(),
 	currency: varchar('currency', { length: 10 }).notNull().default('DGT'),
 	source: varchar('source', { length: 100 }),
@@ -73,7 +75,7 @@ export interface TipRequest {
  * Tip response structure
  */
 export interface TipResponse {
-	id: TipId;
+	id: string;
 	fromUserId: UserId;
 	toUserId: UserId;
 	amount: number;
@@ -105,11 +107,11 @@ export class TipService {
 		try {
 			// Validate request
 			if (fromUserId === toUserId) {
-				throw new WalletError('Cannot tip yourself', 400, WalletErrorCodes.INVALID_PARAMETERS);
+				throw new WalletError('Cannot tip yourself', ErrorCodes.BAD_REQUEST);
 			}
 
 			if (amount <= 0) {
-				throw new WalletError('Tip amount must be positive', 400, WalletErrorCodes.INVALID_AMOUNT);
+				throw new WalletError('Tip amount must be positive', ErrorCodes.BAD_REQUEST);
 			}
 
 			// Check tip settings (min/max amounts, cooldowns, etc.)
@@ -121,8 +123,8 @@ export class TipService {
 			if (currency === 'DGT') {
 				// Handle DGT tip using internal transfer
 				const result = await walletService.transferDgt({
-					from: fromUserId,
-					to: toUserId,
+					fromUserId: fromUserId,
+					toUserId: toUserId,
 					amount: amount,
 					reason: message || `Tip from user`,
 					metadata: {
@@ -140,8 +142,7 @@ export class TipService {
 				// TODO: Implement crypto tipping if CCPayment supports it
 				throw new WalletError(
 					'Cryptocurrency tipping not supported yet',
-					400,
-					WalletErrorCodes.INVALID_PARAMETERS
+					ErrorCodes.OPERATION_NOT_ALLOWED
 				);
 			}
 
@@ -170,7 +171,7 @@ export class TipService {
 			// This could track tips given/received for achievements, etc.
 
 			return {
-				id: tipRecord.id,
+				id: tipRecord.id as string,
 				fromUserId,
 				toUserId,
 				amount,
@@ -180,16 +181,15 @@ export class TipService {
 				createdAt: tipRecord.createdAt,
 				transactionIds
 			};
-		} catch (error) {
+		} catch (error: unknown) {
 			if (error instanceof WalletError) {
 				throw error;
 			}
-
-			logger.error('TipService', `Error sending tip: ${error.message}`);
+			const errorMessage = error instanceof Error ? error.message : String(error);
+			logger.error('TipService', `Error sending tip: ${errorMessage}`);
 			throw new WalletError(
-				`Failed to send tip: ${error.message}`,
-				500,
-				WalletErrorCodes.TRANSACTION_FAILED
+				`Failed to send tip: ${errorMessage}`,
+				ErrorCodes.WALLET_TRANSACTION_FAILED
 			);
 		}
 	}
@@ -215,8 +215,7 @@ export class TipService {
 		if (currency === 'DGT' && settings.minTipAmountDGT && amount < Number(settings.minTipAmountDGT)) {
 			throw new WalletError(
 				`Minimum DGT tip amount is ${settings.minTipAmountDGT}`,
-				400,
-				WalletErrorCodes.INVALID_AMOUNT
+				ErrorCodes.BAD_REQUEST
 			);
 		}
 
@@ -224,8 +223,7 @@ export class TipService {
 		if (currency === 'DGT' && settings.maxTipAmountDGT && amount > Number(settings.maxTipAmountDGT)) {
 			throw new WalletError(
 				`Maximum DGT tip amount is ${settings.maxTipAmountDGT}`,
-				400,
-				WalletErrorCodes.INVALID_AMOUNT
+				ErrorCodes.BAD_REQUEST
 			);
 		}
 
@@ -250,8 +248,7 @@ export class TipService {
 			if (totalSentToday + amount > Number(settings.dailyTipLimitDGT)) {
 				throw new WalletError(
 					`Daily DGT tip limit of ${settings.dailyTipLimitDGT} would be exceeded`,
-					400,
-					WalletErrorCodes.RATE_LIMITED
+					ErrorCodes.RATE_LIMITED
 				);
 			}
 		}
@@ -280,8 +277,7 @@ export class TipService {
 
 				throw new WalletError(
 					`Tip cooldown in effect. You can tip this user again at ${nextAllowedTime.toISOString()}`,
-					400,
-					WalletErrorCodes.RATE_LIMITED,
+					ErrorCodes.RATE_LIMITED,
 					{ nextAllowedTime }
 				);
 			}
@@ -293,7 +289,7 @@ export class TipService {
 	 */
 	async getTipHistory(
 		userId: UserId,
-		type: 'sent' | 'received' = 'both',
+		type: 'sent' | 'received' | 'both' = 'both',
 		limit: number = 20,
 		offset: number = 0
 	): Promise<{
@@ -333,12 +329,12 @@ export class TipService {
 				tips,
 				total: Number(count)
 			};
-		} catch (error) {
-			logger.error('TipService', `Error getting tip history: ${error.message}`);
+		} catch (error: unknown) {
+			const errorMessage = error instanceof Error ? error.message : String(error);
+			logger.error('TipService', `Error getting tip history: ${errorMessage}`);
 			throw new WalletError(
-				`Failed to get tip history: ${error.message}`,
-				500,
-				WalletErrorCodes.SYSTEM_ERROR
+				`Failed to get tip history: ${errorMessage}`,
+				ErrorCodes.SERVER_ERROR
 			);
 		}
 	}

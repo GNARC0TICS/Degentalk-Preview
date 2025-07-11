@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import type { ForumId } from '@shared/types/ids';
-import { logger } from "../../server/src/core/logger";
+// TODO: Replace with proper shared logger
+// import { logger } from "../../server/src/core/logger";
 import type { UserId } from "@shared/types/ids";
 
 /*
@@ -265,7 +266,7 @@ export function sanitizeMultiplier(
 				finalMultiplier = originalMultiplier;
 				break;
 			case 'log_only':
-				logger.info('XP_MULTIPLIER_ANALYSIS', 'Multiplier data logged', logData);
+				console.log('XP_MULTIPLIER_ANALYSIS', 'Multiplier data logged', logData);
 				// In log_only mode, return original uncapped multiplier
 				finalMultiplier = originalMultiplier;
 				break;

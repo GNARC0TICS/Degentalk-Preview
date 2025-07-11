@@ -28,6 +28,7 @@ import { isDevMode } from '../../utils/environment';
 import { logger } from '@core/logger';
 import { getAuthenticatedUser } from "@core/utils/auth.helpers";
 import { sendSuccessResponse, sendErrorResponse } from "@core/utils/transformer.helpers";
+import type { UserId, GroupId } from '@shared/types/ids';
 
 const router = Router();
 
@@ -70,8 +71,9 @@ export function setupAuthPassport(sessionStore: any) {
 					// Ensure role is not null and groupId is undefined if null
 					const userWithRole = {
 						...user,
+						id: user.id as UserId, // Cast to branded type
 						role: user.role || 'user',
-						groupId: user.groupId === null ? undefined : user.groupId
+						groupId: user.groupId === null ? undefined : (user.groupId as unknown as GroupId)
 					};
 					return done(null, userWithRole);
 				}
@@ -97,8 +99,9 @@ export function setupAuthPassport(sessionStore: any) {
 				// Ensure role is not null and groupId is undefined if null
 				const userWithRole = {
 					...user,
+					id: user.id as UserId, // Cast to branded type
 					role: user.role || 'user',
-					groupId: user.groupId === null ? undefined : user.groupId
+					groupId: user.groupId === null ? undefined : (user.groupId as unknown as GroupId)
 				};
 				return done(null, userWithRole);
 			} catch (err) {
@@ -119,48 +122,58 @@ export function setupAuthPassport(sessionStore: any) {
 
 	// Configure user deserialization (retrieving user from session)
 	passport.deserializeUser(async (id: string, done) => {
-		logger.debug('Passport deserializeUser called', { id, idType: typeof id });
+		logger.debug('AuthDeserialize', 'Passport deserializeUser called', { id, idType: typeof id });
 		try {
 			// Try to get user from storage
 			try {
-				logger.debug('Calling storage.getUser from deserializer');
-				const user = await storage.getUser(id);
+				logger.debug('AuthDeserialize', 'Calling storage.getUser from deserializer');
+				const user = await storage.getUser(id as UserId);
 				if (user) {
-					logger.debug('Deserializer got user from storage', {
-						userId: user.id,
-						username: user.username
-					});
+					logger.debug(
+						'AuthDeserialize',
+						'Deserializer got user from storage',
+						{
+							userId: user.id,
+							username: user.username
+						}
+					);
 					// Ensure role is not null and groupId is undefined if null
 					const userWithRole = {
 						...user,
+						id: user.id as UserId, // Cast to branded type
 						role: user.role || 'user',
-						groupId: user.groupId === null ? undefined : user.groupId
+						groupId: user.groupId === null ? undefined : (user.groupId as unknown as GroupId)
 					};
 					return done(null, userWithRole);
 				} else {
-					logger.warn('Deserializer: storage.getUser returned null/undefined', { id });
+					logger.warn('AuthDeserialize', 'storage.getUser returned null/undefined', { userId: id });
 				}
 			} catch (storageErr) {
-				logger.info('❌ Deserializer: storage.getUser threw error:', storageErr);
-				logger.warn('AuthRoutes', 'Storage getUser error during deserialization, falling back.', {
-					err: storageErr,
-					userId: id
-				});
+				logger.info('AuthDeserialize', 'storage.getUser threw error', { error: String(storageErr) });
+				logger.warn(
+					'AuthDeserialize',
+					'Storage getUser error during deserialization, falling back.',
+					{
+						error: String(storageErr),
+						userId: id
+					}
+				);
 				// Fall through to direct SQL approach or mock user in dev mode
 			}
 
 			// If in development mode, create a mock user
 			if (isDevMode()) {
-				logger.info('⚠️ Deserializer: Creating mock user in dev mode for ID:', id);
+				logger.info('AuthDeserialize', 'Creating mock user in dev mode', { userId: id });
 				// Check if there's a dev role stored in session
 				const role = (global as any).devRole || 'user';
-				const mockUser = createMockUser(id, role as any);
-				logger.info('🎭 Mock user created:', JSON.stringify(mockUser, null, 2));
+				const mockUser = createMockUser(id as UserId, role as any);
+				logger.info('AuthDeserialize', 'Mock user created', { user: JSON.stringify(mockUser, null, 2) });
 				// Ensure role is not null and groupId is undefined if null for mock user too
 				const mockUserWithRole = {
 					...mockUser,
+					id: mockUser.id as UserId, // Cast to branded type
 					role: mockUser.role || 'user',
-					groupId: mockUser.groupId === null ? undefined : mockUser.groupId
+					groupId: mockUser.groupId === null ? undefined : (mockUser.groupId as unknown as GroupId)
 				};
 				return done(null, mockUserWithRole);
 			}
@@ -190,8 +203,10 @@ router.get('/user', getCurrentUser);
 router.get('/verify-email', verifyEmail);
 router.post('/resend-verification', resendVerification);
 
-// Test endpoint to verify role computation
-sendSuccessResponse(res, { authenticated: false });
+// Test endpoint for unauthenticated responses
+router.get('/test-unauthenticated', (req, res) => {
+	sendSuccessResponse(res, { authenticated: false });
+});
 
 // Dev mode auth switching endpoint
 router.get('/dev-mode/set-role', devModeAuthHandler);

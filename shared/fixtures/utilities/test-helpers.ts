@@ -6,7 +6,8 @@
 import { Factory } from '../core/factory';
 import { scenarioGenerator, AvailableScenario } from './scenario-generator';
 import type { AdminId } from '@shared/types/ids';
-import { logger } from "../../../server/src/core/logger";
+// TODO: Replace with proper shared logger
+// import { logger } from "../../../server/src/core/logger";
 import type { ThreadId } from "@shared/types/ids";
 
 // Setup helpers for test environments
@@ -84,7 +85,7 @@ export class TestDataManager {
 		// Register cleanup for any database operations
 		this.registerCleanup(async () => {
 			// Cleanup logic would go here
-			logger.info(`Cleaning up scenario: ${scenarioName}`);
+			console.log(`Cleaning up scenario: ${scenarioName}`);
 		});
 
 		return result.generatedData;
@@ -353,7 +354,7 @@ export class TestDataManager {
 	}): any {
 		const { users = 1000, threads = 500, posts = 5000, transactions = 10000 } = config;
 
-		logger.info(`Generating large dataset: ${users} users, ${threads} threads, ${posts} posts, ${transactions} transactions`);
+		console.log(`Generating large dataset: ${users} users, ${threads} threads, ${posts} posts, ${transactions} transactions`);
 
 		const userData = Factory.createMany('user', users);
 		const threadData = Factory.createMany('thread', threads);

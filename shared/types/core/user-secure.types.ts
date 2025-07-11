@@ -27,7 +27,8 @@ export type {
   CreateUserRequest,
   UpdateUserRequest,
   AdminUpdateUserRequest
-} from '../../../server/src/domains/users/types';
+// TODO: Move these types to shared workspace to avoid server imports
+// } from '../../../server/src/domains/users/types';
 
 // Type guards and utilities for secure user handling
 export const isPublicUserSafe = (data: any): boolean => {

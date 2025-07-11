@@ -11,7 +11,6 @@ import { Folder, LayoutGrid } from 'lucide-react';
 import type { ZoneCardProps } from '@/components/forum/ZoneCard';
 import { ErrorBoundary } from '@/components/errors/ErrorBoundary';
 
-import { ErrorBoundary } from '@/components/errors/ErrorBoundary';
 
 function ZonesPage() {
 	// Changed to regular function for clarity with provider

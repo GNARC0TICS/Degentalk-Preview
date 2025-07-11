@@ -31,7 +31,6 @@ import { DynamicSidebar } from '@/components/forum/sidebar';
 import { ErrorBoundary } from '@/components/errors/ErrorBoundary';
 import { PageBackdrop } from '@/layout/primitives';
 
-import { ErrorBoundary } from '@/components/errors/ErrorBoundary';
 
 // Generate dynamic theme colors based on zone theme
 const getDynamicZoneColors = (colorTheme: string | null) => {

@@ -21,7 +21,7 @@ router.use(requireAuth);
 
 // Define validation schemas
 const tipSchema = z.object({
-	toUserId: z.string().uuid().positive('Recipient ID must be a positive integer'),
+	toUserId: z.string().uuid('Recipient ID must be a valid UUID'),
 	amount: z.number().positive('Amount must be positive'),
 	reason: z.string().optional(),
 	source: z.string().default('forum')

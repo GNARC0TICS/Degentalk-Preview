@@ -23,8 +23,6 @@ import HomePageSkeleton from '@/components/skeletons/HomePageSkeleton';
 import type { ZoneCardProps } from '@/components/forum/ZoneCard';
 import { ErrorBoundary } from '@/components/errors/ErrorBoundary';
 
-import { ErrorBoundary } from '@/components/errors/ErrorBoundary';
-
 function HomePage() {
 	// Get forum structure from context
 	const { zones: mergedZones, isLoading: structureLoading } = useForumStructure();

@@ -7,8 +7,6 @@ import { sendSuccessResponse, sendErrorResponse } from "@core/utils/transformer.
 
 const router = Router();
 
-sendErrorResponse(res, 'Server error', 400);
-
-sendErrorResponse(res, 'Server error', 400);
+// TODO: Implement sharing routes
 
 export default router;

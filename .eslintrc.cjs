@@ -142,7 +142,7 @@ module.exports = {
     'degen/no-direct-req-user': 'error',
     'degen/no-number-id': 'warn',
     'degen/no-missing-branded-id-import': 'error',
-    'degen/no-cross-domain-imports': 'warn',
+    'degen/no-cross-context-imports': 'warn',
     '@typescript-eslint/ban-types': 'warn',
     'react-hooks/rules-of-hooks': 'warn',
     'no-useless-catch': 'warn',

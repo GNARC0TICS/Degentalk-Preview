@@ -107,11 +107,7 @@ export class WalletApiService {
 		return this.getConfig();
 	}
 
-	static async transferDgt(data: {
-		toUserId: UserId;
-		amount: number;
-		note?: string;
-	}): Promise<void> {
+	static async transferDgt(data: { toUserId: UserId; amount: number; note?: string }): Promise<void> {
 		return apiRequest<void>({
 			url: '/api/wallet/transfer-dgt',
 			method: 'POST',
@@ -119,18 +115,7 @@ export class WalletApiService {
 		});
 	}
 
-	static async transferDgt(toUserId: UserId, amount: number, note?: string): Promise<void> {
-		return apiRequest<void>({
-			url: '/api/wallet/transfer-dgt',
-			method: 'POST',
-			data: { toUserId, amount, note }
-		});
-	}
-
-	static async createPurchaseOrder(data: {
-		cryptoAmount: number;
-		cryptoCurrency: string;
-	}): Promise<{
+	static async createPurchaseOrder(data: { cryptoAmount: number; cryptoCurrency: string }): Promise<{
 		success: boolean;
 		orderId: string;
 		depositAddress: string;
@@ -142,20 +127,6 @@ export class WalletApiService {
 			method: 'POST',
 			data
 		});
-	}
-
-	// Instance wrapper for createPurchaseOrder (legacy API)
-	async createPurchaseOrder(data: { cryptoAmount: number; cryptoCurrency: string }) {
-		return WalletApiService.createPurchaseOrder(data);
-	}
-
-	// Legacy overload that accepts packageId string and returns depositUrl
-	async createPurchaseOrder(packageId: string) {
-		const result = await WalletApiService.createPurchaseOrder({
-			cryptoAmount: 0,
-			cryptoCurrency: 'USDT'
-		});
-		return { depositUrl: `/wallet/deposit/${result.orderId}` } as { depositUrl: string };
 	}
 
 	static async getDepositAddresses(): Promise<DepositAddress[]> {
@@ -172,26 +143,16 @@ export class WalletApiService {
 		});
 	}
 
-	static async requestWithdrawal(data: {
-		amount: number;
-		currency: string;
-		address: string;
-	}): Promise<void> {
-		return apiRequest<void>({
-			url: '/api/wallet/withdraw',
-			method: 'POST',
-			data
-		});
-	}
-
-	// Legacy positional API used by WithdrawButton
+	static async requestWithdrawal(
+		data: { amount: number; currency: string; address: string }
+	): Promise<void>;
 	static async requestWithdrawal(
 		amount: number,
 		currency: string,
 		address: string
 	): Promise<void>;
 	static async requestWithdrawal(
-		arg1: number | { amount: number; currency: string; address: string },
+		arg1: any,
 		arg2?: string,
 		arg3?: string
 	): Promise<void> {

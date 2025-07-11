@@ -107,15 +107,17 @@ adminRouter.use('/ui-config', uiConfigRoutes);
 adminRouter.get('/dashboard', asyncHandler(adminController.getDashboardStats)); // Corrected method name
 
 // Admin account validation
-sendSuccessResponse(res, { isAdmin: true });
+adminRouter.get('/validate', (req, res) => {
+	sendSuccessResponse(res, { isAdmin: true });
+});
 
 /**
  * Register admin routes with the Express application
  * @param app Express application or router
  */
-export function registerAdminRoutes(app: Express) {
+export function registerAdminRoutes(router: Router) {
 	// Added type for app
-	app.use('/api/admin', adminRouter);
+	router.use('/admin', adminRouter);
 }
 
 export default adminRouter;
