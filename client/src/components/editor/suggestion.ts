@@ -139,7 +139,7 @@ class MentionList {
 		const selectedItem = this.element.querySelectorAll('.mention-list-item')[index];
 		if (selectedItem) {
 			this.scrollContainer.scrollTop =
-				selectedItem.offsetTop - this.scrollContainer.offsetHeight / 2;
+				(selectedItem as HTMLElement).offsetTop - this.scrollContainer.offsetHeight / 2;
 		}
 	}
 
@@ -157,7 +157,10 @@ class MentionList {
 		}
 
 		if (event.key === 'Enter') {
-			this.command(this.items[this.selectedIndex]);
+			const selectedItem = this.items[this.selectedIndex];
+			if (selectedItem) {
+				this.command(selectedItem);
+			}
 			event.preventDefault();
 		}
 	}
@@ -210,7 +213,7 @@ export default {
 
 		return {
 			onStart: (props: SuggestionProps) => {
-				component = new ReactRenderer(MentionList, {
+				component = new ReactRenderer(MentionList as any, {
 					props,
 					editor: props.editor
 				});
@@ -229,7 +232,7 @@ export default {
 			onUpdate(props: SuggestionProps) {
 				component.updateProps(props);
 
-				popup[0].setProps({
+				popup[0]?.setProps({
 					getReferenceClientRect: props.clientRect
 				});
 			},
@@ -243,7 +246,7 @@ export default {
 			},
 
 			onExit() {
-				popup[0].destroy();
+				popup[0]?.destroy();
 				component.destroy();
 			}
 		};

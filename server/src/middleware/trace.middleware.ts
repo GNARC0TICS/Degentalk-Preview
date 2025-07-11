@@ -35,9 +35,10 @@ export function traceMiddleware(req: Request, res: Response, next: NextFunction)
 					method: req.method,
 					url: req.originalUrl,
 					statusCode: res.statusCode,
-				durationMs: parseFloat(durationMs.toFixed(3))
-			}
-		);
+					durationMs: parseFloat(durationMs.toFixed(3))
+				}
+			);
+		}
 	});
 
 	next();

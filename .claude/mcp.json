@@ -1,5 +1,41 @@
 {
 	"mcpServers": {
+		"eslint": {
+			"command": "npx",
+			"args": ["-y", "@eslint/mcp@latest"]
+		},
+		"postgres": {
+			"command": "npx",
+			"args": ["-y", "@modelcontextprotocol/server-postgres"],
+			"env": {
+				"POSTGRES_CONNECTION_STRING": "postgresql://neondb_owner:npg_eZTUNmt3h5YE@ep-steep-field-a4mgmi29-pooler.us-east-1.aws.neon.tech/neondb?sslmode=require"
+			}
+		},
+		"filesystem": {
+			"command": "npx",
+			"args": ["-y", "@modelcontextprotocol/server-filesystem", "/Users/gnarcotic/Degentalk"]
+		},
+		"puppeteer": {
+			"command": "npx",
+			"args": ["-y", "@modelcontextprotocol/server-puppeteer@latest"]
+		},
+		"fetch": {
+			"command": "npx",
+			"args": ["-y", "@modelcontextprotocol/server-fetch@latest"]
+		},
+		"sequential-thinking": {
+			"command": "npx",
+			"args": ["-y", "mcp-server-sequential-thinking"]
+		},
+		"context7": {
+			"command": "npx",
+			"args": ["-y", "@upstash/context7-mcp@latest"]
+		},
+		"zen": {
+			"command": "python3",
+			"args": ["zen-mcp-server/server.py"],
+			"cwd": "/Users/gnarcotic/Degentalk"
+		},
 		"Neon": {
 			"command": "npx",
 			"args": [
@@ -8,13 +44,6 @@
 				"start",
 				"napi_64010heeqqly1w5t5eg1dpjposfjcqpdg0lu4bc7yvnci0vh7qyivoo04i3j036x"
 			]
-		},
-		"PostgreSQL": {
-			"command": "npx",
-			"args": ["-y", "@modelcontextprotocol/server-postgres"],
-			"env": {
-				"POSTGRES_CONNECTION_STRING": "postgresql://neondb_owner:npg_eZTUNmt3h5YE@ep-steep-field-a4mgmi29-pooler.us-east-1.aws.neon.tech/neondb?sslmode=require"
-			}
 		},
 		"BraveSearch": {
 			"command": "npx",

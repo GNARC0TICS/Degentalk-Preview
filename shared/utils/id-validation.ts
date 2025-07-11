@@ -6,7 +6,6 @@
 
 import type { UserId, ThreadId, PostId, MissionId, AchievementId } from '@shared/types/ids';
 import { z } from 'zod';
-import { isValidId } from '@shared/utils/id';
 
 /**
  * Runtime UUID validation

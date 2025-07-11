@@ -25,11 +25,12 @@ module.exports = {
     sourceType: 'module',
     project: ['tsconfig.eslint.json'],
   },
-  plugins: ['@typescript-eslint', 'react-hooks'],
+  plugins: ['@typescript-eslint', 'react-hooks', 'drizzle'],
   extends: [
     'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
     'plugin:react-hooks/recommended',
+    'plugin:drizzle/recommended',
   ],
   overrides: [
     {

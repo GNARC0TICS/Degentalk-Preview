@@ -1,4 +1,4 @@
-import type { UserId } from "@shared/types/ids";
+import type { UserId } from './types/ids';
 
 // Unified Wallet System Configuration
 // Consolidated from 3 separate configs for single source of truth
@@ -212,7 +212,18 @@ export class WalletFeatureChecker {
 
 		// Check rollout percentage
 		if (feature.rolloutPercentage && userId) {
-			const userHash = userId % 100;
+			// Simple hash function to get a number from the userId string
+			const getNumericHash = (str: string) => {
+				let hash = 0;
+				for (let i = 0; i < str.length; i++) {
+					const char = str.charCodeAt(i);
+					hash = (hash << 5) - hash + char;
+					hash |= 0; // Convert to 32bit integer
+				}
+				return Math.abs(hash);
+			};
+
+			const userHash = getNumericHash(userId) % 100;
 			if (userHash >= feature.rolloutPercentage) {
 				return { hasAccess: false, reason: 'Not in rollout group' };
 			}

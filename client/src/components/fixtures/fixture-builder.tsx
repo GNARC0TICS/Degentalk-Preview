@@ -25,7 +25,7 @@ import { toast } from 'sonner';
 interface FixtureConfig {
 	type: 'user' | 'thread' | 'post' | 'transaction' | 'scenario';
 	count: number;
-	state?: string;
+	state?: string | undefined;
 	overrides: Record<string, any>;
 	relationships: Record<string, any>;
 }

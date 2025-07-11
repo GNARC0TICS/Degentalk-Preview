@@ -7,9 +7,7 @@
  * Re-exports from the user domain for cross-domain usage.
  */
 
-// Import the security-enhanced types from the user domain
-// TODO: Move these types to shared workspace to avoid server imports
-/*
+// Import and re-export the security-enhanced types from the user domain
 export type {
   PublicUser,
   AuthenticatedUserSelf,
@@ -30,7 +28,6 @@ export type {
   UpdateUserRequest,
   AdminUpdateUserRequest
 } from '../../../server/src/domains/users/types';
-*/
 
 // Type guards and utilities for secure user handling
 export const isPublicUserSafe = (data: any): boolean => {

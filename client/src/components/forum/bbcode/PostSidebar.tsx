@@ -1,5 +1,14 @@
 import React from 'react';
-import { Crown, Shield, User, Calendar, MessageSquare, Award, TrendingUp } from 'lucide-react';
+import {
+	Crown,
+	Shield,
+	User,
+	Calendar,
+	MessageSquare,
+	Award,
+	TrendingUp,
+	Circle
+} from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { AvatarFrame } from '@/components/identity/AvatarFrame';
 import { UserName } from '@/components/users/Username';
@@ -192,18 +201,18 @@ export function PostSidebar({
 				</div>
 
 				{/* Reputation/Clout */}
-				{profile.reputation && profile.reputation > 0 && (
+				{profile.clout && profile.clout > 0 && (
 					<div className="flex items-center text-zinc-400">
 						<TrendingUp className="h-3 w-3 mr-2 flex-shrink-0" />
-						<span>Rep: {profile.reputation.toLocaleString()}</span>
+						<span>Rep: {profile.clout.toLocaleString()}</span>
 					</div>
 				)}
 
 				{/* XP Display */}
-				{profile.totalXp && profile.totalXp > 0 && (
+				{profile.xp && profile.xp > 0 && (
 					<div className="flex items-center text-zinc-400">
 						<Award className="h-3 w-3 mr-2 flex-shrink-0" />
-						<span>XP: {profile.totalXp.toLocaleString()}</span>
+						<span>XP: {profile.xp.toLocaleString()}</span>
 					</div>
 				)}
 			</div>

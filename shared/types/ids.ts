@@ -97,6 +97,18 @@ export type WithdrawalId = Id<'WithdrawalId'>;
 export type DgtPackageId = Id<'DgtPackageId'>;
 export type PurchaseOrderId = Id<'PurchaseOrderId'>;
 
+// Amount types
+export type DgtAmount = Id<'DgtAmount'>;
+export type UsdAmount = Id<'UsdAmount'>;
+export type XpAmount = Id<'XpAmount'>;
+export type TipAmount = Id<'TipAmount'>;
+export type WithdrawalAmount = Id<'WithdrawalAmount'>;
+
+// Transaction types
+export type TransactionType = Id<'TransactionType'>;
+export type TransactionStatus = Id<'TransactionStatus'>;
+export type WithdrawalStatus = Id<'WithdrawalStatus'>;
+
 export const isValidUUID = (id: string): boolean => {
   const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
   return uuidRegex.test(id);

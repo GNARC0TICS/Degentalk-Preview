@@ -190,8 +190,8 @@ describe('Admin Types', () => {
 			expect(achievement.rarity).toBe('common');
 			expect(achievement.requirements).toHaveLength(1);
 			expect(achievement.rewards).toHaveLength(2);
-			expect(achievement.requirements[0].type).toBe('posts');
-			expect(achievement.rewards[0].type).toBe('xp');
+			expect(achievement.requirements[0]?.type).toBe('posts');
+			expect(achievement.rewards[0]?.type).toBe('xp');
 		});
 	});
 });

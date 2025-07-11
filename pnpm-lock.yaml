@@ -14,6 +14,10 @@ packageExtensionsChecksum: 01024426c495ea8fcf0f03eefad777e9
 importers:
 
   .:
+    dependencies:
+      tippy.js:
+        specifier: ^6.3.7
+        version: 6.3.7
     devDependencies:
       '@paralleldrive/cuid2':
         specifier: ^2.2.2
@@ -54,9 +58,15 @@ importers:
       drizzle-orm:
         specifier: 0.44.2
         version: 0.44.2(@neondatabase/serverless@0.10.4)(@types/pg@8.15.4)(pg@8.16.3)
+      drizzle-zod:
+        specifier: ^0.7.0
+        version: 0.7.1(drizzle-orm@0.44.2(@neondatabase/serverless@0.10.4)(@types/pg@8.15.4)(pg@8.16.3))(zod@3.25.67)
       eslint:
         specifier: ^8.57.0
         version: 8.57.1
+      eslint-plugin-drizzle:
+        specifier: ^0.2.3
+        version: 0.2.3(eslint@8.57.1)
       glob:
         specifier: ^10.3.10
         version: 10.4.5
@@ -3785,6 +3795,11 @@ packages:
     resolution: {directory: eslint-plugins/degen, type: directory}
     peerDependencies:
       eslint: ^8
+
+  eslint-plugin-drizzle@0.2.3:
+    resolution: {integrity: sha512-BO+ymHo33IUNoJlC0rbd7HP9EwwpW4VIp49R/tWQF/d2E1K2kgTf0tCXT0v9MSiBr6gGR1LtPwMLapTKEWSg9A==}
+    peerDependencies:
+      eslint: '>=8.0.0'
 
   eslint-plugin-react-hooks@4.6.2:
     resolution: {integrity: sha512-QzliNJq4GinDBcD8gPB5v0wh6g8q3SUi6EFF0x8N/BL9PoVs0atuGc47ozMRyOWAKdwaZ5OnbOEa3WR+dSGKuQ==}
@@ -9012,6 +9027,10 @@ snapshots:
   escape-string-regexp@4.0.0: {}
 
   eslint-plugin-degen@file:eslint-plugins/degen(eslint@8.57.1):
+    dependencies:
+      eslint: 8.57.1
+
+  eslint-plugin-drizzle@0.2.3(eslint@8.57.1):
     dependencies:
       eslint: 8.57.1
 

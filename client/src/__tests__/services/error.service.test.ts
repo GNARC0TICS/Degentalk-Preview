@@ -40,8 +40,8 @@ describe('ErrorService', () => {
 			const appError = recentErrors[0];
 			expect(appError?.message).toBe('Test error message');
 			expect(appError?.context).toBe('test-context');
-			expect(appError.id).toMatch(/^err_\d+_[a-z0-9]+$/);
-			expect(appError.timestamp).toBeDefined();
+			expect(appError?.id).toMatch(/^err_\d+_[a-z0-9]+$/);
+			expect(appError?.timestamp).toBeDefined();
 		});
 
 		it('should handle AppError objects directly', () => {
@@ -56,7 +56,7 @@ describe('ErrorService', () => {
 			errorService.handle(appError);
 
 			const recentErrors = errorService.getRecentErrors(1);
-			expect(recentErrors[0].id).toBe('custom-error-1');
+			expect(recentErrors[0]?.id).toBe('custom-error-1');
 		});
 	});
 
@@ -67,7 +67,7 @@ describe('ErrorService', () => {
 			errorService.handle(networkError);
 
 			const recentErrors = errorService.getRecentErrors(1);
-			expect(recentErrors[0].category).toBe('network');
+			expect(recentErrors[0]?.category).toBe('network');
 		});
 
 		it('should categorize validation errors correctly', () => {
@@ -76,7 +76,7 @@ describe('ErrorService', () => {
 			errorService.handle(validationError);
 
 			const recentErrors = errorService.getRecentErrors(1);
-			expect(recentErrors[0].category).toBe('validation');
+			expect(recentErrors[0]?.category).toBe('validation');
 		});
 
 		it('should categorize permission errors correctly', () => {
@@ -85,7 +85,7 @@ describe('ErrorService', () => {
 			errorService.handle(permissionError);
 
 			const recentErrors = errorService.getRecentErrors(1);
-			expect(recentErrors[0].category).toBe('permission');
+			expect(recentErrors[0]?.category).toBe('permission');
 		});
 
 		it('should categorize payment errors correctly', () => {
@@ -94,7 +94,7 @@ describe('ErrorService', () => {
 			errorService.handle(paymentError);
 
 			const recentErrors = errorService.getRecentErrors(1);
-			expect(recentErrors[0].category).toBe('payment');
+			expect(recentErrors[0]?.category).toBe('payment');
 		});
 
 		it('should categorize system errors correctly', () => {
@@ -103,7 +103,7 @@ describe('ErrorService', () => {
 			errorService.handle(systemError);
 
 			const recentErrors = errorService.getRecentErrors(1);
-			expect(recentErrors[0].category).toBe('system');
+			expect(recentErrors[0]?.category).toBe('system');
 		});
 
 		it('should default to business category for unknown errors', () => {
@@ -112,7 +112,7 @@ describe('ErrorService', () => {
 			errorService.handle(unknownError);
 
 			const recentErrors = errorService.getRecentErrors(1);
-			expect(recentErrors[0].category).toBe('business');
+			expect(recentErrors[0]?.category).toBe('business');
 		});
 	});
 
@@ -123,7 +123,7 @@ describe('ErrorService', () => {
 			errorService.handle(paymentError);
 
 			const recentErrors = errorService.getRecentErrors(1);
-			expect(recentErrors[0].severity).toBe('critical');
+			expect(recentErrors[0]?.severity).toBe('critical');
 		});
 
 		it('should assign high severity to TypeErrors', () => {
@@ -132,7 +132,7 @@ describe('ErrorService', () => {
 			errorService.handle(typeError);
 
 			const recentErrors = errorService.getRecentErrors(1);
-			expect(recentErrors[0].severity).toBe('high');
+			expect(recentErrors[0]?.severity).toBe('high');
 		});
 
 		it('should assign medium severity to validation errors', () => {
@@ -141,7 +141,7 @@ describe('ErrorService', () => {
 			errorService.handle(validationError);
 
 			const recentErrors = errorService.getRecentErrors(1);
-			expect(recentErrors[0].severity).toBe('medium');
+			expect(recentErrors[0]?.severity).toBe('medium');
 		});
 
 		it('should assign low severity by default', () => {
@@ -150,7 +150,7 @@ describe('ErrorService', () => {
 			errorService.handle(generalError);
 
 			const recentErrors = errorService.getRecentErrors(1);
-			expect(recentErrors[0].severity).toBe('low');
+			expect(recentErrors[0]?.severity).toBe('low');
 		});
 	});
 
@@ -164,8 +164,8 @@ describe('ErrorService', () => {
 
 			const recentErrors = errorService.getRecentErrors();
 			expect(recentErrors).toHaveLength(2);
-			expect(recentErrors[0].message).toBe('Second error'); // Most recent first
-			expect(recentErrors[1].message).toBe('First error');
+			expect(recentErrors[0]?.message).toBe('Second error'); // Most recent first
+			expect(recentErrors[1]?.message).toBe('First error');
 		});
 
 		it('should limit stored errors to maximum', () => {
@@ -246,8 +246,8 @@ describe('useErrorHandler hook', () => {
 
 		const errors = getRecentErrors();
 		expect(errors).toHaveLength(1);
-		expect(errors[0].message).toBe('Hook test error');
-		expect(errors[0].context).toBe('hook-context');
+		expect(errors[0]?.message).toBe('Hook test error');
+		expect(errors[0]?.context).toBe('hook-context');
 	});
 });
 
@@ -263,8 +263,8 @@ describe('withErrorHandling wrapper', () => {
 
 		const recentErrors = errorService.getRecentErrors(1);
 		expect(recentErrors).toHaveLength(1);
-		expect(recentErrors[0].message).toBe('Async operation failed');
-		expect(recentErrors[0].context).toBe('async-context');
+		expect(recentErrors[0]?.message).toBe('Async operation failed');
+		expect(recentErrors[0]?.context).toBe('async-context');
 	});
 
 	it('should return results from successful operations', async () => {
