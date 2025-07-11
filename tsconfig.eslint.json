@@ -2,6 +2,8 @@
 	"extends": "./tsconfig.json",
 	"include": [
 		"client/src/**/*",
+		"client/postcss.config.js",
+		"client/tailwind.config.ts",
 		"server/**/*",
 		"shared/**/*",
 		"scripts/**/*",

@@ -8,6 +8,8 @@
  */
 
 // Import the security-enhanced types from the user domain
+// TODO: Move these types to shared workspace to avoid server imports
+/*
 export type {
   PublicUser,
   AuthenticatedUserSelf,
@@ -27,8 +29,8 @@ export type {
   CreateUserRequest,
   UpdateUserRequest,
   AdminUpdateUserRequest
-// TODO: Move these types to shared workspace to avoid server imports
-// } from '../../../server/src/domains/users/types';
+} from '../../../server/src/domains/users/types';
+*/
 
 // Type guards and utilities for secure user handling
 export const isPublicUserSafe = (data: any): boolean => {
