@@ -14,6 +14,11 @@
 		"dev:server": "pnpm --filter @degentalk/server dev",
 		"dev:seed": "pnpm run kill-ports && pnpm run seed:all && pnpm dev",
 		"dev:quick": "pnpm run kill-ports && pnpm --parallel --filter @degentalk/server --filter @degentalk/client dev",
+		"docker:dev": "./scripts/docker-dev.sh dev",
+		"docker:claude": "./scripts/docker-dev.sh claude",
+		"docker:prod": "./scripts/docker-dev.sh prod",
+		"docker:build": "./scripts/docker-dev.sh build",
+		"docker:clean": "./scripts/docker-dev.sh clean",
 		"validate:workspace": "pnpm -r exec pnpm why @degentalk/shared",
 		"validate:boundaries": "node scripts/validation/validate-boundaries.cjs",
 		"validate:dependencies": "node scripts/validation/validate-dependencies.cjs",
@@ -95,17 +100,19 @@
 		"dotenv-cli": "^8.0.0",
 		"drizzle-kit": "0.31.4",
 		"drizzle-orm": "0.44.2",
+		"drizzle-zod": "^0.7.0",
 		"eslint": "^8.57.0",
+		"eslint-plugin-drizzle": "^0.2.3",
 		"glob": "^10.3.10",
 		"lint-staged": "^15.2.10",
 		"minimist": "^1.2.8",
 		"prettier": "^3.5.3",
+		"recast": "^0.23.4",
 		"simple-git-hooks": "^2.12.0",
 		"ts-morph": "^26.0.0",
 		"ts-node": "^10.9.2",
 		"tsx": "^4.19.4",
 		"typescript": "5.6.3",
-		"recast": "^0.23.4",
 		"utility-types": "^3.10.0"
 	},
 	"simple-git-hooks": {
@@ -193,5 +200,8 @@
 				]
 			}
 		}
+	},
+	"dependencies": {
+		"tippy.js": "^6.3.7"
 	}
 }
