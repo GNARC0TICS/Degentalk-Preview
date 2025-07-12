@@ -6,7 +6,7 @@
 
 import { z } from 'zod';
 import type { Request, Response } from 'express';
-import { sendValidationError, sendError } from './admin.response';
+import { sendErrorResponse } from '@core/utils/transformer.helpers';
 
 /**
  * Validate request body against a Zod schema
@@ -19,7 +19,7 @@ export function validateRequestBody<T>(
 	const validation = schema.safeParse(req.body);
 
 	if (!validation.success) {
-		sendValidationError(res, 'Invalid request data', validation.error.format());
+		sendErrorResponse(res, 'Invalid request data', 400);
 		return null;
 	}
 
@@ -34,7 +34,7 @@ export function validateNumberParam(req: Request, res: Response, paramName: stri
 	const numValue = Number(value);
 
 	if (isNaN(numValue) || !isFinite(numValue)) {
-		sendError(res, `Invalid ${paramName}: must be a valid number`, 400);
+		sendErrorResponse(res, `Invalid ${paramName}: must be a valid number`, 400);
 		return null;
 	}
 
@@ -52,7 +52,7 @@ export function validateQueryParams<T>(
 	const validation = schema.safeParse(req.query);
 
 	if (!validation.success) {
-		sendValidationError(res, 'Invalid query parameters', validation.error.format());
+		sendErrorResponse(res, 'Invalid query parameters', 400);
 		return null;
 	}
 

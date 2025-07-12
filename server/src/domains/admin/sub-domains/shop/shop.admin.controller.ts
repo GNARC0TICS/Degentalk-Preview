@@ -66,7 +66,7 @@ export const shopAdminController = {
 			return sendSuccessResponse(res, newProduct[0]);
 		} catch (error) {
 			logger.error('Error creating product:', error);
-			return sendErrorResponse(res, 'Error creating product');
+			return sendErrorResponse(res, 'Error creating product', 400);
 		}
 	},
 
@@ -89,7 +89,7 @@ export const shopAdminController = {
 			sendSuccessResponse(res, transformedProduct);
 		} catch (error) {
 			logger.error('Error fetching product by ID:', error);
-			return sendErrorResponse(res, 'Error fetching product by ID');
+			return sendErrorResponse(res, 'Error fetching product by ID', 400);
 		}
 	},
 
@@ -130,7 +130,7 @@ export const shopAdminController = {
 			sendSuccessResponse(res, transformedProduct);
 		} catch (error) {
 			logger.error('Error updating product:', error);
-			return sendErrorResponse(res, 'Error updating product');
+			return sendErrorResponse(res, 'Error updating product', 400);
 		}
 	},
 
@@ -150,7 +150,7 @@ export const shopAdminController = {
 			return sendSuccessResponse(res, { message: 'Product archived successfully', product: deletedProduct[0] });
 		} catch (error) {
 			logger.error('Error deleting product:', error);
-			return sendErrorResponse(res, 'Error deleting product');
+			return sendErrorResponse(res, 'Error deleting product', 400);
 		}
 	}
 };

@@ -26,7 +26,7 @@ export class AdminTreasuryController {
 			if (error instanceof AdminError) {
 				return sendErrorResponse(res, error.message, error.httpStatus);
 			}
-			return sendErrorResponse(res, 'Failed to get DGT supply statistics');
+			return sendErrorResponse(res, 'Failed to get DGT supply statistics', 400);
 		}
 	}
 
@@ -47,7 +47,7 @@ export class AdminTreasuryController {
 			if (error instanceof AdminError) {
 				return sendErrorResponse(res, error.message, error.httpStatus);
 			}
-			return sendErrorResponse(res, 'Failed to send DGT from treasury');
+			return sendErrorResponse(res, 'Failed to send DGT from treasury', 400);
 		}
 	}
 
@@ -68,7 +68,7 @@ export class AdminTreasuryController {
 			if (error instanceof AdminError) {
 				return sendErrorResponse(res, error.message, error.httpStatus);
 			}
-			return sendErrorResponse(res, 'Failed to recover DGT to treasury');
+			return sendErrorResponse(res, 'Failed to recover DGT to treasury', 400);
 		}
 	}
 
@@ -90,7 +90,7 @@ export class AdminTreasuryController {
 			if (error instanceof AdminError) {
 				return sendErrorResponse(res, error.message, error.httpStatus);
 			}
-			return sendErrorResponse(res, 'Failed to process mass airdrop');
+			return sendErrorResponse(res, 'Failed to process mass airdrop', 400);
 		}
 	}
 
@@ -105,7 +105,7 @@ export class AdminTreasuryController {
 			if (error instanceof AdminError) {
 				return sendErrorResponse(res, error.message, error.httpStatus);
 			}
-			return sendErrorResponse(res, 'Failed to get treasury settings');
+			return sendErrorResponse(res, 'Failed to get treasury settings', 400);
 		}
 	}
 
@@ -130,7 +130,7 @@ export class AdminTreasuryController {
 			if (error instanceof AdminError) {
 				return sendErrorResponse(res, error.message, error.httpStatus);
 			}
-			return sendErrorResponse(res, 'Failed to update treasury settings');
+			return sendErrorResponse(res, 'Failed to update treasury settings', 400);
 		}
 	}
 }

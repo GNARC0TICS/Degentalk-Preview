@@ -18,6 +18,8 @@ import { WalletError, ErrorCodes } from '@core/errors';
 import { getAuthenticatedUser } from '@core/utils/auth.helpers';
 import { walletService } from '@server/domains/wallet/services/wallet.service';
 import { walletConfig } from '@shared/wallet.config';
+import { settingsService } from '@core/services/settings.service';
+import { hasPermission } from '@server/domains/admin/adminRegistry';
 
 // Import transformers
 import {
@@ -405,21 +407,17 @@ export class WalletController {
     try {
       const user = getAuthenticatedUser(req);
       
-      // Check admin permissions
-      if (!['admin', 'super_admin'].includes(user.role)) {
-        throw new WalletError('Insufficient permissions for admin config', ErrorCodes.FORBIDDEN, 403);
+      // Check admin permissions using RBAC
+      if (!hasPermission(user.role, 'economy', 'read')) {
+        throw new WalletError('Insufficient permissions for wallet admin config', ErrorCodes.FORBIDDEN, 403);
       }
 
       logger.info('WalletController', 'Getting admin deposit config', { userId: user.id });
 
+      const walletSettings = await settingsService.getWalletSettings();
       const config = {
-        autoConvertDeposits: walletConfig.AUTO_CONVERT_DEPOSITS,
-        manualConversionAllowed: walletConfig.MANUAL_CONVERSION_ALLOWED,
-        conversionRateBuffer: walletConfig.CONVERSION_RATE_BUFFER,
-        dgtPriceUsd: walletConfig.DGT.PRICE_USD,
-        depositsEnabled: walletConfig.DEPOSITS_ENABLED,
-        withdrawalsEnabled: walletConfig.WITHDRAWALS_ENABLED,
-        internalTransfersEnabled: walletConfig.INTERNAL_TRANSFERS_ENABLED
+        ...walletSettings,
+        dgtPriceUsd: walletConfig.DGT.PRICE_USD, // Static value from config
       };
 
       res.json({
@@ -433,15 +431,15 @@ export class WalletController {
 
   /**
    * POST /api/wallet/admin/deposit-config
-   * Update deposit configuration (admin only, hot-swappable)
+   * Update deposit configuration (admin only, immutable)
    */
   async updateAdminDepositConfig(req: Request, res: Response): Promise<void> {
     try {
       const user = getAuthenticatedUser(req);
       
-      // Check admin permissions
-      if (!['admin', 'super_admin'].includes(user.role)) {
-        throw new WalletError('Insufficient permissions for admin config', ErrorCodes.FORBIDDEN, 403);
+      // Check admin permissions using RBAC
+      if (!hasPermission(user.role, 'economy', 'write')) {
+        throw new WalletError('Insufficient permissions to modify wallet admin config', ErrorCodes.FORBIDDEN, 403);
       }
 
       const {
@@ -458,45 +456,30 @@ export class WalletController {
         changes: req.body
       });
 
-      // Hot-swap configuration values (no server restart required)
-      if (typeof autoConvertDeposits === 'boolean') {
-        (walletConfig as any).AUTO_CONVERT_DEPOSITS = autoConvertDeposits;
-      }
-      if (typeof manualConversionAllowed === 'boolean') {
-        (walletConfig as any).MANUAL_CONVERSION_ALLOWED = manualConversionAllowed;
-      }
-      if (typeof conversionRateBuffer === 'number' && conversionRateBuffer >= 0 && conversionRateBuffer <= 0.1) {
-        (walletConfig as any).CONVERSION_RATE_BUFFER = conversionRateBuffer;
-      }
-      if (typeof depositsEnabled === 'boolean') {
-        (walletConfig as any).DEPOSITS_ENABLED = depositsEnabled;
-      }
-      if (typeof withdrawalsEnabled === 'boolean') {
-        (walletConfig as any).WITHDRAWALS_ENABLED = withdrawalsEnabled;
-      }
-      if (typeof internalTransfersEnabled === 'boolean') {
-        (walletConfig as any).INTERNAL_TRANSFERS_ENABLED = internalTransfersEnabled;
-      }
+      // Update settings immutably through service
+      const updatedSettings = await settingsService.updateWalletSettings({
+        ...(typeof autoConvertDeposits === 'boolean' && { autoConvertDeposits }),
+        ...(typeof manualConversionAllowed === 'boolean' && { manualConversionAllowed }),
+        ...(typeof conversionRateBuffer === 'number' && { conversionRateBuffer }),
+        ...(typeof depositsEnabled === 'boolean' && { depositsEnabled }),
+        ...(typeof withdrawalsEnabled === 'boolean' && { withdrawalsEnabled }),
+        ...(typeof internalTransfersEnabled === 'boolean' && { internalTransfersEnabled }),
+      });
 
-      const updatedConfig = {
-        autoConvertDeposits: walletConfig.AUTO_CONVERT_DEPOSITS,
-        manualConversionAllowed: walletConfig.MANUAL_CONVERSION_ALLOWED,
-        conversionRateBuffer: walletConfig.CONVERSION_RATE_BUFFER,
+      const responseConfig = {
+        ...updatedSettings,
         dgtPriceUsd: walletConfig.DGT.PRICE_USD,
-        depositsEnabled: walletConfig.DEPOSITS_ENABLED,
-        withdrawalsEnabled: walletConfig.WITHDRAWALS_ENABLED,
-        internalTransfersEnabled: walletConfig.INTERNAL_TRANSFERS_ENABLED
       };
 
       logger.info('WalletController', 'Admin deposit config updated successfully', {
         userId: user.id,
-        newConfig: updatedConfig
+        newConfig: responseConfig
       });
 
       res.json({
         success: true,
-        message: 'Deposit configuration updated successfully (hot-swapped)',
-        data: updatedConfig
+        message: 'Deposit configuration updated successfully',
+        data: responseConfig
       });
     } catch (error) {
       this.handleError(res, error, 'Failed to update admin deposit config');

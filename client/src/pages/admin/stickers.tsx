@@ -61,7 +61,7 @@ import { rarityColorMap } from '@/config/rarity.config';
 // Mock data for development (replace with actual API calls)
 const mockStickers = [
 	{
-		id: 1,
+		id: randomUUID(),
 		name: 'pepe_cry',
 		displayName: 'Crying Pepe',
 		shortcode: ':pepe_cry:',
@@ -77,7 +77,7 @@ const mockStickers = [
 		createdAt: '2024-06-20T10:30:00Z'
 	},
 	{
-		id: 2,
+		id: randomUUID(),
 		name: 'whale_moon',
 		displayName: 'Whale to Moon',
 		shortcode: ':whale_moon:',
@@ -95,7 +95,7 @@ const mockStickers = [
 
 const mockPacks = [
 	{
-		id: 1,
+		id: randomUUID(),
 		name: 'pepe_pack',
 		displayName: 'Pepe Pack',
 		theme: 'memes',
@@ -108,7 +108,7 @@ const mockPacks = [
 		createdAt: '2024-06-15T09:00:00Z'
 	},
 	{
-		id: 2,
+		id: randomUUID(),
 		name: 'whale_pack',
 		displayName: 'Whale Pack',
 		theme: 'crypto',

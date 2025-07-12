@@ -26,7 +26,6 @@ import {
 	sendTransformedResponse,
 	sendTransformedListResponse
 } from '@core/utils/transformer.helpers';
-import { sendSuccess, sendError, sendValidationError, handleAdminError } from '../../admin.response';
 
 export class UiConfigController {
 	// ==================== QUOTE OPERATIONS ====================
@@ -47,9 +46,9 @@ export class UiConfigController {
 			sendSuccessResponse(res, result);
 		} catch (error) {
 			if (error instanceof AdminError) {
-				return handleAdminError(res, error);
+				return sendErrorResponse(res, error.message, error.httpStatus || 500);
 			}
-			return sendError(res, 'Failed to fetch quotes');
+			return sendErrorResponse(res, 'Failed to fetch quotes', 500);
 		}
 	}
 
@@ -72,9 +71,9 @@ export class UiConfigController {
 			sendSuccessResponse(res, quote);
 		} catch (error) {
 			if (error instanceof AdminError) {
-				return handleAdminError(res, error);
+				return sendErrorResponse(res, error.message, error.httpStatus || 500);
 			}
-			return sendError(res, 'Failed to fetch quote');
+			return sendErrorResponse(res, 'Failed to fetch quote', 500);
 		}
 	}
 
@@ -95,9 +94,9 @@ export class UiConfigController {
 			sendSuccessResponse(res, quote);
 		} catch (error) {
 			if (error instanceof AdminError) {
-				return handleAdminError(res, error);
+				return sendErrorResponse(res, error.message, error.httpStatus || 500);
 			}
-			return sendError(res, 'Failed to create quote');
+			return sendErrorResponse(res, 'Failed to create quote', 500);
 		}
 	}
 
@@ -121,9 +120,9 @@ export class UiConfigController {
 			sendSuccessResponse(res, quote);
 		} catch (error) {
 			if (error instanceof AdminError) {
-				return handleAdminError(res, error);
+				return sendErrorResponse(res, error.message, error.httpStatus || 500);
 			}
-			return sendError(res, 'Failed to update quote');
+			return sendErrorResponse(res, 'Failed to update quote', 500);
 		}
 	}
 
@@ -149,9 +148,9 @@ export class UiConfigController {
 			sendSuccessResponse(res, { success: true });
 		} catch (error) {
 			if (error instanceof AdminError) {
-				return handleAdminError(res, error);
+				return sendErrorResponse(res, error.message, error.httpStatus || 500);
 			}
-			return sendError(res, 'Failed to delete quote');
+			return sendErrorResponse(res, 'Failed to delete quote', 500);
 		}
 	}
 
@@ -173,9 +172,9 @@ export class UiConfigController {
 			sendSuccessResponse(res, { success: true });
 		} catch (error) {
 			if (error instanceof AdminError) {
-				return handleAdminError(res, error);
+				return sendErrorResponse(res, error.message, error.httpStatus || 500);
 			}
-			return sendError(res, 'Failed to reorder quotes');
+			return sendErrorResponse(res, 'Failed to reorder quotes', 500);
 		}
 	}
 
@@ -190,7 +189,7 @@ export class UiConfigController {
 			const collections = await uiConfigService.getCollections();
 			sendTransformedListResponse(res, collections, (collection) => ({ ...collection, id: collection.id }));
 		} catch (error) {
-			return sendError(res, 'Failed to fetch collections');
+			return sendErrorResponse(res, 'Failed to fetch collections', 500);
 		}
 	}
 
@@ -217,9 +216,9 @@ export class UiConfigController {
 			sendSuccessResponse(res, collection);
 		} catch (error) {
 			if (error instanceof AdminError) {
-				return handleAdminError(res, error);
+				return sendErrorResponse(res, error.message, error.httpStatus || 500);
 			}
-			return sendError(res, 'Failed to create collection');
+			return sendErrorResponse(res, 'Failed to create collection', 500);
 		}
 	}
 
@@ -243,9 +242,9 @@ export class UiConfigController {
 			sendSuccessResponse(res, collection);
 		} catch (error) {
 			if (error instanceof AdminError) {
-				return handleAdminError(res, error);
+				return sendErrorResponse(res, error.message, error.httpStatus || 500);
 			}
-			return sendError(res, 'Failed to update collection');
+			return sendErrorResponse(res, 'Failed to update collection', 500);
 		}
 	}
 
@@ -271,9 +270,9 @@ export class UiConfigController {
 			sendSuccessResponse(res, { success: true });
 		} catch (error) {
 			if (error instanceof AdminError) {
-				return handleAdminError(res, error);
+				return sendErrorResponse(res, error.message, error.httpStatus || 500);
 			}
-			return sendError(res, 'Failed to delete collection');
+			return sendErrorResponse(res, 'Failed to delete collection', 500);
 		}
 	}
 
@@ -294,9 +293,9 @@ export class UiConfigController {
 			sendSuccessResponse(res, { success: true });
 		} catch (error) {
 			if (error instanceof AdminError) {
-				return handleAdminError(res, error);
+				return sendErrorResponse(res, error.message, error.httpStatus || 500);
 			}
-			return sendError(res, 'Failed to track event');
+			return sendErrorResponse(res, 'Failed to track event', 500);
 		}
 	}
 
@@ -316,9 +315,9 @@ export class UiConfigController {
 			sendSuccessResponse(res, result);
 		} catch (error) {
 			if (error instanceof AdminError) {
-				return handleAdminError(res, error);
+				return sendErrorResponse(res, error.message, error.httpStatus || 500);
 			}
-			return sendError(res, 'Failed to fetch analytics');
+			return sendErrorResponse(res, 'Failed to fetch analytics', 500);
 		}
 	}
 
@@ -343,9 +342,9 @@ export class UiConfigController {
 			sendSuccessResponse(res, { success: true });
 		} catch (error) {
 			if (error instanceof AdminError) {
-				return handleAdminError(res, error);
+				return sendErrorResponse(res, error.message, error.httpStatus || 500);
 			}
-			return sendError(res, 'Failed to perform bulk operation');
+			return sendErrorResponse(res, 'Failed to perform bulk operation', 500);
 		}
 	}
 
@@ -372,9 +371,9 @@ export class UiConfigController {
 			sendSuccessResponse(res, result);
 		} catch (error) {
 			if (error instanceof AdminError) {
-				return handleAdminError(res, error);
+				return sendErrorResponse(res, error.message, error.httpStatus || 500);
 			}
-			return sendError(res, 'Failed to import quotes');
+			return sendErrorResponse(res, 'Failed to import quotes', 500);
 		}
 	}
 
@@ -407,9 +406,9 @@ export class UiConfigController {
 			sendSuccessResponse(res, result);
 		} catch (error) {
 			if (error instanceof AdminError) {
-				return handleAdminError(res, error);
+				return sendErrorResponse(res, error.message, error.httpStatus || 500);
 			}
-			return sendError(res, 'Failed to export quotes');
+			return sendErrorResponse(res, 'Failed to export quotes', 500);
 		}
 	}
 }

@@ -31,7 +31,7 @@ export class AdminSettingsController {
 			if (error instanceof AdminError) {
 				return sendErrorResponse(res, error.message, error.httpStatus);
 			}
-			return sendErrorResponse(res, 'Failed to fetch settings');
+			return sendErrorResponse(res, 'Failed to fetch settings', 400);
 		}
 	}
 
@@ -44,7 +44,7 @@ export class AdminSettingsController {
 			if (error instanceof AdminError) {
 				return sendErrorResponse(res, error.message, error.httpStatus);
 			}
-			return sendErrorResponse(res, 'Failed to fetch setting');
+			return sendErrorResponse(res, 'Failed to fetch setting', 400);
 		}
 	}
 
@@ -59,7 +59,7 @@ export class AdminSettingsController {
 			if (error instanceof AdminError) {
 				return sendErrorResponse(res, error.message, error.httpStatus);
 			}
-			return sendErrorResponse(res, 'Failed to update setting');
+			return sendErrorResponse(res, 'Failed to update setting', 400);
 		}
 	}
 
@@ -76,7 +76,7 @@ export class AdminSettingsController {
 		} catch (error) {
 			if (error instanceof AdminError)
 				return sendErrorResponse(res, error.message, error.httpStatus);
-			return sendErrorResponse(res, 'Failed to update settings');
+			return sendErrorResponse(res, 'Failed to update settings', 400);
 		}
 	}
 
@@ -87,7 +87,7 @@ export class AdminSettingsController {
 		} catch (error) {
 			if (error instanceof AdminError)
 				return sendErrorResponse(res, error.message, error.httpStatus);
-			return sendErrorResponse(res, 'Failed to fetch setting groups');
+			return sendErrorResponse(res, 'Failed to fetch setting groups', 400);
 		}
 	}
 
@@ -107,7 +107,7 @@ export class AdminSettingsController {
 		} catch (error) {
 			if (error instanceof AdminError)
 				return sendErrorResponse(res, error.message, error.httpStatus);
-			return sendErrorResponse(res, 'Failed to create setting group');
+			return sendErrorResponse(res, 'Failed to create setting group', 400);
 		}
 	}
 
@@ -126,7 +126,7 @@ export class AdminSettingsController {
 		} catch (error) {
 			if (error instanceof AdminError)
 				return sendErrorResponse(res, error.message, error.httpStatus);
-			return sendErrorResponse(res, 'Failed to update setting group');
+			return sendErrorResponse(res, 'Failed to update setting group', 400);
 		}
 	}
 
@@ -144,7 +144,7 @@ export class AdminSettingsController {
 		} catch (error) {
 			if (error instanceof AdminError)
 				return sendErrorResponse(res, error.message, error.httpStatus);
-			return sendErrorResponse(res, 'Failed to delete setting group');
+			return sendErrorResponse(res, 'Failed to delete setting group', 400);
 		}
 	}
 
@@ -158,7 +158,7 @@ export class AdminSettingsController {
 		} catch (error) {
 			if (error instanceof AdminError)
 				return sendErrorResponse(res, error.message, error.httpStatus);
-			return sendErrorResponse(res, 'Failed to create setting');
+			return sendErrorResponse(res, 'Failed to create setting', 400);
 		}
 	}
 
@@ -174,7 +174,7 @@ export class AdminSettingsController {
 		} catch (error) {
 			if (error instanceof AdminError)
 				return sendErrorResponse(res, error.message, error.httpStatus);
-			return sendErrorResponse(res, 'Failed to update setting metadata');
+			return sendErrorResponse(res, 'Failed to update setting metadata', 400);
 		}
 	}
 
@@ -188,7 +188,7 @@ export class AdminSettingsController {
 		} catch (error) {
 			if (error instanceof AdminError)
 				return sendErrorResponse(res, error.message, error.httpStatus);
-			return sendErrorResponse(res, 'Failed to delete setting');
+			return sendErrorResponse(res, 'Failed to delete setting', 400);
 		}
 	}
 
@@ -199,7 +199,7 @@ export class AdminSettingsController {
 		} catch (error) {
 			if (error instanceof AdminError)
 				return sendErrorResponse(res, error.message, error.httpStatus);
-			return sendErrorResponse(res, 'Failed to fetch feature flags');
+			return sendErrorResponse(res, 'Failed to fetch feature flags', 400);
 		}
 	}
 
@@ -214,7 +214,7 @@ export class AdminSettingsController {
 		} catch (error) {
 			if (error instanceof AdminError)
 				return sendErrorResponse(res, error.message, error.httpStatus);
-			return sendErrorResponse(res, 'Failed to update feature flag');
+			return sendErrorResponse(res, 'Failed to update feature flag', 400);
 		}
 	}
 }

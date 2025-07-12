@@ -5,7 +5,7 @@ import { shopItems } from '../../../utils/shop-utils';
 import { db } from '@db';
 import { products, userInventory, transactions } from '@schema';
 import { eq, isNull, or, and, gte, lte } from 'drizzle-orm';
-import { walletService } from '../wallet/services/wallet.service';
+import { dgtService } from '@server/domains/wallet/services/dgtService';
 import { isAuthenticated } from '@server/auth/middleware/auth.middleware';
 import { walletConfig } from '@shared/wallet.config';
 import { logger } from '@core/logger';
@@ -241,15 +241,12 @@ router.post('/purchase', isAuthenticated, validateRequest(shopValidation.purchas
 				userAgent: req.get('User-Agent')
 			};
 
-			// Deduct DGT with enhanced audit trail
-			const transactionResult = await walletService.debitDgt(
+			// Deduct DGT via centralized service
+			const transactionResult = await dgtService.processShopPurchase(
 				userId,
 				dgtAmountRequired,
-				{
-					source: 'shop_purchase',
-					reason: `Purchased ${item.name}`,
-					...transactionMetadata
-				}
+				item.id,
+				item.name
 			);
 
 			// Add item to user's inventory

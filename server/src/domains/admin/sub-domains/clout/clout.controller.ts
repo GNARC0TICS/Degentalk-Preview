@@ -136,7 +136,7 @@ export const grantClout = async (req: Request, res: Response, next: NextFunction
 			reason: string;
 		};
 		if (!userId || !amount || !reason)
-			return sendErrorResponse(res, 'userId, amount, reason required', 400);
+			return sendErrorResponse(res, 'userId, amount, reason required');
 
 		// Validate user exists
 		const userExists = await db
@@ -189,7 +189,7 @@ export const adjustClout = async (req: Request, res: Response, next: NextFunctio
 		};
 
 		if (!userId || !amount || !adjustmentType || !reason) {
-			return sendErrorResponse(res, 'userId, amount, adjustmentType, and reason are required', 400);
+			return sendErrorResponse(res, 'userId, amount, adjustmentType, and reason are required');
 		}
 
 		// Validate user exists and get current clout

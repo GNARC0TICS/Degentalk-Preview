@@ -11,7 +11,7 @@ import { transactions, users, airdropSettings, airdropRecords } from '@schema';
 import { eq, and, gt, sql, desc, between } from 'drizzle-orm';
 import { logger } from '@core/logger';
 import { WalletError, ErrorCodes as WalletErrorCodes } from '@core/errors';
-import { walletService } from '../../wallet/services/wallet.service';
+import { dgtService } from '../../wallet/services/dgtService';
 import { v4 as uuidv4 } from 'uuid';
 import type { AdminUserId, AirdropId, ActionId, UserId } from '@shared/types/ids';
 
@@ -276,14 +276,13 @@ export class AirdropService {
 			}
 
 			try {
-				// Use walletService to grant DGT to the recipient
-				await walletService.creditDgt(recipientId, perUserAmount, {
-					source: 'airdrop_received',
-					reason: title || 'Airdrop distribution',
-					airdropId,
-					parentTransactionId: transactionId,
-					adminUserId
-				});
+				// Use dgtService to grant DGT to the recipient
+				await dgtService.processAirdrop(
+					recipientId,
+					perUserAmount,
+					airdropId.toString(),
+					title || 'Airdrop distribution'
+				);
 			} catch (error) {
 				// Log error but continue with other recipients
 				logger.error(
@@ -298,12 +297,12 @@ export class AirdropService {
 			try {
 				// Deduct the entire airdrop amount from admin
 				const totalAmount = perUserAmount * (recipientIds.length - 1); // Exclude admin from recipients
-				await walletService.debitDgt(adminUserId, totalAmount, {
-					source: 'airdrop_sent',
-					reason: title || 'Airdrop funding',
-					airdropId,
-					parentTransactionId: transactionId
-				});
+				await dgtService.processAdminDebit(
+					adminUserId,
+					totalAmount,
+					title || 'Airdrop funding',
+					adminUserId
+				);
 			} catch (error) {
 				// This should not happen since we checked balance earlier
 				logger.error(

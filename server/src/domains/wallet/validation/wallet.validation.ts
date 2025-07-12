@@ -272,6 +272,23 @@ const getWithdrawFeeSchema = z.object({
 });
 
 /**
+ * Admin deposit config update validation
+ */
+const walletAdminPatchSchema = z.object({
+  body: z.object({
+    autoConvertDeposits: z.boolean().optional(),
+    manualConversionAllowed: z.boolean().optional(),
+    conversionRateBuffer: z.number()
+      .min(0, 'Conversion rate buffer cannot be negative')
+      .max(0.1, 'Conversion rate buffer cannot exceed 10%')
+      .optional(),
+    depositsEnabled: z.boolean().optional(),
+    withdrawalsEnabled: z.boolean().optional(),
+    internalTransfersEnabled: z.boolean().optional(),
+  }).strict() // Prevent unknown fields
+});
+
+/**
  * Export all schemas
  */
 export const walletValidation = {
@@ -284,4 +301,5 @@ export const walletValidation = {
   validateAddress,
   swapCrypto,
   getWithdrawFee: getWithdrawFeeSchema,
+  walletAdminPatch: walletAdminPatchSchema,
 };

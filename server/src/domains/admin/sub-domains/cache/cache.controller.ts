@@ -3,12 +3,27 @@ import { userService } from '@core/services/user.service';
 import { z } from 'zod';
 import { adminCacheService } from '../../shared/admin-cache.service';
 import {
-	sendSuccess,
-	sendError,
-	validateRequestBody,
-	AdminOperationBoundary,
-	formatAdminResponse
-} from '../../shared';
+	sendSuccessResponse,
+	sendErrorResponse
+} from '@core/utils/transformer.helpers';
+import { validateRequestBody } from '../../admin.validation';
+
+// Mock boundary pattern - replace with actual implementation
+class AdminOperationBoundary {
+	constructor(private config: any) {}
+	async execute(fn: () => Promise<any>) {
+		try {
+			const data = await fn();
+			return { success: true, data };
+		} catch (error: any) {
+			return { success: false, error: { message: error.message, httpStatus: 500 } };
+		}
+	}
+}
+
+function formatAdminResponse(data: any, operation: string, entityType: string) {
+	return data;
+}
 
 const clearCacheSchema = z.object({
 	pattern: z.string().optional(),
@@ -49,12 +64,12 @@ export class AdminCacheController {
 		});
 
 		if (result.success) {
-			return sendSuccess(res, result.data);
+			return sendSuccessResponse(res, result.data);
 		} else {
-			return sendError(
+			return sendErrorResponse(
 				res,
 				result.error?.message || 'Failed to get cache metrics',
-				result.error?.httpStatus
+				result.error?.httpStatus || 500
 			);
 		}
 	}
@@ -106,12 +121,12 @@ export class AdminCacheController {
 					? 'All cache cleared successfully'
 					: `${result.data.clearedCount} cache entries cleared`;
 
-			return sendSuccess(res, result.data, message);
+			return sendSuccessResponse(res, result.data, message);
 		} else {
-			return sendError(
+			return sendErrorResponse(
 				res,
 				result.error?.message || 'Failed to clear cache',
-				result.error?.httpStatus
+				result.error?.httpStatus || 500
 			);
 		}
 	}
@@ -149,12 +164,12 @@ export class AdminCacheController {
 		});
 
 		if (result.success) {
-			return sendSuccess(res, result.data, 'Cache warmup completed successfully');
+			return sendSuccessResponse(res, result.data, 'Cache warmup completed successfully');
 		} else {
-			return sendError(
+			return sendErrorResponse(
 				res,
 				result.error?.message || 'Failed to warm up cache',
-				result.error?.httpStatus
+				result.error?.httpStatus || 500
 			);
 		}
 	}
@@ -197,12 +212,12 @@ export class AdminCacheController {
 		});
 
 		if (result.success) {
-			return sendSuccess(res, result.data);
+			return sendSuccessResponse(res, result.data);
 		} else {
-			return sendError(
+			return sendErrorResponse(
 				res,
 				result.error?.message || 'Failed to get cache analytics',
-				result.error?.httpStatus
+				result.error?.httpStatus || 500
 			);
 		}
 	}

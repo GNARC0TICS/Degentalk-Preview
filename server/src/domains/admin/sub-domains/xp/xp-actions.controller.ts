@@ -76,7 +76,7 @@ export const createXpAction = async (req: Request, res: Response, next: NextFunc
 		const { action, baseValue, description, maxPerDay, cooldownSec, enabled } = req.body;
 
 		if (!action || baseValue === undefined || !description) {
-			return sendErrorResponse(res, 'Missing required fields. action, baseValue, and description are required.', 400);
+			return sendErrorResponse(res, 'Missing required fields. action, baseValue, and description are required.');
 		}
 
 		// Check if action already exists

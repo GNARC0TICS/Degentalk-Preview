@@ -59,27 +59,37 @@ export class CCPaymentWebhookController {
 				status: webhookEvent.status
 			});
 
-			// Process the event (asynchronously, but don't wait for completion)
-			// This allows us to respond quickly to CCPayment while processing in the background
-			const processPromise = ccpaymentWebhookService.processWebhookEvent(webhookEvent);
-
-			// Immediately respond to the webhook
+			// Immediately acknowledge the webhook to CCPayment (critical for webhook reliability)
 			sendSuccessResponse(res, {
 				success: true,
 				message: 'Webhook received and validated'
 			});
 
-			// Wait for processing to complete (for logging purposes)
-			const result = await processPromise;
-			logger.info('Webhook processing completed', result);
+			// Process the event asynchronously with error boundary
+			try {
+				const result = await ccpaymentWebhookService.processWebhookEvent(webhookEvent);
+				logger.info('Webhook processing completed successfully', result);
+			} catch (processingError) {
+				logger.error('Webhook processing failed after acknowledgment', {
+					error: processingError,
+					eventType: webhookEvent.eventType,
+					orderId: webhookEvent.orderId
+				});
+				// Don't throw - webhook already acknowledged
+			}
 		} catch (error) {
-			logger.error('Error handling webhook', error);
+			logger.error('Critical error handling webhook - signature validation or parsing failed', {
+				error,
+				headers: req.headers,
+				hasSignature: !!req.header('X-Signature')
+			});
 
-			// Still respond with 200 to CCPayment to prevent retries
-			// CCPayment expects 200 OK even if processing fails
+			// Always acknowledge webhooks to prevent infinite retries from CCPayment
+			// Even validation/signature failures should return 200 OK
 			sendSuccessResponse(res, {
 				success: false,
-				message: 'Webhook received but processing failed'
+				message: 'Webhook received but validation failed',
+				error: 'Signature verification or request parsing failed'
 			});
 		}
 	}

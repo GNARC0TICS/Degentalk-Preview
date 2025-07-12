@@ -324,7 +324,7 @@ export class AdminSubscriptionController {
 				type
 			);
 			if (existingSubscription) {
-				sendErrorResponse(res, `User already has an active ${type.replace('_', ' ')} subscription`, 400);
+				sendErrorResponse(res, `User already has an active ${type.replace('_', ' ')} subscription`);
 				return;
 			}
 

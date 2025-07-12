@@ -8,7 +8,7 @@
 import { Router } from 'express';
 import { CCPaymentWebhookController } from './ccpayment-webhook.controller';
 import { asyncHandler } from '@core/errors';
-import { validateRequest } from '@server-middleware/validate-request';
+import { validateRequest } from '@server/middleware/validate-request';
 import { webhookValidation } from './validation/webhook.validation';
 
 const ccPaymentWebhookController = new CCPaymentWebhookController();

@@ -15,13 +15,9 @@ import { toId, isValidId } from '@shared/utils/id';
 import { logger } from '@core/logger';
 import { UserTransformer } from '@server/domains/users/transformers/user.transformer';
 import { 
-	toPublicList,
 	sendSuccessResponse,
-	sendErrorResponse,
-	sendTransformedResponse,
-	sendTransformedListResponse
+	sendErrorResponse
 } from '@core/utils/transformer.helpers';
-import { sendSuccess, sendError, sendValidationError, handleAdminError } from '../../admin.response';
 
 export class AdminUsersController {
 	/**
@@ -34,13 +30,13 @@ export class AdminUsersController {
 			const users = await adminUsersService.getUsers(query);
 			return sendSuccessResponse(res, {
 				...users,
-				users: toPublicList(users.users, UserTransformer.toAdminUserDetail)
+				users: users.users.map(user => UserTransformer.toAdminUserDetail(user))
 			});
 		} catch (error) {
 			if (error instanceof AdminError) {
-				return handleAdminError(res, error);
+				return sendErrorResponse(res, error.message, error.httpStatus || 500);
 			}
-			return sendError(res, 'Failed to fetch users');
+			return sendErrorResponse(res, 'Failed to fetch users', 500);
 		}
 	}
 
@@ -51,17 +47,17 @@ export class AdminUsersController {
 		try {
 			const userIdParam = req.params.id;
 			if (!isValidId(userIdParam)) {
-				return sendValidationError(res, 'Invalid user ID format');
+				return sendErrorResponse(res, 'Invalid user ID format', 400);
 			}
 
 			const userId = toId<'User'>(userIdParam);
 			const userData = await adminUsersService.getUserById(userId);
-			return sendTransformedResponse(res, userData, UserTransformer.toAdminUserDetail);
+			return sendSuccessResponse(res, UserTransformer.toAdminUserDetail(userData));
 		} catch (error) {
 			if (error instanceof AdminError) {
-				return handleAdminError(res, error);
+				return sendErrorResponse(res, error.message, error.httpStatus || 500);
 			}
-			return sendError(res, 'Failed to fetch user');
+			return sendErrorResponse(res, 'Failed to fetch user', 500);
 		}
 	}
 
@@ -72,7 +68,7 @@ export class AdminUsersController {
 		try {
 			const userIdParam = req.params.id;
 			if (!isValidId(userIdParam)) {
-				return sendValidationError(res, 'Invalid user ID format');
+				return sendErrorResponse(res, 'Invalid user ID format', 400);
 			}
 
 			const userId = toId<'User'>(userIdParam);
@@ -85,12 +81,12 @@ export class AdminUsersController {
 				changes: data
 			});
 
-			return sendTransformedResponse(res, updatedUser, UserTransformer.toAdminUserDetail, 'User updated successfully');
+			return sendSuccessResponse(res, UserTransformer.toAdminUserDetail(updatedUser), 'User updated successfully');
 		} catch (error) {
 			if (error instanceof AdminError) {
-				return handleAdminError(res, error);
+				return sendErrorResponse(res, error.message, error.httpStatus || 500);
 			}
-			return sendError(res, 'Failed to update user');
+			return sendErrorResponse(res, 'Failed to update user', 500);
 		}
 	}
 
@@ -114,12 +110,12 @@ export class AdminUsersController {
 			});
 
 			res.status(201);
-			return sendTransformedResponse(res, newUser, UserTransformer.toAdminUserDetail, 'User created successfully');
+			return sendSuccessResponse(res, UserTransformer.toAdminUserDetail(newUser), 'User created successfully');
 		} catch (error) {
 			if (error instanceof AdminError) {
-				return handleAdminError(res, error);
+				return sendErrorResponse(res, error.message, error.httpStatus || 500);
 			}
-			return sendError(res, 'Failed to create user');
+			return sendErrorResponse(res, 'Failed to create user', 500);
 		}
 	}
 
@@ -130,7 +126,7 @@ export class AdminUsersController {
 		try {
 			const userIdParam = req.params.id;
 			if (!isValidId(userIdParam)) {
-				return sendValidationError(res, 'Invalid user ID format');
+				return sendErrorResponse(res, 'Invalid user ID format', 400);
 			}
 
 			const userId = toId<'User'>(userIdParam);
@@ -142,9 +138,9 @@ export class AdminUsersController {
 			return sendSuccessResponse(res, null, 'User deleted successfully');
 		} catch (error) {
 			if (error instanceof AdminError) {
-				return handleAdminError(res, error);
+				return sendErrorResponse(res, error.message, error.httpStatus || 500);
 			}
-			return sendError(res, 'Failed to delete user');
+			return sendErrorResponse(res, 'Failed to delete user', 500);
 		}
 	}
 
@@ -155,7 +151,7 @@ export class AdminUsersController {
 		try {
 			const userIdParam = req.params.id;
 			if (!isValidId(userIdParam)) {
-				return sendValidationError(res, 'Invalid user ID format');
+				return sendErrorResponse(res, 'Invalid user ID format', 400);
 			}
 
 			const userId = toId<'User'>(userIdParam);
@@ -170,9 +166,9 @@ export class AdminUsersController {
 			return sendSuccessResponse(res, null, 'User banned successfully');
 		} catch (error) {
 			if (error instanceof AdminError) {
-				return handleAdminError(res, error);
+				return sendErrorResponse(res, error.message, error.httpStatus || 500);
 			}
-			return sendError(res, 'Failed to ban user');
+			return sendErrorResponse(res, 'Failed to ban user', 500);
 		}
 	}
 
@@ -183,7 +179,7 @@ export class AdminUsersController {
 		try {
 			const userIdParam = req.params.id;
 			if (!isValidId(userIdParam)) {
-				return sendValidationError(res, 'Invalid user ID format');
+				return sendErrorResponse(res, 'Invalid user ID format', 400);
 			}
 
 			const userId = toId<'User'>(userIdParam);
@@ -195,9 +191,9 @@ export class AdminUsersController {
 			return sendSuccessResponse(res, null, 'User unbanned successfully');
 		} catch (error) {
 			if (error instanceof AdminError) {
-				return handleAdminError(res, error);
+				return sendErrorResponse(res, error.message, error.httpStatus || 500);
 			}
-			return sendError(res, 'Failed to unban user');
+			return sendErrorResponse(res, 'Failed to unban user', 500);
 		}
 	}
 
@@ -208,13 +204,13 @@ export class AdminUsersController {
 		try {
 			const userIdParam = req.params.id;
 			if (!isValidId(userIdParam)) {
-				return sendValidationError(res, 'Invalid user ID format');
+				return sendErrorResponse(res, 'Invalid user ID format', 400);
 			}
 
 			const userId = toId<'User'>(userIdParam);
 			const { role } = req.body;
 			if (!role || !['user', 'mod', 'admin'].includes(role)) {
-				return sendValidationError(res, 'Invalid role. Must be one of: user, mod, admin');
+				return sendErrorResponse(res, 'Invalid role. Must be one of: user, mod, admin');
 			}
 
 			const updatedUser = await adminUsersService.changeUserRole(userId, role);
@@ -227,9 +223,9 @@ export class AdminUsersController {
 			return sendSuccessResponse(res, updatedUser, 'User role updated successfully');
 		} catch (error) {
 			if (error instanceof AdminError) {
-				return handleAdminError(res, error);
+				return sendErrorResponse(res, error.message, error.httpStatus || 500);
 			}
-			return sendError(res, 'Failed to change user role');
+			return sendErrorResponse(res, 'Failed to change user role', 500);
 		}
 	}
 
@@ -303,7 +299,7 @@ export class AdminUsersController {
 			return sendSuccessResponse(res, { users: transformedResults });
 		} catch (error) {
 			logger.error('Error searching users:', error);
-			return sendError(res, 'Failed to search users');
+			return sendErrorResponse(res, 'Failed to search users', 500);
 		}
 	}
 }

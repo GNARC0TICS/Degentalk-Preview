@@ -7,7 +7,7 @@ import { XP_ACTION } from '../../../xp/xp-actions';
 import { db } from '@db';
 import { xpAdjustmentLogs } from '@schema';
 import { eq, desc } from 'drizzle-orm';
-import { sendSuccess, sendError, sendValidationError, handleAdminError } from '../../admin.response';
+import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 import { validateRequestBody, validateNumberParam } from '../../admin.validation';
 import {
 	XpSettingsSchema,
@@ -21,7 +21,7 @@ export const getXpSettings = async (req: Request, res: Response, next: NextFunct
 	try {
 		// const settings = await xpAdminService.getXpSettings();
 		// AdminResponse.success(settings);
-		return sendError(res, 'Get XP Settings not implemented', 501);
+		return sendErrorResponse(res, 'Get XP Settings not implemented', 501);
 	} catch (error) {
 		logger.error(
 			'XP_ADMIN_CONTROLLER',
@@ -39,14 +39,14 @@ export const updateXpSettings = async (req: Request, res: Response, next: NextFu
 
 		// const updatedSettings = await xpAdminService.updateXpSettings(validatedData);
 		// return sendSuccess(res, updatedSettings, 'XP settings updated successfully');
-		return sendError(res, 'Update XP Settings not implemented', 501);
+		return sendErrorResponse(res, 'Update XP Settings not implemented', 501);
 	} catch (error) {
 		logger.error(
 			'XP_ADMIN_CONTROLLER',
 			'Error updating XP settings:',
 			error instanceof Error ? error.message : String(error)
 		);
-		return sendError(res, 'Failed to update XP settings');
+		return sendErrorResponse(res, 'Failed to update XP settings', 500);
 	}
 };
 
@@ -54,7 +54,7 @@ export const updateXpSettings = async (req: Request, res: Response, next: NextFu
 export const getLevels = async (req: Request, res: Response, next: NextFunction) => {
 	try {
 		const levels = await xpAdminService.getLevels();
-		return sendSuccess(res, {
+		return sendSuccessResponse(res, {
 			levels,
 			totalLevels: levels.length,
 			highestLevel: levels.length > 0 ? Math.max(...levels.map((l) => l.level)) : 0,
@@ -67,7 +67,7 @@ export const getLevels = async (req: Request, res: Response, next: NextFunction)
 			'Error getting levels:',
 			error instanceof Error ? error.message : String(error)
 		);
-		return sendError(res, 'Failed to get levels');
+		return sendErrorResponse(res, 'Failed to get levels', 500);
 	}
 };
 
@@ -77,7 +77,7 @@ export const createLevel = async (req: Request, res: Response, next: NextFunctio
 		if (!data) return; // validation handled
 
 		const level = await xpAdminService.createLevel(data);
-		return sendSuccess(res, level, 'Level created');
+		return sendSuccessResponse(res, level, 'Level created');
 	} catch (err) {
 		logger.error('XP_ADMIN_CONTROLLER', 'Error creating level:', err);
 		next(err);
@@ -93,7 +93,7 @@ export const updateLevel = async (req: Request, res: Response, next: NextFunctio
 		if (!data) return;
 
 		const level = await xpAdminService.updateLevel(levelNumber, data);
-		return sendSuccess(res, level, 'Level updated');
+		return sendSuccessResponse(res, level, 'Level updated');
 	} catch (err) {
 		logger.error('XP_ADMIN_CONTROLLER', 'Error updating level:', err);
 		next(err);
@@ -105,7 +105,7 @@ export const deleteLevel = async (req: Request, res: Response, next: NextFunctio
 		// const { levelNumber } = req.params;
 		// await xpAdminService.deleteLevel(parseInt(levelNumber));
 		// res.status(204).send();
-		return sendError(res, 'Delete Level not implemented', 501);
+		return sendErrorResponse(res, 'Delete Level not implemented', 501);
 	} catch (error) {
 		logger.error(
 			'XP_ADMIN_CONTROLLER',
@@ -121,7 +121,7 @@ export const getBadges = async (req: Request, res: Response, next: NextFunction)
 	try {
 		// const badges = await xpAdminService.getBadges();
 		// AdminResponse.success(badges);
-		return sendError(res, 'Get Badges not implemented', 501);
+		return sendErrorResponse(res, 'Get Badges not implemented', 501);
 	} catch (error) {
 		logger.error(
 			'XP_ADMIN_CONTROLLER',
@@ -136,7 +136,7 @@ export const createBadge = async (req: Request, res: Response, next: NextFunctio
 	try {
 		// const newBadge = await xpAdminService.createBadge(req.body);
 		// res.status(201).json(newBadge);
-		return sendError(res, 'Create Badge not implemented', 501);
+		return sendErrorResponse(res, 'Create Badge not implemented', 501);
 	} catch (error) {
 		logger.error(
 			'XP_ADMIN_CONTROLLER',
@@ -152,7 +152,7 @@ export const updateBadge = async (req: Request, res: Response, next: NextFunctio
 		// const { badgeId } = req.params;
 		// const updatedBadge = await xpAdminService.updateBadge(badgeId, req.body);
 		// AdminResponse.success(updatedBadge);
-		return sendError(res, 'Update Badge not implemented', 501);
+		return sendErrorResponse(res, 'Update Badge not implemented', 501);
 	} catch (error) {
 		logger.error(
 			'XP_ADMIN_CONTROLLER',
@@ -168,7 +168,7 @@ export const deleteBadge = async (req: Request, res: Response, next: NextFunctio
 		// const { badgeId } = req.params;
 		// await xpAdminService.deleteBadge(badgeId);
 		// res.status(204).send();
-		return sendError(res, 'Delete Badge not implemented', 501);
+		return sendErrorResponse(res, 'Delete Badge not implemented', 501);
 	} catch (error) {
 		logger.error(
 			'XP_ADMIN_CONTROLLER',
@@ -184,7 +184,7 @@ export const getTitles = async (req: Request, res: Response, next: NextFunction)
 	try {
 		// const titles = await xpAdminService.getTitles();
 		// AdminResponse.success(titles);
-		return sendError(res, 'Get Titles not implemented', 501);
+		return sendErrorResponse(res, 'Get Titles not implemented', 501);
 	} catch (error) {
 		logger.error(
 			'XP_ADMIN_CONTROLLER',
@@ -199,7 +199,7 @@ export const createTitle = async (req: Request, res: Response, next: NextFunctio
 	try {
 		// const newTitle = await xpAdminService.createTitle(req.body);
 		// res.status(201).json(newTitle);
-		return sendError(res, 'Create Title not implemented', 501);
+		return sendErrorResponse(res, 'Create Title not implemented', 501);
 	} catch (error) {
 		logger.error(
 			'XP_ADMIN_CONTROLLER',
@@ -215,7 +215,7 @@ export const updateTitle = async (req: Request, res: Response, next: NextFunctio
 		// const { titleId } = req.params;
 		// const updatedTitle = await xpAdminService.updateTitle(titleId, req.body);
 		// AdminResponse.success(updatedTitle);
-		return sendError(res, 'Update Title not implemented', 501);
+		return sendErrorResponse(res, 'Update Title not implemented', 501);
 	} catch (error) {
 		logger.error(
 			'XP_ADMIN_CONTROLLER',
@@ -231,7 +231,7 @@ export const deleteTitle = async (req: Request, res: Response, next: NextFunctio
 		// const { titleId } = req.params;
 		// await xpAdminService.deleteTitle(titleId);
 		// res.status(204).send();
-		return sendError(res, 'Delete Title not implemented', 501);
+		return sendErrorResponse(res, 'Delete Title not implemented', 501);
 	} catch (error) {
 		logger.error(
 			'XP_ADMIN_CONTROLLER',
@@ -249,11 +249,11 @@ export const adjustUserXp = async (req: Request, res: Response, next: NextFuncti
 		const adminId = userService.getUserFromRequest(req)?.id;
 
 		if (!userId || !amount || !adjustmentType) {
-			return sendValidationError(res, 'Missing required parameters: userId, amount, and adjustmentType are required.');
+			return sendErrorResponse(res, 'Missing required parameters: userId, amount, and adjustmentType are required.');
 		}
 
 		if (!['add', 'subtract', 'set'].includes(adjustmentType)) {
-			return sendValidationError(res, 'Invalid adjustmentType. Must be one of: add, subtract, set.');
+			return sendErrorResponse(res, 'Invalid adjustmentType. Must be one of: add, subtract, set.');
 		}
 
 		logger.info('XP_ADMIN_CONTROLLER', 'Admin adjusting user XP', {
@@ -275,7 +275,7 @@ export const adjustUserXp = async (req: Request, res: Response, next: NextFuncti
 			}
 		);
 
-		return sendSuccess(res, result, 'XP adjusted successfully');
+		return sendSuccessResponse(res, result, 'XP adjusted successfully');
 	} catch (error: any) {
 		logger.error(
 			'XP_ADMIN_CONTROLLER',
@@ -283,7 +283,7 @@ export const adjustUserXp = async (req: Request, res: Response, next: NextFuncti
 			error instanceof Error ? error.message : String(error)
 		);
 		if (error.message && error.message.includes('not found')) {
-			return sendError(res, error.message, 404);
+			return sendErrorResponse(res, error.message, 404);
 		}
 		next(error);
 	}
@@ -306,7 +306,7 @@ export const getXpAdjustmentLogs = async (req: Request, res: Response, next: Nex
 
 		const logs = await query;
 
-		return sendSuccess(res, { logs });
+		return sendSuccessResponse(res, { logs });
 	} catch (error) {
 		logger.error(
 			'XP_ADMIN_CONTROLLER',
@@ -328,12 +328,12 @@ export const testXpActionAward = async (req: Request, res: Response, next: NextF
 		const { userId, action, metadata } = req.body;
 
 		if (!userId || !action) {
-			return sendValidationError(res, 'Missing required parameters. userId and action are required.');
+			return sendErrorResponse(res, 'Missing required parameters. userId and action are required.', 400);
 		}
 
 		// Ensure action is valid
 		if (!Object.values(XP_ACTION).includes(action as XP_ACTION)) {
-			return sendValidationError(res, `Invalid action. Must be one of: ${Object.values(XP_ACTION).join(', ')}`);
+			return sendErrorResponse(res, `Invalid action. Must be one of: ${Object.values(XP_ACTION).join(', ')}`, 400);
 		}
 
 		logger.info('XP_ADMIN_CONTROLLER', 'Admin testing XP action award', {
@@ -347,10 +347,10 @@ export const testXpActionAward = async (req: Request, res: Response, next: NextF
 		const result = await xpService.awardXp(userId, action as XP_ACTION, metadata);
 
 		if (!result) {
-			return sendError(res, 'Could not award XP. The user may have reached a limit for this action.', 429);
+			return sendErrorResponse(res, 'Could not award XP. The user may have reached a limit for this action.', 429);
 		}
 
-		return sendSuccess(res, {
+		return sendSuccessResponse(res, {
 			result,
 			limits: await xpService.getActionLimitsForUser(userId, action as XP_ACTION)
 		}, 'XP awarded successfully');
@@ -361,7 +361,7 @@ export const testXpActionAward = async (req: Request, res: Response, next: NextF
 			error instanceof Error ? error.message : String(error)
 		);
 		if (error.message && error.message.includes('not found')) {
-			return sendError(res, error.message, 404);
+			return sendErrorResponse(res, error.message, 404);
 		}
 		next(error);
 	}

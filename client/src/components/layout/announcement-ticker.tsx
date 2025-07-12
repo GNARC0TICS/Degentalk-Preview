@@ -104,7 +104,7 @@ export function AnnouncementTicker() {
 
 	const [fallbackAnnouncements] = useState<Announcement[]>([
 		{
-			id: 0,
+			id: randomUUID(),
 			type: 'info',
 			content: 'Welcome to Degentalk! The community-powered crypto forum',
 			createdAt: new Date().toISOString(),

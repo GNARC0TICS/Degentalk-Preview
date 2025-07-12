@@ -177,96 +177,119 @@ export class WalletService {
       let dgtWalletCreated = false;
       let welcomeBonusAdded = false;
 
-      // Step 1: Create DGT wallet (critical for registration)
-      try {
-        await this.getOrCreateDgtWallet(db, userId);
-        dgtWalletCreated = true;
-        logger.info('WalletService', 'DGT wallet created/verified for user', { userId });
+      // Everything runs in a single transaction for atomicity
+      return await db.transaction(async (tx) => {
+        // Step 1: Create DGT wallet (critical for registration)
+        try {
+          await this.getOrCreateDgtWallet(tx, userId);
+          dgtWalletCreated = true;
+          logger.info('WalletService', 'DGT wallet created/verified for user', { userId });
 
-        // Add 10 DGT welcome bonus
-        await this.creditDgt(userId, 10, {
-          source: 'admin_credit',
-          reason: 'Welcome bonus for new user',
-          adminId: 'system' as UserId
-        });
-        welcomeBonusAdded = true;
-        logger.info('WalletService', 'Welcome bonus credited to new user', { userId, amount: 10 });
-      } catch (dgtError) {
-        logger.error('WalletService', 'Failed to create DGT wallet during initialization', {
-          userId,
-          error: dgtError
-        });
-        // Continue despite DGT wallet failure - circuit breaker
-      }
+          // Add 10 DGT welcome bonus within same transaction
+          const wallet = await tx.query.wallets.findFirst({ 
+            where: eq(wallets.userId, userId) 
+          });
+          
+          if (wallet) {
+            const newBalance = wallet.balance + 10;
+            await tx.update(wallets)
+              .set({ balance: newBalance, lastTransaction: new Date() })
+              .where(eq(wallets.id, wallet.id));
 
-      // Step 2: Initialize CCPayment wallet (non-critical)
-      try {
-        const ccpaymentUserId = await ccpaymentService.getOrCreateCCPaymentUser(userId);
-        logger.info('WalletService', 'CCPayment user created/verified', { userId, ccpaymentUserId });
-      } catch (ccpaymentError) {
-        logger.warn('WalletService', 'Failed to create CCPayment user during initialization', {
-          userId,
-          error: ccpaymentError
-        });
-        // Continue despite CCPayment failure - circuit breaker
-      }
+            await tx.insert(transactions).values({
+              userId: userId,
+              walletId: wallet.id,
+              amount: 10,
+              type: 'admin_credit',
+              status: 'completed',
+              description: 'Welcome bonus for new user',
+              metadata: {
+                source: 'admin_credit',
+                reason: 'Welcome bonus for new user',
+                adminId: 'system'
+              },
+            });
 
-      // Step 3: Create crypto deposit addresses (non-critical)
-      try {
-        const supportedCoins = await this.getSupportedCoins();
-        const primaryCoins = supportedCoins.filter((coin) =>
-          ['BTC', 'ETH', 'USDT'].includes(coin.symbol.toUpperCase())
-        );
+            welcomeBonusAdded = true;
+            logger.info('WalletService', 'Welcome bonus credited to new user', { userId, amount: 10 });
+          }
+        } catch (dgtError) {
+          logger.error('WalletService', 'Failed to create DGT wallet during initialization', {
+            userId,
+            error: dgtError
+          });
+          // Continue despite DGT wallet failure - circuit breaker
+        }
 
-        for (const coin of primaryCoins) {
-          for (const network of coin.networks) {
-            try {
-              const address = await this.createDepositAddress(userId, coin.symbol, network.network);
-              
-              await db.insert(cryptoWallets).values({
-                userId,
-                ccpaymentUserId: '', // Will be populated later if CCPayment succeeds
-                coinId: 0,
-                coinSymbol: coin.symbol,
-                chain: network.network,
-                address: address.address,
-                memo: address.memo,
-                qrCodeUrl: address.qrCode,
-              });
+        // Step 2: Initialize CCPayment wallet (non-critical, outside transaction)
+        try {
+          const ccpaymentUserId = await ccpaymentService.getOrCreateCCPaymentUser(userId);
+          logger.info('WalletService', 'CCPayment user created/verified', { userId, ccpaymentUserId });
+        } catch (ccpaymentError) {
+          logger.warn('WalletService', 'Failed to create CCPayment user during initialization', {
+            userId,
+            error: ccpaymentError
+          });
+          // Continue despite CCPayment failure - circuit breaker
+        }
 
-              walletsCreated++;
-            } catch (addressError) {
-              logger.warn('WalletService', 'Failed to create deposit address during initialization', {
-                userId,
-                coin: coin.symbol,
-                network: network.network,
-                error: addressError,
-              });
-              // Continue despite individual address failures
+        // Step 3: Create crypto deposit addresses (non-critical, outside transaction)
+        try {
+          const supportedCoins = await this.getSupportedCoins();
+          const primaryCoins = supportedCoins.filter((coin) =>
+            ['BTC', 'ETH', 'USDT'].includes(coin.symbol.toUpperCase())
+          );
+
+          for (const coin of primaryCoins) {
+            for (const network of coin.networks) {
+              try {
+                const address = await this.createDepositAddress(userId, coin.symbol, network.network);
+                
+                await db.insert(cryptoWallets).values({
+                  userId,
+                  ccpaymentUserId: '', // Will be populated later if CCPayment succeeds
+                  coinId: 0,
+                  coinSymbol: coin.symbol,
+                  chain: network.network,
+                  address: address.address,
+                  memo: address.memo,
+                  qrCodeUrl: address.qrCode,
+                });
+
+                walletsCreated++;
+              } catch (addressError) {
+                logger.warn('WalletService', 'Failed to create deposit address during initialization', {
+                  userId,
+                  coin: coin.symbol,
+                  network: network.network,
+                  error: addressError,
+                });
+                // Continue despite individual address failures
+              }
             }
           }
+        } catch (coinError) {
+          logger.warn('WalletService', 'Failed to initialize crypto addresses', {
+            userId,
+            error: coinError
+          });
+          // Continue despite crypto address failures - circuit breaker
         }
-      } catch (coinError) {
-        logger.warn('WalletService', 'Failed to initialize crypto addresses', {
+
+        logger.info('WalletService', 'Wallet initialization completed', {
           userId,
-          error: coinError
+          walletsCreated,
+          dgtWalletCreated,
+          welcomeBonusAdded
         });
-        // Continue despite crypto address failures - circuit breaker
-      }
 
-      logger.info('WalletService', 'Wallet initialization completed', {
-        userId,
-        walletsCreated,
-        dgtWalletCreated,
-        welcomeBonusAdded
+        return { 
+          success: true, 
+          walletsCreated, 
+          dgtWalletCreated,
+          welcomeBonusAdded
+        };
       });
-
-      return { 
-        success: true, 
-        walletsCreated, 
-        dgtWalletCreated,
-        welcomeBonusAdded
-      };
     } catch (error) {
       logger.error('WalletService', 'Critical error during wallet initialization', { userId, error });
       // Even on complete failure, return success to not break registration
@@ -611,9 +634,14 @@ export class WalletService {
             amount: transferAmount,
         });
 
-        const senderWallet = await tx.query.wallets.findFirst({
-            where: eq(wallets.userId, transfer.from),
-        });
+        // Use SELECT FOR UPDATE to prevent race conditions on concurrent transfers
+        const senderWallet = await tx
+            .select()
+            .from(wallets)
+            .where(eq(wallets.userId, transfer.from))
+            .for('update')
+            .limit(1)
+            .then(rows => rows[0]);
 
         if (!senderWallet) {
             throw new WalletError('Sender wallet not found', ErrorCodes.NOT_FOUND, 404);
@@ -627,9 +655,14 @@ export class WalletService {
             throw new WalletError('Insufficient balance', ErrorCodes.INSUFFICIENT_FUNDS, 400);
         }
         
-        const receiverWallet = await tx.query.wallets.findFirst({
-            where: eq(wallets.userId, transfer.to),
-        });
+        // Use SELECT FOR UPDATE to prevent race conditions on receiver wallet too
+        const receiverWallet = await tx
+            .select()
+            .from(wallets)
+            .where(eq(wallets.userId, transfer.to))
+            .for('update')
+            .limit(1)
+            .then(rows => rows[0]);
 
         if (!receiverWallet) {
             throw new WalletError('Receiver wallet not found', ErrorCodes.NOT_FOUND, 404);
@@ -860,10 +893,19 @@ export class WalletService {
    * Get or create a DGT wallet for a user within a transaction.
    */
   private async getOrCreateDgtWallet(tx: any, userId: UserId) {
-      let wallet = await tx.query.wallets.findFirst({ where: eq(wallets.userId, userId) });
+      // Use SELECT FOR UPDATE to prevent race conditions on wallet creation and balance updates
+      let wallet = await tx
+          .select()
+          .from(wallets)
+          .where(eq(wallets.userId, userId))
+          .for('update')
+          .limit(1)
+          .then(rows => rows[0]);
+      
       if (wallet) {
           return wallet;
       }
+      
       const [newWallet] = await tx.insert(wallets).values({ userId, balance: 0 }).returning();
       logger.info('WalletService:getOrCreateDgtWallet', 'Created new DGT wallet for user', { userId });
       return newWallet;

@@ -1,6 +1,6 @@
 import type { Request, Response } from 'express';
 import { userService } from '@core/services/user.service';
-import { walletService } from '../../services/wallet.service';
+import { walletService } from '@server/domains/wallet/services/wallet.service';
 import { adminWalletService } from '../services/wallet.service';
 import { logger } from '@core/logger';
 import { sendSuccessResponse, sendErrorResponse } from "@core/utils/transformer.helpers";

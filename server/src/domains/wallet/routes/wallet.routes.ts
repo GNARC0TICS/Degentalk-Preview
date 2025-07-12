@@ -8,7 +8,7 @@
 import { Router } from 'express';
 import { walletController } from '../controllers/wallet.controller';
 import { walletValidation } from '../validation/wallet.validation';
-import { validateRequest } from '@server-middleware/validate-request';
+import { validateRequest } from '@server/middleware/validate-request';
 import { isAuthenticated as requireAuth } from '@server/domains/auth/middleware/auth.middleware';
 import { createCustomRateLimiter as rateLimit } from '@core/services/rate-limit.service';
 import webhookRoutes from '../webhooks/ccpayment-webhook.routes';
@@ -187,11 +187,12 @@ router.get(
 
 /**
  * POST /api/wallet/admin/deposit-config
- * Update deposit configuration (admin only, hot-swappable)
+ * Update deposit configuration (admin only, immutable)
  */
 router.post(
   '/admin/deposit-config',
   rateLimit({ windowMs: 60 * 1000, max: 5 }), // 5 requests per minute (strict)
+  validateRequest(walletValidation.walletAdminPatch),
   walletController.updateAdminDepositConfig.bind(walletController)
 );
 

@@ -2,7 +2,7 @@ import { db } from '@db';
 import type { UserId } from '@shared/types/ids';
 import { economySettings } from '@schema';
 import { eq } from 'drizzle-orm';
-import { walletService } from '../../wallet/services/wallet.service';
+import { dgtService } from '@server/domains/wallet/services/dgtService';
 import { logger } from '@core/logger';
 
 async function getSettingInt(key: string, defaultVal: number = 0): Promise<number> {
@@ -25,10 +25,12 @@ export async function awardXShareReward(userId: UserId) {
 		const dgtReward = await getSettingInt('X_SHARE_DGT', 0);
 
 		if (dgtReward > 0) {
-			await walletService.creditDgt(userId, dgtReward, {
-				source: 'x_share_reward',
-				reason: 'X social share reward'
-			});
+			await dgtService.processReward(
+				userId,
+				dgtReward,
+				'x_share_reward',
+				'X social share reward'
+			);
 		}
 
 		logger.info('RewardService', 'Issued X share reward', { userId, xpReward, dgtReward });
@@ -43,10 +45,12 @@ export async function awardXReferralReward(userId: UserId) {
 		const dgtReward = await getSettingInt('X_REFERRAL_DGT', 100);
 
 		if (dgtReward > 0) {
-			await walletService.creditDgt(userId, dgtReward, {
-				source: 'x_referral_reward',
-				reason: 'X referral reward'
-			});
+			await dgtService.processReward(
+				userId,
+				dgtReward,
+				'x_referral_reward',
+				'X referral reward'
+			);
 		}
 
 		logger.info('RewardService', 'Issued X referral reward', { userId, xpReward, dgtReward });

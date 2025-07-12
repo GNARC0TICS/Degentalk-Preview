@@ -11,8 +11,9 @@ import { eq, and } from 'drizzle-orm';
 import { db } from '@core/database';
 import { logger } from '@core/logger';
 import type { CCPaymentWebhookEvent } from '../providers/ccpayment/ccpayment.service';
-import { walletService } from '../services/wallet.service';
+import { dgtService } from '../services/dgtService';
 import { walletConfig } from '@shared/wallet.config';
+import { settingsService } from '@core/services/settings.service';
 
 /**
  * CCPayment webhook service for processing webhook events
@@ -79,11 +80,12 @@ export class CCPaymentWebhookService {
 		event: CCPaymentWebhookEvent
 	): Promise<{ success: boolean; message: string }> {
 		try {
+			const settings = await settingsService.getWalletSettings();
 			logger.info('Processing deposit completion with auto-conversion check', {
 				merchantOrderId: event.merchantOrderId,
 				amount: event.actualAmount,
 				coinSymbol: event.coinSymbol,
-				autoConvertEnabled: walletConfig.AUTO_CONVERT_DEPOSITS
+				autoConvertEnabled: settings.autoConvertDeposits
 			});
 
 			// Find the DGT purchase order associated with this deposit
@@ -99,7 +101,7 @@ export class CCPaymentWebhookService {
 				});
 
 				// Check admin toggle for auto-conversion of direct deposits
-				if (walletConfig.AUTO_CONVERT_DEPOSITS && event.uid) {
+				if (settings.autoConvertDeposits && event.uid) {
 					return await this.handleDirectDepositAutoConversion(event);
 				}
 
@@ -116,16 +118,12 @@ export class CCPaymentWebhookService {
 			);
 
 			// Credit DGT to user for successful deposit
-			await walletService.creditDgt(purchaseOrder.userId, conversionAmount, {
-				source: 'crypto_deposit',
-				reason: 'Cryptocurrency deposit auto-conversion to DGT',
-				originalToken: event.coinSymbol,
-				usdtAmount: event.actualAmount,
-				txHash: event.txHash,
-				webhookEventId: event.orderId,
-				conversionRate: walletConfig.DGT.PRICE_USD,
-				adminAutoConvert: walletConfig.AUTO_CONVERT_DEPOSITS
-			});
+			await dgtService.processReward(
+				purchaseOrder.userId,
+				conversionAmount,
+				'crypto_deposit',
+				`Cryptocurrency deposit auto-conversion from ${event.coinSymbol} (${event.actualAmount})`
+			);
 
 			logger.info('DGT purchase completed with auto-conversion', {
 				purchaseOrderId: purchaseOrder.id,
@@ -181,16 +179,12 @@ export class CCPaymentWebhookService {
 			);
 
 			// Credit DGT for direct deposit
-			await walletService.creditDgt(user.id, conversionAmount, {
-				source: 'crypto_deposit',
-				reason: 'Direct crypto deposit auto-converted to DGT',
-				originalToken: event.coinSymbol,
-				usdtAmount: event.actualAmount,
-				txHash: event.txHash,
-				webhookEventId: event.orderId,
-				conversionRate: walletConfig.DGT.PRICE_USD,
-				adminAutoConvert: true
-			});
+			await dgtService.processReward(
+				user.id,
+				conversionAmount,
+				'crypto_deposit',
+				`Direct crypto deposit auto-converted from ${event.coinSymbol} (${event.actualAmount})`
+			);
 
 			logger.info('Direct deposit auto-converted to DGT', {
 				userId: user.id,
@@ -426,23 +420,13 @@ export class CCPaymentWebhookService {
 				orderId: event.orderId
 			});
 
-			// Find the user by CCPayment user ID if provided
+			// Just log wallet creation success - welcome bonus is handled in auth controller only
 			if (event.uid) {
 				const [user] = await db.select().from(users).where(eq(users.id, event.uid)).limit(1);
 
 				if (user) {
-					// Award welcome bonus DGT for new wallet
-					const welcomeAmount = 10; // 10 DGT welcome bonus
-
-					await walletService.creditDgt(user.id, welcomeAmount, {
-						source: 'welcome_bonus',
-						reason: 'Welcome bonus for new wallet',
-						webhookEventId: event.orderId
-					});
-
-					logger.info('Welcome bonus awarded for new wallet', {
+					logger.info('CCPayment wallet creation confirmed for user', {
 						userId: user.id,
-						amount: welcomeAmount,
 						webhookEventId: event.orderId
 					});
 				}

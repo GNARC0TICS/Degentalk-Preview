@@ -26,7 +26,7 @@ interface ThreadPermissions {
 
 // Type-safe mock data matching actual project types
 export const MOCK_THREAD: ThreadDisplay = {
-	id: 1,
+	id: randomUUID(),
 	title: 'Test Thread',
 	slug: 'test-thread',
 	content: 'Test content',
@@ -39,7 +39,7 @@ export const MOCK_THREAD: ThreadDisplay = {
 		username: 'testuser'
 	},
 	category: {
-		id: 1,
+		id: randomUUID(),
 		name: 'Test Category',
 		slug: 'test-category'
 	},
@@ -51,7 +51,7 @@ export const MOCK_THREAD: ThreadDisplay = {
 };
 
 export const MOCK_POST = {
-	id: 1,
+	id: randomUUID(),
 	userId: 'test-user-123',
 	content: 'Test post content',
 	createdAt: new Date().toISOString()

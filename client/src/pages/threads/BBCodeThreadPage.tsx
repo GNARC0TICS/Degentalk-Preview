@@ -125,6 +125,7 @@ export default function BBCodeThreadPage() {
 			if (page > 1) {
 				url.searchParams.set('page', page.toString());
 			} else {
+				// eslint-disable-next-line drizzle/enforce-delete-with-where
 				url.searchParams.delete('page');
 			}
 			window.history.replaceState({}, '', url.toString());

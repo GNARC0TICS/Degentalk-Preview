@@ -18,7 +18,7 @@ export * from './admin-error-boundaries';
 export * from './admin-cache.service';
 
 // Response utilities (already created in Phase 1)
-export * from '../admin.response';
+// Legacy admin.response exports removed - use @core/utils/transformer.helpers
 
 // Validation utilities (already created in Phase 1)
 export * from '../admin.validation';

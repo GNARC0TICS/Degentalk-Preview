@@ -70,21 +70,21 @@ export const cryptoIcons = [
 
 export const sampleAnnouncements = [
 	{
-		id: 1,
+		id: randomUUID(),
 		title: 'New XP Multiplier Event!',
 		description: 'Double XP on all forum posts this weekend. Time to farm those gains!',
 		type: 'event',
 		timestamp: new Date()
 	},
 	{
-		id: 2,
+		id: randomUUID(),
 		title: 'Maintenance Notice',
 		description: 'Trading disabled for 30 minutes while we add more hopium to the reserves.',
 		type: 'warning',
 		timestamp: new Date()
 	},
 	{
-		id: 3,
+		id: randomUUID(),
 		title: 'Whale Alert!',
 		description: 'ChadGPT just dropped 1000 DGT in the community rain pool.',
 		type: 'success',

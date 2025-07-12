@@ -36,7 +36,7 @@ export class AdminUserBulkOperationsController {
 
 		const adminId = (userService.getUserFromRequest(req) as any)?.id;
 		if (!adminId) {
-			return sendError(res, 'Admin user ID required', 401);
+			return sendErrorResponse(res, 'Admin user ID required', 401);
 		}
 
 		const boundary =
@@ -86,7 +86,7 @@ export class AdminUserBulkOperationsController {
 
 		const adminId = (userService.getUserFromRequest(req) as any)?.id;
 		if (!adminId) {
-			return sendError(res, 'Admin user ID required', 401);
+			return sendErrorResponse(res, 'Admin user ID required', 401);
 		}
 
 		const boundary =
@@ -136,7 +136,7 @@ export class AdminUserBulkOperationsController {
 
 		const adminId = (userService.getUserFromRequest(req) as any)?.id;
 		if (!adminId) {
-			return sendError(res, 'Admin user ID required', 401);
+			return sendErrorResponse(res, 'Admin user ID required', 401);
 		}
 
 		const boundary =
@@ -182,7 +182,7 @@ export class AdminUserBulkOperationsController {
 	async getBulkOperationHistory(req: Request, res: Response) {
 		const adminId = (userService.getUserFromRequest(req) as any)?.id;
 		if (!adminId) {
-			return sendError(res, 'Admin user ID required', 401);
+			return sendErrorResponse(res, 'Admin user ID required', 401);
 		}
 
 		const limit = parseInt(req.query.limit as string) || 50;

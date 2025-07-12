@@ -35,7 +35,7 @@ export async function getAnnouncementsController(req: Request, res: Response) {
 		return sendSuccessResponse(res, announcements);
 	} catch (error) {
 		logger.error('Error fetching announcements:', error);
-		return sendErrorResponse(res, 'Internal server error');
+		return sendErrorResponse(res, 'Internal server error', 400);
 	}
 }
 
@@ -48,7 +48,7 @@ export async function getAllAnnouncementsController(req: Request, res: Response)
 		return sendSuccessResponse(res, announcements);
 	} catch (error) {
 		logger.error('Error fetching all announcements:', error);
-		return sendErrorResponse(res, 'Internal server error');
+		return sendErrorResponse(res, 'Internal server error', 400);
 	}
 }
 
@@ -71,7 +71,7 @@ export async function getAnnouncementByIdController(req: Request, res: Response)
 		return sendSuccessResponse(res, announcement);
 	} catch (error) {
 		logger.error('Error fetching announcement:', error);
-		return sendErrorResponse(res, 'Internal server error');
+		return sendErrorResponse(res, 'Internal server error', 400);
 	}
 }
 
@@ -97,7 +97,7 @@ export async function createAnnouncementController(req: Request, res: Response) 
 			return sendErrorResponse(res, 'Invalid announcement data', 400);
 		}
 		logger.error('Error creating announcement:', error);
-		return sendErrorResponse(res, 'Internal server error');
+		return sendErrorResponse(res, 'Internal server error', 400);
 	}
 }
 
@@ -124,7 +124,7 @@ export async function updateAnnouncementController(req: Request, res: Response) 
 		return sendSuccessResponse(res, updatedAnnouncement);
 	} catch (error) {
 		logger.error('Error updating announcement:', error);
-		return sendErrorResponse(res, 'Internal server error');
+		return sendErrorResponse(res, 'Internal server error', 400);
 	}
 }
 
@@ -147,6 +147,6 @@ export async function deactivateAnnouncementController(req: Request, res: Respon
 		return sendSuccessResponse(res, { message: 'Announcement deactivated successfully' });
 	} catch (error) {
 		logger.error('Error deactivating announcement:', error);
-		return sendErrorResponse(res, 'Internal server error');
+		return sendErrorResponse(res, 'Internal server error', 400);
 	}
 }

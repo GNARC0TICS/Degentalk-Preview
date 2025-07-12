@@ -576,7 +576,7 @@ export function CreateThreadForm({
 								<TagInput
 									value={(field.value || []).map((tagName) => ({
 										name: tagName,
-										id: 0,
+										id: randomUUID(),
 										slug: tagName.toLowerCase().replace(/\s+/g, '-')
 									}))}
 									onChange={(tagsFromInput: Tag[]) =>

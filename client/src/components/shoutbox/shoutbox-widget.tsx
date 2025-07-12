@@ -132,12 +132,12 @@ export default function ShoutboxWidget({ instanceId }: ShoutboxWidgetProps) {
 	const userLoggedIn = true;
 	// Mock user data for testing
 	const currentUser = {
-		id: 1,
+		id: randomUUID(),
 		username: 'TestUser',
 		avatarUrl: null,
 		activeAvatarUrl: null,
 		level: 5,
-		groupId: 3 // Regular user
+		groupId: randomUUID() // Regular user
 	};
 
 	// Check if current user is admin or moderator

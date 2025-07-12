@@ -102,7 +102,7 @@ export const forumApi = {
 		slugOrId: string | number,
 		params?: { page?: number; limit?: number }
 	): Promise<ThreadWithPostsAndUser | null> => {
-		const isSlug = typeof slugOrId === 'string' && isNaN(slugOrId);
+		const isSlug = typeof slugOrId === 'string' && !isValidUUID(slugOrId);
 		const url = isSlug ? `/api/forum/threads/slug/${slugOrId}` : `/api/forum/threads/${slugOrId}`;
 
 		// Convert params to string for apiRequest if they exist
