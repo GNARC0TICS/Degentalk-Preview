@@ -1,6 +1,5 @@
 import {
 	pgTable,
-	serial,
 	varchar,
 	text,
 	boolean,
@@ -11,7 +10,6 @@ import {
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users';
-
 export const emojiPacks = pgTable(
 	'emoji_packs',
 	{
@@ -34,5 +32,4 @@ export const emojiPacks = pgTable(
 		featuredIdx: index('idx_emoji_packs_featured').on(table.isFeatured)
 	})
 );
-
 export type EmojiPack = typeof emojiPacks.$inferSelect;

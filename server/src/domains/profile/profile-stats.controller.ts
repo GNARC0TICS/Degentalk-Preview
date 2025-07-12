@@ -3,7 +3,7 @@ import type { Request, Response } from 'express';
 import { ProfileStatsService } from './profile-stats.service';
 import { handleControllerError } from '../../lib/error-handler';
 import { z } from 'zod';
-import { logger } from "../../core/logger";
+import { logger } from '@core/logger';
 import { sendSuccessResponse, sendErrorResponse } from "@core/utils/transformer.helpers";
 
 // Request validation schemas

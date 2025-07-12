@@ -1,11 +1,9 @@
 import {
-	pgTable, serial, varchar, integer, boolean, timestamp, uuid,
+	pgTable, varchar, integer, boolean, timestamp, uuid,
 	index
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
-
 // Note: `MissionType` was defined in schema.ts, it should be moved to a types file or enums if it's a pgEnum
-
 export const missions = pgTable('missions', {
 	id: uuid('id').primaryKey().defaultRandom(),
 	title: varchar('title', { length: 100 }).notNull(),
@@ -25,6 +23,5 @@ export const missions = pgTable('missions', {
 	minLevel: integer('min_level').notNull().default(1),
 	sortOrder: integer('sort_order').notNull().default(0)
 });
-
 export type Mission = typeof missions.$inferSelect;
 export type InsertMission = typeof missions.$inferInsert; // Assuming full insert is okay

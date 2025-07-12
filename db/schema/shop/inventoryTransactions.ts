@@ -1,6 +1,5 @@
 import {
 	pgTable,
-	serial,
 	integer,
 	varchar,
 	doublePrecision,
@@ -12,7 +11,6 @@ import {
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users';
 import { products } from './products';
-
 export const inventoryTransactions = pgTable(
 	'inventory_transactions',
 	{
@@ -41,6 +39,5 @@ export const inventoryTransactions = pgTable(
 		createdAtIdx: index('idx_inventory_transactions_created_at').on(table.createdAt)
 	})
 );
-
 export type InventoryTransaction = typeof inventoryTransactions.$inferSelect;
 // export type InsertInventoryTransaction = typeof inventoryTransactions.$inferInsert; // If needed

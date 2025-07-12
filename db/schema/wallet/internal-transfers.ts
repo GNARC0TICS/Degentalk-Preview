@@ -1,6 +1,5 @@
 import {
 	pgTable,
-	serial,
 	uuid,
 	integer,
 	varchar,
@@ -11,7 +10,6 @@ import {
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users';
-
 /**
  * Internal Transfers - Track user-to-user transfers within the platform
  */
@@ -48,6 +46,5 @@ export const internalTransfers = pgTable(
 		createdAtIdx: index('idx_internal_transfers_created_at').on(table.createdAt)
 	})
 );
-
 export type InternalTransfer = typeof internalTransfers.$inferSelect;
 export type InsertInternalTransfer = typeof internalTransfers.$inferInsert;

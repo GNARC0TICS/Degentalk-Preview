@@ -1,6 +1,5 @@
 import {
 	pgTable,
-	serial,
 	text,
 	varchar,
 	boolean,
@@ -14,7 +13,6 @@ import { sql } from 'drizzle-orm';
 import { users } from '../user/users'; // Adjusted path
 import { createInsertSchema } from 'drizzle-zod';
 import { z } from 'zod';
-
 export const announcements = pgTable(
 	'announcements',
 	{
@@ -45,7 +43,6 @@ export const announcements = pgTable(
 		createdAtIdx: index('idx_announcements_created_at').on(table.createdAt)
 	})
 );
-
 export const insertAnnouncementSchema = createInsertSchema(announcements, {
 	content: z.string().min(1, 'Content is required'),
 	isActive: z.boolean().default(true),
@@ -53,6 +50,5 @@ export const insertAnnouncementSchema = createInsertSchema(announcements, {
 	priority: z.number().default(0),
 	tickerMode: z.boolean().default(true)
 }).omit({ id: true, createdAt: true, updatedAt: true }); // createdBy will be set by system
-
 export type Announcement = typeof announcements.$inferSelect;
 export type InsertAnnouncement = z.infer<typeof insertAnnouncementSchema>;

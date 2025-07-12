@@ -3,7 +3,6 @@
  * 
  * Auto-generated Drizzle relations for type-safe joins
  */
-
 import { relations } from 'drizzle-orm';
 import { friendships } from './friendships';
 import { userFriendPreferences } from './userFriendPreferences';
@@ -12,8 +11,8 @@ import { friendGroupMembers } from './friendGroupMembers';
 import { mentions } from './mentions';
 import { userMentionPreferences } from './userMentionPreferences';
 import { userFollows } from './userFollows';
-import { threads, posts } from '../forum';
-
+import { threads } from '../forum/threads';
+import { posts } from '../forum/posts';
 export const mentionsRelations = relations(mentions, ({ one, many }) => ({
   thread: one(threads, {
     fields: [mentions.threadId],
@@ -24,4 +23,3 @@ export const mentionsRelations = relations(mentions, ({ one, many }) => ({
     references: [posts.id]
   }),
 }));
-

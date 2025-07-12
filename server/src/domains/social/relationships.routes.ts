@@ -12,9 +12,9 @@ import { users, userRelationships } from '@schema';
 import { eq, and, sql, desc, not, or, count, gt, isNull } from 'drizzle-orm';
 import { isValidId } from '@shared/utils/id';
 
-import { isAuthenticated, isAdminOrModerator, isAdmin } from '../auth/middleware/auth.middleware';
+import { isAuthenticated, isAdminOrModerator, isAdmin } from '@server/auth/middleware/auth.middleware';
 import { getUserIdFromRequest } from '@server-utils/auth';
-import { logger } from "../../core/logger";
+import { logger } from '@core/logger';
 import { UserTransformer } from '@server/domains/users/transformers/user.transformer';
 import { 
 	toPublicList,

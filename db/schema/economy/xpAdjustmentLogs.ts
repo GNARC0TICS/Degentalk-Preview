@@ -1,10 +1,9 @@
 import {
-	pgTable, serial, integer, text, timestamp, uuid,
+	pgTable, integer, text, timestamp, uuid,
 	index
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users';
-
 export const xpAdjustmentLogs = pgTable('xp_adjustment_logs', {
 	id: uuid('id').primaryKey().defaultRandom(),
 	userId: uuid('user_id')
@@ -22,7 +21,6 @@ export const xpAdjustmentLogs = pgTable('xp_adjustment_logs', {
 		.notNull()
 		.default(sql`CURRENT_TIMESTAMP`)
 });
-
 // Add zod schema or relations as needed
 // export type XpAdjustmentLog = typeof xpAdjustmentLogs.$inferSelect;
 // export type InsertXpAdjustmentLog = typeof xpAdjustmentLogs.$inferInsert;

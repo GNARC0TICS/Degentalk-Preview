@@ -1,6 +1,5 @@
 import {
 	pgTable,
-	serial,
 	uuid,
 	varchar,
 	text,
@@ -15,7 +14,6 @@ import { sql } from 'drizzle-orm';
 import { productCategories } from './productCategories'; // Placeholder
 import { mediaLibrary } from '../admin/mediaLibrary'; // Placeholder, path might change based on final admin structure
 import { avatarFrames } from '../user/avatarFrames';
-
 export const products = pgTable(
 	'products',
 	{
@@ -76,6 +74,5 @@ export const products = pgTable(
 		featuredUntilIdx: index('idx_products_featured_until').on(table.featuredUntil)
 	})
 );
-
 export type Product = typeof products.$inferSelect;
 // export type InsertProduct = typeof products.$inferInsert; // If needed

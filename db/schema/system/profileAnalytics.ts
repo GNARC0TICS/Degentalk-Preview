@@ -1,7 +1,6 @@
 import { pgTable, uuid, integer, numeric, text, inet, timestamp, index } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users';
-
 export const profileAnalytics = pgTable(
 	'profile_analytics',
 	{
@@ -28,5 +27,4 @@ export const profileAnalytics = pgTable(
 		engagementIdx: index('idx_profile_analytics_engagement').on(table.engagementScore)
 	})
 );
-
 export type ProfileAnalytics = typeof profileAnalytics.$inferSelect;

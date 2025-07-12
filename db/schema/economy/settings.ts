@@ -1,6 +1,5 @@
 import {
 	pgTable,
-	serial,
 	varchar,
 	bigint,
 	integer,
@@ -13,7 +12,6 @@ import {
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users';
-
 export const dgtEconomyParameters = pgTable('dgt_economy_parameters', {
 	id: uuid('id').primaryKey().defaultRandom(), // Added primary key for consistency, can be a single row table if needed
 	treasuryWalletAddress: varchar('treasury_wallet_address', { length: 255 }),
@@ -41,10 +39,8 @@ export const dgtEconomyParameters = pgTable('dgt_economy_parameters', {
 		.default(sql`now()`),
 	updatedBy: uuid('updated_by').references(() => users.id, { onDelete: 'set null' })
 });
-
 export type DgtEconomyParameter = typeof dgtEconomyParameters.$inferSelect;
 export type InsertDgtEconomyParameter = typeof dgtEconomyParameters.$inferInsert; // Assuming full insert okay for settings
-
 export const tipSettings = pgTable('tip_settings', {
 	id: uuid('id').primaryKey().defaultRandom(),
 	enabled: boolean('enabled').notNull().default(true),
@@ -62,10 +58,8 @@ export const tipSettings = pgTable('tip_settings', {
 		.notNull()
 		.default(sql`now()`)
 });
-
 export type TipSetting = typeof tipSettings.$inferSelect;
 export type InsertTipSetting = typeof tipSettings.$inferInsert;
-
 export const rainSettings = pgTable('rain_settings', {
 	id: uuid('id').primaryKey().defaultRandom(),
 	enabled: boolean('enabled').notNull().default(true),
@@ -80,11 +74,9 @@ export const rainSettings = pgTable('rain_settings', {
 		.notNull()
 		.default(sql`now()`)
 });
-
 // Add Zod schema if needed for rainSettings
 // export type RainSetting = typeof rainSettings.$inferSelect;
 // export type InsertRainSetting = typeof rainSettings.$inferInsert;
-
 export const cooldownSettings = pgTable('cooldown_settings', {
 	id: uuid('id').primaryKey().defaultRandom(), // Changed from setting_id to id for consistency with schema.ts
 	tipCooldownSeconds: integer('tip_cooldown_seconds').notNull().default(10),
@@ -98,27 +90,22 @@ export const cooldownSettings = pgTable('cooldown_settings', {
 		.notNull()
 		.default(sql`now()`)
 });
-
 // Add Zod schema if needed for cooldownSettings
 // export type CooldownSetting = typeof cooldownSettings.$inferSelect;
 // export type InsertCooldownSetting = typeof cooldownSettings.$inferInsert;
-
 export const xpCloutSettings = pgTable('xp_clout_settings', {
 	actionKey: varchar('action_key', { length: 100 }).primaryKey(),
 	xpValue: integer('xp_value').notNull().default(0),
 	cloutValue: integer('clout_value').notNull().default(0),
 	description: text('description')
 });
-
 // Add Zod schema if needed
 // export type XpCloutSetting = typeof xpCloutSettings.$inferSelect;
 // export type InsertXpCloutSetting = typeof xpCloutSettings.$inferInsert;
-
 export const economySettings = pgTable('economy_settings', {
 	key: text('key').primaryKey(),
 	value: integer('value').notNull()
 });
-
 import { createInsertSchema as createInsertEconomySettingSchema } from 'drizzle-zod'; // Renamed to avoid conflict
 export const insertEconomySettingSchema = createInsertEconomySettingSchema(economySettings);
 export type EconomySetting = typeof economySettings.$inferSelect;

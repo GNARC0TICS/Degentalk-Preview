@@ -1,6 +1,5 @@
 import {
 	pgTable,
-	serial,
 	integer,
 	varchar,
 	jsonb,
@@ -11,7 +10,6 @@ import {
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users'; // Adjusted path
-
 export const activityFeed = pgTable('activity_feed', {
 	id: uuid('id').primaryKey().defaultRandom(),
 	userId: uuid('user_id')
@@ -24,6 +22,5 @@ export const activityFeed = pgTable('activity_feed', {
 		.notNull()
 		.default(sql`now()`) // Changed defaultNow() to sql`now()`
 });
-
 export type ActivityFeedItem = typeof activityFeed.$inferSelect;
 // Add InsertActivityFeedItem if Zod schema is needed

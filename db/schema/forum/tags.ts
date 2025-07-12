@@ -1,9 +1,8 @@
 import {
-	pgTable, serial, varchar, text, timestamp, uuid,
+	pgTable, varchar, text, timestamp, uuid,
 	index
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
-
 export const tags = pgTable('tags', {
 	id: uuid('id').primaryKey().defaultRandom(),
 	name: varchar('name', { length: 50 }).notNull().unique(),
@@ -13,7 +12,6 @@ export const tags = pgTable('tags', {
 		.notNull()
 		.default(sql`CURRENT_TIMESTAMP`)
 });
-
 // Add zod schema or relations as needed
 // import { createInsertSchema } from "drizzle-zod";
 // export const insertTagSchema = createInsertSchema(tags);

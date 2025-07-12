@@ -1,9 +1,8 @@
 import {
-	pgTable, serial, jsonb, timestamp, uuid,
+	pgTable, jsonb, timestamp, uuid,
 	index
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
-
 /**
  * Stores partial/complete overrides for the canonical economy configuration.
  * Only a single row is expected at any given time – the most-recent override wins.
@@ -18,6 +17,5 @@ export const economyConfigOverrides = pgTable('economy_config_overrides', {
 		idx_economyConfigOverrides_createdAt: index('idx_economyConfigOverrides_createdAt').on(table.createdAt),
 		idx_economyConfigOverrides_updatedAt: index('idx_economyConfigOverrides_updatedAt').on(table.updatedAt),
 	}));
-
 export type EconomyConfigOverride = typeof economyConfigOverrides.$inferSelect;
 export type NewEconomyConfigOverride = typeof economyConfigOverrides.$inferInsert;

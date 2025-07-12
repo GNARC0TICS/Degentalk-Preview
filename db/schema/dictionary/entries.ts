@@ -2,16 +2,14 @@
  * Dictionary Entries Schema @syncSchema
  * New table definitions for Degen Dictionary feature.
  */
-
 import {
-	pgTable, serial, text, uuid, integer, timestamp, boolean,
+	pgTable, text, uuid, integer, timestamp, boolean,
 	index
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users';
 import { createInsertSchema } from 'drizzle-zod';
 import { z } from 'zod';
-
 export const dictionaryEntries = pgTable('dictionary_entries', {
 	id: uuid('id').primaryKey().defaultRandom(),
 	slug: text('slug').notNull().unique(),
@@ -35,7 +33,6 @@ export const dictionaryEntries = pgTable('dictionary_entries', {
 		.notNull()
 		.default(sql`CURRENT_TIMESTAMP`)
 });
-
 export const insertDictionaryEntrySchema = createInsertSchema(dictionaryEntries, {
 	word: z.string().min(2).max(50),
 	definition: z.string().min(20).max(5000),
@@ -52,6 +49,5 @@ export const insertDictionaryEntrySchema = createInsertSchema(dictionaryEntries,
 	createdAt: true,
 	updatedAt: true
 });
-
 export type DictionaryEntry = typeof dictionaryEntries.$inferSelect;
 export type NewDictionaryEntry = z.infer<typeof insertDictionaryEntrySchema>;

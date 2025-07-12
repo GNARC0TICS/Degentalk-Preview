@@ -1,6 +1,5 @@
 import {
 	pgTable,
-	serial,
 	uuid,
 	// integer, // No longer using integer for senderId
 	text,
@@ -14,7 +13,6 @@ import {
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users'; // Adjusted path
 import { conversations } from './conversations'; // Adjusted path
-
 export const messages = pgTable(
 	'messages',
 	{
@@ -45,6 +43,5 @@ export const messages = pgTable(
 		createdAtIdx: index('idx_messages_created_at').on(table.createdAt)
 	})
 );
-
 export type Message = typeof messages.$inferSelect;
 // Add InsertMessage if Zod schema is needed

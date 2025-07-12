@@ -22,6 +22,7 @@ COPY server/package.json ./server/
 COPY db/package.json ./db/
 COPY shared/package.json ./shared/
 COPY scripts/package.json ./scripts/
+COPY eslint-plugins ./eslint-plugins/
 
 # Install dependencies (all workspaces)
 RUN pnpm install --frozen-lockfile
@@ -165,6 +166,7 @@ COPY --chown=claude:claude server/package.json ./server/
 COPY --chown=claude:claude db/package.json ./db/
 COPY --chown=claude:claude shared/package.json ./shared/
 COPY --chown=claude:claude scripts/package.json ./scripts/
+COPY --chown=claude:claude eslint-plugins ./eslint-plugins/
 
 # Install dependencies
 RUN pnpm install --frozen-lockfile

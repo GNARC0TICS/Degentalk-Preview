@@ -1,6 +1,5 @@
 import {
 	pgTable,
-	serial,
 	integer,
 	varchar,
 	doublePrecision,
@@ -13,7 +12,6 @@ import {
 import { sql } from 'drizzle-orm';
 import { orders } from './orders';
 import { products } from './products';
-
 export const orderItems = pgTable(
 	'order_items',
 	{
@@ -38,6 +36,5 @@ export const orderItems = pgTable(
 		productIdx: index('idx_order_items_product_id').on(table.productId)
 	})
 );
-
 export type OrderItem = typeof orderItems.$inferSelect;
 // Add InsertOrderItem if Zod schema is needed

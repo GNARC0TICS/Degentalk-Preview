@@ -2,7 +2,6 @@ import { pgTable, timestamp, primaryKey, index, uuid, integer } from 'drizzle-or
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users';
 import { threads } from './threads';
-
 export const userThreadBookmarks = pgTable(
 	'user_thread_bookmarks',
 	{
@@ -21,7 +20,6 @@ export const userThreadBookmarks = pgTable(
 		userIdx: index('idx_user_thread_bookmarks_user_id').on(table.userId)
 	})
 );
-
 // Add zod schema or relations as needed
 // export type UserThreadBookmark = typeof userThreadBookmarks.$inferSelect;
 // export type InsertUserThreadBookmark = typeof userThreadBookmarks.$inferInsert;

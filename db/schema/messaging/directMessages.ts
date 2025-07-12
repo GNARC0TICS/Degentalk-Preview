@@ -1,6 +1,5 @@
 import {
 	pgTable,
-	serial,
 	/*integer,*/ text,
 	timestamp,
 	boolean,
@@ -11,7 +10,6 @@ import { sql } from 'drizzle-orm';
 import { users } from '../user/users'; // Adjusted path
 import { createInsertSchema } from 'drizzle-zod';
 import { z } from 'zod';
-
 export const directMessages = pgTable(
 	'direct_messages',
 	{
@@ -35,9 +33,8 @@ export const directMessages = pgTable(
 		timestampIdx: index('idx_direct_messages_timestamp').on(table.timestamp)
 	})
 );
-
 export const insertDirectMessageSchema = createInsertSchema(directMessages, {
-	// id: undefined, // This is how it was in schema.ts, but serial id is auto-generated
+	// id: undefined, // Auto-generated UUID primary key
 	// timestamp: undefined, // defaultNow should handle this
 	// isRead: undefined, // default(false) should handle this
 	// isDeleted: undefined, // default(false) should handle this
@@ -48,6 +45,5 @@ export const insertDirectMessageSchema = createInsertSchema(directMessages, {
 	isRead: true,
 	isDeleted: true
 });
-
 export type DirectMessage = typeof directMessages.$inferSelect;
 export type InsertDirectMessage = z.infer<typeof insertDirectMessageSchema>;

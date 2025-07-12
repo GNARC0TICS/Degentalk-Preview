@@ -3,7 +3,6 @@ import { users } from '../user/users'; // Adjusted import
 import { posts } from './posts'; // Adjusted import
 import { reactionTypeEnum } from '../core/enums'; // Adjusted import
 import { sql } from 'drizzle-orm';
-
 export const postReactions = pgTable(
 	'post_reactions',
 	{
@@ -24,7 +23,6 @@ export const postReactions = pgTable(
 		reactionTypeIdx: index('idx_post_reactions_reaction_type').on(table.reactionType)
 	})
 );
-
 import { createInsertSchema } from 'drizzle-zod';
 export const insertPostReactionSchema = createInsertSchema(postReactions).omit({
 	createdAt: true

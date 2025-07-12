@@ -1,6 +1,5 @@
 import {
 	pgTable,
-	serial,
 	integer,
 	timestamp,
 	boolean,
@@ -12,7 +11,6 @@ import {
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users';
 import { referralSources } from './referralSources';
-
 export const userReferrals = pgTable(
 	'user_referrals',
 	{
@@ -36,5 +34,4 @@ export const userReferrals = pgTable(
 		uniqueUser: unique('user_referrals_user_unique').on(table.userId)
 	})
 );
-
 export type UserReferral = typeof userReferrals.$inferSelect;

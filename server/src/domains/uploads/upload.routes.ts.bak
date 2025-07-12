@@ -1,0 +1,17 @@
+import { Router } from 'express';
+import { createPresignedUploadUrlController, confirmUploadController } from './upload.controller';
+import { requireAuth } from '../../middleware/auth'; // Adjusted path
+
+const router = Router();
+
+// POST /api/uploads/presigned-url
+// Generates a presigned URL for the client to upload a file directly to storage.
+// Requires authentication.
+router.post('/presigned-url', requireAuth, createPresignedUploadUrlController);
+
+// POST /api/uploads/confirm
+// Confirms that a file upload (via presigned URL) was successful and updates user profile.
+// Requires authentication.
+router.post('/confirm', requireAuth, confirmUploadController);
+
+export default router;

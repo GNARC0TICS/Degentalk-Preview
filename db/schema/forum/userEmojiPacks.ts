@@ -1,8 +1,7 @@
-import { pgTable, serial, timestamp, text, index, uuid, integer } from 'drizzle-orm/pg-core';
+import { pgTable, timestamp, text, index, uuid, integer } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users';
 import { emojiPacks } from './emojiPacks';
-
 export const userEmojiPacks = pgTable(
 	'user_emoji_packs',
 	{
@@ -23,5 +22,4 @@ export const userEmojiPacks = pgTable(
 		userPackIdx: index('idx_user_pack_unique').on(table.userId, table.emojiPackId)
 	})
 );
-
 export type UserEmojiPack = typeof userEmojiPacks.$inferSelect;

@@ -1,6 +1,5 @@
 import {
 	pgTable,
-	serial,
 	varchar,
 	text,
 	boolean,
@@ -13,7 +12,6 @@ import {
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users'; // Adjusted path
-
 // Consolidated from betaFeatureFlags and featureFlags in shared/schema.ts
 export const featureFlags = pgTable('feature_flags', {
 	id: uuid('id').primaryKey().defaultRandom(),
@@ -36,6 +34,5 @@ export const featureFlags = pgTable('feature_flags', {
 		.notNull()
 		.default('100.00') // TODO: @syncSchema added column for gradual rollout support
 });
-
 export type FeatureFlag = typeof featureFlags.$inferSelect;
 // Add InsertFeatureFlag if Zod schema is needed

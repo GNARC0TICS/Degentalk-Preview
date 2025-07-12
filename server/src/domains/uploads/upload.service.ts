@@ -8,9 +8,9 @@ import {
 	STICKERS_BUCKET
 	// type GetPresignedUploadUrlParams, // This type is for storageService, not directly used here
 	// type PresignedUrlInfo // This type is for storageService, not directly used here
-} from '../../core/storage.service';
+} from '@core/storage.service';
 import type { PackId, StickerId, UserId } from '@shared/types/ids';
-import { logger } from "../../core/logger";
+import { logger } from '@core/logger';
 import { profileService, type ProfileMediaUpdateParams } from '../profile/profile.service';
 
 // --- Types specific to this Upload Domain Service ---

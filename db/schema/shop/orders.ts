@@ -1,6 +1,5 @@
 import {
 	pgTable,
-	serial,
 	uuid,
 	integer,
 	varchar,
@@ -13,7 +12,6 @@ import {
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users';
-
 export const orders = pgTable(
 	'orders',
 	{
@@ -50,6 +48,5 @@ export const orders = pgTable(
 		createdAtIdx: index('idx_orders_created_at').on(table.createdAt)
 	})
 );
-
 export type Order = typeof orders.$inferSelect;
 // export type InsertOrder = typeof orders.$inferInsert; // If needed

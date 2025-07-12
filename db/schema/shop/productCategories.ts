@@ -1,7 +1,6 @@
 import type { AnyPgColumn } from 'drizzle-orm/pg-core';
 import {
 	pgTable,
-	serial,
 	varchar,
 	text,
 	integer,
@@ -12,7 +11,6 @@ import {
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { mediaLibrary } from '../admin/mediaLibrary'; // Placeholder
-
 export const productCategories = pgTable(
 	'product_categories',
 	{
@@ -39,6 +37,5 @@ export const productCategories = pgTable(
 		parentIdx: index('idx_product_categories_parent_id').on(table.parentId)
 	})
 );
-
 export type ProductCategory = typeof productCategories.$inferSelect;
 // export type InsertProductCategory = typeof productCategories.$inferInsert; // If needed

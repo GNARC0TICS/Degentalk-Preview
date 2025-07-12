@@ -5,7 +5,6 @@ import {
 import { sql } from 'drizzle-orm';
 import { users } from './users';
 import { roles } from './roles';
-
 export const userRoles = pgTable(
 	'user_roles',
 	{
@@ -25,7 +24,6 @@ export const userRoles = pgTable(
 		pk: primaryKey({ columns: [table.userId, table.roleId] })
 	})
 );
-
 // Add zod schema or relations as needed
 // export type UserRole = typeof userRoles.$inferSelect;
 // export type InsertUserRole = typeof userRoles.$inferInsert;

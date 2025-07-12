@@ -3,46 +3,39 @@
  * 
  * Auto-generated Drizzle relations for type-safe joins
  */
-
 import { relations } from 'drizzle-orm';
 import { avatarFrames } from './avatarFrames';
-import { userBans } from './userBans';
+import { userBans } from './bans';
 import { featurePermissions } from './featurePermissions';
 import { passwordResetTokens } from './passwordResetTokens';
 import { permissions } from './permissions';
-import { userSettings } from './userSettings';
-import { notificationSettings } from './notificationSettings';
-import { displayPreferences } from './displayPreferences';
-import { userRelationships } from './userRelationships';
+import { userSettings } from './preferences';
+import { userRelationships } from './relationships';
 import { rolePermissions } from './rolePermissions';
 import { roles } from './roles';
-import { userSessions } from './userSessions';
-import { userSettingsHistory } from './userSettingsHistory';
+import { userSessions } from './sessions';
+import { userSettingsHistory } from './settingsHistory';
 import { subscriptions } from './subscriptions';
-import { subscriptionBenefits } from './subscriptionBenefits';
-import { cosmeticDrops } from './cosmeticDrops';
-import { userSocialPreferences } from './userSocialPreferences';
+import { userSocialPreferences } from './user-social-preferences';
 import { userOwnedFrames } from './userOwnedFrames';
 import { userRoles } from './userRoles';
 import { users } from './users';
 import { verificationTokens } from './verificationTokens';
 import { xShares } from './xShares';
-import { titles, badges } from '../user';
-
+import { titles } from '../economy/titles';
+import { badges } from '../economy/badges';
 export const userBansRelations = relations(userBans, ({ one, many }) => ({
   liftedBy: one(users, {
     fields: [userBans.liftedBy],
     references: [users.id]
   }),
 }));
-
 export const rolePermissionsRelations = relations(rolePermissions, ({ one, many }) => ({
   grantedBy: one(users, {
     fields: [rolePermissions.grantedBy],
     references: [users.id]
   }),
 }));
-
 export const userOwnedFramesRelations = relations(userOwnedFrames, ({ one, many }) => ({
   user: one(users, {
     fields: [userOwnedFrames.userId],
@@ -53,14 +46,12 @@ export const userOwnedFramesRelations = relations(userOwnedFrames, ({ one, many 
     references: [avatarFrames.id]
   }),
 }));
-
 export const userRolesRelations = relations(userRoles, ({ one, many }) => ({
   grantedBy: one(users, {
     fields: [userRoles.grantedBy],
     references: [users.id]
   }),
 }));
-
 export const usersRelations = relations(users, ({ one, many }) => ({
   activeFrame: one(avatarFrames, {
     fields: [users.activeFrameId],
@@ -82,22 +73,15 @@ export const usersRelations = relations(users, ({ one, many }) => ({
     fields: [users.activeBadgeId],
     references: [badges.id]
   }),
-}));
-
-export const usersRelations = relations(users, ({ one, many }) => ({
   userBans: many(userBans),
   rolePermissions: many(rolePermissions),
   userOwnedFrames: many(userOwnedFrames),
   userRoles: many(userRoles),
 }));
-
 export const avatarFramesRelations = relations(avatarFrames, ({ one, many }) => ({
   userOwnedFrames: many(userOwnedFrames),
   users: many(users),
-  users: many(users),
 }));
-
 export const rolesRelations = relations(roles, ({ one, many }) => ({
   users: many(users),
 }));
-

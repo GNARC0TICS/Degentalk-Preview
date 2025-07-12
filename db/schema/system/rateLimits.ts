@@ -1,9 +1,8 @@
 import {
-	pgTable, serial, text, integer, timestamp, uuid,
+	pgTable, text, integer, timestamp, uuid,
 	index
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm'; // Assuming sql is needed for default timestamps
-
 export const rateLimits = pgTable('rate_limits', {
 	id: uuid('id').primaryKey().defaultRandom(),
 	key: text('key').notNull(), // Can be User ID, IP address, or a combination
@@ -21,6 +20,5 @@ export const rateLimits = pgTable('rate_limits', {
 		idx_rateLimits_createdAt: index('idx_rateLimits_createdAt').on(table.createdAt),
 		idx_rateLimits_updatedAt: index('idx_rateLimits_updatedAt').on(table.updatedAt),
 	}));
-
 export type RateLimit = typeof rateLimits.$inferSelect;
 // Add InsertRateLimit if Zod schema is needed

@@ -1,5 +1,4 @@
 import { roles } from './roles';
-
 /**
  * DEPRECATED alias – use `roles` instead. Kept only to avoid massive refactor breakage.
  */

@@ -1,6 +1,7 @@
 import { db } from '../../db';
 import { xpActionSettings, type InsertXpActionSetting } from '../../db/schema/economy/xpActionSettings';
 import { eq } from 'drizzle-orm';
+import { logger } from '@server/core/logger';
 
 // ACTION ENUM – source-of-truth lives in server domain, but re-declare subset here to avoid heavy imports
 export enum XP_ACTION {
@@ -32,7 +33,7 @@ const DEFAULT_XP_ACTIONS: InsertXpActionSetting[] = [
 ];
 
 export async function seedXpActions(): Promise<void> {
-  console.log('🌱 [SEED-XP-ACTIONS] Seeding XP action settings…');
+  logger.info('[SEED-XP-ACTIONS] Seeding XP action settings...');
 
   for (const action of DEFAULT_XP_ACTIONS) {
     await db
@@ -42,12 +43,12 @@ export async function seedXpActions(): Promise<void> {
       .execute();
   }
 
-  console.log('✅ [SEED-XP-ACTIONS] Done');
+  logger.info('[SEED-XP-ACTIONS] Done');
 }
 
 if (process.argv[1] && process.argv[1].endsWith('seed-xp-actions.ts')) {
   seedXpActions().then(() => process.exit(0)).catch((e) => {
-    console.error(e);
+    logger.error('[SEED-XP-ACTIONS] Error:', e);
     process.exit(1);
   });
 }

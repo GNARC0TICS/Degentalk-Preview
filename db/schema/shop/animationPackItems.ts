@@ -1,10 +1,9 @@
 import {
-	pgTable, serial, integer, uuid,
+	pgTable, integer, uuid,
 	index
 } from 'drizzle-orm/pg-core';
 import { mediaLibrary } from '../admin/mediaLibrary';
 import { animationPacks } from './animationPacks';
-
 export const animationPackItems = pgTable('animation_pack_items', {
 	id: uuid('id').primaryKey().defaultRandom(),
 	packId: uuid('pack_id')
@@ -15,5 +14,4 @@ export const animationPackItems = pgTable('animation_pack_items', {
 		.notNull(),
 	sortOrder: integer('sort_order').notNull().default(0)
 });
-
 export type AnimationPackItem = typeof animationPackItems.$inferSelect;

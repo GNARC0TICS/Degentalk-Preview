@@ -2,7 +2,6 @@ import { pgTable, varchar, timestamp, primaryKey, index, uuid, integer } from 'd
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users';
 import { forumRules } from './rules';
-
 export const userRulesAgreements = pgTable(
 	'user_rules_agreements',
 	{
@@ -22,6 +21,5 @@ export const userRulesAgreements = pgTable(
 		userIdx: index('idx_user_rules_agreements_user_id').on(table.userId)
 	})
 );
-
 export type UserRulesAgreement = typeof userRulesAgreements.$inferSelect;
 // export type InsertUserRulesAgreement = typeof userRulesAgreements.$inferInsert; // If needed

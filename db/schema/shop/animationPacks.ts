@@ -1,6 +1,5 @@
 import {
 	pgTable,
-	serial,
 	uuid,
 	varchar,
 	text,
@@ -10,7 +9,6 @@ import {
 	index
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
-
 export const animationPacks = pgTable('animation_packs', {
 	id: uuid('id').primaryKey().defaultRandom(),
 	uuid: uuid('uuid').notNull().defaultRandom(),
@@ -27,5 +25,4 @@ export const animationPacks = pgTable('animation_packs', {
 		.notNull()
 		.default(sql`now()`)
 });
-
 export type AnimationPack = typeof animationPacks.$inferSelect;

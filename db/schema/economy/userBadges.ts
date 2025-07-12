@@ -2,7 +2,6 @@ import { pgTable, timestamp, primaryKey, uuid, integer } from 'drizzle-orm/pg-co
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users';
 import { badges } from './badges';
-
 export const userBadges = pgTable(
 	'user_badges',
 	{
@@ -20,7 +19,6 @@ export const userBadges = pgTable(
 		pk: primaryKey({ columns: [table.userId, table.badgeId] })
 	})
 );
-
 // Add zod schema or relations as needed
 // export type UserBadge = typeof userBadges.$inferSelect;
 // export type InsertUserBadge = typeof userBadges.$inferInsert;

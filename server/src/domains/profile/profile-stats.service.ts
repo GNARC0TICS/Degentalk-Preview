@@ -1,4 +1,4 @@
-import { db } from '../../../db';
+import { db } from '@db';
 import {
 	users,
 	userStats,
@@ -6,9 +6,9 @@ import {
 	subscriptions,
 	roles,
 	walletTransactions
-} from '../../../db/schema';
+} from '@schema';
 import { eq, sql, and, desc, count } from 'drizzle-orm';
-import { logger } from "../../core/logger";
+import { logger } from '@core/logger';
 
 export interface ExtendedProfileStats {
 	// Core profile data

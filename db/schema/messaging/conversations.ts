@@ -1,7 +1,6 @@
-import { pgTable, serial, uuid, varchar, boolean, timestamp, index } from 'drizzle-orm/pg-core';
+import { pgTable, uuid, varchar, boolean, timestamp, index } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users'; // Adjusted path
-
 export const conversations = pgTable(
 	'conversations',
 	{
@@ -28,7 +27,6 @@ export const conversations = pgTable(
 		updatedAtIdx: index('idx_conversations_updated_at').on(table.updatedAt)
 	})
 );
-
 export type Conversation = typeof conversations.$inferSelect;
 // Add InsertConversation if Zod schema is needed
 // import { createInsertSchema } from "drizzle-zod";

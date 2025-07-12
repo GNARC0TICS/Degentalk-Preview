@@ -1,6 +1,5 @@
 import {
 	pgTable,
-	serial,
 	varchar,
 	text,
 	boolean,
@@ -14,7 +13,6 @@ import { users } from '../user/users'; // Adjusted path
 import { roles } from '../user/roles'; // Use roles instead of deprecated userGroups
 import { createInsertSchema } from 'drizzle-zod';
 import { z } from 'zod';
-
 export const chatRooms = pgTable(
 	'chat_rooms',
 	{
@@ -42,7 +40,6 @@ export const chatRooms = pgTable(
 		orderIdx: index('idx_chat_rooms_order').on(table.order)
 	})
 );
-
 export const insertChatRoomSchema = createInsertSchema(chatRooms, {
 	name: z.string().min(2).max(100),
 	description: z.string().optional()
@@ -52,6 +49,5 @@ export const insertChatRoomSchema = createInsertSchema(chatRooms, {
 	updatedAt: true,
 	isDeleted: true
 });
-
 export type ChatRoom = typeof chatRooms.$inferSelect;
 export type InsertChatRoom = z.infer<typeof insertChatRoomSchema>;

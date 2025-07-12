@@ -291,6 +291,7 @@ const EnhancedShoutboxWidget: React.FC<EnhancedShoutboxWidgetProps> = ({
 			} else {
 				setIgnoredUsers((prev) => {
 					const newSet = new Set(prev);
+					// eslint-disable-next-line drizzle/enforce-delete-with-where
 					newSet.delete(userId);
 					return newSet;
 				});

@@ -9,7 +9,7 @@ import type {
   UserId,
   NotificationId
 } from '@shared/types/ids';
-import { logger } from "../../../core/logger";
+import { logger } from '@core/logger';
 
 // Notification Interfaces
 export interface PublicNotification {

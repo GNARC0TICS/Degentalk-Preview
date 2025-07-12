@@ -1,7 +1,6 @@
 import { relations } from 'drizzle-orm';
 import {
 	pgTable,
-	serial,
 	text,
 	integer,
 	timestamp,
@@ -15,7 +14,6 @@ import {
 import { users } from '../user/users';
 import { products } from './products';
 import { transactions } from '../economy/transactions';
-
 export const userInventory = pgTable(
 	'user_inventory',
 	{
@@ -39,7 +37,6 @@ export const userInventory = pgTable(
 		userProductUnique: uniqueIndex('user_product_idx').on(table.userId, table.productId)
 	})
 );
-
 export const userInventoryRelations = relations(userInventory, ({ one }) => ({
 	user: one(users, {
 		fields: [userInventory.userId],
@@ -54,7 +51,6 @@ export const userInventoryRelations = relations(userInventory, ({ one }) => ({
 		references: [transactions.id]
 	})
 }));
-
 export const inventoryTransactionLinks = pgTable('inventory_transaction_links', {
 	id: uuid('id').primaryKey().defaultRandom(),
 	inventoryId: uuid('inventory_id')
@@ -69,7 +65,6 @@ export const inventoryTransactionLinks = pgTable('inventory_transaction_links', 
 		onDelete: 'set null'
 	})
 });
-
 export const inventoryTransactionLinksRelations = relations(
 	inventoryTransactionLinks,
 	({ one }) => ({
@@ -83,6 +78,5 @@ export const inventoryTransactionLinksRelations = relations(
 		})
 	})
 );
-
 export type UserInventoryItem = typeof userInventory.$inferSelect;
 export type InsertUserInventoryItem = typeof userInventory.$inferInsert;

@@ -1,6 +1,5 @@
 import {
 	pgTable,
-	serial,
 	text,
 	timestamp,
 	boolean,
@@ -13,7 +12,6 @@ import { users } from '../user/users'; // Adjusted path
 import { chatRooms } from './chatRooms'; // Adjusted path
 import { createInsertSchema } from 'drizzle-zod';
 import { z } from 'zod';
-
 export const shoutboxMessages = pgTable(
 	'shoutbox_messages',
 	{
@@ -37,7 +35,6 @@ export const shoutboxMessages = pgTable(
 		createdAtIdx: index('idx_shoutbox_messages_created_at').on(table.createdAt)
 	})
 );
-
 export const insertShoutboxMessageSchema = createInsertSchema(shoutboxMessages, {
 	content: z.string().min(2).max(250),
 	roomId: z.string().uuid().optional() // Updated to uuid
@@ -49,6 +46,5 @@ export const insertShoutboxMessageSchema = createInsertSchema(shoutboxMessages, 
 	isPinned: true,
 	tipAmount: true
 });
-
 export type ShoutboxMessage = typeof shoutboxMessages.$inferSelect;
 export type InsertShoutboxMessage = z.infer<typeof insertShoutboxMessageSchema>;

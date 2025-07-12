@@ -2,8 +2,8 @@ import { userService } from '@core/services/user.service';
 import { Router } from 'express';
 import { z } from 'zod';
 import { userPromotionService } from './user-promotion.service';
-import { isAuthenticated, isAdmin } from '../auth/middleware/auth.middleware';
-import { logger } from "../../core/logger";
+import { isAuthenticated, isAdmin } from '@server/auth/middleware/auth.middleware';
+import { logger } from '@core/logger';
 import { sendSuccessResponse, sendErrorResponse } from "@core/utils/transformer.helpers";
 
 const router = Router();

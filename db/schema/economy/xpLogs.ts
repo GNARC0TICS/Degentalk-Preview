@@ -1,6 +1,5 @@
 import {
 	pgTable,
-	serial,
 	integer,
 	date,
 	timestamp,
@@ -10,7 +9,6 @@ import {
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users';
-
 export const xpLogs = pgTable(
 	'xp_logs',
 	{
@@ -29,7 +27,6 @@ export const xpLogs = pgTable(
 		userDateIdx: index('idx_xp_logs_user_date').on(table.userId, table.date)
 	})
 );
-
 // Type definitions for use in services and API responses
 export type XpLog = typeof xpLogs.$inferSelect;
 export type InsertXpLog = typeof xpLogs.$inferInsert;

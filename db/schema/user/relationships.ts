@@ -1,6 +1,5 @@
 import {
 	pgTable,
-	serial,
 	integer,
 	varchar,
 	timestamp,
@@ -11,7 +10,6 @@ import {
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from './users';
-
 // Enhanced user relationships table for profile system
 export const userRelationships = pgTable(
 	'user_relationships',
@@ -62,6 +60,5 @@ export const userRelationships = pgTable(
 		createdIdx: index('idx_user_relationships_created').on(table.createdAt)
 	})
 );
-
 export type UserRelationship = typeof userRelationships.$inferSelect;
 // export type InsertUserRelationship = typeof userRelationships.$inferInsert; // If needed

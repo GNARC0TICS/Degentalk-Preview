@@ -1,6 +1,5 @@
 import {
 	pgTable,
-	serial,
 	integer,
 	bigint,
 	text,
@@ -15,7 +14,6 @@ import { sql } from 'drizzle-orm';
 import { users } from '../user/users';
 import { wallets } from './wallets';
 import { transactionTypeEnum, transactionStatusEnum } from '../core/enums';
-
 export const transactions = pgTable(
 	'transactions',
 	{
@@ -51,6 +49,5 @@ export const transactions = pgTable(
 		typeStatusIdx: index('idx_transactions_type_status').on(table.type, table.status)
 	})
 );
-
 export type Transaction = typeof transactions.$inferSelect;
 // export type InsertTransaction = typeof transactions.$inferInsert; // If needed

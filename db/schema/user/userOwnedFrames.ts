@@ -1,11 +1,10 @@
 import {
-	pgTable, serial, uuid, integer, varchar, timestamp,
+	pgTable, uuid, integer, varchar, timestamp,
 	index
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from './users';
 import { avatarFrames } from './avatarFrames';
-
 /**
  * user_owned_frames – join table mapping which avatar frames a user owns.
  *
@@ -28,6 +27,5 @@ export const userOwnedFrames = pgTable('user_owned_frames', {
 		.notNull()
 		.default(sql`CURRENT_TIMESTAMP`)
 });
-
 export type UserOwnedFrame = typeof userOwnedFrames.$inferSelect;
 export type InsertUserOwnedFrame = typeof userOwnedFrames.$inferInsert;

@@ -13,7 +13,6 @@ import { sql } from 'drizzle-orm';
 import { users } from '../user/users';
 import { eventLogs } from './event_logs';
 import { notificationTypeEnum } from '../core/enums';
-
 export const notifications = pgTable(
 	'notifications',
 	{
@@ -38,6 +37,5 @@ export const notifications = pgTable(
 		userCreatedIdx: index('idx_notifications_user_created').on(table.userId, table.createdAt)
 	})
 );
-
 export type Notification = typeof notifications.$inferSelect;
 export type InsertNotification = typeof notifications.$inferInsert;

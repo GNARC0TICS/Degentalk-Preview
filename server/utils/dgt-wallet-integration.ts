@@ -2,6 +2,7 @@ import { db } from '../db';
 import { sql } from 'drizzle-orm';
 import type { UserId } from '@shared/types/ids';
 import Stripe from 'stripe';
+import { logger } from '../src/core/logger';
 
 // Initialize Stripe with secret key if available
 let stripe: Stripe | null = null;
@@ -10,7 +11,7 @@ if (process.env.STRIPE_SECRET_KEY) {
 		apiVersion: '2023-10-16'
 	});
 } else {
-	console.warn('STRIPE_SECRET_KEY not set, Stripe integration disabled');
+	logger.warn('STRIPE_SECRET_KEY not set, Stripe integration disabled');
 }
 
 // Available DGT packages

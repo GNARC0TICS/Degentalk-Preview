@@ -1,6 +1,5 @@
 import {
 	pgTable,
-	serial,
 	varchar,
 	integer,
 	boolean,
@@ -19,10 +18,8 @@ import { threadPrefixes } from './prefixes'; // Placeholder for future import
 import { contentVisibilityStatusEnum } from '../core/enums';
 import { type AnyPgColumn } from 'drizzle-orm/pg-core';
 // import { posts } from "./posts"; // Placeholder for self-reference with posts
-
 // Forward declare the post type for solvingPostId reference
 export type PostTable = { id: AnyPgColumn }; // Corrected PgColumn to AnyPgColumn
-
 export const threads = pgTable(
 	'threads',
 	{
@@ -86,7 +83,6 @@ export const threads = pgTable(
 		isBoostedIdx: index('idx_threads_is_boosted').on(table.isBoosted)
 	})
 );
-
 // Placeholder for relations
 // import { relations } from "drizzle-orm";
 // export const threadsRelations = relations(threads, ({ one, many }) => ({
@@ -97,10 +93,8 @@ export const threads = pgTable(
 //   solvingPost: one(posts, {fields: [threads.solvingPostId], references: [posts.id]}),
 //   // ... other relations
 // }));
-
 import { createInsertSchema } from 'drizzle-zod';
 import { z } from 'zod';
-
 export const insertThreadSchema = createInsertSchema(threads)
 	.extend({
 		title: z.string().min(3).max(255)
@@ -139,6 +133,5 @@ export const insertThreadSchema = createInsertSchema(threads)
 		xpMultiplier: true,
 		rewardRules: true
 	});
-
 export type Thread = typeof threads.$inferSelect;
 export type InsertThread = z.infer<typeof insertThreadSchema>;

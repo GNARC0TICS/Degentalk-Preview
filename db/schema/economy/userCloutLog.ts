@@ -1,8 +1,7 @@
-import { pgTable, serial, uuid, integer, varchar, timestamp, index } from 'drizzle-orm/pg-core';
+import { pgTable, uuid, integer, varchar, timestamp, index } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users';
 import { cloutAchievements } from './cloutAchievements';
-
 /**
  * Table: user_clout_log
  * -----------------------------------------
@@ -30,6 +29,5 @@ export const userCloutLog = pgTable(
 		userCreatedIdx: index('idx_user_clout').on(table.userId, table.createdAt)
 	})
 );
-
 export type UserCloutLog = typeof userCloutLog.$inferSelect;
 export type InsertUserCloutLog = typeof userCloutLog.$inferInsert;

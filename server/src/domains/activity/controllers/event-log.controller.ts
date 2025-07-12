@@ -2,7 +2,7 @@ import type { Request, Response } from 'express';
 import { eventLogService } from '../services/event-log.service';
 import { z } from 'zod';
 import { eventTypeEnum } from '@schema/system/event_logs';
-import { logger } from "../../../core/logger";
+import { logger } from '@core/logger';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
 /**

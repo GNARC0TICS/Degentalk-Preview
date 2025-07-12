@@ -1,6 +1,5 @@
 import {
 	pgTable,
-	serial,
 	varchar,
 	integer,
 	boolean,
@@ -11,7 +10,6 @@ import {
 	uuid
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
-
 /**
  * rarities
  *
@@ -21,19 +19,14 @@ export const rarities = pgTable(
 	'rarities',
 	{
 		id: uuid('id').primaryKey().defaultRandom(),
-
 		name: varchar('name', { length: 100 }).notNull(),
 		slug: varchar('slug', { length: 100 }).notNull().unique(),
-
 		hexColor: varchar('hex_color', { length: 10 }).notNull(),
 		rarityScore: integer('rarity_score').notNull(), // 1–100 scale
-
 		isGlow: boolean('is_glow').notNull().default(false),
 		isAnimated: boolean('is_animated').notNull().default(false),
-
 		flags: jsonb('flags').default('{}'), // Future visual FX flags
 		pluginData: jsonb('plugin_data').default('{}'),
-
 		createdAt: timestamp('created_at')
 			.notNull()
 			.default(sql`CURRENT_TIMESTAMP`),
@@ -45,6 +38,5 @@ export const rarities = pgTable(
 		scoreIdx: index('idx_rarities_rarity_score').on(table.rarityScore)
 	})
 );
-
 export type Rarity = typeof rarities.$inferSelect;
 export type InsertRarity = typeof rarities.$inferInsert;

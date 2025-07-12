@@ -1,8 +1,7 @@
-import { pgTable, serial, integer, boolean, timestamp, unique, uuid } from 'drizzle-orm/pg-core';
+import { pgTable, integer, boolean, timestamp, unique, uuid } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users';
 import { signatureShopItems } from './signatureItems';
-
 export const userSignatureItems = pgTable(
 	'user_signature_items',
 	{
@@ -25,7 +24,6 @@ export const userSignatureItems = pgTable(
 		)
 	})
 );
-
 // Add zod schema or relations as needed
 // export type UserSignatureItem = typeof userSignatureItems.$inferSelect;
 // export type InsertUserSignatureItem = typeof userSignatureItems.$inferInsert;

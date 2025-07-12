@@ -1,0 +1,610 @@
+/**
+ * Subscription Service
+ *
+ * Handles VIP Pass (lifetime) and Degen Pass (monthly) subscription management,
+ * including purchases, renewals, cancellations, and benefit tracking.
+ */
+
+import { db } from '@db';
+import {
+	subscriptions,
+	subscriptionBenefits,
+	cosmeticDrops,
+	users,
+	avatarFrames,
+	badges,
+	titles
+} from '@schema';
+import { eq, and, sql, desc, gte, lt } from 'drizzle-orm';
+import { walletService } from '../wallet/services/wallet.service';
+import { logger } from '../../core/logger';
+import type { CosmeticId, ItemId, SubscriptionId } from '@shared/types/ids';
+import type { EntityId } from "@shared/types/ids";
+
+export interface SubscriptionPurchaseRequest {
+	userId: string;
+	type: 'vip_pass' | 'degen_pass';
+}
+
+export interface SubscriptionInfo {
+	id: EntityId;
+	userId: string;
+	type: 'vip_pass' | 'degen_pass';
+	status: 'active' | 'expired' | 'cancelled' | 'lifetime';
+	startDate: Date;
+	endDate: Date | null;
+	nextBillingDate: Date | null;
+	autoRenew: boolean;
+	totalCosmeticValue: number;
+	benefits: Record<string, any>;
+}
+
+export interface CosmeticDropInfo {
+	cosmeticType: 'avatar_frame' | 'badge' | 'title' | 'sticker' | 'emoji_pack' | 'profile_theme';
+	cosmeticId: CosmeticId;
+	cosmeticName: string;
+	cosmeticValue: number;
+}
+
+/**
+ * Subscription Service Class
+ */
+export class SubscriptionService {
+	private readonly VIP_PASS_PRICE = 500; // 500 DGT
+	private readonly DEGEN_PASS_PRICE = 100; // 100 DGT per month
+	private readonly COSMETIC_DROP_VALUE = 120; // 120 DGT worth of cosmetics per month
+
+	/**
+	 * Purchase a subscription (VIP Pass or Degen Pass)
+	 */
+	async purchaseSubscription(request: SubscriptionPurchaseRequest): Promise<SubscriptionInfo> {
+		const { userId, type } = request;
+
+		try {
+			// Check if user already has an active subscription of this type
+			const existingSubscription = await this.getUserActiveSubscription(userId, type);
+			if (existingSubscription) {
+				throw new Error(`User already has an active ${type.replace('_', ' ')} subscription`);
+			}
+
+			// Determine pricing
+			const price = type === 'vip_pass' ? this.VIP_PASS_PRICE : this.DEGEN_PASS_PRICE;
+
+			// Check user's DGT balance
+			const balance = await dgtService.getDGTBalance(userId);
+			if (balance.balance < price) {
+				throw new Error(
+					`Insufficient DGT balance. Required: ${price}, Available: ${balance.balance}`
+				);
+			}
+
+			// Process payment and create subscription
+			const result = await db.transaction(async (tx) => {
+				// Debit DGT from user
+				const transaction = await dgtService.debitDGT(userId, price, {
+					source: 'shop_purchase',
+					shopItemId: `subscription_${type}`,
+					reason: `${type.replace('_', ' ')} subscription purchase`
+				});
+
+				// Create subscription record
+				const endDate = type === 'vip_pass' ? null : this.getNextMonthDate();
+				const nextBillingDate = type === 'vip_pass' ? null : endDate;
+				const status = type === 'vip_pass' ? 'lifetime' : 'active';
+
+				const [subscription] = await tx
+					.insert(subscriptions)
+					.values({
+						userId,
+						type,
+						status,
+						pricePaid: price,
+						currency: 'DGT',
+						startDate: new Date(),
+						endDate,
+						nextBillingDate,
+						autoRenew: type === 'degen_pass',
+						purchaseTransactionId: transaction.id,
+						benefits: this.getDefaultBenefits(type),
+						metadata: { purchaseSource: 'web', transactionId: transaction.id }
+					})
+					.returning();
+
+				return subscription;
+			});
+
+			logger.info('SUBSCRIPTION', `${type} purchased by user ${userId} for ${price} DGT`);
+
+			return this.mapToSubscriptionInfo(result);
+		} catch (error) {
+			logger.error('SUBSCRIPTION', `Error purchasing ${type}:`, error);
+			throw new Error(`Failed to purchase subscription: ${error.message}`);
+		}
+	}
+
+	/**
+	 * Get user's active subscription
+	 */
+	async getUserActiveSubscription(
+		userId: string,
+		type?: 'vip_pass' | 'degen_pass'
+	): Promise<SubscriptionInfo | null> {
+		try {
+			let query = db
+				.select()
+				.from(subscriptions)
+				.where(
+					and(
+						eq(subscriptions.userId, userId),
+						sql`${subscriptions.status} IN ('active', 'lifetime')`,
+						eq(subscriptions.isDeleted, false)
+					)
+				);
+
+			if (type) {
+				query = query.where(
+					and(
+						eq(subscriptions.userId, userId),
+						eq(subscriptions.type, type),
+						sql`${subscriptions.status} IN ('active', 'lifetime')`,
+						eq(subscriptions.isDeleted, false)
+					)
+				);
+			}
+
+			const result = await query.orderBy(desc(subscriptions.createdAt)).limit(1);
+
+			if (result.length === 0) {
+				return null;
+			}
+
+			return this.mapToSubscriptionInfo(result[0]);
+		} catch (error) {
+			logger.error('SUBSCRIPTION', 'Error getting user subscription:', error);
+			throw new Error('Failed to retrieve subscription information');
+		}
+	}
+
+	/**
+	 * Get all user subscriptions (active and historical)
+	 */
+	async getUserSubscriptions(userId: string): Promise<SubscriptionInfo[]> {
+		try {
+			const results = await db
+				.select()
+				.from(subscriptions)
+				.where(and(eq(subscriptions.userId, userId), eq(subscriptions.isDeleted, false)))
+				.orderBy(desc(subscriptions.createdAt));
+
+			return results.map((sub) => this.mapToSubscriptionInfo(sub));
+		} catch (error) {
+			logger.error('SUBSCRIPTION', 'Error getting user subscriptions:', error);
+			throw new Error('Failed to retrieve subscription history');
+		}
+	}
+
+	/**
+	 * Cancel a subscription
+	 */
+	async cancelSubscription(userId: string, subscriptionId: SubscriptionId): Promise<boolean> {
+		try {
+			// Verify subscription belongs to user and is active
+			const subscription = await db
+				.select()
+				.from(subscriptions)
+				.where(
+					and(
+						eq(subscriptions.id, subscriptionId),
+						eq(subscriptions.userId, userId),
+						sql`${subscriptions.status} IN ('active', 'lifetime')`
+					)
+				)
+				.limit(1);
+
+			if (subscription.length === 0) {
+				throw new Error('Subscription not found or not active');
+			}
+
+			// VIP Pass cannot be cancelled (lifetime)
+			if (subscription[0].type === 'vip_pass') {
+				throw new Error('VIP Pass subscriptions cannot be cancelled (lifetime access)');
+			}
+
+			// Cancel the subscription
+			await db
+				.update(subscriptions)
+				.set({
+					status: 'cancelled',
+					autoRenew: false,
+					updatedAt: new Date()
+				})
+				.where(eq(subscriptions.id, subscriptionId));
+
+			logger.info('SUBSCRIPTION', `Subscription ${subscriptionId} cancelled by user ${userId}`);
+			return true;
+		} catch (error) {
+			logger.error('SUBSCRIPTION', 'Error cancelling subscription:', error);
+			throw new Error(`Failed to cancel subscription: ${error.message}`);
+		}
+	}
+
+	/**
+	 * Renew monthly subscription
+	 */
+	async renewSubscription(subscriptionId: SubscriptionId): Promise<boolean> {
+		try {
+			const subscription = await db
+				.select()
+				.from(subscriptions)
+				.where(eq(subscriptions.id, subscriptionId))
+				.limit(1);
+
+			if (subscription.length === 0) {
+				throw new Error('Subscription not found');
+			}
+
+			const sub = subscription[0];
+
+			// Only monthly subscriptions can be renewed
+			if (sub.type !== 'degen_pass') {
+				throw new Error('Only Degen Pass subscriptions can be renewed');
+			}
+
+			// Check if subscription is eligible for renewal
+			if (sub.status === 'cancelled') {
+				throw new Error('Cancelled subscriptions cannot be renewed');
+			}
+
+			// Check user's DGT balance
+			const balance = await dgtService.getDGTBalance(sub.userId);
+			if (balance.balance < this.DEGEN_PASS_PRICE) {
+				// Mark subscription as expired
+				await db
+					.update(subscriptions)
+					.set({
+						status: 'expired',
+						updatedAt: new Date()
+					})
+					.where(eq(subscriptions.id, subscriptionId));
+
+				throw new Error(
+					`Insufficient DGT balance for renewal. Required: ${this.DEGEN_PASS_PRICE}, Available: ${balance.balance}`
+				);
+			}
+
+			// Process renewal payment
+			await db.transaction(async (tx) => {
+				// Debit DGT from user
+				await dgtService.debitDGT(sub.userId, this.DEGEN_PASS_PRICE, {
+					source: 'shop_purchase',
+					shopItemId: 'subscription_degen_pass_renewal',
+					reason: 'Degen Pass subscription renewal'
+				});
+
+				// Update subscription
+				const newEndDate = this.getNextMonthDate();
+				const newBillingDate = this.getNextMonthDate(newEndDate);
+
+				await tx
+					.update(subscriptions)
+					.set({
+						status: 'active',
+						endDate: newEndDate,
+						nextBillingDate: newBillingDate,
+						lastPaymentDate: new Date(),
+						updatedAt: new Date()
+					})
+					.where(eq(subscriptions.id, subscriptionId));
+			});
+
+			logger.info('SUBSCRIPTION', `Subscription ${subscriptionId} renewed for user ${sub.userId}`);
+			return true;
+		} catch (error) {
+			logger.error('SUBSCRIPTION', 'Error renewing subscription:', error);
+			throw new Error(`Failed to renew subscription: ${error.message}`);
+		}
+	}
+
+	/**
+	 * Process monthly cosmetic drop for Degen Pass subscribers
+	 */
+	async processMonthlyCosmetics(): Promise<{
+		processed: number;
+		failed: number;
+		details: Array<{ userId: string; success: boolean; error?: string }>;
+	}> {
+		try {
+			const currentDate = new Date();
+			const currentMonth = currentDate.getMonth() + 1;
+			const currentYear = currentDate.getFullYear();
+
+			// Get all active Degen Pass subscriptions
+			const activeSubscriptions = await db
+				.select()
+				.from(subscriptions)
+				.where(
+					and(
+						eq(subscriptions.type, 'degen_pass'),
+						eq(subscriptions.status, 'active'),
+						eq(subscriptions.isDeleted, false)
+					)
+				);
+
+			const results = {
+				processed: 0,
+				failed: 0,
+				details: [] as Array<{ userId: string; success: boolean; error?: string }>
+			};
+
+			for (const subscription of activeSubscriptions) {
+				try {
+					// Check if cosmetic drop already processed for this month
+					const existingDrop = await db
+						.select()
+						.from(cosmeticDrops)
+						.where(
+							and(
+								eq(cosmeticDrops.userId, subscription.userId),
+								eq(cosmeticDrops.subscriptionId, subscription.id),
+								eq(cosmeticDrops.dropMonth, currentMonth),
+								eq(cosmeticDrops.dropYear, currentYear)
+							)
+						)
+						.limit(1);
+
+					if (existingDrop.length > 0) {
+						logger.info(
+							'COSMETIC_DROP',
+							`Cosmetic already dropped for user ${subscription.userId} this month`
+						);
+						continue;
+					}
+
+					// Generate random cosmetic drop
+					const cosmetic = await this.generateRandomCosmetic();
+					if (!cosmetic) {
+						throw new Error('Failed to generate cosmetic item');
+					}
+
+					// Create cosmetic drop record
+					await db.insert(cosmeticDrops).values({
+						userId: subscription.userId,
+						subscriptionId: subscription.id,
+						dropMonth: currentMonth,
+						dropYear: currentYear,
+						cosmeticType: cosmetic.cosmeticType,
+						cosmeticId: cosmetic.cosmeticId,
+						cosmeticName: cosmetic.cosmeticName,
+						cosmeticValue: cosmetic.cosmeticValue,
+						claimed: false,
+						metadata: { generatedAt: new Date(), dropReason: 'monthly_degen_pass' }
+					});
+
+					// Update subscription cosmetic value
+					await db
+						.update(subscriptions)
+						.set({
+							lastCosmeticDrop: new Date(),
+							totalCosmeticValue: sql`${subscriptions.totalCosmeticValue} + ${cosmetic.cosmeticValue}`,
+							updatedAt: new Date()
+						})
+						.where(eq(subscriptions.id, subscription.id));
+
+					results.processed++;
+					results.details.push({ userId: subscription.userId, success: true });
+
+					logger.info(
+						'COSMETIC_DROP',
+						`Cosmetic dropped for user ${subscription.userId}: ${cosmetic.cosmeticName} (${cosmetic.cosmeticValue} DGT value)`
+					);
+				} catch (error) {
+					results.failed++;
+					results.details.push({
+						userId: subscription.userId,
+						success: false,
+						error: error.message
+					});
+
+					logger.error(
+						'COSMETIC_DROP',
+						`Failed to process cosmetic drop for user ${subscription.userId}:`,
+						error
+					);
+				}
+			}
+
+			logger.info(
+				'COSMETIC_DROP',
+				`Monthly cosmetic drop completed: ${results.processed} processed, ${results.failed} failed`
+			);
+
+			return results;
+		} catch (error) {
+			logger.error('COSMETIC_DROP', 'Error processing monthly cosmetics:', error);
+			throw new Error(`Failed to process monthly cosmetic drops: ${error.message}`);
+		}
+	}
+
+	/**
+	 * Get user's cosmetic drop history
+	 */
+	async getUserCosmeticDrops(userId: string): Promise<any[]> {
+		try {
+			const drops = await db
+				.select()
+				.from(cosmeticDrops)
+				.where(eq(cosmeticDrops.userId, userId))
+				.orderBy(desc(cosmeticDrops.createdAt));
+
+			return drops;
+		} catch (error) {
+			logger.error('SUBSCRIPTION', 'Error getting cosmetic drops:', error);
+			throw new Error('Failed to retrieve cosmetic drop history');
+		}
+	}
+
+	/**
+	 * Check if user has specific subscription benefit
+	 */
+	async hasSubscriptionBenefit(userId: string, benefitKey: string): Promise<boolean> {
+		try {
+			const subscription = await this.getUserActiveSubscription(userId);
+			if (!subscription) {
+				return false;
+			}
+
+			// Check if benefit exists in subscription benefits or default benefits
+			const benefits = subscription.benefits as Record<string, any>;
+			return benefits[benefitKey] === true || benefits[benefitKey] === 1;
+		} catch (error) {
+			logger.error('SUBSCRIPTION', 'Error checking subscription benefit:', error);
+			return false;
+		}
+	}
+
+	/**
+	 * Get expired subscriptions that need renewal processing
+	 */
+	async getExpiredSubscriptions(): Promise<any[]> {
+		try {
+			const now = new Date();
+
+			const expired = await db
+				.select()
+				.from(subscriptions)
+				.where(
+					and(
+						eq(subscriptions.type, 'degen_pass'),
+						eq(subscriptions.status, 'active'),
+						eq(subscriptions.autoRenew, true),
+						lt(subscriptions.endDate, now),
+						eq(subscriptions.isDeleted, false)
+					)
+				);
+
+			return expired;
+		} catch (error) {
+			logger.error('SUBSCRIPTION', 'Error getting expired subscriptions:', error);
+			throw new Error('Failed to retrieve expired subscriptions');
+		}
+	}
+
+	/**
+	 * Map database subscription to SubscriptionInfo interface
+	 */
+	private mapToSubscriptionInfo(sub: any): SubscriptionInfo {
+		return {
+			id: sub.id,
+			userId: sub.userId,
+			type: sub.type,
+			status: sub.status,
+			startDate: sub.startDate,
+			endDate: sub.endDate,
+			nextBillingDate: sub.nextBillingDate,
+			autoRenew: sub.autoRenew,
+			totalCosmeticValue: sub.totalCosmeticValue,
+			benefits: sub.benefits || {}
+		};
+	}
+
+	/**
+	 * Get default benefits for subscription type
+	 */
+	private getDefaultBenefits(type: 'vip_pass' | 'degen_pass'): Record<string, any> {
+		const benefits: Record<string, any> = {};
+
+		if (type === 'vip_pass') {
+			benefits.lifetime_vip = true;
+			benefits.vip_badge = true;
+			benefits.priority_support = true;
+			benefits.advanced_forum_features = true;
+		} else {
+			benefits.monthly_cosmetic_drop = true;
+			benefits.degen_badge = true;
+			benefits.exclusive_content = true;
+			benefits.enhanced_profile = true;
+		}
+
+		return benefits;
+	}
+
+	/**
+	 * Generate random cosmetic item for monthly drop
+	 */
+	private async generateRandomCosmetic(): Promise<CosmeticDropInfo | null> {
+		try {
+			// Randomly select cosmetic type
+			const cosmeticTypes: Array<CosmeticDropInfo['cosmeticType']> = [
+				'avatar_frame',
+				'badge',
+				'title'
+			];
+			const randomType = cosmeticTypes[Math.floor(Math.random() * cosmeticTypes.length)];
+
+			// Get available cosmetics of that type
+			let cosmetic: CosmeticDropInfo | null = null;
+
+			switch (randomType) {
+				case 'avatar_frame': {
+					const frames = await db
+						.select()
+						.from(avatarFrames)
+						.where(eq(avatarFrames.isActive, true));
+					if (frames.length > 0) {
+						const randomFrame = frames[Math.floor(Math.random() * frames.length)];
+						cosmetic = {
+							cosmeticType: 'avatar_frame',
+							cosmeticId: randomFrame.id,
+							cosmeticName: randomFrame.name || `Avatar Frame #${randomFrame.id}`,
+							cosmeticValue: this.COSMETIC_DROP_VALUE
+						};
+					}
+					break;
+				}
+				case 'badge': {
+					const badgeList = await db.select().from(badges).where(eq(badges.isActive, true));
+					if (badgeList.length > 0) {
+						const randomBadge = badgeList[Math.floor(Math.random() * badgeList.length)];
+						cosmetic = {
+							cosmeticType: 'badge',
+							cosmeticId: randomBadge.id,
+							cosmeticName: randomBadge.name,
+							cosmeticValue: this.COSMETIC_DROP_VALUE
+						};
+					}
+					break;
+				}
+				case 'title': {
+					const titleList = await db.select().from(titles).where(eq(titles.isActive, true));
+					if (titleList.length > 0) {
+						const randomTitle = titleList[Math.floor(Math.random() * titleList.length)];
+						cosmetic = {
+							cosmeticType: 'title',
+							cosmeticId: randomTitle.id,
+							cosmeticName: randomTitle.title,
+							cosmeticValue: this.COSMETIC_DROP_VALUE
+						};
+					}
+					break;
+				}
+			}
+
+			return cosmetic;
+		} catch (error) {
+			logger.error('COSMETIC_DROP', 'Error generating random cosmetic:', error);
+			return null;
+		}
+	}
+
+	/**
+	 * Get date one month from now
+	 */
+	private getNextMonthDate(fromDate?: Date): Date {
+		const date = fromDate ? new Date(fromDate) : new Date();
+		date.setMonth(date.getMonth() + 1);
+		return date;
+	}
+}
+
+// Export singleton instance
+export const subscriptionService = new SubscriptionService();

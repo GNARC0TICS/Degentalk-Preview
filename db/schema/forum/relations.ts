@@ -3,7 +3,6 @@
  * 
  * Auto-generated Drizzle relations for type-safe joins
  */
-
 import { relations } from 'drizzle-orm';
 import { customEmojis } from './customEmojis';
 import { emojiPackItems } from './emojiPackItems';
@@ -15,40 +14,36 @@ import { postDrafts } from './postDrafts';
 import { postLikes } from './postLikes';
 import { postReactions } from './postReactions';
 import { posts } from './posts';
-import { threadPrefixes } from './threadPrefixes';
-import { forumRules } from './forumRules';
-import { forumStructure } from './forumStructure';
+import { threadPrefixes } from './prefixes';
+import { forumRules } from './rules';
+import { forumStructure } from './structure';
 import { tags } from './tags';
-import { userThreadBookmarks } from './userThreadBookmarks';
+import { userThreadBookmarks } from './threadBookmarks';
 import { threadDrafts } from './threadDrafts';
 import { threadFeaturePermissions } from './threadFeaturePermissions';
 import { threadTags } from './threadTags';
 import { threads } from './threads';
 import { userEmojiPacks } from './userEmojiPacks';
-import { userRulesAgreements } from './userRulesAgreements';
-import { users } from '../user';
-
+import { userRulesAgreements } from './userRuleAgreements';
+import { users } from '../user/users';
 export const customEmojisRelations = relations(customEmojis, ({ one, many }) => ({
   createdBy: one(users, {
     fields: [customEmojis.createdBy],
     references: [users.id]
   }),
 }));
-
 export const emojiPacksRelations = relations(emojiPacks, ({ one, many }) => ({
   createdBy: one(users, {
     fields: [emojiPacks.createdBy],
     references: [users.id]
   }),
 }));
-
 export const postDraftsRelations = relations(postDrafts, ({ one, many }) => ({
   thread: one(threads, {
     fields: [postDrafts.threadId],
     references: [threads.id]
   }),
 }));
-
 export const postsRelations = relations(posts, ({ one, many }) => ({
   deletedBy: one(users, {
     fields: [posts.deletedBy],
@@ -59,7 +54,6 @@ export const postsRelations = relations(posts, ({ one, many }) => ({
     references: [users.id]
   }),
 }));
-
 export const forumRulesRelations = relations(forumRules, ({ one, many }) => ({
   createdBy: one(users, {
     fields: [forumRules.createdBy],
@@ -70,7 +64,6 @@ export const forumRulesRelations = relations(forumRules, ({ one, many }) => ({
     references: [users.id]
   }),
 }));
-
 export const threadDraftsRelations = relations(threadDrafts, ({ one, many }) => ({
   structure: one(forumStructure, {
     fields: [threadDrafts.structureId],
@@ -81,7 +74,6 @@ export const threadDraftsRelations = relations(threadDrafts, ({ one, many }) => 
     references: [threadPrefixes.id]
   }),
 }));
-
 export const threadsRelations = relations(threads, ({ one, many }) => ({
   prefix: one(threadPrefixes, {
     fields: [threads.prefixId],
@@ -95,18 +87,12 @@ export const threadsRelations = relations(threads, ({ one, many }) => ({
     fields: [threads.deletedBy],
     references: [users.id]
   }),
-}));
-
-export const threadsRelations = relations(threads, ({ one, many }) => ({
   postDrafts: many(postDrafts),
 }));
-
 export const forumStructureRelations = relations(forumStructure, ({ one, many }) => ({
   threadDrafts: many(threadDrafts),
 }));
-
 export const threadPrefixesRelations = relations(threadPrefixes, ({ one, many }) => ({
   threadDrafts: many(threadDrafts),
   threads: many(threads),
 }));
-

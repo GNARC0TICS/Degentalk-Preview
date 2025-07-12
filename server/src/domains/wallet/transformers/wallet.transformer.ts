@@ -27,7 +27,7 @@ import type {
   TransactionHistoryItem
 } from '@shared/types/wallet/wallet.types';
 import { createHash } from 'crypto';
-import { logger } from "../../../core/logger";
+import { logger } from '@core/logger';
 
 export class WalletTransformer {
   /**

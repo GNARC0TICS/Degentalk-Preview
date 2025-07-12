@@ -1,9 +1,8 @@
 import {
-	pgTable, serial, text, boolean, timestamp, uuid,
+	pgTable, text, boolean, timestamp, uuid,
 	index
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
-
 export const avatarFrames = pgTable('avatar_frames', {
 	id: uuid('id').primaryKey().defaultRandom(),
 	name: text('name').notNull(),
@@ -17,6 +16,5 @@ export const avatarFrames = pgTable('avatar_frames', {
 	(table) => ({
 		idx_avatarFrames_createdAt: index('idx_avatarFrames_createdAt').on(table.createdAt),
 	}));
-
 export type AvatarFrame = typeof avatarFrames.$inferSelect;
 export type InsertAvatarFrame = typeof avatarFrames.$inferInsert; // Assuming full insert schema is okay

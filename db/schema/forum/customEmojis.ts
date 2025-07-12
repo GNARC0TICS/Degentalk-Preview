@@ -1,6 +1,5 @@
 import {
 	pgTable,
-	serial,
 	varchar,
 	text,
 	boolean,
@@ -12,7 +11,6 @@ import {
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users';
-
 export const customEmojis = pgTable(
 	'custom_emojis',
 	{
@@ -47,6 +45,5 @@ export const customEmojis = pgTable(
 		unlockTypeIdx: index('idx_custom_emojis_unlock_type').on(table.unlockType)
 	})
 );
-
 export type CustomEmoji = typeof customEmojis.$inferSelect;
 export type InsertCustomEmoji = typeof customEmojis.$inferInsert; // Assuming full insert schema is okay

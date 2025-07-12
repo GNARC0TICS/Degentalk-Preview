@@ -1,7 +1,6 @@
-import { pgTable, serial, uuid, varchar, timestamp, index } from 'drizzle-orm/pg-core';
+import { pgTable, uuid, varchar, timestamp, index } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users';
-
 /**
  * CCPayment Users - Maps Degentalk users to CCPayment user IDs
  */
@@ -22,6 +21,5 @@ export const ccpaymentUsers = pgTable(
 		ccpaymentUserIdx: index('idx_ccpayment_users_ccpayment_user_id').on(table.ccpaymentUserId)
 	})
 );
-
 export type CCPaymentUser = typeof ccpaymentUsers.$inferSelect;
 export type InsertCCPaymentUser = typeof ccpaymentUsers.$inferInsert;

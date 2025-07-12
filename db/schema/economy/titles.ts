@@ -1,6 +1,5 @@
 import {
 	pgTable,
-	serial,
 	varchar,
 	text,
 	timestamp,
@@ -13,14 +12,12 @@ import {
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { createInsertSchema } from 'drizzle-zod';
-
 export const titles = pgTable('titles', {
 	id: uuid('id').primaryKey().defaultRandom(),
 	name: varchar('name', { length: 100 }).notNull(),
 	description: text('description'),
 	iconUrl: varchar('icon_url', { length: 255 }),
 	rarity: varchar('rarity', { length: 50 }).default('common'),
-
 	// Enhanced customization fields
 	emoji: varchar('emoji', { length: 10 }),
 	fontFamily: varchar('font_family', { length: 100 }),
@@ -43,22 +40,18 @@ export const titles = pgTable('titles', {
 	gradientDirection: varchar('gradient_direction', { length: 30 }),
 	animation: varchar('animation', { length: 20 }),
 	animationDuration: doublePrecision('animation_duration'),
-
 	// Role binding
 	roleId: varchar('role_id', { length: 50 }), // @uuid-exception - string role identifier
-
 	// Metadata
 	isShopItem: boolean('is_shop_item').default(false),
 	isUnlockable: boolean('is_unlockable').default(false),
 	unlockConditions: jsonb('unlock_conditions'),
 	shopPrice: doublePrecision('shop_price'),
 	shopCurrency: varchar('shop_currency', { length: 10 }),
-
 	createdAt: timestamp('created_at')
 		.notNull()
 		.default(sql`CURRENT_TIMESTAMP`)
 });
-
 export const insertTitleSchema = createInsertSchema(titles);
 export type Title = typeof titles.$inferSelect;
 export type InsertTitle = typeof titles.$inferInsert;

@@ -1,6 +1,5 @@
 import {
 	pgTable,
-	serial,
 	uuid,
 	integer,
 	varchar,
@@ -11,7 +10,6 @@ import {
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users';
-
 /**
  * Withdrawal Records - Track all withdrawal requests and their status
  */
@@ -54,6 +52,5 @@ export const withdrawalRecords = pgTable(
 		createdAtIdx: index('idx_withdrawal_records_created_at').on(table.createdAt)
 	})
 );
-
 export type WithdrawalRecord = typeof withdrawalRecords.$inferSelect;
 export type InsertWithdrawalRecord = typeof withdrawalRecords.$inferInsert;

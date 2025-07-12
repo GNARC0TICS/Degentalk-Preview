@@ -1,5 +1,4 @@
 import { type AnyPgColumn } from 'drizzle-orm/pg-core';
-
 import {
 	pgTable,
 	text,
@@ -24,7 +23,6 @@ import { posts } from '../forum/posts';
 // import { badges } from "../economy/badges"; // Placeholder for future import
 // import { avatarFrames } from "./avatarFrames"; // Placeholder for future import
 // import { uiThemes } from '../admin/themes'; // For future profile theme support
-
 export const users = pgTable(
 	'users',
 	{
@@ -134,7 +132,6 @@ export const users = pgTable(
 		// groupIdx: index('idx_users_group_id').on(table.groupId) // Drizzle infers this
 	})
 );
-
 // Define relations for users table (placeholders, to be filled when related tables are moved)
 // import { relations } from "drizzle-orm";
 // import { posts } from "../forum/posts"; // Example
@@ -146,11 +143,9 @@ export const users = pgTable(
 //   activeTitle: one(titles, { fields: [users.activeTitleId], references: [titles.id] }),
 //   // ... other relations
 // }));
-
 // Zod schema for validation (example, adjust as needed)
 import { createInsertSchema } from 'drizzle-zod';
 import { z } from 'zod';
-
 export const insertUserSchema = createInsertSchema(users, {
 	email: z.string().email(),
 	username: z.string().min(3).max(50),
@@ -175,10 +170,8 @@ export const insertUserSchema = createInsertSchema(users, {
 	resetTokenExpiresAt: true,
 	gdprConsentedAt: true
 });
-
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
-
 /**
  * Performance Indices (Applied via Migration)
  *

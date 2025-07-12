@@ -1,6 +1,5 @@
 import {
 	pgTable,
-	serial,
 	integer,
 	text,
 	varchar,
@@ -11,7 +10,6 @@ import {
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from './users';
-
 export const userBans = pgTable('user_bans', {
 	id: uuid('id').primaryKey().defaultRandom(),
 	userId: uuid('user_id')
@@ -31,6 +29,5 @@ export const userBans = pgTable('user_bans', {
 	liftedBy: uuid('lifted_by').references(() => users.id, { onDelete: 'set null' }),
 	liftingReason: text('lifting_reason')
 });
-
 export type UserBan = typeof userBans.$inferSelect;
 // export type InsertUserBan = typeof userBans.$inferInsert; // If needed

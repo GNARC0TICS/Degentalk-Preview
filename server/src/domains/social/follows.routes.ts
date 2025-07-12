@@ -4,7 +4,7 @@ import type { EntityId } from '@shared/types/ids';
 import { FollowsService } from './follows.service';
 import { requireAuth } from '../../../middleware/auth';
 import { z } from 'zod';
-import { logger } from "../../core/logger";
+import { logger } from '@core/logger';
 import { UserTransformer } from '@server/domains/users/transformers/user.transformer';
 import { 
 	toPublicList,

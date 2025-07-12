@@ -2,7 +2,7 @@ import { db } from '@db';
 import { mentions, userMentionPreferences, users } from '@schema';
 import { eq, and, desc, sql, inArray } from 'drizzle-orm';
 import type { MentionType } from './mentions.types';
-import { logger } from "../../core/logger";
+import { logger } from '@core/logger';
 
 export class MentionsService {
 	/**

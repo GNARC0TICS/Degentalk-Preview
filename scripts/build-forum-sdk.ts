@@ -10,7 +10,7 @@ if (!fs.existsSync(SDK_DIR)) {
 }
 
 // Create index.ts that re-exports everything from generated types directory
-const exportLines: : AdminId[] = [];
+const exportLines: string[] = [];
 const files = fs.readdirSync(GENERATED_DIR).filter((f) => f.endsWith('.ts'));
 for (const file of files) {
   const base = path.basename(file, '.ts');

@@ -1,5 +1,4 @@
 import { pgEnum } from 'drizzle-orm/pg-core';
-
 export const shoutboxPositionEnum = pgEnum('shoutbox_position', [
 	'sidebar-top',
 	'sidebar-bottom',
@@ -97,7 +96,6 @@ export const cosmeticTypeEnum = pgEnum('cosmetic_type', [
 	'emoji_pack',
 	'profile_theme'
 ]);
-
 // Type exports for use in application code
 export type TransactionType = typeof transactionTypeEnum.enumValues[number];
 export type TransactionStatus = typeof transactionStatusEnum.enumValues[number];

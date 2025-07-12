@@ -1,8 +1,7 @@
-import { pgTable, serial, integer, timestamp, index, uniqueIndex, uuid } from 'drizzle-orm/pg-core';
+import { pgTable, integer, timestamp, index, uniqueIndex, uuid } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users';
 import { mentionSourceTypeEnum } from '../core/enums';
-
 export const mentionsIndex = pgTable(
 	'mentions_index',
 	{
@@ -28,5 +27,4 @@ export const mentionsIndex = pgTable(
 		)
 	})
 );
-
 export type MentionIndex = typeof mentionsIndex.$inferSelect;

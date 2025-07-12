@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { adServingService } from './ad-serving.service';
 import { campaignManagementService } from './campaign-management.service';
 import { adConfigurationService } from './ad-configuration.service';
-import { logger } from "../../core/logger";
+import { logger } from '@core/logger';
 import { sendSuccessResponse, sendErrorResponse } from "@core/utils/transformer.helpers";
 
 // Request validation schemas

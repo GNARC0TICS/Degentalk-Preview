@@ -1,11 +1,10 @@
 import {
-	pgTable, text, boolean, timestamp, uuid, integer, serial,
+	pgTable, text, boolean, timestamp, uuid, integer, 
 	index
 } from 'drizzle-orm/pg-core';
 import { threads } from './threads'; // Import threads to reference its ID
-
 export const threadFeaturePermissions = pgTable('thread_feature_permissions', {
-	id: uuid('id').primaryKey().defaultRandom(), // Changed to serial for auto-incrementing primary key
+	id: uuid('id').primaryKey().defaultRandom(),
 	threadId: uuid('thread_id')
 		.notNull()
 		.references(() => threads.id, { onDelete: 'cascade' }),
@@ -14,7 +13,6 @@ export const threadFeaturePermissions = pgTable('thread_feature_permissions', {
 	createdAt: timestamp('created_at').notNull().defaultNow(),
 	updatedAt: timestamp('updated_at').notNull().defaultNow() // Added updatedAt
 });
-
 // Optional: Define relations if needed later
 // import { relations } from 'drizzle-orm';
 // export const threadFeaturePermissionsRelations = relations(threadFeaturePermissions, ({ one }) => ({
@@ -23,6 +21,5 @@ export const threadFeaturePermissions = pgTable('thread_feature_permissions', {
 //     references: [threads.id],
 //   }),
 // }));
-
 export type ThreadFeaturePermission = typeof threadFeaturePermissions.$inferSelect;
 export type InsertThreadFeaturePermission = typeof threadFeaturePermissions.$inferInsert;

@@ -1,6 +1,5 @@
 import {
 	pgTable,
-	serial,
 	timestamp,
 	boolean,
 	unique,
@@ -11,7 +10,6 @@ import {
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users'; // Adjusted path
 import { conversations } from './conversations'; // Adjusted path
-
 export const conversationParticipants = pgTable(
 	'conversation_participants',
 	{
@@ -41,6 +39,5 @@ export const conversationParticipants = pgTable(
 		userIdx: index('idx_conversation_participants_user_id').on(table.userId)
 	})
 );
-
 export type ConversationParticipant = typeof conversationParticipants.$inferSelect;
 // Add InsertConversationParticipant if Zod schema is needed

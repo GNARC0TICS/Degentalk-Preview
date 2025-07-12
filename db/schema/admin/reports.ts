@@ -1,10 +1,9 @@
 import {
-	pgTable, serial, integer, varchar, text, timestamp, uuid,
+	pgTable, integer, varchar, text, timestamp, uuid,
 	index
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users'; // Adjusted path
-
 export const reportedContent = pgTable('reported_content', {
 	id: uuid('id').primaryKey().defaultRandom(),
 	reporterId: uuid('reporter_id')
@@ -22,6 +21,5 @@ export const reportedContent = pgTable('reported_content', {
 	resolvedBy: uuid('resolved_by').references(() => users.id, { onDelete: 'set null' }),
 	resolutionNotes: text('resolution_notes')
 });
-
 export type ReportedContent = typeof reportedContent.$inferSelect;
 // Add InsertReportedContent if Zod schema is needed

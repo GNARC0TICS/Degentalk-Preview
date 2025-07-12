@@ -10,7 +10,7 @@ import type {
   DgtAmount
 } from '@shared/types/ids';
 import { createHash } from 'crypto';
-import { logger } from "../../../core/logger";
+import { logger } from '@core/logger';
 
 // Profile View Interfaces
 export interface PublicProfile {

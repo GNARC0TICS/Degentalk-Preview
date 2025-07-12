@@ -7,7 +7,7 @@ import {
 	type UploadType,
 	type ConfirmUploadServiceParams
 } from './upload.service';
-import { logger } from "../../core/logger";
+import { logger } from '@core/logger';
 import { sendErrorResponse, sendTransformedResponse } from '@core/utils/transformer.helpers';
 import { UploadTransformer } from './upload.transformer';
 import type { UserId } from '@shared/types/ids';

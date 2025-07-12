@@ -1,9 +1,8 @@
 import {
-	pgTable, serial, timestamp, varchar, jsonb, uuid,
+	pgTable, timestamp, varchar, jsonb, uuid,
 	index
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
-
 export const leaderboardHistory = pgTable('leaderboard_history', {
 	id: uuid('id').primaryKey().defaultRandom(),
 	weekStartDate: timestamp('week_start_date').notNull(),
@@ -15,6 +14,5 @@ export const leaderboardHistory = pgTable('leaderboard_history', {
 		.notNull()
 		.default(sql`now()`) // Changed defaultNow() to sql`now()`
 });
-
 export type LeaderboardHistoryItem = typeof leaderboardHistory.$inferSelect;
 // Add InsertLeaderboardHistoryItem if Zod schema is needed

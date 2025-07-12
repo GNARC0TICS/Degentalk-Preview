@@ -22,10 +22,10 @@ import {
 } from '@schema';
 import { eq, and, sql, desc, not, or, count, gt, isNull } from 'drizzle-orm';
 import signatureRoutes from './signature.routes'; // Import signature routes
-import { authenticate } from '../../middleware/authenticate';
+import { isAuthenticated } from '@server/auth/middleware/auth.middleware';
 import { profileService } from './profile.service';
 import { referralsService } from './referrals.service';
-import { logger } from "../../core/logger";
+import { logger } from '@core/logger';
 import { sendSuccessResponse, sendErrorResponse } from "@core/utils/transformer.helpers";
 
 const router = Router();

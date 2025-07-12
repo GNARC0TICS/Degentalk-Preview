@@ -1,7 +1,6 @@
-import { pgTable, serial, integer, index, uuid } from 'drizzle-orm/pg-core';
+import { pgTable, integer, index, uuid } from 'drizzle-orm/pg-core';
 import { emojiPacks } from './emojiPacks';
 import { customEmojis } from './customEmojis';
-
 export const emojiPackItems = pgTable(
 	'emoji_pack_items',
 	{
@@ -18,5 +17,4 @@ export const emojiPackItems = pgTable(
 		packEmojiIdx: index('idx_pack_emoji_unique').on(table.packId, table.emojiId)
 	})
 );
-
 export type EmojiPackItem = typeof emojiPackItems.$inferSelect;

@@ -1,11 +1,10 @@
 import {
-	pgTable, serial, timestamp, uuid, integer,
+	pgTable, timestamp, uuid, integer,
 	index
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { pollOptions } from './pollOptions';
 import { users } from '../user/users';
-
 export const pollVotes = pgTable('poll_votes', {
 	id: uuid('id').primaryKey().defaultRandom(),
 	optionId: integer('option_id')
@@ -18,5 +17,4 @@ export const pollVotes = pgTable('poll_votes', {
 		.notNull()
 		.default(sql`now()`)
 });
-
 export type PollVote = typeof pollVotes.$inferSelect;

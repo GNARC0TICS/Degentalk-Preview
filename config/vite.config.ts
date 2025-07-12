@@ -41,7 +41,7 @@ export default defineConfig(async () => {
 			const { cartographer } = await import('@replit/vite-plugin-cartographer');
 			plugins.push(cartographer());
 		} catch (e) {
-			console.warn('Failed to load cartographer plugin:', e);
+			// Failed to load cartographer plugin (production build)
 		}
 	}
 

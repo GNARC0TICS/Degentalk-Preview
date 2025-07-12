@@ -1,6 +1,5 @@
-import { pgTable, serial, varchar, integer, boolean, uuid } from 'drizzle-orm/pg-core';
+import { pgTable, varchar, integer, boolean, uuid } from 'drizzle-orm/pg-core';
 import { roles } from './roles'; // Use roles instead of deprecated userGroups
-
 export const featurePermissions = pgTable('feature_permissions', {
 	id: uuid('id').primaryKey().defaultRandom(),
 	feature: varchar('feature', { length: 100 }).notNull(), // e.g. 'edit_post', 'mark_solved', increased length
@@ -8,6 +7,5 @@ export const featurePermissions = pgTable('feature_permissions', {
 	allow: boolean('allow').notNull().default(true)
 	// consider adding: createdAt, updatedAt timestamps
 });
-
 export type FeaturePermission = typeof featurePermissions.$inferSelect;
 export type InsertFeaturePermission = typeof featurePermissions.$inferInsert;

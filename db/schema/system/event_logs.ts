@@ -1,7 +1,6 @@
 import { pgTable, pgEnum, uuid, varchar, jsonb, timestamp, index } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users';
-
 // Define event type enum
 export const eventTypeEnum = pgEnum('event_type', [
 	'rain_claimed',
@@ -18,7 +17,6 @@ export const eventTypeEnum = pgEnum('event_type', [
 	'mission_completed',
 	'airdrop_claimed'
 ]);
-
 export const eventLogs = pgTable(
 	'event_logs',
 	{
@@ -40,6 +38,5 @@ export const eventLogs = pgTable(
 		eventTypeIdx: index('idx_event_logs_type_created').on(table.eventType, table.createdAt)
 	})
 );
-
 export type EventLog = typeof eventLogs.$inferSelect;
 export type InsertEventLog = typeof eventLogs.$inferInsert;

@@ -1,6 +1,5 @@
 import {
 	pgTable,
-	serial,
 	uuid,
 	varchar,
 	text,
@@ -9,7 +8,6 @@ import {
 	index
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
-
 /**
  * Webhook Events - Log all incoming webhook events from CCPayment
  */
@@ -20,21 +18,17 @@ export const webhookEvents = pgTable(
 		webhookId: varchar('webhook_id', { length: 255 }).notNull().unique(),
 		eventType: varchar('event_type', { length: 50 }).notNull(), // deposit, withdraw, transfer, etc.
 		status: varchar('status', { length: 20 }).notNull(), // received, processed, failed
-
 		// Raw webhook data
 		rawPayload: text('raw_payload').notNull(), // JSON string of the full webhook payload
 		signature: varchar('signature', { length: 500 }), // Webhook signature for verification
-
 		// Processing details
 		isProcessed: boolean('is_processed').default(false),
 		processedAt: timestamp('processed_at'),
 		processingError: text('processing_error'), // Error message if processing failed
 		retryCount: varchar('retry_count', { length: 10 }).default('0'),
-
 		// Related record tracking
 		relatedRecordType: varchar('related_record_type', { length: 50 }), // deposit, withdrawal, transfer, swap
 		relatedRecordId: varchar('related_record_id', { length: 255 }), // Link to the related record
-
 		receivedAt: timestamp('received_at')
 			.notNull()
 			.default(sql`now()`)
@@ -51,6 +45,5 @@ export const webhookEvents = pgTable(
 		receivedAtIdx: index('idx_webhook_events_received_at').on(table.receivedAt)
 	})
 );
-
 export type WebhookEvent = typeof webhookEvents.$inferSelect;
 export type InsertWebhookEvent = typeof webhookEvents.$inferInsert;

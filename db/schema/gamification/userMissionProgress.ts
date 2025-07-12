@@ -1,11 +1,10 @@
 import {
-	pgTable, serial, boolean, timestamp, unique, uuid, integer,
+	pgTable, boolean, timestamp, unique, uuid, integer,
 	index
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users'; // Adjusted path
 import { missions } from './missions'; // Adjusted path
-
 export const userMissionProgress = pgTable(
 	'user_mission_progress',
 	{
@@ -29,6 +28,5 @@ export const userMissionProgress = pgTable(
 		};
 	}
 );
-
 export type UserMissionProgress = typeof userMissionProgress.$inferSelect;
 export type InsertUserMissionProgress = typeof userMissionProgress.$inferInsert; // Assuming full insert is okay

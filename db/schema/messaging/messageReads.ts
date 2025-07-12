@@ -2,7 +2,6 @@ import { pgTable, integer, timestamp, primaryKey, index, uuid } from 'drizzle-or
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users'; // Adjusted path
 import { messages } from './messages'; // Adjusted path
-
 export const messageReads = pgTable(
 	'message_reads',
 	{
@@ -21,6 +20,5 @@ export const messageReads = pgTable(
 		messageIdx: index('idx_message_reads_message_id').on(table.messageId)
 	})
 );
-
 export type MessageRead = typeof messageReads.$inferSelect;
 // Add InsertMessageRead if Zod schema is needed

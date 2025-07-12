@@ -1,7 +1,6 @@
-import { pgTable, serial, varchar, text, timestamp, uuid } from 'drizzle-orm/pg-core';
+import { pgTable, varchar, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users'; // Adjusted path
-
 export const seoMetadata = pgTable('seo_metadata', {
 	id: uuid('id').primaryKey().defaultRandom(),
 	path: varchar('path', { length: 255 }).notNull().unique(),
@@ -16,6 +15,5 @@ export const seoMetadata = pgTable('seo_metadata', {
 		.default(sql`now()`), // Changed defaultNow() to sql`now()`
 	updatedBy: uuid('updated_by').references(() => users.id, { onDelete: 'set null' }) // Changed to uuid
 });
-
 export type SeoMetadata = typeof seoMetadata.$inferSelect;
 // Add InsertSeoMetadata if Zod schema is needed

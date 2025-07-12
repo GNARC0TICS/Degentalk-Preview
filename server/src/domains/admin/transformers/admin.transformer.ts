@@ -11,7 +11,7 @@ import type {
   DgtAmount 
 } from '@shared/types/ids';
 import { createHash } from 'crypto';
-import { logger } from "../../../core/logger";
+import { logger } from '@core/logger';
 
 // Admin Dashboard Interfaces
 export interface AdminDashboardStats {

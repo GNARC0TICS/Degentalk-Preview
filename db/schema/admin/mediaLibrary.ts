@@ -1,6 +1,5 @@
 import {
 	pgTable,
-	serial,
 	integer,
 	varchar,
 	boolean,
@@ -12,7 +11,6 @@ import {
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users'; // Adjusted path
-
 export const mediaLibrary = pgTable(
 	'media_library',
 	{
@@ -44,6 +42,5 @@ export const mediaLibrary = pgTable(
 		// fileNameUnique: unique('media_library_filename_unique').on(table.fileName) // Filenames might not be unique across users/types
 	})
 );
-
 export type MediaLibrary = typeof mediaLibrary.$inferSelect;
 // Add InsertMediaLibrary if Zod schema is needed

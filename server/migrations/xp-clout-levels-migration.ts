@@ -152,7 +152,7 @@ export async function down() {
 //   } else if (operation === 'down') {
 //     down().then(() => process.exit(0)).catch(() => process.exit(1));
 //   } else {
-//     console.log("Please specify 'up' or 'down' as an argument to run this migration directly.");
+//     logger.info("Please specify 'up' or 'down' as an argument to run this migration directly.");
 //     process.exit(1);
 //   }
 // }

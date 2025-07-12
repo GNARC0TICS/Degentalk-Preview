@@ -1,6 +1,5 @@
 import {
 	pgTable,
-	serial,
 	integer,
 	varchar,
 	timestamp,
@@ -10,7 +9,6 @@ import {
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from './users';
-
 export const passwordResetTokens = pgTable(
 	'password_reset_tokens',
 	{
@@ -33,6 +31,5 @@ export const passwordResetTokens = pgTable(
 		tokenIdx: index('idx_password_reset_tokens_token').on(table.token)
 	})
 );
-
 export type PasswordResetToken = typeof passwordResetTokens.$inferSelect;
 export type InsertPasswordResetToken = typeof passwordResetTokens.$inferInsert;

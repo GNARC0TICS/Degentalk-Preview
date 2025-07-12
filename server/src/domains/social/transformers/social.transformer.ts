@@ -9,7 +9,7 @@ import type {
   UserId,
   RequestId
 } from '@shared/types/ids';
-import { logger } from "../../../core/logger";
+import { logger } from '@core/logger';
 
 // Social Relationship Interfaces
 export interface PublicFriend {

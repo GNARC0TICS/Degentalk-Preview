@@ -27,7 +27,7 @@ import {
 	sendSuccessResponse,
 	sendErrorResponse
 } from '@core/utils/transformer.helpers';
-import { logger } from "../../../core/logger";
+import { logger } from '@core/logger';
 
 const router = Router();
 

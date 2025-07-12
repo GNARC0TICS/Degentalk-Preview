@@ -1,6 +1,5 @@
 import {
 	pgTable,
-	serial,
 	varchar,
 	text,
 	integer,
@@ -10,7 +9,6 @@ import {
 	index
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
-
 /**
  * Table: clout_achievements
  * -----------------------------------------
@@ -31,6 +29,5 @@ export const cloutAchievements = pgTable('clout_achievements', {
 		.notNull()
 		.default(sql`now()`)
 });
-
 export type CloutAchievement = typeof cloutAchievements.$inferSelect;
 export type InsertCloutAchievement = typeof cloutAchievements.$inferInsert;

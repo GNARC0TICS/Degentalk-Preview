@@ -1,11 +1,10 @@
 import {
-	pgTable, serial, uuid, integer, timestamp, unique,
+	pgTable, uuid, integer, timestamp, unique,
 	index
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { dictionaryEntries } from './entries';
 import { users } from '../user/users';
-
 export const dictionaryUpvotes = pgTable(
 	'dictionary_upvotes',
 	{
@@ -24,6 +23,5 @@ export const dictionaryUpvotes = pgTable(
 		uniqueUpvote: unique('unique_dictionary_upvote').on(table.entryId, table.userId)
 	})
 );
-
 export type DictionaryUpvote = typeof dictionaryUpvotes.$inferSelect;
 export type NewDictionaryUpvote = typeof dictionaryUpvotes.$inferInsert;

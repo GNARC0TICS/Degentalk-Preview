@@ -1,6 +1,5 @@
 import {
 	pgTable,
-	serial,
 	bigint,
 	decimal,
 	varchar,
@@ -13,7 +12,6 @@ import { sql } from 'drizzle-orm';
 import { users } from '../user/users';
 import { createInsertSchema } from 'drizzle-zod';
 import { z } from 'zod';
-
 export const dgtPurchaseOrders = pgTable(
 	'dgt_purchase_orders',
 	{
@@ -41,7 +39,6 @@ export const dgtPurchaseOrders = pgTable(
 		createdAtIdx: index('idx_dgt_purchase_orders_created_at').on(table.createdAt)
 	})
 );
-
 export const insertDgtPurchaseOrderSchema = createInsertSchema(dgtPurchaseOrders, {
 	dgtAmountRequested: z.number().min(1),
 	cryptoAmountExpected: z.number().min(0.00000001),
@@ -55,6 +52,5 @@ export const insertDgtPurchaseOrderSchema = createInsertSchema(dgtPurchaseOrders
 	createdAt: true,
 	updatedAt: true
 });
-
 export type DgtPurchaseOrder = typeof dgtPurchaseOrders.$inferSelect;
 export type InsertDgtPurchaseOrder = z.infer<typeof insertDgtPurchaseOrderSchema>;

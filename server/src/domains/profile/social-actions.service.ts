@@ -1,7 +1,7 @@
-import { db } from '../../../db';
-import { users, userRelationships, notifications } from '../../../db/schema';
+import { db } from '@db';
+import { users, userRelationships, notifications } from '@schema';
 import { eq, and, or } from 'drizzle-orm';
-import { logger } from "../../core/logger";
+import { logger } from '@core/logger';
 
 export type RelationshipType = 'follow' | 'friend' | 'block';
 export type RelationshipStatus = 'pending' | 'accepted' | 'declined';

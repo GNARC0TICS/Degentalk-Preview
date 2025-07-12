@@ -1,10 +1,9 @@
 import {
-	pgTable, serial, integer, timestamp, text, uuid,
+	pgTable, integer, timestamp, text, uuid,
 	index
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users';
-
 export const userAbuseFlags = pgTable('user_abuse_flags', {
 	id: uuid('id').primaryKey().defaultRandom(),
 	userId: uuid('user_id')
@@ -20,5 +19,4 @@ export const userAbuseFlags = pgTable('user_abuse_flags', {
 		.notNull()
 		.default(sql`now()`)
 });
-
 export type UserAbuseFlag = typeof userAbuseFlags.$inferSelect;

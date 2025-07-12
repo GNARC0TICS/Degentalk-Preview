@@ -1,6 +1,5 @@
 import {
 	pgTable,
-	serial,
 	varchar,
 	text,
 	integer,
@@ -14,7 +13,6 @@ import { users } from '../user/users';
 import { contentEditStatusEnum } from '../core/enums';
 import { createInsertSchema } from 'drizzle-zod';
 import { z } from 'zod';
-
 export const forumRules = pgTable(
 	'forum_rules',
 	{
@@ -41,7 +39,6 @@ export const forumRules = pgTable(
 		statusIdx: index('idx_forum_rules_status').on(table.status)
 	})
 );
-
 export const insertForumRuleSchema = createInsertSchema(forumRules, {
 	title: z.string().min(3).max(255),
 	content: z.string().min(10),
@@ -57,6 +54,5 @@ export const insertForumRuleSchema = createInsertSchema(forumRules, {
 	createdBy: true,
 	updatedBy: true
 });
-
 export type ForumRule = typeof forumRules.$inferSelect;
 export type InsertForumRule = z.infer<typeof insertForumRuleSchema>;

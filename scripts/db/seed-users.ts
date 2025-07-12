@@ -4,34 +4,35 @@ import { users } from '@schema/user/users';
 import bcrypt from 'bcrypt';
 import { faker } from '@faker-js/faker';
 import { sql } from 'drizzle-orm';
+import { logger } from '@server/core/logger';
 
 // Define types for clarity and stricter type checking for mockUsers
 type UserRole = 'admin' | 'mod' | 'user';
 type UserSeedData = {
-  username: : AdminId;
-  email: : AdminId;
-  password: : AdminId; // This holds the password hash
+  username: string;
+  email: string;
+  password: string; // This holds the password hash
   role: UserRole;
   xp: number;
   clout: number;
-  avatarUrl: : AdminId;
+  avatarUrl: string;
   isActive: boolean;
   isBanned: boolean;
   isVerified: boolean;
-  bio?: : AdminId;
-  signature?: : AdminId;
-  website?: : AdminId;
-  github?: : AdminId;
-  twitter?: : AdminId;
-  discord?: : AdminId;
-  profileBannerUrl?: : AdminId;
-  activeAvatarUrl?: : AdminId;
+  bio?: string;
+  signature?: string;
+  website?: string;
+  github?: string;
+  twitter?: string;
+  discord?: string;
+  profileBannerUrl?: string;
+  activeAvatarUrl?: string;
   level?: number;
   reputation?: number;
 };
 
 export async function seedUsers() {
-  console.log('🌱 Seeding users...');
+  logger.info('Seeding users...');
   const passwordHash = await bcrypt.hash('password123', 10);
   const mockUsers: UserSeedData[] = [
     {
@@ -128,7 +129,7 @@ export async function seedUsers() {
       updatedAt: sql`CURRENT_TIMESTAMP`
     }
   });
-  console.log(`✅ Upserted ${uniqueUsers.length} users (inserted or updated).`);
+  logger.info(`Upserted ${uniqueUsers.length} users (inserted or updated).`);
 }
 
 seedUsers().then(() => process.exit(0));

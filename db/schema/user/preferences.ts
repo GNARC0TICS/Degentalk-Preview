@@ -10,7 +10,6 @@ import {
 } from 'drizzle-orm/pg-core';
 import { users } from './users'; // Adjusted import
 import { sql } from 'drizzle-orm';
-
 export const userSettings = pgTable(
 	'user_settings',
 	{
@@ -29,7 +28,6 @@ export const userSettings = pgTable(
 		userIdx: index('idx_user_settings_user_id').on(table.userId)
 	})
 );
-
 export const notificationSettings = pgTable('notification_settings', {
 	userId: uuid('user_id')
 		.primaryKey()
@@ -49,7 +47,6 @@ export const notificationSettings = pgTable('notification_settings', {
 		.notNull()
 		.default(sql`now()`)
 });
-
 export const displayPreferences = pgTable(
 	'display_preferences',
 	{
@@ -74,13 +71,10 @@ export const displayPreferences = pgTable(
 		userIdx: index('idx_display_preferences_user_id').on(table.userId)
 	})
 );
-
 // Placeholder for notificationSettings table that will be merged here or related
-
 // Add zod schema or relations as needed
 // export type UserSetting = typeof userSettings.$inferSelect;
 // export type InsertUserSetting = typeof userSettings.$inferInsert;
-
 // export type NotificationSetting = typeof notificationSettings.$inferSelect;
 // export type InsertNotificationSetting = typeof notificationSettings.$inferInsert;
 // export type DisplayPreference = typeof displayPreferences.$inferSelect;

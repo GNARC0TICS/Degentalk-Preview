@@ -1,6 +1,5 @@
-import { pgTable, serial, uuid, timestamp, index, unique } from 'drizzle-orm/pg-core';
+import { pgTable, uuid, timestamp, index, unique } from 'drizzle-orm/pg-core';
 import { users } from '../user/users';
-
 /**
  * User Follows Table (Whale Watch System)
  *

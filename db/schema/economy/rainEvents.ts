@@ -1,6 +1,5 @@
 import {
 	pgTable,
-	serial,
 	bigint,
 	varchar,
 	timestamp,
@@ -12,7 +11,6 @@ import {
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users';
 import { transactions } from './transactions';
-
 export const rainEvents = pgTable('rain_events', {
 	id: uuid('id').primaryKey().defaultRandom(),
 	userId: uuid('user_id')
@@ -30,7 +28,6 @@ export const rainEvents = pgTable('rain_events', {
 		.default(sql`now()`),
 	metadata: jsonb('metadata').default({})
 });
-
 // Add zod schema or relations as needed
 // export type RainEvent = typeof rainEvents.$inferSelect;
 // export type InsertRainEvent = typeof rainEvents.$inferInsert;

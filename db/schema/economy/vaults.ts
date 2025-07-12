@@ -1,6 +1,5 @@
 import {
 	pgTable,
-	serial,
 	varchar,
 	doublePrecision,
 	timestamp,
@@ -15,7 +14,6 @@ import { transactions } from './transactions'; // Assuming transactions is in th
 import { vaultStatusEnum } from '../core/enums';
 import { createInsertSchema } from 'drizzle-zod';
 import { z } from 'zod';
-
 export const vaults = pgTable(
 	'vaults',
 	{
@@ -56,9 +54,7 @@ export const vaults = pgTable(
 		walletAddressIdx: index('idx_vaults_wallet_address').on(table.walletAddress)
 	})
 );
-
 const isDevelopment = () => process.env.NODE_ENV !== 'production';
-
 const walletAddressSchema = z.union([
 	z.string().min(34).max(34), // Basic length check for Tron addresses
 	z
@@ -70,7 +66,6 @@ const walletAddressSchema = z.union([
 			{ message: 'Invalid wallet address format for dev/test specific values' }
 		)
 ]);
-
 export const insertVaultSchema = createInsertSchema(vaults, {
 	walletAddress: walletAddressSchema,
 	amount: z.number().positive(),
@@ -97,6 +92,5 @@ export const insertVaultSchema = createInsertSchema(vaults, {
 	createdAt: true,
 	updatedAt: true
 });
-
 export type Vault = typeof vaults.$inferSelect;
 export type InsertVault = z.infer<typeof insertVaultSchema>;

@@ -1,6 +1,5 @@
 import {
 	pgTable,
-	serial,
 	integer,
 	uuid,
 	varchar,
@@ -11,7 +10,6 @@ import {
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users'; // Adjusted path
-
 export const analyticsEvents = pgTable(
 	'analytics_events',
 	{
@@ -32,6 +30,5 @@ export const analyticsEvents = pgTable(
 		createdAtIdx: index('idx_analytics_events_created_at').on(table.createdAt)
 	})
 );
-
 export type AnalyticsEvent = typeof analyticsEvents.$inferSelect;
 // Add InsertAnalyticsEvent if Zod schema is needed

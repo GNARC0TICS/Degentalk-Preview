@@ -1,6 +1,5 @@
 import {
 	pgTable,
-	serial,
 	uuid,
 	integer,
 	varchar,
@@ -10,7 +9,6 @@ import {
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users';
-
 /**
  * Crypto Wallets - Store crypto wallet addresses per user/coin/chain
  */
@@ -39,6 +37,5 @@ export const cryptoWallets = pgTable(
 		addressIdx: index('idx_crypto_wallets_address').on(table.address)
 	})
 );
-
 export type CryptoWallet = typeof cryptoWallets.$inferSelect;
 export type InsertCryptoWallet = typeof cryptoWallets.$inferInsert;

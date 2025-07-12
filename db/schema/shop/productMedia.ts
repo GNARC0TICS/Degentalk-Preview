@@ -1,6 +1,5 @@
 import {
 	pgTable,
-	serial,
 	integer,
 	boolean,
 	timestamp,
@@ -11,7 +10,6 @@ import {
 import { sql } from 'drizzle-orm';
 import { products } from './products';
 import { mediaLibrary } from '../admin/mediaLibrary'; // Adjust path as needed
-
 export const productMedia = pgTable(
 	'product_media',
 	{
@@ -33,6 +31,5 @@ export const productMedia = pgTable(
 		productIdx: index('idx_product_media_product_id').on(table.productId)
 	})
 );
-
 export type ProductMedia = typeof productMedia.$inferSelect;
 // export type InsertProductMedia = typeof productMedia.$inferInsert; // If needed

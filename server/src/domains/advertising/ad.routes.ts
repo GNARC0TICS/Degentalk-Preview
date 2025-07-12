@@ -3,7 +3,7 @@ import { adController } from './ad.controller';
 import { adAdminController } from './ad-admin.controller';
 import { adConfigurationService } from './ad-configuration.service';
 import { userPromotionRoutes } from './user-promotion.routes';
-import { logger } from "../../core/logger";
+import { logger } from '@core/logger';
 import { sendSuccessResponse, sendErrorResponse } from "@core/utils/transformer.helpers";
 
 const router = Router();

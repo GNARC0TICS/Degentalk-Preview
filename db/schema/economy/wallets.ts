@@ -1,6 +1,5 @@
 import {
 	pgTable,
-	serial,
 	// integer, // No longer using integer for userId/deletedBy
 	doublePrecision,
 	timestamp,
@@ -12,7 +11,6 @@ import {
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users';
 import { walletStatusEnum } from '../core/enums';
-
 // This table represents the user's internal DGT balance, as distinct from external crypto wallets.
 export const wallets = pgTable(
 	'wallets',
@@ -40,6 +38,5 @@ export const wallets = pgTable(
 		// If multiple wallet types are introduced later, that might be relevant.
 	})
 );
-
 export type Wallet = typeof wallets.$inferSelect;
 // export type InsertWallet = typeof wallets.$inferInsert; // If needed

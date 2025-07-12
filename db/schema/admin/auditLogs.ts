@@ -1,6 +1,5 @@
 import {
 	pgTable,
-	serial,
 	// integer, // No longer using integer for userId
 	varchar,
 	jsonb,
@@ -11,7 +10,6 @@ import {
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users'; // Adjusted path
-
 // Consolidated from auditLogs and adminAuditLogs in shared/schema.ts
 export const auditLogs = pgTable(
 	'audit_logs',
@@ -36,6 +34,5 @@ export const auditLogs = pgTable(
 		createdAtIdx: index('idx_audit_logs_created_at').on(table.createdAt)
 	})
 );
-
 export type AuditLog = typeof auditLogs.$inferSelect;
 // Add InsertAuditLog if Zod schema is needed

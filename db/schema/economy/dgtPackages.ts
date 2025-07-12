@@ -1,6 +1,5 @@
 import {
 	pgTable,
-	serial,
 	varchar,
 	text,
 	bigint,
@@ -14,7 +13,6 @@ import {
 import { sql } from 'drizzle-orm';
 import { createInsertSchema } from 'drizzle-zod';
 import { z } from 'zod';
-
 export const dgtPackages = pgTable(
 	'dgt_packages',
 	{
@@ -41,7 +39,6 @@ export const dgtPackages = pgTable(
 		featuredIdx: index('idx_dgt_packages_featured').on(table.isFeatured)
 	})
 );
-
 export const insertDgtPackageSchema = createInsertSchema(dgtPackages, {
 	name: z.string().min(1).max(100),
 	description: z.string().optional(),
@@ -57,6 +54,5 @@ export const insertDgtPackageSchema = createInsertSchema(dgtPackages, {
 	createdAt: true,
 	updatedAt: true
 });
-
 export type DgtPackage = typeof dgtPackages.$inferSelect;
 export type InsertDgtPackage = z.infer<typeof insertDgtPackageSchema>;

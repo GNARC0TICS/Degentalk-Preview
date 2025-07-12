@@ -1,11 +1,10 @@
 import {
-	pgTable, serial, timestamp, unique, uuid, integer,
+	pgTable, timestamp, unique, uuid, integer,
 	index
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { posts } from './posts';
 import { users } from '../user/users';
-
 export const postLikes = pgTable(
 	'post_likes',
 	{
@@ -24,7 +23,6 @@ export const postLikes = pgTable(
 		uniqueLike: unique('unique_post_like').on(table.postId, table.likedByUserId)
 	})
 );
-
 // Add zod schema or relations as needed
 // export type PostLike = typeof postLikes.$inferSelect;
 // export type InsertPostLike = typeof postLikes.$inferInsert;

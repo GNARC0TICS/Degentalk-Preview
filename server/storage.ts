@@ -60,9 +60,9 @@ import type {
 	ForumStructureWithStats,
 	ThreadWithUser,
 	PostWithUser
-} from '../db/types/forum.types.ts';
-import type { UserPluginData } from '../db/types/user-plugin-data.types.ts';
-import type { EmojiWithAvailability } from '../db/types/emoji.types.ts';
+} from '@db/types/forum.types';
+import type { UserPluginData } from '@db/types/user-plugin-data.types';
+import type { EmojiWithAvailability } from '@db/types/emoji.types';
 import session from 'express-session';
 import connectPGSink from 'connect-pg-simple';
 import { randomBytes, scrypt } from 'crypto';

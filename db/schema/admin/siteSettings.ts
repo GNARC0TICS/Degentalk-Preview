@@ -1,10 +1,9 @@
 import {
-	pgTable, serial, varchar, text, boolean, timestamp, uuid,
+	pgTable, varchar, text, boolean, timestamp, uuid,
 	index
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users';
-
 export const siteSettings = pgTable('site_settings', {
 	id: uuid('id').primaryKey().defaultRandom(), // schema.ts had this, useful for direct edits if needed
 	key: varchar('key', { length: 100 }).notNull().unique(),
@@ -21,6 +20,5 @@ export const siteSettings = pgTable('site_settings', {
 		.default(sql`CURRENT_TIMESTAMP`),
 	updatedBy: uuid('updated_by').references(() => users.id, { onDelete: 'set null' }) // TODO: @syncSchema added column
 });
-
 export type SiteSetting = typeof siteSettings.$inferSelect;
 export type InsertSiteSetting = typeof siteSettings.$inferInsert; // Assuming full insert is okay for settings

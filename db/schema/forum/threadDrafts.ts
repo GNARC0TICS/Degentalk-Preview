@@ -1,6 +1,5 @@
 import {
 	pgTable,
-	serial,
 	varchar,
 	text,
 	jsonb,
@@ -13,7 +12,6 @@ import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
 import { users } from '../user/users';
 import { forumStructure } from './structure'; // Updated to use forum structure
 import { threadPrefixes } from './prefixes'; // Assuming you have threadPrefixes schema
-
 export const threadDrafts = pgTable('thread_drafts', {
 	id: uuid('id').primaryKey().defaultRandom(),
 	uuid: uuid('uuid').notNull().defaultRandom(), // This is a separate uuid field
@@ -35,10 +33,8 @@ export const threadDrafts = pgTable('thread_drafts', {
 		.notNull()
 		.default(sql`now()`)
 });
-
 export type ThreadDraft = typeof threadDrafts.$inferSelect;
 export type InsertThreadDraft = typeof threadDrafts.$inferInsert;
-
 // Zod schemas for validation
 export const insertThreadDraftSchema = createInsertSchema(threadDrafts);
 export const selectThreadDraftSchema = createSelectSchema(threadDrafts);

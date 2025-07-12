@@ -1,10 +1,9 @@
 import {
-	pgTable, serial, varchar, text, boolean, timestamp, uuid,
+	pgTable, varchar, text, boolean, timestamp, uuid,
 	index
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users'; // Adjusted path
-
 export const siteTemplates = pgTable('site_templates', {
 	id: uuid('id').primaryKey().defaultRandom(),
 	name: varchar('name', { length: 100 }).notNull().unique(),
@@ -20,6 +19,5 @@ export const siteTemplates = pgTable('site_templates', {
 		.default(sql`now()`), // Changed defaultNow() to sql`now()`
 	createdBy: uuid('created_by').references(() => users.id, { onDelete: 'set null' })
 });
-
 export type SiteTemplate = typeof siteTemplates.$inferSelect;
 // Add InsertSiteTemplate if Zod schema is needed

@@ -1,6 +1,5 @@
 import {
 	pgTable,
-	serial,
 	integer,
 	varchar,
 	text,
@@ -11,7 +10,6 @@ import {
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users'; // Adjusted path
-
 export const contentModerationActions = pgTable('content_moderation_actions', {
 	id: uuid('id').primaryKey().defaultRandom(),
 	moderatorId: uuid('moderator_id')
@@ -26,6 +24,5 @@ export const contentModerationActions = pgTable('content_moderation_actions', {
 		.default(sql`now()`), // Changed defaultNow() to sql`now()`
 	additionalData: jsonb('additional_data').default('{}') // For storing things like duration of a temp ban, etc.
 });
-
 export type ContentModerationAction = typeof contentModerationActions.$inferSelect;
 // Add InsertContentModerationAction if Zod schema is needed

@@ -4,7 +4,7 @@ import { eq } from 'drizzle-orm';
 import { xpService } from '../../xp/xp.service';
 import { XP_ACTION } from '../../xp/xp-actions';
 import type { FrameId } from "@shared/types/ids";
-import { logger } from "../../core/logger";
+import { logger } from '@core/logger';
 
 class FrameEquipService {
 	async userOwnsFrame(userId: string, frameId: FrameId): Promise<boolean> {

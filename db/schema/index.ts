@@ -22,7 +22,6 @@
  */
 // Core exports - Global enums used across domains
 export * from './core/enums';
-
 // User domain exports
 export * from './user/users';
 export * from './user/sessions';
@@ -41,10 +40,8 @@ export * from './user/userOwnedFrames';
 export * from './user/userGroups';
 export * from './user/user-social-preferences';
 export * from './user/subscriptions';
-
 // User domain - feature permissions
 export * from './user/featurePermissions';
-
 // Forum domain exports
 export * from './forum/structure'; // Forum structure schema (replaces categories)
 export * from './forum/threads';
@@ -67,7 +64,6 @@ export * from './forum/pollVotes';
 export * from './forum/emojiPacks';
 export * from './forum/emojiPackItems';
 export * from './forum/userEmojiPacks';
-
 // Economy domain exports
 export * from './economy/wallets';
 export * from './economy/transactions';
@@ -89,12 +85,10 @@ export * from './economy/settings';
 export * from './economy/treasurySettings';
 export * from './economy/cloutAchievements';
 export * from './economy/userCloutLog';
-
 // Economy domain - airdrop
 export * from './economy/airdropSettings';
 export * from './economy/airdropRecords';
 export * from './economy/xpLogs';
-
 // Shop domain exports
 export * from './shop/products';
 export * from './shop/productCategories';
@@ -109,7 +103,6 @@ export * from './shop/cosmeticCategories';
 export * from './shop/rarities';
 export * from './shop/animationPacks';
 export * from './shop/animationPackItems';
-
 // Messaging domain exports
 export * from './messaging/conversations';
 export * from './messaging/conversationParticipants';
@@ -119,7 +112,6 @@ export * from './messaging/directMessages';
 export * from './messaging/chatRooms';
 export * from './messaging/shoutboxMessages';
 export * from './messaging/onlineUsers';
-
 // Admin domain exports
 export * from './admin/auditLogs';
 export * from './admin/reports';
@@ -139,7 +131,6 @@ export * from './admin/emailTemplates';
 export * from './admin/backups';
 export * from './admin/brandConfig';
 export * from './admin/shoutboxConfig';
-
 // Gamification domain exports
 export * from './gamification/achievements';
 export * from './gamification/userAchievements';
@@ -148,7 +139,6 @@ export * from './gamification/missions';
 export * from './gamification/userMissionProgress';
 export * from './gamification/leaderboards';
 export * from './gamification/platformStats';
-
 // System domain exports
 export * from './system/rateLimits';
 export { notifications } from './system/notifications';
@@ -168,16 +158,13 @@ export * from './system/referralSources';
 export * from './system/userReferrals';
 export * from './system/event_logs';
 export * from './system/economyConfigOverrides';
-
 // Dictionary domain exports
 export * from './dictionary/entries';
 export * from './dictionary/upvotes';
-
 // Social domain exports
 export * from './social/mentions';
 export * from './social/user-follows';
 export * from './social/friends';
-
 // Wallet domain exports - CCPayment integration
 export * from './wallet/ccpayment-users';
 export * from './wallet/crypto-wallets';
@@ -187,10 +174,8 @@ export * from './wallet/internal-transfers';
 export * from './wallet/swap-records';
 export * from './wallet/webhook-events';
 export * from './wallet/supported-tokens';
-
 // Collectibles domain exports - Sticker system
 export * from './collectibles/stickers';
-
 // Advertising domain exports
 export * from './advertising/campaigns';
 export * from './advertising/placements';
@@ -198,6 +183,5 @@ export * from './advertising/targeting';
 export * from './advertising/performance';
 export * from './advertising/payments';
 export * from './advertising/user-promotions';
-
 // Note: './forum/threadDrafts.ts' was commented out as it was empty in the previous steps.
 // Ensure all files listed for export actually exist and contain exports.

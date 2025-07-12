@@ -1,7 +1,6 @@
-import { pgTable, serial, text, timestamp, jsonb, uuid } from 'drizzle-orm/pg-core';
+import { pgTable, text, timestamp, jsonb, uuid } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users';
-
 export const userCommands = pgTable('user_commands', {
 	id: uuid('id').primaryKey().defaultRandom(),
 	userId: uuid('user_id')
@@ -13,7 +12,6 @@ export const userCommands = pgTable('user_commands', {
 		.default(sql`now()`),
 	metadata: jsonb('metadata').default({})
 });
-
 // Add zod schema or relations as needed
 // export type UserCommand = typeof userCommands.$inferSelect;
 // export type InsertUserCommand = typeof userCommands.$inferInsert;

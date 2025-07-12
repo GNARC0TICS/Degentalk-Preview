@@ -1,7 +1,7 @@
 import { db } from '@db';
 import { userSocialPreferences } from '@schema';
 import { eq } from 'drizzle-orm';
-import { logger } from "../../core/logger";
+import { logger } from '@core/logger';
 
 export interface SocialPreferences {
 	// Mentions preferences

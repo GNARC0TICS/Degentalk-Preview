@@ -3,7 +3,6 @@
  * 
  * Auto-generated Drizzle relations for type-safe joins
  */
-
 import { relations } from 'drizzle-orm';
 import { achievementEvents } from './achievementEvents';
 import { achievements } from './achievements';
@@ -12,12 +11,10 @@ import { missions } from './missions';
 import { platformStatistics } from './platformStatistics';
 import { userAchievements } from './userAchievements';
 import { userMissionProgress } from './userMissionProgress';
-import { users } from '../user';
-
+import { users } from '../user/users';
 export const achievementsRelations = relations(achievements, ({ one, many }) => ({
   createdBy: one(users, {
     fields: [achievements.createdBy],
     references: [users.id]
   }),
 }));
-

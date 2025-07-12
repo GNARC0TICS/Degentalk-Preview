@@ -1,6 +1,5 @@
 import {
 	pgTable,
-	serial,
 	integer,
 	text,
 	boolean,
@@ -16,7 +15,6 @@ import { users } from '../user/users'; // Adjusted import path
 import { threads } from './threads'; // Adjusted import path
 import { contentVisibilityStatusEnum } from '../core/enums';
 import { type AnyPgColumn } from 'drizzle-orm/pg-core';
-
 export const posts = pgTable(
 	'posts',
 	{
@@ -65,7 +63,6 @@ export const posts = pgTable(
 		totalTipsIdx: index('idx_posts_total_tips').on(table.totalTips)
 	})
 );
-
 // Placeholder for relations
 // import { relations } from "drizzle-orm";
 // export const postsRelations = relations(posts, ({ one, many }) => ({
@@ -75,10 +72,8 @@ export const posts = pgTable(
 //   replies: many(posts, {relationName: 'replyToPost'}),
 //   // ... other relations like reactions, tips
 // }));
-
 import { createInsertSchema } from 'drizzle-zod';
 import { z } from 'zod';
-
 export const insertPostSchema = createInsertSchema(posts, {
 	content: z.string().min(1)
 }).omit({
@@ -103,6 +98,5 @@ export const insertPostSchema = createInsertSchema(posts, {
 	moderationReason: true,
 	depth: true
 });
-
 export type Post = typeof posts.$inferSelect;
 export type InsertPost = z.infer<typeof insertPostSchema>;

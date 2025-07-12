@@ -9,7 +9,7 @@ import {
 	type Campaign,
 	type AdPlacement
 } from '@schema';
-import { logger } from "../../core/logger";
+import { logger } from '@core/logger';
 import type { Id } from '@shared/types/ids';
 
 export interface AdRequest {

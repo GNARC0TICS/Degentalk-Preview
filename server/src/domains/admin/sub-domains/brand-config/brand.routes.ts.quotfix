@@ -1,0 +1,17 @@
+import { Router } from 'express';
+import { brandController } from './brand.controller';
+import { isAdmin } from '../../admin.middleware';
+import { asyncHandler } from '../../admin.middleware';
+
+const router = Router();
+
+// All routes require admin auth
+router.use(isAdmin);
+
+// GET /api/admin/brand-config
+router.get('/', asyncHandler(brandController.getBrandConfig.bind(brandController)));
+
+// PUT /api/admin/brand-config
+router.put('/', asyncHandler(brandController.updateBrandConfig.bind(brandController)));
+
+export default router;

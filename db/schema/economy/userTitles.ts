@@ -2,7 +2,6 @@ import { pgTable, timestamp, primaryKey, uuid, integer } from 'drizzle-orm/pg-co
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users';
 import { titles } from './titles';
-
 export const userTitles = pgTable(
 	'user_titles',
 	{
@@ -20,7 +19,6 @@ export const userTitles = pgTable(
 		pk: primaryKey({ columns: [table.userId, table.titleId] })
 	})
 );
-
 // Add zod schema or relations as needed
 // export type UserTitle = typeof userTitles.$inferSelect;
 // export type InsertUserTitle = typeof userTitles.$inferInsert;

@@ -1,6 +1,5 @@
 import {
 	pgTable,
-	serial,
 	varchar,
 	text,
 	boolean,
@@ -10,7 +9,6 @@ import {
 	index
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
-
 export const scheduledTasks = pgTable('scheduled_tasks', {
 	id: uuid('id').primaryKey().defaultRandom(),
 	name: varchar('name', { length: 100 }).notNull(),
@@ -30,6 +28,5 @@ export const scheduledTasks = pgTable('scheduled_tasks', {
 		.notNull()
 		.default(sql`now()`) // Changed defaultNow() to sql`now()`
 });
-
 export type ScheduledTask = typeof scheduledTasks.$inferSelect;
 // Add InsertScheduledTask if Zod schema is needed

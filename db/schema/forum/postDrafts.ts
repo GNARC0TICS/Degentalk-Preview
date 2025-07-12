@@ -1,11 +1,10 @@
 import {
-	pgTable, serial, text, jsonb, timestamp, uuid, integer,
+	pgTable, text, jsonb, timestamp, uuid, integer,
 	index
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { threads } from './threads'; // Adjusted import
 import { users } from '../user/users'; // Adjusted import
-
 export const postDrafts = pgTable('post_drafts', {
 	id: uuid('id').primaryKey().defaultRandom(),
 	uuid: uuid('uuid').notNull().defaultRandom(),
@@ -22,7 +21,6 @@ export const postDrafts = pgTable('post_drafts', {
 		.notNull()
 		.default(sql`now()`)
 });
-
 // Add zod schema or relations as needed
 // export type PostDraft = typeof postDrafts.$inferSelect;
 // export type InsertPostDraft = typeof postDrafts.$inferInsert;

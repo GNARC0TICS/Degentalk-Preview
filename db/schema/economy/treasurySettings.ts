@@ -1,6 +1,5 @@
 import {
 	pgTable,
-	serial,
 	text,
 	varchar,
 	doublePrecision,
@@ -12,7 +11,6 @@ import {
 } from 'drizzle-orm/pg-core';
 import { users } from '../user/users';
 import { sql } from 'drizzle-orm';
-
 // This table is for platform-wide treasury settings, potentially for multiple currencies (e.g., CCPayment)
 export const platformTreasurySettings = pgTable('platform_treasury_settings', {
 	// Renamed table
@@ -34,11 +32,8 @@ export const platformTreasurySettings = pgTable('platform_treasury_settings', {
 	createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
 	updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull()
 });
-
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
-
 export const insertPlatformTreasurySettingSchema = createInsertSchema(platformTreasurySettings);
 export type PlatformTreasurySetting = typeof platformTreasurySettings.$inferSelect;
 export type InsertPlatformTreasurySetting = typeof platformTreasurySettings.$inferInsert;
-
 export const selectPlatformTreasurySettingSchema = createSelectSchema(platformTreasurySettings);

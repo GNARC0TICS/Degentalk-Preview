@@ -1,12 +1,11 @@
 import {
-	pgTable, serial, integer, bigint, timestamp, uuid,
+	pgTable, integer, bigint, timestamp, uuid,
 	index
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { posts } from '../forum/posts';
 import { users } from '../user/users';
 import { createInsertSchema } from 'drizzle-zod';
-
 export const postTips = pgTable('post_tips', {
 	id: uuid('id').primaryKey().defaultRandom(),
 	postId: uuid('post_id')
@@ -20,7 +19,6 @@ export const postTips = pgTable('post_tips', {
 		.notNull()
 		.default(sql`now()`)
 });
-
 export const insertPostTipSchema = createInsertSchema(postTips).omit({
 	id: true,
 	createdAt: true

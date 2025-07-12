@@ -1,6 +1,5 @@
 import {
 	pgTable,
-	serial,
 	// integer, // No longer using integer for userId
 	timestamp,
 	varchar,
@@ -14,7 +13,6 @@ import {
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users'; // Adjusted path
 import { chatRooms } from './chatRooms'; // Adjusted path
-
 export const onlineUsers = pgTable(
 	'online_users',
 	{
@@ -36,7 +34,6 @@ export const onlineUsers = pgTable(
 		uniqueUserConstraint: unique('unique_online_user').on(table.userId) // This implies one online record per user system-wide
 	})
 );
-
 // Add zod schema or relations as needed
 // export type OnlineUser = typeof onlineUsers.$inferSelect;
 // export type InsertOnlineUser = typeof onlineUsers.$inferInsert;

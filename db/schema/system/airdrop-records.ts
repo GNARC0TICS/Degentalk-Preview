@@ -1,12 +1,10 @@
 import {
-	serial, integer, text, timestamp, pgEnum, pgTable, uuid,
+	integer, text, timestamp, pgEnum, pgTable, uuid,
 	index
 } from 'drizzle-orm/pg-core';
 import { users } from '../user/users'; // Assuming users schema is in db/schema/user/users.ts
 import { roles } from '../user/roles'; // Use roles instead of deprecated userGroups
-
 export const tokenTypeEnumAirdrop = pgEnum('token_type_admin_airdrop', ['XP', 'DGT']);
-
 export const adminManualAirdropLogs = pgTable('admin_manual_airdrop_logs', {
 	id: uuid('id').primaryKey().defaultRandom(),
 	adminId: uuid('admin_id')
@@ -22,6 +20,5 @@ export const adminManualAirdropLogs = pgTable('admin_manual_airdrop_logs', {
 	airdropBatchId: uuid('airdrop_batch_id'), // To group records from a single admin action
 	createdAt: timestamp('created_at').defaultNow().notNull()
 });
-
 export type AdminManualAirdropLog = typeof adminManualAirdropLogs.$inferSelect;
 export type NewAdminManualAirdropLog = typeof adminManualAirdropLogs.$inferInsert;

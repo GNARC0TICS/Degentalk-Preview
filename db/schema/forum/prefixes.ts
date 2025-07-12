@@ -1,10 +1,9 @@
 import {
-	pgTable, serial, varchar, boolean, integer, timestamp, uuid,
+	pgTable, varchar, boolean, integer, timestamp, uuid,
 	index
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { forumStructure } from './structure'; // Updated to use forum structure
-
 export const threadPrefixes = pgTable('thread_prefixes', {
 	id: uuid('id').primaryKey().defaultRandom(),
 	name: varchar('name', { length: 30 }).notNull().unique(),
@@ -21,7 +20,6 @@ export const threadPrefixes = pgTable('thread_prefixes', {
 		.notNull()
 		.default(sql`CURRENT_TIMESTAMP`)
 });
-
 // Add zod schema if needed, or define relations
 // import { createInsertSchema } from "drizzle-zod";
 // export const insertThreadPrefixSchema = createInsertSchema(threadPrefixes);

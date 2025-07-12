@@ -1,11 +1,9 @@
 import {
-	pgTable, serial, varchar, text, timestamp, uuid, pgEnum,
+	pgTable, varchar, text, timestamp, uuid, pgEnum,
 	index
 } from 'drizzle-orm/pg-core';
 import { users } from '../user/users';
-
 export const moderatorNoteTypeEnum = pgEnum('moderator_note_type', ['thread', 'post', 'user']);
-
 export const moderatorNotes = pgTable('moderator_notes', {
 	id: uuid('id').primaryKey().defaultRandom(),
 	type: moderatorNoteTypeEnum('type').notNull(),
@@ -20,7 +18,6 @@ export const moderatorNotes = pgTable('moderator_notes', {
 		.defaultNow()
 		.$onUpdate(() => new Date())
 });
-
 export const selectModeratorNoteSchema = {
 	id: true,
 	type: true,
@@ -30,7 +27,6 @@ export const selectModeratorNoteSchema = {
 	createdAt: true,
 	updatedAt: true
 };
-
 export const insertModeratorNoteSchema = {
 	type: moderatorNotes.type,
 	itemId: moderatorNotes.itemId,
