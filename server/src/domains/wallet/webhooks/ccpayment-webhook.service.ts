@@ -10,8 +10,9 @@ import { dgtPurchaseOrders, users, transactions } from '@schema';
 import { eq, and } from 'drizzle-orm';
 import { db } from '@core/database';
 import { logger } from '@core/logger';
-import type { CCPaymentWebhookEvent } from '../wallet/ccpayment.service';
-import { walletService } from '../wallet/services/wallet.service';
+import type { CCPaymentWebhookEvent } from '../providers/ccpayment/ccpayment.service';
+import { walletService } from '../services/wallet.service';
+import { walletConfig } from '@shared/wallet.config';
 
 /**
  * CCPayment webhook service for processing webhook events
@@ -70,7 +71,7 @@ export class CCPaymentWebhookService {
 	}
 
 	/**
-	 * Handle deposit completion webhook
+	 * Handle deposit completion webhook with auto-conversion to DGT
 	 * @param event Webhook event
 	 * @returns Processing result
 	 */
@@ -78,6 +79,13 @@ export class CCPaymentWebhookService {
 		event: CCPaymentWebhookEvent
 	): Promise<{ success: boolean; message: string }> {
 		try {
+			logger.info('Processing deposit completion with auto-conversion check', {
+				merchantOrderId: event.merchantOrderId,
+				amount: event.actualAmount,
+				coinSymbol: event.coinSymbol,
+				autoConvertEnabled: walletConfig.AUTO_CONVERT_DEPOSITS
+			});
+
 			// Find the DGT purchase order associated with this deposit
 			const [purchaseOrder] = await db
 				.select()
@@ -90,28 +98,46 @@ export class CCPaymentWebhookService {
 					merchantOrderId: event.merchantOrderId
 				});
 
-				// This could be a direct crypto deposit not tied to a DGT purchase
-				// We can handle that case here if needed
+				// Check admin toggle for auto-conversion of direct deposits
+				if (walletConfig.AUTO_CONVERT_DEPOSITS && event.uid) {
+					return await this.handleDirectDepositAutoConversion(event);
+				}
 
 				return {
 					success: true,
-					message: 'No matching DGT purchase order found, processed as direct deposit'
+					message: 'Direct deposit processed - no auto-conversion (admin disabled)'
 				};
 			}
 
+			// Handle purchase order deposit with conversion
+			const conversionAmount = await this.calculateDgtConversion(
+				parseFloat(event.actualAmount), 
+				event.coinSymbol
+			);
+
 			// Credit DGT to user for successful deposit
-			await walletService.creditDgt(purchaseOrder.userId, event.actualAmount, {
+			await walletService.creditDgt(purchaseOrder.userId, conversionAmount, {
 				source: 'crypto_deposit',
-				reason: 'Cryptocurrency deposit conversion',
+				reason: 'Cryptocurrency deposit auto-conversion to DGT',
 				originalToken: event.coinSymbol,
 				usdtAmount: event.actualAmount,
 				txHash: event.txHash,
-				webhookEventId: event.orderId
+				webhookEventId: event.orderId,
+				conversionRate: walletConfig.DGT.PRICE_USD,
+				adminAutoConvert: walletConfig.AUTO_CONVERT_DEPOSITS
+			});
+
+			logger.info('DGT purchase completed with auto-conversion', {
+				purchaseOrderId: purchaseOrder.id,
+				originalAmount: event.actualAmount,
+				originalCurrency: event.coinSymbol,
+				dgtAmount: conversionAmount,
+				conversionRate: walletConfig.DGT.PRICE_USD
 			});
 
 			return {
 				success: true,
-				message: `DGT purchase completed for order ${purchaseOrder.id}`
+				message: `DGT purchase completed: ${conversionAmount} DGT credited for ${event.actualAmount} ${event.coinSymbol}`
 			};
 		} catch (error) {
 			logger.error('Error handling deposit completed webhook', error);
@@ -120,6 +146,96 @@ export class CCPaymentWebhookService {
 				message: `Error fulfilling DGT purchase: ${error.message}`
 			};
 		}
+	}
+
+	/**
+	 * Handle direct crypto deposits with auto-conversion (no purchase order)
+	 * @param event Webhook event
+	 * @returns Processing result
+	 */
+	private async handleDirectDepositAutoConversion(
+		event: CCPaymentWebhookEvent
+	): Promise<{ success: boolean; message: string }> {
+		try {
+			// Find user by CCPayment UID
+			const [user] = await db
+				.select()
+				.from(users)
+				.where(eq(users.id, event.uid))
+				.limit(1);
+
+			if (!user) {
+				logger.warn('User not found for direct deposit auto-conversion', {
+					ccpaymentUid: event.uid,
+					orderId: event.orderId
+				});
+				return {
+					success: false,
+					message: 'User not found for direct deposit'
+				};
+			}
+
+			const conversionAmount = await this.calculateDgtConversion(
+				parseFloat(event.actualAmount), 
+				event.coinSymbol
+			);
+
+			// Credit DGT for direct deposit
+			await walletService.creditDgt(user.id, conversionAmount, {
+				source: 'crypto_deposit',
+				reason: 'Direct crypto deposit auto-converted to DGT',
+				originalToken: event.coinSymbol,
+				usdtAmount: event.actualAmount,
+				txHash: event.txHash,
+				webhookEventId: event.orderId,
+				conversionRate: walletConfig.DGT.PRICE_USD,
+				adminAutoConvert: true
+			});
+
+			logger.info('Direct deposit auto-converted to DGT', {
+				userId: user.id,
+				originalAmount: event.actualAmount,
+				originalCurrency: event.coinSymbol,
+				dgtAmount: conversionAmount,
+				conversionRate: walletConfig.DGT.PRICE_USD
+			});
+
+			return {
+				success: true,
+				message: `Direct deposit auto-converted: ${conversionAmount} DGT credited for ${event.actualAmount} ${event.coinSymbol}`
+			};
+		} catch (error) {
+			logger.error('Error handling direct deposit auto-conversion', error);
+			return {
+				success: false,
+				message: `Error auto-converting direct deposit: ${error.message}`
+			};
+		}
+	}
+
+	/**
+	 * Calculate DGT amount from crypto deposit with rate buffer
+	 * @param usdAmount USD amount from crypto
+	 * @param coinSymbol Original coin symbol
+	 * @returns DGT amount to credit
+	 */
+	private async calculateDgtConversion(usdAmount: number, coinSymbol: string): Promise<number> {
+		// Apply rate buffer to account for fluctuations
+		const bufferedAmount = usdAmount * (1 - walletConfig.CONVERSION_RATE_BUFFER);
+		
+		// Convert to DGT at pegged rate ($0.10 per DGT)
+		const dgtAmount = Math.floor(bufferedAmount / walletConfig.DGT.PRICE_USD);
+
+		logger.debug('DGT conversion calculation', {
+			originalUsdAmount: usdAmount,
+			bufferedUsdAmount: bufferedAmount,
+			conversionRate: walletConfig.DGT.PRICE_USD,
+			dgtAmount,
+			coinSymbol,
+			bufferPercentage: walletConfig.CONVERSION_RATE_BUFFER
+		});
+
+		return dgtAmount;
 	}
 
 	/**

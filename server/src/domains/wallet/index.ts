@@ -7,6 +7,7 @@
 
 // Services
 export { walletService } from './services/wallet.service';
+export type { WalletService } from './services/wallet.service';
 
 // Controllers
 export { walletController } from './controllers/wallet.controller';

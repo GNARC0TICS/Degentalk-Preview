@@ -46,6 +46,11 @@ export const walletConfig = {
 	WITHDRAWALS_ENABLED: true,
 	INTERNAL_TRANSFERS_ENABLED: true,
 
+	// Auto-conversion settings (admin hot-swappable)
+	AUTO_CONVERT_DEPOSITS: true, // Auto-convert crypto deposits to DGT
+	MANUAL_CONVERSION_ALLOWED: false, // Allow users to manually convert instead
+	CONVERSION_RATE_BUFFER: 0.02, // 2% buffer on conversions to account for rate fluctuations
+
 	// Supported tokens
 	SUPPORTED_TOKENS: ['DGT', 'USDT'] as const,
 

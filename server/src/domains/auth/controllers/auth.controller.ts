@@ -51,25 +51,33 @@ export async function register(req: Request, res: Response, next: NextFunction) 
 			isActive: isDevMode() ? true : false // Automatically active in dev mode
 		});
 
-		// Initialize wallet for new user
+		// Initialize wallet for new user (circuit breaker - never fails registration)
 		if (walletConfig.WALLET_ENABLED) {
 			try {
-				// Initialize DGT wallet
-				await walletService.initializeWallet(user.id);
-				logger.info('AuthController', 'DGT wallet initialized for new user', { userId: user.id });
-
-				// Initialize CCPayment wallet
-				const ccpaymentId = await walletService.ensureCcPaymentWallet(user.id);
-				logger.info('AuthController', 'CCPayment wallet initialized for new user', {
+				const walletResult = await walletService.initializeWallet(user.id);
+				
+				logger.info('AuthController', 'Wallet initialization completed for new user', {
 					userId: user.id,
-					ccpaymentId
+					success: walletResult.success,
+					dgtWalletCreated: walletResult.dgtWalletCreated,
+					welcomeBonusAdded: walletResult.welcomeBonusAdded,
+					cryptoWalletsCreated: walletResult.walletsCreated
 				});
+
+				// Log specific outcomes for monitoring
+				if (!walletResult.dgtWalletCreated) {
+					logger.warn('AuthController', 'DGT wallet creation failed during registration', { userId: user.id });
+				}
+				if (!walletResult.welcomeBonusAdded) {
+					logger.warn('AuthController', 'Welcome bonus failed during registration', { userId: user.id });
+				}
 			} catch (walletError) {
-				logger.error('AuthController', 'Error initializing wallet for new user', {
+				// This should never happen due to circuit breaker, but log if it does
+				logger.error('AuthController', 'Unexpected wallet initialization error', {
 					err: walletError,
 					userId: user.id
 				});
-				// Continue with registration even if wallet creation fails
+				// Continue with registration - wallet issues never block user creation
 			}
 		}
 
@@ -147,20 +155,30 @@ export function login(req: Request, res: Response, next: NextFunction) {
 				return next(err);
 			}
 
-			// Ensure wallet is initialized for existing users
+			// Ensure wallet is initialized for existing users (non-blocking)
 			if (walletConfig.WALLET_ENABLED && user.id) {
 				try {
-					// Initialize DGT wallet if needed
-					await walletService.initializeWallet(user.id);
+					// Ensure DGT wallet exists (but don't re-initialize if already exists)
+					const dgtWallet = await walletService.getUserBalance(user.id);
+					logger.debug('AuthController', 'DGT wallet verified for user login', { 
+						userId: user.id, 
+						balance: dgtWallet.dgtBalance 
+					});
 
-					// Initialize CCPayment wallet if needed
-					await walletService.ensureCcPaymentWallet(user.id);
+					// Ensure CCPayment wallet if needed (non-critical)
+					const ccpaymentId = await walletService.ensureCcPaymentWallet(user.id);
+					if (ccpaymentId) {
+						logger.debug('AuthController', 'CCPayment wallet verified for user login', { 
+							userId: user.id, 
+							ccpaymentId 
+						});
+					}
 				} catch (walletError) {
-					logger.error('AuthController', 'Error ensuring wallet for user login', {
+					logger.warn('AuthController', 'Non-critical wallet check failed during login', {
 						err: walletError,
 						userId: user.id
 					});
-					// Continue with login even if wallet check fails
+					// Continue with login - wallet issues never block authentication
 				}
 			}
 

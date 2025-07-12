@@ -17,6 +17,7 @@ import { logger } from '@core/logger';
 import { WalletError, ErrorCodes } from '@core/errors';
 import { getAuthenticatedUser } from '@core/utils/auth.helpers';
 import { walletService } from '@server/domains/wallet/services/wallet.service';
+import { walletConfig } from '@shared/wallet.config';
 
 // Import transformers
 import {
@@ -393,6 +394,112 @@ export class WalletController {
       });
     } catch (error) {
       this.handleError(res, error, 'Failed to process webhook');
+    }
+  }
+
+  /**
+   * GET /api/wallet/admin/deposit-config
+   * Get current deposit configuration (admin only)
+   */
+  async getAdminDepositConfig(req: Request, res: Response): Promise<void> {
+    try {
+      const user = getAuthenticatedUser(req);
+      
+      // Check admin permissions
+      if (!['admin', 'super_admin'].includes(user.role)) {
+        throw new WalletError('Insufficient permissions for admin config', ErrorCodes.FORBIDDEN, 403);
+      }
+
+      logger.info('WalletController', 'Getting admin deposit config', { userId: user.id });
+
+      const config = {
+        autoConvertDeposits: walletConfig.AUTO_CONVERT_DEPOSITS,
+        manualConversionAllowed: walletConfig.MANUAL_CONVERSION_ALLOWED,
+        conversionRateBuffer: walletConfig.CONVERSION_RATE_BUFFER,
+        dgtPriceUsd: walletConfig.DGT.PRICE_USD,
+        depositsEnabled: walletConfig.DEPOSITS_ENABLED,
+        withdrawalsEnabled: walletConfig.WITHDRAWALS_ENABLED,
+        internalTransfersEnabled: walletConfig.INTERNAL_TRANSFERS_ENABLED
+      };
+
+      res.json({
+        success: true,
+        data: config
+      });
+    } catch (error) {
+      this.handleError(res, error, 'Failed to get admin deposit config');
+    }
+  }
+
+  /**
+   * POST /api/wallet/admin/deposit-config
+   * Update deposit configuration (admin only, hot-swappable)
+   */
+  async updateAdminDepositConfig(req: Request, res: Response): Promise<void> {
+    try {
+      const user = getAuthenticatedUser(req);
+      
+      // Check admin permissions
+      if (!['admin', 'super_admin'].includes(user.role)) {
+        throw new WalletError('Insufficient permissions for admin config', ErrorCodes.FORBIDDEN, 403);
+      }
+
+      const {
+        autoConvertDeposits,
+        manualConversionAllowed,
+        conversionRateBuffer,
+        depositsEnabled,
+        withdrawalsEnabled,
+        internalTransfersEnabled
+      } = req.body;
+
+      logger.info('WalletController', 'Updating admin deposit config', { 
+        userId: user.id,
+        changes: req.body
+      });
+
+      // Hot-swap configuration values (no server restart required)
+      if (typeof autoConvertDeposits === 'boolean') {
+        (walletConfig as any).AUTO_CONVERT_DEPOSITS = autoConvertDeposits;
+      }
+      if (typeof manualConversionAllowed === 'boolean') {
+        (walletConfig as any).MANUAL_CONVERSION_ALLOWED = manualConversionAllowed;
+      }
+      if (typeof conversionRateBuffer === 'number' && conversionRateBuffer >= 0 && conversionRateBuffer <= 0.1) {
+        (walletConfig as any).CONVERSION_RATE_BUFFER = conversionRateBuffer;
+      }
+      if (typeof depositsEnabled === 'boolean') {
+        (walletConfig as any).DEPOSITS_ENABLED = depositsEnabled;
+      }
+      if (typeof withdrawalsEnabled === 'boolean') {
+        (walletConfig as any).WITHDRAWALS_ENABLED = withdrawalsEnabled;
+      }
+      if (typeof internalTransfersEnabled === 'boolean') {
+        (walletConfig as any).INTERNAL_TRANSFERS_ENABLED = internalTransfersEnabled;
+      }
+
+      const updatedConfig = {
+        autoConvertDeposits: walletConfig.AUTO_CONVERT_DEPOSITS,
+        manualConversionAllowed: walletConfig.MANUAL_CONVERSION_ALLOWED,
+        conversionRateBuffer: walletConfig.CONVERSION_RATE_BUFFER,
+        dgtPriceUsd: walletConfig.DGT.PRICE_USD,
+        depositsEnabled: walletConfig.DEPOSITS_ENABLED,
+        withdrawalsEnabled: walletConfig.WITHDRAWALS_ENABLED,
+        internalTransfersEnabled: walletConfig.INTERNAL_TRANSFERS_ENABLED
+      };
+
+      logger.info('WalletController', 'Admin deposit config updated successfully', {
+        userId: user.id,
+        newConfig: updatedConfig
+      });
+
+      res.json({
+        success: true,
+        message: 'Deposit configuration updated successfully (hot-swapped)',
+        data: updatedConfig
+      });
+    } catch (error) {
+      this.handleError(res, error, 'Failed to update admin deposit config');
     }
   }
 

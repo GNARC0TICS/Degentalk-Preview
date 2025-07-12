@@ -175,6 +175,26 @@ router.post(
   walletController.getWithdrawFee.bind(walletController)
 );
 
+/**
+ * GET /api/wallet/admin/deposit-config
+ * Get current deposit configuration (admin only)
+ */
+router.get(
+  '/admin/deposit-config',
+  rateLimit({ windowMs: 60 * 1000, max: 10 }), // 10 requests per minute
+  walletController.getAdminDepositConfig.bind(walletController)
+);
+
+/**
+ * POST /api/wallet/admin/deposit-config
+ * Update deposit configuration (admin only, hot-swappable)
+ */
+router.post(
+  '/admin/deposit-config',
+  rateLimit({ windowMs: 60 * 1000, max: 5 }), // 5 requests per minute (strict)
+  walletController.updateAdminDepositConfig.bind(walletController)
+);
+
 // Mount webhook routes at /webhooks
 router.use('/webhooks', webhookRoutes);
 
