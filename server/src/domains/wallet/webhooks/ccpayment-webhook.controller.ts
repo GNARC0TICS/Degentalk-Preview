@@ -7,7 +7,7 @@
 
 import type { Request, Response } from 'express';
 import { logger } from '@core/logger';
-import { ccpaymentService } from '../wallet/providers/ccpayment/ccpayment.service';
+import { ccpaymentService } from '../providers/ccpayment/ccpayment.service';
 import { ccpaymentWebhookService } from './ccpayment-webhook.service';
 import { WalletError, ErrorCodes as WalletErrorCodes } from '@core/errors';
 import crypto from 'crypto';

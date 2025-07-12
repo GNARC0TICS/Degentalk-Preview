@@ -7,9 +7,9 @@ import { insertUserSchema } from '@schema';
 import { users } from '@schema';
 import { logger } from '@core/logger';
 import { storage } from '@server/storage'; // Will be refactored in a future step
-import { hashPassword, storeTempDevMetadata, verifyEmailToken } from '../services/auth.service';
-import { isDevMode } from '../../../utils/environment';
-import { walletService } from '../../wallet';
+import { hashPassword, storeTempDevMetadata, verifyEmailToken } from '@server/domains/auth/services/auth.service';
+import { isDevMode } from '@server/utils/environment';
+import { walletService } from '@server/domains/wallet';
 import { walletConfig } from '@shared/wallet.config';
 import { UserTransformer } from "@server/domains/users/transformers/user.transformer";
 import { sendSuccessResponse, sendErrorResponse } from "@core/utils/transformer.helpers";

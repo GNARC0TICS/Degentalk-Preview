@@ -16,7 +16,7 @@ import type {
 import { logger } from '@core/logger';
 import { WalletError, ErrorCodes } from '@core/errors';
 import { getAuthenticatedUser } from '@core/utils/auth.helpers';
-import { walletService } from '../services/wallet.service';
+import { walletService } from '@server/domains/wallet/services/wallet.service';
 
 // Import transformers
 import {

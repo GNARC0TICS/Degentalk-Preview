@@ -11,6 +11,7 @@ import { walletValidation } from '../validation/wallet.validation';
 import { validateRequest } from '@server-middleware/validate-request';
 import { isAuthenticated as requireAuth } from '@server/domains/auth/middleware/auth.middleware';
 import { createCustomRateLimiter as rateLimit } from '@core/services/rate-limit.service';
+import webhookRoutes from '../webhooks/ccpayment-webhook.routes';
 
 
 const router = Router();
@@ -174,5 +175,7 @@ router.post(
   walletController.getWithdrawFee.bind(walletController)
 );
 
+// Mount webhook routes at /webhooks
+router.use('/webhooks', webhookRoutes);
 
 export default router;

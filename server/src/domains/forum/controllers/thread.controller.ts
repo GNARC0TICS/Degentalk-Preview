@@ -3,8 +3,8 @@ import { z } from 'zod';
 import { logger } from '@core/logger';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 import { getAuthenticatedUser } from '@core/utils/auth.helpers';
-import { threadService } from '../services/thread.service';
-import { ForumTransformer } from '../transformers/forum.transformer';
+import { threadService } from '@server/domains/forum/services/thread.service';
+import { ForumTransformer } from '@server/domains/forum/transformers/forum.transformer';
 import type { StructureId, ThreadId, UserId, TagId } from '@shared/types/ids';
 
 class ThreadController {

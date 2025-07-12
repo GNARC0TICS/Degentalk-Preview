@@ -2,9 +2,9 @@ import type { Request, Response } from 'express';
 import { z } from 'zod';
 import { logger } from '@core/logger';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
-import { userSearchService } from '../services/user-search.service';
-import { userSearchValidation } from '../validation/user-search.validation';
-import { ForumTransformer } from '../transformers/forum.transformer';
+import { userSearchService } from '@server/domains/forum/services/user-search.service';
+import { userSearchValidation } from '@server/domains/forum/validation/user-search.validation';
+import { ForumTransformer } from '@server/domains/forum/transformers/forum.transformer';
 
 class UserSearchController {
   async searchUsers(req: Request, res: Response) {

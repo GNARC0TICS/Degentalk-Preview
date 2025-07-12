@@ -1,8 +1,8 @@
 import type { Request, Response } from 'express';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 import { getAuthenticatedUser } from '@core/utils/auth.helpers';
-import { postService } from '../services/post.service';
-import { ForumTransformer } from '../transformers/forum.transformer';
+import { postService } from '@server/domains/forum/services/post.service';
+import { ForumTransformer } from '@server/domains/forum/transformers/forum.transformer';
 import type { PostId, UserId } from '@shared/types/ids';
 
 class PostController {
