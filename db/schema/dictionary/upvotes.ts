@@ -1,4 +1,4 @@
-import { pgTable, uuid, integer, timestamp, unique, index } from 'drizzle-orm/pg-core';
+import { pgTable, timestamp, unique, uuid } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { dictionaryEntries } from './entries';
 import { users } from '../user/users';
@@ -6,7 +6,7 @@ export const dictionaryUpvotes = pgTable(
 	'dictionary_upvotes',
 	{
 		id: uuid('id').primaryKey().defaultRandom(),
-		entryId: integer('entry_id')
+		entryId: uuid('entry_id')
 			.notNull()
 			.references(() => dictionaryEntries.id, { onDelete: 'cascade' }),
 		userId: uuid('user_id')

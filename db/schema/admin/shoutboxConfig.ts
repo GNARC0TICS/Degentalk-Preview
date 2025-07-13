@@ -9,8 +9,7 @@ import {
 	jsonb,
 	text,
 	unique,
-	uuid,
-	index
+	uuid
 } from 'drizzle-orm/pg-core';
 import { users } from '../user/users';
 import { customEmojis } from '../forum/customEmojis';
@@ -185,7 +184,7 @@ export const shoutboxEmojiPermissions = pgTable('shoutbox_emoji_permissions', {
 	id: varchar('id', { length: 128 })
 		.primaryKey()
 		.$defaultFn(() => createId()),
-	emojiId: varchar('emoji_id', { length: 128 })
+	emojiId: uuid('emoji_id')
 		.notNull()
 		.references(() => customEmojis.id, { onDelete: 'cascade' }),
 	roomId: varchar('room_id', { length: 128 }), // null = global
