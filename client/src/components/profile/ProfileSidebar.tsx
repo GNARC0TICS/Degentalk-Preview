@@ -88,15 +88,19 @@ const ProfileSidebar: React.FC<Props> = ({ profile, isOwnProfile }) => {
 							username: profile.username
 						})}
 						frame={identity?.avatarFrame}
-						username={profile.username}
-						size="xl"
+						size={80}
 						className="mb-2"
 					/>
 				</div>
 
 				{/* Username, Title, Role, Level */}
 				<div className="flex items-center justify-center gap-2 mb-1">
-					<UserName user={profile} className="text-2xl font-bold text-center" />
+					<UserName 
+						username={profile.username}
+						userId={profile.id}
+						userRole={profile.role}
+						className="text-2xl font-bold text-center" 
+					/>
 					{whaleStatus?.isWhale && (
 						<Crown className="h-6 w-6 text-yellow-400" title="Whale - High Follower Count" />
 					)}
@@ -112,7 +116,7 @@ const ProfileSidebar: React.FC<Props> = ({ profile, isOwnProfile }) => {
 				)}
 				{identity && (
 					<LevelBadge
-						levelConfig={identity.levelConfig as any}
+						levelConfig={identity.levelConfig}
 						level={identity.level}
 						className="mb-4 text-sm"
 					/>

@@ -31,13 +31,13 @@ export interface IdentityDisplay {
  * Centralized hook that gathers cosmetic & role data for a user and returns
  * a small object ready for UI components. Falls back gracefully when data missing.
  */
-export function useIdentityDisplay(user: BaseUser | null | undefined): IdentityDisplay | null {
+export function useIdentityDisplay(user: BaseUser | Partial<BaseUser> | null | undefined): IdentityDisplay | null {
 	const { cosmetics } = useUserCosmetics(user?.id);
 	const { data: xpData } = useUserXP(
 		user?.id ? parseId<'UserId'>(user.id) || toId<'UserId'>(user.id) : undefined
 	);
 
-	if (!user) return null;
+	if (!user || !user.username) return null;
 
 	const primaryRole = user.roles?.[0];
 

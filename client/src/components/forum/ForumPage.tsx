@@ -13,7 +13,7 @@ import ThreadList from '@/features/forum/components/ThreadList';
 import { DynamicSidebar } from '@/components/forum/sidebar';
 import { SiteFooter } from '@/components/footer';
 import { ForumHeader } from '@/components/forum/ForumHeader';
-import type { ForumId, StructureId } from '@shared/types/ids';
+import type { ForumId, StructureId, asStructureId } from '@shared/types/ids';
 
 export interface ForumPageProps {
 	className?: string;
@@ -153,8 +153,8 @@ const ForumPage = memo(() => {
 
 					{/* Right Sidebar */}
 					<aside className="space-y-6">
-						{parentZone && (
-							<DynamicSidebar structureId={forum?.id as StructureId} zoneSlug={parentZone.slug} />
+						{parentZone && forum?.id && (
+							<DynamicSidebar structureId={asStructureId(forum.id)} zoneSlug={parentZone.slug} />
 						)}
 					</aside>
 				</div>

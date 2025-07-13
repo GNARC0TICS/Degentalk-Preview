@@ -13,6 +13,7 @@ import { hasPermission } from '@lib/auth/permissions';
 import { WalletError, ErrorCodes } from '@core/errors';
 import { validateRequest } from '@server/middleware/validate-request';
 import { z } from 'zod';
+import { toAdminWalletSettings } from '../transformers/wallet-settings.transformer';
 
 const router = Router();
 
@@ -45,10 +46,11 @@ router.get('/', isAuthenticated, async (req: Request, res: Response) => {
 		}
 
 		const settings = await settingsService.getWalletSettings();
+		const transformedSettings = toAdminWalletSettings(settings);
 
 		res.json({
 			success: true,
-			data: settings
+			data: transformedSettings
 		});
 	} catch (error) {
 		logger.error('Error getting wallet settings', { error });
@@ -81,6 +83,7 @@ router.patch(
 			logger.info('Updating wallet settings', { userId: user.id, updates });
 
 			const newSettings = await settingsService.updateWalletSettings(updates);
+			const transformedSettings = toAdminWalletSettings(newSettings);
 
 			// Log admin action
 			logger.info('Wallet settings updated by admin', {
@@ -92,7 +95,7 @@ router.patch(
 
 			res.json({
 				success: true,
-				data: newSettings,
+				data: transformedSettings,
 				message: 'Wallet settings updated successfully'
 			});
 		} catch (error) {

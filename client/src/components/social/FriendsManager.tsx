@@ -63,7 +63,7 @@ interface Friendship {
 }
 
 interface FriendRequest {
-	id: EntityId;
+	id: RequestId;
 	requestMessage?: string | null;
 	createdAt: string;
 	requester?: FriendUser;

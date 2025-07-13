@@ -1,5 +1,8 @@
 import React, { useState, useCallback, memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import type { ThreadDisplay } from '@/types/thread.types';
+import type { ThreadId, UserId, ZoneId, StructureId, ForumId } from '@shared/types/ids';
+import type { CanonicalForum } from '@/types/canonical.types';
 import {
 	Wand2,
 	Sparkles,
@@ -150,63 +153,158 @@ const MagicForumBuilder = memo(
 			setConfig(defaultConfig);
 		};
 
-		// Sample data for preview
-		const sampleThreads = [
+		// Sample data for preview - typed as ThreadDisplay
+		const sampleThreads: ThreadDisplay[] = [
 			{
-				id: '1',
+				id: '1' as ThreadId,
 				title: 'Sample Thread: What are your thoughts on the latest DeFi protocols?',
 				slug: 'sample-thread-1',
 				excerpt:
 					'Looking for community insights on the newest DeFi protocols and their potential...',
 				createdAt: new Date().toISOString(),
+				updatedAt: new Date().toISOString(),
 				viewCount: 234,
 				postCount: 15,
-				isHot: true,
+				firstPostLikeCount: 0,
+				isSticky: false,
+				isLocked: false,
+				isHidden: false,
+				isSolved: false,
+				structureId: 'struct_1' as StructureId,
+				userId: '1' as UserId,
 				user: {
-					id: '1',
+					id: '1' as UserId,
 					username: 'CryptoDegen',
 					avatarUrl: '',
-					reputation: 850,
-					isVerified: true
+					role: 'user' as const,
+					forumStats: {
+						level: 5,
+						xp: 1200,
+						reputation: 850,
+						totalPosts: 45,
+						totalThreads: 8,
+						totalLikes: 120,
+						totalTips: 250
+					},
+					isOnline: true,
+					joinedAt: new Date().toISOString()
 				},
 				zone: {
+					id: 'zone_1' as ZoneId,
 					name: 'The Pit',
 					slug: 'pit',
-					colorTheme: 'pit'
+					colorTheme: 'pit',
+					isPrimary: true,
+					sortOrder: 1,
+					isVisible: true,
+					forums: [],
+					stats: {
+						totalForums: 5,
+						totalThreads: 150,
+						totalPosts: 2400
+					}
+				} as unknown as ThreadDisplay['zone'],
+				structure: {
+					id: 'struct_1' as StructureId,
+					name: 'General Discussion',
+					slug: 'general',
+					type: 'forum' as const
+				},
+				tags: [],
+				permissions: {
+					canEdit: false,
+					canDelete: false,
+					canReply: true,
+					canMarkSolved: false,
+					canModerate: false
 				},
 				engagement: {
 					totalTips: 45,
 					uniqueTippers: 8,
 					momentum: 'bullish' as const,
 					reputationScore: 890,
-					bookmarks: 12
+					bookmarks: 12,
+					tipLeaderboard: [
+						{ username: 'CryptoWhale', amount: 15, avatarUrl: '' },
+						{ username: 'DeFiMaster', amount: 10, avatarUrl: '' }
+					],
+					shares: 5
 				}
 			},
 			{
-				id: '2',
+				id: '2' as ThreadId,
 				title: 'Market Analysis: Bears vs Bulls in Q4',
 				slug: 'sample-thread-2',
 				excerpt: 'Comprehensive analysis of market trends and predictions for the final quarter...',
 				createdAt: new Date(Date.now() - 86400000).toISOString(),
+				updatedAt: new Date(Date.now() - 86400000).toISOString(),
 				viewCount: 567,
 				postCount: 32,
+				firstPostLikeCount: 0,
+				isSticky: false,
+				isLocked: false,
+				isHidden: false,
+				isSolved: false,
+				structureId: 'struct_2' as StructureId,
+				userId: '2' as UserId,
 				user: {
-					id: '2',
+					id: '2' as UserId,
 					username: 'MarketWizard',
 					avatarUrl: '',
-					reputation: 1250
+					role: 'user' as const,
+					forumStats: {
+						level: 8,
+						xp: 2100,
+						reputation: 1250,
+						totalPosts: 89,
+						totalThreads: 15,
+						totalLikes: 250,
+						totalTips: 780
+					},
+					isOnline: false,
+					joinedAt: new Date().toISOString()
 				},
 				zone: {
+					id: 'zone_2' as ZoneId,
 					name: 'Mission Control',
 					slug: 'mission',
-					colorTheme: 'mission'
+					colorTheme: 'mission',
+					isPrimary: true,
+					sortOrder: 2,
+					isVisible: true,
+					forums: [],
+					stats: {
+						totalForums: 3,
+						totalThreads: 89,
+						totalPosts: 1450
+					}
+				} as unknown as ThreadDisplay['zone'],
+				structure: {
+					id: 'struct_2' as StructureId,
+					name: 'Market Analysis',
+					slug: 'analysis',
+					type: 'forum' as const
+				},
+				tags: [],
+				permissions: {
+					canEdit: false,
+					canDelete: false,
+					canReply: true,
+					canMarkSolved: false,
+					canModerate: false
 				},
 				engagement: {
 					totalTips: 78,
 					uniqueTippers: 15,
 					momentum: 'neutral' as const,
 					reputationScore: 1100,
-					bookmarks: 28
+					bookmarks: 28,
+					tipLeaderboard: [
+						{ username: 'TraderPro', amount: 25, avatarUrl: '' },
+						{ username: 'BullRunner', amount: 20, avatarUrl: '' },
+						{ username: 'MarketSage', amount: 15, avatarUrl: '' }
+					],
+					shares: 12
 				}
 			}
 		];
@@ -660,7 +758,7 @@ const MagicForumBuilder = memo(
 											)}
 										/>
 
-										{config.showEngagement && (
+										{config.showEngagement && thread.engagement && (
 											<CryptoEngagementBar
 												engagement={thread.engagement}
 												onTip={(amount) => {

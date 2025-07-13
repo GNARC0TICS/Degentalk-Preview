@@ -35,7 +35,7 @@ import {
 	SelectValue
 } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
-import type { SocialConfig } from '@/config/social.config';
+import type { SocialConfig } from '@shared/config/social.config';
 
 interface SocialStats {
 	mentions: { total: number; unread: number };
@@ -172,14 +172,21 @@ export default function SocialConfigPage() {
 
 	const updateFeatureSetting = (feature: keyof SocialConfig, settingPath: string, value: any) => {
 		if (!config) return;
-		const featureConfig = { ...config[feature] };
+		const featureConfig = { ...config[feature] } as any;
 		const pathParts = settingPath.split('.');
 
 		let current = featureConfig;
 		for (let i = 0; i < pathParts.length - 1; i++) {
-			current = current[pathParts[i]];
+			const key = pathParts[i];
+			if (!current[key]) {
+				current[key] = {};
+			}
+			current = current[key];
 		}
-		current[pathParts[pathParts.length - 1]] = value;
+		const finalKey = pathParts[pathParts.length - 1];
+		if (finalKey) {
+			current[finalKey] = value;
+		}
 
 		updateConfigMutation.mutate({
 			[feature]: featureConfig
@@ -523,7 +530,7 @@ export default function SocialConfigPage() {
 											type="number"
 											min="1"
 											max="1000"
-											value={config.mentions.settings.maxMentionsPerHour}
+											value={(config.mentions.settings as any).maxMentionsPerHour || 100}
 											onChange={(e) =>
 												updateFeatureSetting(
 													'mentions',
@@ -542,7 +549,7 @@ export default function SocialConfigPage() {
 											type="number"
 											min="0"
 											max="3600"
-											value={config.mentions.settings.mentionCooldownSeconds}
+											value={(config.mentions.settings as any).mentionCooldownSeconds || 5}
 											onChange={(e) =>
 												updateFeatureSetting(
 													'mentions',
@@ -566,7 +573,7 @@ export default function SocialConfigPage() {
 									<div className="flex items-center space-x-2">
 										<Checkbox
 											id="mentions-require-level"
-											checked={config.mentions.settings.requireMinLevel}
+											checked={(config.mentions.settings as any).requireMinLevel || false}
 											onCheckedChange={(checked) =>
 												updateFeatureSetting('mentions', 'settings.requireMinLevel', checked)
 											}
@@ -579,7 +586,7 @@ export default function SocialConfigPage() {
 									<div className="flex items-center space-x-2">
 										<Checkbox
 											id="mentions-friends-only"
-											checked={config.mentions.settings.allowFromFriendsOnly}
+											checked={(config.mentions.settings as any).allowFromFriendsOnly || false}
 											onCheckedChange={(checked) =>
 												updateFeatureSetting('mentions', 'settings.allowFromFriendsOnly', checked)
 											}
@@ -590,7 +597,7 @@ export default function SocialConfigPage() {
 									<div className="flex items-center space-x-2">
 										<Checkbox
 											id="mentions-followers-only"
-											checked={config.mentions.settings.allowFromFollowersOnly}
+											checked={(config.mentions.settings as any).allowFromFollowersOnly || false}
 											onCheckedChange={(checked) =>
 												updateFeatureSetting('mentions', 'settings.allowFromFollowersOnly', checked)
 											}
@@ -603,7 +610,7 @@ export default function SocialConfigPage() {
 									<div className="flex items-center space-x-2">
 										<Checkbox
 											id="mentions-priority-mods"
-											checked={config.mentions.settings.priorityMentionForMods}
+											checked={(config.mentions.settings as any).priorityMentionForMods || false}
 											onCheckedChange={(checked) =>
 												updateFeatureSetting('mentions', 'settings.priorityMentionForMods', checked)
 											}
@@ -614,7 +621,7 @@ export default function SocialConfigPage() {
 									<div className="flex items-center space-x-2">
 										<Checkbox
 											id="mentions-cross-forum"
-											checked={config.mentions.settings.crossForumMentions}
+											checked={(config.mentions.settings as any).crossForumMentions || false}
 											onCheckedChange={(checked) =>
 												updateFeatureSetting('mentions', 'settings.crossForumMentions', checked)
 											}
@@ -681,11 +688,11 @@ export default function SocialConfigPage() {
 											type="number"
 											min="1"
 											max="10000"
-											value={config.whaleWatch.settings.maxFollowsPerUser}
+											value={config.whaleWatch.settings.maxFollowing}
 											onChange={(e) =>
 												updateFeatureSetting(
 													'whaleWatch',
-													'settings.maxFollowsPerUser',
+													'settings.maxFollowing',
 													parseInt(e.target.value)
 												)
 											}
@@ -700,7 +707,7 @@ export default function SocialConfigPage() {
 											type="number"
 											min="1"
 											max="500"
-											value={config.whaleWatch.settings.maxFollowsPerHour}
+											value={(config.whaleWatch.settings as any).maxFollowsPerHour || 50}
 											onChange={(e) =>
 												updateFeatureSetting(
 													'whaleWatch',
@@ -728,11 +735,11 @@ export default function SocialConfigPage() {
 											type="number"
 											min="1"
 											max="100"
-											value={config.whaleWatch.settings.whaleDetection.minLevel}
+											value={config.whaleWatch.settings.whaleThresholds.level}
 											onChange={(e) =>
 												updateFeatureSetting(
 													'whaleWatch',
-													'settings.whaleDetection.minLevel',
+													'settings.whaleThresholds.level',
 													parseInt(e.target.value)
 												)
 											}
@@ -746,11 +753,11 @@ export default function SocialConfigPage() {
 											id="whale-detect-clout"
 											type="number"
 											min="0"
-											value={config.whaleWatch.settings.whaleDetection.minClout}
+											value={config.whaleWatch.settings.whaleThresholds.dgtBalance}
 											onChange={(e) =>
 												updateFeatureSetting(
 													'whaleWatch',
-													'settings.whaleDetection.minClout',
+													'settings.whaleThresholds.dgtBalance',
 													parseInt(e.target.value)
 												)
 											}
@@ -764,11 +771,11 @@ export default function SocialConfigPage() {
 											id="whale-detect-followers"
 											type="number"
 											min="0"
-											value={config.whaleWatch.settings.whaleDetection.minFollowers}
+											value={config.whaleWatch.settings.whaleThresholds.followerCount}
 											onChange={(e) =>
 												updateFeatureSetting(
 													'whaleWatch',
-													'settings.whaleDetection.minFollowers',
+													'settings.whaleThresholds.followerCount',
 													parseInt(e.target.value)
 												)
 											}
@@ -782,11 +789,11 @@ export default function SocialConfigPage() {
 											id="whale-detect-threads"
 											type="number"
 											min="0"
-											value={config.whaleWatch.settings.whaleDetection.minThreadsCreated}
+											value={config.whaleWatch.settings.whaleThresholds.postCount}
 											onChange={(e) =>
 												updateFeatureSetting(
 													'whaleWatch',
-													'settings.whaleDetection.minThreadsCreated',
+													'settings.whaleThresholds.postCount',
 													parseInt(e.target.value)
 												)
 											}
@@ -853,11 +860,11 @@ export default function SocialConfigPage() {
 											type="number"
 											min="1"
 											max="5000"
-											value={config.friends.settings.maxFriendsPerUser}
+											value={config.friends.settings.maxFriends}
 											onChange={(e) =>
 												updateFeatureSetting(
 													'friends',
-													'settings.maxFriendsPerUser',
+													'settings.maxFriends',
 													parseInt(e.target.value)
 												)
 											}
@@ -872,7 +879,7 @@ export default function SocialConfigPage() {
 											type="number"
 											min="1"
 											max="100"
-											value={config.friends.settings.maxRequestsPerDay}
+											value={(config.friends.settings as any).maxRequestsPerDay || 20}
 											onChange={(e) =>
 												updateFeatureSetting(
 													'friends',
@@ -891,11 +898,11 @@ export default function SocialConfigPage() {
 											type="number"
 											min="1"
 											max="365"
-											value={config.friends.settings.friendRequestExpireDays}
+											value={config.friends.settings.requestExpireDays}
 											onChange={(e) =>
 												updateFeatureSetting(
 													'friends',
-													'settings.friendRequestExpireDays',
+													'settings.requestExpireDays',
 													parseInt(e.target.value)
 												)
 											}
@@ -926,7 +933,7 @@ export default function SocialConfigPage() {
 									<div className="flex items-center space-x-2">
 										<Checkbox
 											id="friends-suggestions"
-											checked={config.friends.settings.enableMutualFriendSuggestions}
+											checked={(config.friends.settings as any).enableMutualFriendSuggestions || false}
 											onCheckedChange={(checked) =>
 												updateFeatureSetting(
 													'friends',
@@ -941,7 +948,7 @@ export default function SocialConfigPage() {
 									<div className="flex items-center space-x-2">
 										<Checkbox
 											id="friends-activity-feed"
-											checked={config.friends.settings.enableFriendActivityFeed}
+											checked={(config.friends.settings as any).enableFriendActivityFeed || false}
 											onCheckedChange={(checked) =>
 												updateFeatureSetting(
 													'friends',
@@ -956,7 +963,7 @@ export default function SocialConfigPage() {
 									<div className="flex items-center space-x-2">
 										<Checkbox
 											id="friends-online-status"
-											checked={config.friends.settings.enableOnlineStatus}
+											checked={(config.friends.settings as any).enableOnlineStatus || false}
 											onCheckedChange={(checked) =>
 												updateFeatureSetting('friends', 'settings.enableOnlineStatus', checked)
 											}
@@ -967,9 +974,9 @@ export default function SocialConfigPage() {
 									<div className="flex items-center space-x-2">
 										<Checkbox
 											id="friends-auto-accept"
-											checked={config.friends.settings.autoAcceptMutualFollows}
+											checked={(config.friends.settings as any).autoAcceptMutualFollows || config.friends.settings.autoAcceptFromFollowers}
 											onCheckedChange={(checked) =>
-												updateFeatureSetting('friends', 'settings.autoAcceptMutualFollows', checked)
+												updateFeatureSetting('friends', 'settings.autoAcceptFromFollowers', checked)
 											}
 										/>
 										<Label htmlFor="friends-auto-accept">
@@ -999,9 +1006,9 @@ export default function SocialConfigPage() {
 								<div className="flex items-center space-x-2">
 									<Checkbox
 										id="admin-bypass-rate-limits"
-										checked={config.adminOverrides.bypassAllRateLimits}
+										checked={(config.global as any).bypassAllRateLimits || false}
 										onCheckedChange={(checked) =>
-											updateFeatureSetting('adminOverrides', 'bypassAllRateLimits', checked)
+											updateFeatureSetting('global', 'bypassAllRateLimits', checked)
 										}
 									/>
 									<Label htmlFor="admin-bypass-rate-limits">
@@ -1012,9 +1019,9 @@ export default function SocialConfigPage() {
 								<div className="flex items-center space-x-2">
 									<Checkbox
 										id="admin-bypass-level-req"
-										checked={config.adminOverrides.bypassLevelRequirements}
+										checked={(config.global as any).bypassLevelRequirements || false}
 										onCheckedChange={(checked) =>
-											updateFeatureSetting('adminOverrides', 'bypassLevelRequirements', checked)
+											updateFeatureSetting('global', 'bypassLevelRequirements', checked)
 										}
 									/>
 									<Label htmlFor="admin-bypass-level-req">
@@ -1025,9 +1032,9 @@ export default function SocialConfigPage() {
 								<div className="flex items-center space-x-2">
 									<Checkbox
 										id="admin-debug-mode"
-										checked={config.adminOverrides.enableDebugMode}
+										checked={(config.global as any).enableDebugMode || false}
 										onCheckedChange={(checked) =>
-											updateFeatureSetting('adminOverrides', 'enableDebugMode', checked)
+											updateFeatureSetting('global', 'enableDebugMode', checked)
 										}
 									/>
 									<Label htmlFor="admin-debug-mode">Enable debug mode</Label>
@@ -1036,9 +1043,9 @@ export default function SocialConfigPage() {
 								<div className="flex items-center space-x-2">
 									<Checkbox
 										id="admin-force-enable"
-										checked={config.adminOverrides.forceEnableAllFeatures}
+										checked={(config.global as any).forceEnableAllFeatures || false}
 										onCheckedChange={(checked) =>
-											updateFeatureSetting('adminOverrides', 'forceEnableAllFeatures', checked)
+											updateFeatureSetting('global', 'forceEnableAllFeatures', checked)
 										}
 									/>
 									<Label htmlFor="admin-force-enable">Force enable all features</Label>
@@ -1047,9 +1054,9 @@ export default function SocialConfigPage() {
 								<div className="flex items-center space-x-2">
 									<Checkbox
 										id="admin-log-actions"
-										checked={config.adminOverrides.logAllSocialActions}
+										checked={(config.global as any).logAllSocialActions || false}
 										onCheckedChange={(checked) =>
-											updateFeatureSetting('adminOverrides', 'logAllSocialActions', checked)
+											updateFeatureSetting('global', 'logAllSocialActions', checked)
 										}
 									/>
 									<Label htmlFor="admin-log-actions">Log all social actions</Label>
@@ -1069,9 +1076,9 @@ export default function SocialConfigPage() {
 								<div className="flex items-center space-x-2">
 									<Checkbox
 										id="admin-emergency-disable"
-										checked={config.adminOverrides.enableEmergencyDisable}
+										checked={(config.global as any).enableEmergencyDisable || false}
 										onCheckedChange={(checked) =>
-											updateFeatureSetting('adminOverrides', 'enableEmergencyDisable', checked)
+											updateFeatureSetting('global', 'enableEmergencyDisable', checked)
 										}
 									/>
 									<Label htmlFor="admin-emergency-disable">

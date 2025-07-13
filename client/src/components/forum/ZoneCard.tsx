@@ -10,7 +10,9 @@ import {
 	Activity,
 	ArrowRight,
 	Crown,
-	Sparkles
+	Sparkles,
+	Flame,
+	Target
 } from 'lucide-react';
 
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
@@ -56,12 +58,12 @@ export interface ZoneCardProps {
 			};
 		};
 		forums?: Array<{
-			id: string;
+			id: ForumId;
 			name: string;
 			threadCount: number;
 			isPopular?: boolean;
 			subforums?: Array<{
-				id: UserId;
+				id: ForumId;
 				name: string;
 			}>;
 		}>;
@@ -122,7 +124,22 @@ const ZoneCardPure = memo(
 
 		// Use consolidated theme configuration
 		const theme = getZoneTheme(zone.colorTheme);
-		const IconComponent = theme.icon;
+		
+		// Map string icon names to React components
+		const iconMap: Record<string, React.ComponentType<any>> = {
+			Flame,
+			Target,
+			Sparkles,
+			MessageSquare,
+			Crown,
+			Activity,
+			TrendingUp,
+			Zap,
+			Users,
+			ArrowRight
+		};
+		
+		const IconComponent = iconMap[theme.icon] || MessageSquare;
 
 		// Generate CSS variables for theming
 		const themeVars = getZoneThemeVars(zone.colorTheme);

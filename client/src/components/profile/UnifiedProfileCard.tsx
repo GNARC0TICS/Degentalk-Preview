@@ -124,7 +124,9 @@ export function UnifiedProfileCard({
 				<div className="flex items-center space-x-2">
 					<Link href={`/profile/${username}`}>
 						<UserName
-							user={profile}
+							username={profile.username}
+							userId={profile.id}
+							userRole={profile.role}
 							className={cn(
 								'hover:text-emerald-400 transition-colors',
 								brandConfig.typography.body
@@ -132,7 +134,7 @@ export function UnifiedProfileCard({
 						/>
 					</Link>
 					{showLevel && (profile.levelConfig || profile.level) && (
-						<LevelBadge levelConfig={profile.levelConfig as any} level={profile.level} compact />
+						<LevelBadge levelConfig={profile.levelConfig} level={profile.level} />
 					)}
 				</div>
 			</motion.div>
@@ -177,7 +179,9 @@ export function UnifiedProfileCard({
 							<div className="flex items-center justify-center gap-2 mb-2">
 								<Link href={`/profile/${username}`}>
 									<UserName
-										user={profile}
+										username={profile.username}
+										userId={profile.id}
+										userRole={profile.role}
 										className={cn(
 											'hover:text-emerald-400 transition-colors',
 											brandConfig.typography.h3

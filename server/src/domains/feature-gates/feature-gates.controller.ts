@@ -49,7 +49,6 @@ export const getFeatureGate = async (req: Request, res: Response, next: NextFunc
 export const checkFeatureAccess = async (req: Request, res: Response, next: NextFunction) => {
 	try {
 		const { featureId } = req.params;
-		// @ts-expect-error - req.user is added by auth middleware
 		const userId = userService.getUserFromRequest(req)?.id;
 
 		if (!userId) {
@@ -73,7 +72,6 @@ export const checkFeatureAccess = async (req: Request, res: Response, next: Next
  */
 export const checkAllFeatureAccess = async (req: Request, res: Response, next: NextFunction) => {
 	try {
-		// @ts-expect-error - req.user is added by auth middleware
 		const userId = userService.getUserFromRequest(req)?.id;
 
 		if (!userId) {

@@ -3,11 +3,11 @@ import { X, Tag as TagIcon } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { useTags } from '@/features/forum/hooks/useForumQueries';
-import type { Tag } from '@/types/forum'; // Import Tag type
+import type { ThreadTag } from '@/types/thread.types'; // Import ThreadTag type
 
 interface TagInputProps {
-	value: Tag[]; // Changed from string[]
-	onChange: (tags: Tag[]) => void; // Changed from string[]
+	value: ThreadTag[]; // Use ThreadTag which is what useTags returns
+	onChange: (tags: ThreadTag[]) => void; // Use ThreadTag
 	placeholder?: string;
 	maxTags?: number;
 	className?: string;
@@ -25,7 +25,7 @@ export function TagInput({
 	const inputRef = useRef<HTMLInputElement>(null);
 	const suggestionsRef = useRef<HTMLDivElement>(null);
 
-	const { data: availableTags, isLoading } = useTags(); // Returns Tag[]
+	const { data: availableTags, isLoading } = useTags(); // Returns ThreadTag[]
 
 	const filteredSuggestions = availableTags
 		? availableTags
@@ -37,12 +37,12 @@ export function TagInput({
 				.slice(0, 5)
 		: [];
 
-	const removeTag = (tagToRemove: Tag) => {
+	const removeTag = (tagToRemove: ThreadTag) => {
 		onChange(value.filter((tag) => tag.id !== tagToRemove.id));
 	};
 
 	// Simplified addTag: only adds from suggestions for now
-	const addTag = (tagToAdd: Tag) => {
+	const addTag = (tagToAdd: ThreadTag) => {
 		if (!value.some((selectedTag) => selectedTag.id === tagToAdd.id) && value.length < maxTags) {
 			onChange([...value, tagToAdd]);
 			setInputValue('');
@@ -71,7 +71,10 @@ export function TagInput({
 			// TODO: Implement creating a new tag if no exact match, or disallow free-form entry if not desired
 			// For now, pressing Enter with text that's not a suggestion does nothing.
 		} else if (e.key === 'Backspace' && !inputValue && value.length > 0) {
-			removeTag(value[value.length - 1]);
+			const lastTag = value[value.length - 1];
+			if (lastTag) {
+				removeTag(lastTag);
+			}
 		} else if (e.key === 'Escape') {
 			setShowSuggestions(false);
 		}

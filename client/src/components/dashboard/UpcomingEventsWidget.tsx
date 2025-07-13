@@ -9,12 +9,12 @@ interface UpcomingEventsWidgetProps {
 export default function UpcomingEventsWidget({ className = '' }: UpcomingEventsWidgetProps) {
 	const dummyEvents = [
 		{
-			id: randomUUID(),
+			id: crypto.randomUUID(),
 			title: 'Weekly AMA with Devs',
 			date: '2025-06-22T18:00:00Z'
 		},
 		{
-			id: randomUUID(),
+			id: crypto.randomUUID(),
 			title: 'DegenShop Flash Sale',
 			date: '2025-06-25T12:00:00Z'
 		}

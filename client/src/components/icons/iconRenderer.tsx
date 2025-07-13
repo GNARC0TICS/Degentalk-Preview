@@ -10,6 +10,32 @@ export interface IconRendererProps extends React.SVGProps<SVGSVGElement> {
 	theme?: Theme;
 }
 
+// Extract valid HTML img attributes from props
+const getImgProps = (props: any) => {
+	const {
+		suppressHydrationWarning,
+		className,
+		style,
+		...restProps
+	} = props;
+	
+	// Return only props that are valid for img elements
+	return {
+		className,
+		style,
+		// Add other valid img attributes as needed
+		alt: restProps.alt,
+		title: restProps.title,
+		loading: restProps.loading,
+		crossOrigin: restProps.crossOrigin,
+		decoding: restProps.decoding,
+		referrerPolicy: restProps.referrerPolicy,
+		sizes: restProps.sizes,
+		srcSet: restProps.srcSet,
+		useMap: restProps.useMap
+	};
+};
+
 // Type predicate to distinguish Lucide components from string paths
 const isLucideIcon = (candidate: unknown): candidate is LucideIcon =>
 	typeof candidate === 'function';
@@ -35,7 +61,8 @@ export const IconRenderer: React.FC<IconRendererProps> = ({
 			return <Lucide width={size} height={size} {...rest} />;
 		}
 		if (typeof variant === 'string') {
-			return <img src={variant} width={size} height={size} alt={`${icon}-icon`} {...rest} />;
+			const imgProps = getImgProps(rest);
+			return <img src={variant} width={size} height={size} alt={`${icon}-icon`} {...imgProps} />;
 		}
 	}
 
@@ -59,15 +86,17 @@ export const IconRenderer: React.FC<IconRendererProps> = ({
 
 	// 3. SVG fallback
 	if (config.fallbackSvg) {
+		const imgProps = getImgProps(rest);
 		return (
-			<img src={config.fallbackSvg} width={size} height={size} alt={`${icon}-icon`} {...rest} />
+			<img src={config.fallbackSvg} width={size} height={size} alt={`${icon}-icon`} {...imgProps} />
 		);
 	}
 
 	// 4. PNG fallback
 	if (config.fallbackPng) {
+		const imgProps = getImgProps(rest);
 		return (
-			<img src={config.fallbackPng} width={size} height={size} alt={`${icon}-icon`} {...rest} />
+			<img src={config.fallbackPng} width={size} height={size} alt={`${icon}-icon`} {...imgProps} />
 		);
 	}
 

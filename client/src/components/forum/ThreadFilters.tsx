@@ -31,7 +31,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { useLocalStorage } from '@/hooks/use-local-storage';
 import { cn } from '@/lib/utils';
 import type { Tag } from '@/types/forum';
-import type { TagId, PrefixId, ThreadId } from '@shared/types/ids';
+import type { TagId, PrefixId, ThreadId, asTagId, asPrefixId } from '@shared/types/ids';
 
 export type ThreadSortOption =
 	| 'latest'
@@ -54,7 +54,7 @@ export interface ThreadFiltersState {
 
 interface ThreadFiltersProps {
 	availableTags?: Tag[];
-	availablePrefixes?: Array<{ id: ThreadId; name: string; color: string }>;
+	availablePrefixes?: Array<{ id: PrefixId; name: string; color: string }>;
 	onFiltersChange: (filters: ThreadFiltersState) => void;
 	forumSlug?: string;
 	className?: string;
@@ -136,7 +136,7 @@ export function ThreadFilters({
 		}));
 	};
 
-	const selectedTags = availableTags.filter((tag) => filters.tags.includes(tag.id));
+	const selectedTags = availableTags.filter((tag) => filters.tags.includes(asTagId(tag.id)));
 	const selectedPrefix = availablePrefixes.find((p) => p.id === filters.prefixId);
 	const currentSort = sortOptions.find((opt) => opt.value === filters.sortBy) || sortOptions[0];
 	const hasActiveFilters =
@@ -201,11 +201,11 @@ export function ThreadFilters({
 							<CommandEmpty>No tags found.</CommandEmpty>
 							<CommandGroup className="max-h-64 overflow-auto">
 								{availableTags.map((tag) => (
-									<CommandItem key={tag.id} onSelect={() => toggleTag(tag.id)} className="gap-2">
+									<CommandItem key={tag.id} onSelect={() => toggleTag(asTagId(tag.id))} className="gap-2">
 										<div
 											className={cn(
 												'h-4 w-4 rounded border',
-												filters.tags.includes(tag.id)
+												filters.tags.includes(asTagId(tag.id))
 													? 'bg-emerald-500 border-emerald-500'
 													: 'border-zinc-600'
 											)}
@@ -266,7 +266,7 @@ export function ThreadFilters({
 							key={tag.id}
 							variant="secondary"
 							className="gap-1 px-2 py-0.5 text-xs cursor-pointer hover:bg-zinc-700"
-							onClick={() => toggleTag(tag.id)}
+							onClick={() => toggleTag(asTagId(tag.id))}
 						>
 							{tag.name}
 							<X className="h-3 w-3" />
@@ -402,7 +402,7 @@ export function ThreadFilters({
 											key={tag.id}
 											variant="ghost"
 											className="w-full justify-start gap-2"
-											onClick={() => toggleTag(tag.id)}
+											onClick={() => toggleTag(asTagId(tag.id))}
 										>
 											<div
 												className={cn(

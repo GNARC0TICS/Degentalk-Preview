@@ -20,7 +20,7 @@ const useUser = (): UserContextType => {
 	// For now, let's mock a user if needed for local testing
 	return {
 		user: {
-			id: randomUUID(),
+			id: crypto.randomUUID(),
 			username: 'TestUser',
 			role: undefined // Change to 'admin', 'mod', or 'dev' to test role colors
 		},

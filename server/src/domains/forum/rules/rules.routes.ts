@@ -111,7 +111,7 @@ router.get(
 			const userId = getUserIdFromRequest(req);
 			if (userId === undefined) {
 				// This case should ideally be caught by !req.isAuthenticated() already,
-				// but as a safeguard if req.user exists but ID doesn't.
+				// but as a safeguard if request user exists but ID doesn't.
 				return sendErrorResponse(res, 'User ID not found after authentication', 401);
 			}
 

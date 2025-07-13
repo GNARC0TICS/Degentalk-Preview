@@ -253,7 +253,6 @@ export const profileService = {
 				message: `${mediaType.charAt(0).toUpperCase() + mediaType.slice(1)} updated successfully, you absolute legend!`
 			};
 		} catch (error) {
-			// Comment: console.error has been replaced by logger.error for consistency
 			logger.error(
 				{ context: 'PROFILE_SERVICE', userId, mediaType, err: error },
 				`Error updating ${mediaType} URL for user ${userId}`

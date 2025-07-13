@@ -132,7 +132,10 @@ export function CosmeticControlPanel({
 								<div>
 									<p className="text-sm font-medium">Username Color</p>
 									{equippedByType.usernameColor ? (
-										<p className="text-xs" style={{ color: cosmetics.usernameColor }}>
+										<p 
+											className="text-xs" 
+											style={{ color: cosmetics.usernameColor || undefined }}
+										>
 											{equippedByType.usernameColor.product.name}
 										</p>
 									) : (

@@ -102,6 +102,7 @@ const ShoutboxAdminPage: React.FC = () => {
 	const [editingRoom, setEditingRoom] = useState<ChatRoom | null>(null);
 
 	const queryClient = useQueryClient();
+	const { toast } = useToast();
 
 	// Fetch shoutbox configuration
 	const { data: config, isLoading: configLoading } = useQuery<ShoutboxConfig>({
@@ -159,10 +160,17 @@ const ShoutboxAdminPage: React.FC = () => {
 		},
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ['shoutbox-config'] });
-			toast.success('Configuration updated successfully');
+			toast({
+				title: 'Success',
+				description: 'Configuration updated successfully'
+			});
 		},
 		onError: () => {
-			toast.error('Failed to update configuration');
+			toast({
+				title: 'Error',
+				description: 'Failed to update configuration',
+				variant: 'destructive'
+			});
 		}
 	});
 
@@ -180,10 +188,17 @@ const ShoutboxAdminPage: React.FC = () => {
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ['shoutbox-rooms'] });
 			setShowCreateRoom(false);
-			toast.success('Room created successfully');
+			toast({
+				title: 'Success',
+				description: 'Room created successfully'
+			});
 		},
 		onError: (error: any) => {
-			toast.error(error.message || 'Failed to create room');
+			toast({
+				title: 'Error',
+				description: error.message || 'Failed to create room',
+				variant: 'destructive'
+			});
 		}
 	});
 
@@ -201,10 +216,17 @@ const ShoutboxAdminPage: React.FC = () => {
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ['shoutbox-rooms'] });
 			setEditingRoom(null);
-			toast.success('Room updated successfully');
+			toast({
+				title: 'Success',
+				description: 'Room updated successfully'
+			});
 		},
 		onError: () => {
-			toast.error('Failed to update room');
+			toast({
+				title: 'Error',
+				description: 'Failed to update room',
+				variant: 'destructive'
+			});
 		}
 	});
 
@@ -219,10 +241,17 @@ const ShoutboxAdminPage: React.FC = () => {
 		},
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ['shoutbox-rooms'] });
-			toast.success('Room deleted successfully');
+			toast({
+				title: 'Success',
+				description: 'Room deleted successfully'
+			});
 		},
 		onError: (error: any) => {
-			toast.error(error.message || 'Failed to delete room');
+			toast({
+				title: 'Error',
+				description: error.message || 'Failed to delete room',
+				variant: 'destructive'
+			});
 		}
 	});
 
@@ -258,9 +287,16 @@ const ShoutboxAdminPage: React.FC = () => {
 				window.URL.revokeObjectURL(downloadUrl);
 			}
 
-			toast.success('Export completed successfully');
+			toast({
+				title: 'Success',
+				description: 'Export completed successfully'
+			});
 		} catch (error) {
-			toast.error('Failed to export data');
+			toast({
+				title: 'Error',
+				description: 'Failed to export data',
+				variant: 'destructive'
+			});
 		}
 	};
 

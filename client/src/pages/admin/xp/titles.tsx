@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import type { MediaId } from '@shared/types/ids';
 import { Plus, Pencil, Trash2, ArrowUpDown, Search } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Input } from '@/components/ui/input';
@@ -58,7 +59,7 @@ interface TitleFormData {
 	description: string;
 	color: string;
 	icon: string;
-	mediaId?: Id<'media'> | null;
+	mediaId?: MediaId | null;
 	rarity: string;
 	category: string;
 	requiredPath: string;

@@ -107,6 +107,18 @@ export function CreateThreadForm({
 	);
 	const queryClient = useQueryClient();
 
+	// Initialize form
+	const form = useForm<ThreadFormValues>({
+		resolver: zodResolver(threadFormSchema),
+		defaultValues: {
+			title: '',
+			forumSlug: passedForumSlug || '',
+			prefixId: '',
+			content: '',
+			tags: []
+		}
+	});
+
 	const [targetForumConfig, setTargetForumConfig] = useState<Record<string, unknown> | undefined>(
 		undefined
 	); // Merged forum data from context
@@ -576,7 +588,7 @@ export function CreateThreadForm({
 								<TagInput
 									value={(field.value || []).map((tagName) => ({
 										name: tagName,
-										id: randomUUID(),
+										id: crypto.randomUUID(),
 										slug: tagName.toLowerCase().replace(/\s+/g, '-')
 									}))}
 									onChange={(tagsFromInput: Tag[]) =>

@@ -1,65 +1,23 @@
-import type { AdminId, ModeratorId } from '@shared/types/ids';
-import { db } from '@db';
-import { eq } from 'drizzle-orm';
-import { threads, posts, contentModerationActions } from '@schema';
-import type { EntityId } from '@shared/types/ids';
-
-export type VisibilityStatus =
-	| 'draft'
-	| 'published'
-	| 'hidden'
-	| 'shadowbanned'
-	| 'archived'
-	| 'deleted';
-
-interface ApplyModerationActionParams {
-	moderatorId: ModeratorId;
-	targetType: 'thread' | 'post';
-	targetId: EntityId;
-	newVisibility: VisibilityStatus;
-	reason: string;
-}
+import type { VisibilityStatus, ApplyModerationActionParams } from './types';
 
 /**
- * Applies a moderation action by updating the visibility of the target content
- * and logging the action to `admin.content_moderation_actions`.
- *
- * This helper should be used by all moderation endpoints/services to ensure
- * audit trails remain consistent.
+ * @deprecated This file now only exports types for cross-boundary compatibility.
+ * For server-side moderation action operations, use:
+ * server/src/domains/admin/services/moderation-action.service.ts
+ * 
+ * For client-side operations, use API endpoints that utilize the server service.
  */
-export async function applyModerationAction({
-	moderatorId,
-	targetType,
-	targetId,
-	newVisibility,
-	reason
-}: ApplyModerationActionParams): Promise<void> {
-	// 1) Update inline visibility + reason
-	if (targetType === 'thread') {
-		await db
-			.update(threads)
-			.set({
-				visibilityStatus: newVisibility,
-				moderationReason: reason
-			})
-			.where(eq(threads.id, targetId));
-	} else {
-		await db
-			.update(posts)
-			.set({
-				visibilityStatus: newVisibility,
-				moderationReason: reason
-			})
-			.where(eq(posts.id, targetId));
-	}
 
-	// 2) Insert audit log
-	await db.insert(contentModerationActions).values({
-		moderatorId,
-		contentType: targetType,
-		contentId: targetId,
-		actionType: 'visibility_change',
-		reason,
-		additionalData: { newVisibility }
-	});
+export type { VisibilityStatus, ApplyModerationActionParams };
+
+/**
+ * @deprecated This function has been moved to server-only service.
+ * Use ModerationActionService.applyModerationAction() on the server side.
+ * For client-side usage, call the appropriate API endpoint.
+ */
+export function applyModerationAction(params: ApplyModerationActionParams): Promise<void> {
+	throw new Error(
+		'applyModerationAction() has been moved to server-only service. ' +
+		'Use ModerationActionService.applyModerationAction() on server or call API endpoint from client.'
+	);
 }

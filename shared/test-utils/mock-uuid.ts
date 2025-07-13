@@ -8,6 +8,16 @@ import type { UserId, ThreadId, PostId, MissionId, AchievementId } from '@shared
 
 /* eslint-disable @typescript-eslint/no-var-requires */
 
+// Jest global types
+declare global {
+	function beforeEach(fn: () => void): void;
+	function afterEach(fn: () => void): void;
+	function expect(value: any): any;
+	namespace jest {
+		function fn(implementation?: (...args: any[]) => any): any;
+	}
+}
+
 /**
  * Deterministic UUID generator for tests
  * Generates consistent UUIDs based on an incremental counter

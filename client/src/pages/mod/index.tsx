@@ -19,7 +19,7 @@ import {
 // Mock data for development
 const recentReports = [
 	{
-		id: randomUUID(),
+		id: crypto.randomUUID(),
 		type: 'thread',
 		title: 'Inappropriate content in trading advice',
 		reporter: 'michael95',
@@ -28,7 +28,7 @@ const recentReports = [
 		time: '30 minutes ago'
 	},
 	{
-		id: randomUUID(),
+		id: crypto.randomUUID(),
 		type: 'post',
 		title: 'Spam links in NFT discussion',
 		reporter: 'artlover',
@@ -37,7 +37,7 @@ const recentReports = [
 		time: '2 hours ago'
 	},
 	{
-		id: randomUUID(),
+		id: crypto.randomUUID(),
 		type: 'user',
 		title: 'Multiple accounts for same user',
 		reporter: 'securityfirst',
@@ -46,7 +46,7 @@ const recentReports = [
 		time: '1 day ago'
 	},
 	{
-		id: randomUUID(),
+		id: crypto.randomUUID(),
 		type: 'post',
 		title: 'Offensive language',
 		reporter: 'community_lead',
@@ -58,7 +58,7 @@ const recentReports = [
 
 const recentActivity = [
 	{
-		id: randomUUID(),
+		id: crypto.randomUUID(),
 		action: 'User Warned',
 		user: 'traderguy',
 		moderator: 'admin',
@@ -66,7 +66,7 @@ const recentActivity = [
 		details: 'Multiple promotional posts'
 	},
 	{
-		id: randomUUID(),
+		id: crypto.randomUUID(),
 		action: 'Post Deleted',
 		user: 'cryptowhale',
 		moderator: 'admin',
@@ -74,7 +74,7 @@ const recentActivity = [
 		details: 'Rule violation in DeFi thread'
 	},
 	{
-		id: randomUUID(),
+		id: crypto.randomUUID(),
 		action: 'Thread Locked',
 		user: 'tokenmaster',
 		moderator: 'moderator2',
@@ -82,7 +82,7 @@ const recentActivity = [
 		details: 'Heated argument in price prediction thread'
 	},
 	{
-		id: randomUUID(),
+		id: crypto.randomUUID(),
 		action: 'User Banned',
 		user: 'scammer123',
 		moderator: 'moderator1',

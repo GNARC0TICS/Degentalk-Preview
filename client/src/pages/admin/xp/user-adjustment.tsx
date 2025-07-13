@@ -98,7 +98,7 @@ export default function UserXPAdjustmentPage() {
 	const adjustmentForm = useForm<z.infer<typeof adjustmentFormSchema>>({
 		resolver: zodResolver(adjustmentFormSchema),
 		defaultValues: {
-			userId: randomUUID(),
+			userId: crypto.randomUUID(),
 			amount: 0,
 			adjustmentType: 'add',
 			reason: ''

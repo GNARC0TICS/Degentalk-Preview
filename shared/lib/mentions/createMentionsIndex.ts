@@ -1,30 +1,23 @@
-import { db } from '@db';
-import { mentionsIndex } from '@schema';
-import type { UserId } from '@shared/types/ids';
+import type { CreateMentionsIndexParams } from './types';
 
 /**
- * Creates mentions index entries for discovered mentions in content
+ * @deprecated This file now only exports types for cross-boundary compatibility.
+ * For server-side mentions index operations, use:
+ * server/src/domains/social/services/mentions-index.service.ts
+ * 
+ * For client-side operations, use API endpoints that utilize the server service.
  */
-export async function createMentionsIndex(params: {
-	sourceType: 'thread' | 'post' | 'shout';
-	sourceId: string;
-	userIds: UserId[];
-	triggeredBy?: UserId | null;
-}): Promise<number> {
-	const { sourceType, sourceId, userIds, triggeredBy } = params;
 
-	// Filter out null/undefined IDs
-	const validIds = userIds.filter((id): id is UserId => !!id);
+export type { CreateMentionsIndexParams };
 
-	if (validIds.length === 0) return 0;
-
-	const rows = validIds.map((uid) => ({
-		sourceType,
-		sourceId,
-		mentioningUserId: triggeredBy ?? null,
-		mentionedUserId: uid
-	}));
-
-	const result = await db.insert(mentionsIndex).values(rows);
-	return result.length;
+/**
+ * @deprecated This function has been moved to server-only service.
+ * Use MentionsIndexService.createMentionsIndex() on the server side.
+ * For client-side usage, call the appropriate API endpoint.
+ */
+export function createMentionsIndex(params: CreateMentionsIndexParams): Promise<number> {
+	throw new Error(
+		'createMentionsIndex() has been moved to server-only service. ' +
+		'Use MentionsIndexService.createMentionsIndex() on server or call API endpoint from client.'
+	);
 }

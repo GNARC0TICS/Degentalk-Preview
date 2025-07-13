@@ -109,7 +109,7 @@ export interface TransactionMetadata {
 	txHash?: string;
 	blockHeight?: number;
 	confirmations?: number;
-	recipientId?: Id<'recipient'>;
+	recipientId?: UserId;
 	conversionRate?: number;
 	originalAmount?: number;
 	originalCurrency?: string;

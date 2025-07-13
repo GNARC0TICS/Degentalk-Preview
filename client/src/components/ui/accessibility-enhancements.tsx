@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState, memo } from 'react';
+import React, { createContext, useContext, useEffect, useState, memo, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
 	Eye,

@@ -57,7 +57,13 @@ export function ThreadAuthor({
 
 				<div className="flex flex-col">
 					<div className="flex items-center gap-1.5">
-						<UserName user={user} className={getUsernameSizeClass()} />
+						<UserName 
+							username={user?.username || 'Unknown'} 
+							className={getUsernameSizeClass()}
+							isVerified={user?.isVerified}
+							userId={user?.id}
+							userRole={user?.role}
+						/>
 						{showLevelBadge && (identity?.levelConfig || identity?.level) && (
 							<LevelBadge levelConfig={identity?.levelConfig} level={identity?.level} />
 						)}

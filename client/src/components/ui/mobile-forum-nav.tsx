@@ -33,7 +33,7 @@ export interface MobileForumNavProps {
 }
 
 interface NavItem {
-	icon: React.ComponentType<{ className?: string }>;
+	icon: React.ComponentType<any>;
 	label: string;
 	href: string;
 	badge?: number;

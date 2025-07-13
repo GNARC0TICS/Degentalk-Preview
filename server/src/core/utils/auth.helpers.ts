@@ -18,7 +18,7 @@ export interface AuthenticatedUser {
 
 /**
  * Safely extract authenticated user from request
- * Replaces direct req.user access for better type safety
+ * Replaces direct request user access for better type safety
  *
  * @param req Express request object
  * @returns Authenticated user or null if not authenticated

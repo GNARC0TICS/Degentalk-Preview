@@ -11,10 +11,10 @@ export function HeaderThemeWrapper({ children, className }: HeaderThemeWrapperPr
 
 	// Generate CSS custom properties for theme
 	const themeStyles: React.CSSProperties = theme
-		? {
+		? ({
 				'--header-theme-color': theme.color,
 				'--header-theme-opacity': isScrolled ? '0.9' : '0.8'
-			}
+			} as React.CSSProperties)
 		: {};
 
 	// Apply theme classes if available

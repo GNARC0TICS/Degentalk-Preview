@@ -19,7 +19,7 @@ import { cn } from '@/lib/utils';
 interface NavigationItem {
 	id: string;
 	label: string;
-	icon: React.ComponentType<{ className?: string }>;
+	icon: React.ComponentType<any>;
 	href?: string;
 	badge?: number;
 	isActive?: boolean;

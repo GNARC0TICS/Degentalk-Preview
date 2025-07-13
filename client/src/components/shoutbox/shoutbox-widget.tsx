@@ -132,12 +132,12 @@ export default function ShoutboxWidget({ instanceId }: ShoutboxWidgetProps) {
 	const userLoggedIn = true;
 	// Mock user data for testing
 	const currentUser = {
-		id: randomUUID(),
+		id: crypto.randomUUID(),
 		username: 'TestUser',
 		avatarUrl: null,
 		activeAvatarUrl: null,
 		level: 5,
-		groupId: randomUUID() // Regular user
+		groupId: crypto.randomUUID() // Regular user
 	};
 
 	// Check if current user is admin or moderator
@@ -316,7 +316,11 @@ export default function ShoutboxWidget({ instanceId }: ShoutboxWidgetProps) {
 				<div className="flex-1">
 					<div className="flex items-center justify-between">
 						<div className="flex items-center gap-1.5">
-							<UserName user={msg.user} className="text-sm" />
+							<UserName 
+								username={msg.user.username}
+								userId={msg.user.id}
+								className="text-sm" 
+							/>
 							{(identity?.levelConfig || identity?.level) && (
 								<LevelBadge
 									levelConfig={identity?.levelConfig as any}

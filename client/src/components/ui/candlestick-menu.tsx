@@ -45,7 +45,7 @@ const ChartMenu: React.FC<ChartMenuProps> = ({
 		const selectedPattern = availablePatterns[randomIndex];
 
 		// Store this pattern as the previous pattern for next time
-		previousPatternRef.current = selectedPattern;
+		previousPatternRef.current = selectedPattern || null;
 
 		return selectedPattern;
 	};
@@ -61,13 +61,14 @@ const ChartMenu: React.FC<ChartMenuProps> = ({
 
 			// Add a slight delay before adding the pattern class for better animation effect
 			const timerId = setTimeout(() => {
-				setCurrentPattern(newPattern);
+				setCurrentPattern(newPattern || null);
 			}, 50);
 
 			return () => clearTimeout(timerId);
 		} else {
 			// Reset to hamburger state
 			clearPatterns();
+			return; // Explicit return for else branch
 		}
 	}, [isActive]);
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useLocation } from 'wouter';
+import { useLocation, useRouter } from 'wouter';
 import { useMissions } from '@/hooks/useMissions';
 import {
 	Card,

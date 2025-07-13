@@ -405,7 +405,7 @@ export async function generateQualityMetrics() {
 }
 
 // CLI interface
-if (require.main === module) {
+if (import.meta.url === `file://${process.argv[1]}`) {
   const detailed = process.argv.includes('--detailed');
   const metrics = process.argv.includes('--metrics');
   

@@ -95,21 +95,31 @@ export default function AdminMissionsPage() {
 		data: missions,
 		isLoading,
 		error
-	} = useQuery<Mission[]>('adminMissions', async () => {
-		return apiRequest('/api/missions/admin/all');
+	} = useQuery<Mission[]>({
+		queryKey: ['adminMissions'],
+		queryFn: async () => {
+			return apiRequest<Mission[]>({
+				url: '/api/missions/admin/all',
+				method: 'GET'
+			});
+		}
 	});
 
 	// Create mission mutation
 	const createMissionMutation = useMutation({
 		mutationFn: async (mission: Omit<Mission, 'id'>) => {
-			return apiRequest('POST', '/api/missions/admin/create', mission);
+			return apiRequest({
+				url: '/api/missions/admin/create',
+				method: 'POST',
+				data: mission
+			});
 		},
 		onSuccess: () => {
 			toast({
 				title: 'Mission created',
 				description: 'New mission has been created successfully'
 			});
-			queryClient.invalidateQueries('adminMissions');
+			queryClient.invalidateQueries({ queryKey: ['adminMissions'] });
 			setDialogOpen(false);
 			setEditingMission(null);
 		},
@@ -125,14 +135,18 @@ export default function AdminMissionsPage() {
 	// Update mission mutation
 	const updateMissionMutation = useMutation({
 		mutationFn: async (mission: Mission) => {
-			return apiRequest('PUT', `/api/missions/admin/${mission.id}`, mission);
+			return apiRequest({
+				url: `/api/missions/admin/${mission.id}`,
+				method: 'PUT',
+				data: mission
+			});
 		},
 		onSuccess: () => {
 			toast({
 				title: 'Mission updated',
 				description: 'Mission has been updated successfully'
 			});
-			queryClient.invalidateQueries('adminMissions');
+			queryClient.invalidateQueries({ queryKey: ['adminMissions'] });
 			setDialogOpen(false);
 			setEditingMission(null);
 		},
@@ -148,14 +162,17 @@ export default function AdminMissionsPage() {
 	// Reset daily missions mutation
 	const resetDailyMissionsMutation = useMutation({
 		mutationFn: async () => {
-			return apiRequest('POST', '/api/missions/admin/reset-daily');
+			return apiRequest({
+				url: '/api/missions/admin/reset-daily',
+				method: 'POST'
+			});
 		},
 		onSuccess: () => {
 			toast({
 				title: 'Daily missions reset',
 				description: 'Daily missions have been reset successfully'
 			});
-			queryClient.invalidateQueries('adminMissions');
+			queryClient.invalidateQueries({ queryKey: ['adminMissions'] });
 		},
 		onError: (error: any) => {
 			toast({
@@ -169,14 +186,17 @@ export default function AdminMissionsPage() {
 	// Reset weekly missions mutation
 	const resetWeeklyMissionsMutation = useMutation({
 		mutationFn: async () => {
-			return apiRequest('POST', '/api/missions/admin/reset-weekly');
+			return apiRequest({
+				url: '/api/missions/admin/reset-weekly',
+				method: 'POST'
+			});
 		},
 		onSuccess: () => {
 			toast({
 				title: 'Weekly missions reset',
 				description: 'Weekly missions have been reset successfully'
 			});
-			queryClient.invalidateQueries('adminMissions');
+			queryClient.invalidateQueries({ queryKey: ['adminMissions'] });
 		},
 		onError: (error: any) => {
 			toast({
@@ -190,14 +210,17 @@ export default function AdminMissionsPage() {
 	// Initialize default missions mutation
 	const initializeDefaultMissionsMutation = useMutation({
 		mutationFn: async () => {
-			return apiRequest('POST', '/api/missions/admin/initialize-defaults');
+			return apiRequest({
+				url: '/api/missions/admin/initialize-defaults',
+				method: 'POST'
+			});
 		},
 		onSuccess: () => {
 			toast({
 				title: 'Default missions initialized',
 				description: 'Default missions have been created successfully'
 			});
-			queryClient.invalidateQueries('adminMissions');
+			queryClient.invalidateQueries({ queryKey: ['adminMissions'] });
 		},
 		onError: (error: any) => {
 			toast({
@@ -219,7 +242,7 @@ export default function AdminMissionsPage() {
 		setEditingMission({
 			title: '',
 			description: '',
-			type: MISSION_TYPES[0].value,
+			type: MISSION_TYPES[0]?.value || 'POST_CREATE',
 			requiredAction: '',
 			requiredCount: 1,
 			xpReward: 10,
@@ -249,7 +272,7 @@ export default function AdminMissionsPage() {
 		if (filter === 'daily') return mission.isDaily;
 		if (filter === 'weekly') return mission.isWeekly;
 		return true;
-	});
+	}) || [];
 
 	return (
 		<div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
@@ -259,7 +282,7 @@ export default function AdminMissionsPage() {
 					<Button
 						variant="outline"
 						onClick={() => initializeDefaultMissionsMutation.mutate()}
-						disabled={initializeDefaultMissionsMutation.isLoading}
+						disabled={initializeDefaultMissionsMutation.isPending}
 					>
 						<Trophy className="mr-2 h-4 w-4" />
 						Initialize Defaults
@@ -299,7 +322,7 @@ export default function AdminMissionsPage() {
 								variant="outline"
 								size="sm"
 								onClick={() => resetDailyMissionsMutation.mutate()}
-								disabled={resetDailyMissionsMutation.isLoading}
+								disabled={resetDailyMissionsMutation.isPending}
 							>
 								<RefreshCw className="mr-2 h-4 w-4" />
 								Reset Daily
@@ -308,7 +331,7 @@ export default function AdminMissionsPage() {
 								variant="outline"
 								size="sm"
 								onClick={() => resetWeeklyMissionsMutation.mutate()}
-								disabled={resetWeeklyMissionsMutation.isLoading}
+								disabled={resetWeeklyMissionsMutation.isPending}
 							>
 								<RefreshCw className="mr-2 h-4 w-4" />
 								Reset Weekly
@@ -396,7 +419,7 @@ export default function AdminMissionsPage() {
 				<DialogContent className="sm:max-w-[600px]">
 					<DialogHeader>
 						<DialogTitle>
-							{'id' in editingMission && editingMission.id !== undefined
+							{editingMission && 'id' in editingMission && editingMission.id !== undefined
 								? 'Edit Mission'
 								: 'Create Mission'}
 						</DialogTitle>
@@ -424,7 +447,7 @@ export default function AdminMissionsPage() {
 							<div className="space-y-2">
 								<Label htmlFor="type">Mission Type</Label>
 								<Select
-									value={editingMission?.type || MISSION_TYPES[0].value}
+									value={editingMission?.type || MISSION_TYPES[0]?.value || 'POST_CREATE'}
 									onValueChange={(value) =>
 										setEditingMission((prev) => (prev ? { ...prev, type: value } : null))
 									}
@@ -634,8 +657,8 @@ export default function AdminMissionsPage() {
 								!editingMission?.title ||
 								!editingMission?.type ||
 								!editingMission?.requiredAction ||
-								createMissionMutation.isLoading ||
-								updateMissionMutation.isLoading
+								createMissionMutation.isPending ||
+								updateMissionMutation.isPending
 							}
 						>
 							<Save className="h-4 w-4 mr-1" />

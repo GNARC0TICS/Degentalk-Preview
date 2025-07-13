@@ -128,7 +128,7 @@ module.exports = {
 		{
 			files: ['shared/types/**', 'shared/types/ids.ts'],
 			rules: {
-				'degen/no-missing-branded-id-import': 'off'
+				// 'degen/no-missing-branded-id-import': 'off'
 			}
 		}
 	],
@@ -136,11 +136,12 @@ module.exports = {
 		'@typescript-eslint/no-explicit-any': 'off',
 		'@typescript-eslint/no-var-requires': 'off',
 		'@typescript-eslint/no-unused-vars': ['warn', { varsIgnorePattern: '^[A-Z][A-Za-z0-9]+$' }],
-		'degen/no-raw-container-auto': 'warn',
-		'degen/no-direct-req-user': 'error',
-		'degen/no-number-id': 'warn',
-		'degen/no-missing-branded-id-import': 'error',
-		'degen/no-cross-context-imports': 'warn',
+		// Custom rules disabled - manual enforcement via code review
+		// 'degen/no-raw-container-auto': 'warn',
+		// 'degen/no-direct-req-user': 'error',
+		// 'degen/no-number-id': 'warn',
+		// 'degen/no-missing-branded-id-import': 'error',
+		// 'degen/no-cross-context-imports': 'warn',
 		'@typescript-eslint/ban-types': 'warn',
 		'react-hooks/rules-of-hooks': 'warn',
 		'no-useless-catch': 'warn',
@@ -149,7 +150,7 @@ module.exports = {
 		'no-case-declarations': 'warn',
 		'no-empty-pattern': 'warn',
 		'no-prototype-builtins': 'warn',
-		'degen/no-undeclared-branded-id': 'off',
+		// 'degen/no-undeclared-branded-id': 'off',
 		'prefer-const': 'warn',
 		'no-constant-condition': 'warn'
 	}

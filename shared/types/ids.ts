@@ -190,3 +190,10 @@ export const asPackId = (id: string): PackId => id as PackId;
 export const asFriendId = (id: string): FriendId => id as FriendId;
 export const asFollowId = (id: string): FollowId => id as FollowId;
 export const asRequestId = (id: string): RequestId => id as RequestId;
+
+// Additional casting helpers for common forum types
+export const asStructureId = (id: string): StructureId => id as StructureId;
+export const asTagId = (id: string): TagId => id as TagId;
+export const asPrefixId = (id: string): PrefixId => id as PrefixId;
+export const asCategoryId = (id: string): CategoryId => id as CategoryId;
+export const asZoneId = (id: string): ZoneId => id as ZoneId;

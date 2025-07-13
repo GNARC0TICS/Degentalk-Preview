@@ -8,7 +8,7 @@ interface ShareButtonProps {
 	threadTitle: string;
 	variant?: 'button' | 'icon';
 	className?: string;
-	size?: 'sm' | 'md' | 'lg';
+	size?: 'default' | 'sm' | 'lg' | 'icon' | 'xl' | 'icon-sm';
 }
 
 export default function ShareButton({
@@ -16,7 +16,7 @@ export default function ShareButton({
 	threadTitle,
 	variant = 'button',
 	className = '',
-	size = 'md'
+	size = 'default'
 }: ShareButtonProps) {
 	const [copied, setCopied] = useState(false);
 	const threadUrl = `${window.location.origin}/threads/${threadId}`;

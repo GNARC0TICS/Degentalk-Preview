@@ -1,6 +1,7 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 import type { UserTitle } from '@/hooks/useXP';
+import type { TitleId } from '@shared/types/ids';
 import { Check, ChevronDown, Crown, Info } from 'lucide-react';
 import {
 	DropdownMenu,
@@ -19,7 +20,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 type TitleSelectorProps = {
 	titles: UserTitle[];
 	equippedTitle: UserTitle | null;
-	onEquipTitle: (titleId: string) => void;
+	onEquipTitle: (titleId: TitleId) => void;
 	isLoading?: boolean;
 	className?: string;
 	compact?: boolean;

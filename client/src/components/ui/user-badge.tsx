@@ -38,7 +38,7 @@ export function UserBadge({ user, className, size = 'md', showLevel = true }: Us
 	if (showLevel) {
 		return (
 			<Badge variant="secondary" className={cn(sizeClasses[size], className)}>
-				Level {user.level}
+				Level {user.level as number}
 			</Badge>
 		);
 	}

@@ -19,7 +19,7 @@ export function animateNumber(
 ): { cancel: () => void } {
 	const startTime = performance.now();
 	const difference = endValue - startValue;
-	let animationFrameId: Id<'animationFrame'>;
+	let animationFrameId: number;
 
 	// Check for reduced motion preference
 	const prefersReducedMotion =

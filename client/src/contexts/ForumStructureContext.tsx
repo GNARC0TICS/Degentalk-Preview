@@ -313,7 +313,7 @@ function processApiData(resp: ForumStructureApiResponse) {
 	// Forums tier 1
 	resp.forums.forEach((f) => {
 		if (f.parentId && zoneById.has(f.parentId)) {
-			const m = makeMergedForum(f, f.parentId);
+			const m = makeMergedForum(f, f.parentId as unknown as ParentZoneId);
 			forums[m.slug] = m;
 			forumsById[m.id] = m;
 			forumById.set(m.id, m);

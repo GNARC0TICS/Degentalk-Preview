@@ -6,6 +6,7 @@
  */
 
 import { apiRequest } from '@/lib/api-request';
+import { isValidUUID } from '@shared/utils/id-validation';
 import type {
 	ThreadWithUser,
 	PostWithUser,

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { isValidId } from '@shared/utils/id-validation';
 import {
 	Plus,
 	Pencil,
@@ -529,7 +530,7 @@ function XPSystemModuleContent() {
 												`Enter new XP value for ${action.action}:`,
 												action.baseValue.toString()
 											);
-											if (newValue && !!isValidId(userId)) {
+											if (newValue && !isNaN(Number(newValue))) {
 												updateXpAction.mutate({
 													actionKey: action.action,
 													payload: { baseValue: Number(newValue) }

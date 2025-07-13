@@ -26,7 +26,7 @@ const ActivityItem: React.FC<{ event: EventLog; isCompact?: boolean }> = ({
 					<div className="flex flex-col">
 						<span className="text-sm text-zinc-200">Created thread</span>
 						<span className="text-xs text-zinc-500 line-clamp-1">
-							{event.meta.threadTitle || 'New thread'}
+							{(event.meta as any)?.threadTitle || 'New thread'}
 						</span>
 					</div>
 				);
@@ -36,7 +36,7 @@ const ActivityItem: React.FC<{ event: EventLog; isCompact?: boolean }> = ({
 					<div className="flex flex-col">
 						<span className="text-sm text-zinc-200">Posted reply</span>
 						<span className="text-xs text-zinc-500 line-clamp-1">
-							{event.meta.threadTitle ? `in ${event.meta.threadTitle}` : ''}
+							{(event.meta as any)?.threadTitle ? `in ${(event.meta as any)?.threadTitle}` : ''}
 						</span>
 					</div>
 				);
@@ -46,7 +46,7 @@ const ActivityItem: React.FC<{ event: EventLog; isCompact?: boolean }> = ({
 					<div className="flex flex-col">
 						<span className="text-sm text-zinc-200">Leveled up!</span>
 						<span className="text-xs text-zinc-500">
-							Level {event.meta.oldLevel} → {event.meta.newLevel}
+							Level {(event.meta as any)?.oldLevel} → {(event.meta as any)?.newLevel}
 						</span>
 					</div>
 				);
@@ -55,7 +55,7 @@ const ActivityItem: React.FC<{ event: EventLog; isCompact?: boolean }> = ({
 				return (
 					<div className="flex flex-col">
 						<span className="text-sm text-zinc-200">Earned badge</span>
-						<span className="text-xs text-zinc-500">{event.meta.badgeName}</span>
+						<span className="text-xs text-zinc-500">{(event.meta as any)?.badgeName}</span>
 					</div>
 				);
 

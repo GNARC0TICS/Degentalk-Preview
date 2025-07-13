@@ -11,7 +11,12 @@ function shuffleArray<T>(array: T[]): T[] {
 	const arr = [...array];
 	for (let i = arr.length - 1; i > 0; i--) {
 		const j = Math.floor(Math.random() * (i + 1));
-		[arr[i], arr[j]] = [arr[j], arr[i]];
+		// Ensure both values exist before swapping
+		const temp = arr[i];
+		if (temp !== undefined && arr[j] !== undefined) {
+			arr[i] = arr[j];
+			arr[j] = temp;
+		}
 	}
 	return arr;
 }
@@ -34,7 +39,12 @@ export function HeroSection() {
 		return () => clearInterval(interval);
 	}, [shuffledQuotes.length]);
 
-	const currentQuote: HeroQuote = shuffledQuotes[currentQuoteIndex];
+	const currentQuote: HeroQuote | undefined = shuffledQuotes[currentQuoteIndex];
+	
+	// Don't render if no quote available
+	if (!currentQuote) {
+		return null;
+	}
 
 	return (
 		<section
