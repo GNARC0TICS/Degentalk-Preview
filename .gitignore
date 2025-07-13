@@ -41,5 +41,10 @@ UIVERSE/
 zen-mcp-server
 scripts/codemods/logger-migration.ts
 
+# Database schema compilation artifacts (TypeScript only)
+db/schema/**/*.js
+db/schema/**/*.js.map
+db/schema/**/*.d.ts
+
 # Claude audit logs
 .claude/audit/
