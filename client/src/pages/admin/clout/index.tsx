@@ -11,7 +11,7 @@ import { CloutTiersSection } from '@/features/admin/components/clout/CloutTiersS
 import { AchievementsSection } from '@/features/admin/components/clout/AchievementsSection';
 import { CloutGrantsSection } from '@/features/admin/components/clout/CloutGrantsSection';
 import { CloutLogsSection } from '@/features/admin/components/clout/CloutLogsSection';
-import { type AchievementId } from "@shared/types/ids";
+import { type AchievementId } from '@shared/types/ids';
 
 // Types
 export interface CloutAchievement {

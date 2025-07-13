@@ -5,7 +5,7 @@ import { eq, desc } from 'drizzle-orm';
 import { logger } from '@core/logger';
 import { CloutService } from '../../../gamification/services/cloutService';
 import { CloutTransformer } from '../../../gamification/transformers/clout.transformer';
-import { sendSuccessResponse, sendErrorResponse } from "@core/utils/transformer.helpers";
+import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
 // Instantiate once – can be swapped with dependency injection later
 const cloutService = new CloutService();
@@ -14,11 +14,18 @@ const cloutService = new CloutService();
 export const getAllAchievements = async (req: Request, res: Response, next: NextFunction) => {
 	try {
 		const achievements = await db.select().from(cloutAchievements).orderBy(cloutAchievements.id);
-		
+
 		// Transform achievements for admin view
-		const transformedAchievements = CloutTransformer.toAchievementList(achievements, { role: 'admin' }, 'admin');
-		
-		sendSuccessResponse(res, { achievements: transformedAchievements, count: transformedAchievements.length });
+		const transformedAchievements = CloutTransformer.toAchievementList(
+			achievements,
+			{ role: 'admin' },
+			'admin'
+		);
+
+		sendSuccessResponse(res, {
+			achievements: transformedAchievements,
+			count: transformedAchievements.length
+		});
 	} catch (err) {
 		logger.error('CloutAdmin', 'Error fetching achievements', err);
 		next(err);
@@ -34,10 +41,10 @@ export const getAchievementById = async (req: Request, res: Response, next: Next
 			.where(eq(cloutAchievements.id, id))
 			.limit(1);
 		if (!rows.length) return sendErrorResponse(res, 'Achievement not found', 404);
-		
+
 		// Transform achievement for admin view
 		const transformedAchievement = CloutTransformer.toAdminAchievement(rows[0]);
-		
+
 		sendSuccessResponse(res, transformedAchievement);
 	} catch (err) {
 		next(err);
@@ -161,10 +168,14 @@ export const getCloutLogs = async (req: Request, res: Response, next: NextFuncti
 		const baseQuery = db.select().from(userCloutLog);
 		const filtered = userId ? baseQuery.where(eq(userCloutLog.userId, userId)) : baseQuery;
 		const logs = await filtered.orderBy(desc(userCloutLog.createdAt)).limit(Number(limit));
-		
+
 		// Transform logs for admin view
-		const { logs: transformedLogs, summary } = CloutTransformer.toCloutLogHistory(logs, { role: 'admin' }, 'admin');
-		
+		const { logs: transformedLogs, summary } = CloutTransformer.toCloutLogHistory(
+			logs,
+			{ role: 'admin' },
+			'admin'
+		);
+
 		sendSuccessResponse(res, { logs: transformedLogs, summary, count: transformedLogs.length });
 	} catch (err) {
 		next(err);
@@ -252,18 +263,18 @@ export const adjustClout = async (req: Request, res: Response, next: NextFunctio
 			username: updatedUser.username,
 			clout: updatedUser.clout
 		};
-		
+
 		sendSuccessResponse(res, {
-        			message: `Clout adjustment applied`,
-        			user: userResponse,
-        			adjustment: {
-        				type: adjustmentType,
-        				amount,
-        				oldClout,
-        				newClout: updatedUser.clout,
-        				reason
-        			}
-        		});
+			message: `Clout adjustment applied`,
+			user: userResponse,
+			adjustment: {
+				type: adjustmentType,
+				amount,
+				oldClout,
+				newClout: updatedUser.clout,
+				reason
+			}
+		});
 	} catch (err) {
 		logger.error('CloutAdmin', 'Error adjusting clout', err);
 		next(err);
@@ -323,13 +334,13 @@ export const getCloutAdjustmentLogs = async (req: Request, res: Response, next: 
 		});
 
 		// Transform adjustment logs for admin view
-		const transformedLogs = adjustmentLogs.map(log => ({
+		const transformedLogs = adjustmentLogs.map((log) => ({
 			...log,
 			// Ensure proper data sanitization
 			username: log.username || 'Unknown',
 			timestamp: log.timestamp
 		}));
-		
+
 		sendSuccessResponse(res, transformedLogs);
 	} catch (err) {
 		logger.error('CloutAdmin', 'Error fetching clout adjustment logs', err);

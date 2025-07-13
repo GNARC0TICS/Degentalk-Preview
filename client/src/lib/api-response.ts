@@ -42,10 +42,12 @@ export function extractApiData<T>(response: any): T {
  */
 export function createStandardResponse<T>(
 	data: T,
-	options?: {
-		meta?: StandardApiResponse<T>['meta'] | undefined;
-		requestId?: string;
-	} | undefined
+	options?:
+		| {
+				meta?: StandardApiResponse<T>['meta'] | undefined;
+				requestId?: string;
+		  }
+		| undefined
 ): StandardApiResponse<T> {
 	return {
 		success: true,
@@ -67,9 +69,11 @@ export function createErrorResponse(
 		message: string;
 		details?: Record<string, any> | undefined;
 	},
-	options?: {
-		requestId?: string;
-	} | undefined
+	options?:
+		| {
+				requestId?: string;
+		  }
+		| undefined
 ): StandardApiResponse<null> {
 	return {
 		success: false,

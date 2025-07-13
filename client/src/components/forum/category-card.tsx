@@ -13,7 +13,7 @@ import {
 	TrendingUp
 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
-import type { CategoryId } from "@shared/types/ids";
+import type { CategoryId } from '@shared/types/ids';
 
 interface CategoryCardProps {
 	id: CategoryId;

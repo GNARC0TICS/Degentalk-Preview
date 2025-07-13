@@ -267,7 +267,10 @@ export class AchievementAdminService {
 	/**
 	 * Update an existing achievement
 	 */
-	async updateAchievement(id: AchievementId, data: Partial<InsertAchievement>): Promise<Achievement> {
+	async updateAchievement(
+		id: AchievementId,
+		data: Partial<InsertAchievement>
+	): Promise<Achievement> {
 		try {
 			// Validate trigger configuration if provided
 			if (data.triggerType && data.triggerConfig) {

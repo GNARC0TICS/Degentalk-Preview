@@ -1,12 +1,4 @@
-import {
-	pgTable,
-	varchar,
-	text,
-	jsonb,
-	timestamp,
-	uuid,
-	index
-} from 'drizzle-orm/pg-core';
+import { pgTable, varchar, text, jsonb, timestamp, uuid, index } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
 import { users } from '../user/users';

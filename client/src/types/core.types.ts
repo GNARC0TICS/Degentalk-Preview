@@ -21,11 +21,13 @@ export interface ApiErrorData {
 
 // Timing and performance metadata
 export interface TimingMetadata {
-	_timing?: {
-		duration: number;
-		requestId?: string;
-		cacheHit?: boolean | undefined;
-	} | undefined;
+	_timing?:
+		| {
+				duration: number;
+				requestId?: string;
+				cacheHit?: boolean | undefined;
+		  }
+		| undefined;
 }
 
 // Standardized API response wrapper
@@ -34,16 +36,20 @@ export interface StandardApiResponse<T> {
 	success: boolean;
 	message?: string;
 	errors?: ApiErrorData[] | undefined;
-	meta?: {
-		timestamp: string;
-		requestId?: string;
-		pagination?: {
-			page: number;
-			limit: number;
-			total: number;
-			totalPages: number;
-		} | undefined;
-	} & TimingMetadata | undefined;
+	meta?:
+		| ({
+				timestamp: string;
+				requestId?: string;
+				pagination?:
+					| {
+							page: number;
+							limit: number;
+							total: number;
+							totalPages: number;
+					  }
+					| undefined;
+		  } & TimingMetadata)
+		| undefined;
 }
 
 // Test utilities

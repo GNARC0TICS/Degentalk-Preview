@@ -685,15 +685,18 @@ export class UserPromotionService {
 			.where(eq(wallets.userId, userId));
 
 		// Create completed transaction
-		const [transaction] = await db.insert(transactions).values({
-			userId,
-			type: 'promotion_payment',
-			amount: amount.toString(),
-			currency: 'DGT',
-			status: 'completed',
-			metadata: { promotionId, type: 'user_promotion_payment' },
-			description: `DGT payment for user promotion ${promotionId}`
-		}).returning();
+		const [transaction] = await db
+			.insert(transactions)
+			.values({
+				userId,
+				type: 'promotion_payment',
+				amount: amount.toString(),
+				currency: 'DGT',
+				status: 'completed',
+				metadata: { promotionId, type: 'user_promotion_payment' },
+				description: `DGT payment for user promotion ${promotionId}`
+			})
+			.returning();
 
 		// Track DGT burn for promotion purchase
 		await vanitySinkAnalyzer.trackBurn({

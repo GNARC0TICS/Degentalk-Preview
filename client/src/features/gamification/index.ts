@@ -1,6 +1,6 @@
 /**
  * Gamification Feature Export Barrel
- * 
+ *
  * Centralized exports for the complete gamification domain
  */
 

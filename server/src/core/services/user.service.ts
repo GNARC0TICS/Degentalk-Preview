@@ -10,7 +10,7 @@ import { users } from '@schema';
 import { eq, and } from 'drizzle-orm';
 import { logger } from '../logger';
 import type { UserId } from '@shared/types/ids';
-import { getAuthenticatedUser } from "@core/utils/auth.helpers";
+import { getAuthenticatedUser } from '@core/utils/auth.helpers';
 
 export interface User {
 	id: UserId;

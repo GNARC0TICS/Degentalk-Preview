@@ -212,7 +212,10 @@ export const profileService = {
 				.returning({ updatedId: users.id }); // Ensure the update happened
 
 			if (result.length === 0) {
-				logger.warn({ context: 'PROFILE_SERVICE', userId }, `User with ID ${userId} not found for media URL update.`);
+				logger.warn(
+					{ context: 'PROFILE_SERVICE', userId },
+					`User with ID ${userId} not found for media URL update.`
+				);
 				// Consider throwing a "User not found" error or returning a specific failure message
 				return { success: false, message: `User not found. Couldn't update ${mediaType}.` };
 			}
@@ -233,7 +236,10 @@ export const profileService = {
 					timestamp: new Date().toISOString()
 				};
 				eventEmitter.emit(PROFILE_UPDATED_EVENT, eventPayload);
-				logger.info({ context: 'PROFILE_SERVICE', userId, event: PROFILE_UPDATED_EVENT }, `Emitted ${PROFILE_UPDATED_EVENT} for user ${userId}`);
+				logger.info(
+					{ context: 'PROFILE_SERVICE', userId, event: PROFILE_UPDATED_EVENT },
+					`Emitted ${PROFILE_UPDATED_EVENT} for user ${userId}`
+				);
 			} catch (eventError) {
 				logger.error(
 					{ context: 'PROFILE_SERVICE', userId, event: PROFILE_UPDATED_EVENT, err: eventError },
@@ -248,7 +254,10 @@ export const profileService = {
 			};
 		} catch (error) {
 			// Comment: console.error has been replaced by logger.error for consistency
-			logger.error({ context: 'PROFILE_SERVICE', userId, mediaType, err: error }, `Error updating ${mediaType} URL for user ${userId}`);
+			logger.error(
+				{ context: 'PROFILE_SERVICE', userId, mediaType, err: error },
+				`Error updating ${mediaType} URL for user ${userId}`
+			);
 			// This should ideally be a more specific error
 			throw new Error(`Failed to update ${mediaType} URL. The server gods are displeased.`);
 		}

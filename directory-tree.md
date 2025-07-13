@@ -8,31 +8,31 @@ This document provides a visual map of the DegenTalk monorepo. It's automaticall
 
 Jump to a specific top-level directory:
 
-| Directory | Purpose | Go to Line |
-| :--- | :--- | :---: |
-| **CI/CD `.github/`** | GitHub Actions workflows | `L12` |
-| **⚛️ `client/`** | Frontend Application (React/Vite) | `L32` |
-| **🔧 `config/`** | Shared build/tooling configuration | `L794` |
-| **🗄️ `db/`** | Database schema, migrations, and seeds | `L803` |
-| **📚 `docs/`** | Project documentation | `L1069` |
-| **🛠️ `scripts/`** | Development & utility scripts | `L1222` |
-| **⚙️ `server/`** | Backend Server (Express) | `L1464` |
-| **🤝 `shared/`** | Isomorphic code (client & server) | `L1808` |
-| **🧪 `tests/`** | End-to-end tests (Playwright) | `L1919` |
+| Directory            | Purpose                                | Go to Line |
+| :------------------- | :------------------------------------- | :--------: |
+| **CI/CD `.github/`** | GitHub Actions workflows               |   `L12`    |
+| **⚛️ `client/`**     | Frontend Application (React/Vite)      |   `L32`    |
+| **🔧 `config/`**     | Shared build/tooling configuration     |   `L794`   |
+| **🗄️ `db/`**         | Database schema, migrations, and seeds |   `L803`   |
+| **📚 `docs/`**       | Project documentation                  |  `L1069`   |
+| **🛠️ `scripts/`**    | Development & utility scripts          |  `L1222`   |
+| **⚙️ `server/`**     | Backend Server (Express)               |  `L1464`   |
+| **🤝 `shared/`**     | Isomorphic code (client & server)      |  `L1808`   |
+| **🧪 `tests/`**      | End-to-end tests (Playwright)          |  `L1919`   |
 
-##  Legend
+## Legend
 
-| Emoji | Meaning                  |
-| :---: | ------------------------ |
-| ⚛️    | Frontend Application     |
-| ⚙️    | Backend Server           |
-| 🤝    | Shared Code              |
-| 🗄️    | Database                 |
-| 🛠️    | Scripts & Tooling        |
-| 📚    | Documentation            |
-| 🧪    | Tests                    |
-| 🧩    | Reusable UI Components   |
-| 🏗️    | Server Business Logic    |
+| Emoji | Meaning                |
+| :---: | ---------------------- |
+|  ⚛️   | Frontend Application   |
+|  ⚙️   | Backend Server         |
+|  🤝   | Shared Code            |
+|  🗄️   | Database               |
+|  🛠️   | Scripts & Tooling      |
+|  📚   | Documentation          |
+|  🧪   | Tests                  |
+|  🧩   | Reusable UI Components |
+|  🏗️   | Server Business Logic  |
 
 ---
 

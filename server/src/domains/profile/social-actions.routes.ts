@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { SocialActionsController } from './social-actions.controller';
-import { isAuthenticated } from '@server/auth/middleware/auth.middleware';
+import { isAuthenticated } from '@server/domains/auth/middleware/auth.middleware';
 import rateLimit from 'express-rate-limit';
 
 const router = Router();

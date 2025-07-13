@@ -91,8 +91,13 @@ export function useGamification() {
 
 	// Check for new achievements after an action
 	const checkAchievements = useMutation({
-		mutationFn: ({ actionType, metadata }: { actionType: string; metadata?: Record<string, unknown> }) =>
-			gamificationApi.checkAndAwardAchievements(user!.id, actionType, metadata),
+		mutationFn: ({
+			actionType,
+			metadata
+		}: {
+			actionType: string;
+			metadata?: Record<string, unknown>;
+		}) => gamificationApi.checkAndAwardAchievements(user!.id, actionType, metadata),
 		onSuccess: (data) => {
 			// Invalidate achievement queries
 			queryClient.invalidateQueries({ queryKey: ['/api/gamification/achievements'] });
@@ -117,8 +122,13 @@ export function useGamification() {
 
 	// Update mission progress
 	const updateMissionProgress = useMutation({
-		mutationFn: ({ actionType, metadata }: { actionType: string; metadata?: Record<string, unknown> }) =>
-			gamificationApi.updateMissionProgress(user!.id, actionType, metadata),
+		mutationFn: ({
+			actionType,
+			metadata
+		}: {
+			actionType: string;
+			metadata?: Record<string, unknown>;
+		}) => gamificationApi.updateMissionProgress(user!.id, actionType, metadata),
 		onSuccess: () => {
 			// Silently update mission progress
 			queryClient.invalidateQueries({ queryKey: ['/api/gamification/missions'] });

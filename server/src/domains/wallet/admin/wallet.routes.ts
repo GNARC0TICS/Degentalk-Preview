@@ -1,6 +1,10 @@
 import { Router } from 'express';
 import { adminWalletController } from './controllers/wallet.controller';
-import { validateWalletConfig, validateDGTTransaction, validateUserId } from './validators/wallet.validators';
+import {
+	validateWalletConfig,
+	validateDGTTransaction,
+	validateUserId
+} from './validators/wallet.validators';
 
 const router = Router();
 

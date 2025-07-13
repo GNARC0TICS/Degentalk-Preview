@@ -26,7 +26,11 @@ class RainAnalyticsController {
 			}
 
 			if (isNaN(topLimit) || topLimit < 1 || topLimit > 100) {
-				return sendErrorResponse(res, 'Invalid topLimit parameter. Must be between 1 and 100.', 400);
+				return sendErrorResponse(
+					res,
+					'Invalid topLimit parameter. Must be between 1 and 100.',
+					400
+				);
 			}
 
 			// Get analytics data from service

@@ -1,7 +1,4 @@
-import {
-	pgTable, uuid, boolean, varchar, timestamp,
-	index
-} from 'drizzle-orm/pg-core';
+import { pgTable, uuid, boolean, varchar, timestamp, index } from 'drizzle-orm/pg-core';
 import { users } from './users';
 export const userSocialPreferences = pgTable('user_social_preferences', {
 	userId: uuid('user_id')

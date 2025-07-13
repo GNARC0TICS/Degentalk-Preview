@@ -35,8 +35,7 @@ export default function EconomyConfigPage() {
 	// Update config mutation
 	const updateConfigMutation = useMutation({
 		mutationFn: async (config: Record<string, any>) => {
-			return apiRequest({ url: '/api/admin/economy/config', method: 'PUT', data: config
-			 });
+			return apiRequest({ url: '/api/admin/economy/config', method: 'PUT', data: config });
 		},
 		onSuccess: (data) => {
 			queryClient.setQueryData(['admin-economy-config'], data);

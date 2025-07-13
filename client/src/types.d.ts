@@ -4,9 +4,9 @@
  */
 
 declare module '@shared/types' {
-  export type DgtAmount = number;
-  export type XpAmount = number;
-  export type UsdAmount = number;
-  export type TipAmount = number;
-  export type CloutAmount = number;
+	export type DgtAmount = number;
+	export type XpAmount = number;
+	export type UsdAmount = number;
+	export type TipAmount = number;
+	export type CloutAmount = number;
 }

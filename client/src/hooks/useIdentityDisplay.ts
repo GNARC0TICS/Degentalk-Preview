@@ -33,7 +33,9 @@ export interface IdentityDisplay {
  */
 export function useIdentityDisplay(user: BaseUser | null | undefined): IdentityDisplay | null {
 	const { cosmetics } = useUserCosmetics(user?.id);
-	const { data: xpData } = useUserXP(user?.id ? parseId<'UserId'>(user.id) || toId<'UserId'>(user.id) : undefined);
+	const { data: xpData } = useUserXP(
+		user?.id ? parseId<'UserId'>(user.id) || toId<'UserId'>(user.id) : undefined
+	);
 
 	if (!user) return null;
 

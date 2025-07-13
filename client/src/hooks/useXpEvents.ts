@@ -19,38 +19,38 @@ export interface XpGainResponse {
 }
 
 export function useXpEvents() {
-  const { toast } = useToast();
-  const { showLevelUp } = useLevelUp();
+	const { toast } = useToast();
+	const { showLevelUp } = useLevelUp();
 
-  useEffect(() => {
-    const handleXpGain = (event: CustomEvent<XpGainResponse>) => {
-      const { xpAmount, xpAction, xpDescription, levelUp, newLevel } = event.detail;
+	useEffect(() => {
+		const handleXpGain = (event: CustomEvent<XpGainResponse>) => {
+			const { xpAmount, xpAction, xpDescription, levelUp, newLevel } = event.detail;
 
-      if (xpAmount && xpAction && xpDescription) {
-        toast({
-          title: `+${xpAmount} XP`,
-          description: xpDescription,
-        });
-      }
-    };
+			if (xpAmount && xpAction && xpDescription) {
+				toast({
+					title: `+${xpAmount} XP`,
+					description: xpDescription
+				});
+			}
+		};
 
-    const handleLevelUp = (
-      event: CustomEvent<{
-        level: number;
-        title?: string;
-        rewards?: any[];
-      }>
-    ) => {
-      const { level, title, rewards } = event.detail;
-      showLevelUp(level, title, rewards);
-    };
+		const handleLevelUp = (
+			event: CustomEvent<{
+				level: number;
+				title?: string;
+				rewards?: any[];
+			}>
+		) => {
+			const { level, title, rewards } = event.detail;
+			showLevelUp(level, title, rewards);
+		};
 
-    window.addEventListener('xp-gained', handleXpGain as EventListener);
-    window.addEventListener('level-up', handleLevelUp as EventListener);
+		window.addEventListener('xp-gained', handleXpGain as EventListener);
+		window.addEventListener('level-up', handleLevelUp as EventListener);
 
-    return () => {
-      window.removeEventListener('xp-gained', handleXpGain as EventListener);
-      window.removeEventListener('level-up', handleLevelUp as EventListener);
-    };
-  }, [toast, showLevelUp]);
+		return () => {
+			window.removeEventListener('xp-gained', handleXpGain as EventListener);
+			window.removeEventListener('level-up', handleLevelUp as EventListener);
+		};
+	}, [toast, showLevelUp]);
 }

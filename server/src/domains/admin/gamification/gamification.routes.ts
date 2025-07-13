@@ -1,11 +1,11 @@
 import { Router } from 'express';
-import { 
-	getLevels, 
-	createLevel, 
-	updateLevel, 
-	adjustUserXp, 
-	getXpAdjustmentLogs, 
-	testXpActionAward 
+import {
+	getLevels,
+	createLevel,
+	updateLevel,
+	adjustUserXp,
+	getXpAdjustmentLogs,
+	testXpActionAward
 } from './controllers/xp.controller';
 
 const router = Router();

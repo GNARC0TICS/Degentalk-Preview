@@ -9,7 +9,9 @@ const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 if (!supabaseUrl || !supabaseServiceKey) {
-	logger.error('❌ STORAGE SERVICE: SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY is missing. Storage operations will fail.');
+	logger.error(
+		'❌ STORAGE SERVICE: SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY is missing. Storage operations will fail.'
+	);
 }
 const supabase: SupabaseClient = createClient(supabaseUrl!, supabaseServiceKey!);
 
@@ -212,7 +214,9 @@ class SupabaseStorageService implements IStorageService {
 		if (!data || !data.publicUrl) {
 			// This can happen if the object doesn't exist or bucket isn't public
 			// For robustness, construct a predictable URL, assuming public access is set up
-			logger.warn(`Could not retrieve public URL directly for ${bucket}/${relativePath}. Constructing fallback.`);
+			logger.warn(
+				`Could not retrieve public URL directly for ${bucket}/${relativePath}. Constructing fallback.`
+			);
 			return `${supabaseUrl}/storage/v1/object/public/${bucket}/${relativePath}`;
 		}
 		return data.publicUrl;
@@ -297,7 +301,9 @@ class GoogleCloudStorageService implements IStorageService {
 	constructor() {
 		// Initialize GCS client here using GOOGLE_APPLICATION_CREDENTIALS or other auth
 		// eslint-disable-next-line no-console
-		logger.warn('GCS_STORAGE_SERVICE: Initialized (STUB). Implement actual GCS logic if switching providers.');
+		logger.warn(
+			'GCS_STORAGE_SERVICE: Initialized (STUB). Implement actual GCS logic if switching providers.'
+		);
 	}
 
 	async getPresignedUploadUrl(params: GetPresignedUploadUrlParams): Promise<PresignedUrlInfo> {
@@ -305,7 +311,9 @@ class GoogleCloudStorageService implements IStorageService {
 		// TODO: Implement GCS presigned URL generation
 		// Example: const [url] = await storage.bucket(bucket).file(relativePath).getSignedUrl({ action: 'write', expires: '03-17-2025', contentType: fileType });
 		// eslint-disable-next-line no-console
-		logger.info(`GCS_STORAGE_SERVICE: STUB - getPresignedUploadUrl for ${bucket}/${relativePath} (type: ${fileType}, size: ${fileSize})`);
+		logger.info(
+			`GCS_STORAGE_SERVICE: STUB - getPresignedUploadUrl for ${bucket}/${relativePath} (type: ${fileType}, size: ${fileSize})`
+		);
 		if (bucket === 'gcs_error_test_bucket') {
 			// For testing error propagation
 			throw new DegenUploadError('GCS is feeling moody today, no URLs for you.', 503);

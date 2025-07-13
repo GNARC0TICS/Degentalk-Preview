@@ -6,7 +6,7 @@
 import { FullResult, TestCase, TestResult, Reporter } from '@playwright/test/reporter';
 import { writeFileSync, mkdirSync, existsSync } from 'fs';
 import { join } from 'path';
-import { logger } from "../../../server/src/core/logger";
+import { logger } from '../../../server/src/core/logger';
 
 export interface TestAnalytics {
 	summary: {
@@ -191,7 +191,9 @@ export class TestAnalyticsReporter implements Reporter {
 
 		logger.info('\n📈 Test Analytics Summary:');
 		logger.info(`   Total Tests: ${this.analytics.summary.totalTests}`);
-		logger.info(`   Passed: ${this.analytics.summary.passed} (${Math.round((this.analytics.summary.passed / this.analytics.summary.totalTests) * 100)}%)`);
+		logger.info(
+			`   Passed: ${this.analytics.summary.passed} (${Math.round((this.analytics.summary.passed / this.analytics.summary.totalTests) * 100)}%)`
+		);
 		logger.info(`   Failed: ${this.analytics.summary.failed}`);
 		logger.info(`   Duration: ${Math.round(this.analytics.summary.duration / 1000)}s`);
 		logger.info(`\n📋 Reports generated in: ${this.outputDir}`);

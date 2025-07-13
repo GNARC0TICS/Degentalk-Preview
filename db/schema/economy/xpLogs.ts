@@ -1,12 +1,4 @@
-import {
-	pgTable,
-	integer,
-	date,
-	timestamp,
-	unique,
-	index,
-	uuid
-} from 'drizzle-orm/pg-core';
+import { pgTable, integer, date, timestamp, unique, index, uuid } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users';
 export const xpLogs = pgTable(

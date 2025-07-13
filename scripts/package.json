@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "seed:all": "npx dotenv-cli -e ../env.local -- tsx -r tsconfig-paths/register seed/seed-all-comprehensive.ts",
+    "seed:all": "npx dotenv-cli -e ../env.local -- tsx -r tsconfig-paths/register db/reset-and-seed.ts",
     "seed:users": "npx dotenv-cli -e ../env.local -- tsx -r tsconfig-paths/register db/seed-users.ts",
     "seed:forums:only": "npx dotenv-cli -e ../env.local -- tsx -r tsconfig-paths/register seed/seed-all-comprehensive.ts --forums-only",
     "seed:dev-wallet": "npx dotenv-cli -e ../env.local -- tsx -r tsconfig-paths/register db/seed-dev-wallet.ts",

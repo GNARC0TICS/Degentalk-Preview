@@ -8,9 +8,6 @@ import { prefixesController } from '../controllers/prefixes.controller';
 
 const router = Router();
 
-router.get(
-	'/',
-	asyncHandler(prefixesController.getPrefixes.bind(prefixesController))
-);
+router.get('/', asyncHandler(prefixesController.getPrefixes.bind(prefixesController)));
 
-export default router; 
+export default router;

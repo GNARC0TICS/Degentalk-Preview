@@ -24,11 +24,13 @@ export interface LevelInfo {
 	colorTheme?: string;
 	animationEffect?: string;
 	unlocks?: Record<string, any> | undefined;
-	rewards?: {
-		dgt?: number | undefined;
-		titleId?: AchievementId | undefined;
-		badgeId?: AchievementId | undefined;
-	} | undefined;
+	rewards?:
+		| {
+				dgt?: number | undefined;
+				titleId?: AchievementId | undefined;
+				badgeId?: AchievementId | undefined;
+		  }
+		| undefined;
 }
 
 export interface UserProgression {
@@ -271,7 +273,7 @@ export class GamificationApiService {
 		}>({
 			url: `${this.baseUrl}/missions`,
 			method: 'GET',
-				params: { 
+			params: {
 				...(userLevel !== undefined && { userLevel: userLevel.toString() }),
 				activeOnly: activeOnly.toString()
 			}

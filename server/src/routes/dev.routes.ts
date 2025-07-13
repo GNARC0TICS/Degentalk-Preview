@@ -10,10 +10,7 @@ import { cacheService } from '@core/cache.service';
 import { logger } from '@core/logger';
 import { isDevMode } from '@server-utils/environment';
 import { devSecurity } from '@server-middleware/dev-security.middleware';
-import { 
-	sendSuccessResponse,
-	sendErrorResponse 
-} from '@core/utils/transformer.helpers';
+import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
 const router = Router();
 

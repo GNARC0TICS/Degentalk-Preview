@@ -2,9 +2,9 @@ import { userService } from '@core/services/user.service';
 import { Router } from 'express';
 import { z } from 'zod';
 import { userPromotionService } from './user-promotion.service';
-import { isAuthenticated, isAdmin } from '@server/auth/middleware/auth.middleware';
+import { isAuthenticated, isAdmin } from '@server/domains/auth/middleware/auth.middleware';
 import { logger } from '@core/logger';
-import { sendSuccessResponse, sendErrorResponse } from "@core/utils/transformer.helpers";
+import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
 const router = Router();
 
@@ -140,11 +140,11 @@ router.post('/user-promotions/:id/extend', isAuthenticated, async (req, res) => 
 		// 5. Charge additional DGT
 
 		sendSuccessResponse(res, {
-        			success: true,
-        			message: 'Promotion extension feature coming soon',
-        			promotionId: id,
-        			additionalHours
-        		});
+			success: true,
+			message: 'Promotion extension feature coming soon',
+			promotionId: id,
+			additionalHours
+		});
 	} catch (error) {
 		logger.error('Extend promotion error:', error);
 		sendErrorResponse(res, 'Failed to extend promotion', 400);
@@ -169,10 +169,10 @@ router.delete('/user-promotions/:id', isAuthenticated, async (req, res) => {
 		// 5. Update promotion status to 'cancelled'
 
 		sendSuccessResponse(res, {
-        			success: true,
-        			message: 'Promotion cancellation feature coming soon',
-        			promotionId: id
-        		});
+			success: true,
+			message: 'Promotion cancellation feature coming soon',
+			promotionId: id
+		});
 	} catch (error) {
 		logger.error('Cancel promotion error:', error);
 		sendErrorResponse(res, 'Failed to cancel promotion', 400);
@@ -244,7 +244,11 @@ router.post('/announcement-slots/reserve', isAuthenticated, async (req, res) => 
 		const userId = userService.getUserFromRequest(req)?.id;
 
 		if (!slotId || !promotionId || !userId) {
-			return sendErrorResponse(res, 'Slot ID, promotion ID, and user authentication are required', 400);
+			return sendErrorResponse(
+				res,
+				'Slot ID, promotion ID, and user authentication are required',
+				400
+			);
 		}
 
 		await userPromotionService.reserveAnnouncementSlot(slotId, promotionId, userId);
@@ -265,9 +269,9 @@ router.get('/announcement-slots/active', async (req, res) => {
 		// This would return currently active user promotions for the announcement bar
 
 		sendSuccessResponse(res, {
-        			announcements: [],
-        			message: 'Active announcement slots feature coming soon'
-        		});
+			announcements: [],
+			message: 'Active announcement slots feature coming soon'
+		});
 	} catch (error) {
 		logger.error('Get active slots error:', error);
 		sendErrorResponse(res, 'Failed to get active slots', 500);
@@ -391,12 +395,12 @@ router.get('/admin/user-promotions/analytics', isAdmin, async (req, res) => {
 		// - Moderation queue statistics
 
 		sendSuccessResponse(res, {
-        			totalPromotions: 0,
-        			totalDgtSpent: 0,
-        			activePromotions: 0,
-        			pendingApproval: 0,
-        			message: 'Admin analytics feature coming soon'
-        		});
+			totalPromotions: 0,
+			totalDgtSpent: 0,
+			activePromotions: 0,
+			pendingApproval: 0,
+			message: 'Admin analytics feature coming soon'
+		});
 	} catch (error) {
 		logger.error('Get admin analytics error:', error);
 		sendErrorResponse(res, 'Failed to get admin analytics', 500);

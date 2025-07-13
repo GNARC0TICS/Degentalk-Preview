@@ -4,7 +4,7 @@ import { env, isDevelopment, isProduction } from '@core/config/environment';
 import { createMockUser } from '../services/auth.service';
 import { logger } from '@core/logger';
 import { shouldBypassAuth } from '@server-utils/environment';
-import { sendSuccessResponse, sendErrorResponse } from "@core/utils/transformer.helpers";
+import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
 /**
  * Determines if a user has a specific role
@@ -116,7 +116,9 @@ export function isAdmin(req: Request, res: Response, next: NextFunction) {
 			userRole: (userService.getUserFromRequest(req) as any)?.role,
 			ip: req.ip
 		});
-		return sendErrorResponse(res, 'Forbidden - Admin access required', 403, { error: 'PRODUCTION_ADMIN_REQUIRED' });
+		return sendErrorResponse(res, 'Forbidden - Admin access required', 403, {
+			error: 'PRODUCTION_ADMIN_REQUIRED'
+		});
 	}
 
 	// Development mode bypass with strict validation
@@ -215,8 +217,8 @@ export function devModeAuthHandler(req: Request, res: Response, next: NextFuncti
 	(req.session as any).devRole = role;
 
 	sendSuccessResponse(res, {
-    		message: `Development mode authentication set to: ${role}`,
-    		role: role,
-    		warning: 'DEVELOPMENT ONLY - This endpoint is disabled in production'
-    	});
+		message: `Development mode authentication set to: ${role}`,
+		role: role,
+		warning: 'DEVELOPMENT ONLY - This endpoint is disabled in production'
+	});
 }

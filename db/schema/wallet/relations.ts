@@ -1,6 +1,6 @@
 /**
  * Wallet Domain Relations
- * 
+ *
  * Auto-generated Drizzle relations for type-safe joins
  */
 import { relations } from 'drizzle-orm';

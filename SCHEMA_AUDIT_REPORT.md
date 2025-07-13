@@ -2,7 +2,7 @@
 
 **Generated:** July 11, 2025  
 **Project:** DegenTalk  
-**Scope:** /Users/gnarcotic/Degentalk/db/schema/  
+**Scope:** /Users/gnarcotic/Degentalk/db/schema/
 
 ## Executive Summary
 
@@ -13,12 +13,14 @@
 ## 1. Complete Schema Inventory
 
 ### Core Schemas (Essential)
+
 - **user/**: 20 table files - User management, roles, permissions, sessions
 - **forum/**: 22 table files - Forum structure, threads, posts, reactions
 - **economy/**: 24 table files - Wallets, transactions, XP, levels, DGT system
 - **messaging/**: 9 table files - Chat, direct messages, shoutbox
 
 ### Auxiliary Schemas (Secondary)
+
 - **admin/**: 19 table files - Admin tools, moderation, site settings
 - **shop/**: 14 table files - Digital marketplace, inventory
 - **system/**: 14 table files - Analytics, notifications, rate limits
@@ -39,18 +41,21 @@
 ### Pattern: Relations files import tables using incorrect names
 
 #### Advertising Domain
+
 **Files exist:** `campaigns.ts`, `payments.ts`, `performance.ts`, `placements.ts`, `targeting.ts`, `user-promotions.ts`
 
 **Relations imports (WRONG):**
+
 ```typescript
-import { cryptoPayments } from './cryptoPayments';  // Should be './payments'
-import { adImpressions } from './adImpressions';    // Should be './performance' 
-import { adPlacements } from './adPlacements';      // Should be './placements'
-import { campaignRules } from './campaignRules';   // Should be './targeting'
+import { cryptoPayments } from './cryptoPayments'; // Should be './payments'
+import { adImpressions } from './adImpressions'; // Should be './performance'
+import { adPlacements } from './adPlacements'; // Should be './placements'
+import { campaignRules } from './campaignRules'; // Should be './targeting'
 import { userPromotions } from './userPromotions'; // Should be './user-promotions'
 ```
 
 **Actual exports:**
+
 - `payments.ts` exports: `cryptoPayments`, `adGovernanceProposals`, `adGovernanceVotes`
 - `performance.ts` exports: `adImpressions`, `campaignMetrics`
 - `placements.ts` exports: `adPlacements`
@@ -58,33 +63,39 @@ import { userPromotions } from './userPromotions'; // Should be './user-promotio
 - `user-promotions.ts` exports: `userPromotions`, `announcementSlots`, `shoutboxPins`, etc.
 
 #### Dictionary Domain
+
 **Files exist:** `entries.ts`, `upvotes.ts`
 
 **Relations imports (WRONG):**
+
 ```typescript
-import { dictionaryEntries } from './dictionaryEntries';  // Should be './entries'
-import { dictionaryUpvotes } from './dictionaryUpvotes';  // Should be './upvotes'
+import { dictionaryEntries } from './dictionaryEntries'; // Should be './entries'
+import { dictionaryUpvotes } from './dictionaryUpvotes'; // Should be './upvotes'
 ```
 
 #### Collectibles Domain
+
 **File exists:** `stickers.ts`
 
 **Relations imports (WRONG):**
+
 ```typescript
-import { stickerPacks } from './stickerPacks';              // All exported from './stickers'
+import { stickerPacks } from './stickerPacks'; // All exported from './stickers'
 import { userStickerInventory } from './userStickerInventory';
 import { userStickerPacks } from './userStickerPacks';
 import { stickerUsage } from './stickerUsage';
 ```
 
 **Actual exports from `stickers.ts`:**
+
 - `stickerPacks`
-- `stickers` 
+- `stickers`
 - `userStickerInventory`
 - `userStickerPacks`
 - `stickerUsage`
 
 ### Similar Pattern Throughout All Domains
+
 This same mismatch pattern exists across **ALL** domains where relations files import from non-existent files instead of the actual files.
 
 ---
@@ -92,9 +103,11 @@ This same mismatch pattern exists across **ALL** domains where relations files i
 ## 3. Duplicate Exports (CRITICAL)
 
 ### In Relations Files
+
 Multiple relations files export the same relation names:
 
 #### Economy Domain
+
 ```typescript
 // Multiple exports of same relation
 export const walletsRelations = relations(wallets, ({ one, many }) => ({
@@ -103,6 +116,7 @@ export const transactionsRelations = relations(transactions, ({ one, many }) => 
 ```
 
 #### User Domain
+
 ```typescript
 // Duplicate exports
 export const usersRelations = relations(users, ({ one, many }) => ({
@@ -111,6 +125,7 @@ export const avatarFramesRelations = relations(avatarFrames, ({ one, many }) => 
 ```
 
 #### Collectibles Domain
+
 ```typescript
 // Duplicate function names
 export const stickerPacksRelations = relations(stickerPacks, ({ one, many }) => ({
@@ -118,6 +133,7 @@ export const stickerPacksRelations = relations(stickerPacks, ({ one, many }) => 
 ```
 
 #### System Domain
+
 ```typescript
 // Duplicate relation exports
 export const referralSourcesRelations = relations(referralSources, ({ one, many }) => ({
@@ -131,12 +147,15 @@ export const referralSourcesRelations = relations(referralSources, ({ one, many 
 Based on relations imports, these files should exist but don't:
 
 ### Economy Domain (Multiple missing files)
+
 Relations file imports from `settings.ts` expecting `xpCloutSettings`, but actual file structure is different.
 
-### Forum Domain  
+### Forum Domain
+
 Relations imports expect files like `forumRules.ts`, `forumStructure.ts` but actual files are `rules.ts`, `structure.ts`.
 
 ### User Domain
+
 Relations imports expect individual files but actual structure uses consolidated files like `preferences.ts` containing multiple tables.
 
 ---
@@ -151,11 +170,13 @@ Relations imports expect individual files but actual structure uses consolidated
 4. **Hyphenated vs camelCase**: Files use `user-promotions.ts` but imports expect `userPromotions.ts`
 
 ### Well-Structured Domains
+
 - **user/**: Good organization, clear table exports
 - **economy/**: Comprehensive, well-documented
 - **forum/**: Logical grouping
 
 ### Problematic Domains
+
 - **advertising/**: Major import/export mismatches
 - **collectibles/**: Everything in one file but relations expect multiple
 - **dictionary/**: Wrong import paths
@@ -166,6 +187,7 @@ Relations imports expect individual files but actual structure uses consolidated
 ## 6. Files Not Imported Anywhere (Unused)
 
 ### Main Index Missing Exports
+
 These files exist but aren't exported in `/db/schema/index.ts`:
 
 - `migrations/performance-indices.ts` - Database performance optimizations
@@ -173,6 +195,7 @@ These files exist but aren't exported in `/db/schema/index.ts`:
 - `core/enums/index.ts` - Secondary enum file
 
 ### Potentially Obsolete
+
 - `.js`, `.d.ts`, `.js.map` files in root - Build artifacts
 
 ---
@@ -182,16 +205,26 @@ These files exist but aren't exported in `/db/schema/index.ts`:
 ### Phase 1: Emergency Fixes (CRITICAL - Do First)
 
 1. **Fix Advertising Relations** (`advertising/relations.ts`):
+
 ```typescript
 // Change these imports:
 import { cryptoPayments } from './payments';
 import { adImpressions, campaignMetrics } from './performance';
 import { adPlacements } from './placements';
 import { campaignRules } from './targeting';
-import { userPromotions, announcementSlots, shoutboxPins, promotionPricingConfig, threadBoosts, profileSpotlights, userPromotionAnalytics } from './user-promotions';
+import {
+	userPromotions,
+	announcementSlots,
+	shoutboxPins,
+	promotionPricingConfig,
+	threadBoosts,
+	profileSpotlights,
+	userPromotionAnalytics
+} from './user-promotions';
 ```
 
 2. **Fix Dictionary Relations** (`dictionary/relations.ts`):
+
 ```typescript
 // Change these imports:
 import { dictionaryEntries } from './entries';
@@ -199,9 +232,16 @@ import { dictionaryUpvotes } from './upvotes';
 ```
 
 3. **Fix Collectibles Relations** (`collectibles/relations.ts`):
+
 ```typescript
 // Change all imports to single file:
-import { stickerPacks, stickers, userStickerInventory, userStickerPacks, stickerUsage } from './stickers';
+import {
+	stickerPacks,
+	stickers,
+	userStickerInventory,
+	userStickerPacks,
+	stickerUsage
+} from './stickers';
 ```
 
 ### Phase 2: Relations File Cleanup
@@ -213,6 +253,7 @@ import { stickerPacks, stickers, userStickerInventory, userStickerPacks, sticker
 ### Phase 3: Index File Updates
 
 1. **Export all relations** in main index.ts:
+
 ```typescript
 // Add these exports
 export * from './admin/relations';
@@ -241,18 +282,21 @@ export * from './wallet/relations';
 ## 8. Impact Assessment
 
 ### Current Blocking Issues
+
 - ❌ Database cannot initialize due to import errors
 - ❌ Server startup fails on schema compilation
 - ❌ Relations are not properly typed
 - ❌ Development workflow is broken
 
 ### After Phase 1 Fixes
+
 - ✅ Database will initialize successfully
 - ✅ Server can start
 - ✅ Basic relations work
 - ⚠️ Some duplicate exports remain
 
 ### After All Phases
+
 - ✅ Clean, maintainable schema architecture
 - ✅ Proper type safety throughout
 - ✅ Consistent naming conventions
@@ -263,18 +307,14 @@ export * from './wallet/relations';
 ## 9. Files Requiring Immediate Attention
 
 **CRITICAL (Fix first):**
+
 1. `/db/schema/advertising/relations.ts` - 15 wrong imports
-2. `/db/schema/collectibles/relations.ts` - 4 wrong imports  
+2. `/db/schema/collectibles/relations.ts` - 4 wrong imports
 3. `/db/schema/dictionary/relations.ts` - 2 wrong imports
 
-**HIGH:**
-4. `/db/schema/economy/relations.ts` - Multiple duplicate exports
-5. `/db/schema/user/relations.ts` - Duplicate relation exports
-6. `/db/schema/system/relations.ts` - Duplicate exports
+**HIGH:** 4. `/db/schema/economy/relations.ts` - Multiple duplicate exports 5. `/db/schema/user/relations.ts` - Duplicate relation exports 6. `/db/schema/system/relations.ts` - Duplicate exports
 
-**MEDIUM:**
-7. `/db/schema/index.ts` - Missing relations exports
-8. All domain relations files - Standardization needed
+**MEDIUM:** 7. `/db/schema/index.ts` - Missing relations exports 8. All domain relations files - Standardization needed
 
 ---
 
@@ -290,4 +330,4 @@ export * from './wallet/relations';
 
 ---
 
-*This audit reveals a critical mismatch between file organization and import statements that must be resolved immediately to restore database functionality.*
+_This audit reveals a critical mismatch between file organization and import statements that must be resolved immediately to restore database functionality._

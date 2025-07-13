@@ -7,59 +7,60 @@
  */
 
 const problematicIds = new Set([
-  'UserId',
-  'ThreadId',
-  'PostId',
-  'MessageId',
-  'WalletId',
-  'TransactionId',
-  'ProductId',
-  'BadgeId',
-  'TitleId',
-  'FrameId',
-  'StructureId',
-  'AchievementId',
-  'MissionId',
-  'GroupId',
-  'RoleId',
-  'CategoryId'
+	'UserId',
+	'ThreadId',
+	'PostId',
+	'MessageId',
+	'WalletId',
+	'TransactionId',
+	'ProductId',
+	'BadgeId',
+	'TitleId',
+	'FrameId',
+	'StructureId',
+	'AchievementId',
+	'MissionId',
+	'GroupId',
+	'RoleId',
+	'CategoryId'
 ]);
 
 module.exports = {
-  meta: {
-    type: 'problem',
-    docs: {
-      description: 'Require imports for branded ID types to prevent implicit any errors',
-      category: 'Best Practices',
-      recommended: true
-    },
-    schema: [],
-    messages: {
-      missingImport: 'Missing import for branded ID type "{{idType}}"; add `import type { {{idType}} } from \"@/types/ids\";`'
-    }
-  },
+	meta: {
+		type: 'problem',
+		docs: {
+			description: 'Require imports for branded ID types to prevent implicit any errors',
+			category: 'Best Practices',
+			recommended: true
+		},
+		schema: [],
+		messages: {
+			missingImport:
+				'Missing import for branded ID type "{{idType}}"; add `import type { {{idType}} } from \"@/types/ids\";`'
+		}
+	},
 
-  create(context) {
-    const imported = new Set();
+	create(context) {
+		const imported = new Set();
 
-    return {
-      ImportDeclaration(node) {
-        const source = node.source.value;
-        if (typeof source === 'string' && source.includes('types')) {
-          node.specifiers.forEach((spec) => {
-            if (spec.type === 'ImportSpecifier' && spec.imported) {
-              imported.add(spec.imported.name);
-            }
-          });
-        }
-      },
+		return {
+			ImportDeclaration(node) {
+				const source = node.source.value;
+				if (typeof source === 'string' && source.includes('types')) {
+					node.specifiers.forEach((spec) => {
+						if (spec.type === 'ImportSpecifier' && spec.imported) {
+							imported.add(spec.imported.name);
+						}
+					});
+				}
+			},
 
-      Identifier(node) {
-        const name = node.name;
-        if (problematicIds.has(name) && !imported.has(name)) {
-          context.report({ node, messageId: 'missingImport', data: { idType: name } });
-        }
-      }
-    };
-  }
-}; 
+			Identifier(node) {
+				const name = node.name;
+				if (problematicIds.has(name) && !imported.has(name)) {
+					context.report({ node, messageId: 'missingImport', data: { idType: name } });
+				}
+			}
+		};
+	}
+};

@@ -142,7 +142,7 @@ export function ProtectedRoute({ path, component: Component, children }: Protect
 	if (!path && children) {
 		return <RequireAuth>{children}</RequireAuth>;
 	}
-	
+
 	// If used as a route component (with path and component)
 	if (path && Component) {
 		return (
@@ -153,7 +153,7 @@ export function ProtectedRoute({ path, component: Component, children }: Protect
 			</Route>
 		);
 	}
-	
+
 	throw new Error('ProtectedRoute requires either (path + component) or children');
 }
 

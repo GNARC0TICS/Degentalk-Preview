@@ -11,11 +11,15 @@ import { PathService } from '../../../services/path-service';
 import { db } from '@db';
 import { sql } from 'drizzle-orm';
 
-import { isAuthenticated, isAdminOrModerator, isAdmin } from '@server/auth/middleware/auth.middleware';
+import {
+	isAuthenticated,
+	isAdminOrModerator,
+	isAdmin
+} from '@server/domains/auth/middleware/auth.middleware';
 import { getUserId } from '../auth/services/auth.service';
 import { isValidId } from '@shared/utils/id';
 import { logger } from '@core/logger';
-import { sendSuccessResponse, sendErrorResponse } from "@core/utils/transformer.helpers";
+import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
 // Using shared isAuthenticated middleware from middleware/auth.ts
 

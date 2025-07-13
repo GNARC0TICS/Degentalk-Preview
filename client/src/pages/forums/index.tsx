@@ -31,7 +31,6 @@ import { DynamicSidebar } from '@/components/forum/sidebar';
 import { ErrorBoundary } from '@/components/errors/ErrorBoundary';
 import { PageBackdrop } from '@/layout/primitives';
 
-
 // Generate dynamic theme colors based on zone theme
 const getDynamicZoneColors = (colorTheme: string | null) => {
 	const colorMap: Record<string, string> = {
@@ -253,33 +252,33 @@ export default function ForumsIndexPage() {
 
 	if (structureLoading) {
 		return (
-            <ErrorBoundary level='component'>
-                <PageBackdrop className="flex flex-col min-h-screen">
+			<ErrorBoundary level="component">
+				<PageBackdrop className="flex flex-col min-h-screen">
 					<div className="max-w-7xl mx-auto px-4 py-6 flex-grow">
 						<LoadingSpinner text="Loading Zones..." />
 					</div>
 					<SiteFooter />
 				</PageBackdrop>
-            </ErrorBoundary>
-        );
+			</ErrorBoundary>
+		);
 	}
 
 	if (structureErrorDetails) {
 		return (
-            <ErrorBoundary level='component'>
-                <PageBackdrop className="flex flex-col min-h-screen">
+			<ErrorBoundary level="component">
+				<PageBackdrop className="flex flex-col min-h-screen">
 					<div className="max-w-7xl mx-auto px-4 py-6 flex-grow">
 						<ErrorDisplay title="Error loading forums" error={structureErrorDetails} />
 					</div>
 					<SiteFooter />
 				</PageBackdrop>
-            </ErrorBoundary>
-        );
+			</ErrorBoundary>
+		);
 	}
 
 	return (
-        <ErrorBoundary level='component'>
-            <PageBackdrop className="flex flex-col min-h-screen">
+		<ErrorBoundary level="component">
+			<PageBackdrop className="flex flex-col min-h-screen">
 				<div className={getForumLayout('page')}>
 					<Wide className={`${getForumSpacing('container')} flex-grow`}>
 						<BackToHomeButton />
@@ -430,6 +429,6 @@ export default function ForumsIndexPage() {
 					<SiteFooter />
 				</div>
 			</PageBackdrop>
-        </ErrorBoundary>
-    );
+		</ErrorBoundary>
+	);
 }

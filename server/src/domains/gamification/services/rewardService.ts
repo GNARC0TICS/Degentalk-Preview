@@ -25,12 +25,7 @@ export async function awardXShareReward(userId: UserId) {
 		const dgtReward = await getSettingInt('X_SHARE_DGT', 0);
 
 		if (dgtReward > 0) {
-			await dgtService.processReward(
-				userId,
-				dgtReward,
-				'x_share_reward',
-				'X social share reward'
-			);
+			await dgtService.processReward(userId, dgtReward, 'x_share_reward', 'X social share reward');
 		}
 
 		logger.info('RewardService', 'Issued X share reward', { userId, xpReward, dgtReward });
@@ -45,12 +40,7 @@ export async function awardXReferralReward(userId: UserId) {
 		const dgtReward = await getSettingInt('X_REFERRAL_DGT', 100);
 
 		if (dgtReward > 0) {
-			await dgtService.processReward(
-				userId,
-				dgtReward,
-				'x_referral_reward',
-				'X referral reward'
-			);
+			await dgtService.processReward(userId, dgtReward, 'x_referral_reward', 'X referral reward');
 		}
 
 		logger.info('RewardService', 'Issued X referral reward', { userId, xpReward, dgtReward });

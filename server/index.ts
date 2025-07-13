@@ -42,7 +42,7 @@ import { seedDevUser } from './utils/seed-dev-user';
 import { traceMiddleware } from './src/middleware/trace.middleware';
 import { initEventNotificationListener } from './src/domains/notifications/event-notification-listener';
 import './src/core/background-processor';
-import { logger } from "./src/core/logger";
+import { logger } from './src/core/logger';
 import { sendErrorResponse } from './src/core/utils/transformer.helpers';
 
 // Startup logging helper
@@ -86,38 +86,42 @@ app.use(traceMiddleware);
 			startupLog('Database migrations complete.', 'success');
 		}
 
-		if (process.env.NODE_ENV === 'development' && process.env.QUICK_MODE !== 'true') {
-			// Seed DevUser for development
-			startupLog('Seeding development user...');
-			await seedDevUser();
+		// if (process.env.NODE_ENV === 'development' && process.env.QUICK_MODE !== 'true') {
+		// 	// Seed DevUser for development
+		// 	startupLog('Seeding development user...');
+		// 	await seedDevUser();
 
-			// Run all other seed scripts in development
-			startupLog('Running seed scripts in development mode...');
-			try {
-				const { seedXpActions } = await import('../scripts/db/seed-xp-actions');
-				const { seedDefaultLevels } = await import('../scripts/db/seed-default-levels');
-				const { seedEconomySettings } = await import('../scripts/db/seed-economy-settings');
-				const { forumStructureService } = await import('./src/domains/forum/services/structure.service');
-				
-				await seedXpActions();
-				await seedDefaultLevels();
-				await seedEconomySettings();
-				// Seed zones & forums using config-driven seeder
-				await forumStructureService.syncFromConfig();
-				startupLog('All seed scripts completed successfully.', 'success');
-			} catch (seedError) {
-				startupLog(`Error during seeding: ${seedError}`, 'error');
-				// Log the error but continue server startup
-			}
-		} else if (process.env.QUICK_MODE === 'true') {
-			startupLog('Quick mode enabled - skipping seed scripts', 'warning');
-		}
+		// 	// Run all other seed scripts in development
+		// 	startupLog('Running seed scripts in development mode...');
+		// 	try {
+		// 		const { seedXpActions } = await import('../scripts/db/seed-xp-actions');
+		// 		const { seedDefaultLevels } = await import('../scripts/db/seed-default-levels');
+		// 		const { seedEconomySettings } = await import('../scripts/db/seed-economy-settings');
+		// 		const { forumStructureService } = await import('./src/domains/forum/services/structure.service');
+
+		// 		await seedXpActions();
+		// 		await seedDefaultLevels();
+		// 		await seedEconomySettings();
+		// 		// Seed zones & forums using config-driven seeder
+		// 		await forumStructureService.syncFromConfig();
+		// 		startupLog('All seed scripts completed successfully.', 'success');
+		// 	} catch (seedError) {
+		// 		startupLog(`Error during seeding: ${seedError}`, 'error');
+		// 		// Log the error but continue server startup
+		// 	}
+		// } else if (process.env.QUICK_MODE === 'true') {
+		// 	startupLog('Quick mode enabled - skipping seed scripts', 'warning');
+		// }
 
 		// TEMP: Simple routes for debugging
 		app.get('/', (req, res) => {
-			res.json({ message: 'Degentalk API Server Running!', status: 'ok', timestamp: new Date().toISOString() });
+			res.json({
+				message: 'Degentalk API Server Running!',
+				status: 'ok',
+				timestamp: new Date().toISOString()
+			});
 		});
-		
+
 		app.get('/api/health', (req, res) => {
 			res.json({ status: 'healthy', uptime: process.uptime() });
 		});

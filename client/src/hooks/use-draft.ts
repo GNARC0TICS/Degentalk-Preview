@@ -8,7 +8,7 @@ import { useAuth } from './use-auth';
 const debounce = <T extends (...args: any[]) => any>(
 	func: T,
 	delay: number
-): (...args: Parameters<T>) => void => {
+): ((...args: Parameters<T>) => void) => {
 	let timeoutId: NodeJS.Timeout;
 	return (...args: Parameters<T>) => {
 		clearTimeout(timeoutId);
@@ -153,9 +153,7 @@ export function useDraft({
 		// Delete from cloud if it exists
 		if (localDraft.id && enableCloudSync && user) {
 			try {
-				await apiRequest({ url: `/api/forum/drafts/${localDraft.id}`,
-					method: 'DELETE'
-				});
+				await apiRequest({ url: `/api/forum/drafts/${localDraft.id}`, method: 'DELETE' });
 			} catch (error) {
 				console.error('Failed to delete cloud draft:', error);
 			}

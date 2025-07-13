@@ -37,9 +37,7 @@ export default function InvitePage() {
 
 		const validateCode = async () => {
 			try {
-				const res = await apiRequest({ url: `/api/referrals/validate/${code}`,
-					method: 'GET'
-				});
+				const res = await apiRequest({ url: `/api/referrals/validate/${code}`, method: 'GET' });
 				const data = await res.json();
 				setValidation(data);
 			} catch (error) {

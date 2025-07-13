@@ -12,7 +12,7 @@ import { eq, and } from 'drizzle-orm';
 import { logger } from '../src/core/logger';
 import { WalletError, ErrorCodes as WalletErrorCodes } from '../src/core/errors';
 import { sql } from 'drizzle-orm';
-import { RoomId } from "@shared/types/ids";
+import { RoomId } from '@shared/types/ids';
 
 // Constants
 const MIN_TIP_AMOUNT = 0.1; // Minimum tip amount in USDT

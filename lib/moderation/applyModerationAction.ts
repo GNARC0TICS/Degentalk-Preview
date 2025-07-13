@@ -1,7 +1,7 @@
 import { db } from '@db';
 import { eq } from 'drizzle-orm';
 import { threads, posts, contentModerationActions } from '@schema';
-import { EntityId } from "@shared/types";
+import { EntityId } from '@shared/types';
 
 export type VisibilityStatus =
 	| 'draft'

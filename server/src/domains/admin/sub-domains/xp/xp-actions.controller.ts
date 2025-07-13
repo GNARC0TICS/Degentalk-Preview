@@ -76,7 +76,10 @@ export const createXpAction = async (req: Request, res: Response, next: NextFunc
 		const { action, baseValue, description, maxPerDay, cooldownSec, enabled } = req.body;
 
 		if (!action || baseValue === undefined || !description) {
-			return sendErrorResponse(res, 'Missing required fields. action, baseValue, and description are required.');
+			return sendErrorResponse(
+				res,
+				'Missing required fields. action, baseValue, and description are required.'
+			);
 		}
 
 		// Check if action already exists
@@ -87,7 +90,11 @@ export const createXpAction = async (req: Request, res: Response, next: NextFunc
 			.limit(1);
 
 		if (existingActions.length > 0) {
-			return sendErrorResponse(res, `XP action "${action}" already exists. Use the update endpoint instead.`, 409);
+			return sendErrorResponse(
+				res,
+				`XP action "${action}" already exists. Use the update endpoint instead.`,
+				409
+			);
 		}
 
 		// Insert new XP action
@@ -248,7 +255,11 @@ export const resetXpAction = async (req: Request, res: Response, next: NextFunct
 		const isDefaultAction = Object.values(XP_ACTION).includes(actionKey as XP_ACTION);
 
 		if (!isDefaultAction) {
-			return sendErrorResponse(res, `Cannot reset custom action "${actionKey}". Only default actions can be reset.`, 400);
+			return sendErrorResponse(
+				res,
+				`Cannot reset custom action "${actionKey}". Only default actions can be reset.`,
+				400
+			);
 		}
 
 		// Get all XP actions from code and extract the default for this key

@@ -155,7 +155,7 @@ export function RichTextEditor({
 						}
 					})
 				: null,
-			canUseFeature('images') ? Image : null,
+			canUseFeature('images') ? Image : null
 			// Mention.configure({
 			//	HTMLAttributes: {
 			//		class: 'mention'

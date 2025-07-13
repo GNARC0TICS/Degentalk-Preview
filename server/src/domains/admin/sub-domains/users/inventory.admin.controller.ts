@@ -2,7 +2,7 @@ import { db } from '@db'; // Adjust
 import { userInventory, products } from '@schema'; // Adjust
 import { eq, and, getTableColumns } from 'drizzle-orm';
 import { logger } from '@core/logger';
-import { sendSuccessResponse, sendErrorResponse } from "@core/utils/transformer.helpers";
+import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
 export const userInventoryAdminController = {
 	// View a user's inventory
@@ -36,9 +36,7 @@ export const userInventoryAdminController = {
 			const existingItem = await db
 				.select()
 				.from(userInventory)
-				.where(
-					and(eq(userInventory.userId, userId), eq(userInventory.productId, productId))
-				)
+				.where(and(eq(userInventory.userId, userId), eq(userInventory.productId, productId)))
 				.limit(1);
 
 			if (existingItem.length > 0) {
@@ -80,12 +78,7 @@ export const userInventoryAdminController = {
 					})
 					.from(userInventory)
 					.leftJoin(products, eq(userInventory.productId, products.id))
-					.where(
-						and(
-							eq(userInventory.id, inventoryItemId),
-							eq(userInventory.userId, userId)
-						)
-					)
+					.where(and(eq(userInventory.id, inventoryItemId), eq(userInventory.userId, userId)))
 					.limit(1);
 
 				if (itemToEquipResult.length === 0) {
@@ -139,7 +132,11 @@ export const userInventoryAdminController = {
 								}
 							}
 						} catch (e) {
-							logger.error('Failed to parse pluginReward for an equipped item:', equippedItem.inventoryId, e);
+							logger.error(
+								'Failed to parse pluginReward for an equipped item:',
+								equippedItem.inventoryId,
+								e
+							);
 							// Continue to the next item, don't let one bad JSON break the loop
 						}
 					}
@@ -148,12 +145,7 @@ export const userInventoryAdminController = {
 						await tx
 							.update(userInventory)
 							.set({ equipped: false, updatedAt: new Date() })
-							.where(
-								and(
-									eq(userInventory.userId, userId),
-									userInventory.id.in(itemsToUnequipIds)
-								)
-							);
+							.where(and(eq(userInventory.userId, userId), userInventory.id.in(itemsToUnequipIds)));
 					}
 				}
 
@@ -176,10 +168,10 @@ export const userInventoryAdminController = {
 				.limit(1);
 
 			sendSuccessResponse(res, {
-            				success: true,
-            				message: 'Item equipped successfully',
-            				item: finalEquippedItem[0]
-            			});
+				success: true,
+				message: 'Item equipped successfully',
+				item: finalEquippedItem[0]
+			});
 		} catch (error) {
 			logger.error('Error equipping item:', error);
 			sendErrorResponse(res, error.message || 'Error equipping item', 500);
@@ -193,12 +185,7 @@ export const userInventoryAdminController = {
 			const unequippedItem = await db
 				.update(userInventory)
 				.set({ equipped: false, updatedAt: new Date() })
-				.where(
-					and(
-						eq(userInventory.id, inventoryItemId),
-						eq(userInventory.userId, userId)
-					)
-				)
+				.where(and(eq(userInventory.id, inventoryItemId), eq(userInventory.userId, userId)))
 				.returning();
 
 			if (unequippedItem.length === 0) {

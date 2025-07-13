@@ -31,7 +31,7 @@ import {
 	isAuthenticatedOptional,
 	isAdminOrModerator,
 	isAdmin
-} from '@server/auth/middleware/auth.middleware';
+} from '@server/domains/auth/middleware/auth.middleware';
 import { getUserId } from '../auth/services/auth.service';
 import { logger } from '@core/logger';
 import { ShoutboxService } from './services/shoutbox.service';
@@ -44,7 +44,7 @@ import { createCustomRateLimiter } from '@core/services/rate-limit.service';
 import { isValidId } from '@shared/utils/id';
 import { ShoutboxTransformer } from './transformers/shoutbox.transformer';
 import { UserTransformer } from '@server/domains/users/transformers/user.transformer';
-import { 
+import {
 	toPublicList,
 	sendSuccessResponse,
 	sendErrorResponse,
@@ -326,7 +326,7 @@ router.get('/messages', isAuthenticatedOptional, async (req: Request, res: Respo
 			.limit(limit);
 
 		// Transform messages using ShoutboxTransformer
-		const transformedMessages = messages.map((msg) => 
+		const transformedMessages = messages.map((msg) =>
 			ShoutboxTransformer.toAuthenticatedShout(msg)
 		);
 
@@ -493,7 +493,11 @@ router.patch(
 					);
 
 				if (pinnedCount[0].count >= config.maxPinnedMessages) {
-					return sendErrorResponse(res, `Maximum ${config.maxPinnedMessages} pinned messages allowed`, 400);
+					return sendErrorResponse(
+						res,
+						`Maximum ${config.maxPinnedMessages} pinned messages allowed`,
+						400
+					);
 				}
 			}
 
@@ -532,7 +536,12 @@ router.patch(
 				}
 			}
 
-			sendTransformedResponse(res, updatedMessage, ShoutboxTransformer.toAuthenticatedShoutbox, `Message ${isPinned ? 'pinned' : 'unpinned'} successfully`);
+			sendTransformedResponse(
+				res,
+				updatedMessage,
+				ShoutboxTransformer.toAuthenticatedShoutbox,
+				`Message ${isPinned ? 'pinned' : 'unpinned'} successfully`
+			);
 		} catch (error) {
 			logger.error('Enhanced Shoutbox', 'Error pinning/unpinning message', { error });
 			sendErrorResponse(res, 'Failed to update message', 500);
@@ -710,7 +719,7 @@ router.get('/analytics', isAdmin, async (req: Request, res: Response) => {
 			roomId,
 			eventCounts,
 			hourlyActivity,
-			topUsers: topUsers.map(user => ({
+			topUsers: topUsers.map((user) => ({
 				userId: user.userId,
 				username: user.username,
 				count: user.count
@@ -943,7 +952,9 @@ router.get('/history/advanced', isAdminOrModerator, async (req: Request, res: Re
 
 		sendSuccessResponse(res, {
 			...result,
-			messages: result.messages ? toPublicList(result.messages, ShoutboxTransformer.toAdminShout) : []
+			messages: result.messages
+				? toPublicList(result.messages, ShoutboxTransformer.toAdminShout)
+				: []
 		});
 	} catch (error) {
 		logger.error('Enhanced Shoutbox', 'Error fetching message history', { error });

@@ -172,7 +172,8 @@ export default function ReportsPage() {
 	// Resolve report mutation
 	const resolveReportMutation = useMutation({
 		mutationFn: async (data: { id: string; notes?: string }) => {
-			return apiRequest({ url: `/api/admin/reports/${data.id}/resolve`,
+			return apiRequest({
+				url: `/api/admin/reports/${data.id}/resolve`,
 				method: 'POST',
 				data: { notes: data.notes }
 			});
@@ -188,7 +189,8 @@ export default function ReportsPage() {
 	// Dismiss report mutation
 	const dismissReportMutation = useMutation({
 		mutationFn: async (data: { id: string; notes?: string }) => {
-			return apiRequest({ url: `/api/admin/reports/${data.id}/dismiss`,
+			return apiRequest({
+				url: `/api/admin/reports/${data.id}/dismiss`,
 				method: 'POST',
 				data: { notes: data.notes }
 			});
@@ -204,7 +206,8 @@ export default function ReportsPage() {
 	// Ban user mutation
 	const banUserMutation = useMutation({
 		mutationFn: async (data: { userId: UserId; reason: string; duration?: string }) => {
-			return apiRequest({ url: `/api/admin/reports/users/${data.userId}/ban`,
+			return apiRequest({
+				url: `/api/admin/reports/users/${data.userId}/ban`,
 				method: 'POST',
 				data: { reason: data.reason, duration: data.duration }
 			});
@@ -220,7 +223,8 @@ export default function ReportsPage() {
 	// Delete content mutation
 	const deleteContentMutation = useMutation({
 		mutationFn: async (data: { contentType: string; contentId: ContentId; reason: string }) => {
-			return apiRequest({ url: `/api/admin/reports/content/${data.contentType}/${data.contentId}`,
+			return apiRequest({
+				url: `/api/admin/reports/content/${data.contentType}/${data.contentId}`,
 				method: 'DELETE',
 				data: { reason: data.reason }
 			});

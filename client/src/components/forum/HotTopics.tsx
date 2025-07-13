@@ -4,7 +4,7 @@ import { Flame, MessageSquare, Clock } from 'lucide-react';
 import { FrostCard } from '@/components/ui/frost-card';
 import { CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import type { ThreadId } from "@shared/types/ids";
+import type { ThreadId } from '@shared/types/ids';
 
 interface HotThread {
 	id: ThreadId;

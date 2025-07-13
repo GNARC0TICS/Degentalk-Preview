@@ -1,7 +1,4 @@
-import {
-	pgTable, text, jsonb, timestamp, uuid, integer,
-	index
-} from 'drizzle-orm/pg-core';
+import { pgTable, text, jsonb, timestamp, uuid, integer, index } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { threads } from './threads'; // Adjusted import
 import { users } from '../user/users'; // Adjusted import

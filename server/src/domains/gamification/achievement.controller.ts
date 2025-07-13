@@ -11,12 +11,12 @@ import { z } from 'zod';
 import { achievementService, AchievementService } from './services/achievement.service';
 import type { AchievementRequirement } from './services/achievement.service';
 import { CloutTransformer } from './transformers/clout.transformer';
-import { 
+import {
 	toPublicList,
 	sendSuccessResponse,
 	sendErrorResponse,
 	sendTransformedResponse,
-	sendTransformedListResponse 
+	sendTransformedListResponse
 } from '@core/utils/transformer.helpers';
 import { logger } from '@core/logger';
 import { AppError } from '@core/errors';
@@ -62,7 +62,11 @@ const createAchievementSchema = z.object({
 });
 
 const getLeaderboardSchema = z.object({
-	limit: z.string().optional().transform((val) => val ? parseInt(val) : 50).pipe(z.number().int().min(1).max(100))
+	limit: z
+		.string()
+		.optional()
+		.transform((val) => (val ? parseInt(val) : 50))
+		.pipe(z.number().int().min(1).max(100))
 });
 
 export class AchievementController {
@@ -94,7 +98,10 @@ export class AchievementController {
 				{} as Record<string, typeof achievements>
 			);
 
-			const transformedAchievements = toPublicList(achievements, CloutTransformer.toPublicAchievement);
+			const transformedAchievements = toPublicList(
+				achievements,
+				CloutTransformer.toPublicAchievement
+			);
 			const transformedGrouped = Object.fromEntries(
 				Object.entries(grouped).map(([category, items]) => [
 					category,
@@ -206,8 +213,8 @@ export class AchievementController {
 			const inProgress = progress.filter((p) => !p.isCompleted && p.progressPercentage > 0);
 			const notStarted = progress.filter((p) => !p.isCompleted && p.progressPercentage === 0);
 
-			const transformProgress = (progressItems: any[]) => 
-				progressItems.map(p => ({
+			const transformProgress = (progressItems: any[]) =>
+				progressItems.map((p) => ({
 					...p,
 					achievement: CloutTransformer.toAuthenticatedAchievement(p.achievement, { id: userId })
 				}));
@@ -256,8 +263,8 @@ export class AchievementController {
 			const inProgress = progress.filter((p) => !p.isCompleted && p.progressPercentage > 0);
 			const notStarted = progress.filter((p) => !p.isCompleted && p.progressPercentage === 0);
 
-			const transformProgress = (progressItems: any[]) => 
-				progressItems.map(p => ({
+			const transformProgress = (progressItems: any[]) =>
+				progressItems.map((p) => ({
 					...p,
 					achievement: CloutTransformer.toAuthenticatedAchievement(p.achievement, { id: userId })
 				}));
@@ -298,12 +305,16 @@ export class AchievementController {
 				metadata
 			);
 
-			sendSuccessResponse(res, {
-				awarded: toPublicList(awardedAchievements, CloutTransformer.toPublicAchievement),
-				count: awardedAchievements.length
-			}, awardedAchievements.length > 0
-				? `Awarded ${awardedAchievements.length} achievement(s)`
-				: 'No new achievements awarded');
+			sendSuccessResponse(
+				res,
+				{
+					awarded: toPublicList(awardedAchievements, CloutTransformer.toPublicAchievement),
+					count: awardedAchievements.length
+				},
+				awardedAchievements.length > 0
+					? `Awarded ${awardedAchievements.length} achievement(s)`
+					: 'No new achievements awarded'
+			);
 		} catch (error) {
 			logger.error('ACHIEVEMENT_CONTROLLER', 'Error checking achievements:', error);
 			if (error instanceof z.ZodError) {
@@ -348,7 +359,12 @@ export class AchievementController {
 			const achievement = await this.service.createAchievement(achievementData);
 
 			res.status(201);
-			sendTransformedResponse(res, achievement, CloutTransformer.toAdminAchievement, `Achievement "${achievement.name}" created successfully`);
+			sendTransformedResponse(
+				res,
+				achievement,
+				CloutTransformer.toAdminAchievement,
+				`Achievement "${achievement.name}" created successfully`
+			);
 		} catch (error) {
 			logger.error('ACHIEVEMENT_CONTROLLER', 'Error creating achievement:', error);
 			if (error instanceof z.ZodError) {

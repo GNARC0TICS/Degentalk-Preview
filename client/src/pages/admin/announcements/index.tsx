@@ -215,8 +215,7 @@ export default function AnnouncementsPage() {
 	// Create mutation
 	const createMutation = useMutation({
 		mutationFn: async (values: AnnouncementFormValues) => {
-			return await apiRequest({ url: '/api/admin/announcements', method: 'POST', data: values
-			 });
+			return await apiRequest({ url: '/api/admin/announcements', method: 'POST', data: values });
 		},
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ['/api/admin/announcements'] });
@@ -240,8 +239,11 @@ export default function AnnouncementsPage() {
 	// Update mutation
 	const updateMutation = useMutation({
 		mutationFn: async ({ id, values }: { id: string; values: AnnouncementFormValues }) => {
-			return await apiRequest({ url: `/api/admin/announcements/${id}`, method: 'PUT', data: values
-			 });
+			return await apiRequest({
+				url: `/api/admin/announcements/${id}`,
+				method: 'PUT',
+				data: values
+			});
 		},
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ['/api/admin/announcements'] });

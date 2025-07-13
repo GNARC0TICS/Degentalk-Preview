@@ -4,7 +4,7 @@ import { Clock, MessageSquare, UserPlus, Award } from 'lucide-react';
 import { FrostCard } from '@/components/ui/frost-card';
 import { CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import type { EntityId } from "@shared/types/ids";
+import type { EntityId } from '@shared/types/ids';
 
 interface ActivityItem {
 	id: EntityId;

@@ -1,6 +1,12 @@
 // Insert the missing Drizzle imports at the top of the file
 import {
-	pgTable, uuid, varchar, jsonb, integer, boolean, timestamp,
+	pgTable,
+	uuid,
+	varchar,
+	jsonb,
+	integer,
+	boolean,
+	timestamp,
 	index
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';

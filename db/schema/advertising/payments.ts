@@ -104,8 +104,9 @@ export const adGovernanceProposals = pgTable('ad_governance_proposals', {
 	executedAt: timestamp('executed_at'),
 	executionResult: jsonb('execution_result'),
 	// Community engagement
-	discussionThreadId: uuid('discussion_thread_id')
-		.references(() => threads.id, { onDelete: 'set null' }), // Link to forum thread
+	discussionThreadId: uuid('discussion_thread_id').references(() => threads.id, {
+		onDelete: 'set null'
+	}), // Link to forum thread
 	createdAt: timestamp('created_at')
 		.notNull()
 		.default(sql`CURRENT_TIMESTAMP`),

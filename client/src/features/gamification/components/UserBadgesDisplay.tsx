@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils';
 import { Trophy } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { rarityBorderMap, rarityColorMap } from '@/config/rarity.config';
-import type { BadgeId } from "@shared/types/ids";
+import type { BadgeId } from '@shared/types/ids';
 
 export type UserBadge = {
 	id: BadgeId;

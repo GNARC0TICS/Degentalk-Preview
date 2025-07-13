@@ -11,7 +11,7 @@ import { logger } from '@core/logger';
 import { db } from '@db';
 import { subscriptions, cosmeticDrops, users } from '@schema';
 import { eq, sql, desc, count, sum } from 'drizzle-orm';
-import { sendSuccessResponse, sendErrorResponse } from "@core/utils/transformer.helpers";
+import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
 export class AdminSubscriptionController {
 	/**
@@ -92,9 +92,9 @@ export class AdminSubscriptionController {
 			};
 
 			sendSuccessResponse(res, {
-            				success: true,
-            				data: { analytics }
-            			});
+				success: true,
+				data: { analytics }
+			});
 		} catch (error) {
 			logger.error('ADMIN_SUBSCRIPTION', 'Error getting analytics:', error);
 			sendErrorResponse(res, 'Failed to retrieve subscription analytics', 500);
@@ -149,17 +149,17 @@ export class AdminSubscriptionController {
 				.where(sql`${whereConditions.join(' AND ')}`);
 
 			sendSuccessResponse(res, {
-            				success: true,
-            				data: {
-            					subscriptions: results,
-            					pagination: {
-            						page,
-            						limit,
-            						total: totalCount?.count || 0,
-            						pages: Math.ceil((totalCount?.count || 0) / limit)
-            					}
-            				}
-            			});
+				success: true,
+				data: {
+					subscriptions: results,
+					pagination: {
+						page,
+						limit,
+						total: totalCount?.count || 0,
+						pages: Math.ceil((totalCount?.count || 0) / limit)
+					}
+				}
+			});
 		} catch (error) {
 			logger.error('ADMIN_SUBSCRIPTION', 'Error getting all subscriptions:', error);
 			sendErrorResponse(res, 'Failed to retrieve subscriptions', 500);
@@ -175,12 +175,12 @@ export class AdminSubscriptionController {
 			const results = await subscriptionService.processMonthlyCosmetics();
 
 			sendSuccessResponse(res, {
-            				success: true,
-            				data: {
-            					results,
-            					message: `Cosmetic drops processed: ${results.processed} successful, ${results.failed} failed`
-            				}
-            			});
+				success: true,
+				data: {
+					results,
+					message: `Cosmetic drops processed: ${results.processed} successful, ${results.failed} failed`
+				}
+			});
 		} catch (error) {
 			logger.error('ADMIN_SUBSCRIPTION', 'Error processing cosmetics:', error);
 			sendErrorResponse(res, 'Failed to process monthly cosmetic drops', 500);
@@ -231,17 +231,17 @@ export class AdminSubscriptionController {
 				.where(whereConditions.length > 0 ? sql`${whereConditions.join(' AND ')}` : undefined);
 
 			sendSuccessResponse(res, {
-            				success: true,
-            				data: {
-            					drops: results,
-            					pagination: {
-            						page,
-            						limit,
-            						total: totalCount?.count || 0,
-            						pages: Math.ceil((totalCount?.count || 0) / limit)
-            					}
-            				}
-            			});
+				success: true,
+				data: {
+					drops: results,
+					pagination: {
+						page,
+						limit,
+						total: totalCount?.count || 0,
+						pages: Math.ceil((totalCount?.count || 0) / limit)
+					}
+				}
+			});
 		} catch (error) {
 			logger.error('ADMIN_SUBSCRIPTION', 'Error getting cosmetic drops:', error);
 			sendErrorResponse(res, 'Failed to retrieve cosmetic drop history', 500);
@@ -293,11 +293,11 @@ export class AdminSubscriptionController {
 			);
 
 			sendSuccessResponse(res, {
-            				success: true,
-            				data: {
-            					message: 'Subscription cancelled successfully'
-            				}
-            			});
+				success: true,
+				data: {
+					message: 'Subscription cancelled successfully'
+				}
+			});
 		} catch (error) {
 			logger.error('ADMIN_SUBSCRIPTION', 'Error cancelling subscription:', error);
 			sendErrorResponse(res, 'Failed to cancel subscription', 500);
@@ -361,12 +361,12 @@ export class AdminSubscriptionController {
 			);
 
 			sendSuccessResponse(res, {
-            				success: true,
-            				data: {
-            					subscription,
-            					message: `${type.replace('_', ' ')} granted successfully`
-            				}
-            			});
+				success: true,
+				data: {
+					subscription,
+					message: `${type.replace('_', ' ')} granted successfully`
+				}
+			});
 		} catch (error) {
 			logger.error('ADMIN_SUBSCRIPTION', 'Error granting subscription:', error);
 			sendErrorResponse(res, 'Failed to grant subscription', 500);

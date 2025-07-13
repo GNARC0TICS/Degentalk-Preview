@@ -37,11 +37,15 @@ export const SwitchRow: React.FC<SwitchRowProps> = ({
 		<div className={className}>
 			<div className="flex items-center justify-between gap-4 py-2">
 				<div className="flex-1">
-					<span className={`text-sm font-medium leading-none text-foreground ${required ? 'after:content-["*"] after:ml-0.5 after:text-red-500' : ''}`}>
+					<span
+						className={`text-sm font-medium leading-none text-foreground ${required ? 'after:content-["*"] after:ml-0.5 after:text-red-500' : ''}`}
+					>
 						{label}
 					</span>
 					{description && <p className="text-xs text-muted-foreground mt-1">{description}</p>}
-					{helperText && !error && <p className="text-xs text-muted-foreground mt-1">{helperText}</p>}
+					{helperText && !error && (
+						<p className="text-xs text-muted-foreground mt-1">{helperText}</p>
+					)}
 					{error && <p className="text-xs text-red-600 mt-1">{error}</p>}
 				</div>
 				<Switch.Root

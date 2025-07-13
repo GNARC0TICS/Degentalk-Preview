@@ -15,7 +15,7 @@ import {
 	type MassAirdropInput
 } from './treasury.validators';
 import { validateRequestBody } from '../../admin.validation';
-import { sendSuccessResponse, sendErrorResponse } from "@core/utils/transformer.helpers";
+import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
 export class AdminTreasuryController {
 	async getDgtSupplyStats(req: Request, res: Response) {

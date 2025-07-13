@@ -10,7 +10,15 @@
  */
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { mockUuid, mockUserId, mockThreadId, mockPostId, mockMissionId, mockAchievementId, TEST_UUIDS } from "@shared/test-utils/mock-uuid";
+import {
+	mockUuid,
+	mockUserId,
+	mockThreadId,
+	mockPostId,
+	mockMissionId,
+	mockAchievementId,
+	TEST_UUIDS
+} from '@shared/test-utils/mock-uuid';
 import { ccpaymentWebhookService } from '../../src/domains/ccpayment-webhook/ccpayment-webhook.service';
 import { ccpaymentService } from '../../src/domains/wallet/ccpayment.service';
 import { dgtService } from '../../src/domains/wallet/dgt.service';

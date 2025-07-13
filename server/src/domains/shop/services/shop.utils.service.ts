@@ -118,10 +118,7 @@ export class ShopUtilsService {
 			const [existingItems] = await db.select({ count: products.id }).from(products).limit(1);
 
 			if (existingItems && existingItems.count) {
-				logger.info(
-					'SHOP',
-					`Shop already has items. Skipping seeding.`
-				);
+				logger.info('SHOP', `Shop already has items. Skipping seeding.`);
 				return;
 			}
 
@@ -184,16 +181,15 @@ export class ShopUtilsService {
 					stockLimit: 10
 				}
 			];
-			
+
 			for (const item of itemsToSeed) {
 				await this.addShopItem(item);
 			}
 
 			logger.info('SHOP', `Seeded shop with ${itemsToSeed.length} items.`);
-
 		} catch (error) {
 			logger.error('SHOP', 'Error seeding shop items', { error });
 			throw error;
 		}
 	}
-} 
+}

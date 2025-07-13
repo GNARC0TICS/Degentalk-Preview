@@ -68,15 +68,15 @@ export function PostBody({
 			'height'
 		],
 		ADD_ATTR: ['target'],
-							HOOK_ATTRIBUTES: {
-						a: function (node: Element) {
-							const href = node.getAttribute('href');
-							if (href && (href.startsWith('http') || href.startsWith('//'))) {
-								node.setAttribute('target', '_blank');
-								node.setAttribute('rel', 'noopener noreferrer');
-							}
-						}
-					}
+		HOOK_ATTRIBUTES: {
+			a: function (node: Element) {
+				const href = node.getAttribute('href');
+				if (href && (href.startsWith('http') || href.startsWith('//'))) {
+					node.setAttribute('target', '_blank');
+					node.setAttribute('rel', 'noopener noreferrer');
+				}
+			}
+		}
 	});
 
 	// Sanitize signature if provided

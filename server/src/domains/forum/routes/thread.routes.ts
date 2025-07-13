@@ -4,10 +4,7 @@
  */
 
 import { Router } from 'express';
-import {
-	isAuthenticated,
-	isAdminOrModerator
-} from '../../auth/middleware/auth.middleware';
+import { isAuthenticated, isAdminOrModerator } from '../../auth/middleware/auth.middleware';
 import {
 	requireThreadSolvePermission,
 	requireThreadTagPermission
@@ -20,15 +17,9 @@ import { asyncHandler } from '@core/errors';
 const router = Router();
 
 // --- Public Routes ---
-router.get(
-	'/search',
-	asyncHandler(threadController.searchThreads.bind(threadController))
-);
+router.get('/search', asyncHandler(threadController.searchThreads.bind(threadController)));
 
-router.get(
-	'/', 
-	asyncHandler(threadController.searchThreads.bind(threadController))
-);
+router.get('/', asyncHandler(threadController.searchThreads.bind(threadController)));
 
 router.get(
 	'/:id',
@@ -36,10 +27,7 @@ router.get(
 	asyncHandler(threadController.getThreadById.bind(threadController))
 );
 
-router.get(
-	'/slug/:slug',
-	asyncHandler(threadController.getThreadBySlug.bind(threadController))
-);
+router.get('/slug/:slug', asyncHandler(threadController.getThreadBySlug.bind(threadController)));
 
 // --- Authenticated User Routes ---
 router.post(

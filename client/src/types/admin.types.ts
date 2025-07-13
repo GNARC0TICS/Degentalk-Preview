@@ -16,11 +16,13 @@ export interface User {
 	updatedAt: string;
 	permissions?: string[] | undefined;
 	lastLoginAt?: string;
-	profileData?: {
-		bio?: string;
-		avatarUrl?: string;
-		activeAvatarUrl?: string;
-	} | undefined;
+	profileData?:
+		| {
+				bio?: string;
+				avatarUrl?: string;
+				activeAvatarUrl?: string;
+		  }
+		| undefined;
 }
 
 // User Form Data Interface
@@ -31,10 +33,12 @@ export interface UserFormData {
 	status: 'active' | 'suspended' | 'banned' | 'pending';
 	permissions: string[];
 	password?: string; // Only for new users
-	profileData?: {
-		bio?: string;
-		avatarUrl?: string;
-	} | undefined;
+	profileData?:
+		| {
+				bio?: string;
+				avatarUrl?: string;
+		  }
+		| undefined;
 }
 
 // Role Management
@@ -131,15 +135,19 @@ export interface AdminApiResponse<T> {
 	data: T;
 	message?: string;
 	errors?: string[] | undefined;
-	metadata?: {
-		pagination?: {
-			page: number;
-			limit: number;
-			total: number;
-			totalPages: number;
-		} | undefined;
-		timestamp: string;
-	} | undefined;
+	metadata?:
+		| {
+				pagination?:
+					| {
+							page: number;
+							limit: number;
+							total: number;
+							totalPages: number;
+					  }
+					| undefined;
+				timestamp: string;
+		  }
+		| undefined;
 }
 
 // Module System

@@ -100,11 +100,19 @@ export class UserFactory extends BaseFactory<User> {
 	 */
 	static createLevelConfig(level: number = 1): LevelConfig {
 		const levelNames = [
-			'Newcomer', 'Lurker', 'Poster', 'Regular', 'Veteran', 
-			'Elite', 'Legend', 'Master', 'Grandmaster', 'Deity'
+			'Newcomer',
+			'Lurker',
+			'Poster',
+			'Regular',
+			'Veteran',
+			'Elite',
+			'Legend',
+			'Master',
+			'Grandmaster',
+			'Deity'
 		];
 		const colors = ['#gray', '#green', '#blue', '#purple', '#orange', '#red'];
-		
+
 		return {
 			level,
 			name: levelNames[Math.min(level - 1, levelNames.length - 1)] || `Level ${level}`,

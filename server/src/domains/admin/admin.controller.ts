@@ -4,7 +4,7 @@ import { getUserId } from './admin.middleware';
 import { AdminError } from './admin.errors';
 import type { AdminId, UserId } from '@shared/types/ids';
 import { userService } from '@core/services/user.service';
-import { sendSuccessResponse, sendErrorResponse } from "@core/utils/transformer.helpers";
+import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 import { AdminTransformer } from './transformers/admin.transformer';
 
 export class AdminController {
@@ -15,13 +15,13 @@ export class AdminController {
 		try {
 			const stats = await adminService.getDashboardStats();
 			const requestingAdmin = userService.getUserFromRequest(req);
-			
+
 			// Transform based on admin level
 			const isSuperAdmin = requestingAdmin?.role === 'super_admin';
 			const transformedStats = isSuperAdmin
 				? AdminTransformer.toSuperAdminDashboard(stats, requestingAdmin)
 				: AdminTransformer.toAdminDashboard(stats, requestingAdmin);
-				
+
 			sendSuccessResponse(res, transformedStats);
 		} catch (error) {
 			if (error instanceof AdminError) {
@@ -42,8 +42,8 @@ export class AdminController {
 			const requestingAdmin = userService.getUserFromRequest(req);
 
 			const transformedActions = AdminTransformer.toAdminActionLogList(
-				recentActions, 
-				requestingAdmin, 
+				recentActions,
+				requestingAdmin,
 				includeDetails
 			);
 

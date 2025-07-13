@@ -100,10 +100,7 @@ export default function AdminAvatarFramesPage() {
 	// Update frame mutation
 	const updateMutation = useMutation<AvatarFrame, Error, { id: string; data: CreateFrameData }>({
 		mutationFn: ({ id, data }) =>
-			apiRequest({ url: `/api/admin/avatar-frames/${id}`,
-				method: 'PUT',
-				data
-			}),
+			apiRequest({ url: `/api/admin/avatar-frames/${id}`, method: 'PUT', data }),
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ['admin', 'avatar-frames'] });
 			setEditingFrame(null);
@@ -124,8 +121,7 @@ export default function AdminAvatarFramesPage() {
 
 	// Delete frame mutation
 	const deleteMutation = useMutation<void, Error, FrameId>({
-		mutationFn: (id) =>
-			apiRequest({ url: `/api/admin/avatar-frames/${id}`, method: 'DELETE' }),
+		mutationFn: (id) => apiRequest({ url: `/api/admin/avatar-frames/${id}`, method: 'DELETE' }),
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ['admin', 'avatar-frames'] });
 			toast({

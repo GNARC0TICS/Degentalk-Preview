@@ -36,7 +36,10 @@ export function useFriends(profileUserId: string): UseFriendsResult {
 		queryKey: ['friends-profile', profileUserId],
 		queryFn: async (): Promise<FriendsApiResponse | undefined> => {
 			if (!profileUserId) return undefined;
-			return apiRequest<FriendsApiResponse>({ url: `/api/social/friends?user=${profileUserId}&status=accepted`, method: 'GET' });
+			return apiRequest<FriendsApiResponse>({
+				url: `/api/social/friends?user=${profileUserId}&status=accepted`,
+				method: 'GET'
+			});
 		},
 		enabled: Boolean(profileUserId)
 	});
@@ -49,7 +52,10 @@ export function useFriends(profileUserId: string): UseFriendsResult {
 		queryKey: ['friends-viewer'],
 		queryFn: async (): Promise<FriendsApiResponse | undefined> => {
 			if (!currentUser || viewingOwnProfile) return undefined;
-			return apiRequest<FriendsApiResponse>({ url: `/api/social/friends?user=${currentUser.id}&status=accepted`, method: 'GET' });
+			return apiRequest<FriendsApiResponse>({
+				url: `/api/social/friends?user=${currentUser.id}&status=accepted`,
+				method: 'GET'
+			});
 		},
 		enabled: Boolean(currentUser) && !viewingOwnProfile
 	});

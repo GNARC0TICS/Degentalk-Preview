@@ -99,10 +99,34 @@ export default function LeaderboardPage() {
 					dgtBalance: 100,
 					avatarUrl: 'https://avatar.vercel.sh/paperhands'
 				},
-				{ id: toId<'UserId'>('550e8400-e29b-41d4-a716-446655440007'), username: 'LaserEyes', xp: 75000, clout: 1100, dgtBalance: 12000 },
-				{ id: toId<'UserId'>('550e8400-e29b-41d4-a716-446655440008'), username: 'ToTheMoon', xp: 68000, clout: 1050, dgtBalance: 9000 },
-				{ id: toId<'UserId'>('550e8400-e29b-41d4-a716-446655440009'), username: 'RugPullSurvivor', xp: 60000, clout: 850, dgtBalance: 7500 },
-				{ id: toId<'UserId'>('550e8400-e29b-41d4-a716-446655440010'), username: 'HODLer', xp: 55000, clout: 800, dgtBalance: 20000 }
+				{
+					id: toId<'UserId'>('550e8400-e29b-41d4-a716-446655440007'),
+					username: 'LaserEyes',
+					xp: 75000,
+					clout: 1100,
+					dgtBalance: 12000
+				},
+				{
+					id: toId<'UserId'>('550e8400-e29b-41d4-a716-446655440008'),
+					username: 'ToTheMoon',
+					xp: 68000,
+					clout: 1050,
+					dgtBalance: 9000
+				},
+				{
+					id: toId<'UserId'>('550e8400-e29b-41d4-a716-446655440009'),
+					username: 'RugPullSurvivor',
+					xp: 60000,
+					clout: 850,
+					dgtBalance: 7500
+				},
+				{
+					id: toId<'UserId'>('550e8400-e29b-41d4-a716-446655440010'),
+					username: 'HODLer',
+					xp: 55000,
+					clout: 800,
+					dgtBalance: 20000
+				}
 			].sort((a, b) => b.xp - a.xp); // Sort by XP descending
 
 			/* Uncomment when API is ready

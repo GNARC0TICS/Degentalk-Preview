@@ -11,10 +11,10 @@ import { ErrorBoundary } from '@/components/errors/ErrorBoundary';
  */
 const ForumRoutePage: React.FC = () => {
 	return (
-        <ErrorBoundary level='component'>
-            <ForumPageView />
-        </ErrorBoundary>
-    );
+		<ErrorBoundary level="component">
+			<ForumPageView />
+		</ErrorBoundary>
+	);
 };
 
 export default ForumRoutePage;

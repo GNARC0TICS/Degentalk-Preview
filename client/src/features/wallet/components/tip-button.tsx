@@ -99,14 +99,12 @@ export default function TipButton({
 		if (values.message) {
 			tipData.reason = values.message;
 		}
-		sendTip(tipData,
-			{
-				onSuccess: () => {
-					setIsOpen(false);
-					form.reset();
-				}
+		sendTip(tipData, {
+			onSuccess: () => {
+				setIsOpen(false);
+				form.reset();
 			}
-		);
+		});
 	}
 
 	return (

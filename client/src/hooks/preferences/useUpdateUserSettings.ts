@@ -15,7 +15,8 @@ export function useUpdateUserSettings(section: PreferenceSection) {
 
 	return useMutation({
 		mutationFn: async (data: Record<string, any>) => {
-			return apiRequest<{ success: boolean; data: any }>({ url: `/api/users/me/preferences/${section}`,
+			return apiRequest<{ success: boolean; data: any }>({
+				url: `/api/users/me/preferences/${section}`,
 				method: 'PUT',
 				data
 			});

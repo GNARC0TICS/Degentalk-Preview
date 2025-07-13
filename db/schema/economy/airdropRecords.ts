@@ -1,7 +1,4 @@
-import {
-	pgTable, varchar, integer, timestamp, uuid,
-	index
-} from 'drizzle-orm/pg-core';
+import { pgTable, varchar, integer, timestamp, uuid, index } from 'drizzle-orm/pg-core';
 import { users } from '../user/users'; // Assuming path to users
 export const airdropRecords = pgTable('airdrop_records', {
 	id: uuid('id').primaryKey().defaultRandom(),

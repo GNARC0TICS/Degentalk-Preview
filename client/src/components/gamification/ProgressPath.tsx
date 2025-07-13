@@ -24,10 +24,10 @@ export interface ProgressPathProps {
 
 /**
  * ProgressPath - Unified component for all progression displays
- * 
+ *
  * Replaces:
  * - components/economy/xp/XPProgressBar.tsx
- * - components/profile/XPProgressBar.tsx  
+ * - components/profile/XPProgressBar.tsx
  * - components/paths/path-progress.tsx
  * - components/dashboard/DailyTasksWidget.tsx (progress parts)
  */
@@ -47,20 +47,29 @@ export function ProgressPath({
 	const getIcon = () => {
 		if (icon) return icon;
 		switch (type) {
-			case 'xp': return <Sparkles className="h-4 w-4" />;
-			case 'path': return <Target className="h-4 w-4" />;
-			case 'mission': return <Star className="h-4 w-4" />;
-			default: return null;
+			case 'xp':
+				return <Sparkles className="h-4 w-4" />;
+			case 'path':
+				return <Target className="h-4 w-4" />;
+			case 'mission':
+				return <Star className="h-4 w-4" />;
+			default:
+				return null;
 		}
 	};
 
 	const getColorScheme = () => {
 		switch (type) {
-			case 'xp': return 'from-blue-500 to-purple-600';
-			case 'path': return 'from-green-500 to-teal-600';
-			case 'mission': return 'from-orange-500 to-red-600';
-			case 'achievement': return 'from-yellow-500 to-orange-600';
-			default: return 'from-gray-500 to-gray-600';
+			case 'xp':
+				return 'from-blue-500 to-purple-600';
+			case 'path':
+				return 'from-green-500 to-teal-600';
+			case 'mission':
+				return 'from-orange-500 to-red-600';
+			case 'achievement':
+				return 'from-yellow-500 to-orange-600';
+			default:
+				return 'from-gray-500 to-gray-600';
 		}
 	};
 
@@ -99,10 +108,7 @@ export function ProgressPath({
 		<div className={cn('space-y-3 p-4 rounded-lg border bg-card', className)}>
 			<div className="flex items-center justify-between">
 				<div className="flex items-center gap-3">
-					<div className={cn(
-						'p-2 rounded-full bg-gradient-to-r',
-						getColorScheme()
-					)}>
+					<div className={cn('p-2 rounded-full bg-gradient-to-r', getColorScheme())}>
 						{getIcon()}
 					</div>
 					<div>
@@ -125,9 +131,7 @@ export function ProgressPath({
 					<div className="font-medium">
 						{formatNumber(currentValue)}/{targetValue ? formatNumber(targetValue) : '∞'}
 					</div>
-					<div className="text-muted-foreground">
-						{Math.round(progressPercent)}% complete
-					</div>
+					<div className="text-muted-foreground">{Math.round(progressPercent)}% complete</div>
 				</div>
 			</div>
 			<Progress value={progressPercent} className="h-3" />

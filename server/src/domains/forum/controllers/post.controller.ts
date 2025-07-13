@@ -10,7 +10,7 @@ class PostController {
 		const user = getAuthenticatedUser(req);
 		const newPost = await postService.createPost({
 			...req.body,
-			userId: user?.id as UserId,
+			userId: user?.id as UserId
 		});
 
 		const transformedPost = ForumTransformer.toAuthenticatedPost(newPost, user);
@@ -21,7 +21,7 @@ class PostController {
 		const { id } = req.params as { id: PostId };
 		const user = getAuthenticatedUser(req);
 		const updatedPost = await postService.updatePost(id, req.body);
-		
+
 		const transformedPost = ForumTransformer.toAuthenticatedPost(updatedPost, user);
 		return sendSuccessResponse(res, transformedPost);
 	}
@@ -52,7 +52,7 @@ class PostController {
 		const { amount } = req.body;
 		const user = getAuthenticatedUser(req);
 		const userId = user?.id as UserId;
-		
+
 		// TODO: Implement tipping logic with DGT service integration
 		await postService.tipPost(postId, userId, amount);
 
@@ -63,7 +63,7 @@ class PostController {
 		const { postId } = req.params as { postId: PostId };
 		const replies = await postService.getPostReplies(postId);
 		const user = getAuthenticatedUser(req);
-		const transformedReplies = replies.map(reply =>
+		const transformedReplies = replies.map((reply) =>
 			user
 				? ForumTransformer.toAuthenticatedPost(reply, user)
 				: ForumTransformer.toPublicPost(reply)
@@ -72,4 +72,4 @@ class PostController {
 	}
 }
 
-export const postController = new PostController(); 
+export const postController = new PostController();

@@ -1,5 +1,13 @@
 import { forumService } from './forum.service';
-import { mockUuid, mockUserId, mockThreadId, mockPostId, mockMissionId, mockAchievementId, TEST_UUIDS } from "@shared/test-utils/mock-uuid";
+import {
+	mockUuid,
+	mockUserId,
+	mockThreadId,
+	mockPostId,
+	mockMissionId,
+	mockAchievementId,
+	TEST_UUIDS
+} from '@shared/test-utils/mock-uuid';
 import { forumCategories } from '@schema';
 import { db } from '@db';
 import { eq } from 'drizzle-orm';

@@ -11,7 +11,7 @@ import { logger } from '@core/logger';
 import { adminCreateAuditLogEntry } from '../../shared/admin-operation-utils';
 import { getUserId } from '../../admin.middleware';
 import { z } from 'zod';
-import { sendSuccessResponse, sendErrorResponse } from "@core/utils/transformer.helpers";
+import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
 const queryService = new QueryService();
 
@@ -77,9 +77,9 @@ export async function executeQuery(req: Request, res: Response) {
 		});
 
 		sendSuccessResponse(res, {
-        			success: true,
-        			data: result
-        		});
+			success: true,
+			data: result
+		});
 	} catch (error: any) {
 		logger.error('QueryController', 'Error executing query', { error: error.message });
 		sendErrorResponse(res, 'Invalid query request', 400);
@@ -110,9 +110,9 @@ export async function validateQuery(req: Request, res: Response) {
 		});
 
 		sendSuccessResponse(res, {
-        			success: true,
-        			data: validation
-        		});
+			success: true,
+			data: validation
+		});
 	} catch (error: any) {
 		logger.error('QueryController', 'Error validating query', { error: error.message });
 		sendErrorResponse(res, 'Invalid validation request', 400);
@@ -144,9 +144,9 @@ export async function getQueryHistory(req: Request, res: Response) {
 		});
 
 		sendSuccessResponse(res, {
-        			success: true,
-        			data: history
-        		});
+			success: true,
+			data: history
+		});
 	} catch (error: any) {
 		logger.error('QueryController', 'Error getting query history', { error: error.message });
 		sendErrorResponse(res, 'Failed to retrieve query history', 500);
@@ -181,9 +181,9 @@ export async function clearQueryHistory(req: Request, res: Response) {
 		});
 
 		sendSuccessResponse(res, {
-        			success: true,
-        			message: 'Query history cleared'
-        		});
+			success: true,
+			message: 'Query history cleared'
+		});
 	} catch (error: any) {
 		logger.error('QueryController', 'Error clearing query history', { error: error.message });
 		sendErrorResponse(res, 'Failed to clear query history', 500);
@@ -207,9 +207,9 @@ export async function getSuggestedQueries(req: Request, res: Response) {
 		});
 
 		sendSuccessResponse(res, {
-        			success: true,
-        			data: suggestions
-        		});
+			success: true,
+			data: suggestions
+		});
 	} catch (error: any) {
 		logger.error('QueryController', 'Error getting suggested queries', { error: error.message });
 		sendErrorResponse(res, 'Failed to retrieve suggested queries', 500);
@@ -292,9 +292,9 @@ export async function getQueryMetrics(req: Request, res: Response) {
 		});
 
 		sendSuccessResponse(res, {
-        			success: true,
-        			data: metrics
-        		});
+			success: true,
+			data: metrics
+		});
 	} catch (error: any) {
 		logger.error('QueryController', 'Error getting query metrics', { error: error.message });
 		sendErrorResponse(res, 'Failed to retrieve query metrics', 500);

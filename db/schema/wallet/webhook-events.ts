@@ -1,12 +1,4 @@
-import {
-	pgTable,
-	uuid,
-	varchar,
-	text,
-	boolean,
-	timestamp,
-	index
-} from 'drizzle-orm/pg-core';
+import { pgTable, uuid, varchar, text, boolean, timestamp, index } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 /**
  * Webhook Events - Log all incoming webhook events from CCPayment

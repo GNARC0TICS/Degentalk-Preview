@@ -5,6 +5,7 @@ This directory contains the core business domains of the Degentalk platform, org
 ## 🏗️ Domain Organization
 
 Each domain follows a consistent structure:
+
 ```
 domain/
 ├── {domain}.controller.ts     # HTTP request handling
@@ -20,16 +21,19 @@ domain/
 ### Core Platform Domains
 
 **`auth`** - Authentication & Authorization
+
 - Session management, JWT tokens
 - Role-based access control (RBAC)
 - X (Twitter) authentication integration
 
 **`forum`** - Core Forum Functionality
+
 - Threads, posts, categories
 - Thread management and moderation
 - Content filtering and search
 
 **`wallet`** - DGT Economy & Crypto Integration
+
 - DGT token management
 - CCPayment crypto deposits
 - Internal transfers and withdrawals
@@ -37,16 +41,19 @@ domain/
 ### Engagement Domains
 
 **`engagement`** - Social Features
+
 - Tipping system (DGT rewards)
 - Rain events (mass tips)
 - User-to-user interactions
 
 **`gamification`** - XP & Achievement System
+
 - Experience point calculations
 - Achievement tracking and unlocks
 - Leaderboards and missions
 
 **`social`** - Social Graph
+
 - Friend/follow relationships
 - Mentions and notifications
 - Whale watching (high-value users)
@@ -54,16 +61,19 @@ domain/
 ### Content & Commerce
 
 **`shop`** - Digital Marketplace
+
 - Cosmetic items and avatars
 - Purchase processing
 - Inventory management
 
 **`admin`** - Administrative Operations
+
 - User management and moderation
 - System configuration
 - Analytics and reporting
 
 **`messaging`** - Communication
+
 - Shoutbox (global chat)
 - Direct messages
 - Real-time notifications
@@ -71,16 +81,19 @@ domain/
 ### Support Domains
 
 **`advertising`** - Ad System
+
 - Campaign management
 - Ad serving and tracking
 - User promotions
 
 **`collectibles`** - Digital Assets
+
 - Sticker system
 - Rare item management
 - Trading functionality
 
 **`cosmetics`** - Visual Customization
+
 - Avatar frames and effects
 - Profile customization
 - Equipment system
@@ -123,7 +136,7 @@ import { ForumService } from '../forum/forum.service';
 - **engagement**: User interaction and rewards
 - **gamification**: Progress tracking and motivation
 
-### Secondary Support Capabilities  
+### Secondary Support Capabilities
 
 - **admin**: Platform management and oversight
 - **messaging**: Real-time communication channels

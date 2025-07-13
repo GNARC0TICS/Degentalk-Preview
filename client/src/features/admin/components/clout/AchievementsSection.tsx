@@ -164,7 +164,11 @@ export function AchievementsSection({ achievements, isLoading }: AchievementsSec
 	const updateAchievementMutation = useMutation({
 		mutationFn: async (data: AchievementForm & { id: AchievementId }) => {
 			const { id, ...updateData } = data;
-			return apiRequest({ url: `/api/admin/clout/achievements/${id}`, method: 'PUT', data: updateData });
+			return apiRequest({
+				url: `/api/admin/clout/achievements/${id}`,
+				method: 'PUT',
+				data: updateData
+			});
 		},
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ['admin-clout-achievements'] });

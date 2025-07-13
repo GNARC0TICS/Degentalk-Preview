@@ -19,17 +19,14 @@ import {
 	users as usersTable
 } from '@schema';
 import { eq, ilike, asc, gt, inArray, lt, desc, and, sql } from 'drizzle-orm';
-import { isAuthenticated as requireAuth } from '@server/auth/middleware/auth.middleware';
+import { isAuthenticated as requireAuth } from '@server/domains/auth/middleware/auth.middleware';
 import { logger } from '@core/logger';
 import { forumStructureService } from './services/structure.service';
 import { threadService } from './services/thread.service';
 import { asyncHandler } from '@core/errors';
 import type { StructureId } from '@shared/types/ids';
 import { ForumTransformer } from './transformers/forum.transformer';
-import { 
-	sendSuccessResponse,
-	sendErrorResponse
-} from '@core/utils/transformer.helpers';
+import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
 // Import specialized route modules
 import threadRoutes from './routes/thread.routes';

@@ -21,10 +21,7 @@ export function DevRoleSwitcher() {
 			<Badge variant="outline" className="border-yellow-500 text-yellow-500">
 				DEV
 			</Badge>
-			<Select
-				value={currentMockRole}
-				onValueChange={(value) => setMockRole(value as MockRole)}
-			>
+			<Select value={currentMockRole} onValueChange={(value) => setMockRole(value as MockRole)}>
 				<SelectTrigger className="w-[120px] h-8 text-xs">
 					<SelectValue placeholder="Select Role" />
 				</SelectTrigger>

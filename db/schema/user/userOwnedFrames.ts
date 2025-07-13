@@ -1,7 +1,4 @@
-import {
-	pgTable, uuid, integer, varchar, timestamp,
-	index
-} from 'drizzle-orm/pg-core';
+import { pgTable, uuid, integer, varchar, timestamp, index } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from './users';
 import { avatarFrames } from './avatarFrames';

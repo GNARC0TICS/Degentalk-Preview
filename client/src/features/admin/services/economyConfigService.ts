@@ -18,7 +18,8 @@ export function useEconomyConfig() {
 export function useUpdateEconomyConfig() {
 	const qc = useQueryClient();
 	return useMutation({
-		mutationFn: (data: Record<string, unknown>) => adminApi.put('/economy/config', data).then((res) => res.data),
+		mutationFn: (data: Record<string, unknown>) =>
+			adminApi.put('/economy/config', data).then((res) => res.data),
 		onSuccess: () => {
 			qc.invalidateQueries({ queryKey: ECONOMY_KEY });
 		}

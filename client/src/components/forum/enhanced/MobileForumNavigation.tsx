@@ -30,7 +30,9 @@ export interface MobileForumNavigationProps {
 }
 
 // Generate dynamic theme based on colorTheme
-const getDynamicMobileTheme = (colorTheme: string | null): {
+const getDynamicMobileTheme = (
+	colorTheme: string | null
+): {
 	gradient: string;
 	accent: string;
 	icon: typeof Folder;

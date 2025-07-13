@@ -1,7 +1,4 @@
-import {
-	pgTable, integer, uuid,
-	index
-} from 'drizzle-orm/pg-core';
+import { pgTable, integer, uuid, index } from 'drizzle-orm/pg-core';
 import { mediaLibrary } from '../admin/mediaLibrary';
 import { animationPacks } from './animationPacks';
 export const animationPackItems = pgTable('animation_pack_items', {

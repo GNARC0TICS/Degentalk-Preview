@@ -450,10 +450,10 @@ export class EmailTemplateService {
 			// TODO: Integrate with your email service (SendGrid, AWS SES, etc.)
 			// For now, just log it
 			logger.info('Sending email:', {
-            				to: recipientEmail,
-            				subject,
-            				template: templateKey
-            			});
+				to: recipientEmail,
+				subject,
+				template: templateKey
+			});
 
 			// Log email send
 			await db.insert(emailTemplateLogs).values({

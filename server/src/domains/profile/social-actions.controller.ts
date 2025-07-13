@@ -3,7 +3,7 @@ import type { Request, Response } from 'express';
 import { SocialActionsService } from './social-actions.service';
 import { handleControllerError } from '../../lib/error-handler';
 import { z } from 'zod';
-import { sendSuccessResponse, sendErrorResponse } from "@core/utils/transformer.helpers";
+import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
 // Request validation schemas
 const FollowUserSchema = z.object({
@@ -160,10 +160,10 @@ export class SocialActionsController {
 			);
 
 			sendSuccessResponse(res, {
-            				success: true,
-            				data: status,
-            				timestamp: new Date().toISOString()
-            			});
+				success: true,
+				data: status,
+				timestamp: new Date().toISOString()
+			});
 		} catch (error) {
 			handleControllerError(error, res, 'Failed to get relationship status');
 		}
@@ -190,13 +190,13 @@ export class SocialActionsController {
 			);
 
 			sendSuccessResponse(res, {
-            				success: true,
-            				data: {
-            					suggestions,
-            					count: suggestions.length
-            				},
-            				timestamp: new Date().toISOString()
-            			});
+				success: true,
+				data: {
+					suggestions,
+					count: suggestions.length
+				},
+				timestamp: new Date().toISOString()
+			});
 		} catch (error) {
 			handleControllerError(error, res, 'Failed to get social suggestions');
 		}
@@ -216,14 +216,14 @@ export class SocialActionsController {
 			const pendingRequests = await this.getPendingRequests(userService.getUserFromRequest(req).id);
 
 			sendSuccessResponse(res, {
-            				success: true,
-            				data: {
-            					received: pendingRequests.received,
-            					sent: pendingRequests.sent,
-            					count: pendingRequests.received.length
-            				},
-            				timestamp: new Date().toISOString()
-            			});
+				success: true,
+				data: {
+					received: pendingRequests.received,
+					sent: pendingRequests.sent,
+					count: pendingRequests.received.length
+				},
+				timestamp: new Date().toISOString()
+			});
 		} catch (error) {
 			handleControllerError(error, res, 'Failed to get pending friend requests');
 		}

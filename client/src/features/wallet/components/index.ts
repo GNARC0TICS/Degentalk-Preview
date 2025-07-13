@@ -1,6 +1,6 @@
 /**
  * Wallet Components Export Barrel
- * 
+ *
  * Centralized exports for all wallet UI components
  */
 

@@ -37,8 +37,7 @@ export function useWallet() {
 		return {
 			...raw,
 			dgt: { balance: (raw as any).dgtBalance ?? 0 },
-			crypto:
-				raw.cryptoBalances?.map((c) => ({ balance: c.balance })) ?? [],
+			crypto: raw.cryptoBalances?.map((c) => ({ balance: c.balance })) ?? []
 		} as any;
 	}, [balanceQuery.data]);
 

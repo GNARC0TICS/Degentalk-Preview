@@ -17,12 +17,12 @@ import {
 	getTemplatesByCategory
 } from './templates/achievement-templates';
 import { CloutTransformer } from '../transformers/clout.transformer';
-import { 
+import {
 	toPublicList,
 	sendSuccessResponse,
 	sendErrorResponse,
 	sendTransformedResponse,
-	sendTransformedListResponse 
+	sendTransformedListResponse
 } from '@core/utils/transformer.helpers';
 import { logger } from '@core/logger';
 import { db } from '@db';
@@ -80,7 +80,7 @@ export class AchievementController {
 				.where(and(...whereConditions))
 				.orderBy(desc(userAchievements.completedAt));
 
-			const transformedData = userAchievementsData.map(item => ({
+			const transformedData = userAchievementsData.map((item) => ({
 				...item,
 				achievement: CloutTransformer.toAuthenticatedAchievement(item.achievement, { id: userId })
 			}));
@@ -127,12 +127,17 @@ export class AchievementController {
 				parseInt(limit as string)
 			);
 
-			sendSuccessResponse(res, toPublicList(result.achievements, CloutTransformer.toPublicAchievement), undefined, {
-				page: parseInt(page as string),
-				limit: parseInt(limit as string),
-				total: result.total,
-				pages: Math.ceil(result.total / parseInt(limit as string))
-			});
+			sendSuccessResponse(
+				res,
+				toPublicList(result.achievements, CloutTransformer.toPublicAchievement),
+				undefined,
+				{
+					page: parseInt(page as string),
+					limit: parseInt(limit as string),
+					total: result.total,
+					pages: Math.ceil(result.total / parseInt(limit as string))
+				}
+			);
 		} catch (error) {
 			logger.error('ACHIEVEMENT_CONTROLLER', 'Failed to get achievements', {
 				error: error instanceof Error ? error.message : String(error)
@@ -197,7 +202,11 @@ export class AchievementController {
 				body: req.body,
 				error: error instanceof Error ? error.message : String(error)
 			});
-			sendErrorResponse(res, error instanceof Error ? error.message : 'Failed to create achievement', 400);
+			sendErrorResponse(
+				res,
+				error instanceof Error ? error.message : 'Failed to create achievement',
+				400
+			);
 		}
 	}
 
@@ -217,7 +226,11 @@ export class AchievementController {
 				body: req.body,
 				error: error instanceof Error ? error.message : String(error)
 			});
-			sendErrorResponse(res, error instanceof Error ? error.message : 'Failed to update achievement', 400);
+			sendErrorResponse(
+				res,
+				error instanceof Error ? error.message : 'Failed to update achievement',
+				400
+			);
 		}
 	}
 
@@ -236,7 +249,11 @@ export class AchievementController {
 				id: req.params.id,
 				error: error instanceof Error ? error.message : String(error)
 			});
-			sendErrorResponse(res, error instanceof Error ? error.message : 'Failed to delete achievement', 400);
+			sendErrorResponse(
+				res,
+				error instanceof Error ? error.message : 'Failed to delete achievement',
+				400
+			);
 		}
 	}
 
@@ -249,13 +266,22 @@ export class AchievementController {
 			const { ids, updates } = req.body;
 			const achievements = await this.adminService.bulkUpdateAchievements(ids, updates);
 
-			sendTransformedListResponse(res, achievements, CloutTransformer.toAdminAchievement, `Updated ${achievements.length} achievements`);
+			sendTransformedListResponse(
+				res,
+				achievements,
+				CloutTransformer.toAdminAchievement,
+				`Updated ${achievements.length} achievements`
+			);
 		} catch (error) {
 			logger.error('ACHIEVEMENT_CONTROLLER', 'Failed to bulk update achievements', {
 				body: req.body,
 				error: error instanceof Error ? error.message : String(error)
 			});
-			sendErrorResponse(res, error instanceof Error ? error.message : 'Failed to bulk update achievements', 400);
+			sendErrorResponse(
+				res,
+				error instanceof Error ? error.message : 'Failed to bulk update achievements',
+				400
+			);
 		}
 	}
 
@@ -307,7 +333,11 @@ export class AchievementController {
 				body: req.body,
 				error: error instanceof Error ? error.message : String(error)
 			});
-			sendErrorResponse(res, error instanceof Error ? error.message : 'Failed to award achievement', 400);
+			sendErrorResponse(
+				res,
+				error instanceof Error ? error.message : 'Failed to award achievement',
+				400
+			);
 		}
 	}
 
@@ -423,14 +453,23 @@ export class AchievementController {
 			const achievement = await this.adminService.createAchievement(finalData);
 
 			res.status(201);
-			sendTransformedResponse(res, achievement, CloutTransformer.toAdminAchievement, `Achievement created from template: ${template.templateName}`);
+			sendTransformedResponse(
+				res,
+				achievement,
+				CloutTransformer.toAdminAchievement,
+				`Achievement created from template: ${template.templateName}`
+			);
 		} catch (error) {
 			logger.error('ACHIEVEMENT_CONTROLLER', 'Failed to create achievement from template', {
 				templateId: req.params.templateId,
 				body: req.body,
 				error: error instanceof Error ? error.message : String(error)
 			});
-			sendErrorResponse(res, error instanceof Error ? error.message : 'Failed to create achievement from template', 400);
+			sendErrorResponse(
+				res,
+				error instanceof Error ? error.message : 'Failed to create achievement from template',
+				400
+			);
 		}
 	}
 }

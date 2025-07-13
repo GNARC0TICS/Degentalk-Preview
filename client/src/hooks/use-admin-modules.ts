@@ -51,15 +51,17 @@ export function useAdminModules(): UseAdminModulesReturn {
 			adminModuleRegistry.reset();
 
 			// Apply server-side feature flags and settings
-			serverConfig.modules.forEach((serverModule: { id: string; enabled: boolean; settings?: Record<string, unknown> }) => {
-				const localModule = adminModuleRegistry.getModule(serverModule.id);
-				if (localModule) {
-					adminModuleRegistry.setModuleEnabled(serverModule.id, serverModule.enabled);
-					if (serverModule.settings) {
-						adminModuleRegistry.updateModuleSettings(serverModule.id, serverModule.settings);
+			serverConfig.modules.forEach(
+				(serverModule: { id: string; enabled: boolean; settings?: Record<string, unknown> }) => {
+					const localModule = adminModuleRegistry.getModule(serverModule.id);
+					if (localModule) {
+						adminModuleRegistry.setModuleEnabled(serverModule.id, serverModule.enabled);
+						if (serverModule.settings) {
+							adminModuleRegistry.updateModuleSettings(serverModule.id, serverModule.settings);
+						}
 					}
 				}
-			});
+			);
 		}
 
 		return adminModuleRegistry.getModulesForUser(user);

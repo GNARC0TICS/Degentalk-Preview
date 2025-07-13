@@ -1,7 +1,4 @@
-import {
-	integer, text, timestamp, pgEnum, pgTable, uuid,
-	index
-} from 'drizzle-orm/pg-core';
+import { integer, text, timestamp, pgEnum, pgTable, uuid, index } from 'drizzle-orm/pg-core';
 import { users } from '../user/users'; // Assuming users schema is in db/schema/user/users.ts
 import { roles } from '../user/roles'; // Use roles instead of deprecated userGroups
 export const tokenTypeEnumAirdrop = pgEnum('token_type_admin_airdrop', ['XP', 'DGT']);

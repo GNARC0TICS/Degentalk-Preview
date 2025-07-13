@@ -1,7 +1,4 @@
-import {
-	pgTable, varchar, text, boolean, timestamp, uuid,
-	index
-} from 'drizzle-orm/pg-core';
+import { pgTable, varchar, text, boolean, timestamp, uuid, index } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users'; // Adjusted path
 export const siteTemplates = pgTable('site_templates', {

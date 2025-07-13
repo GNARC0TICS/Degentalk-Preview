@@ -13,7 +13,7 @@ import { validateRequest } from '@server-middleware/validate-request';
 import { getUserIdFromRequest } from '@server-utils/auth';
 import { isValidId } from '@shared/utils/id';
 import { logger } from '@core/logger';
-import { sendSuccessResponse, sendErrorResponse } from "@core/utils/transformer.helpers";
+import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
 const router = Router();
 

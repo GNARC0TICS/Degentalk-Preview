@@ -130,7 +130,10 @@ const reportsApi = {
 		});
 	},
 
-	async resolveReport(id: ReportId, data: { action: string; reason?: string; banDuration?: string }) {
+	async resolveReport(
+		id: ReportId,
+		data: { action: string; reason?: string; banDuration?: string }
+	) {
 		return apiRequest<{ message: string }>({
 			url: `/api/admin/reports/${id}/resolve`,
 			method: 'POST',

@@ -6,7 +6,15 @@
  */
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { mockUuid, mockUserId, mockThreadId, mockPostId, mockMissionId, mockAchievementId, TEST_UUIDS } from "@shared/test-utils/mock-uuid";
+import {
+	mockUuid,
+	mockUserId,
+	mockThreadId,
+	mockPostId,
+	mockMissionId,
+	mockAchievementId,
+	TEST_UUIDS
+} from '@shared/test-utils/mock-uuid';
 import { UserRepository } from '../repositories/user-repository';
 import type { User } from '@schema';
 import type { IUserRepository } from '../interfaces';

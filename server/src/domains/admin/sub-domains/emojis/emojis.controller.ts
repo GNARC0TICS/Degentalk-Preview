@@ -14,7 +14,7 @@ import {
 } from '../../admin.validation';
 import { logger } from '@core/logger';
 import { AdminError, AdminErrorCodes } from '../../admin.errors';
-import { 
+import {
 	toPublicList,
 	sendSuccessResponse,
 	sendErrorResponse,
@@ -116,7 +116,11 @@ export const createEmoji = async (req: Request, res: Response) => {
 		);
 
 		res.status(201);
-		return sendSuccessResponse(res, { ...newEmoji, id: newEmoji.id }, `Emoji '${newEmoji.name}' created successfully`);
+		return sendSuccessResponse(
+			res,
+			{ ...newEmoji, id: newEmoji.id },
+			`Emoji '${newEmoji.name}' created successfully`
+		);
 	} catch (error) {
 		logger.error('EMOJI_CONTROLLER', 'Error creating emoji:', error);
 
@@ -161,7 +165,11 @@ export const updateEmoji = async (req: Request, res: Response) => {
 
 		logger.info('EMOJI_CONTROLLER', `Successfully updated emoji: ${updatedEmoji.name} (ID: ${id})`);
 
-		return sendSuccessResponse(res, { ...updatedEmoji, id: updatedEmoji.id }, `Emoji '${updatedEmoji.name}' updated successfully`);
+		return sendSuccessResponse(
+			res,
+			{ ...updatedEmoji, id: updatedEmoji.id },
+			`Emoji '${updatedEmoji.name}' updated successfully`
+		);
 	} catch (error) {
 		logger.error('EMOJI_CONTROLLER', 'Error updating emoji:', error);
 
@@ -197,7 +205,11 @@ export const deleteEmoji = async (req: Request, res: Response) => {
 
 		logger.info('EMOJI_CONTROLLER', `Successfully deleted emoji (ID: ${id})`);
 
-		return sendSuccessResponse(res, { id: deletedEmoji.id, name: deletedEmoji.name }, 'Emoji deleted successfully');
+		return sendSuccessResponse(
+			res,
+			{ id: deletedEmoji.id, name: deletedEmoji.name },
+			'Emoji deleted successfully'
+		);
 	} catch (error) {
 		logger.error('EMOJI_CONTROLLER', 'Error deleting emoji:', error);
 
@@ -237,10 +249,14 @@ export const bulkDeleteEmojis = async (req: Request, res: Response) => {
 
 		logger.info('EMOJI_CONTROLLER', `Successfully bulk deleted ${deletedEmojis.length} emojis`);
 
-		return sendSuccessResponse(res, {
-			deleted: deletedEmojis,
-			count: deletedEmojis.length
-		}, `Successfully deleted ${deletedEmojis.length} emoji(s)`);
+		return sendSuccessResponse(
+			res,
+			{
+				deleted: deletedEmojis,
+				count: deletedEmojis.length
+			},
+			`Successfully deleted ${deletedEmojis.length} emoji(s)`
+		);
 	} catch (error) {
 		logger.error('EMOJI_CONTROLLER', 'Error bulk deleting emojis:', error);
 
@@ -264,7 +280,10 @@ export const getEmojiCategories = async (req: Request, res: Response) => {
 
 		logger.info('EMOJI_CONTROLLER', `Successfully fetched ${categories.length} emoji categories`);
 
-		return sendTransformedListResponse(res, categories, (category) => ({ ...category, id: category.id }));
+		return sendTransformedListResponse(res, categories, (category) => ({
+			...category,
+			id: category.id
+		}));
 	} catch (error) {
 		logger.error('EMOJI_CONTROLLER', 'Error fetching emoji categories:', error);
 

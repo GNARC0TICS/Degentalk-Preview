@@ -1,5 +1,5 @@
 import { getPathForCategory, xpRewards } from '@shared/path-config';
-import { CategoryId } from "@shared/types/ids";
+import { CategoryId } from '@shared/types/ids';
 
 export interface UserPaths {
 	paths?: Record<string, number>;

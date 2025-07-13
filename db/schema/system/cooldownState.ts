@@ -1,7 +1,4 @@
-import {
-	pgTable, integer, varchar, timestamp, uuid,
-	index
-} from 'drizzle-orm/pg-core';
+import { pgTable, integer, varchar, timestamp, uuid, index } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users';
 export const cooldownState = pgTable('cooldown_state', {

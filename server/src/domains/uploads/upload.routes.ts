@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { createPresignedUploadUrlController, confirmUploadController } from './upload.controller';
-import { isAuthenticated } from '@server/auth/middleware/auth.middleware';
+import { isAuthenticated } from '@server/domains/auth/middleware/auth.middleware';
 
 const router = Router();
 

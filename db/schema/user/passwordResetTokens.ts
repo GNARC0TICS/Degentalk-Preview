@@ -1,12 +1,4 @@
-import {
-	pgTable,
-	integer,
-	varchar,
-	timestamp,
-	boolean,
-	index,
-	uuid
-} from 'drizzle-orm/pg-core';
+import { pgTable, integer, varchar, timestamp, boolean, index, uuid } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from './users';
 export const passwordResetTokens = pgTable(

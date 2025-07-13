@@ -11,10 +11,7 @@ import { forumStructureService } from '../services/structure.service';
 import { logger } from '@core/logger';
 import { asyncHandler } from '@core/errors';
 import { ForumTransformer } from '../transformers/forum.transformer';
-import { 
-	sendSuccessResponse,
-	sendErrorResponse
-} from '@core/utils/transformer.helpers';
+import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
 const router = Router();
 
@@ -40,8 +37,8 @@ router.get(
 			const forums = allStructures.filter((s) => s.type === 'forum');
 
 			sendSuccessResponse(res, {
-				zones: zones.map(z => ForumTransformer.toPublicForumStructure(z)), 
-				forums: forums.map(f => ForumTransformer.toPublicForumStructure(f)) 
+				zones: zones.map((z) => ForumTransformer.toPublicForumStructure(z)),
+				forums: forums.map((f) => ForumTransformer.toPublicForumStructure(f))
 			});
 		} catch (error) {
 			logger.error('StructureRoutes', 'Error in GET /structure', { error });
@@ -56,8 +53,8 @@ router.get(
 	asyncHandler(async (req: Request, res: Response) => {
 		try {
 			const hierarchy = await forumStructureService.getForumHierarchy();
-			const transformedHierarchy = Array.isArray(hierarchy) 
-				? hierarchy.map(item => ForumTransformer.toPublicForumStructure(item))
+			const transformedHierarchy = Array.isArray(hierarchy)
+				? hierarchy.map((item) => ForumTransformer.toPublicForumStructure(item))
 				: ForumTransformer.toPublicForumStructure(hierarchy);
 			sendSuccessResponse(res, transformedHierarchy);
 		} catch (error) {
@@ -75,7 +72,10 @@ router.get(
 			const includeStats = req.query.includeStats !== 'false';
 			const structures = await forumStructureService.getStructuresWithStats();
 
-			sendSuccessResponse(res, structures.map(s => ForumTransformer.toPublicForumStructure(s)));
+			sendSuccessResponse(
+				res,
+				structures.map((s) => ForumTransformer.toPublicForumStructure(s))
+			);
 		} catch (error) {
 			logger.error('StructureRoutes', 'Error in GET /structures', { error });
 			return sendErrorResponse(res, 'Failed to fetch forum structures', 500);
@@ -96,9 +96,12 @@ router.get(
 				includeEmptyStats
 			});
 
-			sendSuccessResponse(res, Array.isArray(tree) 
-				? tree.map(item => ForumTransformer.toPublicForumStructure(item))
-				: ForumTransformer.toPublicForumStructure(tree));
+			sendSuccessResponse(
+				res,
+				Array.isArray(tree)
+					? tree.map((item) => ForumTransformer.toPublicForumStructure(item))
+					: ForumTransformer.toPublicForumStructure(tree)
+			);
 		} catch (error) {
 			logger.error('StructureRoutes', 'Error in GET /structure/tree', { error });
 			return sendErrorResponse(res, 'Failed to fetch structure tree', 500);

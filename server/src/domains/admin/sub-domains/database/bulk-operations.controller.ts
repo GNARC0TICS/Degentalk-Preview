@@ -14,7 +14,7 @@ import { z } from 'zod';
 import multer from 'multer';
 import csvParser from 'csv-parser';
 import { Readable } from 'stream';
-import { sendSuccessResponse, sendErrorResponse } from "@core/utils/transformer.helpers";
+import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
 const databaseService = new DatabaseService();
 
@@ -160,14 +160,14 @@ export async function validateImportData(req: Request, res: Response) {
 		});
 
 		sendSuccessResponse(res, {
-        			success: true,
-        			data: {
-        				totalRows: data.length,
-        				validRows: data.length - validationResults.length,
-        				invalidRows: validationResults.length,
-        				errors: validationResults
-        			}
-        		});
+			success: true,
+			data: {
+				totalRows: data.length,
+				validRows: data.length - validationResults.length,
+				invalidRows: validationResults.length,
+				errors: validationResults
+			}
+		});
 	} catch (error: any) {
 		logger.error('BulkController', 'Error validating import data', { error: error.message });
 		sendErrorResponse(res, 'Failed to validate import data', 500);

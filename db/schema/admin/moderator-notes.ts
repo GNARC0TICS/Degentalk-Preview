@@ -1,7 +1,4 @@
-import {
-	pgTable, varchar, text, timestamp, uuid, pgEnum,
-	index
-} from 'drizzle-orm/pg-core';
+import { pgTable, varchar, text, timestamp, uuid, pgEnum, index } from 'drizzle-orm/pg-core';
 import { users } from '../user/users';
 export const moderatorNoteTypeEnum = pgEnum('moderator_note_type', ['thread', 'post', 'user']);
 export const moderatorNotes = pgTable('moderator_notes', {

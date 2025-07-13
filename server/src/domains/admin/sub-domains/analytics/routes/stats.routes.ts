@@ -10,7 +10,7 @@ import { eq } from 'drizzle-orm';
 import { platformStatsService } from '../services/platformStats.service';
 import { isAdmin } from '../../../../auth/middleware/auth.middleware';
 import { logger } from '@core/logger';
-import { sendSuccessResponse, sendErrorResponse } from "@core/utils/transformer.helpers";
+import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
 const router = Router();
 
@@ -72,10 +72,10 @@ router.get('/:key', async (req, res) => {
 		}
 
 		sendSuccessResponse(res, {
-        			key: stat.statKey,
-        			value: Number(stat.statValue),
-        			lastUpdated: stat.lastUpdatedAt
-        		});
+			key: stat.statKey,
+			value: Number(stat.statValue),
+			lastUpdated: stat.lastUpdatedAt
+		});
 	} catch (error) {
 		logger.error('Error fetching platform statistic:', error);
 		sendErrorResponse(res, 'Failed to fetch platform statistic', 500);
@@ -92,9 +92,9 @@ router.post('/refresh', async (req, res) => {
 		const stats = await platformStatsService.updateAllStats();
 
 		sendSuccessResponse(res, {
-        			message: 'Platform statistics refreshed successfully',
-        			stats
-        		});
+			message: 'Platform statistics refreshed successfully',
+			stats
+		});
 	} catch (error) {
 		logger.error('Error refreshing platform statistics:', error);
 		sendErrorResponse(res, 'Failed to refresh platform statistics', 500);

@@ -83,7 +83,8 @@ export function CooldownSettings() {
 		onError: (error: Error) => {
 			toast({
 				title: 'Error saving cooldown settings',
-				description: (error as any).response?.data?.message || 'An error occurred while saving settings',
+				description:
+					(error as any).response?.data?.message || 'An error occurred while saving settings',
 				variant: 'destructive'
 			});
 		}

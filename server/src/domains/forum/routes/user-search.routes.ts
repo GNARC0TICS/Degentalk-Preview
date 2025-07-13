@@ -8,9 +8,6 @@ import { userSearchController } from '../controllers/user-search.controller';
 
 const router = Router();
 
-router.get(
-	'/',
-	asyncHandler(userSearchController.searchUsers.bind(userSearchController))
-);
+router.get('/', asyncHandler(userSearchController.searchUsers.bind(userSearchController)));
 
-export default router; 
+export default router;

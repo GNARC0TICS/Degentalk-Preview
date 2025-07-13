@@ -2,7 +2,7 @@ import type { Request, Response } from 'express';
 import { AdminTitlesService } from './titles.service';
 import { createTitleSchema, updateTitleSchema } from './titles.validators';
 import { validateRequestBody } from '../../admin.validation';
-import { sendSuccessResponse, sendErrorResponse } from "@core/utils/transformer.helpers";
+import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
 const service = new AdminTitlesService();
 

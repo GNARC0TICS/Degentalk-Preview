@@ -2,7 +2,7 @@ import type { Request, Response } from 'express';
 import { userService } from '@core/services/user.service';
 import { SocialService } from './social.service';
 import { logger } from '@core/logger';
-import { sendSuccessResponse, sendErrorResponse } from "@core/utils/transformer.helpers";
+import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
 export class SocialController {
 	/**

@@ -9,10 +9,10 @@
 		"pnpm": ">=9.0.0"
 	},
 	"scripts": {
-		"dev": "pnpm run kill-ports && pnpm --parallel --filter @degentalk/server --filter @degentalk/client dev",
+		"dev": "pnpm run kill-port:5001 && pnpm --parallel --filter @degentalk/server --filter @degentalk/client dev",
 		"dev:client": "pnpm --filter @degentalk/client dev",
 		"dev:server": "pnpm --filter @degentalk/server dev",
-		"dev:seed": "pnpm run kill-ports && pnpm run seed:all && pnpm dev",
+		"dev:seed": "pnpm run kill-port:5001 && pnpm --filter @degentalk/scripts seed:all && pnpm dev",
 		"dev:quick": "pnpm run kill-ports && pnpm --parallel --filter @degentalk/server --filter @degentalk/client dev",
 		"docker:dev": "./scripts/docker-dev.sh dev",
 		"docker:claude": "./scripts/docker-dev.sh claude",

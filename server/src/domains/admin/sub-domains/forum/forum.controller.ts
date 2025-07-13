@@ -18,7 +18,7 @@ import {
 import { logger } from '@core/logger';
 import { validateRequestBody, validateQueryParams } from '../../admin.validation';
 import { ForumTransformer } from '@server/domains/forum/transformers/forum.transformer';
-import { 
+import {
 	toPublicList,
 	sendSuccessResponse,
 	sendErrorResponse,

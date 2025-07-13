@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { isAdmin } from '@server/auth/middleware/auth.middleware';
+import { isAdmin } from '@server/domains/auth/middleware/auth.middleware';
 import {
 	getAnnouncementsController,
 	getAllAnnouncementsController,

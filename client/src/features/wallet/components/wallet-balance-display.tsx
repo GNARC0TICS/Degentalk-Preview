@@ -127,7 +127,6 @@ export function WalletBalanceDisplay({
 					</div>
 				</div>
 
-
 				<div className="mt-3 pt-3 border-t border-emerald-800/30">
 					<div className="text-xs text-zinc-400">
 						💡 All crypto deposits are automatically converted to DGT at $0.10 per token

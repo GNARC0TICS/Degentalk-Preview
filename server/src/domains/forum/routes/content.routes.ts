@@ -14,10 +14,7 @@ import { threadService } from '../services/thread.service';
 import { asyncHandler } from '@core/errors';
 import type { ForumId } from '@shared/types/ids';
 import { ForumTransformer } from '../transformers/forum.transformer';
-import { 
-	sendSuccessResponse,
-	sendErrorResponse
-} from '@core/utils/transformer.helpers';
+import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
 const router = Router();
 
@@ -70,12 +67,12 @@ router.get(
 
 			// Get user context for permissions and personalization
 			const requestingUser = userService.getUserFromRequest(req);
-			
+
 			// Transform threads using ForumTransformer based on user context
-			const transformedThreads = result.threads.map(thread => {
-				return requestingUser ? 
-					ForumTransformer.toSlimThread(thread) :
-					ForumTransformer.toPublicThread(thread);
+			const transformedThreads = result.threads.map((thread) => {
+				return requestingUser
+					? ForumTransformer.toSlimThread(thread)
+					: ForumTransformer.toPublicThread(thread);
 			});
 
 			// Return unified ThreadDisplay format (includes zone data)

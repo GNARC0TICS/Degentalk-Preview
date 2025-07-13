@@ -14,7 +14,7 @@ Structure:
     - DGT transfers between users ✅
     - User transaction history ✅
     - Wallet status validation ✅
-    
+
   Admin Domain: domains/wallet/admin/ + admin/sub-domains/economy/
     - Fund user wallets (addDgt) ✅
     - Deduct from wallets (deductDgt) ✅
@@ -32,6 +32,7 @@ Structure:
 ### **🔧 KEY COMPONENTS**
 
 #### **User Wallet Service** (`domains/wallet/services/wallet.service.ts`)
+
 ```typescript
 // Core user operations
 - initializeWallet(userId) → Create wallet on signup
@@ -44,6 +45,7 @@ Structure:
 ```
 
 #### **Admin Wallet Service** (`domains/wallet/admin/services/wallet.service.ts`)
+
 ```typescript
 // Admin-only operations
 - addDgt(userId, amount, reason) → Fund user wallet
@@ -56,6 +58,7 @@ Structure:
 ```
 
 #### **Schema Design** (`db/schema/economy/wallets.ts`)
+
 ```typescript
 wallets: {
   id: uuid (primary key)
@@ -83,7 +86,7 @@ Admin Operations:
   - Transaction audit trail
   - Freeze capabilities
   - Analytics access
-  
+
 Import Security:
   - Fixed all @core/middleware → @server-middleware
   - Schema imports use @schema barrel exports
@@ -93,14 +96,12 @@ Import Security:
 ### **🎯 CC PAYMENT INTEGRATION**
 
 ```yaml
-User Signup Flow:
-  1. User registers → walletService.initializeWallet()
+User Signup Flow: 1. User registers → walletService.initializeWallet()
   2. Creates DGT wallet + crypto addresses
   3. CC Payment provider handles deposits
   4. Automatic DGT conversion available
 
-Admin Control Flow:
-  1. Admin dashboard → adminWalletService methods
+Admin Control Flow: 1. Admin dashboard → adminWalletService methods
   2. Fund/deduct with reason logging
   3. Freeze for compliance/security
   4. Complete audit trail
@@ -122,15 +123,13 @@ enum WalletStatus {
 ### **🔄 TRANSACTION FLOW**
 
 ```yaml
-User Transfer:
-  1. Validate sender wallet status
-  2. Check balance sufficiency  
+User Transfer: 1. Validate sender wallet status
+  2. Check balance sufficiency
   3. Validate receiver wallet status
   4. Execute atomic transfer
   5. Log both debit/credit transactions
 
-Admin Operations:
-  1. Admin authentication required
+Admin Operations: 1. Admin authentication required
   2. Execute operation with reason
   3. Log administrative transaction
   4. Update wallet status if needed
@@ -143,13 +142,13 @@ Phase 1: Import Crisis Fixed ✅
   - Updated 51+ files with correct paths
   - Fixed @core/middleware → @server-middleware
   - Schema imports via @schema barrel
-  
+
 Phase 2: Freeze Capability Added ✅
   - walletStatusEnum in core/enums
   - status field in wallets table
   - freezeWallet/unfreezeWallet methods
   - Status validation in user operations
-  
+
 Phase 3: Validation Complete ✅
   - Server startup successful
   - Import paths resolved

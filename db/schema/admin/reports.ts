@@ -1,7 +1,4 @@
-import {
-	pgTable, integer, varchar, text, timestamp, uuid,
-	index
-} from 'drizzle-orm/pg-core';
+import { pgTable, integer, varchar, text, timestamp, uuid, index } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users'; // Adjusted path
 export const reportedContent = pgTable('reported_content', {

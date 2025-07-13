@@ -4,15 +4,15 @@ import { cn } from '@/lib/utils';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { 
-	Wallet, 
-	Coins, 
-	ArrowUpRight, 
-	ArrowDownLeft, 
+import {
+	Wallet,
+	Coins,
+	ArrowUpRight,
+	ArrowDownLeft,
 	Plus,
 	TrendingUp,
 	ArrowDownToLine,
-	ArrowUpToLine 
+	ArrowUpToLine
 } from 'lucide-react';
 
 interface WalletData {
@@ -37,10 +37,10 @@ interface WalletDashboardProps {
 
 /**
  * WalletDashboard - Unified wallet display component
- * 
+ *
  * Replaces:
  * - components/economy/wallet-display.tsx
- * - components/sidebar/wallet-summary-widget.tsx  
+ * - components/sidebar/wallet-summary-widget.tsx
  * - components/economy/wallet/wallet-balance-display.tsx
  */
 export function WalletDashboard({
@@ -87,14 +87,16 @@ export function WalletDashboard({
 
 	if (variant === 'compact') {
 		const layout = horizontal ? 'flex items-center gap-4' : 'space-y-2';
-		
+
 		return (
 			<div className={cn(layout, className)}>
 				<div className="flex items-center gap-2">
 					<Coins className="h-5 w-5 text-yellow-500" />
 					<div>
 						<div className="font-medium">{formatBalance(walletData.dgtBalance)} DGT</div>
-						<div className="text-sm text-muted-foreground">${formatBalance(walletData.usdtBalance)} USDT</div>
+						<div className="text-sm text-muted-foreground">
+							${formatBalance(walletData.usdtBalance)} USDT
+						</div>
 					</div>
 				</div>
 				{showActions && (
@@ -135,7 +137,7 @@ export function WalletDashboard({
 							)}
 						</div>
 					</div>
-					
+
 					<div className="flex items-center justify-between">
 						<div className="flex items-center gap-2">
 							<div className="h-5 w-5 rounded-full bg-green-500 flex items-center justify-center">
@@ -165,12 +167,15 @@ export function WalletDashboard({
 								<span>Last transaction</span>
 							</div>
 							<div className="text-right">
-								<div className={cn(
-									'font-medium',
-									walletData.lastTransaction.type === 'in' ? 'text-green-500' : 'text-red-500'
-								)}>
+								<div
+									className={cn(
+										'font-medium',
+										walletData.lastTransaction.type === 'in' ? 'text-green-500' : 'text-red-500'
+									)}
+								>
 									{walletData.lastTransaction.type === 'in' ? '+' : '-'}
-									{formatBalance(walletData.lastTransaction.amount)} {walletData.lastTransaction.token}
+									{formatBalance(walletData.lastTransaction.amount)}{' '}
+									{walletData.lastTransaction.token}
 								</div>
 								<div className="text-xs text-muted-foreground">
 									{walletData.lastTransaction.time}
@@ -183,28 +188,20 @@ export function WalletDashboard({
 				{/* Actions */}
 				{showActions && (
 					<div className="flex gap-2 pt-2">
-						<Button 
-							size="sm" 
-							className="flex-1"
-							onClick={() => handleWalletAction('deposit')}
-						>
+						<Button size="sm" className="flex-1" onClick={() => handleWalletAction('deposit')}>
 							<ArrowDownToLine className="h-4 w-4 mr-2" />
 							Deposit
 						</Button>
-						<Button 
-							size="sm" 
-							variant="outline" 
+						<Button
+							size="sm"
+							variant="outline"
 							className="flex-1"
 							onClick={() => handleWalletAction('withdraw')}
 						>
 							<ArrowUpToLine className="h-4 w-4 mr-2" />
 							Withdraw
 						</Button>
-						<Button 
-							size="sm" 
-							variant="outline"
-							onClick={() => handleWalletAction('transfer')}
-						>
+						<Button size="sm" variant="outline" onClick={() => handleWalletAction('transfer')}>
 							<TrendingUp className="h-4 w-4 mr-2" />
 							Transfer
 						</Button>

@@ -85,10 +85,12 @@ export function ProtectedAdminRoute({
 	}
 
 	return (
-        <Suspense fallback={<AdminLoadingFallback />}>
-            <ErrorBoundary context={resolvedModuleId || ''} level='page'>{children}</ErrorBoundary>
-        </Suspense>
-    );
+		<Suspense fallback={<AdminLoadingFallback />}>
+			<ErrorBoundary context={resolvedModuleId || ''} level="page">
+				{children}
+			</ErrorBoundary>
+		</Suspense>
+	);
 }
 
 function AdminLoadingFallback() {

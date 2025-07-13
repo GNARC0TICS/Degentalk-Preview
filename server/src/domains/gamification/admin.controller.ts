@@ -17,12 +17,12 @@ import { missionsService } from '../missions/missions.service';
 import { gamificationAnalyticsService } from './services/analytics.service';
 import { CloutTransformer } from './transformers/clout.transformer';
 import { MissionsTransformer } from '../missions/transformers/missions.transformer';
-import { 
+import {
 	toPublicList,
 	sendSuccessResponse,
 	sendErrorResponse,
 	sendTransformedResponse,
-	sendTransformedListResponse 
+	sendTransformedListResponse
 } from '@core/utils/transformer.helpers';
 import { logger } from '@core/logger';
 import { AppError } from '@core/errors';
@@ -194,14 +194,18 @@ export class GamificationAdminController {
 				}
 			}
 
-			sendSuccessResponse(res, {
-				created: createdLevels,
-				stats: {
-					requested: levels.length,
-					created: createdLevels.length,
-					failed: levels.length - createdLevels.length
-				}
-			}, `Created ${createdLevels.length} out of ${levels.length} levels`);
+			sendSuccessResponse(
+				res,
+				{
+					created: createdLevels,
+					stats: {
+						requested: levels.length,
+						created: createdLevels.length,
+						failed: levels.length - createdLevels.length
+					}
+				},
+				`Created ${createdLevels.length} out of ${levels.length} levels`
+			);
 		} catch (error) {
 			logger.error('ADMIN_CONTROLLER', 'Error bulk creating levels:', error);
 			if (error instanceof z.ZodError) {
@@ -234,14 +238,18 @@ export class GamificationAdminController {
 				}
 			}
 
-			sendSuccessResponse(res, {
-				created: toPublicList(createdAchievements, CloutTransformer.toAdminAchievement),
-				stats: {
-					requested: achievements.length,
-					created: createdAchievements.length,
-					failed: achievements.length - createdAchievements.length
-				}
-			}, `Created ${createdAchievements.length} out of ${achievements.length} achievements`);
+			sendSuccessResponse(
+				res,
+				{
+					created: toPublicList(createdAchievements, CloutTransformer.toAdminAchievement),
+					stats: {
+						requested: achievements.length,
+						created: createdAchievements.length,
+						failed: achievements.length - createdAchievements.length
+					}
+				},
+				`Created ${createdAchievements.length} out of ${achievements.length} achievements`
+			);
 		} catch (error) {
 			logger.error('ADMIN_CONTROLLER', 'Error bulk creating achievements:', error);
 			if (error instanceof z.ZodError) {
@@ -270,14 +278,18 @@ export class GamificationAdminController {
 				}
 			}
 
-			sendSuccessResponse(res, {
-				created: toPublicList(createdMissions, MissionsTransformer.toAdminMission),
-				stats: {
-					requested: missions.length,
-					created: createdMissions.length,
-					failed: missions.length - createdMissions.length
-				}
-			}, `Created ${createdMissions.length} out of ${missions.length} missions`);
+			sendSuccessResponse(
+				res,
+				{
+					created: toPublicList(createdMissions, MissionsTransformer.toAdminMission),
+					stats: {
+						requested: missions.length,
+						created: createdMissions.length,
+						failed: missions.length - createdMissions.length
+					}
+				},
+				`Created ${createdMissions.length} out of ${missions.length} missions`
+			);
 		} catch (error) {
 			logger.error('ADMIN_CONTROLLER', 'Error bulk creating missions:', error);
 			if (error instanceof z.ZodError) {
@@ -356,12 +368,16 @@ export class GamificationAdminController {
 				adminId: userService.getUserFromRequest(req)?.id
 			});
 
-			sendSuccessResponse(res, {
-				userId,
-				resetType,
-				reason,
-				resetAt: new Date().toISOString()
-			}, `User ${userId} ${resetType} progress reset successfully`);
+			sendSuccessResponse(
+				res,
+				{
+					userId,
+					resetType,
+					reason,
+					resetAt: new Date().toISOString()
+				},
+				`User ${userId} ${resetType} progress reset successfully`
+			);
 		} catch (error) {
 			logger.error('ADMIN_CONTROLLER', 'Error resetting user progress:', error);
 			if (error instanceof z.ZodError) {
@@ -412,11 +428,15 @@ export class GamificationAdminController {
 					throw new AppError(`Unknown maintenance operation: ${operation}`, 400);
 			}
 
-			sendSuccessResponse(res, {
-				operation,
-				results,
-				completedAt: new Date().toISOString()
-			}, `Maintenance operation "${operation}" completed successfully`);
+			sendSuccessResponse(
+				res,
+				{
+					operation,
+					results,
+					completedAt: new Date().toISOString()
+				},
+				`Maintenance operation "${operation}" completed successfully`
+			);
 		} catch (error) {
 			logger.error('ADMIN_CONTROLLER', 'Error performing maintenance:', error);
 			if (error instanceof AppError) {
@@ -497,10 +517,14 @@ export class GamificationAdminController {
 				results.push('Default level curve failed');
 			}
 
-			sendSuccessResponse(res, {
-				results,
-				completedAt: new Date().toISOString()
-			}, 'Default data seeding completed');
+			sendSuccessResponse(
+				res,
+				{
+					results,
+					completedAt: new Date().toISOString()
+				},
+				'Default data seeding completed'
+			);
 		} catch (error) {
 			logger.error('ADMIN_CONTROLLER', 'Error seeding defaults:', error);
 			sendErrorResponse(res, 'Internal server error', 500);

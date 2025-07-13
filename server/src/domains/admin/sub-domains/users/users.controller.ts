@@ -14,10 +14,7 @@ import type { UserId, AdminId } from '@shared/types/ids';
 import { toId, isValidId } from '@shared/utils/id';
 import { logger } from '@core/logger';
 import { UserTransformer } from '@server/domains/users/transformers/user.transformer';
-import { 
-	sendSuccessResponse,
-	sendErrorResponse
-} from '@core/utils/transformer.helpers';
+import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
 export class AdminUsersController {
 	/**
@@ -30,7 +27,7 @@ export class AdminUsersController {
 			const users = await adminUsersService.getUsers(query);
 			return sendSuccessResponse(res, {
 				...users,
-				users: users.users.map(user => UserTransformer.toAdminUserDetail(user))
+				users: users.users.map((user) => UserTransformer.toAdminUserDetail(user))
 			});
 		} catch (error) {
 			if (error instanceof AdminError) {
@@ -81,7 +78,11 @@ export class AdminUsersController {
 				changes: data
 			});
 
-			return sendSuccessResponse(res, UserTransformer.toAdminUserDetail(updatedUser), 'User updated successfully');
+			return sendSuccessResponse(
+				res,
+				UserTransformer.toAdminUserDetail(updatedUser),
+				'User updated successfully'
+			);
 		} catch (error) {
 			if (error instanceof AdminError) {
 				return sendErrorResponse(res, error.message, error.httpStatus || 500);
@@ -110,7 +111,11 @@ export class AdminUsersController {
 			});
 
 			res.status(201);
-			return sendSuccessResponse(res, UserTransformer.toAdminUserDetail(newUser), 'User created successfully');
+			return sendSuccessResponse(
+				res,
+				UserTransformer.toAdminUserDetail(newUser),
+				'User created successfully'
+			);
 		} catch (error) {
 			if (error instanceof AdminError) {
 				return sendErrorResponse(res, error.message, error.httpStatus || 500);

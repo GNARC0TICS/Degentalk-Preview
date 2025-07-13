@@ -53,7 +53,7 @@ const searchFormSchema = z.object({
 
 // Form schema for XP adjustment
 const adjustmentFormSchema = z.object({
-	userId: z.custom<UserId>().refine(val => Number(val) > 0, 'Invalid user'),
+	userId: z.custom<UserId>().refine((val) => Number(val) > 0, 'Invalid user'),
 	amount: z.coerce.number().int('Must be a whole number'),
 	adjustmentType: z.enum(['add', 'subtract', 'set']),
 	reason: z.string().min(3, 'Please provide a reason for this adjustment')

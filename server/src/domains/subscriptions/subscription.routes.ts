@@ -6,7 +6,7 @@
 
 import { Router } from 'express';
 import { subscriptionController } from './subscription.controller';
-import { isAuthenticated } from '@server/auth/middleware/auth.middleware';
+import { isAuthenticated } from '@server/domains/auth/middleware/auth.middleware';
 
 const router = Router();
 

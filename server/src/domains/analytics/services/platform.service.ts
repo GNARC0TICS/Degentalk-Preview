@@ -150,9 +150,18 @@ export class PlatformAnalyticsService {
 	static async getPlatformStats() {
 		try {
 			// Basic stats with current schema
-			const [threadCount] = await db.select({ count: count() }).from(threads).where(eq(threads.isDeleted, false));
-			const [postCount] = await db.select({ count: count() }).from(posts).where(eq(posts.isDeleted, false));
-			const [userCount] = await db.select({ count: count() }).from(users).where(eq(users.isDeleted, false));
+			const [threadCount] = await db
+				.select({ count: count() })
+				.from(threads)
+				.where(eq(threads.isDeleted, false));
+			const [postCount] = await db
+				.select({ count: count() })
+				.from(posts)
+				.where(eq(posts.isDeleted, false));
+			const [userCount] = await db
+				.select({ count: count() })
+				.from(users)
+				.where(eq(users.isDeleted, false));
 
 			return {
 				totalThreads: threadCount.count,
@@ -187,7 +196,10 @@ export class PlatformAnalyticsService {
 	 */
 	static async featureThread(threadId: ThreadId, userId: UserId, expiresAt?: Date) {
 		try {
-			logger.info('PLATFORM_ANALYTICS', `Thread ${threadId} featured by user ${userId} (MVP stub - not implemented)`);
+			logger.info(
+				'PLATFORM_ANALYTICS',
+				`Thread ${threadId} featured by user ${userId} (MVP stub - not implemented)`
+			);
 			return true;
 		} catch (error) {
 			logger.error('PLATFORM_ANALYTICS', `Error featuring thread ${threadId}:`, { error });
@@ -200,11 +212,14 @@ export class PlatformAnalyticsService {
 	 */
 	static async unfeatureThread(threadId: ThreadId) {
 		try {
-			logger.info('PLATFORM_ANALYTICS', `Thread ${threadId} unfeatured (MVP stub - not implemented)`);
+			logger.info(
+				'PLATFORM_ANALYTICS',
+				`Thread ${threadId} unfeatured (MVP stub - not implemented)`
+			);
 			return true;
 		} catch (error) {
 			logger.error('PLATFORM_ANALYTICS', `Error unfeaturing thread ${threadId}:`, { error });
 			return false;
 		}
 	}
-} 
+}

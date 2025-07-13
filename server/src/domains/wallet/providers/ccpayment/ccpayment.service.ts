@@ -228,13 +228,17 @@ export class CCPaymentService {
 		fromAmount: string;
 	}): Promise<string> {
 		try {
-			logger.info('CCPaymentService', 'Initiating swap', { uid: params.uid, from: params.fromCoinId, to: params.toCoinId });
+			logger.info('CCPaymentService', 'Initiating swap', {
+				uid: params.uid,
+				from: params.fromCoinId,
+				to: params.toCoinId
+			});
 
 			const apiParams = {
 				user_id: params.uid,
 				from_coin_id: params.fromCoinId,
 				to_coin_id: params.toCoinId,
-				amount: params.fromAmount,
+				amount: params.fromAmount
 			};
 
 			const response = await ccpaymentApiService.makeRequest<{
@@ -243,7 +247,7 @@ export class CCPaymentService {
 
 			logger.info('CCPaymentService', 'Swap initiated successfully', {
 				uid: params.uid,
-				recordId: response.record_id,
+				recordId: response.record_id
 			});
 
 			return response.record_id;
@@ -277,7 +281,7 @@ export class CCPaymentService {
 				.select({
 					id: users.id,
 					username: users.username,
-					email: users.email,
+					email: users.email
 				})
 				.from(users)
 				.where(eq(users.id, userId))
@@ -295,7 +299,7 @@ export class CCPaymentService {
 			// Store the mapping
 			await db.insert(ccpaymentUsers).values({
 				userId: user.id,
-				ccpaymentUserId: ccpaymentUserId,
+				ccpaymentUserId: ccpaymentUserId
 			});
 
 			return ccpaymentUserId;

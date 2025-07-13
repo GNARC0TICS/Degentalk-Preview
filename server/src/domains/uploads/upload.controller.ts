@@ -31,7 +31,11 @@ export async function createPresignedUploadUrlController(req: AuthenticatedReque
 		}
 
 		if (!fileName || !fileType || fileSize === undefined || !uploadType) {
-			return sendErrorResponse(res, 'Missing parameters: fileName, fileType, fileSize, and uploadType are required.', 400);
+			return sendErrorResponse(
+				res,
+				'Missing parameters: fileName, fileType, fileSize, and uploadType are required.',
+				400
+			);
 		}
 
 		if (uploadType !== 'avatar' && uploadType !== 'banner') {
@@ -47,13 +51,12 @@ export async function createPresignedUploadUrlController(req: AuthenticatedReque
 		};
 
 		const result = await uploadService.createPresignedUploadUrl(params);
-		
+
 		if (!result.success || !result.presignedUrlInfo) {
 			return sendErrorResponse(res, result.message, 400);
 		}
 
 		return sendTransformedResponse(res, result, UploadTransformer.toPresignedUrl);
-
 	} catch (error) {
 		if (error instanceof DegenUploadError) {
 			logger.warn(`DegenUploadError: ${error.message}`);
@@ -80,28 +83,28 @@ export async function confirmUploadController(
 		const userId = userService.getUserFromRequest(req)?.id;
 
 		if (!userId) {
-			return sendErrorResponse(res, "Unauthorized: User ID missing.", 401);
+			return sendErrorResponse(res, 'Unauthorized: User ID missing.', 401);
 		}
 
 		if (!relativePath || !uploadType) {
-			return sendErrorResponse(res, 'Missing parameters: relativePath and uploadType are required.', 400);
+			return sendErrorResponse(
+				res,
+				'Missing parameters: relativePath and uploadType are required.',
+				400
+			);
 		}
 		if (uploadType !== 'avatar' && uploadType !== 'banner') {
 			return sendErrorResponse(res, 'Invalid uploadType. Must be "avatar" or "banner".', 400);
 		}
 
 		const confirmServiceParams: ConfirmUploadServiceParams = { relativePath, uploadType };
-		const confirmation = await uploadService.confirmUpload(
-			userId as UserId,
-			confirmServiceParams
-		);
+		const confirmation = await uploadService.confirmUpload(userId as UserId, confirmServiceParams);
 
 		if (!confirmation.success) {
 			return sendErrorResponse(res, confirmation.message, 400);
 		}
 
 		return sendTransformedResponse(res, confirmation, UploadTransformer.toUploadConfirmation);
-		
 	} catch (error) {
 		if (error instanceof DegenUploadError) {
 			logger.warn(`DegenUploadError in confirmUploadController: ${error.message}`);

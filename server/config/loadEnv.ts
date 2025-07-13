@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { logger } from "../src/core/logger";
+import { logger } from '../src/core/logger';
 
 // ESM equivalent for __dirname
 // __filename will be /Users/gnarcotic/Degentalk/server/config/loadEnv.ts (or similar based on execution)
@@ -15,17 +15,25 @@ const projectRoot = path.resolve(__dirname, '..', '..');
 const envLocalPath = path.resolve(projectRoot, 'env.local');
 const dotEnvPath = path.resolve(projectRoot, '.env');
 
-logger.info('LOAD_ENV', 'Script executing. Attempting to load env files from project root', { projectRoot });
+logger.info('LOAD_ENV', 'Script executing. Attempting to load env files from project root', {
+	projectRoot
+});
 
 // Load env.local first
 logger.info('LOAD_ENV', 'Attempting to load env file', { envLocalPath });
 const envLocalResult = dotenv.config({ path: envLocalPath });
 
 if (envLocalResult.error) {
-	logger.error('LOAD_ENV', 'Error loading env.local', { envLocalPath, error: envLocalResult.error });
+	logger.error('LOAD_ENV', 'Error loading env.local', {
+		envLocalPath,
+		error: envLocalResult.error
+	});
 } else {
 	if (envLocalResult.parsed) {
-		logger.info('LOAD_ENV', 'Successfully parsed env.local', { envLocalPath, keys: Object.keys(envLocalResult.parsed) });
+		logger.info('LOAD_ENV', 'Successfully parsed env.local', {
+			envLocalPath,
+			keys: Object.keys(envLocalResult.parsed)
+		});
 	} else {
 		logger.info('LOAD_ENV', 'Parsed env.local but it was empty', { envLocalPath });
 	}
@@ -44,15 +52,22 @@ if (dotEnvResult.error) {
 	}
 } else {
 	if (dotEnvResult.parsed) {
-		logger.info('LOAD_ENV', 'Successfully parsed .env', { dotEnvPath, keys: Object.keys(dotEnvResult.parsed) });
+		logger.info('LOAD_ENV', 'Successfully parsed .env', {
+			dotEnvPath,
+			keys: Object.keys(dotEnvResult.parsed)
+		});
 	} else {
 		logger.info('LOAD_ENV', 'Parsed .env but it was empty', { dotEnvPath });
 	}
 }
 
 // Final check of the critical environment variables
-logger.info('LOAD_ENV', 'DATABASE_URL after all attempts', { databaseUrl: process.env.DATABASE_URL });
-logger.info('LOAD_ENV', 'DATABASE_PROVIDER after all attempts', { databaseProvider: process.env.DATABASE_PROVIDER });
+logger.info('LOAD_ENV', 'DATABASE_URL after all attempts', {
+	databaseUrl: process.env.DATABASE_URL
+});
+logger.info('LOAD_ENV', 'DATABASE_PROVIDER after all attempts', {
+	databaseProvider: process.env.DATABASE_PROVIDER
+});
 
 if (!process.env.DATABASE_URL) {
 	logger.error('[LOAD_ENV] CRITICAL: DATABASE_URL is still not set after loading attempts!');

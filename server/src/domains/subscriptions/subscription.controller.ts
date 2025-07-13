@@ -9,7 +9,7 @@ import type { Request, Response } from 'express';
 import type { EntityId } from '@shared/types/ids';
 import { subscriptionService } from './subscription.service';
 import { logger } from '@core/logger';
-import { sendSuccessResponse, sendErrorResponse } from "@core/utils/transformer.helpers";
+import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
 export class SubscriptionController {
 	/**
@@ -26,7 +26,11 @@ export class SubscriptionController {
 			}
 
 			if (!type || !['vip_pass', 'degen_pass'].includes(type)) {
-				return sendErrorResponse(res, 'Valid subscription type required (vip_pass or degen_pass)', 400);
+				return sendErrorResponse(
+					res,
+					'Valid subscription type required (vip_pass or degen_pass)',
+					400
+				);
 			}
 
 			const subscription = await subscriptionService.purchaseSubscription({
@@ -34,10 +38,14 @@ export class SubscriptionController {
 				type
 			});
 
-			sendSuccessResponse(res, {
-				subscription,
-				message: `${type.replace('_', ' ')} purchased successfully!`
-			}, 201);
+			sendSuccessResponse(
+				res,
+				{
+					subscription,
+					message: `${type.replace('_', ' ')} purchased successfully!`
+				},
+				201
+			);
 		} catch (error) {
 			logger.error('SUBSCRIPTION_CONTROLLER', 'Error purchasing subscription:', error);
 			sendErrorResponse(res, error.message || 'Failed to purchase subscription', 400);

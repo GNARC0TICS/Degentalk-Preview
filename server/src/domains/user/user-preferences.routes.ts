@@ -2,7 +2,7 @@ import { userService } from '@core/services/user.service';
 import { Router } from 'express';
 import { z } from 'zod';
 import { UserPreferencesService } from './user-preferences.service';
-import { requireAuth } from '@server/auth/middleware/auth.middleware';
+import { requireAuth } from '@server/domains/auth/middleware/auth.middleware';
 import { logger } from '@core/logger';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 

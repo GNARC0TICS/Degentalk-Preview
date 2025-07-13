@@ -1,7 +1,4 @@
-import {
-	pgTable, timestamp, uuid, integer,
-	index
-} from 'drizzle-orm/pg-core';
+import { pgTable, timestamp, uuid, integer, index } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { pollOptions } from './pollOptions';
 import { users } from '../user/users';

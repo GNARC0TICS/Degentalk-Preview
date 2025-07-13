@@ -61,9 +61,9 @@ function RolesAdminPage() {
 		mutationFn: async (values) => {
 			if (values.id) {
 				const { id, ...rest } = values;
-				return apiRequest({ url: `/api/admin/roles/${id}`, method: 'PUT', data: rest  });
+				return apiRequest({ url: `/api/admin/roles/${id}`, method: 'PUT', data: rest });
 			}
-			return apiRequest({ url: '/api/admin/roles', method: 'POST', data: values  });
+			return apiRequest({ url: '/api/admin/roles', method: 'POST', data: values });
 		},
 		queryKeyToInvalidate: ['/api/admin/roles'],
 		successMessage: `Role ${editingRole ? 'updated' : 'created'} successfully.`,

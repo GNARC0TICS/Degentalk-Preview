@@ -12,7 +12,7 @@ import { RainService } from './rain.service';
 import { asyncHandler } from '@core/errors';
 import { z } from 'zod';
 import { logger } from '@core/logger';
-import { sendSuccessResponse, sendErrorResponse } from "@core/utils/transformer.helpers";
+import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
 /**
  * Controller for rain functionality
@@ -55,9 +55,9 @@ export class RainController {
 		);
 
 		sendSuccessResponse(res, {
-        			success: true,
-        			data: result
-        		});
+			success: true,
+			data: result
+		});
 	});
 
 	/**
@@ -70,9 +70,9 @@ export class RainController {
 		const events = await this.rainService.getRecentRainEvents(limit, offset);
 
 		sendSuccessResponse(res, {
-        			success: true,
-        			data: events
-        		});
+			success: true,
+			data: events
+		});
 	});
 
 	/**
@@ -82,9 +82,9 @@ export class RainController {
 		const settings = await this.rainService.getRainSettings();
 
 		sendSuccessResponse(res, {
-        			success: true,
-        			data: settings
-        		});
+			success: true,
+			data: settings
+		});
 	});
 
 	/**
@@ -123,9 +123,9 @@ export class RainController {
 		const updatedSettings = await this.rainService.updateRainSettings(userId, validatedData);
 
 		sendSuccessResponse(res, {
-        			success: true,
-        			data: updatedSettings
-        		});
+			success: true,
+			data: updatedSettings
+		});
 	});
 }
 

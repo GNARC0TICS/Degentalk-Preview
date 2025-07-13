@@ -1,7 +1,4 @@
-import {
-	pgTable, integer, text, timestamp, uuid,
-	index
-} from 'drizzle-orm/pg-core';
+import { pgTable, integer, text, timestamp, uuid, index } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users';
 export const xpAdjustmentLogs = pgTable('xp_adjustment_logs', {

@@ -20,7 +20,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import FeatureGate from '@/components/ui/feature-gate';
 import { Username } from '@/components/users/Username';
 import RainButton from '@/features/wallet/components/rain-button';
-import type { UserId } from "@shared/types/ids";
+import type { UserId } from '@shared/types/ids';
 
 // ShoutMessage type definition
 interface ShoutMessage {

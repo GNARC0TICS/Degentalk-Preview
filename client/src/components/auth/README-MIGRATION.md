@@ -2,7 +2,7 @@
 
 ## DEPRECATED COMPONENTS - DO NOT USE
 
-- `protected-route.tsx` → Use `ProtectedRoute.tsx` 
+- `protected-route.tsx` → Use `ProtectedRoute.tsx`
 - `withRouteProtection.tsx` → Use `ProtectedRoute.tsx`
 - `GlobalRouteGuard.tsx` → Use `RouteGuards.tsx`
 
@@ -15,8 +15,8 @@
 
 ```tsx
 // OLD - DEPRECATED
-import { ProtectedRoute } from './protected-route'
+import { ProtectedRoute } from './protected-route';
 
-// NEW - CANONICAL  
-import { ProtectedRoute } from './ProtectedRoute'
+// NEW - CANONICAL
+import { ProtectedRoute } from './ProtectedRoute';
 ```

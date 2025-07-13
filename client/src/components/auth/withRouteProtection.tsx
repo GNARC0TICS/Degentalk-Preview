@@ -70,7 +70,7 @@ export function withRole<P extends object>(
 		const roleProps: any = { redirectTo };
 		if (minRole !== undefined) roleProps.minRole = minRole;
 		if (exactRole !== undefined) roleProps.exactRole = exactRole;
-		
+
 		return (
 			<RequireRole {...roleProps}>
 				<Component {...props} />

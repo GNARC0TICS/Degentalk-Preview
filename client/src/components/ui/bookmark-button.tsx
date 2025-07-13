@@ -31,9 +31,7 @@ export function BookmarkButton({ threadId, hasBookmarked, size = 'md' }: Bookmar
 					data: { threadId }
 				});
 			} else {
-				return await apiRequest({ url: `/api/bookmarks/${threadId}`,
-					method: 'DELETE'
-				});
+				return await apiRequest({ url: `/api/bookmarks/${threadId}`, method: 'DELETE' });
 			}
 		},
 		onMutate: async (next) => {

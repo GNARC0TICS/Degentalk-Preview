@@ -391,18 +391,20 @@ const ZoneCardPure = memo(
 								(slots?.preview ?? (
 									<div className="space-y-2">
 										<div className="text-xs font-medium text-zinc-300 mb-2">Forums:</div>
-										{previewForums.map((forumItem: { id: ForumId; name: string; threadCount?: number }) => (
-											<div
-												key={forumItem.id}
-												className="flex items-center justify-between p-2 rounded bg-zinc-800/40 hover:bg-zinc-800/60 transition-colors"
-											>
-												<span className="text-sm text-zinc-300 truncate">{forumItem.name}</span>
-												<div className="flex items-center gap-1 text-xs text-zinc-500">
-													<MessageSquare className="w-3 h-3" />
-													<span>{forumItem.threadCount ?? 0}</span>
+										{previewForums.map(
+											(forumItem: { id: ForumId; name: string; threadCount?: number }) => (
+												<div
+													key={forumItem.id}
+													className="flex items-center justify-between p-2 rounded bg-zinc-800/40 hover:bg-zinc-800/60 transition-colors"
+												>
+													<span className="text-sm text-zinc-300 truncate">{forumItem.name}</span>
+													<div className="flex items-center gap-1 text-xs text-zinc-500">
+														<MessageSquare className="w-3 h-3" />
+														<span>{forumItem.threadCount ?? 0}</span>
+													</div>
 												</div>
-											</div>
-										))}
+											)
+										)}
 									</div>
 								))}
 						</CardContent>

@@ -98,12 +98,12 @@ export function initLogger(customConfig = {}) {
 
 			const logFilePath = path.join(config.filePath, config.fileName);
 			currentLogFile = logFilePath;
-			
+
 			// Check current file size for rotation
 			if (fs.existsSync(logFilePath)) {
 				currentFileSize = fs.statSync(logFilePath).size;
 			}
-			
+
 			logStream = createWriteStream(logFilePath, { flags: 'a' });
 
 			// Ensure logs are flushed on process exit
@@ -134,16 +134,16 @@ export function initLogger(customConfig = {}) {
  */
 function rotateLogFile() {
 	if (!currentLogFile || !logStream) return;
-	
+
 	try {
 		// Close current stream
 		logStream.end();
-		
+
 		// Rotate existing files
 		for (let i = config.maxFiles - 1; i > 0; i--) {
 			const oldFile = currentLogFile + (i === 1 ? '' : `.${i - 1}`);
 			const newFile = currentLogFile + `.${i}`;
-			
+
 			if (fs.existsSync(oldFile)) {
 				if (i === config.maxFiles - 1) {
 					fs.unlinkSync(oldFile); // Delete oldest
@@ -152,11 +152,11 @@ function rotateLogFile() {
 				}
 			}
 		}
-		
+
 		// Create new log stream
 		logStream = createWriteStream(currentLogFile, { flags: 'w' });
 		currentFileSize = 0;
-		
+
 		log({
 			level: LogLevel.INFO,
 			action: LogAction.SYSTEM_STARTUP,
@@ -242,24 +242,24 @@ export function log(options: {
 
 	// Log to file
 	if (config.file && logStream) {
-		const logEntry = config.jsonOutput 
+		const logEntry = config.jsonOutput
 			? JSON.stringify({
-				timestamp: new Date().toISOString(),
-				level,
-				namespace: logNamespace,
-				message,
-				action,
-				data,
-				pid: process.pid,
-				env: process.env.NODE_ENV
-			}) + '\n'
+					timestamp: new Date().toISOString(),
+					level,
+					namespace: logNamespace,
+					message,
+					action,
+					data,
+					pid: process.pid,
+					env: process.env.NODE_ENV
+				}) + '\n'
 			: formattedMessage + dataString + '\n';
-		
+
 		// Check for log rotation
 		if (currentFileSize + logEntry.length > config.maxFileSize) {
 			rotateLogFile();
 		}
-		
+
 		logStream.write(logEntry);
 		currentFileSize += logEntry.length;
 	}

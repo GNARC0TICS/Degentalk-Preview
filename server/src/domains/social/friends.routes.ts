@@ -6,7 +6,7 @@ import { requireAuth } from '../../../middleware/auth';
 import { z } from 'zod';
 import { logger } from '@core/logger';
 import { UserTransformer } from '@server/domains/users/transformers/user.transformer';
-import { 
+import {
 	toPublicList,
 	sendSuccessResponse,
 	sendErrorResponse,
@@ -237,7 +237,9 @@ router.get('/mutual/:userId', requireAuth, async (req, res) => {
 
 		const mutualFriends = await FriendsService.getMutualFriends(userId, otherUserId);
 
-		sendSuccessResponse(res, { mutualFriends: toPublicList(mutualFriends, UserTransformer.toPublicUser) });
+		sendSuccessResponse(res, {
+			mutualFriends: toPublicList(mutualFriends, UserTransformer.toPublicUser)
+		});
 	} catch (error) {
 		logger.error('Error fetching mutual friends:', error);
 		sendErrorResponse(res, 'Failed to fetch mutual friends', 500);

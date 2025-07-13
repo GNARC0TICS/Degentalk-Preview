@@ -10,7 +10,15 @@
  */
 
 import { describe, it, expect, beforeEach, afterEach, vi, Mock } from 'vitest';
-import { mockUuid, mockUserId, mockThreadId, mockPostId, mockMissionId, mockAchievementId, TEST_UUIDS } from "@shared/test-utils/mock-uuid";
+import {
+	mockUuid,
+	mockUserId,
+	mockThreadId,
+	mockPostId,
+	mockMissionId,
+	mockAchievementId,
+	TEST_UUIDS
+} from '@shared/test-utils/mock-uuid';
 import { dgtService } from '../../src/domains/wallet/dgt.service';
 import { db } from '@db';
 import { eq } from 'drizzle-orm';

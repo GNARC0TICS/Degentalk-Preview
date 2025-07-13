@@ -37,7 +37,8 @@ export const ThreadActionsProvider: React.FC<{
 		(...args: [string, number] | [number]) => {
 			const amount = args.length === 1 ? args[0] : args[1];
 			if (typeof amount !== 'number') return;
-			const authorId = parseId<'UserId'>(String(thread.user.id)) || toId<'UserId'>(String(thread.user.id));
+			const authorId =
+				parseId<'UserId'>(String(thread.user.id)) || toId<'UserId'>(String(thread.user.id));
 			sendTip({ toUserId: authorId, amount, reason: 'thread_tip', source: 'forum_thread' });
 		},
 		[sendTip, thread.user.id]
@@ -86,7 +87,8 @@ export const ThreadActionsProvider: React.FC<{
 
 	const quickReply = useCallback(
 		(content: string) => {
-			const threadId = parseId<'ThreadId'>(String(thread.id)) || toId<'ThreadId'>(String(thread.id));
+			const threadId =
+				parseId<'ThreadId'>(String(thread.id)) || toId<'ThreadId'>(String(thread.id));
 			if (!content.trim()) return;
 
 			createPost.mutate(

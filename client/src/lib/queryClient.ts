@@ -13,11 +13,13 @@ import {
 
 export { apiPost, apiPut, apiPatch, apiDelete };
 
-// Wrapper adds XP-gain detection but delegates actual HTTP to base implementation  
-export async function apiRequest<T = unknown>(config: import('@/lib/api-request').ApiRequestConfig): Promise<T>;
+// Wrapper adds XP-gain detection but delegates actual HTTP to base implementation
+export async function apiRequest<T = unknown>(
+	config: import('@/lib/api-request').ApiRequestConfig
+): Promise<T>;
 export async function apiRequest<T = unknown>(url: string, options?: RequestInit): Promise<T>;
 export async function apiRequest<T = unknown>(
-	configOrUrl: import('@/lib/api-request').ApiRequestConfig | string, 
+	configOrUrl: import('@/lib/api-request').ApiRequestConfig | string,
 	options?: RequestInit
 ): Promise<T> {
 	const data = await baseApiRequest<T>(configOrUrl as any, options as any);
@@ -94,14 +96,16 @@ function checkForXpGain(data: any) {
 export { queryClient } from '@/core/queryClient';
 
 // Level up event listener setup
-export function setupLevelUpListener(callback: (level: number, title?: string, rewards?: any[]) => void) {
+export function setupLevelUpListener(
+	callback: (level: number, title?: string, rewards?: any[]) => void
+) {
 	const handleLevelUp = (event: CustomEvent) => {
 		const { level, title, rewards } = event.detail;
 		callback(level, title, rewards);
 	};
 
 	window.addEventListener('level-up', handleLevelUp as EventListener);
-	
+
 	// Return cleanup function
 	return () => {
 		window.removeEventListener('level-up', handleLevelUp as EventListener);

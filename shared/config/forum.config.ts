@@ -373,8 +373,7 @@ const GENERAL_ZONES: Zone[] = [
 	{
 		slug: 'the-shop',
 		name: 'The DegenShop',
-		description:
-			'Spend your hard-earned DGT on cosmetics, power-ups, and real-world items.',
+		description: 'Spend your hard-earned DGT on cosmetics, power-ups, and real-world items.',
 		type: 'general',
 		position: 6,
 		theme: THEME_PRESETS.shop,
@@ -460,10 +459,7 @@ try {
 }
 
 // Function to get a forum by its slug from the map
-export function getForumBySlug(
-	slug: string,
-	zones: Zone[] = forumMap
-): Forum | undefined {
+export function getForumBySlug(slug: string, zones: Zone[] = forumMap): Forum | undefined {
 	for (const zone of zones) {
 		for (const forum of zone.forums) {
 			if (forum.slug === slug) {
@@ -476,4 +472,4 @@ export function getForumBySlug(
 		}
 	}
 	return undefined;
-} 
+}

@@ -14,7 +14,15 @@ import type {
 	ThreadWithPostsAndUser
 } from '@/types/compat/forum';
 import type { ApiErrorData } from '@/types/core.types';
-import type { ReportId, ForumId, TagId, ContentId, PrefixId, ThreadId, PostId } from '@shared/types/ids';
+import type {
+	ReportId,
+	ForumId,
+	TagId,
+	ContentId,
+	PrefixId,
+	ThreadId,
+	PostId
+} from '@shared/types/ids';
 
 export interface ThreadSearchParams {
 	structureId?: ForumId;
@@ -275,10 +283,12 @@ export const forumApi = {
 		}>({
 			url: `/api/forum/threads/${threadId}/posts`,
 			method: 'GET',
-			params: params ? {
-				...(params.page !== undefined && { page: String(params.page) }),
-				...(params.limit !== undefined && { limit: String(params.limit) })
-			} : undefined
+			params: params
+				? {
+						...(params.page !== undefined && { page: String(params.page) }),
+						...(params.limit !== undefined && { limit: String(params.limit) })
+					}
+				: undefined
 		});
 
 		// Backend returns { success: true, data: { posts: ..., pagination: ... } }

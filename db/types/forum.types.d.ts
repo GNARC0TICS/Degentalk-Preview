@@ -20,62 +20,60 @@ export type PostWithUser = CanonicalPost;
 export type ThreadWithUserAndCategory = CanonicalThread;
 /** Pagination info retained for server responses – keep for now */
 export interface PaginationInfo {
-    page: number;
-    pageSize: number;
-    totalItems: number;
-    totalPages: number;
+	page: number;
+	pageSize: number;
+	totalItems: number;
+	totalPages: number;
 }
 /** @deprecated – use CanonicalThread */
-export interface ThreadWithUserAndStructure extends CanonicalThread {
-}
+export interface ThreadWithUserAndStructure extends CanonicalThread {}
 /** @deprecated – use CanonicalThread & CanonicalPost composite */
 export interface ThreadWithPostsAndUser {
-    thread: CanonicalThread;
-    posts: CanonicalPost[];
-    pagination: PaginationInfo;
+	thread: CanonicalThread;
+	posts: CanonicalPost[];
+	pagination: PaginationInfo;
 }
 /** @deprecated – consolidated under CanonicalThread */
-export interface ThreadWithPostsAndUserStructure extends ThreadWithPostsAndUser {
-}
+export interface ThreadWithPostsAndUserStructure extends ThreadWithPostsAndUser {}
 export interface ForumTag {
-    id: TagId;
-    name: string;
-    slug: string;
-    description?: string | null;
-    createdAt: Date;
+	id: TagId;
+	name: string;
+	slug: string;
+	description?: string | null;
+	createdAt: Date;
 }
 export interface ForumCategoryWithStats extends ForumStructureNode {
-    threadCount: number;
-    postCount: number;
-    lastThread?: ThreadWithUser;
-    parentId: string | null;
-    pluginData: Record<string, unknown>;
-    minXp: number;
-    type: string;
-    colorTheme: string | null;
-    icon: string;
-    isHidden: boolean;
-    canHaveThreads: boolean;
-    childForums?: ForumCategoryWithStats[];
-    isZone?: boolean;
-    canonical?: boolean;
-    isPrimary?: boolean;
-    features?: string[];
-    customComponents?: string[];
-    staffOnly?: boolean;
+	threadCount: number;
+	postCount: number;
+	lastThread?: ThreadWithUser;
+	parentId: string | null;
+	pluginData: Record<string, unknown>;
+	minXp: number;
+	type: string;
+	colorTheme: string | null;
+	icon: string;
+	isHidden: boolean;
+	canHaveThreads: boolean;
+	childForums?: ForumCategoryWithStats[];
+	isZone?: boolean;
+	canonical?: boolean;
+	isPrimary?: boolean;
+	features?: string[];
+	customComponents?: string[];
+	staffOnly?: boolean;
 }
 export interface ForumStructureWithStats extends ForumStructureNode {
-    threadCount: number;
-    postCount: number;
-    lastThread?: ThreadWithUser;
-    canHaveThreads: boolean;
-    childStructures?: ForumStructureWithStats[];
-    isZone?: boolean;
-    canonical?: boolean;
-    isPrimary?: boolean;
-    features?: string[];
-    customComponents?: string[];
-    staffOnly?: boolean;
+	threadCount: number;
+	postCount: number;
+	lastThread?: ThreadWithUser;
+	canHaveThreads: boolean;
+	childStructures?: ForumStructureWithStats[];
+	isZone?: boolean;
+	canonical?: boolean;
+	isPrimary?: boolean;
+	features?: string[];
+	customComponents?: string[];
+	staffOnly?: boolean;
 }
 export type ThreadPrefix = typeof threadPrefixes.$inferSelect;
 export declare const __ensureModule = true;

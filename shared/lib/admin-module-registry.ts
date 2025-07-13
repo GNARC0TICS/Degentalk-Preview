@@ -207,11 +207,15 @@ export class AdminModuleRegistry {
 	getNavigationStructure(user: User | null): AdminModule[] {
 		const userModules = this.getModulesForUser(user);
 		console.log('AdminModuleRegistry', 'DEBUG userModules count', { count: userModules.length });
-		console.log('AdminModuleRegistry', 'DEBUG userModules sample', userModules.slice(0, 2).map((m) => ({
-        				id: m.id,
-        				hasSubModules: !!m.subModules,
-        				subModulesCount: m.subModules?.length || 0
-        			})));
+		console.log(
+			'AdminModuleRegistry',
+			'DEBUG userModules sample',
+			userModules.slice(0, 2).map((m) => ({
+				id: m.id,
+				hasSubModules: !!m.subModules,
+				subModulesCount: m.subModules?.length || 0
+			}))
+		);
 
 		// Build a complete tree first, ensuring every module has subModules array
 		const moduleMap = new Map<string, AdminModule>();
@@ -236,16 +240,21 @@ export class AdminModuleRegistry {
 					this.hasPermission(subModule.id, user)
 				);
 				moduleWithSubs.subModules = accessibleSubModules;
-				console.log(`DEBUG: Module ${module.id} has ${module.subModules.length} total subModules, ${accessibleSubModules.length} accessible`);
+				console.log(
+					`DEBUG: Module ${module.id} has ${module.subModules.length} total subModules, ${accessibleSubModules.length} accessible`
+				);
 			}
 
 			rootModules.push(moduleWithSubs);
 		}
 
 		console.log('DEBUG: rootModules count:', rootModules.length);
-		console.log('DEBUG: rootModules with subModules:', rootModules
-        				.filter((m) => m.subModules && m.subModules.length > 0)
-        				.map((m) => ({ id: m.id, subModulesCount: m.subModules?.length })));
+		console.log(
+			'DEBUG: rootModules with subModules:',
+			rootModules
+				.filter((m) => m.subModules && m.subModules.length > 0)
+				.map((m) => ({ id: m.id, subModulesCount: m.subModules?.length }))
+		);
 
 		return rootModules;
 	}

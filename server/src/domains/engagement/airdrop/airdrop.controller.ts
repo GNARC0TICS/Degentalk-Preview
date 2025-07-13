@@ -13,10 +13,7 @@ import { WalletError, ErrorCodes as WalletErrorCodes } from '@core/errors';
 import { asyncHandler } from '@core/errors';
 import { logger } from '@core/logger';
 import type { EntityId } from '@shared/types/ids';
-import { 
-	sendSuccessResponse,
-	sendErrorResponse
-} from '@core/utils/transformer.helpers';
+import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
 /**
  * Controller for airdrop functionality
@@ -34,14 +31,22 @@ export class AirdropController {
 		}
 
 		if (!isAdmin) {
-			return sendErrorResponse(res, 'Permission denied: Only administrators can initiate airdrops', 403);
+			return sendErrorResponse(
+				res,
+				'Permission denied: Only administrators can initiate airdrops',
+				403
+			);
 		}
 
 		const { amount, currency, title, description, target, activityDays, threshold } = req.body;
 
 		// Validate required fields
 		if (!amount || !currency) {
-			return sendErrorResponse(res, 'Missing required fields: amount and currency are required', 400);
+			return sendErrorResponse(
+				res,
+				'Missing required fields: amount and currency are required',
+				400
+			);
 		}
 
 		// Create airdrop options
@@ -83,7 +88,11 @@ export class AirdropController {
 		}
 
 		if (!isAdmin) {
-			return sendErrorResponse(res, 'Permission denied: Only administrators can view airdrop history', 403);
+			return sendErrorResponse(
+				res,
+				'Permission denied: Only administrators can view airdrop history',
+				403
+			);
 		}
 
 		const limit = parseInt(req.query.limit as string) || 20;
@@ -118,7 +127,11 @@ export class AirdropController {
 		}
 
 		if (!isAdmin) {
-			return sendErrorResponse(res, 'Permission denied: Only administrators can view airdrop details', 403);
+			return sendErrorResponse(
+				res,
+				'Permission denied: Only administrators can view airdrop details',
+				403
+			);
 		}
 
 		const airdropId = req.params.id as EntityId;

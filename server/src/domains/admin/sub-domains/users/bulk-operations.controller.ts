@@ -2,13 +2,8 @@ import { userService } from '@core/services/user.service';
 import type { Request, Response } from 'express';
 import { z } from 'zod';
 import { adminUserBulkOperationsService } from './bulk-operations.service';
-import {
-	sendSuccess,
-	sendError,
-	validateRequestBody,
-	AdminOperationBoundary,
-	formatAdminResponse
-} from '../../shared';
+import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
+import { validateRequestBody, AdminOperationBoundary, formatAdminResponse } from '../../shared';
 
 const bulkRoleAssignmentSchema = z.object({
 	userIds: z.array(z.number()).min(1).max(100), // Limit to 100 users per operation
@@ -63,13 +58,13 @@ export class AdminUserBulkOperationsController {
 		});
 
 		if (result.success) {
-			return sendSuccess(
+			return sendSuccessResponse(
 				res,
 				result.data,
 				`Bulk role assignment completed. ${result.data.processed} users updated, ${result.data.failed} failed.`
 			);
 		} else {
-			return sendError(
+			return sendErrorResponse(
 				res,
 				result.error?.message || 'Bulk role assignment failed',
 				result.error?.httpStatus
@@ -113,13 +108,13 @@ export class AdminUserBulkOperationsController {
 		});
 
 		if (result.success) {
-			return sendSuccess(
+			return sendSuccessResponse(
 				res,
 				result.data,
 				`Bulk ban completed. ${result.data.processed} users banned, ${result.data.failed} failed.`
 			);
 		} else {
-			return sendError(
+			return sendErrorResponse(
 				res,
 				result.error?.message || 'Bulk ban operation failed',
 				result.error?.httpStatus
@@ -162,13 +157,13 @@ export class AdminUserBulkOperationsController {
 		});
 
 		if (result.success) {
-			return sendSuccess(
+			return sendSuccessResponse(
 				res,
 				result.data,
 				`Bulk unban completed. ${result.data.processed} users unbanned, ${result.data.failed} failed.`
 			);
 		} else {
-			return sendError(
+			return sendErrorResponse(
 				res,
 				result.error?.message || 'Bulk unban operation failed',
 				result.error?.httpStatus
@@ -202,9 +197,9 @@ export class AdminUserBulkOperationsController {
 		});
 
 		if (result.success) {
-			return sendSuccess(res, result.data);
+			return sendSuccessResponse(res, result.data);
 		} else {
-			return sendError(
+			return sendErrorResponse(
 				res,
 				result.error?.message || 'Failed to fetch bulk operation history',
 				result.error?.httpStatus

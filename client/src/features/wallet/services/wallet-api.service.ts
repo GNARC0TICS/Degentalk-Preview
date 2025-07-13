@@ -88,7 +88,10 @@ export class WalletApiService {
 		});
 	}
 
-	static async getTransactionHistory(): Promise<{ transactions: TransactionItem[]; total: number }> {
+	static async getTransactionHistory(): Promise<{
+		transactions: TransactionItem[];
+		total: number;
+	}> {
 		const transactions = await this.getTransactions();
 		return {
 			transactions,
@@ -107,7 +110,11 @@ export class WalletApiService {
 		return this.getConfig();
 	}
 
-	static async transferDgt(data: { toUserId: UserId; amount: number; note?: string }): Promise<void> {
+	static async transferDgt(data: {
+		toUserId: UserId;
+		amount: number;
+		note?: string;
+	}): Promise<void> {
 		return apiRequest<void>({
 			url: '/api/wallet/transfer-dgt',
 			method: 'POST',
@@ -115,7 +122,10 @@ export class WalletApiService {
 		});
 	}
 
-	static async createPurchaseOrder(data: { cryptoAmount: number; cryptoCurrency: string }): Promise<{
+	static async createPurchaseOrder(data: {
+		cryptoAmount: number;
+		cryptoCurrency: string;
+	}): Promise<{
 		success: boolean;
 		orderId: string;
 		depositAddress: string;
@@ -143,19 +153,13 @@ export class WalletApiService {
 		});
 	}
 
-	static async requestWithdrawal(
-		data: { amount: number; currency: string; address: string }
-	): Promise<void>;
-	static async requestWithdrawal(
-		amount: number,
-		currency: string,
-		address: string
-	): Promise<void>;
-	static async requestWithdrawal(
-		arg1: any,
-		arg2?: string,
-		arg3?: string
-	): Promise<void> {
+	static async requestWithdrawal(data: {
+		amount: number;
+		currency: string;
+		address: string;
+	}): Promise<void>;
+	static async requestWithdrawal(amount: number, currency: string, address: string): Promise<void>;
+	static async requestWithdrawal(arg1: any, arg2?: string, arg3?: string): Promise<void> {
 		if (typeof arg1 === 'object') {
 			return apiRequest<void>({ url: '/api/wallet/withdraw', method: 'POST', data: arg1 });
 		}

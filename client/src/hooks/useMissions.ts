@@ -98,7 +98,10 @@ export function useMissions() {
 		MissionId
 	>({
 		mutationFn: async (missionId: MissionId) => {
-			return apiRequest<{ success: boolean; message: string; rewards: MissionReward }>({ url: `/api/missions/claim/${missionId}`, method: 'POST' });
+			return apiRequest<{ success: boolean; message: string; rewards: MissionReward }>({
+				url: `/api/missions/claim/${missionId}`,
+				method: 'POST'
+			});
 		},
 		onSuccess: (
 			data: { success: boolean; message: string; rewards: MissionReward },

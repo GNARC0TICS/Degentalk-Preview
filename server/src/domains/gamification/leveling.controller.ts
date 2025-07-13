@@ -10,12 +10,12 @@ import type { Request, Response } from 'express';
 import { z } from 'zod';
 import { levelingService, LevelingService } from './services/leveling.service';
 import { CloutTransformer } from './transformers/clout.transformer';
-import { 
+import {
 	toPublicList,
 	sendSuccessResponse,
 	sendErrorResponse,
 	sendTransformedResponse,
-	sendTransformedListResponse 
+	sendTransformedListResponse
 } from '@core/utils/transformer.helpers';
 import { logger } from '@core/logger';
 import { AppError } from '@core/errors';
@@ -31,8 +31,16 @@ const getUserProgressionSchema = z.object({
 
 const getLeaderboardSchema = z.object({
 	type: z.enum(['level', 'xp', 'weekly', 'monthly']).optional().default('xp'),
-	limit: z.string().optional().transform((val) => val ? parseInt(val) : 50).pipe(z.number().int().min(1).max(100)),
-	offset: z.string().optional().transform((val) => val ? parseInt(val) : 0).pipe(z.number().int().min(0))
+	limit: z
+		.string()
+		.optional()
+		.transform((val) => (val ? parseInt(val) : 50))
+		.pipe(z.number().int().min(1).max(100)),
+	offset: z
+		.string()
+		.optional()
+		.transform((val) => (val ? parseInt(val) : 0))
+		.pipe(z.number().int().min(0))
 });
 
 const createLevelSchema = z.object({
@@ -237,12 +245,16 @@ export class LevelingController {
 			const curve = await this.service.generateXpCurve(maxLevel, baseXp);
 			await this.service.importXpCurve(curve);
 
-			sendSuccessResponse(res, {
-				curve: curve.slice(0, 10),
-				total: curve.length,
-				maxLevel,
-				maxXp: Math.max(...curve.map((c) => c.minXp))
-			}, `Generated and imported ${curve.length} levels`);
+			sendSuccessResponse(
+				res,
+				{
+					curve: curve.slice(0, 10),
+					total: curve.length,
+					maxLevel,
+					maxXp: Math.max(...curve.map((c) => c.minXp))
+				},
+				`Generated and imported ${curve.length} levels`
+			);
 		} catch (error) {
 			logger.error('LEVELING_CONTROLLER', 'Error generating XP curve:', error);
 			if (error instanceof z.ZodError) {
@@ -308,12 +320,16 @@ export class LevelingController {
 
 			const { rewards, unlocks } = await this.service.processLevelUp(userId, level - 1, level);
 
-			sendSuccessResponse(res, {
-				level,
-				userId,
-				rewards,
-				unlocks
-			}, `Simulated level ${level} rewards for user ${userId}`);
+			sendSuccessResponse(
+				res,
+				{
+					level,
+					userId,
+					rewards,
+					unlocks
+				},
+				`Simulated level ${level} rewards for user ${userId}`
+			);
 		} catch (error) {
 			logger.error('LEVELING_CONTROLLER', 'Error simulating level rewards:', error);
 			if (error instanceof AppError) {

@@ -4,7 +4,7 @@ import { ProfileStatsService } from './profile-stats.service';
 import { handleControllerError } from '../../lib/error-handler';
 import { z } from 'zod';
 import { logger } from '@core/logger';
-import { sendSuccessResponse, sendErrorResponse } from "@core/utils/transformer.helpers";
+import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
 // Request validation schemas
 const GetProfileStatsSchema = z.object({
@@ -52,11 +52,11 @@ export class ProfileStatsController {
 			);
 
 			sendSuccessResponse(res, {
-            				success: true,
-            				data: sanitizedStats,
-            				cached: false,
-            				timestamp: new Date().toISOString()
-            			});
+				success: true,
+				data: sanitizedStats,
+				cached: false,
+				timestamp: new Date().toISOString()
+			});
 		} catch (error) {
 			handleControllerError(error, res, 'Failed to fetch profile statistics');
 		}
@@ -80,9 +80,9 @@ export class ProfileStatsController {
 			});
 
 			sendSuccessResponse(res, {
-            				success: true,
-            				message: 'Engagement data recorded'
-            			});
+				success: true,
+				message: 'Engagement data recorded'
+			});
 		} catch (error) {
 			handleControllerError(error, res, 'Failed to record engagement analytics');
 		}
@@ -115,11 +115,11 @@ export class ProfileStatsController {
 			};
 
 			sendSuccessResponse(res, {
-            				success: true,
-            				data: quickStats,
-            				cached: true,
-            				timestamp: new Date().toISOString()
-            			});
+				success: true,
+				data: quickStats,
+				cached: true,
+				timestamp: new Date().toISOString()
+			});
 		} catch (error) {
 			handleControllerError(error, res, 'Failed to fetch quick profile stats');
 		}
@@ -158,12 +158,12 @@ export class ProfileStatsController {
 	private static async storeEngagementAnalytics(data: any) {
 		// Example implementation - replace with your analytics service
 		logger.info('Profile Engagement Analytics:', {
-        			profileUsername: data.profileUsername,
-        			viewerId: data.viewerId,
-        			engagementScore: data.metrics.engagementScore,
-        			sessionDuration: data.sessionDuration,
-        			timestamp: data.timestamp
-        		});
+			profileUsername: data.profileUsername,
+			viewerId: data.viewerId,
+			engagementScore: data.metrics.engagementScore,
+			sessionDuration: data.sessionDuration,
+			timestamp: data.timestamp
+		});
 
 		// TODO: Implement actual analytics storage
 		// - Send to analytics service (Mixpanel, Amplitude, etc.)

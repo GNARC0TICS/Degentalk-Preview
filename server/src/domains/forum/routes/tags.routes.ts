@@ -8,9 +8,6 @@ import { tagsController } from '../controllers/tags.controller';
 
 const router = Router();
 
-router.get(
-	'/',
-	asyncHandler(tagsController.getTags.bind(tagsController))
-);
+router.get('/', asyncHandler(tagsController.getTags.bind(tagsController)));
 
-export default router; 
+export default router;

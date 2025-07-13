@@ -170,8 +170,15 @@ export function useManuallyAwardAchievement() {
 	const queryClient = useQueryClient();
 
 	return useMutation({
-		mutationFn: ({ id, userIds, reason }: { id: AchievementId; userIds: string[]; reason?: string }) =>
-			achievementApi.manuallyAwardAchievement(id, userIds, reason),
+		mutationFn: ({
+			id,
+			userIds,
+			reason
+		}: {
+			id: AchievementId;
+			userIds: string[];
+			reason?: string;
+		}) => achievementApi.manuallyAwardAchievement(id, userIds, reason),
 		onSuccess: (data) => {
 			queryClient.invalidateQueries({ queryKey: ['achievements'] });
 			toast.success(data.message);

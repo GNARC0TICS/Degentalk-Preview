@@ -1,12 +1,4 @@
-import {
-	pgTable,
-	timestamp,
-	boolean,
-	unique,
-	index,
-	uuid,
-	integer
-} from 'drizzle-orm/pg-core';
+import { pgTable, timestamp, boolean, unique, index, uuid, integer } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users'; // Adjusted path
 import { conversations } from './conversations'; // Adjusted path

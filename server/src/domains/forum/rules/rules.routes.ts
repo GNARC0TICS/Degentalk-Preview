@@ -23,10 +23,7 @@ import { isAuthenticated } from '../../auth/middleware/auth.middleware';
 import { storage } from '../../../../storage';
 import { asyncHandler } from '@core/errors'; // Assuming asyncHandler is in core errors
 import { getUserIdFromRequest } from '@server-utils/auth';
-import { 
-	sendSuccessResponse,
-	sendErrorResponse
-} from '@core/utils/transformer.helpers';
+import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 import { logger } from '@core/logger';
 
 const router = Router();
@@ -262,10 +259,14 @@ router.post(
 			}
 
 			res.status(200);
-			return sendSuccessResponse(res, {
-				success: true,
-				ruleIds
-			}, 'Successfully agreed to rules');
+			return sendSuccessResponse(
+				res,
+				{
+					success: true,
+					ruleIds
+				},
+				'Successfully agreed to rules'
+			);
 		} catch (error) {
 			logger.error('Error agreeing to rules:', error);
 			return sendErrorResponse(res, 'Failed to process rule agreements', 500);

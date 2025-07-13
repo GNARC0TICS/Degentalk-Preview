@@ -33,53 +33,73 @@ const iconMap: Record<string, any> = {
 	Settings,
 	Shield,
 	Users: ({ className }: { className?: string }) => (
-		<div className={`w-4 h-4 rounded bg-blue-500 text-white text-xs flex items-center justify-center ${className || ''}`}>
+		<div
+			className={`w-4 h-4 rounded bg-blue-500 text-white text-xs flex items-center justify-center ${className || ''}`}
+		>
 			U
 		</div>
 	),
 	TrendingUp: ({ className }: { className?: string }) => (
-		<div className={`w-4 h-4 rounded bg-green-500 text-white text-xs flex items-center justify-center ${className || ''}`}>
+		<div
+			className={`w-4 h-4 rounded bg-green-500 text-white text-xs flex items-center justify-center ${className || ''}`}
+		>
 			↗
 		</div>
 	),
 	Wallet: ({ className }: { className?: string }) => (
-		<div className={`w-4 h-4 rounded bg-yellow-500 text-white text-xs flex items-center justify-center ${className || ''}`}>
+		<div
+			className={`w-4 h-4 rounded bg-yellow-500 text-white text-xs flex items-center justify-center ${className || ''}`}
+		>
 			W
 		</div>
 	),
 	ShoppingBag: ({ className }: { className?: string }) => (
-		<div className={`w-4 h-4 rounded bg-purple-500 text-white text-xs flex items-center justify-center ${className || ''}`}>
+		<div
+			className={`w-4 h-4 rounded bg-purple-500 text-white text-xs flex items-center justify-center ${className || ''}`}
+		>
 			S
 		</div>
 	),
 	BarChart3: ({ className }: { className?: string }) => (
-		<div className={`w-4 h-4 rounded bg-blue-600 text-white text-xs flex items-center justify-center ${className || ''}`}>
+		<div
+			className={`w-4 h-4 rounded bg-blue-600 text-white text-xs flex items-center justify-center ${className || ''}`}
+		>
 			📊
 		</div>
 	),
 	Megaphone: ({ className }: { className?: string }) => (
-		<div className={`w-4 h-4 rounded bg-orange-500 text-white text-xs flex items-center justify-center ${className || ''}`}>
+		<div
+			className={`w-4 h-4 rounded bg-orange-500 text-white text-xs flex items-center justify-center ${className || ''}`}
+		>
 			📢
 		</div>
 	),
 	Package: ({ className }: { className?: string }) => (
-		<div className={`w-4 h-4 rounded bg-indigo-500 text-white text-xs flex items-center justify-center ${className || ''}`}>
+		<div
+			className={`w-4 h-4 rounded bg-indigo-500 text-white text-xs flex items-center justify-center ${className || ''}`}
+		>
 			📦
 		</div>
 	),
 	ToggleLeft: ({ className }: { className?: string }) => (
-		<div className={`w-4 h-4 rounded bg-gray-500 text-white text-xs flex items-center justify-center ${className || ''}`}>
+		<div
+			className={`w-4 h-4 rounded bg-gray-500 text-white text-xs flex items-center justify-center ${className || ''}`}
+		>
 			⚙
 		</div>
 	),
 	Landmark: ({ className }: { className?: string }) => (
-		<div className={`w-4 h-4 rounded bg-emerald-600 text-white text-xs flex items-center justify-center ${className || ''}`}>
+		<div
+			className={`w-4 h-4 rounded bg-emerald-600 text-white text-xs flex items-center justify-center ${className || ''}`}
+		>
 			🏛
 		</div>
 	),
 	// Add fallback
 	default: ({ className }: { className?: string }) => (
-		<div className={`w-4 h-4 rounded bg-gray-400 text-white text-xs flex items-center justify-center ${className || ''}`}>
+		<div
+			className={`w-4 h-4 rounded bg-gray-400 text-white text-xs flex items-center justify-center ${className || ''}`}
+		>
 			•
 		</div>
 	)

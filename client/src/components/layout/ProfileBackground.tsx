@@ -9,8 +9,7 @@ export const ProfileBackground: React.FC<ProfileBackgroundProps> = ({
 	imagePath = '/images/19FA32BC-BF64-4CE2-990E-BDB147C2A159.png'
 }) => {
 	// Use an effect to confirm the component is mounting
-	React.useEffect(() => {
-	}, [imagePath]);
+	React.useEffect(() => {}, [imagePath]);
 
 	return (
 		<>

@@ -2,10 +2,7 @@
  * Dictionary Entries Schema @syncSchema
  * New table definitions for Degen Dictionary feature.
  */
-import {
-	pgTable, text, uuid, integer, timestamp, boolean,
-	index
-} from 'drizzle-orm/pg-core';
+import { pgTable, text, uuid, integer, timestamp, boolean, index } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users';
 import { createInsertSchema } from 'drizzle-zod';

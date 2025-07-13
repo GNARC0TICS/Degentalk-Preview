@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { uiThemesService } from '../../domains/admin/sub-domains/ui-config/uiThemes.service';
-import { logger } from "@core/logger";
+import { logger } from '@core/logger';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
 const router = Router();

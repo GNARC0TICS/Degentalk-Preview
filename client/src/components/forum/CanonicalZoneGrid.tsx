@@ -45,29 +45,26 @@ export const CanonicalZoneGrid = React.memo(function CanonicalZoneGrid({
 	includeShopCard = true,
 	shopCardData
 }: CanonicalZoneGridProps) {
-	const gridData = React.useMemo<GridCardData[]>(
-		() => {
-			if (!zones || zones.length === 0) {
-				return [];
-			}
-			return [
-				// Spread in zone data directly – assume zones are already fully shaped for ZoneCard
-				...zones,
-				// Optionally append a static ShopCard entry
-				...(includeShopCard
-					? [
-							{
-								id: 'shop-card',
-								type: 'shop',
-								isStatic: true,
-								featuredItem: shopCardData
-							} as ShopCardData
-						]
-					: [])
-			];
-		},
-		[zones, includeShopCard, shopCardData]
-	);
+	const gridData = React.useMemo<GridCardData[]>(() => {
+		if (!zones || zones.length === 0) {
+			return [];
+		}
+		return [
+			// Spread in zone data directly – assume zones are already fully shaped for ZoneCard
+			...zones,
+			// Optionally append a static ShopCard entry
+			...(includeShopCard
+				? [
+						{
+							id: 'shop-card',
+							type: 'shop',
+							isStatic: true,
+							featuredItem: shopCardData
+						} as ShopCardData
+					]
+				: [])
+		];
+	}, [zones, includeShopCard, shopCardData]);
 
 	const renderedCards = React.useMemo(
 		() =>

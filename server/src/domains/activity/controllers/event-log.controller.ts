@@ -24,13 +24,21 @@ export class EventLogController {
 			const validatedData = schema.parse(req.body);
 			const result = await eventLogService.createEventLog(validatedData);
 
-			return sendSuccessResponse(res, {
-				success: true,
-				data: result
-			}, 201);
+			return sendSuccessResponse(
+				res,
+				{
+					success: true,
+					data: result
+				},
+				201
+			);
 		} catch (error) {
 			logger.error('Error creating event log:', error);
-			return sendErrorResponse(res, error instanceof Error ? error.message : 'Failed to create event log', 400);
+			return sendErrorResponse(
+				res,
+				error instanceof Error ? error.message : 'Failed to create event log',
+				400
+			);
 		}
 	}
 
@@ -79,7 +87,11 @@ export class EventLogController {
 			});
 		} catch (error) {
 			logger.error('Error getting event logs:', error);
-			return sendErrorResponse(res, error instanceof Error ? error.message : 'Failed to get event logs', 400);
+			return sendErrorResponse(
+				res,
+				error instanceof Error ? error.message : 'Failed to get event logs',
+				400
+			);
 		}
 	}
 
@@ -131,7 +143,11 @@ export class EventLogController {
 			});
 		} catch (error) {
 			logger.error('Error getting user event logs:', error);
-			return sendErrorResponse(res, error instanceof Error ? error.message : 'Failed to get user event logs', 400);
+			return sendErrorResponse(
+				res,
+				error instanceof Error ? error.message : 'Failed to get user event logs',
+				400
+			);
 		}
 	}
 
@@ -158,7 +174,11 @@ export class EventLogController {
 			});
 		} catch (error) {
 			logger.error('Error getting event log:', error);
-			return sendErrorResponse(res, error instanceof Error ? error.message : 'Failed to get event log', 400);
+			return sendErrorResponse(
+				res,
+				error instanceof Error ? error.message : 'Failed to get event log',
+				400
+			);
 		}
 	}
 
@@ -185,7 +205,11 @@ export class EventLogController {
 			});
 		} catch (error) {
 			logger.error('Error deleting event log:', error);
-			return sendErrorResponse(res, error instanceof Error ? error.message : 'Failed to delete event log', 400);
+			return sendErrorResponse(
+				res,
+				error instanceof Error ? error.message : 'Failed to delete event log',
+				400
+			);
 		}
 	}
 }

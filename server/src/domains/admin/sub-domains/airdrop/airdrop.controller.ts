@@ -40,7 +40,8 @@ export const executeAirdrop = async (req: Request, res: Response, next: NextFunc
 		} else {
 			// Determine appropriate status code based on the nature of the failure
 			// For now, using 400 for general processing issues that aren't outright server errors
-			const statusCode = result.message.includes('Unsupported') || result.message.includes('positive') ? 400 : 500;
+			const statusCode =
+				result.message.includes('Unsupported') || result.message.includes('positive') ? 400 : 500;
 			sendErrorResponse(res, result.message, statusCode);
 		}
 	} catch (error) {

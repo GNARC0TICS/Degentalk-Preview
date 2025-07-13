@@ -371,7 +371,9 @@ function fallbackStructure(staticZones: Zone[]) {
 
 		z.forums.forEach((f) => {
 			const forumIdNum = FALLBACK_FORUM_ID();
-			const forumId = toId<'ForumId'>(`550e8400-e29b-41d4-a716-${String(forumIdNum).padStart(12, '0')}`);
+			const forumId = toId<'ForumId'>(
+				`550e8400-e29b-41d4-a716-${String(forumIdNum).padStart(12, '0')}`
+			);
 			const mf: MergedForum = {
 				id: forumId,
 				slug: f.slug,

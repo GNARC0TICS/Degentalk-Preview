@@ -107,7 +107,7 @@ export async function verifyEmailToken(token: string): Promise<{ userId: UserId 
 
 		// For demo purposes, we're returning a fake userId
 		// In production, you would query the actual token from the database
-		return { userId: "1" as UserId }; // Return userId if token is valid
+		return { userId: '1' as UserId }; // Return userId if token is valid
 	} catch (error) {
 		logger.error('AuthService', 'Error verifying token', { err: error, token });
 		return false;

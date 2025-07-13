@@ -12,7 +12,7 @@ import { TipService } from './tip.service';
 import { asyncHandler } from '@core/errors';
 import { z } from 'zod';
 import { logger } from '@core/logger';
-import { sendSuccessResponse, sendErrorResponse } from "@core/utils/transformer.helpers";
+import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
 /**
  * Controller for tipping functionality
@@ -48,9 +48,9 @@ export class TipController {
 		);
 
 		sendSuccessResponse(res, {
-        			success: true,
-        			data: result
-        		});
+			success: true,
+			data: result
+		});
 	});
 
 	/**
@@ -65,9 +65,9 @@ export class TipController {
 		const tipHistory = await this.tipService.getTipHistory(userId, limit, offset, type);
 
 		sendSuccessResponse(res, {
-        			success: true,
-        			data: tipHistory
-        		});
+			success: true,
+			data: tipHistory
+		});
 	});
 
 	/**
@@ -82,9 +82,9 @@ export class TipController {
 		const leaderboard = await this.tipService.getTipLeaderboard(period, type, limit);
 
 		sendSuccessResponse(res, {
-        			success: true,
-        			data: leaderboard
-        		});
+			success: true,
+			data: leaderboard
+		});
 	});
 
 	/**
@@ -94,9 +94,9 @@ export class TipController {
 		const settings = await this.tipService.getTipSettings();
 
 		sendSuccessResponse(res, {
-        			success: true,
-        			data: settings
-        		});
+			success: true,
+			data: settings
+		});
 	});
 
 	/**
@@ -124,9 +124,9 @@ export class TipController {
 		const updatedSettings = await this.tipService.updateTipSettings(userId, validatedData);
 
 		sendSuccessResponse(res, {
-        			success: true,
-        			data: updatedSettings
-        		});
+			success: true,
+			data: updatedSettings
+		});
 	});
 }
 

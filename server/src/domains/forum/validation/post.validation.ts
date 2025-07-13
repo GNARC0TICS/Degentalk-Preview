@@ -45,4 +45,4 @@ export const postValidation = {
 	postParams,
 	postReaction: postReactionSchema,
 	tipPost: tipPostSchema
-}; 
+};

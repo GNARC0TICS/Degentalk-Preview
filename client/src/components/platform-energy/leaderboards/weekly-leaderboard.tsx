@@ -8,7 +8,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Badge } from '@/components/ui/badge';
 import { getInitials } from '@/lib/utils';
 import { Award, MessageSquare, TrendingUp, Clock } from 'lucide-react';
-import type { UserId } from "@shared/types/ids";
+import type { UserId } from '@shared/types/ids';
 
 export type LeaderboardUser = {
 	id: UserId;

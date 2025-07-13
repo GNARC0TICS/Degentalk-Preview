@@ -33,7 +33,9 @@ export interface ThreadCardPropsData {
 	user: ForumUserLite;
 	category?: ForumCategoryLite | undefined; // Simplified category
 	tags?: Partial<ThreadTag>[] | undefined;
-	prefix?: Partial<ThreadPrefix> & { name: string; color?: string | null | undefined } | undefined;
+	prefix?:
+		| (Partial<ThreadPrefix> & { name: string; color?: string | null | undefined })
+		| undefined;
 	hotScore?: number | undefined;
 	isSolved?: boolean | undefined;
 	solvingPostId?: string | null | undefined;

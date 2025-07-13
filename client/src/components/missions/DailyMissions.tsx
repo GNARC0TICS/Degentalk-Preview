@@ -28,7 +28,7 @@ import {
 import { motion } from 'framer-motion';
 import { useAuth } from '@/hooks/use-auth';
 import { cn } from '@/lib/utils';
-import type { MissionId } from "@shared/types/ids";
+import type { MissionId } from '@shared/types/ids';
 
 /**
  * Mission Card component to display a single mission

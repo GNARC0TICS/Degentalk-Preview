@@ -3,7 +3,7 @@ import { cn } from '@/lib/utils';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Badge } from '@/components/ui/badge';
 import { rarityBorderMap, rarityColorMap } from '@/config/rarity.config';
-import type { TitleId } from "@shared/types/ids";
+import type { TitleId } from '@shared/types/ids';
 
 type UserTitlesProps = {
 	titles: Array<{

@@ -5,7 +5,7 @@ import { db } from '@core/db';
 import { users } from '@schema/user/users';
 import { eq } from 'drizzle-orm';
 import { logger } from '@core/logger';
-import { sendSuccessResponse, sendErrorResponse } from "@core/utils/transformer.helpers";
+import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
 // Environment variables required
 const { X_CLIENT_ID, X_CLIENT_SECRET, X_CALLBACK_URL } = process.env as Record<string, string>;
@@ -130,8 +130,7 @@ export async function handleXCallback(req: Request, res: Response, next: NextFun
 
 export async function unlinkXAccount(req: Request, res: Response, next: NextFunction) {
 	try {
-		if (!userService.getUserFromRequest(req))
-			return sendErrorResponse(res, 'Not logged in', 401);
+		if (!userService.getUserFromRequest(req)) return sendErrorResponse(res, 'Not logged in', 401);
 		await db
 			.update(users)
 			.set({

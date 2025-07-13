@@ -78,7 +78,8 @@ export function ModeratorActions({
 	// Thread actions
 	const toggleLock = useMutation({
 		mutationFn: async () => {
-			return apiRequest({ url: `/api/forum/threads/${itemId}/${itemData.isLocked ? 'unlock' : 'lock'}`,
+			return apiRequest({
+				url: `/api/forum/threads/${itemId}/${itemData.isLocked ? 'unlock' : 'lock'}`,
 				method: 'POST'
 			});
 		},
@@ -94,7 +95,8 @@ export function ModeratorActions({
 
 	const togglePin = useMutation({
 		mutationFn: async () => {
-			return apiRequest({ url: `/api/forum/threads/${itemId}/${itemData.isSticky ? 'unpin' : 'pin'}`,
+			return apiRequest({
+				url: `/api/forum/threads/${itemId}/${itemData.isSticky ? 'unpin' : 'pin'}`,
 				method: 'POST'
 			});
 		},
@@ -110,7 +112,8 @@ export function ModeratorActions({
 
 	const toggleHide = useMutation({
 		mutationFn: async () => {
-			return apiRequest({ url: `/api/forum/${type}s/${itemId}/${itemData.isHidden ? 'show' : 'hide'}`,
+			return apiRequest({
+				url: `/api/forum/${type}s/${itemId}/${itemData.isHidden ? 'show' : 'hide'}`,
 				method: 'POST'
 			});
 		},
@@ -126,7 +129,8 @@ export function ModeratorActions({
 
 	const deleteItem = useMutation({
 		mutationFn: async () => {
-			return apiRequest({ url: `/api/forum/${type}s/${itemId}`,
+			return apiRequest({
+				url: `/api/forum/${type}s/${itemId}`,
 				method: 'DELETE',
 				data: { reason: moderatorNote }
 			});
@@ -221,7 +225,8 @@ export function ModeratorActions({
 
 							<DropdownMenuItem
 								onClick={() => {
-									const threadId = parseId<'ThreadId'>(String(itemId)) || toId<'ThreadId'>(String(itemId));
+									const threadId =
+										parseId<'ThreadId'>(String(itemId)) || toId<'ThreadId'>(String(itemId));
 									if (itemData.isSolved) {
 										unsolveThread.mutate(threadId);
 									} else {

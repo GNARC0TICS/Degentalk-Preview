@@ -249,7 +249,10 @@ export const adjustUserXp = async (req: Request, res: Response, next: NextFuncti
 		const adminId = userService.getUserFromRequest(req)?.id;
 
 		if (!userId || !amount || !adjustmentType) {
-			return sendErrorResponse(res, 'Missing required parameters: userId, amount, and adjustmentType are required.');
+			return sendErrorResponse(
+				res,
+				'Missing required parameters: userId, amount, and adjustmentType are required.'
+			);
 		}
 
 		if (!['add', 'subtract', 'set'].includes(adjustmentType)) {
@@ -328,12 +331,20 @@ export const testXpActionAward = async (req: Request, res: Response, next: NextF
 		const { userId, action, metadata } = req.body;
 
 		if (!userId || !action) {
-			return sendErrorResponse(res, 'Missing required parameters. userId and action are required.', 400);
+			return sendErrorResponse(
+				res,
+				'Missing required parameters. userId and action are required.',
+				400
+			);
 		}
 
 		// Ensure action is valid
 		if (!Object.values(XP_ACTION).includes(action as XP_ACTION)) {
-			return sendErrorResponse(res, `Invalid action. Must be one of: ${Object.values(XP_ACTION).join(', ')}`, 400);
+			return sendErrorResponse(
+				res,
+				`Invalid action. Must be one of: ${Object.values(XP_ACTION).join(', ')}`,
+				400
+			);
 		}
 
 		logger.info('XP_ADMIN_CONTROLLER', 'Admin testing XP action award', {
@@ -347,13 +358,21 @@ export const testXpActionAward = async (req: Request, res: Response, next: NextF
 		const result = await xpService.awardXp(userId, action as XP_ACTION, metadata);
 
 		if (!result) {
-			return sendErrorResponse(res, 'Could not award XP. The user may have reached a limit for this action.', 429);
+			return sendErrorResponse(
+				res,
+				'Could not award XP. The user may have reached a limit for this action.',
+				429
+			);
 		}
 
-		return sendSuccessResponse(res, {
-			result,
-			limits: await xpService.getActionLimitsForUser(userId, action as XP_ACTION)
-		}, 'XP awarded successfully');
+		return sendSuccessResponse(
+			res,
+			{
+				result,
+				limits: await xpService.getActionLimitsForUser(userId, action as XP_ACTION)
+			},
+			'XP awarded successfully'
+		);
 	} catch (error: any) {
 		logger.error(
 			'XP_ADMIN_CONTROLLER',

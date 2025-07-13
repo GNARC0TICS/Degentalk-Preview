@@ -6,7 +6,7 @@
  */
 
 import { Router } from 'express';
-import { isAuthenticated } from '@server/auth/middleware/auth.middleware';
+import { isAuthenticated } from '@server/domains/auth/middleware/auth.middleware';
 import * as xpController from './xp.controller';
 
 const router = Router();

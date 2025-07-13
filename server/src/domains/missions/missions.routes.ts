@@ -1,6 +1,6 @@
 // REFACTORED: Updated auth middleware imports to use canonical path
 import { Router } from 'express';
-import { isAuthenticated, isAdmin } from '@server/auth/middleware/auth.middleware';
+import { isAuthenticated, isAdmin } from '@server/domains/auth/middleware/auth.middleware';
 import * as missionsController from './missions.controller';
 
 const router = Router();

@@ -9,7 +9,7 @@ import { adminAnalyticsService } from './analytics.service';
 import { AdminError, AdminErrorCodes } from '../../admin.errors';
 import { AnalyticsQuerySchema, AnalyticsPeriodSchema } from './analytics.validators';
 import { validateQueryParams } from '../../admin.validation';
-import { sendSuccessResponse, sendErrorResponse } from "@core/utils/transformer.helpers";
+import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
 export class AdminAnalyticsController {
 	async getOverviewStats(req: Request, res: Response) {

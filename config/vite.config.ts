@@ -62,7 +62,7 @@ export default defineConfig(async () => {
 				{ find: '@db', replacement: path.resolve(projectRoot, 'db/index.ts') },
 				{ find: '@db_types', replacement: path.resolve(projectRoot, 'db/types') },
 				{ find: '@schema', replacement: path.resolve(projectRoot, 'db/schema/index.ts') },
-				{ find: /^@schema\/(.*)/, replacement: path.resolve(projectRoot, 'db/schema/$1') },
+				{ find: /^@schema\/(.*)/, replacement: path.resolve(projectRoot, 'db/schema/$1') }
 				// Force Vite to use the single React copy from root node_modules
 				// { find: 'react', replacement: path.resolve(projectRoot, 'node_modules/react') },
 				// { find: 'react-dom', replacement: path.resolve(projectRoot, 'node_modules/react-dom') }

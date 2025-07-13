@@ -44,7 +44,10 @@ export default function AdminUserInventoryPage() {
 	// Mutation for equipping an item
 	const equipMutation = useMutation<any, Error, { inventoryId: InventoryId }>({
 		mutationFn: ({ inventoryId }) =>
-			apiRequest({ url: `/api/admin/user-inventory/${userId}/equip/${inventoryId}`, method: 'POST' }),
+			apiRequest({
+				url: `/api/admin/user-inventory/${userId}/equip/${inventoryId}`,
+				method: 'POST'
+			}),
 		onSuccess: () => {
 			toast({ title: 'Item equipped', description: 'The item has been successfully equipped.' });
 			queryClient.invalidateQueries({ queryKey: ['userInventory', userId] });
@@ -57,7 +60,10 @@ export default function AdminUserInventoryPage() {
 	// Mutation for unequipping an item
 	const unequipMutation = useMutation<any, Error, { inventoryId: InventoryId }>({
 		mutationFn: ({ inventoryId }) =>
-			apiRequest({ url: `/api/admin/user-inventory/${userId}/unequip/${inventoryId}`, method: 'POST' }),
+			apiRequest({
+				url: `/api/admin/user-inventory/${userId}/unequip/${inventoryId}`,
+				method: 'POST'
+			}),
 		onSuccess: () => {
 			toast({
 				title: 'Item unequipped',
@@ -77,7 +83,8 @@ export default function AdminUserInventoryPage() {
 	// Mutation for granting an item
 	const grantItemMutation = useMutation<any, Error, { productId: string }>({
 		mutationFn: ({ productId }) =>
-			apiRequest({ url: `/api/admin/user-inventory/${userId}/grant`,
+			apiRequest({
+				url: `/api/admin/user-inventory/${userId}/grant`,
 				method: 'POST',
 				data: { productId, quantity: 1 } // Assuming quantity 1 for cosmetics
 			}),

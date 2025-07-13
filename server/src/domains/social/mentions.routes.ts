@@ -5,7 +5,7 @@ import { requireAuth } from '../../../middleware/auth';
 import { z } from 'zod';
 import { logger } from '@core/logger';
 import { UserTransformer } from '@server/domains/users/transformers/user.transformer';
-import { 
+import {
 	toPublicList,
 	sendSuccessResponse,
 	sendErrorResponse,

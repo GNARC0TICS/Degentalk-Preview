@@ -29,4 +29,4 @@ export class UploadTransformer {
 			publicUrl: data.newPublicUrl
 		};
 	}
-} 
+}

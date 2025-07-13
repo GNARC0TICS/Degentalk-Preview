@@ -11,7 +11,6 @@ import { Folder, LayoutGrid } from 'lucide-react';
 import type { ZoneCardProps } from '@/components/forum/ZoneCard';
 import { ErrorBoundary } from '@/components/errors/ErrorBoundary';
 
-
 function ZonesPage() {
 	// Changed to regular function for clarity with provider
 	// The hook now returns `zones` which contains all zones, and `forums` (a flat map).
@@ -25,33 +24,33 @@ function ZonesPage() {
 
 	if (isLoading) {
 		return (
-            <ErrorBoundary level='component'>
-                <div className="flex flex-col min-h-screen">
+			<ErrorBoundary level="component">
+				<div className="flex flex-col min-h-screen">
 					<div className="max-w-7xl mx-auto px-4 py-6 flex-grow">
 						<LoadingSpinner text="Loading Zones..." />
 					</div>
 					<SiteFooter />
 				</div>
-            </ErrorBoundary>
-        );
+			</ErrorBoundary>
+		);
 	}
 
 	if (error) {
 		return (
-            <ErrorBoundary level='component'>
-                <div className="flex flex-col min-h-screen">
+			<ErrorBoundary level="component">
+				<div className="flex flex-col min-h-screen">
 					<div className="max-w-7xl mx-auto px-4 py-6 flex-grow">
 						<ErrorDisplay title="Error loading zones" error={error} />
 					</div>
 					<SiteFooter />
 				</div>
-            </ErrorBoundary>
-        );
+			</ErrorBoundary>
+		);
 	}
 
 	return (
-        <ErrorBoundary level='component'>
-            <div className="flex flex-col min-h-screen">
+		<ErrorBoundary level="component">
+			<div className="flex flex-col min-h-screen">
 				<div className="max-w-7xl mx-auto px-4 py-6 flex-grow">
 					<div className="mb-8">
 						<h1 className="text-3xl font-bold text-white mb-4">Zones & Categories</h1>
@@ -123,8 +122,8 @@ function ZonesPage() {
 				</div>
 				<SiteFooter />
 			</div>
-        </ErrorBoundary>
-    );
+		</ErrorBoundary>
+	);
 }
 
 export default ZonesPage;

@@ -12,10 +12,10 @@ import { db } from '@db';
 import { sql } from 'drizzle-orm';
 import { users, transactions } from '@schema';
 import { eq } from 'drizzle-orm';
-import { isAdmin } from '@server/auth/middleware/auth.middleware';
+import { isAdmin } from '@server/domains/auth/middleware/auth.middleware';
 import { getUserId } from '../auth/services/auth.service';
 import { logger } from '@core/logger';
-import { sendSuccessResponse, sendErrorResponse } from "@core/utils/transformer.helpers";
+import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
 /**
  * Format DGT amount from storage format (BIGINT with 6 decimal precision) to display format
@@ -49,7 +49,11 @@ async function adjustTreasuryBalance(
 		const { amount, type, reason, currency } = params;
 
 		if (!amount || !type || !currency) {
-			return sendErrorResponse(res, 'Required fields: amount, type (credit/debit), currency (DGT/USDT)', 400);
+			return sendErrorResponse(
+				res,
+				'Required fields: amount, type (credit/debit), currency (DGT/USDT)',
+				400
+			);
 		}
 
 		if (type !== 'credit' && type !== 'debit') {

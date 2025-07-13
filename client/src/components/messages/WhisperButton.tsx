@@ -6,7 +6,7 @@ import { WhisperModal } from './WhisperModal';
 import { Badge } from '@/components/ui/badge';
 import { useMessages } from '@/hooks/use-messages';
 import { useQuery } from '@tanstack/react-query';
-import { type UserId } from "@shared/types/ids";
+import { type UserId } from '@shared/types/ids';
 
 interface WhisperButtonProps extends ButtonProps {
 	userId?: UserId;

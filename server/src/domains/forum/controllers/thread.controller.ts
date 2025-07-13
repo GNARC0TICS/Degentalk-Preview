@@ -20,11 +20,11 @@ class ThreadController {
 			page,
 			limit,
 			sortBy: sortBy as any,
-			search,
+			search
 		});
-		
+
 		const user = getAuthenticatedUser(req);
-		const transformedThreads = result.threads.map(thread => 
+		const transformedThreads = result.threads.map((thread) =>
 			user ? ForumTransformer.toSlimThread(thread) : ForumTransformer.toPublicThread(thread)
 		);
 
@@ -34,8 +34,8 @@ class ThreadController {
 				page,
 				limit: limit,
 				totalThreads: result.total,
-				totalPages: result.totalPages,
-			},
+				totalPages: result.totalPages
+			}
 		});
 	}
 
@@ -77,12 +77,14 @@ class ThreadController {
 		const userId = getAuthenticatedUser(req)?.id as UserId;
 		const newThread = await threadService.createThread({
 			...req.body,
-			userId,
+			userId
 		});
-		
+
 		const user = getAuthenticatedUser(req);
-		const transformedThread = user ? ForumTransformer.toAuthenticatedThread(newThread, user) : ForumTransformer.toPublicThread(newThread);
-		
+		const transformedThread = user
+			? ForumTransformer.toAuthenticatedThread(newThread, user)
+			: ForumTransformer.toPublicThread(newThread);
+
 		return sendSuccessResponse(res, transformedThread, 201);
 	}
 
@@ -92,15 +94,17 @@ class ThreadController {
 
 		const updatedThread = await threadService.updateThreadSolvedStatus({
 			threadId,
-			solvingPostId,
+			solvingPostId
 		});
 
 		if (!updatedThread) {
 			return sendErrorResponse(res, 'Thread not found', 404);
 		}
-		
+
 		const user = getAuthenticatedUser(req);
-		const transformedThread = user ? ForumTransformer.toAuthenticatedThread(updatedThread, user) : ForumTransformer.toPublicThread(updatedThread);
+		const transformedThread = user
+			? ForumTransformer.toAuthenticatedThread(updatedThread, user)
+			: ForumTransformer.toPublicThread(updatedThread);
 
 		return sendSuccessResponse(res, transformedThread);
 	}
@@ -144,4 +148,4 @@ class ThreadController {
 	}
 }
 
-export const threadController = new ThreadController(); 
+export const threadController = new ThreadController();

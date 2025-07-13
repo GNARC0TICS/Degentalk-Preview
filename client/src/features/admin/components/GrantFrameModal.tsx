@@ -35,7 +35,8 @@ export const GrantFrameModal: React.FC<Props> = ({ frame, open, onClose, onSucce
 
 	const grantMutation = useMutation<void, Error, { frameId: FrameId; userIds: UserId[] }>({
 		mutationFn: ({ frameId, userIds }) =>
-			apiRequest({ url: `/api/admin/avatar-frames/${frameId}/grant`,
+			apiRequest({
+				url: `/api/admin/avatar-frames/${frameId}/grant`,
 				method: 'POST',
 				data: { userIds }
 			}),
@@ -65,7 +66,7 @@ export const GrantFrameModal: React.FC<Props> = ({ frame, open, onClose, onSucce
 			});
 			return;
 		}
-		const convertedIds = ids.map(id => parseId<'UserId'>(id) || toId<'UserId'>(id));
+		const convertedIds = ids.map((id) => parseId<'UserId'>(id) || toId<'UserId'>(id));
 		grantMutation.mutate({ frameId: frame.id, userIds: convertedIds });
 	};
 

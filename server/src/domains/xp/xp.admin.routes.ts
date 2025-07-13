@@ -6,7 +6,7 @@
 
 import { Router } from 'express';
 import * as adminXpController from './xp.controller';
-import { isAuthenticated, isAdmin } from '@server/auth/middleware/auth.middleware';
+import { isAuthenticated, isAdmin } from '@server/domains/auth/middleware/auth.middleware';
 import { asyncHandler } from '@core/errors';
 
 const router = Router();

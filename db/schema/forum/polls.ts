@@ -1,7 +1,4 @@
-import {
-	pgTable, integer, boolean, timestamp, text, uuid,
-	index
-} from 'drizzle-orm/pg-core';
+import { pgTable, integer, boolean, timestamp, text, uuid, index } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { threads } from './threads';
 export const polls = pgTable('polls', {

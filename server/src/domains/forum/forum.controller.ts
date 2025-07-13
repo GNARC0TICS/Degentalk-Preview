@@ -5,7 +5,7 @@ import type { ThreadSearchParams } from './forum.service';
 import { logger } from '@core/logger';
 import type { StructureId, ThreadId } from '@shared/types/ids';
 import { ForumTransformer } from '@server/domains/forum/transformers/forum.transformer';
-import { 
+import {
 	toPublicList,
 	sendSuccessResponse,
 	sendErrorResponse
@@ -22,7 +22,10 @@ export const forumController = {
 		try {
 			const categories = await forumService.getCategoriesWithStats();
 			res.status(200);
-			return sendSuccessResponse(res, toPublicList(categories, ForumTransformer.toPublicForumStructure));
+			return sendSuccessResponse(
+				res,
+				toPublicList(categories, ForumTransformer.toPublicForumStructure)
+			);
 		} catch (error) {
 			logger.error('ForumController', 'Error fetching forum categories', { err: error });
 			return sendErrorResponse(res, 'Failed to fetch forum categories', 500);
@@ -46,7 +49,10 @@ export const forumController = {
 			});
 
 			res.status(200);
-			return sendSuccessResponse(res, toPublicList(categories, ForumTransformer.toPublicForumStructure));
+			return sendSuccessResponse(
+				res,
+				toPublicList(categories, ForumTransformer.toPublicForumStructure)
+			);
 		} catch (error) {
 			logger.error('ForumController', 'Error fetching forum category tree', {
 				err: error,
@@ -143,9 +149,7 @@ export const forumController = {
 	// Get all thread prefixes
 	async getPrefixes(req: Request, res: Response) {
 		try {
-			const categoryId = req.query.categoryId
-				? (req.query.categoryId as StructureId)
-				: undefined;
+			const categoryId = req.query.categoryId ? (req.query.categoryId as StructureId) : undefined;
 
 			const prefixes = await forumService.getPrefixes(categoryId);
 			res.status(200);
@@ -222,7 +226,10 @@ export const forumController = {
 
 			// Send success response with transformed thread
 			res.status(200);
-			return sendSuccessResponse(res, { success: true, thread: ForumTransformer.toPublicThread(updatedThread) });
+			return sendSuccessResponse(res, {
+				success: true,
+				thread: ForumTransformer.toPublicThread(updatedThread)
+			});
 		} catch (error) {
 			logger.error('ForumController', 'Error in solveThread', {
 				err: error,
@@ -277,7 +284,9 @@ export const forumController = {
 			const forums = await forumService.getForumsByParentId(parentId);
 
 			res.status(200);
-			return sendSuccessResponse(res, { forums: toPublicList(forums, ForumTransformer.toPublicForumStructure) });
+			return sendSuccessResponse(res, {
+				forums: toPublicList(forums, ForumTransformer.toPublicForumStructure)
+			});
 		} catch (error) {
 			logger.error('ForumController', 'Error fetching forums by parent ID', {
 				err: error,

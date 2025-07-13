@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { avatarFrameStoreService } from '../../domains/cosmetics/avatarFrameStore.service';
-import { isAuthenticated } from '@server/auth/middleware/auth.middleware';
+import { isAuthenticated } from '@server/domains/auth/middleware/auth.middleware';
 import { frameEquipService } from '../../domains/cosmetics/frameEquip.service';
 import { dgtService } from '../../domains/wallet/dgt.service';
 import { userService } from '@core/services/user.service';
@@ -10,7 +10,7 @@ import { eq } from 'drizzle-orm';
 import { z } from 'zod';
 import type { FrameId } from '@shared/types/ids';
 import { CosmeticsTransformer } from '../../../domains/shop/transformers/cosmetics.transformer';
-import { logger } from "@core/logger";
+import { logger } from '@core/logger';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
 const router = Router();
@@ -21,9 +21,7 @@ router.get('/', async (_req, res) => {
 		const frames = await avatarFrameStoreService.listAvailableFrames();
 
 		// Transform raw DB rows → public DTOs (security-first)
-		const transformed = frames.map((frame: any) =>
-			CosmeticsTransformer.toPublicCosmetic(frame)
-		);
+		const transformed = frames.map((frame: any) => CosmeticsTransformer.toPublicCosmetic(frame));
 
 		return sendSuccessResponse(res, transformed);
 	} catch (error) {

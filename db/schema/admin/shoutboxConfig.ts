@@ -118,8 +118,7 @@ export const shoutboxConfig = pgTable(
 		createdBy: uuid('created_by')
 			.notNull()
 			.references(() => users.id, { onDelete: 'set null' }),
-		updatedBy: uuid('updated_by')
-			.references(() => users.id, { onDelete: 'set null' }),
+		updatedBy: uuid('updated_by').references(() => users.id, { onDelete: 'set null' }),
 		// Configuration version for migrations
 		configVersion: varchar('config_version', { length: 10 }).notNull().default('1.0')
 	},
@@ -160,8 +159,12 @@ export const shoutboxUserIgnores = pgTable(
 		id: varchar('id', { length: 128 })
 			.primaryKey()
 			.$defaultFn(() => createId()),
-		userId: uuid('user_id').notNull().references(() => users.id),
-		ignoredUserId: uuid('ignored_user_id').notNull().references(() => users.id),
+		userId: uuid('user_id')
+			.notNull()
+			.references(() => users.id),
+		ignoredUserId: uuid('ignored_user_id')
+			.notNull()
+			.references(() => users.id),
 		// Ignore settings
 		hideMessages: boolean('hide_messages').notNull().default(true),
 		hideCommands: boolean('hide_commands').notNull().default(true),
@@ -191,7 +194,9 @@ export const shoutboxEmojiPermissions = pgTable('shoutbox_emoji_permissions', {
 	requiredLevel: integer('required_level'), // null = no level requirement
 	enabled: boolean('enabled').notNull().default(true),
 	createdAt: timestamp('created_at').notNull().defaultNow(),
-	createdBy: uuid('created_by').notNull().references(() => users.id)
+	createdBy: uuid('created_by')
+		.notNull()
+		.references(() => users.id)
 });
 /**
  * Shoutbox analytics events

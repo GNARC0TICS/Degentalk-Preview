@@ -3,7 +3,10 @@ import { threadId, postId } from '@shared/validation/common.schemas';
 
 const createThreadSchema = z.object({
 	body: z.object({
-		title: z.string().min(3, 'Title must be at least 3 characters').max(200, 'Title cannot exceed 200 characters'),
+		title: z
+			.string()
+			.min(3, 'Title must be at least 3 characters')
+			.max(200, 'Title cannot exceed 200 characters'),
 		content: z.string().min(1, 'Content is required'),
 		structureId: z.string().uuid(),
 		tags: z.array(z.string().max(50)).optional(),
@@ -24,7 +27,10 @@ const updateThreadSolvedSchema = z.object({
 
 const addTagsSchema = z.object({
 	body: z.object({
-		tags: z.array(z.string().min(1).max(50)).min(1, 'At least one tag is required').max(10, 'Cannot add more than 10 tags at a time')
+		tags: z
+			.array(z.string().min(1).max(50))
+			.min(1, 'At least one tag is required')
+			.max(10, 'Cannot add more than 10 tags at a time')
 	}),
 	params: z.object({
 		threadId: threadId
@@ -50,4 +56,4 @@ export const threadValidation = {
 	addTags: addTagsSchema,
 	threadParams,
 	tagParams
-}; 
+};

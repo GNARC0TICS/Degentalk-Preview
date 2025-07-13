@@ -22,7 +22,7 @@ export default function TagConfigPage() {
 	const saveMutation = useMutation({
 		mutationFn: async (body: string) => {
 			const parsed = JSON.parse(body);
-			await apiRequest({ url: '/api/admin/config/tags', method: 'PUT', data: parsed  });
+			await apiRequest({ url: '/api/admin/config/tags', method: 'PUT', data: parsed });
 		},
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ['/api/admin/config/tags'] });

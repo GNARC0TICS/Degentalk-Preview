@@ -1,6 +1,6 @@
 /**
  * Wallet Routes
- * 
+ *
  * API routes for wallet operations
  * Includes authentication, validation, and rate limiting
  */
@@ -13,7 +13,6 @@ import { isAuthenticated as requireAuth } from '@server/domains/auth/middleware/
 import { createCustomRateLimiter as rateLimit } from '@core/services/rate-limit.service';
 import webhookRoutes from '../webhooks/ccpayment-webhook.routes';
 
-
 const router = Router();
 const publicRouter = Router();
 
@@ -22,9 +21,9 @@ const publicRouter = Router();
  * Get list of supported coins
  */
 publicRouter.get(
-  '/supported-coins',
-  rateLimit({ windowMs: 60 * 1000, max: 60 }), // 60 requests per minute
-  walletController.getSupportedCoins.bind(walletController)
+	'/supported-coins',
+	rateLimit({ windowMs: 60 * 1000, max: 60 }), // 60 requests per minute
+	walletController.getSupportedCoins.bind(walletController)
 );
 
 /**
@@ -32,10 +31,10 @@ publicRouter.get(
  * Get info for a single supported coin
  */
 publicRouter.get(
-  '/token-info/:coinId',
-  rateLimit({ windowMs: 60 * 1000, max: 60 }), // 60 requests per minute
-  validateRequest(walletValidation.getTokenInfo),
-  walletController.getTokenInfo.bind(walletController)
+	'/token-info/:coinId',
+	rateLimit({ windowMs: 60 * 1000, max: 60 }), // 60 requests per minute
+	validateRequest(walletValidation.getTokenInfo),
+	walletController.getTokenInfo.bind(walletController)
 );
 
 /**
@@ -43,9 +42,9 @@ publicRouter.get(
  * Get public wallet configuration (no auth required)
  */
 publicRouter.get(
-  '/config',
-  rateLimit({ windowMs: 60 * 1000, max: 60 }), // 60 requests per minute
-  walletController.getWalletConfig.bind(walletController)
+	'/config',
+	rateLimit({ windowMs: 60 * 1000, max: 60 }), // 60 requests per minute
+	walletController.getWalletConfig.bind(walletController)
 );
 
 /**
@@ -53,12 +52,11 @@ publicRouter.get(
  * Process webhook from payment provider (no auth required)
  */
 publicRouter.post(
-  '/webhook/:provider',
-  rateLimit({ windowMs: 60 * 1000, max: 100 }), // 100 requests per minute
-  validateRequest(walletValidation.webhook),
-  walletController.processWebhook.bind(walletController)
+	'/webhook/:provider',
+	rateLimit({ windowMs: 60 * 1000, max: 100 }), // 100 requests per minute
+	validateRequest(walletValidation.webhook),
+	walletController.processWebhook.bind(walletController)
 );
-
 
 // Apply public routes
 router.use(publicRouter);
@@ -73,9 +71,9 @@ router.use(requireAuth);
  * Get user's wallet balance
  */
 router.get(
-  '/balance',
-  rateLimit({ windowMs: 60 * 1000, max: 30 }), // 30 requests per minute
-  walletController.getBalance.bind(walletController)
+	'/balance',
+	rateLimit({ windowMs: 60 * 1000, max: 30 }), // 30 requests per minute
+	walletController.getBalance.bind(walletController)
 );
 
 /**
@@ -83,9 +81,9 @@ router.get(
  * Get all deposit addresses for a user
  */
 router.get(
-  '/deposit-addresses',
-  rateLimit({ windowMs: 60 * 1000, max: 20 }), // 20 requests per minute
-  walletController.getDepositAddresses.bind(walletController)
+	'/deposit-addresses',
+	rateLimit({ windowMs: 60 * 1000, max: 20 }), // 20 requests per minute
+	walletController.getDepositAddresses.bind(walletController)
 );
 
 /**
@@ -93,10 +91,10 @@ router.get(
  * Create deposit address for cryptocurrency
  */
 router.post(
-  '/deposit-address',
-  rateLimit({ windowMs: 60 * 1000, max: 10 }), // 10 requests per minute
-  validateRequest(walletValidation.createDepositAddress),
-  walletController.createDepositAddress.bind(walletController)
+	'/deposit-address',
+	rateLimit({ windowMs: 60 * 1000, max: 10 }), // 10 requests per minute
+	validateRequest(walletValidation.createDepositAddress),
+	walletController.createDepositAddress.bind(walletController)
 );
 
 /**
@@ -104,10 +102,10 @@ router.post(
  * Request cryptocurrency withdrawal
  */
 router.post(
-  '/withdraw',
-  rateLimit({ windowMs: 60 * 1000, max: 5 }), // 5 requests per minute (strict)
-  validateRequest(walletValidation.withdrawal),
-  walletController.requestWithdrawal.bind(walletController)
+	'/withdraw',
+	rateLimit({ windowMs: 60 * 1000, max: 5 }), // 5 requests per minute (strict)
+	validateRequest(walletValidation.withdrawal),
+	walletController.requestWithdrawal.bind(walletController)
 );
 
 /**
@@ -115,10 +113,10 @@ router.post(
  * Get paginated transaction history
  */
 router.get(
-  '/transactions',
-  rateLimit({ windowMs: 60 * 1000, max: 20 }), // 20 requests per minute
-  validateRequest(walletValidation.transactionHistory),
-  walletController.getTransactionHistory.bind(walletController)
+	'/transactions',
+	rateLimit({ windowMs: 60 * 1000, max: 20 }), // 20 requests per minute
+	validateRequest(walletValidation.transactionHistory),
+	walletController.getTransactionHistory.bind(walletController)
 );
 
 /**
@@ -126,10 +124,10 @@ router.get(
  * Transfer DGT between users
  */
 router.post(
-  '/transfer-dgt',
-  rateLimit({ windowMs: 60 * 1000, max: 10 }), // 10 requests per minute
-  validateRequest(walletValidation.dgtTransfer),
-  walletController.transferDgt.bind(walletController)
+	'/transfer-dgt',
+	rateLimit({ windowMs: 60 * 1000, max: 10 }), // 10 requests per minute
+	validateRequest(walletValidation.dgtTransfer),
+	walletController.transferDgt.bind(walletController)
 );
 
 /**
@@ -137,10 +135,10 @@ router.post(
  * Validate a crypto address for a given chain
  */
 router.post(
-  '/validate-address',
-  rateLimit({ windowMs: 60 * 1000, max: 30 }), // 30 requests per minute
-  validateRequest(walletValidation.validateAddress),
-  walletController.validateAddress.bind(walletController)
+	'/validate-address',
+	rateLimit({ windowMs: 60 * 1000, max: 30 }), // 30 requests per minute
+	validateRequest(walletValidation.validateAddress),
+	walletController.validateAddress.bind(walletController)
 );
 
 /**
@@ -148,9 +146,9 @@ router.post(
  * Initialize a new user's wallet
  */
 router.post(
-  '/initialize',
-  rateLimit({ windowMs: 5 * 60 * 1000, max: 5 }), // 5 requests per 5 minutes, strict
-  walletController.initializeWallet.bind(walletController)
+	'/initialize',
+	rateLimit({ windowMs: 5 * 60 * 1000, max: 5 }), // 5 requests per 5 minutes, strict
+	walletController.initializeWallet.bind(walletController)
 );
 
 /**
@@ -158,10 +156,10 @@ router.post(
  * Swap one cryptocurrency for another.
  */
 router.post(
-  '/swap',
-  rateLimit({ windowMs: 60 * 1000, max: 10 }), // 10 requests per minute
-  validateRequest(walletValidation.swapCrypto),
-  walletController.swapCrypto.bind(walletController)
+	'/swap',
+	rateLimit({ windowMs: 60 * 1000, max: 10 }), // 10 requests per minute
+	validateRequest(walletValidation.swapCrypto),
+	walletController.swapCrypto.bind(walletController)
 );
 
 /**
@@ -169,10 +167,10 @@ router.post(
  * Get withdrawal fee for a specific coin and chain.
  */
 router.post(
-  '/get-withdraw-fee',
-  rateLimit({ windowMs: 60 * 1000, max: 30 }), // 30 requests per minute
-  validateRequest(walletValidation.getWithdrawFee),
-  walletController.getWithdrawFee.bind(walletController)
+	'/get-withdraw-fee',
+	rateLimit({ windowMs: 60 * 1000, max: 30 }), // 30 requests per minute
+	validateRequest(walletValidation.getWithdrawFee),
+	walletController.getWithdrawFee.bind(walletController)
 );
 
 /**
@@ -180,9 +178,9 @@ router.post(
  * Get current deposit configuration (admin only)
  */
 router.get(
-  '/admin/deposit-config',
-  rateLimit({ windowMs: 60 * 1000, max: 10 }), // 10 requests per minute
-  walletController.getAdminDepositConfig.bind(walletController)
+	'/admin/deposit-config',
+	rateLimit({ windowMs: 60 * 1000, max: 10 }), // 10 requests per minute
+	walletController.getAdminDepositConfig.bind(walletController)
 );
 
 /**
@@ -190,10 +188,10 @@ router.get(
  * Update deposit configuration (admin only, immutable)
  */
 router.post(
-  '/admin/deposit-config',
-  rateLimit({ windowMs: 60 * 1000, max: 5 }), // 5 requests per minute (strict)
-  validateRequest(walletValidation.walletAdminPatch),
-  walletController.updateAdminDepositConfig.bind(walletController)
+	'/admin/deposit-config',
+	rateLimit({ windowMs: 60 * 1000, max: 5 }), // 5 requests per minute (strict)
+	validateRequest(walletValidation.walletAdminPatch),
+	walletController.updateAdminDepositConfig.bind(walletController)
 );
 
 // Mount webhook routes at /webhooks

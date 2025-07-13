@@ -2,9 +2,8 @@ import type { Request, Response } from 'express';
 import { userService } from '@core/services/user.service';
 import { AdminRolesService } from './roles.service';
 import { createRoleSchema, updateRoleSchema } from './roles.validators';
+import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 import {
-	sendSuccess,
-	sendError,
 	validateRequestBody,
 	validateNumberParam,
 	AdminOperationBoundary,
@@ -30,9 +29,9 @@ export class AdminRolesController {
 		});
 
 		if (result.success) {
-			return sendSuccess(res, result.data);
+			return sendSuccessResponse(res, result.data);
 		} else {
-			return sendError(
+			return sendErrorResponse(
 				res,
 				result.error?.message || 'Failed to list roles',
 				result.error?.httpStatus
@@ -59,9 +58,9 @@ export class AdminRolesController {
 		});
 
 		if (result.success) {
-			return sendSuccess(res, result.data, 'Role created successfully', 201);
+			return sendSuccessResponse(res, result.data, 'Role created successfully', 201);
 		} else {
-			return sendError(
+			return sendErrorResponse(
 				res,
 				result.error?.message || 'Failed to create role',
 				result.error?.httpStatus
@@ -92,9 +91,9 @@ export class AdminRolesController {
 		});
 
 		if (result.success) {
-			return sendSuccess(res, result.data, 'Role updated successfully');
+			return sendSuccessResponse(res, result.data, 'Role updated successfully');
 		} else {
-			return sendError(
+			return sendErrorResponse(
 				res,
 				result.error?.message || 'Failed to update role',
 				result.error?.httpStatus
@@ -122,9 +121,9 @@ export class AdminRolesController {
 		});
 
 		if (result.success) {
-			return sendSuccess(res, result.data, 'Role deleted successfully');
+			return sendSuccessResponse(res, result.data, 'Role deleted successfully');
 		} else {
-			return sendError(
+			return sendErrorResponse(
 				res,
 				result.error?.message || 'Failed to delete role',
 				result.error?.httpStatus

@@ -1,12 +1,4 @@
-import {
-	pgTable,
-	integer,
-	boolean,
-	timestamp,
-	unique,
-	index,
-	uuid
-} from 'drizzle-orm/pg-core';
+import { pgTable, integer, boolean, timestamp, unique, index, uuid } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { products } from './products';
 import { mediaLibrary } from '../admin/mediaLibrary'; // Adjust path as needed

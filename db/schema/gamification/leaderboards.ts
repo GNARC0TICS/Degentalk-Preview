@@ -1,7 +1,4 @@
-import {
-	pgTable, timestamp, varchar, jsonb, uuid,
-	index
-} from 'drizzle-orm/pg-core';
+import { pgTable, timestamp, varchar, jsonb, uuid, index } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 export const leaderboardHistory = pgTable('leaderboard_history', {
 	id: uuid('id').primaryKey().defaultRandom(),

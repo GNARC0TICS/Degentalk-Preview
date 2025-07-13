@@ -1,11 +1,4 @@
-import {
-	pgTable,
-	/*integer,*/ text,
-	timestamp,
-	boolean,
-	index,
-	uuid
-} from 'drizzle-orm/pg-core';
+import { pgTable, /*integer,*/ text, timestamp, boolean, index, uuid } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users'; // Adjusted path
 import { createInsertSchema } from 'drizzle-zod';

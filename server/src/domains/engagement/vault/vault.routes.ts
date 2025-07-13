@@ -20,7 +20,7 @@ import {
 } from '../../auth/middleware/auth.middleware';
 import { getUserIdFromRequest } from '@server-utils/auth';
 import { isValidId } from '@shared/utils/id';
-import { sendSuccessResponse, sendErrorResponse } from "@core/utils/transformer.helpers";
+import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
 // Initialize the service
 const vaultService = new VaultService();
@@ -64,7 +64,11 @@ router.get('/admin/vaults', isAdmin, async (req: Request, res: Response) => {
 			{ error: error instanceof Error ? error.message : String(error) }
 		);
 
-		sendErrorResponse(res, `Failed to fetch vault list: ${error instanceof Error ? error.message : String(error)}`, 500);
+		sendErrorResponse(
+			res,
+			`Failed to fetch vault list: ${error instanceof Error ? error.message : String(error)}`,
+			500
+		);
 	}
 });
 
@@ -141,10 +145,10 @@ router.post('/admin/vaults/unlock/:vaultId', isAdmin, async (req: Request, res: 
 		);
 
 		sendSuccessResponse(res, {
-        			status: 'unlocked',
-        			vault: updatedVault,
-        			transaction
-        		});
+			status: 'unlocked',
+			vault: updatedVault,
+			transaction
+		});
 	} catch (error) {
 		logger.error(
 			'VAULT',
@@ -155,7 +159,11 @@ router.post('/admin/vaults/unlock/:vaultId', isAdmin, async (req: Request, res: 
 			}
 		);
 
-		sendErrorResponse(res, `Failed to unlock vault: ${error instanceof Error ? error.message : String(error)}`, 500);
+		sendErrorResponse(
+			res,
+			`Failed to unlock vault: ${error instanceof Error ? error.message : String(error)}`,
+			500
+		);
 	}
 });
 
@@ -197,43 +205,43 @@ if (process.env.NODE_ENV !== 'production') {
 			};
 
 			sendSuccessResponse(res, {
-            				success: true,
-            				message: 'Vault system is functioning correctly',
-            				vaultSystemStatus: {
-            					vaultTableExists: true,
-            					canQueryVaults: true,
-            					transactionTypesConfigured: true
-            				},
-            				testUser: {
-            					userId: user.user_id,
-            					username: user.username,
-            					hasWallet: !!user.wallet_address,
-            					testWalletAddress: walletAddress
-            				},
-            				existingVaults,
-            				mockedBalances,
-            				testActions: {
-            					createVault: {
-            						url: '/api/vault/lock',
-            						method: 'POST',
-            						body: {
-            							userId,
-            							walletAddress,
-            							amount: 10, // Default small test amount
-            							unlockTime: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(), // 24 hours from now
-            							notes: 'Test vault created via test endpoint'
-            						}
-            					},
-            					getVaults: {
-            						url: `/api/vaults/${userId}`,
-            						method: 'GET'
-            					},
-            					getStats: {
-            						url: `/api/vault/stats/${userId}`,
-            						method: 'GET'
-            					}
-            				}
-            			});
+				success: true,
+				message: 'Vault system is functioning correctly',
+				vaultSystemStatus: {
+					vaultTableExists: true,
+					canQueryVaults: true,
+					transactionTypesConfigured: true
+				},
+				testUser: {
+					userId: user.user_id,
+					username: user.username,
+					hasWallet: !!user.wallet_address,
+					testWalletAddress: walletAddress
+				},
+				existingVaults,
+				mockedBalances,
+				testActions: {
+					createVault: {
+						url: '/api/vault/lock',
+						method: 'POST',
+						body: {
+							userId,
+							walletAddress,
+							amount: 10, // Default small test amount
+							unlockTime: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(), // 24 hours from now
+							notes: 'Test vault created via test endpoint'
+						}
+					},
+					getVaults: {
+						url: `/api/vaults/${userId}`,
+						method: 'GET'
+					},
+					getStats: {
+						url: `/api/vault/stats/${userId}`,
+						method: 'GET'
+					}
+				}
+			});
 		} catch (error) {
 			logger.error(
 				'VAULT',
@@ -241,7 +249,11 @@ if (process.env.NODE_ENV !== 'production') {
 				{ error: error instanceof Error ? error.message : String(error) }
 			);
 
-			sendErrorResponse(res, `Failed to run vault test: ${error instanceof Error ? error.message : String(error)}`, 500);
+			sendErrorResponse(
+				res,
+				`Failed to run vault test: ${error instanceof Error ? error.message : String(error)}`,
+				500
+			);
 		}
 	});
 }
@@ -268,9 +280,9 @@ router.post('/lock', async (req: Request, res: Response) => {
 		const vault = await vaultService.createVault(userId, walletAddress, amount, unlockTime, notes);
 
 		sendSuccessResponse(res, {
-        			status: 'locked',
-        			vault
-        		});
+			status: 'locked',
+			vault
+		});
 	} catch (error) {
 		// Log the error
 		logger.error(
@@ -297,9 +309,9 @@ router.post('/unlock', async (req: Request, res: Response) => {
 		const vault = await vaultService.unlockVault(vaultId, userId);
 
 		sendSuccessResponse(res, {
-        			status: 'unlocked',
-        			vault
-        		});
+			status: 'unlocked',
+			vault
+		});
 	} catch (error) {
 		// Log the error
 		logger.error(

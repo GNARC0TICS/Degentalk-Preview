@@ -2,7 +2,7 @@ import { isValidId } from '@shared/utils/id';
 /* eslint-disable degen/no-missing-branded-id-import */
 /**
  * Frontend-Safe ID Types
- * 
+ *
  * String-based branded types for frontend use.
  * These provide type safety without exposing database internals.
  */
@@ -110,8 +110,8 @@ export type TransactionStatus = Id<'TransactionStatus'>;
 export type WithdrawalStatus = Id<'WithdrawalStatus'>;
 
 export const isValidUUID = (id: string): boolean => {
-  const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-  return uuidRegex.test(id);
+	const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+	return uuidRegex.test(id);
 };
 
 // Re-export isValidId for backwards compatibility
@@ -120,8 +120,10 @@ export { isValidId };
 /**
  * Generic helper to create a branded ID validator using the shared `isValidId` util.
  */
-export const createIdValidator = <T extends string>() =>
-  (id: unknown): id is Id<T> => isValidId(id);
+export const createIdValidator =
+	<T extends string>() =>
+	(id: unknown): id is Id<T> =>
+		isValidId(id);
 
 // Specific ID validators
 export const isUserId = createIdValidator<'UserId'>();

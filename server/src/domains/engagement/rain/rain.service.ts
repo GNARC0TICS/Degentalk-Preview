@@ -34,7 +34,6 @@ const MAX_RECIPIENTS = 15; // Maximum number of recipients
  * Service for handling "rain" functionality (distributing tokens to random active users)
  */
 export class RainService {
-
 	/**
 	 * Process a rain distribution to random active users
 	 * @param senderUserId - ID of the user sending the rain
@@ -206,7 +205,7 @@ export class RainService {
 					recipients,
 					rainTransaction.id
 				);
-				
+
 				// Track DGT burn for vanity sink analysis
 				await vanitySinkAnalyzer.trackBurn({
 					userId: senderUserId,

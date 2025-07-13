@@ -5,7 +5,7 @@ import { DictionaryService, DictionaryStatus } from './dictionary.service';
 import {
 	isAuthenticated as requireAuth,
 	isAdminOrModerator
-} from '@server/auth/middleware/auth.middleware';
+} from '@server/domains/auth/middleware/auth.middleware';
 import { insertDictionaryEntrySchema } from '@schema';
 import rateLimit from 'express-rate-limit';
 import { logger } from '@core/logger';

@@ -1,6 +1,6 @@
 /**
  * Gamification Components Export Barrel
- * 
+ *
  * Centralized exports for all gamification UI components
  */
 

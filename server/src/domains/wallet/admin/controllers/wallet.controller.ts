@@ -3,7 +3,7 @@ import { userService } from '@core/services/user.service';
 import { walletService } from '@server/domains/wallet/services/wallet.service';
 import { adminWalletService } from '../services/wallet.service';
 import { logger } from '@core/logger';
-import { sendSuccessResponse, sendErrorResponse } from "@core/utils/transformer.helpers";
+import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
 /**
  * Admin Wallet Controller
@@ -22,7 +22,7 @@ export class AdminWalletController {
 				success: true,
 				data: config
 			};
-			
+
 			sendSuccessResponse(res, configResult);
 		} catch (error) {
 			logger.error('Error getting wallet config:', error);
@@ -37,9 +37,9 @@ export class AdminWalletController {
 		try {
 			// TODO: Implement config updates in wallet service
 			sendSuccessResponse(res, {
-            				success: true,
-            				message: 'Wallet configuration updated successfully'
-            			});
+				success: true,
+				message: 'Wallet configuration updated successfully'
+			});
 		} catch (error) {
 			logger.error('Error updating wallet config:', error);
 			sendErrorResponse(res, 'Failed to update wallet configuration', 500);
@@ -54,9 +54,9 @@ export class AdminWalletController {
 			const analytics = await adminWalletService.getDGTAnalytics();
 
 			sendSuccessResponse(res, {
-            				success: true,
-            				data: analytics
-            			});
+				success: true,
+				data: analytics
+			});
 		} catch (error) {
 			logger.error('Error getting DGT analytics:', error);
 			sendErrorResponse(res, 'Failed to retrieve DGT analytics', 500);
@@ -81,9 +81,9 @@ export class AdminWalletController {
 			});
 
 			sendSuccessResponse(res, {
-            				success: true,
-            				message: `Successfully credited ${amount} DGT to user ${userId}`
-            			});
+				success: true,
+				message: `Successfully credited ${amount} DGT to user ${userId}`
+			});
 		} catch (error) {
 			logger.error('Error crediting DGT:', error);
 			sendErrorResponse(res, error.message || 'Failed to credit DGT', 500);
@@ -108,9 +108,9 @@ export class AdminWalletController {
 			});
 
 			sendSuccessResponse(res, {
-            				success: true,
-            				message: `Successfully debited ${amount} DGT from user ${userId}`
-            			});
+				success: true,
+				message: `Successfully debited ${amount} DGT from user ${userId}`
+			});
 		} catch (error) {
 			logger.error('Error debiting DGT:', error);
 			sendErrorResponse(res, error.message || 'Failed to debit DGT', 500);
@@ -134,12 +134,12 @@ export class AdminWalletController {
 			]);
 
 			sendSuccessResponse(res, {
-            				success: true,
-            				data: {
-            					balance,
-            					history
-            				}
-            			});
+				success: true,
+				data: {
+					balance,
+					history
+				}
+			});
 		} catch (error) {
 			logger.error('Error getting user DGT info:', error);
 			sendErrorResponse(res, 'Failed to retrieve user DGT information', 500);
@@ -153,9 +153,9 @@ export class AdminWalletController {
 		try {
 			// TODO: Implement reset functionality
 			sendSuccessResponse(res, {
-            				success: true,
-            				message: 'Wallet configuration reset to defaults'
-            			});
+				success: true,
+				message: 'Wallet configuration reset to defaults'
+			});
 		} catch (error) {
 			logger.error('Error resetting wallet config:', error);
 			sendErrorResponse(res, 'Failed to reset wallet configuration', 500);
@@ -184,9 +184,9 @@ export class AdminWalletController {
 			};
 
 			sendSuccessResponse(res, {
-            				success: true,
-            				data: status
-            			});
+				success: true,
+				data: status
+			});
 		} catch (error) {
 			logger.error('Error getting wallet system status:', error);
 			sendErrorResponse(res, 'Failed to retrieve wallet system status', 500);

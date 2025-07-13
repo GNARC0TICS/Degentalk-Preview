@@ -26,13 +26,15 @@ import { eq, and } from 'drizzle-orm';
 import { sql } from 'drizzle-orm';
 import { z } from 'zod';
 import { WebSocket } from 'ws';
-import { isAuthenticated, isAuthenticatedOptional } from '@server/auth/middleware/auth.middleware';
+import {
+	isAuthenticated,
+	isAuthenticatedOptional
+} from '@server/domains/auth/middleware/auth.middleware';
 import { logger, LogLevel, LogAction } from '@core/logger';
 import { displayPreferencesSchema } from './preferences.validators';
 import { getUserIdFromRequest } from '@server-utils/auth';
 import { UserPreferencesService } from '../user/user-preferences.service';
-import { sendSuccessResponse, sendErrorResponse } from "@core/utils/transformer.helpers";
-
+import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
 const router = express.Router();
 
@@ -356,27 +358,29 @@ router.get('/social-preferences', isAuthenticated, async (req, res) => {
  * PUT /api/users/social-preferences
  * Update user's social privacy preferences
  */
-router.put('/social-preferences', 
-	isAuthenticated, 
+router.put(
+	'/social-preferences',
+	isAuthenticated,
 	validateRequest(preferencesValidation.socialPreferences),
 	async (req, res) => {
-	try {
-		const userId = getUserIdFromRequest(req);
-		if (userId === undefined) {
-			return sendErrorResponse(res, 'Unauthorized - User ID not found', 401);
+		try {
+			const userId = getUserIdFromRequest(req);
+			if (userId === undefined) {
+				return sendErrorResponse(res, 'Unauthorized - User ID not found', 401);
+			}
+
+			const updatedPreferences = await UserPreferencesService.updateSocialPreferences(
+				userId,
+				req.body
+			);
+
+			sendSuccessResponse(res, { preferences: updatedPreferences });
+		} catch (error) {
+			logger.error('PREFERENCES', 'Error updating social preferences', error);
+			sendErrorResponse(res, 'Failed to update social preferences', 500);
 		}
-
-		const updatedPreferences = await UserPreferencesService.updateSocialPreferences(
-			userId,
-			req.body
-		);
-
-		sendSuccessResponse(res, { preferences: updatedPreferences });
-	} catch (error) {
-		logger.error('PREFERENCES', 'Error updating social preferences', error);
-		sendErrorResponse(res, 'Failed to update social preferences', 500);
 	}
-});
+);
 
 /**
  * GET /api/users/privacy-summary

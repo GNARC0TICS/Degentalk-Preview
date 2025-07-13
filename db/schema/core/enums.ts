@@ -40,11 +40,7 @@ export const notificationTypeEnum = pgEnum('notification_type', [
 	'mission_complete'
 ]);
 export const reactionTypeEnum = pgEnum('reaction_type', ['like', 'helpful']);
-export const walletStatusEnum = pgEnum('wallet_status', [
-	'active',
-	'frozen', 
-	'suspended'
-]);
+export const walletStatusEnum = pgEnum('wallet_status', ['active', 'frozen', 'suspended']);
 export const transactionTypeEnum = pgEnum('transaction_type', [
 	'TIP',
 	'DEPOSIT',
@@ -97,20 +93,20 @@ export const cosmeticTypeEnum = pgEnum('cosmetic_type', [
 	'profile_theme'
 ]);
 // Type exports for use in application code
-export type TransactionType = typeof transactionTypeEnum.enumValues[number];
-export type TransactionStatus = typeof transactionStatusEnum.enumValues[number];
-export type ThreadStatus = typeof contentVisibilityStatusEnum.enumValues[number];
-export type PostStatus = typeof contentVisibilityStatusEnum.enumValues[number];
-export type UserRole = typeof userRoleEnum.enumValues[number];
-export type NotificationType = typeof notificationTypeEnum.enumValues[number];
-export type ReactionType = typeof reactionTypeEnum.enumValues[number];
-export type WithdrawalStatus = typeof withdrawalStatusEnum.enumValues[number];
-export type VaultStatus = typeof vaultStatusEnum.enumValues[number];
-export type SubscriptionType = typeof subscriptionTypeEnum.enumValues[number];
-export type SubscriptionStatus = typeof subscriptionStatusEnum.enumValues[number];
-export type CosmeticType = typeof cosmeticTypeEnum.enumValues[number];
-export type MentionSourceType = typeof mentionSourceTypeEnum.enumValues[number];
-export type ContentEditStatus = typeof contentEditStatusEnum.enumValues[number];
-export type ContentVisibilityStatus = typeof contentVisibilityStatusEnum.enumValues[number];
-export type TicketStatus = typeof ticketStatusEnum.enumValues[number];
-export type ShoutboxPosition = typeof shoutboxPositionEnum.enumValues[number];
+export type TransactionType = (typeof transactionTypeEnum.enumValues)[number];
+export type TransactionStatus = (typeof transactionStatusEnum.enumValues)[number];
+export type ThreadStatus = (typeof contentVisibilityStatusEnum.enumValues)[number];
+export type PostStatus = (typeof contentVisibilityStatusEnum.enumValues)[number];
+export type UserRole = (typeof userRoleEnum.enumValues)[number];
+export type NotificationType = (typeof notificationTypeEnum.enumValues)[number];
+export type ReactionType = (typeof reactionTypeEnum.enumValues)[number];
+export type WithdrawalStatus = (typeof withdrawalStatusEnum.enumValues)[number];
+export type VaultStatus = (typeof vaultStatusEnum.enumValues)[number];
+export type SubscriptionType = (typeof subscriptionTypeEnum.enumValues)[number];
+export type SubscriptionStatus = (typeof subscriptionStatusEnum.enumValues)[number];
+export type CosmeticType = (typeof cosmeticTypeEnum.enumValues)[number];
+export type MentionSourceType = (typeof mentionSourceTypeEnum.enumValues)[number];
+export type ContentEditStatus = (typeof contentEditStatusEnum.enumValues)[number];
+export type ContentVisibilityStatus = (typeof contentVisibilityStatusEnum.enumValues)[number];
+export type TicketStatus = (typeof ticketStatusEnum.enumValues)[number];
+export type ShoutboxPosition = (typeof shoutboxPositionEnum.enumValues)[number];

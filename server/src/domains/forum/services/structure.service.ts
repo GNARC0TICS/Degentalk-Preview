@@ -223,7 +223,7 @@ export class ForumStructureService {
 		if (forumIds.length === 0) {
 			return {
 				totalPostsToday: 0,
-				trendingThreads: [],
+				trendingThreads: []
 			};
 		}
 
@@ -238,7 +238,10 @@ export class ForumStructureService {
 				and(
 					inArray(
 						posts.threadId,
-						db.select({ id: threads.id }).from(threads).where(inArray(threads.structureId, forumIds))
+						db
+							.select({ id: threads.id })
+							.from(threads)
+							.where(inArray(threads.structureId, forumIds))
 					),
 					gt(posts.createdAt, today)
 				)
@@ -256,7 +259,7 @@ export class ForumStructureService {
 
 		return {
 			totalPostsToday,
-			trendingThreads,
+			trendingThreads
 		};
 	}
 
@@ -490,8 +493,10 @@ export class ForumStructureService {
 			}
 
 			// 5. Second pass to link parentId
-			const allNodes = await tx.select({ id: forumStructure.id, slug: forumStructure.slug }).from(forumStructure);
-			const slugToIdMap = new Map(allNodes.map(n => [n.slug, n.id]));
+			const allNodes = await tx
+				.select({ id: forumStructure.id, slug: forumStructure.slug })
+				.from(forumStructure);
+			const slugToIdMap = new Map(allNodes.map((n) => [n.slug, n.id]));
 
 			for (const node of allNodes) {
 				const configNode = configForums.get(node.slug);
@@ -510,7 +515,7 @@ export class ForumStructureService {
 			} else {
 				this.clearCache();
 			}
-			
+
 			logger.info('ForumStructureService', 'Forum config sync finished.', results);
 			return results;
 		});

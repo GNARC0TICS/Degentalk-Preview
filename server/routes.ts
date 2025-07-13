@@ -23,7 +23,7 @@ import relationshipsRoutes from './src/domains/social/relationships.routes';
 import whaleWatchRoutes from './src/domains/social/whale-watch.routes';
 import messageRoutes from './src/domains/messaging/message.routes';
 import vaultRoutes from './src/domains/engagement/vault/vault.routes';
-import ccpaymentWebhookRoutes from './src/domains/ccpayment-webhook/ccpayment-webhook.routes';
+import ccpaymentWebhookRoutes from './src/domains/wallet/webhooks/ccpayment-webhook.routes';
 import { registerAnnouncementRoutes } from './src/domains/admin/sub-domains/announcements';
 import featureGatesRoutes from './src/domains/feature-gates/feature-gates.routes';
 import notificationRoutes from './src/domains/notifications/notification.routes';
@@ -63,11 +63,8 @@ import xShareRoutes from './src/domains/share/routes/xShareRoutes';
 import { analyticsEvents } from '@schema/system/analyticsEvents';
 import gamificationRoutes from './src/domains/gamification/gamification.routes';
 import { achievementRoutes } from './src/domains/gamification/achievements';
-import { getAuthenticatedUser } from "@core/utils/auth.helpers";
-import {
-	sendSuccessResponse,
-	sendErrorResponse
-} from '@core/utils/transformer.helpers';
+import { getAuthenticatedUser } from '@core/utils/auth.helpers';
+import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
 export async function registerRoutes(app: Express): Promise<Server> {
 	app.use(securityHeaders);
@@ -89,7 +86,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 			const tab = (req.query.tab as string) || 'trending';
 			const page = parseInt(req.query.page as string) || 1;
 			const limit = Math.min(parseInt(req.query.limit as string) || 20, 50);
-			const forumId = req.query.forumId ? parseInt(req.query.forumId as string) as any : undefined;
+			const forumId = req.query.forumId
+				? (parseInt(req.query.forumId as string) as any)
+				: undefined;
 			const userId = getAuthenticatedUser(req)?.id;
 
 			const validTabs = ['trending', 'recent', 'following'];
@@ -155,7 +154,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
 			sendSuccessResponse(res, leaderboards);
 		} catch (error) {
 			const typeForLog = (req.query.type as string) || 'xp';
-			logger.error('/api/leaderboards', 'Error fetching leaderboards', { err: error, type: typeForLog });
+			logger.error('/api/leaderboards', 'Error fetching leaderboards', {
+				err: error,
+				type: typeForLog
+			});
 			sendErrorResponse(res, 'Failed to fetch leaderboards', 500);
 		}
 	});
@@ -227,9 +229,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
 	if (process.env.NODE_ENV === 'production') {
 		const wss = new WebSocketServer({ server });
-		wss.on('connection', ws => {
+		wss.on('connection', (ws) => {
 			logger.info('WebSocket client connected');
-			ws.on('message', message => {
+			ws.on('message', (message) => {
 				logger.info(`Received WebSocket message: ${message}`);
 			});
 			ws.on('close', () => {
@@ -299,7 +301,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
 			if (xpToAward > 0) {
 				await awardPathXp(userId, path, step, xpToAward);
-				sendSuccessResponse(res, { message: `Awarded ${xpToAward} XP for completing ${step} of ${path}` });
+				sendSuccessResponse(res, {
+					message: `Awarded ${xpToAward} XP for completing ${step} of ${path}`
+				});
 			} else {
 				sendSuccessResponse(res, { message: 'No XP for this step' });
 			}
@@ -315,8 +319,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 			const userId = getAuthenticatedUser(req)?.id;
 			await db.insert(analyticsEvents).values({
 				userId,
-				event,
-				data,
+				type: event,
+				sessionId: req.sessionID,
+				data
 			});
 			sendSuccessResponse(res, { message: 'Analytic event logged' });
 		} catch (error) {

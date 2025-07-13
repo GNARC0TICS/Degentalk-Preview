@@ -1,6 +1,6 @@
 /**
  * Messaging Domain Index
- * 
+ *
  * Central export point for messaging functionality
  */
 

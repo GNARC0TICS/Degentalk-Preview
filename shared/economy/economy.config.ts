@@ -2,7 +2,7 @@ import { z } from 'zod';
 import type { ForumId } from '@shared/types/ids';
 // TODO: Replace with proper shared logger
 // import { logger } from "../../server/src/core/logger";
-import type { UserId } from "@shared/types/ids";
+import type { UserId } from '@shared/types/ids';
 
 /*
  * Centralised XP / DGT economy configuration.

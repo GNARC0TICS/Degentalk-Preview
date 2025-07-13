@@ -7,22 +7,22 @@ import { userSearchValidation } from '@server/domains/forum/validation/user-sear
 import { ForumTransformer } from '@server/domains/forum/transformers/forum.transformer';
 
 class UserSearchController {
-  async searchUsers(req: Request, res: Response) {
-    try {
-      const { q } = userSearchValidation.parse(req).query;
-      const users = await userSearchService.searchUsers(q);
-      
-      const publicUsers = users.map(ForumTransformer.toPublicUser);
+	async searchUsers(req: Request, res: Response) {
+		try {
+			const { q } = userSearchValidation.parse(req).query;
+			const users = await userSearchService.searchUsers(q);
 
-      return sendSuccessResponse(res, publicUsers);
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        return sendErrorResponse(res, 'Invalid search query', 400, error.issues);
-      }
-      logger.error('UserSearchController', 'Error in searchUsers', { error });
-      return sendErrorResponse(res, 'Failed to search users', 500);
-    }
-  }
+			const publicUsers = users.map(ForumTransformer.toPublicUser);
+
+			return sendSuccessResponse(res, publicUsers);
+		} catch (error) {
+			if (error instanceof z.ZodError) {
+				return sendErrorResponse(res, 'Invalid search query', 400, error.issues);
+			}
+			logger.error('UserSearchController', 'Error in searchUsers', { error });
+			return sendErrorResponse(res, 'Failed to search users', 500);
+		}
+	}
 }
 
-export const userSearchController = new UserSearchController(); 
+export const userSearchController = new UserSearchController();

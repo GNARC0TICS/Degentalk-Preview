@@ -199,7 +199,11 @@ export function csrfTokenProvider(req: Request, res: Response, next: NextFunctio
 		const token = generateSessionCsrfToken(req);
 
 		if (!token) {
-			return sendErrorResponse(res, 'No session available: Session required to generate CSRF token', 400);
+			return sendErrorResponse(
+				res,
+				'No session available: Session required to generate CSRF token',
+				400
+			);
 		}
 
 		return sendSuccessResponse(res, {

@@ -1,7 +1,4 @@
-import {
-	pgTable, integer, varchar, timestamp, uuid,
-	index
-} from 'drizzle-orm/pg-core';
+import { pgTable, integer, varchar, timestamp, uuid, index } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from './users';
 export const verificationTokens = pgTable('verification_tokens', {

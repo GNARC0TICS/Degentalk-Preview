@@ -1,7 +1,4 @@
-import {
-	pgTable, integer, bigint, varchar, jsonb, uuid,
-	index
-} from 'drizzle-orm/pg-core';
+import { pgTable, integer, bigint, varchar, jsonb, uuid, index } from 'drizzle-orm/pg-core';
 import { titles } from './titles'; // Placeholder
 import { badges } from './badges'; // Placeholder
 export const levels = pgTable('levels', {

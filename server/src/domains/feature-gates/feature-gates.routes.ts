@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { isAuthenticated, isAdmin } from '@server/auth/middleware/auth.middleware';
+import { isAuthenticated, isAdmin } from '@server/domains/auth/middleware/auth.middleware';
 import * as featureGatesController from './feature-gates.controller';
 
 const router = Router();

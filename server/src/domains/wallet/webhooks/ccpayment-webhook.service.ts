@@ -113,7 +113,7 @@ export class CCPaymentWebhookService {
 
 			// Handle purchase order deposit with conversion
 			const conversionAmount = await this.calculateDgtConversion(
-				parseFloat(event.actualAmount), 
+				parseFloat(event.actualAmount),
 				event.coinSymbol
 			);
 
@@ -156,11 +156,7 @@ export class CCPaymentWebhookService {
 	): Promise<{ success: boolean; message: string }> {
 		try {
 			// Find user by CCPayment UID
-			const [user] = await db
-				.select()
-				.from(users)
-				.where(eq(users.id, event.uid))
-				.limit(1);
+			const [user] = await db.select().from(users).where(eq(users.id, event.uid)).limit(1);
 
 			if (!user) {
 				logger.warn('User not found for direct deposit auto-conversion', {
@@ -174,7 +170,7 @@ export class CCPaymentWebhookService {
 			}
 
 			const conversionAmount = await this.calculateDgtConversion(
-				parseFloat(event.actualAmount), 
+				parseFloat(event.actualAmount),
 				event.coinSymbol
 			);
 
@@ -216,7 +212,7 @@ export class CCPaymentWebhookService {
 	private async calculateDgtConversion(usdAmount: number, coinSymbol: string): Promise<number> {
 		// Apply rate buffer to account for fluctuations
 		const bufferedAmount = usdAmount * (1 - walletConfig.CONVERSION_RATE_BUFFER);
-		
+
 		// Convert to DGT at pegged rate ($0.10 per DGT)
 		const dgtAmount = Math.floor(bufferedAmount / walletConfig.DGT.PRICE_USD);
 

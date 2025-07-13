@@ -12,7 +12,7 @@ import {
 	DeleteContentSchema
 } from './reports.validators';
 import { validateRequestBody, validateQueryParams } from '../../admin.validation';
-import { sendSuccessResponse, sendErrorResponse } from "@core/utils/transformer.helpers";
+import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
 export class AdminReportsController {
 	async getReports(req: Request, res: Response) {

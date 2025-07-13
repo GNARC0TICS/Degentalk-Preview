@@ -1,7 +1,7 @@
 import { roles as rolesTable, userRoles as userRolesTable } from '@schema';
 import { db } from '@db';
 import { and, eq, inArray } from 'drizzle-orm';
-import type { UserId } from "@shared/types";
+import type { UserId } from '@shared/types';
 
 /**
  * Shape of the User object expected in permission checks.
@@ -77,7 +77,10 @@ export async function getXpMultiplier(user: RBACUser): Promise<number> {
 		.select({ xpMultiplier: rolesTable.xpMultiplier })
 		.from(rolesTable)
 		.where(inArray(rolesTable.id, roleIds));
-	const max = rows.reduce((acc: number, r: { xpMultiplier: number | null }) => Math.max(acc, r.xpMultiplier ?? 1), 1);
+	const max = rows.reduce(
+		(acc: number, r: { xpMultiplier: number | null }) => Math.max(acc, r.xpMultiplier ?? 1),
+		1
+	);
 	return max || 1.0;
 }
 

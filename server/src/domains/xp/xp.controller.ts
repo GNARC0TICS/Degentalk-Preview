@@ -29,12 +29,20 @@ export const awardXpForAction = async (req: Request, res: Response, next: NextFu
 		const { userId, action, metadata } = req.body;
 
 		if (!userId || !action) {
-			return sendErrorResponse(res, 'Missing required parameters. userId and action are required.', 400);
+			return sendErrorResponse(
+				res,
+				'Missing required parameters. userId and action are required.',
+				400
+			);
 		}
 
 		// Ensure action is valid
 		if (!Object.values(XP_ACTION).includes(action as XP_ACTION)) {
-			return sendErrorResponse(res, `Invalid action. Must be one of: ${Object.values(XP_ACTION).join(', ')}`, 400);
+			return sendErrorResponse(
+				res,
+				`Invalid action. Must be one of: ${Object.values(XP_ACTION).join(', ')}`,
+				400
+			);
 		}
 
 		logger.info('Awarding XP for action (via API)', JSON.stringify({ userId, action, metadata }));
@@ -43,7 +51,11 @@ export const awardXpForAction = async (req: Request, res: Response, next: NextFu
 		const result = await xpService.awardXp(userId, action as XP_ACTION, metadata);
 
 		if (!result) {
-			return sendErrorResponse(res, 'Could not award XP. You may have reached a limit for this action.', 429);
+			return sendErrorResponse(
+				res,
+				'Could not award XP. You may have reached a limit for this action.',
+				429
+			);
 		}
 
 		sendSuccessResponse(res, {
@@ -241,7 +253,11 @@ export const awardActionXp = async (req: Request, res: Response) => {
 
 		if (!userId || !action || !isValidId(userId)) {
 			// entityId can be optional for some actions
-			return sendErrorResponse(res, 'Missing or invalid required parameters (userId, action).', 400);
+			return sendErrorResponse(
+				res,
+				'Missing or invalid required parameters (userId, action).',
+				400
+			);
 		}
 
 		// Optional: Validate that authenticatedUserId matches userId or is an admin if they differ
@@ -257,12 +273,18 @@ export const awardActionXp = async (req: Request, res: Response) => {
 		if (!setting || !setting.enabled) {
 			logger.warn('XP_CONTROLLER', `XP action '${action}' not found or not enabled.`);
 			// Return a success to not break client flow, but award 0 XP
-			return sendSuccessResponse(res, { xpAwarded: 0, message: 'XP action not configured or disabled.' });
+			return sendSuccessResponse(res, {
+				xpAwarded: 0,
+				message: 'XP action not configured or disabled.'
+			});
 		}
 
 		const xpToAward = setting.baseValue;
 		if (xpToAward <= 0) {
-			return sendSuccessResponse(res, { xpAwarded: 0, message: 'XP amount for action is zero or negative.' });
+			return sendSuccessResponse(res, {
+				xpAwarded: 0,
+				message: 'XP amount for action is zero or negative.'
+			});
 		}
 
 		// Use the centralized event handler for awarding XP

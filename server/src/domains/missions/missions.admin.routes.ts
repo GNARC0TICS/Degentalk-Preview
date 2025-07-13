@@ -8,7 +8,7 @@
 import { Router } from 'express';
 import type { Request, Response, NextFunction } from 'express';
 import * as missionsController from './missions.controller';
-import { isAuthenticated, isAdmin } from '@server/auth/middleware/auth.middleware';
+import { isAuthenticated, isAdmin } from '@server/domains/auth/middleware/auth.middleware';
 
 const router = Router();
 

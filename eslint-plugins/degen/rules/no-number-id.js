@@ -31,9 +31,12 @@ module.exports = {
 				'Use UUID-based branded ID types (e.g., UserId, ThreadId) instead of numeric IDs. Found: {{pattern}}',
 			legacyNumericId:
 				'Legacy numeric ID detected: {{pattern}}. Consider migrating to UUID-based type.',
-			numberIdCast: 'Integer ID casting ({{method}}) is not allowed in UUID-first architecture. Use UUID validation instead.',
-			numberIdLiteral: 'Integer ID literal ({{value}}) is not allowed in mock data. Use mockUuid() or TEST_UUIDS instead.',
-			numberIdValidation: 'Integer ID validation (z.number()) is not allowed for ID fields. Use z.string().uuid() instead.',
+			numberIdCast:
+				'Integer ID casting ({{method}}) is not allowed in UUID-first architecture. Use UUID validation instead.',
+			numberIdLiteral:
+				'Integer ID literal ({{value}}) is not allowed in mock data. Use mockUuid() or TEST_UUIDS instead.',
+			numberIdValidation:
+				'Integer ID validation (z.number()) is not allowed for ID fields. Use z.string().uuid() instead.',
 			parseIntId: 'parseInt() on ID fields is not allowed. IDs should be UUIDs, not integers.',
 			isNaNId: 'isNaN() check on ID fields suggests integer usage. Use UUID validation instead.'
 		}
@@ -133,7 +136,7 @@ module.exports = {
 				const name = node.name.toLowerCase();
 				return name === 'id' || name.endsWith('id');
 			}
-			
+
 			// Check if it's a property with an ID-like key
 			if (node.type === 'Property' && node.key) {
 				const keyName = node.key.name || node.key.value;
@@ -142,7 +145,7 @@ module.exports = {
 					return name === 'id' || name.endsWith('id');
 				}
 			}
-			
+
 			return false;
 		}
 
@@ -165,11 +168,11 @@ module.exports = {
 			// Runtime pattern detection
 			CallExpression(node) {
 				const { callee, arguments: args } = node;
-				
+
 				if (args.length === 0) return;
-				
+
 				const firstArg = args[0];
-				
+
 				// Check for Number(someId) or parseInt(someId)
 				if (callee.type === 'Identifier') {
 					if (callee.name === 'Number' && isIdField(firstArg)) {
@@ -182,7 +185,7 @@ module.exports = {
 							}
 						});
 					}
-					
+
 					if (callee.name === 'parseInt' && isIdField(firstArg)) {
 						context.report({
 							node,
@@ -192,13 +195,16 @@ module.exports = {
 							}
 						});
 					}
-					
+
 					if (callee.name === 'isNaN' && isIdField(firstArg)) {
 						context.report({
 							node,
 							messageId: 'isNaNId',
 							fix(fixer) {
-								return fixer.replaceText(node, `!isValidUUID(${context.getSourceCode().getText(firstArg)})`);
+								return fixer.replaceText(
+									node,
+									`!isValidUUID(${context.getSourceCode().getText(firstArg)})`
+								);
 							}
 						});
 					}
@@ -207,10 +213,14 @@ module.exports = {
 
 			// Catch integer literals in ID contexts
 			Property(node) {
-				if (isIdField(node) && node.value.type === 'Literal' && typeof node.value.value === 'number') {
+				if (
+					isIdField(node) &&
+					node.value.type === 'Literal' &&
+					typeof node.value.value === 'number'
+				) {
 					const filename = context.getFilename();
 					const isTestFile = /\.(test|spec)\.[jt]s$/.test(filename);
-					
+
 					context.report({
 						node: node.value,
 						messageId: 'numberIdLiteral',
@@ -241,7 +251,7 @@ module.exports = {
 					while (parent && parent.type !== 'Property') {
 						parent = parent.parent;
 					}
-					
+
 					if (parent && isIdField(parent)) {
 						context.report({
 							node,

@@ -22,7 +22,9 @@ export interface AdminDataTableProps<T extends { id: UserId }> {
 	onSearchChange?: ((newSearchTerm: string) => void) | undefined;
 	className?: string;
 	tableClassName?: string;
-	renderRow?: ((row: T, columns: Parameters<typeof EntityTable<T>>[0]['columns']) => React.ReactNode) | undefined;
+	renderRow?:
+		| ((row: T, columns: Parameters<typeof EntityTable<T>>[0]['columns']) => React.ReactNode)
+		| undefined;
 	pagination?: { page: number; pageSize: number; total: number } | undefined;
 	onPageChange?: ((page: number) => void) | undefined;
 	onPageSizeChange?: ((pageSize: number) => void) | undefined;
@@ -30,28 +32,20 @@ export interface AdminDataTableProps<T extends { id: UserId }> {
 
 export function AdminDataTable<T extends { id: UserId }>(props: AdminDataTableProps<T>) {
 	// Map AdminDataTable props to EntityTable props
-	const {
-		loading,
-		pagination,
-		onPageChange,
-		onPageSizeChange,
-		...entityTableProps
-	} = props;
+	const { loading, pagination, onPageChange, onPageSizeChange, ...entityTableProps } = props;
 
 	// Use loading or isLoading, with loading taking precedence
 	const finalLoading = loading ?? props.isLoading;
 
 	return (
 		<>
-			<EntityTable<T>
-				{...entityTableProps}
-				isLoading={finalLoading}
-			/>
+			<EntityTable<T> {...entityTableProps} isLoading={finalLoading} />
 			{pagination && (
 				<div className="flex items-center justify-between px-2 py-4">
 					<div className="text-sm text-admin-text-secondary">
 						Showing {Math.min((pagination.page - 1) * pagination.pageSize + 1, pagination.total)} to{' '}
-						{Math.min(pagination.page * pagination.pageSize, pagination.total)} of {pagination.total} results
+						{Math.min(pagination.page * pagination.pageSize, pagination.total)} of{' '}
+						{pagination.total} results
 					</div>
 					<div className="flex gap-2">
 						{onPageChange && (

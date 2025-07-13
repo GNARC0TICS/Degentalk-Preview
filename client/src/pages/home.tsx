@@ -87,18 +87,18 @@ function HomePage() {
 	);
 
 	return (
-        <ErrorBoundary level='component'>
-            <HeroSection />
-            <AnnouncementTicker />
-            {/* Primary Zone Carousel */}
-            {primaryZonesFromContext.length > 0 && (
+		<ErrorBoundary level="component">
+			<HeroSection />
+			<AnnouncementTicker />
+			{/* Primary Zone Carousel */}
+			{primaryZonesFromContext.length > 0 && (
 				<PrimaryZoneCarousel
 					zones={zoneCardDataForGrid}
 					autoRotateMs={8000}
 					className="bg-gradient-to-b from-zinc-900/50 to-transparent"
 				/>
 			)}
-            <ContentFeedProvider initialTab="trending">
+			<ContentFeedProvider initialTab="trending">
 				<ResponsiveLayoutWrapper page="home">
 					<Wide as="div" className={getForumSpacing('container')}>
 						{/* New tab-based content feed */}
@@ -106,9 +106,9 @@ function HomePage() {
 					</Wide>
 				</ResponsiveLayoutWrapper>
 			</ContentFeedProvider>
-            <SiteFooter />
-        </ErrorBoundary>
-    );
+			<SiteFooter />
+		</ErrorBoundary>
+	);
 }
 
 export default HomePage;

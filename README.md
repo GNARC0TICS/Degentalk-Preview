@@ -500,13 +500,17 @@ To incentivize user participation, the platform awards Experience Points (XP) an
 
 1.  A user creates a new thread through the client application.
 2.  Upon successful thread creation, the client makes a `POST` request to `/api/xp/award-action`.
+
 - **Payload**: `{ userId: string, action: 'create_thread', entityId: string (threadId) }`
 - **Backend Logic**: The XP service (`server/src/domains/xp/xp.service.ts` using `server/src/domains/xp/events/xp.events.ts`) looks up `xpActionSettings` for `'create_thread'`, awards the `baseValue` XP to the user, updates their total XP and level (if applicable), and logs the adjustment in `xpAdjustmentLogs`.
 - **Response**: `{ xpAwarded: number, newTotalXp: number, leveledUp: boolean, currentLevel: number }`
+
 3.  The client then (or in parallel) makes a `POST` request to `/api/wallet/transactions/create` (actual path for DGT rewards, routed via `server/src/domains/wallet/routes/wallet.routes.ts`).
+
 - **Payload**: `{ userId: string, currency: 'DGT', amount: number (determined by backend config, e.g., DGT_REWARD_CREATE_THREAD), type: 'reward', reason: string, relatedEntityId: string (threadId), context: 'create_thread' }`
 - **Backend Logic**: The DGT service (`server/src/domains/wallet/services/dgt.service.ts`) credits the user's DGT wallet balance (stored on the `users` table as `dgtWalletBalance`), and logs the transaction in the `transactions` table.
 - **Response**: `{ dgtAwarded: number, newBalance: string }`
+
 4.  The client displays toasts to inform the user of the XP and DGT awarded.
 
 **Key Backend Components & Endpoints:**

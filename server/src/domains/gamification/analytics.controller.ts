@@ -7,14 +7,17 @@
 
 import type { Request, Response } from 'express';
 import { z } from 'zod';
-import { gamificationAnalyticsService, GamificationAnalyticsService } from './services/analytics.service';
+import {
+	gamificationAnalyticsService,
+	GamificationAnalyticsService
+} from './services/analytics.service';
 import { CloutTransformer } from './transformers/clout.transformer';
-import { 
+import {
 	toPublicList,
 	sendSuccessResponse,
 	sendErrorResponse,
 	sendTransformedResponse,
-	sendTransformedListResponse 
+	sendTransformedListResponse
 } from '@core/utils/transformer.helpers';
 import { logger } from '@core/logger';
 import { AppError } from '@core/errors';
@@ -71,18 +74,23 @@ export class GamificationAnalyticsController {
 			const dashboard = await this.service.generateDashboard(timeframe);
 
 			// Return just the overview section for performance
-			sendSuccessResponse(res, {
-				overview: dashboard.overview,
-				topPerformers: dashboard.topPerformers.slice(0, 5),
-				quickStats: {
-					avgLevel: dashboard.progression.avgLevelGain,
-					completionRate: dashboard.achievements.avgCompletionRate,
-					activeUsers: dashboard.engagement.uniqueUsers
+			sendSuccessResponse(
+				res,
+				{
+					overview: dashboard.overview,
+					topPerformers: dashboard.topPerformers.slice(0, 5),
+					quickStats: {
+						avgLevel: dashboard.progression.avgLevelGain,
+						completionRate: dashboard.achievements.avgCompletionRate,
+						activeUsers: dashboard.engagement.uniqueUsers
+					}
+				},
+				undefined,
+				{
+					timeframe,
+					generatedAt: new Date().toISOString()
 				}
-			}, undefined, {
-				timeframe,
-				generatedAt: new Date().toISOString()
-			});
+			);
 		} catch (error) {
 			logger.error('ANALYTICS_CONTROLLER', 'Error getting overview:', error);
 			sendErrorResponse(res, 'Internal server error', 500);
@@ -98,15 +106,20 @@ export class GamificationAnalyticsController {
 			const timeframe = (req.query.timeframe as 'day' | 'week' | 'month') || 'week';
 			const dashboard = await this.service.generateDashboard(timeframe);
 
-			sendSuccessResponse(res, {
-				progression: dashboard.progression,
-				trends: {
-					xpGrowth: dashboard.trends.xpGrowth
+			sendSuccessResponse(
+				res,
+				{
+					progression: dashboard.progression,
+					trends: {
+						xpGrowth: dashboard.trends.xpGrowth
+					}
+				},
+				undefined,
+				{
+					timeframe,
+					generatedAt: new Date().toISOString()
 				}
-			}, undefined, {
-				timeframe,
-				generatedAt: new Date().toISOString()
-			});
+			);
 		} catch (error) {
 			logger.error('ANALYTICS_CONTROLLER', 'Error getting progression metrics:', error);
 			sendErrorResponse(res, 'Internal server error', 500);
@@ -122,18 +135,23 @@ export class GamificationAnalyticsController {
 			const timeframe = (req.query.timeframe as 'day' | 'week' | 'month') || 'week';
 			const dashboard = await this.service.generateDashboard(timeframe);
 
-			sendTransformedResponse(res, {
-				achievements: dashboard.achievements.map((a) => CloutTransformer.toPublicAchievement(a)),
-				trends: {
-					completionRates: dashboard.trends.completionRates.map((t) => ({
-						date: t.date,
-						achievements: t.achievements
-					}))
+			sendTransformedResponse(
+				res,
+				{
+					achievements: dashboard.achievements.map((a) => CloutTransformer.toPublicAchievement(a)),
+					trends: {
+						completionRates: dashboard.trends.completionRates.map((t) => ({
+							date: t.date,
+							achievements: t.achievements
+						}))
+					}
+				},
+				undefined,
+				{
+					timeframe,
+					generatedAt: new Date().toISOString()
 				}
-			}, undefined, {
-				timeframe,
-				generatedAt: new Date().toISOString()
-			});
+			);
 		} catch (error) {
 			logger.error('ANALYTICS_CONTROLLER', 'Error getting achievement metrics:', error);
 			sendErrorResponse(res, 'Internal server error', 500);
@@ -149,18 +167,23 @@ export class GamificationAnalyticsController {
 			const timeframe = (req.query.timeframe as 'day' | 'week' | 'month') || 'week';
 			const dashboard = await this.service.generateDashboard(timeframe);
 
-			sendSuccessResponse(res, {
-				missions: dashboard.missions,
-				trends: {
-					completionRates: dashboard.trends.completionRates.map((t) => ({
-						date: t.date,
-						missions: t.missions
-					}))
+			sendSuccessResponse(
+				res,
+				{
+					missions: dashboard.missions,
+					trends: {
+						completionRates: dashboard.trends.completionRates.map((t) => ({
+							date: t.date,
+							missions: t.missions
+						}))
+					}
+				},
+				undefined,
+				{
+					timeframe,
+					generatedAt: new Date().toISOString()
 				}
-			}, undefined, {
-				timeframe,
-				generatedAt: new Date().toISOString()
-			});
+			);
 		} catch (error) {
 			logger.error('ANALYTICS_CONTROLLER', 'Error getting mission metrics:', error);
 			sendErrorResponse(res, 'Internal server error', 500);
@@ -176,15 +199,20 @@ export class GamificationAnalyticsController {
 			const timeframe = (req.query.timeframe as 'day' | 'week' | 'month') || 'week';
 			const dashboard = await this.service.generateDashboard(timeframe);
 
-			sendSuccessResponse(res, {
-				engagement: dashboard.engagement,
-				trends: {
-					userActivity: dashboard.trends.userActivity
+			sendSuccessResponse(
+				res,
+				{
+					engagement: dashboard.engagement,
+					trends: {
+						userActivity: dashboard.trends.userActivity
+					}
+				},
+				undefined,
+				{
+					timeframe,
+					generatedAt: new Date().toISOString()
 				}
-			}, undefined, {
-				timeframe,
-				generatedAt: new Date().toISOString()
-			});
+			);
 		} catch (error) {
 			logger.error('ANALYTICS_CONTROLLER', 'Error getting engagement metrics:', error);
 			sendErrorResponse(res, 'Internal server error', 500);
@@ -223,19 +251,24 @@ export class GamificationAnalyticsController {
 			// Get more detailed leaderboard data
 			const topPerformers = dashboard.topPerformers.slice(0, limit);
 
-			sendSuccessResponse(res, {
-				performers: topPerformers,
-				stats: {
-					totalEntries: topPerformers.length,
-					avgLevel: topPerformers.reduce((sum, p) => sum + p.level, 0) / topPerformers.length,
-					avgXp: topPerformers.reduce((sum, p) => sum + p.xp, 0) / topPerformers.length,
-					avgAchievements:
-						topPerformers.reduce((sum, p) => sum + p.achievements, 0) / topPerformers.length
+			sendSuccessResponse(
+				res,
+				{
+					performers: topPerformers,
+					stats: {
+						totalEntries: topPerformers.length,
+						avgLevel: topPerformers.reduce((sum, p) => sum + p.level, 0) / topPerformers.length,
+						avgXp: topPerformers.reduce((sum, p) => sum + p.xp, 0) / topPerformers.length,
+						avgAchievements:
+							topPerformers.reduce((sum, p) => sum + p.achievements, 0) / topPerformers.length
+					}
+				},
+				undefined,
+				{
+					limit,
+					generatedAt: new Date().toISOString()
 				}
-			}, undefined, {
-				limit,
-				generatedAt: new Date().toISOString()
-			});
+			);
 		} catch (error) {
 			logger.error('ANALYTICS_CONTROLLER', 'Error getting top performers:', error);
 			sendErrorResponse(res, 'Internal server error', 500);

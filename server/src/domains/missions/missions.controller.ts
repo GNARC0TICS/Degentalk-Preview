@@ -10,12 +10,12 @@ import type { Request, Response } from 'express';
 import { z } from 'zod';
 import { missionsService, MissionsService } from './missions.service';
 import { MissionsTransformer } from './transformers/missions.transformer';
-import { 
+import {
 	toPublicList,
 	sendSuccessResponse,
 	sendErrorResponse,
 	sendTransformedResponse,
-	sendTransformedListResponse 
+	sendTransformedListResponse
 } from '@core/utils/transformer.helpers';
 import { logger } from '@core/logger';
 import { AppError } from '@core/errors';
@@ -125,8 +125,12 @@ export class MissionController {
 
 			const transformedMissions = toPublicList(missions, MissionsTransformer.toPublicMission);
 			const transformedGrouped = {
-				daily: grouped.daily ? toPublicList(grouped.daily, MissionsTransformer.toPublicMission) : [],
-				weekly: grouped.weekly ? toPublicList(grouped.weekly, MissionsTransformer.toPublicMission) : [],
+				daily: grouped.daily
+					? toPublicList(grouped.daily, MissionsTransformer.toPublicMission)
+					: [],
+				weekly: grouped.weekly
+					? toPublicList(grouped.weekly, MissionsTransformer.toPublicMission)
+					: [],
 				other: grouped.other ? toPublicList(grouped.other, MissionsTransformer.toPublicMission) : []
 			};
 
@@ -284,16 +288,26 @@ export class MissionController {
 			// Check if any missions were completed
 			const completedMissions = updatedProgress.filter((p) => p.isCompleted);
 
-			sendSuccessResponse(res, {
-				updatedProgress: toPublicList(updatedProgress, MissionsTransformer.toAuthenticatedMission),
-				completedMissions: toPublicList(completedMissions, MissionsTransformer.toAuthenticatedMission),
-				stats: {
-					updated: updatedProgress.length,
-					completed: completedMissions.length
-				}
-			}, completedMissions.length > 0
-				? `${completedMissions.length} mission(s) completed!`
-				: 'Progress updated');
+			sendSuccessResponse(
+				res,
+				{
+					updatedProgress: toPublicList(
+						updatedProgress,
+						MissionsTransformer.toAuthenticatedMission
+					),
+					completedMissions: toPublicList(
+						completedMissions,
+						MissionsTransformer.toAuthenticatedMission
+					),
+					stats: {
+						updated: updatedProgress.length,
+						completed: completedMissions.length
+					}
+				},
+				completedMissions.length > 0
+					? `${completedMissions.length} mission(s) completed!`
+					: 'Progress updated'
+			);
 		} catch (error) {
 			logger.error('MISSION_CONTROLLER', 'Error updating mission progress:', error);
 			if (error instanceof z.ZodError) {
@@ -343,7 +357,12 @@ export class MissionController {
 			const mission = await this.service.createMission(missionData);
 
 			res.status(201);
-			sendTransformedResponse(res, mission, MissionsTransformer.toAdminMission, `Mission "${mission.title}" created successfully`);
+			sendTransformedResponse(
+				res,
+				mission,
+				MissionsTransformer.toAdminMission,
+				`Mission "${mission.title}" created successfully`
+			);
 		} catch (error) {
 			logger.error('MISSION_CONTROLLER', 'Error creating mission:', error);
 			if (error instanceof z.ZodError) {
@@ -373,7 +392,12 @@ export class MissionController {
 				throw new AppError('Mission not found', 404);
 			}
 
-			sendTransformedResponse(res, mission, MissionsTransformer.toAdminMission, `Mission "${mission.title}" updated successfully`);
+			sendTransformedResponse(
+				res,
+				mission,
+				MissionsTransformer.toAdminMission,
+				`Mission "${mission.title}" updated successfully`
+			);
 		} catch (error) {
 			logger.error('MISSION_CONTROLLER', 'Error updating mission:', error);
 			if (error instanceof AppError) {

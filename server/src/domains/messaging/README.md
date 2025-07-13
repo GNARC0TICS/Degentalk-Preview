@@ -7,6 +7,7 @@ The messaging domain handles private user-to-user communications with a security
 ## Architecture Components
 
 ### 1. Types (`types/index.ts`)
+
 - **PublicMessage**: Minimal message data for basic display
 - **AuthenticatedMessage**: Includes user permissions and context
 - **ModerationMessage**: Full data access for admins/moderators
@@ -15,21 +16,24 @@ The messaging domain handles private user-to-user communications with a security
 - **MessageThread**: Paginated message collections
 
 ### 2. Transformer (`transformers/message.transformer.ts`)
+
 The MessageTransformer class provides role-based data transformation:
 
 ```typescript
 // Public view - strips sensitive data
-MessageTransformer.toPublicMessage(dbMessage)
+MessageTransformer.toPublicMessage(dbMessage);
 
 // Authenticated view - adds permissions
-MessageTransformer.toAuthenticatedMessage(dbMessage, requestingUser)
+MessageTransformer.toAuthenticatedMessage(dbMessage, requestingUser);
 
 // Moderation view - full access
-MessageTransformer.toModerationMessage(dbMessage)
+MessageTransformer.toModerationMessage(dbMessage);
 ```
 
 ### 3. Service Layer (`message.service.ts`)
+
 Business logic separated from routes:
+
 - `getConversations()`: Fetch user conversations with unread counts
 - `getMessageThread()`: Get messages between two users
 - `sendMessage()`: Create new messages with validation
@@ -39,7 +43,9 @@ Business logic separated from routes:
 - `deleteMessage()`: Delete individual messages
 
 ### 4. Routes (`message.routes.ts`)
+
 RESTful API endpoints:
+
 - `GET /conversations`: List all user conversations
 - `GET /conversation/:userId`: Get messages with specific user
 - `POST /send`: Send new message
@@ -53,16 +59,19 @@ RESTful API endpoints:
 ## Security Features
 
 ### 1. Permission Checking
+
 - Users can only view their own messages
 - Edit/delete permissions time-limited
 - Admin/moderator overrides available
 
 ### 2. Data Sanitization
+
 - IP addresses hashed for privacy
 - Internal fields stripped from responses
 - Sensitive data never exposed to clients
 
 ### 3. Input Validation
+
 - Zod schemas for all inputs
 - Message length limits enforced
 - Recipient validation before sending
@@ -70,16 +79,19 @@ RESTful API endpoints:
 ## Integration Points
 
 ### 1. Database Schema
+
 - Uses `messages` table for storage
 - Foreign keys to `users` table
 - Soft delete support
 
 ### 2. Type System
+
 - Branded types for IDs (MessageId, UserId)
 - Shared types from `@shared/types`
 - Frontend-safe type definitions
 
 ### 3. Middleware Integration
+
 - Works with `transform-response` middleware
 - Automatic ID transformation
 - Consistent API response format
@@ -90,9 +102,9 @@ RESTful API endpoints:
 // In a route handler
 const conversations = await MessageService.getConversations(userId);
 const transformed = MessageTransformer.toConversationList(
-  conversations,
-  currentUser,
-  'authenticated'
+	conversations,
+	currentUser,
+	'authenticated'
 );
 res.json(transformed);
 ```
@@ -100,6 +112,7 @@ res.json(transformed);
 ## Differences from Shoutbox
 
 While shoutbox messages are public chat room messages, this messaging system handles:
+
 - Private 1-on-1 conversations
 - Read receipts and unread counts
 - Message editing with time limits

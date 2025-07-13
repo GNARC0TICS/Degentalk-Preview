@@ -7,7 +7,7 @@ import { gamificationSettingsFixture } from './gamification/fixtures/gamificatio
 import { contentSettingsFixture } from './content/fixtures/contentSettings.fixture';
 import { systemSettingsFixture } from './system/fixtures/systemSettings.fixture';
 
-// Import routes  
+// Import routes
 import gamificationRoutes from './gamification/gamification.routes';
 
 export interface AdminDomain {
@@ -37,18 +37,21 @@ export const adminRegistry: Record<string, AdminDomain> = {
 			admin: ['admin']
 		}
 	},
-	
+
 	'access-control': {
 		name: 'access-control',
 		description: 'Roles, permissions, and access management',
-		fixtures: { domain: 'access-control', settings: { permissions: { read: ['admin'], write: ['admin'], admin: ['admin'] } } },
+		fixtures: {
+			domain: 'access-control',
+			settings: { permissions: { read: ['admin'], write: ['admin'], admin: ['admin'] } }
+		},
 		permissions: {
 			read: ['admin'],
-			write: ['admin'], 
+			write: ['admin'],
 			admin: ['admin']
 		}
 	},
-	
+
 	economy: {
 		name: 'economy',
 		description: 'Economic system and treasury management',
@@ -59,7 +62,7 @@ export const adminRegistry: Record<string, AdminDomain> = {
 			admin: ['admin']
 		}
 	},
-	
+
 	gamification: {
 		name: 'gamification',
 		description: 'XP, clout, and progression systems',
@@ -71,7 +74,7 @@ export const adminRegistry: Record<string, AdminDomain> = {
 			admin: ['admin']
 		}
 	},
-	
+
 	content: {
 		name: 'content',
 		description: 'Content management and moderation',
@@ -82,40 +85,51 @@ export const adminRegistry: Record<string, AdminDomain> = {
 			admin: ['admin']
 		}
 	},
-	
+
 	customization: {
 		name: 'customization',
 		description: 'UI, branding, and asset management',
-		fixtures: { domain: 'customization', settings: { permissions: { read: ['admin'], write: ['admin'], admin: ['admin'] } } },
+		fixtures: {
+			domain: 'customization',
+			settings: { permissions: { read: ['admin'], write: ['admin'], admin: ['admin'] } }
+		},
 		permissions: {
 			read: ['admin'],
 			write: ['admin'],
 			admin: ['admin']
 		}
 	},
-	
+
 	shop: {
 		name: 'shop',
 		description: 'Commerce and marketplace management',
-		fixtures: { domain: 'shop', settings: { permissions: { read: ['admin'], write: ['admin'], admin: ['admin'] } } },
+		fixtures: {
+			domain: 'shop',
+			settings: { permissions: { read: ['admin'], write: ['admin'], admin: ['admin'] } }
+		},
 		permissions: {
 			read: ['admin'],
 			write: ['admin'],
 			admin: ['admin']
 		}
 	},
-	
+
 	analytics: {
 		name: 'analytics',
 		description: 'Analytics and reporting',
-		fixtures: { domain: 'analytics', settings: { permissions: { read: ['admin', 'moderator'], write: ['admin'], admin: ['admin'] } } },
+		fixtures: {
+			domain: 'analytics',
+			settings: {
+				permissions: { read: ['admin', 'moderator'], write: ['admin'], admin: ['admin'] }
+			}
+		},
 		permissions: {
 			read: ['admin', 'moderator'],
 			write: ['admin'],
 			admin: ['admin']
 		}
 	},
-	
+
 	system: {
 		name: 'system',
 		description: 'System management and configuration',
@@ -145,10 +159,14 @@ export function getAllDomainNames(): string[] {
 /**
  * Check if user has permission for domain action
  */
-export function hasPermission(userRole: string, domain: string, action: 'read' | 'write' | 'admin'): boolean {
+export function hasPermission(
+	userRole: string,
+	domain: string,
+	action: 'read' | 'write' | 'admin'
+): boolean {
 	const domainConfig = adminRegistry[domain];
 	if (!domainConfig) return false;
-	
+
 	return domainConfig.permissions[action].includes(userRole);
 }
 
@@ -156,5 +174,5 @@ export function hasPermission(userRole: string, domain: string, action: 'read' |
  * Get all fixtures for database seeding
  */
 export function getAllFixtures() {
-	return Object.values(adminRegistry).map(domain => domain.fixtures);
+	return Object.values(adminRegistry).map((domain) => domain.fixtures);
 }

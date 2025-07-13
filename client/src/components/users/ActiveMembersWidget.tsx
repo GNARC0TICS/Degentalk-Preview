@@ -14,7 +14,7 @@ import { Users, Activity, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { createWidgetQueryKey } from '@/hooks/widgetData';
 import { WidgetSkeleton } from '@/components/ui/widget-skeleton';
-import type { UserId } from "@shared/types/ids";
+import type { UserId } from '@shared/types/ids';
 
 export interface ActiveUser {
 	id: UserId | string;

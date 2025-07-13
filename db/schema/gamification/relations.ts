@@ -1,6 +1,6 @@
 /**
  * Gamification Domain Relations
- * 
+ *
  * Auto-generated Drizzle relations for type-safe joins
  */
 import { relations } from 'drizzle-orm';
@@ -13,8 +13,8 @@ import { userAchievements } from './userAchievements';
 import { userMissionProgress } from './userMissionProgress';
 import { users } from '../user/users';
 export const achievementsRelations = relations(achievements, ({ one, many }) => ({
-  createdBy: one(users, {
-    fields: [achievements.createdBy],
-    references: [users.id]
-  }),
+	createdBy: one(users, {
+		fields: [achievements.createdBy],
+		references: [users.id]
+	})
 }));

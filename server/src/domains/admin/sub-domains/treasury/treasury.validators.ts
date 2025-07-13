@@ -23,40 +23,42 @@ export const TreasuryWithdrawalSchema = z.object({
 });
 
 // Schema for updating treasury settings
-export const TreasurySettingsUpdateSchema = z.object({
-	treasuryWalletAddress: z
-		.string()
-		.min(1, { message: 'Treasury wallet address cannot be empty.' })
-		.optional(),
-	dgtTreasuryBalance: z
-		.number()
-		.min(0, { message: 'DGT treasury balance cannot be negative.' })
-		.optional(),
-	minWithdrawalAmount: z
-		.number()
-		.min(0, { message: 'Minimum withdrawal amount cannot be negative.' })
-		.optional(),
-	withdrawalFeePercent: z
-		.number()
-		.min(0, { message: 'Withdrawal fee percent cannot be negative.' })
-		.max(100, { message: 'Withdrawal fee percent cannot exceed 100.' })
-		.optional(),
-	rewardDistributionDelayHours: z
-		.number()
-		.int({ message: 'Reward distribution delay must be an integer.' })
-		.min(0, { message: 'Reward distribution delay cannot be negative.' })
-		.optional(),
-	tipBurnPercent: z.number().min(0).max(100).optional(),
-	tipRecipientPercent: z.number().min(0).max(100).optional(),
-	minTipAmount: z.number().min(0).optional(),
-	maxTipAmount: z.number().min(0).optional(),
-	enableLikes: z.boolean().optional(),
-	enableTips: z.boolean().optional(),
-	likesGiveXp: z.boolean().optional(),
-	tipsGiveXp: z.boolean().optional(),
-	likeXpAmount: z.number().int().optional(),
-	tipXpMultiplier: z.number().optional()
-}).partial();
+export const TreasurySettingsUpdateSchema = z
+	.object({
+		treasuryWalletAddress: z
+			.string()
+			.min(1, { message: 'Treasury wallet address cannot be empty.' })
+			.optional(),
+		dgtTreasuryBalance: z
+			.number()
+			.min(0, { message: 'DGT treasury balance cannot be negative.' })
+			.optional(),
+		minWithdrawalAmount: z
+			.number()
+			.min(0, { message: 'Minimum withdrawal amount cannot be negative.' })
+			.optional(),
+		withdrawalFeePercent: z
+			.number()
+			.min(0, { message: 'Withdrawal fee percent cannot be negative.' })
+			.max(100, { message: 'Withdrawal fee percent cannot exceed 100.' })
+			.optional(),
+		rewardDistributionDelayHours: z
+			.number()
+			.int({ message: 'Reward distribution delay must be an integer.' })
+			.min(0, { message: 'Reward distribution delay cannot be negative.' })
+			.optional(),
+		tipBurnPercent: z.number().min(0).max(100).optional(),
+		tipRecipientPercent: z.number().min(0).max(100).optional(),
+		minTipAmount: z.number().min(0).optional(),
+		maxTipAmount: z.number().min(0).optional(),
+		enableLikes: z.boolean().optional(),
+		enableTips: z.boolean().optional(),
+		likesGiveXp: z.boolean().optional(),
+		tipsGiveXp: z.boolean().optional(),
+		likeXpAmount: z.number().int().optional(),
+		tipXpMultiplier: z.number().optional()
+	})
+	.partial();
 
 // Schema for mass airdrop
 export const MassAirdropSchema = z.object({

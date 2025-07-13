@@ -1,7 +1,7 @@
 import { db } from './db/index.js';
 import { threads, users as usersTable, forumStructure } from './db/schema/index.js';
 import { eq, desc, count } from 'drizzle-orm';
-import { logger } from "server/src/core/logger";
+import { logger } from 'server/src/core/logger';
 
 async function testSimpleThreadQuery() {
 	try {

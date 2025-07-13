@@ -1,7 +1,4 @@
-import {
-	pgTable, integer, timestamp, text, uuid,
-	index
-} from 'drizzle-orm/pg-core';
+import { pgTable, integer, timestamp, text, uuid, index } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users';
 export const userAbuseFlags = pgTable('user_abuse_flags', {

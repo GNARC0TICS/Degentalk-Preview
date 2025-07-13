@@ -9,10 +9,7 @@ import { reportsService } from './reports.service';
 import { CreateReportSchema } from './reports.validators';
 import { getUserIdFromRequest } from '@server-utils/auth';
 import { logger } from '@core/logger';
-import { 
-	sendSuccessResponse,
-	sendErrorResponse
-} from '@core/utils/transformer.helpers';
+import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
 export class ReportsController {
 	async createReport(req: Request, res: Response) {
@@ -37,9 +34,13 @@ export class ReportsController {
 			});
 
 			res.status(201);
-			sendSuccessResponse(res, {
-				reportId: report.id
-			}, 'Report submitted successfully');
+			sendSuccessResponse(
+				res,
+				{
+					reportId: report.id
+				},
+				'Report submitted successfully'
+			);
 		} catch (error) {
 			logger.error('Error creating report:', error);
 			sendErrorResponse(res, 'Failed to submit report', 500);

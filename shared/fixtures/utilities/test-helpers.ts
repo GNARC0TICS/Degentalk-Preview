@@ -8,7 +8,7 @@ import { scenarioGenerator, AvailableScenario } from './scenario-generator';
 import type { AdminId } from '@shared/types/ids';
 // TODO: Replace with proper shared logger
 // import { logger } from "../../../server/src/core/logger";
-import type { ThreadId } from "@shared/types/ids";
+import type { ThreadId } from '@shared/types/ids';
 
 // Setup helpers for test environments
 export class TestDataManager {
@@ -354,7 +354,9 @@ export class TestDataManager {
 	}): any {
 		const { users = 1000, threads = 500, posts = 5000, transactions = 10000 } = config;
 
-		console.log(`Generating large dataset: ${users} users, ${threads} threads, ${posts} posts, ${transactions} transactions`);
+		console.log(
+			`Generating large dataset: ${users} users, ${threads} threads, ${posts} posts, ${transactions} transactions`
+		);
 
 		const userData = Factory.createMany('user', users);
 		const threadData = Factory.createMany('thread', threads);

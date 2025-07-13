@@ -103,7 +103,10 @@ export function parseIdParam<T extends string>(param: string | undefined): Id<T>
  * Validate and assert ID is valid UUID
  * Throws error for better debugging
  */
-export function assertValidId(id: string | undefined, paramName: string = 'id'): asserts id is string {
+export function assertValidId(
+	id: string | undefined,
+	paramName: string = 'id'
+): asserts id is string {
 	if (!id || !isValidId(id)) {
 		throw new Error(`Invalid ${paramName}: must be a valid UUID`);
 	}
@@ -115,7 +118,7 @@ export function assertValidId(id: string | undefined, paramName: string = 'id'):
  */
 export function isValidNumericId(id: string | number | undefined | null): boolean {
 	if (!id) return false;
-	
+
 	const num = Number(id);
 	return !isNaN(num) && num > 0 && Number.isInteger(num);
 }
@@ -126,17 +129,17 @@ export function isValidNumericId(id: string | number | undefined | null): boolea
  */
 export function parseEntityIdParam(param: string | undefined): string | number | null {
 	if (!param) return null;
-	
+
 	// Try UUID first
 	if (isValidId(param)) {
 		return param;
 	}
-	
+
 	// Fall back to numeric for legacy support
 	const num = parseInt(param);
 	if (!isNaN(num) && num > 0) {
 		return num;
 	}
-	
+
 	return null;
 }

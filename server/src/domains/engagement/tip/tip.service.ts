@@ -212,7 +212,11 @@ export class TipService {
 		}
 
 		// Check minimum tip amount
-		if (currency === 'DGT' && settings.minTipAmountDGT && amount < Number(settings.minTipAmountDGT)) {
+		if (
+			currency === 'DGT' &&
+			settings.minTipAmountDGT &&
+			amount < Number(settings.minTipAmountDGT)
+		) {
 			throw new WalletError(
 				`Minimum DGT tip amount is ${settings.minTipAmountDGT}`,
 				ErrorCodes.BAD_REQUEST
@@ -220,7 +224,11 @@ export class TipService {
 		}
 
 		// Check maximum tip amount
-		if (currency === 'DGT' && settings.maxTipAmountDGT && amount > Number(settings.maxTipAmountDGT)) {
+		if (
+			currency === 'DGT' &&
+			settings.maxTipAmountDGT &&
+			amount > Number(settings.maxTipAmountDGT)
+		) {
 			throw new WalletError(
 				`Maximum DGT tip amount is ${settings.maxTipAmountDGT}`,
 				ErrorCodes.BAD_REQUEST
@@ -332,10 +340,7 @@ export class TipService {
 		} catch (error: unknown) {
 			const errorMessage = error instanceof Error ? error.message : String(error);
 			logger.error('TipService', `Error getting tip history: ${errorMessage}`);
-			throw new WalletError(
-				`Failed to get tip history: ${errorMessage}`,
-				ErrorCodes.SERVER_ERROR
-			);
+			throw new WalletError(`Failed to get tip history: ${errorMessage}`, ErrorCodes.SERVER_ERROR);
 		}
 	}
 }

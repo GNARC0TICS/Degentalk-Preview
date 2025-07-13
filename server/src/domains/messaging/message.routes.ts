@@ -12,12 +12,16 @@ import { db } from '@db';
 import { eq } from 'drizzle-orm';
 import { users } from '@schema';
 import { getUserIdFromRequest } from '@server-utils/auth';
-import { isAuthenticated, isAdminOrModerator, isAdmin } from '@server/auth/middleware/auth.middleware';
+import {
+	isAuthenticated,
+	isAdminOrModerator,
+	isAdmin
+} from '@server/domains/auth/middleware/auth.middleware';
 import { MessageTransformer } from './transformers/message.transformer';
 import { MessageService } from './message.service';
 import { logger } from '@core/logger';
 import { UserTransformer } from '@server/domains/users/transformers/user.transformer';
-import { 
+import {
 	sendSuccessResponse,
 	sendErrorResponse,
 	sendTransformedResponse,
@@ -38,17 +42,17 @@ router.get('/conversations', isAuthenticated, async (req: Request, res: Response
 		const conversations = await MessageService.getConversations(userId);
 
 		// Get current user for transformation
-		const [currentUser] = await db
-			.select()
-			.from(users)
-			.where(eq(users.id, userId))
-			.limit(1);
-		
+		const [currentUser] = await db.select().from(users).where(eq(users.id, userId)).limit(1);
+
 		// Transform conversations for authenticated user
-		const transformedConversations = conversations.map(conversation => 
-			MessageTransformer.toAuthenticatedConversation(conversation, currentUser, conversation.participants)
+		const transformedConversations = conversations.map((conversation) =>
+			MessageTransformer.toAuthenticatedConversation(
+				conversation,
+				currentUser,
+				conversation.participants
+			)
 		);
-		
+
 		sendSuccessResponse(res, transformedConversations);
 	} catch (error) {
 		logger.error('Error getting conversations:', error);
@@ -73,23 +77,15 @@ router.get('/conversation/:userId', isAuthenticated, async (req: Request, res: R
 		const conversationMessages = await MessageService.getMessageThread(currentUserId, otherUserId);
 
 		// Get other user details
-		const [otherUser] = await db
-			.select()
-			.from(users)
-			.where(eq(users.id, otherUserId))
-			.limit(1);
+		const [otherUser] = await db.select().from(users).where(eq(users.id, otherUserId)).limit(1);
 
 		// Get current user details
-		const [currentUser] = await db
-			.select()
-			.from(users)
-			.where(eq(users.id, currentUserId))
-			.limit(1);
+		const [currentUser] = await db.select().from(users).where(eq(users.id, currentUserId)).limit(1);
 
 		// Transform messages for authenticated user
 		const messageThread = {
-			participants: [currentUser, otherUser].map(user => UserTransformer.toPublicUser(user)),
-			messages: conversationMessages.map(message => 
+			participants: [currentUser, otherUser].map((user) => UserTransformer.toPublicUser(user)),
+			messages: conversationMessages.map((message) =>
 				MessageTransformer.toAuthenticatedMessage(message, currentUser)
 			),
 			totalCount: conversationMessages.length
@@ -121,17 +117,10 @@ router.post('/send', isAuthenticated, async (req: Request, res: Response) => {
 		const newMessage = await MessageService.sendMessage(senderId, { recipientId, content });
 
 		// Get current user details for transformation
-		const [currentUser] = await db
-			.select()
-			.from(users)
-			.where(eq(users.id, senderId))
-			.limit(1);
+		const [currentUser] = await db.select().from(users).where(eq(users.id, senderId)).limit(1);
 
 		// Transform the message before sending response
-		const transformedMessage = MessageTransformer.toAuthenticatedMessage(
-			newMessage,
-			currentUser
-		);
+		const transformedMessage = MessageTransformer.toAuthenticatedMessage(newMessage, currentUser);
 
 		res.status(201);
 		sendSuccessResponse(res, transformedMessage);
@@ -264,20 +253,20 @@ router.delete('/message/:messageId', isAuthenticated, async (req: Request, res: 
 router.get('/admin/messages', isAdminOrModerator, async (req: Request, res: Response) => {
 	try {
 		const { userId, page = 1, limit = 50 } = req.query;
-		
+
 		// Get messages for admin moderation view
-		const messages = await MessageService.getMessagesForModeration({ 
-			userId: userId as string, 
-			page: parseInt(page as string), 
-			limit: parseInt(limit as string) 
+		const messages = await MessageService.getMessagesForModeration({
+			userId: userId as string,
+			page: parseInt(page as string),
+			limit: parseInt(limit as string)
 		});
-		
+
 		// Transform messages for admin view
-		const transformedMessages = messages.map(message => 
+		const transformedMessages = messages.map((message) =>
 			MessageTransformer.toAdminMessage(message)
 		);
-		
-		sendSuccessResponse(res, { 
+
+		sendSuccessResponse(res, {
 			messages: transformedMessages,
 			total: messages.length,
 			page: parseInt(page as string),

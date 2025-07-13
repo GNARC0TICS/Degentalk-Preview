@@ -13,7 +13,7 @@ import { ShoppingBag, Sparkles, Palette, Frame, Crown, Edit } from 'lucide-react
 import { Link } from 'wouter';
 import { applyPluginRewards } from '@/lib/utils/applyPluginRewards';
 import type { UserInventoryWithProduct } from '@/types/inventory';
-import type { InventoryId, EntityId } from "@shared/types/ids";
+import type { InventoryId, EntityId } from '@shared/types/ids';
 
 interface CosmeticControlPanelProps {
 	userId: string; // Changed to string

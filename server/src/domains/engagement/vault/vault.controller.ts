@@ -14,10 +14,7 @@ import { asyncHandler } from '@core/errors';
 import { logger } from '@core/logger';
 import { VaultService } from './vault.service';
 import type { EntityId } from '@shared/types/ids';
-import { 
-	sendSuccessResponse,
-	sendErrorResponse
-} from '@core/utils/transformer.helpers';
+import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 // import { VaultError, VaultErrorCodes } from './vault.errors'; // Removed as file not found and errors not used
 
 /**
@@ -38,7 +35,11 @@ export class VaultController {
 
 		// Validate required fields
 		if (!amount || !currency || !lockDurationDays) {
-			return sendErrorResponse(res, 'Missing required fields: amount, currency, and lockDurationDays are required', 400);
+			return sendErrorResponse(
+				res,
+				'Missing required fields: amount, currency, and lockDurationDays are required',
+				400
+			);
 		}
 
 		// Create lock options
@@ -90,7 +91,11 @@ export class VaultController {
 
 			// Check if the vault lock belongs to the user
 			if (result.userId !== userId) {
-				return sendErrorResponse(res, 'Permission denied: You can only unlock your own vault locks', 403);
+				return sendErrorResponse(
+					res,
+					'Permission denied: You can only unlock your own vault locks',
+					403
+				);
 			}
 
 			return sendSuccessResponse(res, result);
@@ -142,7 +147,11 @@ export class VaultController {
 		}
 
 		if (!isAdmin) {
-			return sendErrorResponse(res, 'Permission denied: Only administrators can process automatic unlocks', 403);
+			return sendErrorResponse(
+				res,
+				'Permission denied: Only administrators can process automatic unlocks',
+				403
+			);
 		}
 
 		try {

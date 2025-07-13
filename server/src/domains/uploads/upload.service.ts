@@ -165,7 +165,10 @@ export class UploadService {
 				// Catch DegenUploadError from storageService
 				throw err;
 			}
-			logger.error(`UploadService: Error creating presigned URL for ${relativePath} via storageService:`, err);
+			logger.error(
+				`UploadService: Error creating presigned URL for ${relativePath} via storageService:`,
+				err
+			);
 			const statusCode =
 				typeof err === 'object' &&
 				err !== null &&
@@ -203,7 +206,9 @@ export class UploadService {
 				relativePath.startsWith('stickers/') || relativePath.startsWith('packs/');
 
 			if (!isValidStickerPath) {
-				logger.error(`UploadService: Invalid sticker path structure. Path ${relativePath} does not match expected sticker patterns.`);
+				logger.error(
+					`UploadService: Invalid sticker path structure. Path ${relativePath} does not match expected sticker patterns.`
+				);
 				throw new DegenUploadError(
 					`Invalid sticker upload path: ${relativePath}. Sticker files must be in stickers/ or packs/ directories.`,
 					400
@@ -247,7 +252,9 @@ export class UploadService {
 				const profileUpdateResult = await profileService.updateMediaUrl(mediaUpdateParams);
 
 				if (!profileUpdateResult.success) {
-					logger.error(`Failed to update profile for user ${userId} after upload confirmation: ${profileUpdateResult.message}`);
+					logger.error(
+						`Failed to update profile for user ${userId} after upload confirmation: ${profileUpdateResult.message}`
+					);
 					// Even if profile update fails, the file is uploaded. Return a partial success with a warning.
 					return {
 						success: false,
@@ -299,7 +306,9 @@ export class UploadService {
 			const deleted = await storageService.deleteFile(bucketName, relativePath);
 
 			if (deleted) {
-				logger.info(`UploadService: Admin ${adminId} successfully deleted file ${bucketName}/${relativePath}`);
+				logger.info(
+					`UploadService: Admin ${adminId} successfully deleted file ${bucketName}/${relativePath}`
+				);
 				return {
 					success: true,
 					message: `File ${relativePath} deleted successfully from ${bucketName}`
@@ -314,7 +323,10 @@ export class UploadService {
 			if (err instanceof DegenUploadError) {
 				throw err;
 			}
-			logger.error(`UploadService: Error deleting file ${bucketName}/${relativePath} by admin ${adminId}:`, err);
+			logger.error(
+				`UploadService: Error deleting file ${bucketName}/${relativePath} by admin ${adminId}:`,
+				err
+			);
 			throw new DegenUploadError(
 				`Failed to delete file ${relativePath}. Storage service error.`,
 				500

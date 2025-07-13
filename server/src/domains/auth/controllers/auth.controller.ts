@@ -7,12 +7,16 @@ import { insertUserSchema } from '@schema';
 import { users } from '@schema';
 import { logger } from '@core/logger';
 import { storage } from '@server/storage'; // Will be refactored in a future step
-import { hashPassword, storeTempDevMetadata, verifyEmailToken } from '@server/domains/auth/services/auth.service';
+import {
+	hashPassword,
+	storeTempDevMetadata,
+	verifyEmailToken
+} from '@server/domains/auth/services/auth.service';
 import { isDevMode } from '@server/utils/environment';
 import { walletService } from '@server/domains/wallet';
 import { walletConfig } from '@shared/wallet.config';
-import { UserTransformer } from "@server/domains/users/transformers/user.transformer";
-import { sendSuccessResponse, sendErrorResponse } from "@core/utils/transformer.helpers";
+import { UserTransformer } from '@server/domains/users/transformers/user.transformer';
+import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
 type User = typeof users.$inferSelect;
 
@@ -55,7 +59,7 @@ export async function register(req: Request, res: Response, next: NextFunction) 
 		if (walletConfig.WALLET_ENABLED) {
 			try {
 				const walletResult = await walletService.initializeWallet(user.id);
-				
+
 				logger.info('AuthController', 'Wallet initialization completed for new user', {
 					userId: user.id,
 					success: walletResult.success,
@@ -66,10 +70,14 @@ export async function register(req: Request, res: Response, next: NextFunction) 
 
 				// Log specific outcomes for monitoring
 				if (!walletResult.dgtWalletCreated) {
-					logger.warn('AuthController', 'DGT wallet creation failed during registration', { userId: user.id });
+					logger.warn('AuthController', 'DGT wallet creation failed during registration', {
+						userId: user.id
+					});
 				}
 				if (!walletResult.welcomeBonusAdded) {
-					logger.warn('AuthController', 'Welcome bonus failed during registration', { userId: user.id });
+					logger.warn('AuthController', 'Welcome bonus failed during registration', {
+						userId: user.id
+					});
 				}
 			} catch (walletError) {
 				// This should never happen due to circuit breaker, but log if it does
@@ -102,10 +110,15 @@ export async function register(req: Request, res: Response, next: NextFunction) 
 
 		// In dev mode, we skip verification
 		if (isDevMode()) {
-			return sendSuccessResponse(res, {
-				message: 'Registration successful in development mode. User is automatically activated.',
-				devMode: true
-			}, '', 201);
+			return sendSuccessResponse(
+				res,
+				{
+					message: 'Registration successful in development mode. User is automatically activated.',
+					devMode: true
+				},
+				'',
+				201
+			);
 		}
 
 		// Generate verification token
@@ -119,9 +132,14 @@ export async function register(req: Request, res: Response, next: NextFunction) 
 			token: verificationToken
 		});
 
-		sendSuccessResponse(res, {
-			message: 'Registration successful. Please check your email to verify your account.'
-		}, '', 201);
+		sendSuccessResponse(
+			res,
+			{
+				message: 'Registration successful. Please check your email to verify your account.'
+			},
+			'',
+			201
+		);
 	} catch (err) {
 		if (err instanceof z.ZodError) {
 			return sendErrorResponse(res, 'Validation error', 400, { errors: err.errors });
@@ -160,17 +178,17 @@ export function login(req: Request, res: Response, next: NextFunction) {
 				try {
 					// Ensure DGT wallet exists (but don't re-initialize if already exists)
 					const dgtWallet = await walletService.getUserBalance(user.id);
-					logger.debug('AuthController', 'DGT wallet verified for user login', { 
-						userId: user.id, 
-						balance: dgtWallet.dgtBalance 
+					logger.debug('AuthController', 'DGT wallet verified for user login', {
+						userId: user.id,
+						balance: dgtWallet.dgtBalance
 					});
 
 					// Ensure CCPayment wallet if needed (non-critical)
 					const ccpaymentId = await walletService.ensureCcPaymentWallet(user.id);
 					if (ccpaymentId) {
-						logger.debug('AuthController', 'CCPayment wallet verified for user login', { 
-							userId: user.id, 
-							ccpaymentId 
+						logger.debug('AuthController', 'CCPayment wallet verified for user login', {
+							userId: user.id,
+							ccpaymentId
 						});
 					}
 				} catch (walletError) {
@@ -232,7 +250,11 @@ export async function verifyEmail(req: Request, res: Response, next: NextFunctio
 		const isValid = await verifyEmailToken(token);
 
 		if (!isValid) {
-			return sendErrorResponse(res, 'Invalid or expired verification token. Please request a new one.', 400);
+			return sendErrorResponse(
+				res,
+				'Invalid or expired verification token. Please request a new one.',
+				400
+			);
 		}
 
 		// Activate the user account

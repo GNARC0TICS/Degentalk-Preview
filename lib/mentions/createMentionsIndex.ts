@@ -2,7 +2,7 @@ import { db } from '@db';
 import { mentionsIndex, users } from '@schema';
 import { mentionSourceTypeEnum } from '@schema';
 import { and, eq, inArray } from 'drizzle-orm';
-import { EntityId } from "@shared/types";
+import { EntityId } from '@shared/types';
 
 export type MentionSourceType = 'post' | 'thread' | 'chat';
 

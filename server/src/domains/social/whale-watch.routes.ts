@@ -2,10 +2,10 @@ import { userService } from '@core/services/user.service';
 import { Router } from 'express';
 import { z } from 'zod';
 import { WhaleWatchService } from './whale-watch.service';
-import { isAuthenticated } from '@server/auth/middleware/auth.middleware';
+import { isAuthenticated } from '@server/domains/auth/middleware/auth.middleware';
 import { logger } from '@core/logger';
 import { UserTransformer } from '@server/domains/users/transformers/user.transformer';
-import { 
+import {
 	toPublicList,
 	sendSuccessResponse,
 	sendErrorResponse,

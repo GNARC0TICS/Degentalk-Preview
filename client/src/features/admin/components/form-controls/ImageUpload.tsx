@@ -88,22 +88,20 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
 	return (
 		<div className={className}>
 			{label && (
-				<label className={`block mb-1 text-sm font-medium text-muted-foreground ${required ? 'after:content-["*"] after:ml-0.5 after:text-red-500' : ''}`}>
+				<label
+					className={`block mb-1 text-sm font-medium text-muted-foreground ${required ? 'after:content-["*"] after:ml-0.5 after:text-red-500' : ''}`}
+				>
 					{label}
 				</label>
 			)}
-			{helperText && (
-				<p className="text-xs text-muted-foreground mb-2">{helperText}</p>
-			)}
+			{helperText && <p className="text-xs text-muted-foreground mb-2">{helperText}</p>}
 			<div
 				{...getRootProps({
-					className: `border-2 border-dashed rounded flex flex-col items-center justify-center text-center transition-colors ${
-						getVariantClasses()
-					} ${
-						disabled 
-							? 'border-gray-300 bg-gray-100 cursor-not-allowed opacity-50' 
-							: isDragActive 
-								? 'border-primary-500 bg-primary-50 cursor-pointer' 
+					className: `border-2 border-dashed rounded flex flex-col items-center justify-center text-center transition-colors ${getVariantClasses()} ${
+						disabled
+							? 'border-gray-300 bg-gray-100 cursor-not-allowed opacity-50'
+							: isDragActive
+								? 'border-primary-500 bg-primary-50 cursor-pointer'
 								: 'border-muted cursor-pointer hover:border-primary-400'
 					}`
 				})}
@@ -115,9 +113,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
 					<p className="text-muted-foreground">{placeholder}</p>
 				)}
 			</div>
-			{errorMessage && (
-				<p className="mt-2 text-xs text-red-600">{errorMessage}</p>
-			)}
+			{errorMessage && <p className="mt-2 text-xs text-red-600">{errorMessage}</p>}
 			{fileRejections.length > 0 && (
 				<p className="mt-2 text-xs text-red-600">
 					File must be an image under {maxSize / 1024 / 1024}MB.

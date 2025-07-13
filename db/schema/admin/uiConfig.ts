@@ -1,5 +1,11 @@
 import {
-	pgTable, text, uuid, integer, timestamp, boolean, jsonb,
+	pgTable,
+	text,
+	uuid,
+	integer,
+	timestamp,
+	boolean,
+	jsonb,
 	index
 } from 'drizzle-orm/pg-core';
 import { users } from '../user/users'; // Added import for users table

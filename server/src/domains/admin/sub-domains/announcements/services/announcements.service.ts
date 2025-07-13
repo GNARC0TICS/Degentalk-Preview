@@ -1,7 +1,7 @@
 import { db } from '@db';
 import { announcements, users } from '@schema';
 import { desc, eq, sql, and } from 'drizzle-orm';
-import type { UserId } from "@shared/types/ids";
+import type { UserId } from '@shared/types/ids';
 
 /**
  * Get all active announcements with filtering

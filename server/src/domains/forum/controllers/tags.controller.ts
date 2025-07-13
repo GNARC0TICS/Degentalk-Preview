@@ -5,16 +5,16 @@ import { taxonomyService } from '@server/domains/forum/services/taxonomy.service
 import { ForumTransformer } from '@server/domains/forum/transformers/forum.transformer';
 
 class TagsController {
-  async getTags(req: Request, res: Response) {
-    try {
-      const tags = await taxonomyService.getTags();
-      const publicTags = tags.map(ForumTransformer.toPublicTag);
-      return sendSuccessResponse(res, publicTags);
-    } catch (error) {
-      logger.error('TagsController', 'Error in getTags', { error });
-      return sendErrorResponse(res, 'Failed to fetch tags', 500);
-    }
-  }
+	async getTags(req: Request, res: Response) {
+		try {
+			const tags = await taxonomyService.getTags();
+			const publicTags = tags.map(ForumTransformer.toPublicTag);
+			return sendSuccessResponse(res, publicTags);
+		} catch (error) {
+			logger.error('TagsController', 'Error in getTags', { error });
+			return sendErrorResponse(res, 'Failed to fetch tags', 500);
+		}
+	}
 }
 
-export const tagsController = new TagsController(); 
+export const tagsController = new TagsController();

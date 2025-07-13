@@ -1,7 +1,7 @@
 import type { Request, Response } from 'express';
 import { userService } from '@core/services/user.service';
 import { referralsService } from './referrals.service';
-import { sendSuccessResponse, sendErrorResponse } from "@core/utils/transformer.helpers";
+import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
 /**
  * Controller for managing referral sources and user referrals in the admin panel
@@ -36,9 +36,9 @@ export class ReferralsController {
 			const sources = await referralsService.getAllReferralSources();
 
 			sendSuccessResponse(res, {
-            				success: true,
-            				data: sources
-            			});
+				success: true,
+				data: sources
+			});
 		} catch (error) {
 			return sendErrorResponse(res, 'Failed to fetch referral sources', 500);
 		}
@@ -52,9 +52,9 @@ export class ReferralsController {
 			const stats = await referralsService.getReferralSourceStats();
 
 			sendSuccessResponse(res, {
-            				success: true,
-            				data: stats
-            			});
+				success: true,
+				data: stats
+			});
 		} catch (error) {
 			return sendErrorResponse(res, 'Failed to fetch referral source statistics', 500);
 		}
@@ -68,9 +68,9 @@ export class ReferralsController {
 			const stats = await referralsService.getUserReferralStats();
 
 			sendSuccessResponse(res, {
-            				success: true,
-            				data: stats
-            			});
+				success: true,
+				data: stats
+			});
 		} catch (error) {
 			return sendErrorResponse(res, 'Failed to fetch user referral statistics', 500);
 		}
@@ -84,9 +84,9 @@ export class ReferralsController {
 			const stats = await referralsService.getReferralCountByUser();
 
 			sendSuccessResponse(res, {
-            				success: true,
-            				data: stats
-            			});
+				success: true,
+				data: stats
+			});
 		} catch (error) {
 			return sendErrorResponse(res, 'Failed to fetch referral count by user', 500);
 		}

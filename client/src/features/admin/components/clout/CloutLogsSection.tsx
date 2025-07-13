@@ -69,7 +69,8 @@ export function CloutLogsSection({ logs, achievements, isLoading }: CloutLogsSec
 				return (
 					log.userId.toLowerCase().includes(searchLower) ||
 					log.reason?.toLowerCase().includes(searchLower) ||
-					(log.achievementId && typeof log.achievementId === 'number' &&
+					(log.achievementId &&
+						typeof log.achievementId === 'number' &&
 						achievementMap[log.achievementId]?.name.toLowerCase().includes(searchLower))
 				);
 			}

@@ -1,6 +1,6 @@
 import type { Request, Response, NextFunction } from 'express';
 import { animationPackService } from './animation-packs.service';
-import { sendSuccessResponse, sendErrorResponse } from "@core/utils/transformer.helpers";
+import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
 export const listPacks = async (_req: Request, res: Response, next: NextFunction) => {
 	try {

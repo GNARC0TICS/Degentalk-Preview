@@ -3,19 +3,19 @@ import { products } from '@schema'; // Adjust path to your schema
 import { eq, desc, and } from 'drizzle-orm';
 import { ShopTransformer } from '@server/domains/shop/transformers/shop.transformer';
 import { logger } from '@core/logger';
-import { sendSuccessResponse, sendErrorResponse } from "@core/utils/transformer.helpers";
+import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
 export const shopAdminController = {
 	// List all products
 	async listProducts(req, res) {
 		// TODO: Add pagination, filtering, sorting
 		const allProducts = await db.select().from(products).orderBy(desc(products.createdAt));
-		
+
 		// Transform products for admin view
-		const transformedProducts = allProducts.map(product => 
+		const transformedProducts = allProducts.map((product) =>
 			ShopTransformer.toAdminShopItem(product)
 		);
-		
+
 		sendSuccessResponse(res, transformedProducts);
 	},
 
@@ -74,18 +74,14 @@ export const shopAdminController = {
 	async getProductById(req, res) {
 		const { productId } = req.params;
 		try {
-			const product = await db
-				.select()
-				.from(products)
-				.where(eq(products.id, productId))
-				.limit(1);
+			const product = await db.select().from(products).where(eq(products.id, productId)).limit(1);
 			if (product.length === 0) {
 				return sendErrorResponse(res, 'Product not found', 404);
 			}
-			
+
 			// Transform product for admin view
 			const transformedProduct = ShopTransformer.toAdminShopItem(product[0]);
-			
+
 			sendSuccessResponse(res, transformedProduct);
 		} catch (error) {
 			logger.error('Error fetching product by ID:', error);
@@ -126,7 +122,7 @@ export const shopAdminController = {
 			}
 			// Transform updated product for admin view
 			const transformedProduct = ShopTransformer.toAdminShopItem(updatedProduct[0]);
-			
+
 			sendSuccessResponse(res, transformedProduct);
 		} catch (error) {
 			logger.error('Error updating product:', error);
@@ -147,7 +143,10 @@ export const shopAdminController = {
 			if (deletedProduct.length === 0) {
 				return sendErrorResponse(res, 'Product not found', 404);
 			}
-			return sendSuccessResponse(res, { message: 'Product archived successfully', product: deletedProduct[0] });
+			return sendSuccessResponse(res, {
+				message: 'Product archived successfully',
+				product: deletedProduct[0]
+			});
 		} catch (error) {
 			logger.error('Error deleting product:', error);
 			return sendErrorResponse(res, 'Error deleting product', 400);

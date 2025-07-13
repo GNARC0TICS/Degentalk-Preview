@@ -7,7 +7,7 @@
 
 import type { Request, Response, NextFunction } from 'express';
 import { logger } from './logger';
-import { getAuthenticatedUser } from "@core/utils/auth.helpers";
+import { getAuthenticatedUser } from '@core/utils/auth.helpers';
 
 // Error severity for monitoring and alerting
 export enum ErrorSeverity {
@@ -263,27 +263,29 @@ export function createErrorContext(req: Request): ErrorContext {
 }
 
 // Enhanced async handler with context
-export const asyncHandler = (fn: (req: Request, res: Response, next: NextFunction) => Promise<any>) => (req: Request, res: Response, next: NextFunction) => {
-	const context = createErrorContext(req);
-	Promise.resolve(fn(req, res, next)).catch((error) => {
-		if (error instanceof AppError) {
-			// Error already has context
-			next(error);
-		} else {
-			// Wrap unknown errors with context
-			next(
-				new AppError(
-					error.message || 'Unknown error',
-					500,
-					ErrorCodes.SERVER_ERROR,
-					ErrorSeverity.HIGH,
-					{ originalError: error.name },
-					context
-				)
-			);
-		}
-	});
-};
+export const asyncHandler =
+	(fn: (req: Request, res: Response, next: NextFunction) => Promise<any>) =>
+	(req: Request, res: Response, next: NextFunction) => {
+		const context = createErrorContext(req);
+		Promise.resolve(fn(req, res, next)).catch((error) => {
+			if (error instanceof AppError) {
+				// Error already has context
+				next(error);
+			} else {
+				// Wrap unknown errors with context
+				next(
+					new AppError(
+						error.message || 'Unknown error',
+						500,
+						ErrorCodes.SERVER_ERROR,
+						ErrorSeverity.HIGH,
+						{ originalError: error.name },
+						context
+					)
+				);
+			}
+		});
+	};
 
 /**
  * Production-ready global error handler with monitoring integration

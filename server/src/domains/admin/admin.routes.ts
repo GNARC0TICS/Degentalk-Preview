@@ -44,7 +44,7 @@ import { backupRestoreRoutes } from './sub-domains/backup-restore/backup-restore
 import { stickerRoutes } from '../../domains/collectibles/stickers/stickers.routes';
 import subscriptionAdminRoutes from './sub-domains/subscriptions/subscription.admin.routes';
 import databaseRoutes from './sub-domains/database/database.routes';
-import { sendSuccessResponse, sendErrorResponse } from "@core/utils/transformer.helpers";
+import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
 // import userAdminRoutes from './users/users.admin.routes'; // DEPRECATED
 // import economyAdminRoutes from './settings/economy.routes'; // Placeholder for future

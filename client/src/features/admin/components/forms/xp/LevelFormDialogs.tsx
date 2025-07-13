@@ -213,7 +213,12 @@ export const LevelFormDialogComponent: React.FC<LevelFormDialogProps> = ({
 								<Label>Rarity</Label>
 								<Select
 									value={formData.rarity || 'common'}
-									onValueChange={(v) => setFormData({ ...formData, rarity: v as 'common' | 'rare' | 'epic' | 'legendary' | 'mythic' })}
+									onValueChange={(v) =>
+										setFormData({
+											...formData,
+											rarity: v as 'common' | 'rare' | 'epic' | 'legendary' | 'mythic'
+										})
+									}
 								>
 									<SelectTrigger>
 										<SelectValue placeholder="Select rarity" />

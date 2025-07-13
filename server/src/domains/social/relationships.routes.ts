@@ -12,11 +12,15 @@ import { users, userRelationships } from '@schema';
 import { eq, and, sql, desc, not, or, count, gt, isNull } from 'drizzle-orm';
 import { isValidId } from '@shared/utils/id';
 
-import { isAuthenticated, isAdminOrModerator, isAdmin } from '@server/auth/middleware/auth.middleware';
+import {
+	isAuthenticated,
+	isAdminOrModerator,
+	isAdmin
+} from '@server/domains/auth/middleware/auth.middleware';
 import { getUserIdFromRequest } from '@server-utils/auth';
 import { logger } from '@core/logger';
 import { UserTransformer } from '@server/domains/users/transformers/user.transformer';
-import { 
+import {
 	toPublicList,
 	sendSuccessResponse,
 	sendErrorResponse,
@@ -127,10 +131,7 @@ router.post('/follow/:userId', isAuthenticated, async (req: Request, res: Respon
 		}
 
 		// Check if user exists
-		const userExists = await db
-			.select()
-			.from(users)
-			.where(eq(users.id, userId));
+		const userExists = await db.select().from(users).where(eq(users.id, userId));
 
 		if (userExists.length === 0) {
 			return sendErrorResponse(res, 'User not found', 404);
@@ -154,7 +155,11 @@ router.post('/follow/:userId', isAuthenticated, async (req: Request, res: Respon
 			.returning();
 
 		res.status(201);
-		return sendSuccessResponse(res, { relationship: newRelationship[0] }, 'Successfully followed user');
+		return sendSuccessResponse(
+			res,
+			{ relationship: newRelationship[0] },
+			'Successfully followed user'
+		);
 	} catch (error) {
 		logger.error('Error following user:', error);
 		return sendErrorResponse(res, 'Error following user', 500);
