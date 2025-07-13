@@ -16,6 +16,7 @@ import type { Request, Response, NextFunction } from 'express';
 import { isValidId } from '@shared/utils/id';
 import { logger } from '@core/logger';
 import { sendErrorResponse } from '@core/utils/transformer.helpers';
+import { securityMonitor } from '@core/security/security-monitor.service';
 
 // ID parameter patterns to validate
 const ID_PARAM_PATTERNS = [
@@ -78,16 +79,9 @@ export function validateRouteIds(req: Request, res: Response, next: NextFunction
 			if (!isValidId(paramValue)) {
 				invalidParams.push(paramName);
 				
-				// Log security event
-				logger.warn({
-					msg: 'Invalid ID in route parameter',
-					paramName,
-					paramValue: paramValue.substring(0, 50), // Truncate for safety
-					route: req.route?.path,
-					method: req.method,
-					ip: req.ip,
-					userAgent: req.get('user-agent')
-				});
+				// Enhanced security logging
+				const resourceType = getResourceType(paramName);
+				securityMonitor.logInvalidIdAttempt(req, paramName, paramValue, resourceType);
 			}
 		}
 	}

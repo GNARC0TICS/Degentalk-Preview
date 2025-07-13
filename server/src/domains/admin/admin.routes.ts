@@ -44,6 +44,7 @@ import { backupRestoreRoutes } from './sub-domains/backup-restore/backup-restore
 import { stickerRoutes } from '../../domains/collectibles/stickers/stickers.routes';
 import subscriptionAdminRoutes from './sub-domains/subscriptions/subscription.admin.routes';
 import databaseRoutes from './sub-domains/database/database.routes';
+import securityMonitorRoutes from './routes/security-monitor.routes';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
 // import userAdminRoutes from './users/users.admin.routes'; // DEPRECATED
@@ -88,6 +89,7 @@ adminRouter.use('/backup-restore', backupRestoreRoutes);
 adminRouter.use('/collectibles', stickerRoutes);
 adminRouter.use('/subscriptions', subscriptionAdminRoutes);
 adminRouter.use('/database', databaseRoutes);
+adminRouter.use('/security', securityMonitorRoutes);
 
 // DEBUG: Middleware to check if /emojis path is reached in adminRouter
 adminRouter.use('/emojis', (req, res, next) => {
