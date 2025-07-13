@@ -12,7 +12,7 @@ import { Router } from 'express';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 import levelingRoutes from './leveling.routes';
 import achievementRoutes from './achievement.routes';
-// import missionRoutes from './mission.routes'; // Feature not yet implemented
+import { missionRoutes } from './routes/mission.routes';
 import analyticsRoutes from './analytics.routes';
 import adminRoutes from './admin.routes';
 
@@ -22,7 +22,7 @@ const router = Router();
 router.use('/levels', levelingRoutes);
 router.use('/progression', levelingRoutes); // Alias for leveling routes
 router.use('/achievements', achievementRoutes);
-// router.use('/missions', missionRoutes);
+router.use('/missions', missionRoutes);
 router.use('/analytics', analyticsRoutes);
 router.use('/admin', adminRoutes);
 
@@ -33,7 +33,7 @@ router.get('/health', (req, res) => {
 		features: {
 			leveling: 'active',
 			achievements: 'active',
-			missions: 'inactive', // Marked as inactive
+			missions: 'active',
 			leaderboards: 'active',
 			analytics: 'active'
 		},

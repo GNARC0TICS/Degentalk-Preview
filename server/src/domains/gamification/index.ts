@@ -6,8 +6,9 @@
  */
 
 // Services
-export { LevelingService, levelingService } from './leveling.service';
-export { AchievementService, achievementService } from './achievement.service';
+export { LevelingService, levelingService } from './services/leveling.service';
+export { AchievementService, achievementService } from './services/achievement.service';
+export { MissionService, missionService } from './services/mission.service';
 
 // Controllers
 export { LevelingController, levelingController } from './leveling.controller';
@@ -16,6 +17,7 @@ export { AchievementController, achievementController } from './achievement.cont
 // Routes
 export { default as levelingRoutes } from './leveling.routes';
 export { default as achievementRoutes } from './achievement.routes';
+export { missionRoutes } from './routes/mission.routes';
 
 // Types
 export type {

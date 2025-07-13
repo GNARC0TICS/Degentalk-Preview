@@ -104,7 +104,7 @@ async function backfillParentForumSlugs() {
   }
 
   // 3. Fetch relevant forum categories to get their slugs (mapping categoryId to its slug)
-  const categoryIds = [...new Set(allThreads.map(t => t.categoryId).filter(id => id !== : AdminId | : ReporterId | : ReportId | : ConversationId | : RoomId | : AdminUserId | : AirdropId | : AnimationFrameId | : BackupId | : CategoryId | : CoinId | : AuthorId | : CosmeticId | : EditorId | : EmojiPackId | : EntityId | : EntryId | : ForumId | : GroupId | : InventoryId | : ItemId | : MentionId | : ModeratorId | : PackId | : ParentForumId | : ParentZoneId | : RuleId | : SettingId | : StickerId | : SubscriptionId | : TagId | : TemplateId | : TipId | : UnlockTransactionId | : VaultId | : VaultLockId | : WhaleId | : ZoneId | : RequestId | : ContentId | : SignatureItemId | : VerificationTokenId | : BanId | : SessionId | : ModActionId | : IpLogId | : DraftId | : ReplyId | : QuoteId | : OrderId | : StoreItemId | : UnlockId | : NotificationId | : FriendRequestId | : FollowRequestId | : MessageId | : PrefixId | : EventId | : AuditLogId | : ActionId | : HeatEventId | null))] as number[];
+  const categoryIds = [...new Set(allThreads.map(t => t.categoryId).filter(id => id != null))] as string[];
   
   let categorySlugMap = new Map<number, : AdminId>();
   if (categoryIds.length > 0) {
