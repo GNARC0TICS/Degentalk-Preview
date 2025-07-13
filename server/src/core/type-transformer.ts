@@ -1,8 +1,19 @@
 /**
  * Type Transformation Layer
  *
- * Safely transforms database types to frontend-safe shared types.
- * Provides boundary between internal database representation and public API.
+ * ⚠️ DEPRECATED - SECURITY VULNERABILITY ⚠️
+ * This module contains critical security vulnerabilities:
+ * - No UUID validation on ID conversions
+ * - Allows any string/number to become a branded ID
+ * - Bypasses all security checks
+ * 
+ * DO NOT USE THIS MODULE
+ * Use @core/helpers/safe-id-converter instead
+ * 
+ * This file is kept temporarily for reference during migration.
+ * It will be deleted once all usages are replaced.
+ * 
+ * @deprecated Use SafeIdConverter from @core/helpers/safe-id-converter
  */
 
 import type {

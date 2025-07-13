@@ -18,7 +18,8 @@ import type {
 import type { UserId } from '@shared/types/ids';
 import { userService } from './services/user.service';
 import { ForbiddenError, NotFoundError, UnauthorizedError, ValidationError } from './errors';
-import { transform } from './type-transformer';
+import { SafeIdConverter } from './helpers/safe-id-converter';
+import { logger } from './logger';
 
 export abstract class BaseController {
 	/**
@@ -90,14 +91,22 @@ export abstract class BaseController {
 	}
 
 	/**
-	 * Extract user ID from request with type safety
+	 * Extract user ID from request with type safety and validation
 	 */
 	protected getUserId(req: any): UserId {
 		const authUser = userService.getUserFromRequest(req);
 		if (!authUser) {
 			throw new UnauthorizedError('User not authenticated');
 		}
-		return transform.toUserId(authUser.id);
+		try {
+			return SafeIdConverter.toUserId(authUser.id);
+		} catch (error) {
+			logger.error('Invalid user ID in authenticated request', { 
+				userId: authUser.id,
+				error 
+			});
+			throw new UnauthorizedError('Invalid user authentication data');
+		}
 	}
 
 	/**

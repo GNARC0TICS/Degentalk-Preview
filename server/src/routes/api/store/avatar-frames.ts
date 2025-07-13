@@ -12,6 +12,7 @@ import type { FrameId } from '@shared/types/ids';
 import { CosmeticsTransformer } from '../../../domains/shop/transformers/cosmetics.transformer';
 import { logger } from '@core/logger';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
+import { validateAndConvertId } from '@core/helpers/validate-controller-ids';
 
 const router = Router();
 
@@ -35,7 +36,12 @@ router.post('/:id/purchase', isAuthenticated, async (req, res) => {
 	const authUser = userService.getUserFromRequest(req);
 	if (!authUser) return sendErrorResponse(res, 'Not authenticated', 401);
 	const userId = String(authUser.id);
-	const frameId = req.params.id as FrameId;
+	
+	// Validate frame ID
+	const frameId = validateAndConvertId(req.params.id, 'Frame');
+	if (!frameId) {
+		return sendErrorResponse(res, 'Invalid frame ID format', 400);
+	}
 
 	try {
 		// Fetch frame product with price

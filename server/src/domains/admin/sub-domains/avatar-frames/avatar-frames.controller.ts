@@ -5,6 +5,7 @@ import { logger } from '@core/logger';
 import { z } from 'zod';
 import type { FrameId } from '@shared/types/ids';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
+import { validateAndConvertId } from '@core/helpers/validate-controller-ids';
 
 const createFrameSchema = z.object({
 	name: z.string().min(1, 'Name is required').max(255, 'Name must be less than 255 characters'),
@@ -31,7 +32,10 @@ class AvatarFrameController {
 
 	async getFrame(req: Request, res: Response) {
 		try {
-			const frameId = req.params.id as FrameId;
+			const frameId = validateAndConvertId(req.params.id, 'Frame');
+			if (!frameId) {
+				return sendErrorResponse(res, 'Invalid frame ID format', 400);
+			}
 
 			const frame = await avatarFrameService.getFrameById(frameId);
 			if (!frame) {
@@ -76,7 +80,10 @@ class AvatarFrameController {
 
 	async updateFrame(req: Request, res: Response) {
 		try {
-			const frameId = req.params.id as FrameId;
+			const frameId = validateAndConvertId(req.params.id, 'Frame');
+			if (!frameId) {
+				return sendErrorResponse(res, 'Invalid frame ID format', 400);
+			}
 
 			const validatedData = updateFrameSchema.parse(req.body);
 
@@ -107,7 +114,10 @@ class AvatarFrameController {
 
 	async deleteFrame(req: Request, res: Response) {
 		try {
-			const frameId = req.params.id as FrameId;
+			const frameId = validateAndConvertId(req.params.id, 'Frame');
+			if (!frameId) {
+				return sendErrorResponse(res, 'Invalid frame ID format', 400);
+			}
 
 			const deleted = await avatarFrameService.deleteFrame(frameId);
 			if (!deleted) {

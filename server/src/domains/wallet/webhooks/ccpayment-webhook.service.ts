@@ -14,6 +14,20 @@ import type { CCPaymentWebhookEvent } from '../providers/ccpayment/ccpayment.ser
 import { dgtService } from '../services/dgtService';
 import { walletConfig } from '@shared/wallet.config';
 import { settingsService } from '@core/services/settings.service';
+import { validateAndConvertId } from '@core/helpers/validate-controller-ids';
+import type { UserId } from '@shared/types/ids';
+
+/**
+ * Extended CCPayment webhook event with all fields
+ * The base interface doesn't include all fields that CCPayment sends
+ */
+interface ExtendedCCPaymentWebhookEvent extends CCPaymentWebhookEvent {
+	eventType: string;
+	uid?: string;
+	actualAmount?: string;
+	coinSymbol?: string;
+	merchantOrderId: string;
+}
 
 /**
  * CCPayment webhook service for processing webhook events
@@ -25,7 +39,7 @@ export class CCPaymentWebhookService {
 	 * @returns Processing result
 	 */
 	async processWebhookEvent(
-		event: CCPaymentWebhookEvent
+		event: ExtendedCCPaymentWebhookEvent
 	): Promise<{ success: boolean; message: string }> {
 		try {
 			logger.info('Processing CCPayment webhook event', {
@@ -77,7 +91,7 @@ export class CCPaymentWebhookService {
 	 * @returns Processing result
 	 */
 	private async handleDepositCompleted(
-		event: CCPaymentWebhookEvent
+		event: ExtendedCCPaymentWebhookEvent
 	): Promise<{ success: boolean; message: string }> {
 		try {
 			const settings = await settingsService.getWalletSettings();
@@ -152,11 +166,24 @@ export class CCPaymentWebhookService {
 	 * @returns Processing result
 	 */
 	private async handleDirectDepositAutoConversion(
-		event: CCPaymentWebhookEvent
+		event: ExtendedCCPaymentWebhookEvent
 	): Promise<{ success: boolean; message: string }> {
 		try {
 			// Find user by CCPayment UID
-			const [user] = await db.select().from(users).where(eq(users.id, event.uid)).limit(1);
+			// Validate the user ID first
+			const userId = validateAndConvertId(event.uid, 'User');
+			if (!userId) {
+				logger.warn('Invalid user ID in webhook event', {
+					ccpaymentUid: event.uid,
+					orderId: event.orderId
+				});
+				return {
+					success: false,
+					message: 'Invalid user ID format in webhook'
+				};
+			}
+			
+			const [user] = await db.select().from(users).where(eq(users.id, userId)).limit(1);
 
 			if (!user) {
 				logger.warn('User not found for direct deposit auto-conversion', {
@@ -234,7 +261,7 @@ export class CCPaymentWebhookService {
 	 * @returns Processing result
 	 */
 	private async handleDepositFailed(
-		event: CCPaymentWebhookEvent
+		event: ExtendedCCPaymentWebhookEvent
 	): Promise<{ success: boolean; message: string }> {
 		try {
 			// Find the DGT purchase order associated with this deposit
@@ -281,7 +308,7 @@ export class CCPaymentWebhookService {
 	 * @returns Processing result
 	 */
 	private async handleWithdrawalCompleted(
-		event: CCPaymentWebhookEvent
+		event: ExtendedCCPaymentWebhookEvent
 	): Promise<{ success: boolean; message: string }> {
 		try {
 			// Find the transaction associated with this withdrawal
@@ -344,7 +371,7 @@ export class CCPaymentWebhookService {
 	 * @returns Processing result
 	 */
 	private async handleWithdrawalFailed(
-		event: CCPaymentWebhookEvent
+		event: ExtendedCCPaymentWebhookEvent
 	): Promise<{ success: boolean; message: string }> {
 		try {
 			// Find the transaction associated with this withdrawal
@@ -407,7 +434,7 @@ export class CCPaymentWebhookService {
 	 * @returns Processing result
 	 */
 	private async handleWalletCreated(
-		event: CCPaymentWebhookEvent
+		event: ExtendedCCPaymentWebhookEvent
 	): Promise<{ success: boolean; message: string }> {
 		try {
 			logger.info('Processing wallet creation success webhook', {
@@ -418,7 +445,20 @@ export class CCPaymentWebhookService {
 
 			// Just log wallet creation success - welcome bonus is handled in auth controller only
 			if (event.uid) {
-				const [user] = await db.select().from(users).where(eq(users.id, event.uid)).limit(1);
+				// Validate the user ID first
+				const userId = validateAndConvertId(event.uid, 'User');
+				if (!userId) {
+					logger.warn('Invalid user ID in wallet creation webhook', {
+						ccpaymentUid: event.uid,
+						orderId: event.orderId
+					});
+					return {
+						success: false,
+						message: 'Invalid user ID format in webhook'
+					};
+				}
+				
+				const [user] = await db.select().from(users).where(eq(users.id, userId)).limit(1);
 
 				if (user) {
 					logger.info('CCPayment wallet creation confirmed for user', {
@@ -447,7 +487,7 @@ export class CCPaymentWebhookService {
 	 * @returns Processing result
 	 */
 	private async handleWalletFailed(
-		event: CCPaymentWebhookEvent
+		event: ExtendedCCPaymentWebhookEvent
 	): Promise<{ success: boolean; message: string }> {
 		try {
 			logger.warn('Processing wallet creation failure webhook', {

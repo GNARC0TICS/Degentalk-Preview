@@ -4,6 +4,7 @@ import { isAuthenticated } from '@server/domains/auth/middleware/auth.middleware
 import { frameEquipService } from '../../../domains/cosmetics/frameEquip.service';
 import { userService } from '@core/services/user.service';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
+import { validateAndConvertId } from '@core/helpers/validate-controller-ids';
 
 const router = Router();
 
@@ -12,7 +13,12 @@ router.post('/:id/equip', isAuthenticated, async (req, res) => {
 	const authUser = userService.getUserFromRequest(req);
 	if (!authUser) return sendErrorResponse(res, 'Not authenticated', 401);
 	const userId = String(authUser.id);
-	const frameId = req.params.id as FrameId;
+	
+	// Validate frame ID
+	const frameId = validateAndConvertId(req.params.id, 'Frame');
+	if (!frameId) {
+		return sendErrorResponse(res, 'Invalid frame ID format', 400);
+	}
 
 	try {
 		await frameEquipService.equipFrame(userId, frameId);

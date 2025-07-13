@@ -1,0 +1,411 @@
+=== .quotfix File Cleanup Report ===
+Generated at: Sun 13 Jul 2025 01:18:34 PDT
+Total files:      284
+
+=== File List ===
+./server/src/app.ts.quotfix
+./server/src/config/forum.config.ts.quotfix
+./server/src/core/audit/audit-logger.ts.quotfix
+./server/src/core/background-processor.ts.quotfix
+./server/src/core/base-controller.ts.quotfix
+./server/src/core/cache.service.ts.quotfix
+./server/src/core/config.service.ts.quotfix
+./server/src/core/config/environment.ts.quotfix
+./server/src/core/database.ts.quotfix
+./server/src/core/db.ts.quotfix
+./server/src/core/errors.ts.quotfix
+./server/src/core/events/achievement-events.service.ts.quotfix
+./server/src/core/logger.ts.quotfix
+./server/src/core/middleware.ts.quotfix
+./server/src/core/middleware/security.middleware.ts.quotfix
+./server/src/core/monitoring/health-check.ts.quotfix
+./server/src/core/monitoring/query-performance.ts.quotfix
+./server/src/core/rate-limiter.ts.quotfix
+./server/src/core/repository/__tests__/user-repository.test.ts.quotfix
+./server/src/core/repository/base-repository.ts.quotfix
+./server/src/core/repository/index.ts.quotfix
+./server/src/core/repository/interfaces.ts.quotfix
+./server/src/core/repository/repositories/transaction-repository.ts.quotfix
+./server/src/core/repository/repositories/user-repository.ts.quotfix
+./server/src/core/repository/repository-factory.ts.quotfix
+./server/src/core/routes/api/index.ts.quotfix
+./server/src/core/routes/api/status.ts.quotfix
+./server/src/core/services/rate-limit.service.ts.quotfix
+./server/src/core/services/user.service.ts.quotfix
+./server/src/core/storage.service.ts.quotfix
+./server/src/core/type-transformer.ts.quotfix
+./server/src/core/utils/auth.helpers.ts.quotfix
+./server/src/core/utils/error-response.util.ts.quotfix
+./server/src/core/utils/index.ts.quotfix
+./server/src/core/utils/transformer.helpers.ts.quotfix
+./server/src/core/wallet-validators.ts.quotfix
+./server/src/cron/mission-reset.ts.quotfix
+./server/src/cron/subscription-management.ts.quotfix
+./server/src/domains/activity/controllers/event-log.controller.ts.quotfix
+./server/src/domains/activity/routes/event-log.routes.ts.quotfix
+./server/src/domains/activity/routes/index.ts.quotfix
+./server/src/domains/activity/services/event-log.service.ts.quotfix
+./server/src/domains/activity/services/event-logger.service.ts.quotfix
+./server/src/domains/advertising/ad-admin.controller.ts.quotfix
+./server/src/domains/advertising/ad-configuration.service.ts.quotfix
+./server/src/domains/advertising/ad-serving.service.ts.quotfix
+./server/src/domains/advertising/ad.controller.ts.quotfix
+./server/src/domains/advertising/ad.routes.ts.quotfix
+./server/src/domains/advertising/campaign-management.service.ts.quotfix
+./server/src/domains/advertising/user-promotion.routes.ts.quotfix
+./server/src/domains/advertising/user-promotion.service.ts.quotfix
+./server/src/domains/analytics/services/platform.service.ts.quotfix
+./server/src/domains/auth/auth.routes.ts.quotfix
+./server/src/domains/auth/controllers/auth.controller.ts.quotfix
+./server/src/domains/auth/index.ts.quotfix
+./server/src/domains/auth/middleware/auth.middleware.ts.quotfix
+./server/src/domains/auth/routes/xAuthRoutes.ts.quotfix
+./server/src/domains/auth/services/auth.service.ts.quotfix
+./server/src/domains/auth/services/xAuthService.ts.quotfix
+./server/src/domains/auth/transformers/auth.transformer.ts.quotfix
+./server/src/domains/auth/validation/auth.validation.ts.quotfix
+./server/src/domains/collectibles/stickers/stickers.controller.ts.quotfix
+./server/src/domains/collectibles/stickers/stickers.routes.ts.quotfix
+./server/src/domains/collectibles/stickers/stickers.service.ts.quotfix
+./server/src/domains/collectibles/stickers/stickers.validators.ts.quotfix
+./server/src/domains/collectibles/transformers/collectibles.transformer.ts.quotfix
+./server/src/domains/core/logger.ts.quotfix
+./server/src/domains/cosmetics/avatarFrameStore.service.ts.quotfix
+./server/src/domains/cosmetics/frameEquip.service.ts.quotfix
+./server/src/domains/dictionary/dictionary.routes.ts.quotfix
+./server/src/domains/dictionary/dictionary.service.ts.quotfix
+./server/src/domains/dictionary/transformers/dictionary.transformer.ts.quotfix
+./server/src/domains/editor/editor.routes.ts.quotfix
+./server/src/domains/engagement/airdrop/airdrop.controller.ts.quotfix
+./server/src/domains/engagement/airdrop/airdrop.routes.ts.quotfix
+./server/src/domains/engagement/airdrop/airdrop.service.ts.quotfix
+./server/src/domains/engagement/engagement.service.ts.quotfix
+./server/src/domains/engagement/rain/rain.controller.ts.quotfix
+./server/src/domains/engagement/rain/rain.routes.ts.quotfix
+./server/src/domains/engagement/rain/rain.service.ts.quotfix
+./server/src/domains/engagement/tip/tip.controller.ts.quotfix
+./server/src/domains/engagement/tip/tip.routes.ts.quotfix
+./server/src/domains/engagement/tip/tip.service.ts.quotfix
+./server/src/domains/engagement/vault/vault.controller.ts.quotfix
+./server/src/domains/engagement/vault/vault.routes.ts.quotfix
+./server/src/domains/engagement/vault/vault.service.ts.quotfix
+./server/src/domains/feature-gates/feature-gates.controller.ts.quotfix
+./server/src/domains/feature-gates/feature-gates.routes.ts.quotfix
+./server/src/domains/feature-gates/feature-gates.service.ts.quotfix
+./server/src/domains/forum/controllers/post.controller.ts.quotfix
+./server/src/domains/forum/controllers/prefixes.controller.ts.quotfix
+./server/src/domains/forum/controllers/structure.controller.ts.quotfix
+./server/src/domains/forum/controllers/tags.controller.ts.quotfix
+./server/src/domains/forum/controllers/thread.controller.ts.quotfix
+./server/src/domains/forum/controllers/user-search.controller.ts.quotfix
+./server/src/domains/forum/forum.controller.ts.quotfix
+./server/src/domains/forum/forum.routes.ts.quotfix
+./server/src/domains/forum/forum.service.test.ts.quotfix
+./server/src/domains/forum/forum.service.ts.quotfix
+./server/src/domains/forum/routes/bookmark.routes.ts.quotfix
+./server/src/domains/forum/routes/category.routes.ts.quotfix
+./server/src/domains/forum/routes/content.routes.ts.quotfix
+./server/src/domains/forum/routes/post.routes.ts.quotfix
+./server/src/domains/forum/routes/prefixes.routes.ts.quotfix
+./server/src/domains/forum/routes/structure.routes.ts.quotfix
+./server/src/domains/forum/routes/tags.routes.ts.quotfix
+./server/src/domains/forum/routes/thread.routes.ts.quotfix
+./server/src/domains/forum/routes/user-search.routes.ts.quotfix
+./server/src/domains/forum/rules/rules.routes.ts.quotfix
+./server/src/domains/forum/services/cache.service.ts.quotfix
+./server/src/domains/forum/services/category.service.ts.quotfix
+./server/src/domains/forum/services/config.service.ts.quotfix
+./server/src/domains/forum/services/permissions.service.ts.quotfix
+./server/src/domains/forum/services/post.service.ts.quotfix
+./server/src/domains/forum/services/structure.service.ts.quotfix
+./server/src/domains/forum/services/taxonomy.service.ts.quotfix
+./server/src/domains/forum/services/thread.service.batch-optimization.ts.quotfix
+./server/src/domains/forum/services/thread.service.ts.quotfix
+./server/src/domains/forum/services/user-search.service.ts.quotfix
+./server/src/domains/forum/sub-domains/reports/reports.controller.ts.quotfix
+./server/src/domains/forum/sub-domains/reports/reports.routes.ts.quotfix
+./server/src/domains/forum/sub-domains/reports/reports.service.ts.quotfix
+./server/src/domains/forum/sub-domains/reports/reports.validators.ts.quotfix
+./server/src/domains/forum/transformers/forum.transformer.ts.quotfix
+./server/src/domains/forum/types/index.ts.quotfix
+./server/src/domains/forum/validation/post.validation.ts.quotfix
+./server/src/domains/forum/validation/thread.validation.ts.quotfix
+./server/src/domains/forum/validation/user-search.validation.ts.quotfix
+./server/src/domains/gamification/achievement.controller.ts.quotfix
+./server/src/domains/gamification/achievement.routes.ts.quotfix
+./server/src/domains/gamification/achievements/achievement-admin.service.ts.quotfix
+./server/src/domains/gamification/achievements/achievement-processor.service.ts.quotfix
+./server/src/domains/gamification/achievements/achievement.controller.ts.quotfix
+./server/src/domains/gamification/achievements/achievement.routes.ts.quotfix
+./server/src/domains/gamification/achievements/evaluators/degen-evaluators.ts.quotfix
+./server/src/domains/gamification/achievements/index.ts.quotfix
+./server/src/domains/gamification/achievements/templates/achievement-templates.ts.quotfix
+./server/src/domains/gamification/admin.controller.ts.quotfix
+./server/src/domains/gamification/admin.routes.ts.quotfix
+./server/src/domains/gamification/analytics.controller.ts.quotfix
+./server/src/domains/gamification/analytics.routes.ts.quotfix
+./server/src/domains/gamification/gamification.routes.ts.quotfix
+./server/src/domains/gamification/index.ts.quotfix
+./server/src/domains/gamification/leveling.controller.ts.quotfix
+./server/src/domains/gamification/leveling.routes.ts.quotfix
+./server/src/domains/gamification/services/achievement.service.ts.quotfix
+./server/src/domains/gamification/services/analytics.service.ts.quotfix
+./server/src/domains/gamification/services/cloutService.ts.quotfix
+./server/src/domains/gamification/services/leveling.service.ts.quotfix
+./server/src/domains/gamification/services/rewardService.ts.quotfix
+./server/src/domains/gamification/transformers/clout.transformer.ts.quotfix
+./server/src/domains/messaging/index.ts.quotfix
+./server/src/domains/messaging/message.routes.ts.quotfix
+./server/src/domains/messaging/message.service.ts.quotfix
+./server/src/domains/messaging/transformers/index.ts.quotfix
+./server/src/domains/messaging/transformers/message.transformer.ts.quotfix
+./server/src/domains/messaging/types/index.ts.quotfix
+./server/src/domains/missions/missions.admin.controller.ts.quotfix
+./server/src/domains/missions/missions.admin.routes.ts.quotfix
+./server/src/domains/missions/missions.controller.ts.quotfix
+./server/src/domains/missions/missions.routes.ts.quotfix
+./server/src/domains/missions/missions.service.ts.quotfix
+./server/src/domains/missions/transformers/missions.transformer.ts.quotfix
+./server/src/domains/notifications/event-notification-listener.ts.quotfix
+./server/src/domains/notifications/notification-generator.service.ts.quotfix
+./server/src/domains/notifications/notification.routes.ts.quotfix
+./server/src/domains/notifications/notification.service.ts.quotfix
+./server/src/domains/notifications/transformers/index.ts.quotfix
+./server/src/domains/notifications/transformers/notification.transformer.ts.quotfix
+./server/src/domains/paths/paths.routes.ts.quotfix
+./server/src/domains/paths/transformers/paths.transformer.ts.quotfix
+./server/src/domains/preferences/preferences.routes.ts.quotfix
+./server/src/domains/preferences/preferences.service.ts.quotfix
+./server/src/domains/preferences/preferences.validators.ts.quotfix
+./server/src/domains/preferences/validation/preferences.validation.ts.quotfix
+./server/src/domains/profile/profile-stats.controller.ts.quotfix
+./server/src/domains/profile/profile-stats.routes.ts.quotfix
+./server/src/domains/profile/profile-stats.service.ts.quotfix
+./server/src/domains/profile/profile.routes.ts.quotfix
+./server/src/domains/profile/profile.service.ts.quotfix
+./server/src/domains/profile/referrals.service.ts.quotfix
+./server/src/domains/profile/signature.routes.ts.quotfix
+./server/src/domains/profile/signature.service.ts.quotfix
+./server/src/domains/profile/social-actions.controller.ts.quotfix
+./server/src/domains/profile/social-actions.routes.ts.quotfix
+./server/src/domains/profile/social-actions.service.ts.quotfix
+./server/src/domains/profile/transformers/index.ts.quotfix
+./server/src/domains/profile/transformers/profile.transformer.ts.quotfix
+./server/src/domains/share/routes/xShareRoutes.ts.quotfix
+./server/src/domains/share/services/xShareService.ts.quotfix
+./server/src/domains/share/transformers/share.transformer.ts.quotfix
+./server/src/domains/shop/cosmetics.routes.ts.quotfix
+./server/src/domains/shop/services/shop.utils.service.ts.quotfix
+./server/src/domains/shop/services/vanity-sink.analyzer.ts.quotfix
+./server/src/domains/shop/shop.routes.ts.quotfix
+./server/src/domains/shop/transformers/cosmetics.transformer.ts.quotfix
+./server/src/domains/shop/transformers/shop.transformer.ts.quotfix
+./server/src/domains/shop/types/index.ts.quotfix
+./server/src/domains/shop/validation/shop.validation.ts.quotfix
+./server/src/domains/shoutbox/services/cache.service.ts.quotfix
+./server/src/domains/shoutbox/services/history.service.ts.quotfix
+./server/src/domains/shoutbox/services/performance.service.ts.quotfix
+./server/src/domains/shoutbox/services/queue.service.ts.quotfix
+./server/src/domains/shoutbox/services/room.service.ts.quotfix
+./server/src/domains/shoutbox/services/shoutbox.service.ts.quotfix
+./server/src/domains/shoutbox/shoutbox.routes.ts.quotfix
+./server/src/domains/shoutbox/transformers/shoutbox.transformer.ts.quotfix
+./server/src/domains/social/follows.routes.ts.quotfix
+./server/src/domains/social/follows.service.ts.quotfix
+./server/src/domains/social/follows.types.ts.quotfix
+./server/src/domains/social/friends.routes.ts.quotfix
+./server/src/domains/social/friends.service.ts.quotfix
+./server/src/domains/social/mentions.routes.ts.quotfix
+./server/src/domains/social/mentions.service.ts.quotfix
+./server/src/domains/social/mentions.types.ts.quotfix
+./server/src/domains/social/relationships.routes.ts.quotfix
+./server/src/domains/social/social.routes.ts.quotfix
+./server/src/domains/social/transformers/index.ts.quotfix
+./server/src/domains/social/transformers/social.transformer.ts.quotfix
+./server/src/domains/social/whale-watch.routes.ts.quotfix
+./server/src/domains/social/whale-watch.service.ts.quotfix
+./server/src/domains/subscriptions/subscription-permissions.service.ts.quotfix
+./server/src/domains/subscriptions/subscription.controller.ts.quotfix
+./server/src/domains/subscriptions/subscription.routes.ts.quotfix
+./server/src/domains/subscriptions/subscription.service.ts.quotfix
+./server/src/domains/subscriptions/subscription.validators.ts.quotfix
+./server/src/domains/subscriptions/transformers/subscription.transformer.ts.quotfix
+./server/src/domains/treasury/transformers/treasury.transformer.ts.quotfix
+./server/src/domains/treasury/treasury.routes.ts.quotfix
+./server/src/domains/uploads/upload.controller.ts.quotfix
+./server/src/domains/uploads/upload.routes.ts.quotfix
+./server/src/domains/uploads/upload.service.ts.quotfix
+./server/src/domains/uploads/upload.transformer.ts.quotfix
+./server/src/domains/user/user-preferences.routes.ts.quotfix
+./server/src/domains/user/user-preferences.service.ts.quotfix
+./server/src/domains/users/middleware/privacy.middleware.ts.quotfix
+./server/src/domains/users/transformers/user.transformer.ts.quotfix
+./server/src/domains/users/types/index.ts.quotfix
+./server/src/domains/wallet/__tests__/ccpayment.adapter.test.ts.quotfix
+./server/src/domains/wallet/adapters/cache.adapter.ts.quotfix
+./server/src/domains/wallet/adapters/ccpayment.adapter.ts.quotfix
+./server/src/domains/wallet/admin/controllers/wallet.controller.ts.quotfix
+./server/src/domains/wallet/admin/services/wallet.service.ts.quotfix
+./server/src/domains/wallet/admin/validators/wallet.validators.ts.quotfix
+./server/src/domains/wallet/admin/wallet.routes.ts.quotfix
+./server/src/domains/wallet/controllers/wallet.controller.ts.quotfix
+./server/src/domains/wallet/index.ts.quotfix
+./server/src/domains/wallet/providers/ccpayment/ccpayment-api.service.ts.quotfix
+./server/src/domains/wallet/providers/ccpayment/ccpayment-balance.service.ts.quotfix
+./server/src/domains/wallet/providers/ccpayment/ccpayment-deposit.service.ts.quotfix
+./server/src/domains/wallet/providers/ccpayment/ccpayment-token.service.ts.quotfix
+./server/src/domains/wallet/providers/ccpayment/ccpayment.service.ts.quotfix
+./server/src/domains/wallet/routes/wallet.routes.ts.quotfix
+./server/src/domains/wallet/services/wallet.service.ts.quotfix
+./server/src/domains/wallet/transformers/wallet.transformer.ts.quotfix
+./server/src/domains/wallet/validation/wallet.validation.ts.quotfix
+./server/src/domains/xp/events/xp.events.ts.quotfix
+./server/src/domains/xp/xp-actions-schema.ts.quotfix
+./server/src/domains/xp/xp-actions.controller.ts.quotfix
+./server/src/domains/xp/xp-actions.ts.quotfix
+./server/src/domains/xp/xp.admin.routes.ts.quotfix
+./server/src/domains/xp/xp.controller.ts.quotfix
+./server/src/domains/xp/xp.events.ts.quotfix
+./server/src/domains/xp/xp.routes.ts.quotfix
+./server/src/domains/xp/xp.service.ts.quotfix
+./server/src/lib/db.ts.quotfix
+./server/src/middleware/auth.ts.quotfix
+./server/src/middleware/authenticate.ts.quotfix
+./server/src/middleware/dev-security.middleware.ts.quotfix
+./server/src/middleware/mission-progress.ts.quotfix
+./server/src/middleware/subscription-permissions.ts.quotfix
+./server/src/middleware/trace.middleware.ts.quotfix
+./server/src/middleware/transform-response.ts.quotfix
+./server/src/middleware/validate-request.ts.quotfix
+./server/src/middleware/validate.ts.quotfix
+./server/src/routes/api/index.ts.quotfix
+./server/src/routes/api/store/avatar-frames.ts.quotfix
+./server/src/routes/api/ui.routes.ts.quotfix
+./server/src/routes/api/user/frames.ts.quotfix
+./server/src/routes/dev.routes.ts.quotfix
+./server/src/utils/auth.ts.quotfix
+./server/src/utils/db-utils.ts.quotfix
+./server/src/utils/economy-loader.ts.quotfix
+./server/src/utils/environment.ts.quotfix
+
+=== Files by Directory ===
+  13 ./server/src/core
+  12 ./server/src/domains/social
+  11 ./server/src/domains/profile
+  10 ./server/src/domains/gamification
+  10 ./server/src/domains/forum/services
+   9 ./server/src/middleware
+   9 ./server/src/domains/forum/routes
+   8 ./server/src/domains/xp
+   8 ./server/src/domains/advertising
+   6 ./server/src/domains/shoutbox/services
+   6 ./server/src/domains/forum/controllers
+   5 ./server/src/domains/wallet/providers/ccpayment
+   5 ./server/src/domains/subscriptions
+   5 ./server/src/domains/missions
+   5 ./server/src/domains/gamification/services
+   5 ./server/src/domains/gamification/achievements
+   4 ./server/src/utils
+   4 ./server/src/domains/uploads
+   4 ./server/src/domains/notifications
+   4 ./server/src/domains/forum/sub-domains/reports
+   4 ./server/src/domains/forum
+   4 ./server/src/domains/collectibles/stickers
+   4 ./server/src/core/utils
+   4 ./server/src/core/repository
+   3 ./server/src/domains/preferences
+   3 ./server/src/domains/messaging
+   3 ./server/src/domains/forum/validation
+   3 ./server/src/domains/feature-gates
+   3 ./server/src/domains/engagement/vault
+   3 ./server/src/domains/engagement/tip
+   3 ./server/src/domains/engagement/rain
+   3 ./server/src/domains/engagement/airdrop
+   2 ./server/src/routes/api
+   2 ./server/src/domains/wallet/adapters
+   2 ./server/src/domains/user
+   2 ./server/src/domains/social/transformers
+   2 ./server/src/domains/shop/transformers
+   2 ./server/src/domains/shop/services
+   2 ./server/src/domains/shop
+   2 ./server/src/domains/profile/transformers
+   2 ./server/src/domains/notifications/transformers
+   2 ./server/src/domains/messaging/transformers
+   2 ./server/src/domains/dictionary
+   2 ./server/src/domains/cosmetics
+   2 ./server/src/domains/auth/services
+   2 ./server/src/domains/auth
+   2 ./server/src/domains/activity/services
+   2 ./server/src/domains/activity/routes
+   2 ./server/src/cron
+   2 ./server/src/core/services
+   2 ./server/src/core/routes/api
+   2 ./server/src/core/repository/repositories
+   2 ./server/src/core/monitoring
+   1 ./server/src/routes/api/user
+   1 ./server/src/routes/api/store
+   1 ./server/src/routes
+   1 ./server/src/lib
+   1 ./server/src/domains/xp/events
+   1 ./server/src/domains/wallet/validation
+   1 ./server/src/domains/wallet/transformers
+   1 ./server/src/domains/wallet/services
+   1 ./server/src/domains/wallet/routes
+   1 ./server/src/domains/wallet/controllers
+   1 ./server/src/domains/wallet/admin/validators
+   1 ./server/src/domains/wallet/admin/services
+   1 ./server/src/domains/wallet/admin/controllers
+   1 ./server/src/domains/wallet/admin
+   1 ./server/src/domains/wallet/__tests__
+   1 ./server/src/domains/wallet
+   1 ./server/src/domains/users/types
+   1 ./server/src/domains/users/transformers
+   1 ./server/src/domains/users/middleware
+   1 ./server/src/domains/treasury/transformers
+   1 ./server/src/domains/treasury
+   1 ./server/src/domains/subscriptions/transformers
+   1 ./server/src/domains/shoutbox/transformers
+   1 ./server/src/domains/shoutbox
+   1 ./server/src/domains/shop/validation
+   1 ./server/src/domains/shop/types
+   1 ./server/src/domains/share/transformers
+   1 ./server/src/domains/share/services
+   1 ./server/src/domains/share/routes
+   1 ./server/src/domains/preferences/validation
+   1 ./server/src/domains/paths/transformers
+   1 ./server/src/domains/paths
+   1 ./server/src/domains/missions/transformers
+   1 ./server/src/domains/messaging/types
+   1 ./server/src/domains/gamification/transformers
+   1 ./server/src/domains/gamification/achievements/templates
+   1 ./server/src/domains/gamification/achievements/evaluators
+   1 ./server/src/domains/forum/types
+   1 ./server/src/domains/forum/transformers
+   1 ./server/src/domains/forum/rules
+   1 ./server/src/domains/engagement
+   1 ./server/src/domains/editor
+   1 ./server/src/domains/dictionary/transformers
+   1 ./server/src/domains/core
+   1 ./server/src/domains/collectibles/transformers
+   1 ./server/src/domains/auth/validation
+   1 ./server/src/domains/auth/transformers
+   1 ./server/src/domains/auth/routes
+   1 ./server/src/domains/auth/middleware
+   1 ./server/src/domains/auth/controllers
+   1 ./server/src/domains/analytics/services
+   1 ./server/src/domains/activity/controllers
+   1 ./server/src/core/repository/__tests__
+   1 ./server/src/core/middleware
+   1 ./server/src/core/events
+   1 ./server/src/core/config
+   1 ./server/src/core/audit
+   1 ./server/src/config
+   1 ./server/src
+
+=== Security Scan ===
+Files containing potential secrets:
+None found
+
+=== TypeTransformer Usage ===
+Files using deprecated TypeTransformer:
+None found

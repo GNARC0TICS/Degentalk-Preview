@@ -9,6 +9,7 @@ import { eq, desc } from 'drizzle-orm';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 import { z } from 'zod';
 import type { UserId } from '@shared/types/ids';
+import { toId } from '@shared/utils/id';
 
 // Zod schemas for validation
 const CreateLevelSchema = z.object({
@@ -119,7 +120,9 @@ export const adjustUserXp = async (req: Request, res: Response) => {
 			reason
 		});
 
-		const result = await xpService.updateUserXp(userId as UserId, Number(amount), adjustmentType, {
+		// userId is already validated as UUID by Zod schema
+		const validUserId = toId<'User'>(userId);
+		const result = await xpService.updateUserXp(validUserId, Number(amount), adjustmentType, {
 			reason: reason || 'Admin adjustment',
 			adminId: adminUser.id,
 			logAdjustment: true

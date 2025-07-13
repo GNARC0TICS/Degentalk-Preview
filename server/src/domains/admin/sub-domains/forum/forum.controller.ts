@@ -5,6 +5,7 @@ import { adminForumService } from './forum.service';
 import { AdminError, AdminErrorCodes } from '../../admin.errors';
 import { getUserId } from '../../admin.middleware';
 import { adminController } from '../../admin.controller';
+import { validateAndConvertId } from '@core/helpers/validate-controller-ids';
 import {
 	CategorySchema,
 	PrefixSchema,
@@ -40,7 +41,10 @@ export class AdminForumController {
 
 	async getCategoryById(req: Request, res: Response) {
 		try {
-			const categoryId = req.params.id as CategoryId;
+			const categoryId = validateAndConvertId(req.params.id, 'Category');
+			if (!categoryId) {
+				return sendErrorResponse(res, 'Invalid category ID format', 400);
+			}
 
 			const category = await adminForumService.getCategoryById(categoryId);
 			sendSuccessResponse(res, ForumTransformer.toModerationForumStructure(category));
@@ -74,7 +78,10 @@ export class AdminForumController {
 
 	async updateCategory(req: Request, res: Response) {
 		try {
-			const categoryId = req.params.id as CategoryId;
+			const categoryId = validateAndConvertId(req.params.id, 'Category');
+			if (!categoryId) {
+				return sendErrorResponse(res, 'Invalid category ID format', 400);
+			}
 
 			const data = validateRequestBody(req, res, CategorySchema);
 			if (!data) return;
@@ -96,7 +103,10 @@ export class AdminForumController {
 
 	async deleteCategory(req: Request, res: Response) {
 		try {
-			const categoryId = req.params.id as CategoryId;
+			const categoryId = validateAndConvertId(req.params.id, 'Category');
+			if (!categoryId) {
+				return sendErrorResponse(res, 'Invalid category ID format', 400);
+			}
 
 			const result = await adminForumService.deleteCategory(categoryId);
 			await adminController.logAction(
@@ -176,7 +186,10 @@ export class AdminForumController {
 
 	async updateTag(req: Request, res: Response) {
 		try {
-			const tagId = req.params.id as TagId;
+			const tagId = validateAndConvertId(req.params.id, 'Tag');
+			if (!tagId) {
+				return sendErrorResponse(res, 'Invalid tag ID format', 400);
+			}
 
 			const dataTagU = validateRequestBody(req, res, TagSchema);
 			if (!dataTagU) return;
@@ -192,7 +205,10 @@ export class AdminForumController {
 
 	async deleteTag(req: Request, res: Response) {
 		try {
-			const tagId = req.params.id as TagId;
+			const tagId = validateAndConvertId(req.params.id, 'Tag');
+			if (!tagId) {
+				return sendErrorResponse(res, 'Invalid tag ID format', 400);
+			}
 
 			const result = await adminForumService.deleteTag(tagId);
 			await adminController.logAction(req, 'DELETE_TAG', 'tag', tagId.toString(), {});
@@ -206,7 +222,10 @@ export class AdminForumController {
 
 	async moderateThread(req: Request, res: Response) {
 		try {
-			const threadId = req.params.id as ThreadId;
+			const threadId = validateAndConvertId(req.params.id, 'Thread');
+			if (!threadId) {
+				return sendErrorResponse(res, 'Invalid thread ID format', 400);
+			}
 
 			const dataMod = validateRequestBody(req, res, ModerateThreadSchema);
 			if (!dataMod) return;
@@ -253,7 +272,10 @@ export class AdminForumController {
 
 	async getEntityById(req: Request, res: Response) {
 		try {
-			const entityId = req.params.id as EntityId;
+			const entityId = validateAndConvertId(req.params.id, 'Entity');
+			if (!entityId) {
+				return sendErrorResponse(res, 'Invalid entity ID format', 400);
+			}
 
 			const entity = await adminForumService.getEntityById(entityId);
 			if (!entity) {
@@ -289,7 +311,10 @@ export class AdminForumController {
 
 	async updateEntity(req: Request, res: Response) {
 		try {
-			const entityId = req.params.id as EntityId;
+			const entityId = validateAndConvertId(req.params.id, 'Entity');
+			if (!entityId) {
+				return sendErrorResponse(res, 'Invalid entity ID format', 400);
+			}
 
 			const dataEntU = validateRequestBody(req, res, updateEntitySchema);
 			if (!dataEntU) return;
@@ -314,7 +339,10 @@ export class AdminForumController {
 
 	async deleteEntity(req: Request, res: Response) {
 		try {
-			const entityId = req.params.id as EntityId;
+			const entityId = validateAndConvertId(req.params.id, 'Entity');
+			if (!entityId) {
+				return sendErrorResponse(res, 'Invalid entity ID format', 400);
+			}
 
 			const result = await adminForumService.deleteEntity(entityId);
 			if (!result) {

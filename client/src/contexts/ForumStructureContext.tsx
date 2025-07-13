@@ -345,7 +345,7 @@ function fallbackStructure(staticZones: Zone[]) {
 
 	staticZones.forEach((z) => {
 		const zoneIdNum = FALLBACK_ZONE_ID();
-		const zoneId = String(zoneIdNum);
+		const zoneId = toId<'ZoneId'>(`550e8400-e29b-41d4-a716-${String(zoneIdNum).padStart(12, '0')}`);
 		const mz: MergedZone = {
 			id: zoneId,
 			slug: z.slug,

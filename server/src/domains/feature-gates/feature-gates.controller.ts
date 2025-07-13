@@ -2,7 +2,7 @@ import { userService } from '@core/services/user.service';
 import type { Request, Response, NextFunction } from 'express';
 import { logger, LogLevel } from '@core/logger';
 import { featureGatesService } from './feature-gates.service';
-import { isValidId } from '@shared/utils/id';
+import { isValidId, toId } from '@shared/utils/id';
 import type { UserId } from '@shared/types/ids';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
@@ -101,7 +101,8 @@ export const checkFeatureAccessForUser = async (
 			return sendErrorResponse(res, 'User ID and Feature ID are required and must be valid', 400);
 		}
 
-		const access = await featureGatesService.checkFeatureAccess(userId as UserId, featureId);
+		const validUserId = toId<'User'>(userId);
+		const access = await featureGatesService.checkFeatureAccess(validUserId, featureId);
 		sendSuccessResponse(res, access);
 	} catch (error) {
 		logger.error('Error checking feature access for user:', error);
@@ -124,7 +125,8 @@ export const getAllFeatureAccessForUser = async (
 			return sendErrorResponse(res, 'User ID is required and must be valid', 400);
 		}
 
-		const access = await featureGatesService.checkAllFeatureAccess(userId as UserId);
+		const validUserId = toId<'User'>(userId);
+		const access = await featureGatesService.checkAllFeatureAccess(validUserId);
 		sendSuccessResponse(res, access);
 	} catch (error) {
 		logger.error('Error getting all feature access for user:', error);

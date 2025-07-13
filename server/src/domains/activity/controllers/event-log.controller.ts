@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { eventTypeEnum } from '@schema/system/event_logs';
 import { logger } from '@core/logger';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
+import { validateAndConvertId } from '@core/helpers/validate-controller-ids';
 
 /**
  * Controller for event log endpoints
@@ -76,7 +77,11 @@ export class EventLogController {
 
 			// If userId is provided in params, use that instead of query
 			if (req.params.userId) {
-				validatedFilters.userId = req.params.userId;
+				const userId = validateAndConvertId(req.params.userId, 'User');
+				if (!userId) {
+					return sendErrorResponse(res, 'Invalid user ID format', 400);
+				}
+				validatedFilters.userId = userId;
 			}
 
 			const result = await eventLogService.getAllEventLogs(validatedFilters);
@@ -100,10 +105,9 @@ export class EventLogController {
 	 */
 	async getUserEventLogs(req: Request, res: Response) {
 		try {
-			const userId = req.params.userId;
-
+			const userId = validateAndConvertId(req.params.userId, 'User');
 			if (!userId) {
-				return sendErrorResponse(res, 'User ID is required', 400);
+				return sendErrorResponse(res, 'Invalid user ID format', 400);
 			}
 
 			const schema = z.object({
@@ -156,10 +160,9 @@ export class EventLogController {
 	 */
 	async getEventLogById(req: Request, res: Response) {
 		try {
-			const id = req.params.id;
-
+			const id = validateAndConvertId(req.params.id, 'LogEntry');
 			if (!id) {
-				return sendErrorResponse(res, 'Event log ID is required', 400);
+				return sendErrorResponse(res, 'Invalid event log ID format', 400);
 			}
 
 			const result = await eventLogService.getEventLogById(id);
@@ -187,10 +190,9 @@ export class EventLogController {
 	 */
 	async deleteEventLog(req: Request, res: Response) {
 		try {
-			const id = req.params.id;
-
+			const id = validateAndConvertId(req.params.id, 'LogEntry');
 			if (!id) {
-				return sendErrorResponse(res, 'Event log ID is required', 400);
+				return sendErrorResponse(res, 'Invalid event log ID format', 400);
 			}
 
 			const result = await eventLogService.deleteEventLog(id);

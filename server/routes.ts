@@ -56,6 +56,7 @@ import {
 	developmentSecurityWarning,
 	apiResponseSecurity
 } from './src/core/middleware/security.middleware';
+import { validateRouteIds, logRouteIds } from './src/middleware/validate-route-ids.middleware';
 import { rateLimiters } from './src/core/services/rate-limit.service';
 import healthCheckRouter, { requestMetricsMiddleware } from './src/core/monitoring/health-check';
 import { auditMiddleware } from './src/core/audit/audit-logger';
@@ -78,6 +79,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
 	app.use(developmentSecurityWarning);
 	app.use(requestMetricsMiddleware);
 	app.use(auditMiddleware);
+	
+	// ID validation middleware - validates all route parameters that look like IDs
+	if (process.env.NODE_ENV === 'development') {
+		app.use(logRouteIds); // Log IDs in development for debugging
+	}
+	app.use(validateRouteIds); // Validate all ID parameters
 
 	app.get('/', async (req: Request, res: Response) => {
 		sendSuccessResponse(res, { message: 'Backend working!!!' });

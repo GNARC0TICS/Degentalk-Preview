@@ -8,6 +8,7 @@
 import type { AdminId, UserId, DgtAmount } from '@shared/types/ids';
 import { createHash } from 'crypto';
 import { logger } from '@core/logger';
+import { toId } from '@shared/utils/id';
 
 // Admin Dashboard Interfaces
 export interface AdminDashboardStats {
@@ -260,7 +261,7 @@ export class AdminTransformer {
 		const canViewSensitiveData = this.canViewSensitiveUserData(requestingAdmin);
 
 		return {
-			id: rawUser.id as UserId,
+			id: toId<'User'>(rawUser.id),
 			username: rawUser.username,
 			email: canViewSensitiveData ? rawUser.email : undefined,
 			role: rawUser.role,
