@@ -1,0 +1,115 @@
+export declare const mentionsIndex: import("drizzle-orm/pg-core").PgTableWithColumns<{
+    name: "mentions_index";
+    schema: undefined;
+    columns: {
+        id: import("drizzle-orm/pg-core").PgColumn<{
+            name: "id";
+            tableName: "mentions_index";
+            dataType: "string";
+            columnType: "PgUUID";
+            data: string;
+            driverParam: string;
+            notNull: true;
+            hasDefault: true;
+            isPrimaryKey: true;
+            isAutoincrement: false;
+            hasRuntimeDefault: false;
+            enumValues: undefined;
+            baseColumn: never;
+            identity: undefined;
+            generated: undefined;
+        }, {}, {}>;
+        sourceType: import("drizzle-orm/pg-core").PgColumn<{
+            name: any;
+            tableName: "mentions_index";
+            dataType: any;
+            columnType: any;
+            data: any;
+            driverParam: any;
+            notNull: false;
+            hasDefault: false;
+            isPrimaryKey: false;
+            isAutoincrement: false;
+            hasRuntimeDefault: false;
+            enumValues: any;
+            baseColumn: never;
+            identity: undefined;
+            generated: undefined;
+        }, {}, {
+            [x: string]: any;
+            [x: number]: any;
+            [x: symbol]: any;
+        }>;
+        sourceId: import("drizzle-orm/pg-core").PgColumn<{
+            name: "source_id";
+            tableName: "mentions_index";
+            dataType: "number";
+            columnType: "PgInteger";
+            data: number;
+            driverParam: string | number;
+            notNull: true;
+            hasDefault: false;
+            isPrimaryKey: false;
+            isAutoincrement: false;
+            hasRuntimeDefault: false;
+            enumValues: undefined;
+            baseColumn: never;
+            identity: undefined;
+            generated: undefined;
+        }, {}, {}>;
+        mentioningUserId: import("drizzle-orm/pg-core").PgColumn<{
+            name: "mentioning_user_id";
+            tableName: "mentions_index";
+            dataType: "string";
+            columnType: "PgUUID";
+            data: string;
+            driverParam: string;
+            notNull: true;
+            hasDefault: false;
+            isPrimaryKey: false;
+            isAutoincrement: false;
+            hasRuntimeDefault: false;
+            enumValues: undefined;
+            baseColumn: never;
+            identity: undefined;
+            generated: undefined;
+        }, {}, {}>;
+        mentionedUserId: import("drizzle-orm/pg-core").PgColumn<{
+            name: "mentioned_user_id";
+            tableName: "mentions_index";
+            dataType: "string";
+            columnType: "PgUUID";
+            data: string;
+            driverParam: string;
+            notNull: true;
+            hasDefault: false;
+            isPrimaryKey: false;
+            isAutoincrement: false;
+            hasRuntimeDefault: false;
+            enumValues: undefined;
+            baseColumn: never;
+            identity: undefined;
+            generated: undefined;
+        }, {}, {}>;
+        createdAt: import("drizzle-orm/pg-core").PgColumn<{
+            name: "created_at";
+            tableName: "mentions_index";
+            dataType: "date";
+            columnType: "PgTimestamp";
+            data: Date;
+            driverParam: string;
+            notNull: true;
+            hasDefault: true;
+            isPrimaryKey: false;
+            isAutoincrement: false;
+            hasRuntimeDefault: false;
+            enumValues: undefined;
+            baseColumn: never;
+            identity: undefined;
+            generated: undefined;
+        }, {}, {}>;
+    };
+    dialect: "pg";
+}>;
+export type MentionIndex = typeof mentionsIndex.$inferSelect;
+//# sourceMappingURL=mentionsIndex.d.ts.map

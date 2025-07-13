@@ -1,0 +1,147 @@
+import { z } from 'zod';
+export declare const directMessages: import("drizzle-orm/pg-core").PgTableWithColumns<{
+    name: "direct_messages";
+    schema: undefined;
+    columns: {
+        id: import("drizzle-orm/pg-core").PgColumn<{
+            name: "id";
+            tableName: "direct_messages";
+            dataType: "string";
+            columnType: "PgUUID";
+            data: string;
+            driverParam: string;
+            notNull: true;
+            hasDefault: true;
+            isPrimaryKey: true;
+            isAutoincrement: false;
+            hasRuntimeDefault: false;
+            enumValues: undefined;
+            baseColumn: never;
+            identity: undefined;
+            generated: undefined;
+        }, {}, {}>;
+        senderId: import("drizzle-orm/pg-core").PgColumn<{
+            name: "sender_id";
+            tableName: "direct_messages";
+            dataType: "string";
+            columnType: "PgUUID";
+            data: string;
+            driverParam: string;
+            notNull: true;
+            hasDefault: false;
+            isPrimaryKey: false;
+            isAutoincrement: false;
+            hasRuntimeDefault: false;
+            enumValues: undefined;
+            baseColumn: never;
+            identity: undefined;
+            generated: undefined;
+        }, {}, {}>;
+        recipientId: import("drizzle-orm/pg-core").PgColumn<{
+            name: "recipient_id";
+            tableName: "direct_messages";
+            dataType: "string";
+            columnType: "PgUUID";
+            data: string;
+            driverParam: string;
+            notNull: true;
+            hasDefault: false;
+            isPrimaryKey: false;
+            isAutoincrement: false;
+            hasRuntimeDefault: false;
+            enumValues: undefined;
+            baseColumn: never;
+            identity: undefined;
+            generated: undefined;
+        }, {}, {}>;
+        content: import("drizzle-orm/pg-core").PgColumn<{
+            name: "content";
+            tableName: "direct_messages";
+            dataType: "string";
+            columnType: "PgText";
+            data: string;
+            driverParam: string;
+            notNull: true;
+            hasDefault: false;
+            isPrimaryKey: false;
+            isAutoincrement: false;
+            hasRuntimeDefault: false;
+            enumValues: [string, ...string[]];
+            baseColumn: never;
+            identity: undefined;
+            generated: undefined;
+        }, {}, {}>;
+        timestamp: import("drizzle-orm/pg-core").PgColumn<{
+            name: "timestamp";
+            tableName: "direct_messages";
+            dataType: "date";
+            columnType: "PgTimestamp";
+            data: Date;
+            driverParam: string;
+            notNull: true;
+            hasDefault: true;
+            isPrimaryKey: false;
+            isAutoincrement: false;
+            hasRuntimeDefault: false;
+            enumValues: undefined;
+            baseColumn: never;
+            identity: undefined;
+            generated: undefined;
+        }, {}, {}>;
+        isRead: import("drizzle-orm/pg-core").PgColumn<{
+            name: "is_read";
+            tableName: "direct_messages";
+            dataType: "boolean";
+            columnType: "PgBoolean";
+            data: boolean;
+            driverParam: boolean;
+            notNull: true;
+            hasDefault: true;
+            isPrimaryKey: false;
+            isAutoincrement: false;
+            hasRuntimeDefault: false;
+            enumValues: undefined;
+            baseColumn: never;
+            identity: undefined;
+            generated: undefined;
+        }, {}, {}>;
+        isDeleted: import("drizzle-orm/pg-core").PgColumn<{
+            name: "is_deleted";
+            tableName: "direct_messages";
+            dataType: "boolean";
+            columnType: "PgBoolean";
+            data: boolean;
+            driverParam: boolean;
+            notNull: true;
+            hasDefault: true;
+            isPrimaryKey: false;
+            isAutoincrement: false;
+            hasRuntimeDefault: false;
+            enumValues: undefined;
+            baseColumn: never;
+            identity: undefined;
+            generated: undefined;
+        }, {}, {}>;
+    };
+    dialect: "pg";
+}>;
+export declare const insertDirectMessageSchema: z.ZodObject<Omit<{
+    id: z.ZodOptional<z.ZodString>;
+    senderId: z.ZodString;
+    recipientId: z.ZodString;
+    content: z.ZodString;
+    timestamp: z.ZodOptional<z.ZodDate>;
+    isRead: z.ZodOptional<z.ZodBoolean>;
+    isDeleted: z.ZodOptional<z.ZodBoolean>;
+}, "id" | "isDeleted" | "timestamp" | "isRead">, "strip", z.ZodTypeAny, {
+    content: string;
+    senderId: string;
+    recipientId: string;
+}, {
+    content: string;
+    senderId: string;
+    recipientId: string;
+}>;
+export type DirectMessage = typeof directMessages.$inferSelect;
+export type InsertDirectMessage = z.infer<typeof insertDirectMessageSchema>;
+//# sourceMappingURL=directMessages.d.ts.map
