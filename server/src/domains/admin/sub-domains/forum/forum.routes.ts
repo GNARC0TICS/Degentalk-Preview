@@ -89,7 +89,7 @@ router.delete(
 router.post(
 	'/prefixes/reorder',
 	asyncHandler(async (req, res) => {
-		const { order } = req.body as { order: number[] };
+		const { order } = req.body as { order: PrefixId[] };
 		if (!Array.isArray(order)) return sendErrorResponse(res, 'order must be array', 400);
 		const result = await forumPrefixService.reorderPrefixes(order);
 		sendSuccessResponse(res, result);

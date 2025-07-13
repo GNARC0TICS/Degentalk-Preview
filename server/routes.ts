@@ -5,7 +5,9 @@
 import express, { type Express, type Request, type Response } from 'express';
 import { createServer, type Server } from 'http';
 import { WebSocketServer } from 'ws';
-import { storage } from './storage';
+import { db, pool } from './src/core/db';
+import connectPGSink from 'connect-pg-simple';
+const PGStore = connectPGSink(session);
 import { setupAuthPassport, authRoutes } from './src/domains/auth';
 import { registerAdminRoutes } from './src/domains/admin/admin.routes';
 import walletRoutes from './src/domains/wallet/routes/wallet.routes';
@@ -241,7 +243,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
 	}
 
 	const sessionMiddleware = session({
-		store: storage.sessionStore,
+		store: new PGStore({
+			pool: pool,
+			tableName: 'user_sessions',
+			createTableIfMissing: true
+		}),
 		secret: process.env.SESSION_SECRET || 'supersecret',
 		resave: false,
 		saveUninitialized: false,

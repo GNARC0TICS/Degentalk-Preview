@@ -35,6 +35,7 @@
 		"src/domains/_new-wallet/**"
 	],
 	"compilerOptions": {
+		"rootDir": "../",
 		"baseUrl": ".",
 		"paths": {
 			"@shared/types": ["../shared/types/index.ts"],

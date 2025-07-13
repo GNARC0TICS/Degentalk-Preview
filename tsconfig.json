@@ -22,7 +22,7 @@
 		"exactOptionalPropertyTypes": true,
 		"forceConsistentCasingInFileNames": true,
 		"allowImportingTsExtensions": true,
-		"verbatimModuleSyntax": true,
+		"verbatimModuleSyntax": false,
 		"types": ["node"],
 		"isolatedModules": true
 	}

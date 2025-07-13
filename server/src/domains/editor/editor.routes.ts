@@ -9,7 +9,7 @@ import type { Request, Response } from 'express';
 import axios from 'axios';
 import { z } from 'zod';
 import { isAuthenticated } from '../../domains/auth/middleware/auth.middleware.ts';
-import type { IStorage } from '../../../storage';
+import { db } from '@core/db';
 import { logger } from '@core/logger';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
@@ -24,8 +24,7 @@ const router = Router();
 // Get trending GIFs
 router.get('/giphy-trending', async (req: Request, res: Response) => {
 	try {
-		const storage = req.app.get('storage') as IStorage;
-		const settings = await storage.getSiteSettings();
+		const settings = await db.query.siteSettings.findMany();
 
 		// Find giphy settings
 		const giphyApiKey = process.env.GIPHY_API_KEY;
@@ -65,8 +64,7 @@ router.post('/giphy-search', async (req: Request, res: Response) => {
 			return sendErrorResponse(res, 'Search query is required', 400);
 		}
 
-		const storage = req.app.get('storage') as IStorage;
-		const settings = await storage.getSiteSettings();
+		const settings = await db.query.siteSettings.findMany();
 
 		// Find giphy settings
 		const giphyApiKey = process.env.GIPHY_API_KEY;

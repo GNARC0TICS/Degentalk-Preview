@@ -28,7 +28,7 @@ router.use(isAuthenticated);
  * GET /api/notifications
  * Get paginated notifications for the authenticated user
  */
-router.get('/getPaginatedNotifications', async (req, res) => {
+router.get('/', async (req, res) => {
 	try {
 		const userId = userService.getUserFromRequest(req)?.id;
 		if (!userId) {

@@ -65,7 +65,7 @@ router.post(
 			stderr += chunk.toString();
 		});
 
-		sendErrorResponse(res, '✅ Seed script ', 500);
+		sendSuccessResponse(res, '✅ Seed script ');
 	})
 );
 

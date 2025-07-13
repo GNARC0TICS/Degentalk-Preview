@@ -153,7 +153,7 @@ export class DgtWalletIntegration {
 
 			return { success: true, url: session.url };
 		} catch (error) {
-			console.error('Error creating Stripe checkout session:', error);
+			logger.error({ error, userId, packageId }, 'Error creating Stripe checkout session');
 			return { success: false, error: 'Failed to create checkout session' };
 		}
 	}
@@ -211,7 +211,7 @@ export class DgtWalletIntegration {
 
 			return { success: true, dgtAmount: dgtPackage.dgt_amount };
 		} catch (error) {
-			console.error('Error processing USDT purchase:', error);
+			logger.error({ error, userId, packageId, txHash }, 'Error processing USDT purchase');
 			return { success: false, error: 'Failed to process purchase' };
 		}
 	}
@@ -241,7 +241,7 @@ export class DgtWalletIntegration {
 
 			return purchases.rows;
 		} catch (error) {
-			console.error('Error fetching purchase history:', error);
+			logger.error({ error, userId }, 'Error fetching purchase history');
 			return [];
 		}
 	}
@@ -276,12 +276,12 @@ export class DgtWalletIntegration {
 					break;
 				}
 				default:
-					console.log(`Unhandled event type ${event.type}`);
+					logger.info({ eventType: event.type }, 'Unhandled Stripe webhook event type');
 			}
 
 			return { success: true };
 		} catch (error) {
-			console.error('Error processing webhook:', error);
+			logger.error({ error, eventType: event?.type }, 'Error processing webhook');
 			return { success: false, error: 'Webhook processing failed' };
 		}
 	}
@@ -300,7 +300,7 @@ export class DgtWalletIntegration {
     `);
 
 		if (!purchase) {
-			console.error('Purchase record not found for session:', session.id);
+			logger.error({ sessionId: session.id }, 'Purchase record not found for session');
 			return;
 		}
 

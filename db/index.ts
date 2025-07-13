@@ -3,7 +3,7 @@ import { neon, neonConfig } from '@neondatabase/serverless';
 import { drizzle as drizzleNode } from 'drizzle-orm/node-postgres';
 import pg from 'pg';
 const { Pool: PoolNode } = pg;
-import * as schema from './schema';
+import * as schema from './schema/index.js';
 import { config } from 'dotenv';
 import ws from 'ws';
 import { z } from 'zod';

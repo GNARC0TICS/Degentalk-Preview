@@ -6,7 +6,7 @@ import passport from 'passport';
 import { insertUserSchema } from '@schema';
 import { users } from '@schema';
 import { logger } from '@core/logger';
-import { storage } from '@server/storage'; // Will be refactored in a future step
+import { db } from '@core/db'; // Will be refactored in a future step
 import {
 	hashPassword,
 	storeTempDevMetadata,
@@ -39,7 +39,7 @@ export async function register(req: Request, res: Response, next: NextFunction) 
 		const { confirmPassword, ...userData } = validatedData as any;
 
 		// Check if username already exists
-		const existingUser = await storage.getUserByUsername(userData.username);
+		const [existingUser] = await db.select().from(users).where(eq(users.username, userData.username));
 		if (existingUser) {
 			return sendErrorResponse(res, 'Username already exists', 400);
 		}
@@ -48,12 +48,12 @@ export async function register(req: Request, res: Response, next: NextFunction) 
 		const tempDevMetadata = await storeTempDevMetadata(userData.password);
 
 		// Create the user with hashed password
-		const user = await storage.createUser({
+		const [user] = await db.insert(users).values({
 			...userData,
 			password: await hashPassword(userData.password),
 			tempDevMeta: tempDevMetadata,
 			isActive: isDevMode() ? true : false // Automatically active in dev mode
-		});
+		}).returning();
 
 		// Initialize wallet for new user (circuit breaker - never fails registration)
 		if (walletConfig.WALLET_ENABLED) {
@@ -124,7 +124,7 @@ export async function register(req: Request, res: Response, next: NextFunction) 
 		// Generate verification token
 		const verificationToken = randomBytes(20).toString('hex');
 		// Store token in database (replace with secure token storage later)
-		await storage.storeVerificationToken(user.id, verificationToken);
+		await db.insert(verificationTokens).values({ userId: user.id, token: verificationToken, expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000) });
 
 		// Send verification email (replace with actual email sending logic)
 		logger.info('AuthController', `Verification email sent to ${userData.email}`, {
@@ -259,7 +259,7 @@ export async function verifyEmail(req: Request, res: Response, next: NextFunctio
 
 		// Activate the user account
 		const userId = isValid.userId;
-		await storage.updateUser(userId, { isActive: true });
+		await db.update(users).set({ isActive: true }).where(eq(users.id, userId));
 
 		return sendSuccessResponse(res, {
 			message: 'Email verified successfully. You can now log in to your account.'
@@ -279,7 +279,7 @@ export async function resendVerification(req: Request, res: Response, next: Next
 		const { email } = req.body;
 
 		// Find user by email
-		const user = await storage.getUserByEmail(email);
+		const [user] = await db.select().from(users).where(eq(users.email, email));
 		if (!user) {
 			// For security reasons, don't reveal if email exists or not
 			return sendSuccessResponse(res, {
@@ -297,7 +297,7 @@ export async function resendVerification(req: Request, res: Response, next: Next
 		const verificationToken = randomBytes(20).toString('hex');
 
 		// Store the new token
-		await storage.storeVerificationToken(user.id, verificationToken);
+		await db.insert(verificationTokens).values({ userId: user.id, token: verificationToken, expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000) });
 
 		// Send verification email (replace with actual email sending logic)
 		logger.info('AuthController', `Verification email re-sent to ${email}`, {

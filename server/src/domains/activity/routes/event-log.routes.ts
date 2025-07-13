@@ -3,7 +3,8 @@ import { eventLogController } from '../controllers/event-log.controller';
 import { isAuthenticated } from '../../auth/middleware/auth.middleware';
 import { isAdmin } from '../../auth/middleware/admin.middleware';
 
-const router = express.Router();
+import { Router } from 'express';
+const router: Router = express.Router();
 
 // Public routes - none for event logs
 

@@ -12,7 +12,7 @@ import { queryMonitor } from './query-performance';
 import { logger } from '../logger';
 import os from 'os';
 
-const router = Router();
+const router: Router = Router();
 
 export interface HealthStatus {
 	status: 'healthy' | 'degraded' | 'unhealthy';

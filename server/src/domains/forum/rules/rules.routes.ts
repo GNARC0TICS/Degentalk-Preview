@@ -20,7 +20,7 @@ import {
 import crypto from 'crypto';
 import { z } from 'zod';
 import { isAuthenticated } from '../../auth/middleware/auth.middleware';
-import { storage } from '../../../../storage';
+import { db } from '@core/db';
 import { asyncHandler } from '@core/errors'; // Assuming asyncHandler is in core errors
 import { getUserIdFromRequest } from '@server-utils/auth';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
@@ -74,7 +74,7 @@ router.get(
 				return sendErrorResponse(res, 'Invalid rule ID', 400);
 			}
 
-			const rule = await storage.getForumRule(ruleId);
+			const [rule] = await db.select().from(forumRules).where(eq(forumRules.id, ruleId));
 
 			if (!rule) {
 				return sendErrorResponse(res, 'Rule not found', 404);

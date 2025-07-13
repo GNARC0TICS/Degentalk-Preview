@@ -12,6 +12,6 @@ router.post('/presigned-url', isAuthenticated, createPresignedUploadUrlControlle
 // POST /api/uploads/confirm
 // Confirms that a file upload (via presigned URL) was successful and updates user profile.
 // Requires authentication.
-router.post('/confirm', requireAuth, confirmUploadController);
+router.post('/confirm', isAuthenticated, confirmUploadController);
 
 export default router;

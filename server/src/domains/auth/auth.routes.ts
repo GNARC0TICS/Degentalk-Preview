@@ -2,7 +2,7 @@ import { Router } from 'express';
 import passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
 import session from 'express-session';
-import { storage } from '../../../storage'; // Will be refactored in a future step
+import { db } from '../../core/db'; // Will be refactored in a future step
 import { validateRequest } from '@server-middleware/validate-request';
 import { authValidation } from './validation/auth.validation';
 import {
@@ -42,13 +42,14 @@ export function setupAuthPassport(sessionStore: any) {
 	passport.use(
 		new LocalStrategy(async (username, password, done) => {
 			try {
+				const [user] = await db.select().from(users).where(eq(users.username, username));
+
 				// In dev mode, we can bypass the password check
 				if (
 					isDevMode() &&
 					process.env.DEV_BYPASS_PASSWORD === 'true' &&
 					process.env.DEV_FORCE_AUTH !== 'true'
 				) {
-					const user = await storage.getUserByUsername(username);
 
 					if (!user) {
 						return done(null, false, { message: 'Invalid username or password' });
@@ -81,7 +82,6 @@ export function setupAuthPassport(sessionStore: any) {
 				}
 
 				// Normal authentication flow
-				const user = await storage.getUserByUsername(username);
 				if (!user || !(await comparePasswords(password, user.password))) {
 					return done(null, false, { message: 'Invalid username or password' });
 				}
@@ -128,10 +128,10 @@ export function setupAuthPassport(sessionStore: any) {
 		try {
 			// Try to get user from storage
 			try {
-				logger.debug('AuthDeserialize', 'Calling storage.getUser from deserializer');
-				const user = await storage.getUser(id as UserId);
+				logger.debug('AuthDeserialize', 'Calling db.query.users.findFirst from deserializer');
+				const user = await db.query.users.findFirst({ where: eq(users.id, id as UserId) });
 				if (user) {
-					logger.debug('AuthDeserialize', 'Deserializer got user from storage', {
+					logger.debug('AuthDeserialize', 'Deserializer got user from db', {
 						userId: user.id,
 						username: user.username
 					});
@@ -144,17 +144,17 @@ export function setupAuthPassport(sessionStore: any) {
 					};
 					return done(null, userWithRole);
 				} else {
-					logger.warn('AuthDeserialize', 'storage.getUser returned null/undefined', { userId: id });
+					logger.warn('AuthDeserialize', 'db.query.users.findFirst returned null/undefined', { userId: id });
 				}
-			} catch (storageErr) {
-				logger.info('AuthDeserialize', 'storage.getUser threw error', {
-					error: String(storageErr)
+			} catch (dbErr) {
+				logger.info('AuthDeserialize', 'db.query.users.findFirst threw error', {
+					error: String(dbErr)
 				});
 				logger.warn(
 					'AuthDeserialize',
-					'Storage getUser error during deserialization, falling back.',
+					'DB query error during deserialization, falling back.',
 					{
-						error: String(storageErr),
+						error: String(dbErr),
 						userId: id
 					}
 				);
