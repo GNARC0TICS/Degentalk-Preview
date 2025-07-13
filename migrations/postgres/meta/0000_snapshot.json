@@ -1,5 +1,5 @@
 {
-  "id": "72ac4729-bee1-4df9-af6b-2cb788984df2",
+  "id": "1c8a95be-4a6c-47c7-950b-5fa353328046",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -3199,7 +3199,7 @@
         },
         "emoji_id": {
           "name": "emoji_id",
-          "type": "varchar(128)",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
@@ -8029,7 +8029,7 @@
         },
         "entry_id": {
           "name": "entry_id",
-          "type": "integer",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
@@ -8182,7 +8182,7 @@
         },
         "target_group_id": {
           "name": "target_group_id",
-          "type": "integer",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": false
         },
