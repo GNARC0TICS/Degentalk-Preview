@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { adminApi } from '@/lib/adminApi';
+import { adminApi } from '@admin/lib/adminApi';
 import type { UserId } from '@shared/types/ids';
 
 export const CLOUT_LOGS_KEY = ['admin', 'clout', 'logs'];

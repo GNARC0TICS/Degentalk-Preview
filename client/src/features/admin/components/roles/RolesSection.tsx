@@ -40,10 +40,10 @@ import {
 	ChevronDown
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { apiRequest } from '@/lib/api-request';
+import { apiRequest } from '@utils/api-request';
 import { RoleForm } from './RoleForm';
 import { PermissionsEditor } from '../permissions/PermissionsEditor';
-import type { Role, Title, Permission } from '@/pages/admin/roles-titles';
+import type { Role, Title, Permission } from '@/features/admin/views/roles-titles';
 
 interface RolesSectionProps {
 	roles: Role[];

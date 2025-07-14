@@ -4,129 +4,29 @@ import { walletService } from '@server/domains/wallet/services/wallet.service';
 import { adminWalletService } from '../services/wallet.service';
 import { logger } from '@core/logger';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
+import { validateAndConvertId } from '@core/helpers/validate-controller-ids';
 
 /**
- * Admin Wallet Controller
+ * Admin Wallet Controller (v2)
  *
- * Handles wallet configuration management, DGT analytics, and admin wallet operations.
+ * Handles all administrative actions related to the dual-ledger wallet system.
  */
 export class AdminWalletController {
-	/**
-	 * Get current wallet configuration
-	 */
-	async getWalletConfig(req: Request, res: Response): Promise<void> {
-		try {
-			const config = await walletService.getWalletConfig();
 
-			const configResult = {
-				success: true,
-				data: config
-			};
-
-			sendSuccessResponse(res, configResult);
-		} catch (error) {
-			logger.error('Error getting wallet config:', error);
-			sendErrorResponse(res, 'Failed to retrieve wallet configuration', 500);
-		}
-	}
+	// --- Unified User Financial Profile --- //
 
 	/**
-	 * Update wallet configuration
+	 * Gets a complete financial profile for a user, including DGT balance,
+	 * crypto balances, and transaction history.
 	 */
-	async updateWalletConfig(req: Request, res: Response): Promise<void> {
+	async getUserFinancialProfile(req: Request, res: Response): Promise<void> {
 		try {
-			// TODO: Implement config updates in wallet service
-			sendSuccessResponse(res, {
-				success: true,
-				message: 'Wallet configuration updated successfully'
-			});
-		} catch (error) {
-			logger.error('Error updating wallet config:', error);
-			sendErrorResponse(res, 'Failed to update wallet configuration', 500);
-		}
-	}
-
-	/**
-	 * Get DGT analytics for admin dashboard
-	 */
-	async getDGTAnalytics(req: Request, res: Response): Promise<void> {
-		try {
-			const analytics = await adminWalletService.getDGTAnalytics();
-
-			sendSuccessResponse(res, {
-				success: true,
-				data: analytics
-			});
-		} catch (error) {
-			logger.error('Error getting DGT analytics:', error);
-			sendErrorResponse(res, 'Failed to retrieve DGT analytics', 500);
-		}
-	}
-
-	/**
-	 * Manually credit DGT to user (admin action)
-	 */
-	async creditDGTToUser(req: Request, res: Response): Promise<void> {
-		try {
-			const { userId, amount, reason } = req.body;
-			const adminUserId = userService.getUserFromRequest(req)?.id;
-
-			if (!adminUserId) {
-				sendErrorResponse(res, 'Admin authentication required', 401);
-				return;
-			}
-
-			await adminWalletService.addDgt(userId, amount, reason || 'Manual admin credit', {
-				adminUserId
-			});
-
-			sendSuccessResponse(res, {
-				success: true,
-				message: `Successfully credited ${amount} DGT to user ${userId}`
-			});
-		} catch (error) {
-			logger.error('Error crediting DGT:', error);
-			sendErrorResponse(res, error.message || 'Failed to credit DGT', 500);
-		}
-	}
-
-	/**
-	 * Manually debit DGT from user (admin action)
-	 */
-	async debitDGTFromUser(req: Request, res: Response): Promise<void> {
-		try {
-			const { userId, amount, reason } = req.body;
-			const adminUserId = userService.getUserFromRequest(req)?.id;
-
-			if (!adminUserId) {
-				sendErrorResponse(res, 'Admin authentication required', 401);
-				return;
-			}
-
-			await adminWalletService.deductDgt(userId, amount, reason || 'Manual admin debit', {
-				adminUserId
-			});
-
-			sendSuccessResponse(res, {
-				success: true,
-				message: `Successfully debited ${amount} DGT from user ${userId}`
-			});
-		} catch (error) {
-			logger.error('Error debiting DGT:', error);
-			sendErrorResponse(res, error.message || 'Failed to debit DGT', 500);
-		}
-	}
-
-	/**
-	 * Get user's DGT balance and transaction history (admin view)
-	 */
-	async getUserDGTInfo(req: Request, res: Response): Promise<void> {
-		try {
-			const { userId } = req.params;
+			const userId = validateAndConvertId(req.params.userId, 'User');
 			const { page = 1, limit = 20 } = req.query;
 
-			const [balance, history] = await Promise.all([
-				walletService.getUserBalance(userId),
+			const [dgtBalance, cryptoBalances, history] = await Promise.all([
+				walletService.getUserDgtBalance(userId),
+				adminWalletService.getUserCryptoBalances(userId),
 				walletService.getTransactionHistory(userId, {
 					page: parseInt(page as string),
 					limit: parseInt(limit as string)
@@ -136,60 +36,92 @@ export class AdminWalletController {
 			sendSuccessResponse(res, {
 				success: true,
 				data: {
-					balance,
+					dgtBalance,
+					cryptoBalances,
 					history
 				}
 			});
 		} catch (error) {
-			logger.error('Error getting user DGT info:', error);
-			sendErrorResponse(res, 'Failed to retrieve user DGT information', 500);
+			logger.error('AdminWalletController', 'Error getting user financial profile', { error });
+			// @ts-ignore
+			sendErrorResponse(res, error.message || 'Failed to retrieve user profile', 500);
 		}
 	}
 
-	/**
-	 * Reset wallet configuration to defaults
-	 */
-	async resetWalletConfig(req: Request, res: Response): Promise<void> {
+	// --- DGT Ledger Actions --- //
+
+	async creditDgt(req: Request, res: Response): Promise<void> {
 		try {
-			// TODO: Implement reset functionality
-			sendSuccessResponse(res, {
-				success: true,
-				message: 'Wallet configuration reset to defaults'
-			});
+			const { userId, amount, reason } = req.body;
+			const adminUserId = userService.getUserFromRequest(req)?.id;
+			if (!adminUserId) throw new Error('Admin authentication required');
+
+			await adminWalletService.creditDgt(userId, amount, reason, { adminUserId });
+			sendSuccessResponse(res, { success: true, message: `Successfully credited ${amount} DGT` });
 		} catch (error) {
-			logger.error('Error resetting wallet config:', error);
-			sendErrorResponse(res, 'Failed to reset wallet configuration', 500);
+			logger.error('AdminWalletController', 'Error crediting DGT', { error });
+			// @ts-ignore
+			sendErrorResponse(res, error.message || 'Failed to credit DGT', 500);
 		}
 	}
 
-	/**
-	 * Get wallet system status and health
-	 */
-	async getWalletSystemStatus(req: Request, res: Response): Promise<void> {
+	async debitDgt(req: Request, res: Response): Promise<void> {
 		try {
-			const config = await walletService.getWalletConfig();
+			const { userId, amount, reason } = req.body;
+			const adminUserId = userService.getUserFromRequest(req)?.id;
+			if (!adminUserId) throw new Error('Admin authentication required');
+
+			await adminWalletService.debitDgt(userId, amount, reason, { adminUserId });
+			sendSuccessResponse(res, { success: true, message: `Successfully debited ${amount} DGT` });
+		} catch (error) {
+			logger.error('AdminWalletController', 'Error debiting DGT', { error });
+			// @ts-ignore
+			sendErrorResponse(res, error.message || 'Failed to debit DGT', 500);
+		}
+	}
+
+	// --- Crypto Ledger Actions --- //
+
+	async creditCrypto(req: Request, res: Response): Promise<void> {
+		try {
+			const { userId, coinId, amount, reason } = req.body;
+			const adminUserId = userService.getUserFromRequest(req)?.id;
+			if (!adminUserId) throw new Error('Admin authentication required');
+
+			await adminWalletService.creditUserCrypto({ adminUserId, userId, coinId, amount, reason });
+			sendSuccessResponse(res, { success: true, message: `Successfully credited ${amount} of coin ${coinId}` });
+		} catch (error) {
+			logger.error('AdminWalletController', 'Error crediting crypto', { error });
+			// @ts-ignore
+			sendErrorResponse(res, error.message || 'Failed to credit crypto', 500);
+		}
+	}
+
+	async debitCrypto(req: Request, res: Response): Promise<void> {
+		try {
+			const { userId, coinId, amount, reason } = req.body;
+			const adminUserId = userService.getUserFromRequest(req)?.id;
+			if (!adminUserId) throw new Error('Admin authentication required');
+
+			await adminWalletService.debitUserCrypto({ adminUserId, userId, coinId, amount, reason });
+			sendSuccessResponse(res, { success: true, message: `Successfully debited ${amount} of coin ${coinId}` });
+		} catch (error) {
+			logger.error('AdminWalletController', 'Error debiting crypto', { error });
+			// @ts-ignore
+			sendErrorResponse(res, error.message || 'Failed to debit crypto', 500);
+		}
+	}
+
+	// --- Analytics --- //
+
+	async getDGTAnalytics(req: Request, res: Response): Promise<void> {
+		try {
 			const analytics = await adminWalletService.getDGTAnalytics();
-
-			const status = {
-				systemHealth: 'healthy',
-				dgtEnabled: true,
-				featuresEnabled: {
-					cryptoWithdrawals: true,
-					cryptoSwaps: true,
-					dgtSpending: true,
-					internalTransfers: true
-				},
-				dgtStats: analytics,
-				configLastUpdated: new Date()
-			};
-
-			sendSuccessResponse(res, {
-				success: true,
-				data: status
-			});
+			sendSuccessResponse(res, { success: true, data: analytics });
 		} catch (error) {
-			logger.error('Error getting wallet system status:', error);
-			sendErrorResponse(res, 'Failed to retrieve wallet system status', 500);
+			logger.error('AdminWalletController', 'Error getting DGT analytics', { error });
+			// @ts-ignore
+			sendErrorResponse(res, error.message || 'Failed to retrieve DGT analytics', 500);
 		}
 	}
 }

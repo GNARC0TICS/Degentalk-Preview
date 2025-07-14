@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { ZodSchema } from 'zod';
-import { apiRequest } from '@/lib/api-request';
+import { apiRequest } from '@utils/api-request';
 import { useToast } from '@/hooks/use-toast';
 
 export interface UseJsonConfigReturn<T> {

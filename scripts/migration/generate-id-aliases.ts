@@ -1,4 +1,4 @@
-import type { AdminId } from '@shared/types/ids';
+import type { AdminId } from '../shared/types/ids';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';

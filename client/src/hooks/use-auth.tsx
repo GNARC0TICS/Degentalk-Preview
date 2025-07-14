@@ -1,12 +1,13 @@
 import type { ReactNode } from 'react';
 import { createContext, useContext, useState, useEffect, useMemo } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { apiRequest } from '@/lib/api-request';
+import { apiRequest } from '@utils/api-request';
 import { useLocation } from 'wouter';
 import { getUserPermissions } from '@/lib/roles';
 import type { Role } from '@/lib/roles';
 import type { UserId, FrameId } from '@shared/types/ids';
 import { toId } from '@shared/utils/id';
+import { setAuthToken, removeAuthToken } from '@/utils/auth-token';
 
 // Define user type
 export interface User {
@@ -253,15 +254,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 	}, [fetchedUser, userLoading]);
 
 	// Login Mutation (Only really used in Production)
-	const loginMutation = useMutation<User, Error, { username: string; password: string }>({
-		mutationFn: async (credentials): Promise<User> => {
-			return await apiRequest<User>({
+	const loginMutation = useMutation<{ user: User; token: string; expiresAt?: string }, Error, { username: string; password: string }>({
+		mutationFn: async (credentials): Promise<{ user: User; token: string; expiresAt?: string }> => {
+			return await apiRequest<{ user: User; token: string; expiresAt?: string }>({
 				url: '/api/auth/login',
 				method: 'POST',
 				data: credentials
 			});
 		},
-		onSuccess: (loggedInUser) => {
+		onSuccess: ({ user: loggedInUser, token, expiresAt }) => {
+			// Store JWT token
+			if (token) {
+				setAuthToken(token);
+				
+				// Log token expiration for debugging
+				if (expiresAt && import.meta.env.MODE === 'development') {
+					console.log('[Auth] Token expires at:', expiresAt);
+				}
+			}
+			
 			setUserState(loggedInUser);
 			setAuthError(null);
 			setIsLoggedOut(false); // Reset logout flag on successful login
@@ -313,6 +324,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 			});
 		},
 		onSuccess: () => {
+			// Clear JWT token
+			removeAuthToken();
+			
 			setUserState(null);
 			setAuthError(null);
 			setIsLoggedOut(true); // Set logout flag to prevent auto-restore in dev mode
@@ -329,6 +343,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 			// Handle logout error, maybe just log it?
 			// console.error('Logout failed:', error.message);
 			// Still clear state locally even if server logout fails?
+			removeAuthToken(); // Clear token even on error
+			
 			setUserState(null);
 			setAuthError(null);
 			setIsLoggedOut(true); // Set logout flag even on error

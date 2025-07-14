@@ -6,10 +6,10 @@
  * Usage: pnpm tsx scripts/missions/seed-example-missions.ts
  */
 
-import { db } from '@db';
-import { missions } from '@schema';
+import { db } from '../db';
+import { missions } from '../db/schema';
 import { defaultMissionTemplates } from '@config/missions.config';
-import { logger } from '@core/logger';
+import { logger } from '../server/src/core/logger';
 import { eq } from 'drizzle-orm';
 
 async function seedExampleMissions() {

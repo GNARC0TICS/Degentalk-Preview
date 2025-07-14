@@ -33,7 +33,7 @@ import {
 	ChevronDown
 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
-import { apiRequest } from '@/lib/api-request';
+import { apiRequest } from '@utils/api-request';
 import type { GroupId, MessageId, RoomId, UserId, EntityId } from '@shared/types/ids';
 
 interface User {

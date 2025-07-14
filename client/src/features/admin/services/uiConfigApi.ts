@@ -1,4 +1,4 @@
-import { apiRequest, apiPost, apiPut, apiDelete } from '@/lib/api-request';
+import { apiRequest, apiPost, apiPut, apiDelete } from '@utils/api-request';
 
 // Types for API requests/responses
 export interface QuoteFilters {

@@ -1,4 +1,4 @@
-import { forumConfig } from '@config/forum.config';
+import { forumConfig } from '../../../config/forum.config';
 
 /**
  * Retrieves a nested property from the forumConfig object via dot-notation path.

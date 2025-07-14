@@ -32,7 +32,7 @@ import {
 } from '@/components/ui/select';
 import { Skeleton } from '@/components/ui/skeleton';
 import { format } from 'date-fns';
-import { apiRequest } from '@/lib/queryClient';
+import { apiRequest } from '@/utils/queryClient';
 
 // Chart colors
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d'];
@@ -145,7 +145,7 @@ const RainAnalyticsCard: React.FC<RainAnalyticsCardProps> = ({ className }) => {
 					<div className="flex h-[300px] items-center justify-center text-center text-red-500">
 						<p>Error loading rain analytics data. Please try again later.</p>
 					</div>
-				) : (
+				) : data ? (
 					<>
 						<div className="grid grid-cols-2 gap-4 mb-6 sm:grid-cols-4">
 							<div className="rounded-lg border p-3">
@@ -259,6 +259,10 @@ const RainAnalyticsCard: React.FC<RainAnalyticsCardProps> = ({ className }) => {
 							</TabsContent>
 						</Tabs>
 					</>
+				) : (
+					<div className="flex h-[300px] items-center justify-center text-center text-muted-foreground">
+						<p>No rain analytics data available.</p>
+					</div>
 				)}
 			</CardContent>
 			<CardFooter className="text-xs text-muted-foreground">

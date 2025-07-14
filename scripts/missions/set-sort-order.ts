@@ -6,9 +6,9 @@
  * Usage: pnpm tsx scripts/missions/set-sort-order.ts
  */
 
-import { db } from '@db';
-import { missions } from '@schema';
-import { logger } from '@core/logger';
+import { db } from '../db';
+import { missions } from '../db/schema';
+import { logger } from '../server/src/core/logger';
 import { eq, sql } from 'drizzle-orm';
 
 // Define sort order by mission title or type

@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/select';
 // import { DatePickerWithRange } from '@/components/ui/date-range-picker'; // Assuming this exists or will be created
 import type { DateRange } from 'react-day-picker'; // Keep type for FilterValue
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/utils';
 import { Search, XCircle } from 'lucide-react';
 
 export type FilterValue = string | number | boolean | DateRange | undefined | null;

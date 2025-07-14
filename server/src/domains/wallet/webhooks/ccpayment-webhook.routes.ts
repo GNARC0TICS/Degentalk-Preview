@@ -9,7 +9,7 @@ import { Router } from 'express';
 import { CCPaymentWebhookController } from './ccpayment-webhook.controller';
 import { asyncHandler } from '@core/errors';
 import { validateRequest } from '@server/middleware/validate-request';
-import { webhookValidation } from './validation/webhook.validation';
+import { ccpaymentWebhookHeadersSchema } from './validation/webhook.validation';
 
 const ccPaymentWebhookController = new CCPaymentWebhookController();
 
@@ -23,7 +23,7 @@ const router = Router();
  */
 router.post(
 	'/ccpayment',
-	validateRequest(webhookValidation.ccpaymentWebhook),
+	validateRequest(ccpaymentWebhookHeadersSchema),
 	asyncHandler(ccPaymentWebhookController.handleWebhook.bind(ccPaymentWebhookController))
 );
 

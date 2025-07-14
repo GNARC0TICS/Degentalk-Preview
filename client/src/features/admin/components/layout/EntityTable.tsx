@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/table';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Input } from '@/components/ui/input';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/utils';
 
 export interface ColumnDef<T> {
 	key: string; // Corresponds to a key in the data object T

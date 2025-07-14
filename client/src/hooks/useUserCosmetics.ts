@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import type { UserInventoryWithProduct, AppliedCosmetics } from '@/types/inventory';
-import { apiRequest } from '@/lib/api-request';
+import { apiRequest } from '@utils/api-request';
 import { applyPluginRewards } from '@/lib/utils/applyPluginRewards';
 import type { UserId } from '@shared/types/ids';
 

@@ -1,7 +1,7 @@
 // WALLET FINALIZATION ON HOLD - Do not prioritize wallet-related features.
 
-import { db } from '@db';
-import { economySettings } from '@schema';
+import { db } from '../db';
+import { economySettings } from '../db/schema';
 import { eq } from 'drizzle-orm'; // Import eq for precise updates
 
 const defaultSettings = [

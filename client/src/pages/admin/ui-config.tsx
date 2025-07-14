@@ -59,7 +59,7 @@ import {
 	type QuoteFilters,
 	type PaginationOptions
 } from '@/features/admin/services/uiConfigApi';
-import ProtectedAdminRoute from '@/features/admin/components/protected-admin-route';
+import ProtectedAdminRoute from '@admin/components/protected-admin-route';
 import { useAdminModule } from '@/hooks/use-admin-modules';
 import { VisualJsonTabs } from '@/features/admin/components/VisualJsonTabs';
 import { useJsonConfig } from '@/hooks/useJsonConfig';

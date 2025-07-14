@@ -1,42 +1,10 @@
-import { apiRequest } from '@/lib/api-request';
+import { apiRequest } from '@/utils/queryClient';
 import type { UserId } from '@shared/types/ids';
-
-export interface EventLog {
-	id: string;
-	userId: UserId;
-	eventType: string;
-	relatedId?: string;
-	meta: Record<string, unknown>;
-	createdAt: string;
-	user: {
-		id: UserId;
-		username: string;
-		displayName: string;
-		avatarUrl?: string;
-	};
-}
-
-export interface EventLogFilters {
-	eventType?: string | string[];
-	startDate?: string;
-	endDate?: string;
-	limit?: number;
-	page?: number;
-}
-
-export interface EventLogPagination {
-	page: number;
-	pageSize: number;
-	totalItems: number;
-	totalPages: number;
-	items: EventLog[];
-}
-
-export interface ApiResponse<T> {
-	success: boolean;
-	data: T;
-	message?: string;
-}
+import type {
+	EventLog,
+	EventLogFilters,
+	EventLogPagination
+} from '@/features/activity/types/activity.types';
 
 /**
  * API service for event logs
@@ -48,7 +16,7 @@ export const activityApi = {
 	async getCurrentUserEventLogs(
 		userId: UserId,
 		filters?: EventLogFilters
-	): Promise<ApiResponse<EventLogPagination>> {
+	): Promise<EventLogPagination> {
 		const queryParams = new URLSearchParams();
 
 		if (filters?.eventType) {
@@ -76,9 +44,7 @@ export const activityApi = {
 			queryParams.append('offset', offset.toString());
 		}
 
-		const queryString = queryParams.toString() ? `?${queryParams.toString()}` : '';
-
-		return apiRequest<ApiResponse<EventLogPagination>>({
+		return apiRequest<EventLogPagination>({
 			url: `/activity/event-logs/user/${userId}`,
 			method: 'GET',
 			params: Object.fromEntries(queryParams)
@@ -91,7 +57,7 @@ export const activityApi = {
 	async getUserEventLogs(
 		userId: UserId,
 		filters?: EventLogFilters
-	): Promise<ApiResponse<EventLogPagination>> {
+	): Promise<EventLogPagination> {
 		const queryParams = new URLSearchParams();
 
 		if (filters?.eventType) {
@@ -119,9 +85,7 @@ export const activityApi = {
 			queryParams.append('offset', offset.toString());
 		}
 
-		const queryString = queryParams.toString() ? `?${queryParams.toString()}` : '';
-
-		return apiRequest<ApiResponse<EventLogPagination>>({
+		return apiRequest<EventLogPagination>({
 			url: `/activity/event-logs/user/${userId}`,
 			method: 'GET',
 			params: Object.fromEntries(queryParams)
@@ -131,7 +95,7 @@ export const activityApi = {
 	/**
 	 * Get all event logs (admin only)
 	 */
-	async getAllEventLogs(filters?: EventLogFilters): Promise<ApiResponse<EventLogPagination>> {
+	async getAllEventLogs(filters?: EventLogFilters): Promise<EventLogPagination> {
 		const queryParams = new URLSearchParams();
 
 		if (filters?.eventType) {
@@ -159,9 +123,7 @@ export const activityApi = {
 			queryParams.append('offset', offset.toString());
 		}
 
-		const queryString = queryParams.toString() ? `?${queryParams.toString()}` : '';
-
-		return apiRequest<ApiResponse<EventLogPagination>>({
+		return apiRequest<EventLogPagination>({
 			url: '/activity/event-logs',
 			method: 'GET',
 			params: Object.fromEntries(queryParams)
@@ -171,8 +133,8 @@ export const activityApi = {
 	/**
 	 * Get event log by ID (admin only)
 	 */
-	async getEventLogById(id: string): Promise<ApiResponse<EventLog>> {
-		return apiRequest<ApiResponse<EventLog>>({
+	async getEventLogById(id: string): Promise<EventLog> {
+		return apiRequest<EventLog>({
 			url: `/activity/event-logs/${id}`,
 			method: 'GET'
 		});
@@ -181,8 +143,8 @@ export const activityApi = {
 	/**
 	 * Delete event log by ID (admin only)
 	 */
-	async deleteEventLog(id: string): Promise<ApiResponse<void>> {
-		return apiRequest<ApiResponse<void>>({
+	async deleteEventLog(id: string): Promise<void> {
+		return apiRequest<void>({
 			url: `/activity/event-logs/${id}`,
 			method: 'DELETE'
 		});

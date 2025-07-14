@@ -6,7 +6,7 @@
  * that will speed up development and fix N+1 queries
  */
 
-import { db } from '@db';
+import { db } from '../db';
 import { sql } from 'drizzle-orm';
 
 const criticalIndices = sql`

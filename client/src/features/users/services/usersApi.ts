@@ -1,5 +1,5 @@
 import type { UserId } from '@shared/types/ids';
-import { apiRequest } from '@/lib/api-request';
+import { apiRequest } from '@utils/api-request';
 import type { ActiveUser } from '@/components/users/ActiveMembersWidget';
 
 /**

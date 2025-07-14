@@ -37,8 +37,7 @@ import { eq, sql } from 'drizzle-orm';
 
 // Import existing CCPayment services
 import { ccpaymentService } from '../providers/ccpayment/ccpayment.service';
-import { ccpaymentBalanceService } from '../providers/ccpayment/ccpayment-balance.service';
-import { ccpaymentDepositService } from '../providers/ccpayment/ccpayment-deposit.service';
+import { ccpaymentApiService } from '../providers/ccpayment/ccpayment-api.service';
 import { ccpaymentTokenService } from '../providers/ccpayment/ccpayment-token.service';
 
 export interface WalletAdapter {
@@ -64,8 +63,8 @@ export class CCPaymentAdapter implements WalletAdapter {
 			// Get CCPayment user ID from database (would need to implement this mapping)
 			const ccPaymentUserId = await this.getCCPaymentUserId(userId);
 
-			// Get crypto balances from CCPayment
-			const ccBalances = await ccpaymentBalanceService.getUserCryptoBalances(ccPaymentUserId);
+			// Get crypto balances from CCPayment using the v2 service
+			const ccBalances = await ccpaymentService.getUserCoinAssetList(ccPaymentUserId);
 
 			// Transform CCPayment balances to our format
 			const cryptoBalances: CryptoBalance[] = ccBalances.map(fromCCPaymentBalance);
@@ -123,7 +122,7 @@ export class CCPaymentAdapter implements WalletAdapter {
 
 			const ccPaymentUserId = await this.getCCPaymentUserId(userId);
 
-			const ccAddress = await ccpaymentDepositService.createDepositAddress(
+			const ccAddress = await ccpaymentService.getOrCreateUserDepositAddress(
 				ccPaymentUserId,
 				coinSymbol
 			);

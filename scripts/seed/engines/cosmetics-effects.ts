@@ -1,8 +1,8 @@
-import { db } from '@db';
+import { db } from '../../db';
 import { logger } from '@server/core/logger';
-import * as schema from '@schema';
+import * as schema from '../../db/schema';
 import { eq, and, inArray, sql } from 'drizzle-orm';
-import type { UserId } from '@shared/types/ids';
+import type { UserId } from '../../shared/types/ids';
 import { getSeedConfig } from '../config/seed.config';
 import { personas } from '../config/personas.config';
 import chalk from 'chalk';

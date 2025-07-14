@@ -33,7 +33,6 @@ import { isDevMode } from '../../utils/environment';
 import { logger } from '@core/logger';
 import { getAuthenticatedUser } from '@core/utils/auth.helpers';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
-import type { UserId, GroupId } from '@shared/types/ids';
 
 const router = Router();
 
@@ -46,6 +45,15 @@ export function setupAuthPassport(sessionStore: any) {
 		new LocalStrategy(async (username, password, done) => {
 			try {
 				const [user] = await db.select().from(users).where(eq(users.username, username));
+				
+				// Debug logging
+				logger.info('AuthRoutes', 'Login attempt debug', { 
+					username, 
+					userFound: !!user,
+					hasPassword: !!user?.password,
+					passwordLength: user?.password?.length,
+					passwordPrefix: user?.password?.substring(0, 10)
+				});
 
 				// In dev mode, we can bypass the password check
 				if (
@@ -85,7 +93,21 @@ export function setupAuthPassport(sessionStore: any) {
 				}
 
 				// Normal authentication flow
-				if (!user || !(await comparePasswords(password, user.password))) {
+				if (!user) {
+					logger.warn('AuthRoutes', 'User not found', { username });
+					return done(null, false, { message: 'Invalid username or password' });
+				}
+				
+				const passwordMatch = await comparePasswords(password, user.password);
+				logger.info('AuthRoutes', 'Password comparison result', { 
+					username,
+					passwordMatch,
+					suppliedPasswordLength: password.length,
+					storedPasswordLength: user.password?.length,
+					storedPasswordPrefix: user.password?.substring(0, 10)
+				});
+				
+				if (!passwordMatch) {
 					return done(null, false, { message: 'Invalid username or password' });
 				}
 

@@ -1,4 +1,4 @@
-import type { UserId } from '@shared/types/ids';
+import type { UserId } from '../../shared/types/ids';
 
 export interface PersonaBehavior {
 	postFrequency: 'low' | 'medium' | 'high' | 'burst';

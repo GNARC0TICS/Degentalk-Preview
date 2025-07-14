@@ -37,7 +37,13 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
 		}
 
 		// Verify token
-		const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as any;
+		const jwtSecret = process.env.JWT_SECRET;
+		if (!jwtSecret) {
+			logger.error('JWT_SECRET not configured');
+			return res.status(500).json({ error: 'Authentication configuration error' });
+		}
+		
+		const decoded = jwt.verify(token, jwtSecret) as any;
 
 		// Get user from database
 		const user = await db.query.users.findFirst({

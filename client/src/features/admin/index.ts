@@ -1,13 +1,4 @@
-/**
- * Admin Feature Export Barrel
- *
- * Centralized exports for the complete admin domain
- */
-
-// Components
+export * from './layout';
+export * from './lib';
 export * from './components';
-
-// Services
-export * from './services/brandConfigApi';
-export * from './services/settingsService';
-export * from './services/uiConfigApi';
+export * from './views';

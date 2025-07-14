@@ -1,10 +1,10 @@
-import { db } from '@db';
+import { db } from '../../db';
 import { logger } from '@server/core/logger';
 import { forumMap } from '@/config/forumMap.config';
-import { economyConfig } from '@shared/economy/economy.config';
+import { economyConfig } from '../../shared/economy/economy.config';
 import { featureFlags } from '@/config/featureFlags';
 import { themes } from '@/config/themes.config';
-import * as schema from '@schema';
+import * as schema from '../../db/schema';
 import { eq, sql } from 'drizzle-orm';
 import chalk from 'chalk';
 

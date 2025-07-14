@@ -1,6 +1,6 @@
 import React from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import axios from 'axios';
+import { apiRequest } from '@/utils/queryClient';
 import {
 	Card,
 	CardContent,
@@ -38,8 +38,7 @@ export function CooldownSettings() {
 	} = useQuery({
 		queryKey: ['/api/admin/settings/cooldowns'],
 		queryFn: async () => {
-			const response = await axios.get('/api/admin/settings/cooldowns');
-			return response.data as CooldownSettings;
+			return apiRequest<CooldownSettings>({ url: '/api/admin/settings/cooldowns', method: 'GET' });
 		}
 	});
 
@@ -69,8 +68,7 @@ export function CooldownSettings() {
 	// Save settings mutation
 	const saveSettings = useMutation({
 		mutationFn: async (data: CooldownSettings) => {
-			const response = await axios.post('/api/admin/settings/cooldowns', data);
-			return response.data;
+			return apiRequest({ url: '/api/admin/settings/cooldowns', method: 'POST', data });
 		},
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ['/api/admin/settings/cooldowns'] });

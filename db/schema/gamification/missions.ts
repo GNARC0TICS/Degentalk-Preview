@@ -1,4 +1,4 @@
-import { pgTable, varchar, integer, boolean, timestamp, uuid, index, text, jsonb } from 'drizzle-orm/pg-core';
+import { pgTable, varchar, integer, boolean, timestamp, uuid, text, jsonb } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 // Note: `MissionType` was defined in schema.ts, it should be moved to a types file or enums if it's a pgEnum
 export const missions = pgTable('missions', {

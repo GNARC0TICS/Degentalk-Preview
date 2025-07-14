@@ -6,9 +6,9 @@
  * Usage: pnpm tsx scripts/missions/deactivate-all.ts [--reactivate]
  */
 
-import { db } from '@db';
-import { missions } from '@schema';
-import { logger } from '@core/logger';
+import { db } from '../db';
+import { missions } from '../db/schema';
+import { logger } from '../server/src/core/logger';
 import { sql } from 'drizzle-orm';
 
 async function deactivateAllMissions(reactivate: boolean = false) {

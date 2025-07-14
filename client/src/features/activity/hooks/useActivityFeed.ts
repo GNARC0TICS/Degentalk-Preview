@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
-import { activityApi, type EventLogFilters } from '@/features/activity/services/activityApi';
+import { activityApi } from '@/features/activity/services/activityApi';
 import { useAuth } from '@/hooks/use-auth';
+import type { EventLogFilters } from '@/features/activity/types/activity.types';
 
 /**
  * Hook for fetching and managing user activity feed
@@ -24,7 +25,7 @@ export const useActivityFeed = (filters?: EventLogFilters) => {
 	});
 
 	return {
-		activityFeed: data?.data,
+		activityFeed: data,
 		isLoading,
 		isError,
 		error,
@@ -43,7 +44,7 @@ export const useAdminActivityFeed = (filters?: EventLogFilters) => {
 	});
 
 	return {
-		activityFeed: data?.data,
+		activityFeed: data,
 		isLoading,
 		isError,
 		error,
@@ -68,7 +69,7 @@ export const useUserActivityFeed = (userId: string, filters?: EventLogFilters) =
 	});
 
 	return {
-		activityFeed: data?.data,
+		activityFeed: data,
 		isLoading,
 		isError,
 		error,

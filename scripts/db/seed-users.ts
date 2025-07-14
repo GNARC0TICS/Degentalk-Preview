@@ -1,6 +1,6 @@
-import type { AdminId } from '@shared/types/ids';
-import { db } from '@db';
-import { users } from '@schema/user/users';
+import type { AdminId } from '../shared/types/ids';
+import { db } from '../db';
+import { users } from '../db/schema/user/users';
 import bcrypt from 'bcrypt';
 import { faker } from '@faker-js/faker';
 import { sql } from 'drizzle-orm';

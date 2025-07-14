@@ -1,4 +1,4 @@
-import type { AdminId } from '@shared/types/ids';
+import type { AdminId } from '../shared/types/ids';
 import { Pool } from 'pg';
 import { config } from 'dotenv';
 import fs from 'fs';

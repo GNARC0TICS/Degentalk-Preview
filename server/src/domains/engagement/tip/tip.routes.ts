@@ -8,7 +8,7 @@
 
 import express from 'express';
 import { tipController } from './tip.controller';
-import { isAuthenticated as requireAuth } from '@server/domains/auth/middleware/auth.middleware';
+import { authenticateJWT as requireAuth } from '@server/middleware/authenticate-jwt';
 import { isAdmin as requireAdmin } from '@server/domains/auth/middleware/auth.middleware';
 import { validateRequest } from '@server-middleware/validate-request';
 import { z } from 'zod';

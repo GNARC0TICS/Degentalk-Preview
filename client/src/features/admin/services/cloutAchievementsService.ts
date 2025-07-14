@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { adminApi } from '@/lib/adminApi';
+import { adminApi } from '@admin/lib/adminApi';
 import type { AchievementId } from '@shared/types/ids';
 import type { AchievementData } from '@/types/admin.types';
 

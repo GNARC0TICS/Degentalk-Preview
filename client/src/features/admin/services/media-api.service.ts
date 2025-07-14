@@ -1,4 +1,4 @@
-import { apiRequest } from '@/lib/api-request';
+import { apiRequest } from '@utils/api-request';
 import type { EntityId } from '@shared/types/ids';
 
 export type MediaType = 'emoji' | 'lottie' | 'badge' | 'title' | 'flair';

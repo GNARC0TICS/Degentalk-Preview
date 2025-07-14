@@ -1,13 +1,14 @@
-import { userService } from '@core/services/user.service';
-import type { UserId } from '@shared/types/ids';
+import { userService } from '../../../core/services/user.service';
+import type { UserId } from '../../../../../shared/types/ids';
 import { scrypt, randomBytes, timingSafeEqual } from 'crypto';
 import { promisify } from 'util';
-import { featureFlags, users } from '@schema';
-import { db } from '@core/db';
+import { featureFlags, users } from '../../../../../db/schema';
+import { db } from '../../../core/db';
 import { eq, count } from 'drizzle-orm';
 import { isDevMode } from '../../../utils/environment';
-import { logger } from '@core/logger';
+import { logger } from '../../../core/logger';
 import { v4 as uuidv4 } from 'uuid';
+import bcrypt from 'bcrypt';
 
 type User = typeof users.$inferSelect;
 
@@ -35,7 +36,6 @@ export async function comparePasswords(supplied: string, stored: string): Promis
 	// Check if it's a bcrypt hash (starts with $2a$, $2b$, etc.)
 	if (stored.startsWith('$2')) {
 		// Use bcrypt for comparison
-		const bcrypt = require('bcryptjs');
 		return await bcrypt.compare(supplied, stored);
 	}
 

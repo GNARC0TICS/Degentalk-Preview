@@ -1,518 +1,219 @@
 /**
- * CCPayment Webhook Service
+ * CCPayment Webhook Service (v2)
  *
- * This service processes verified webhook events from CCPayment.
- * It handles deposit confirmations, purchase fulfillment, and other events.
+ * This service processes verified webhook events from CCPayment's v2 API.
+ * It is the critical link between external crypto deposits and the internal DGT economy.
  */
 
-// Wallet imports handled via singleton service below
-import { dgtPurchaseOrders, users, transactions } from '@schema';
-import { eq, and } from 'drizzle-orm';
 import { db } from '@core/database';
 import { logger } from '@core/logger';
-import type { CCPaymentWebhookEvent } from '../providers/ccpayment/ccpayment.service';
 import { dgtService } from '../services/dgtService';
 import { walletConfig } from '@shared/wallet.config';
 import { settingsService } from '@core/services/settings.service';
 import { validateAndConvertId } from '@core/helpers/validate-controller-ids';
-import type { UserId } from '@shared/types/ids';
+import { ccpaymentApiService } from '../providers/ccpayment/ccpayment-api.service';
+import { dgtPurchaseOrders, transactions } from '@schema';
+import { eq, and } from 'drizzle-orm';
 
-/**
- * Extended CCPayment webhook event with all fields
- * The base interface doesn't include all fields that CCPayment sends
- */
-interface ExtendedCCPaymentWebhookEvent extends CCPaymentWebhookEvent {
-	eventType: string;
-	uid?: string;
-	actualAmount?: string;
-	coinSymbol?: string;
-	merchantOrderId: string;
+// --- v2 Webhook Interfaces --- //
+
+interface WebhookMsgBase {
+	recordId: string;
+	coinId: number;
+	coinSymbol: string;
+	status: 'Success' | 'Processing' | 'Failed' | string; // Allow for other statuses
+	isFlaggedAsRisky: boolean;
 }
 
-/**
- * CCPayment webhook service for processing webhook events
- */
+interface UserDepositMsg extends WebhookMsgBase {
+	userId: string;
+}
+
+interface ApiDepositMsg extends WebhookMsgBase {
+	orderId: string; // This is our dgtPurchaseOrder reference
+}
+
+interface WithdrawalMsg extends WebhookMsgBase {
+	orderId: string;
+	userId?: string; // Present in UserWithdrawal
+}
+
+export interface CCPaymentWebhookPayload {
+	type: 'UserDeposit' | 'ApiDeposit' | 'ApiWithdrawal' | 'UserWithdrawal' | string;
+	msg: UserDepositMsg | ApiDepositMsg | WithdrawalMsg | any;
+}
+
 export class CCPaymentWebhookService {
 	/**
-	 * Process a webhook event from CCPayment
-	 * @param event Webhook event data
-	 * @returns Processing result
+	 * Main entry point for processing a raw webhook request.
+	 * @param rawPayload The raw string body of the webhook POST request.
+	 * @param headers The headers from the request, containing signature info.
+	 * @returns A result object.
 	 */
-	async processWebhookEvent(
-		event: ExtendedCCPaymentWebhookEvent
+	async processWebhook(
+		rawPayload: string,
+		headers: Record<string, string | undefined>
 	): Promise<{ success: boolean; message: string }> {
+		const appId = headers['appid'];
+		const signature = headers['sign'];
+		const timestamp = headers['timestamp'];
+
+		if (!appId || !signature || !timestamp) {
+			logger.warn('CCPaymentWebhookService', 'Missing signature headers in webhook');
+			return { success: false, message: 'Missing signature headers' };
+		}
+
+		// 1. Verify Signature
+		const isSignatureValid = ccpaymentApiService.validateWebhookSignature(
+			rawPayload,
+			appId,
+			signature,
+			timestamp
+		);
+
+		if (!isSignatureValid) {
+			return { success: false, message: 'Invalid signature' };
+		}
+
+		// 2. Parse and Route Event
 		try {
-			logger.info('Processing CCPayment webhook event', {
-				eventType: event.eventType,
-				orderId: event.orderId,
-				status: event.status,
-				amount: event.amount,
-				currency: event.currency
-			});
+			const event: CCPaymentWebhookPayload = JSON.parse(rawPayload);
+			logger.info('CCPaymentWebhookService', 'Processing webhook event', { type: event.type, status: event.msg.status });
 
-			// Process the webhook event directly
-			switch (event.eventType) {
-				case 'deposit_completed':
-					return await this.handleDepositCompleted(event);
+			if (event.msg.status !== 'Success') {
+				logger.info('CCPaymentWebhookService', 'Ignoring non-Success webhook status', { status: event.msg.status });
+				return { success: true, message: 'Status is not Success, no action taken.' };
+			}
 
-				case 'deposit_failed':
-					return await this.handleDepositFailed(event);
-
-				case 'withdrawal_completed':
-					return await this.handleWithdrawalCompleted(event);
-
-				case 'withdrawal_failed':
-					return await this.handleWithdrawalFailed(event);
-
-				case 'user_created':
-				case 'wallet_created':
-					return await this.handleWalletCreated(event);
-
-				case 'user_failed':
-				case 'wallet_failed':
-					return await this.handleWalletFailed(event);
-
+			switch (event.type) {
+				case 'UserDeposit':
+					return this.handleUserDeposit(event.msg as UserDepositMsg);
+				case 'ApiDeposit':
+					return this.handleApiDeposit(event.msg as ApiDepositMsg);
+				// Note: Withdrawal handling can be added here if needed
 				default:
-					logger.warn('Unknown webhook event type', { eventType: event.eventType });
-					return { success: false, message: 'Unknown event type' };
+					logger.warn('CCPaymentWebhookService', 'Unhandled webhook event type', { type: event.type });
+					return { success: true, message: 'Unhandled event type' };
 			}
 		} catch (error) {
-			logger.error('Error processing webhook event', error);
-			return {
-				success: false,
-				message: `Error processing webhook: ${error.message}`
-			};
+			logger.error('CCPaymentWebhookService', 'Error parsing or processing webhook', { error, rawPayload });
+			return { success: false, message: 'Webhook processing failed' };
 		}
 	}
 
 	/**
-	 * Handle deposit completion webhook with auto-conversion to DGT
-	 * @param event Webhook event
-	 * @returns Processing result
+	 * Handles a direct deposit to a user's wallet.
+	 * This triggers an auto-conversion to DGT if enabled by the admin.
 	 */
-	private async handleDepositCompleted(
-		event: ExtendedCCPaymentWebhookEvent
-	): Promise<{ success: boolean; message: string }> {
-		try {
-			const settings = await settingsService.getWalletSettings();
-			logger.info('Processing deposit completion with auto-conversion check', {
-				merchantOrderId: event.merchantOrderId,
-				amount: event.actualAmount,
-				coinSymbol: event.coinSymbol,
-				autoConvertEnabled: settings.autoConvertDeposits
-			});
-
-			// Find the DGT purchase order associated with this deposit
-			const [purchaseOrder] = await db
-				.select()
-				.from(dgtPurchaseOrders)
-				.where(eq(dgtPurchaseOrders.ccpaymentReference, event.merchantOrderId))
-				.limit(1);
-
-			if (!purchaseOrder) {
-				logger.warn('No matching purchase order found for completed deposit', {
-					merchantOrderId: event.merchantOrderId
-				});
-
-				// Check admin toggle for auto-conversion of direct deposits
-				if (settings.autoConvertDeposits && event.uid) {
-					return await this.handleDirectDepositAutoConversion(event);
-				}
-
-				return {
-					success: true,
-					message: 'Direct deposit processed - no auto-conversion (admin disabled)'
-				};
-			}
-
-			// Handle purchase order deposit with conversion
-			const conversionAmount = await this.calculateDgtConversion(
-				parseFloat(event.actualAmount),
-				event.coinSymbol
-			);
-
-			// Credit DGT to user for successful deposit
-			await dgtService.processReward(
-				purchaseOrder.userId,
-				conversionAmount,
-				'crypto_deposit',
-				`Cryptocurrency deposit auto-conversion from ${event.coinSymbol} (${event.actualAmount})`
-			);
-
-			logger.info('DGT purchase completed with auto-conversion', {
-				purchaseOrderId: purchaseOrder.id,
-				originalAmount: event.actualAmount,
-				originalCurrency: event.coinSymbol,
-				dgtAmount: conversionAmount,
-				conversionRate: walletConfig.DGT.PRICE_USD
-			});
-
-			return {
-				success: true,
-				message: `DGT purchase completed: ${conversionAmount} DGT credited for ${event.actualAmount} ${event.coinSymbol}`
-			};
-		} catch (error) {
-			logger.error('Error handling deposit completed webhook', error);
-			return {
-				success: false,
-				message: `Error fulfilling DGT purchase: ${error.message}`
-			};
+	private async handleUserDeposit(msg: UserDepositMsg): Promise<{ success: boolean; message: string }> {
+		const settings = await settingsService.getWalletSettings();
+		if (!settings.autoConvertDeposits) {
+			logger.info('CCPaymentWebhookService', 'Direct user deposit received, but auto-conversion is disabled.', { userId: msg.userId });
+			return { success: true, message: 'Auto-conversion disabled' };
 		}
+
+		const userId = validateAndConvertId(msg.userId, 'User');
+		if (!userId) {
+			logger.warn('CCPaymentWebhookService', 'Invalid userId in UserDeposit webhook', { userId: msg.userId });
+			return { success: false, message: 'Invalid user ID' };
+		}
+
+		// To get the deposited amount, we must fetch the transaction details.
+		// The webhook only notifies us; it doesn't contain the amount.
+		const record = await this.getDepositRecord(msg.recordId);
+		if (!record) {
+			return { success: false, message: `Could not fetch record for ${msg.recordId}` };
+		}
+
+		const conversionAmount = await this.calculateDgtConversion(parseFloat(record.amount), record.coinSymbol);
+
+		await dgtService.processReward(
+			userId,
+			conversionAmount,
+			'crypto_deposit',
+			`Direct deposit auto-converted from ${record.amount} ${record.coinSymbol}`
+		);
+
+		logger.info('CCPaymentWebhookService', 'Direct deposit auto-converted to DGT', { userId, dgtAmount: conversionAmount });
+		return { success: true, message: 'Direct deposit converted to DGT' };
 	}
 
 	/**
-	 * Handle direct crypto deposits with auto-conversion (no purchase order)
-	 * @param event Webhook event
-	 * @returns Processing result
+	 * Handles a deposit related to a specific DGT purchase order.
+	 * This is the primary flow for users buying DGT.
 	 */
-	private async handleDirectDepositAutoConversion(
-		event: ExtendedCCPaymentWebhookEvent
-	): Promise<{ success: boolean; message: string }> {
-		try {
-			// Find user by CCPayment UID
-			// Validate the user ID first
-			const userId = validateAndConvertId(event.uid, 'User');
-			if (!userId) {
-				logger.warn('Invalid user ID in webhook event', {
-					ccpaymentUid: event.uid,
-					orderId: event.orderId
-				});
-				return {
-					success: false,
-					message: 'Invalid user ID format in webhook'
-				};
-			}
-			
-			const [user] = await db.select().from(users).where(eq(users.id, userId)).limit(1);
-
-			if (!user) {
-				logger.warn('User not found for direct deposit auto-conversion', {
-					ccpaymentUid: event.uid,
-					orderId: event.orderId
-				});
-				return {
-					success: false,
-					message: 'User not found for direct deposit'
-				};
-			}
-
-			const conversionAmount = await this.calculateDgtConversion(
-				parseFloat(event.actualAmount),
-				event.coinSymbol
-			);
-
-			// Credit DGT for direct deposit
-			await dgtService.processReward(
-				user.id,
-				conversionAmount,
-				'crypto_deposit',
-				`Direct crypto deposit auto-converted from ${event.coinSymbol} (${event.actualAmount})`
-			);
-
-			logger.info('Direct deposit auto-converted to DGT', {
-				userId: user.id,
-				originalAmount: event.actualAmount,
-				originalCurrency: event.coinSymbol,
-				dgtAmount: conversionAmount,
-				conversionRate: walletConfig.DGT.PRICE_USD
-			});
-
-			return {
-				success: true,
-				message: `Direct deposit auto-converted: ${conversionAmount} DGT credited for ${event.actualAmount} ${event.coinSymbol}`
-			};
-		} catch (error) {
-			logger.error('Error handling direct deposit auto-conversion', error);
-			return {
-				success: false,
-				message: `Error auto-converting direct deposit: ${error.message}`
-			};
-		}
-	}
-
-	/**
-	 * Calculate DGT amount from crypto deposit with rate buffer
-	 * @param usdAmount USD amount from crypto
-	 * @param coinSymbol Original coin symbol
-	 * @returns DGT amount to credit
-	 */
-	private async calculateDgtConversion(usdAmount: number, coinSymbol: string): Promise<number> {
-		// Apply rate buffer to account for fluctuations
-		const bufferedAmount = usdAmount * (1 - walletConfig.CONVERSION_RATE_BUFFER);
-
-		// Convert to DGT at pegged rate ($0.10 per DGT)
-		const dgtAmount = Math.floor(bufferedAmount / walletConfig.DGT.PRICE_USD);
-
-		logger.debug('DGT conversion calculation', {
-			originalUsdAmount: usdAmount,
-			bufferedUsdAmount: bufferedAmount,
-			conversionRate: walletConfig.DGT.PRICE_USD,
-			dgtAmount,
-			coinSymbol,
-			bufferPercentage: walletConfig.CONVERSION_RATE_BUFFER
+	private async handleApiDeposit(msg: ApiDepositMsg): Promise<{ success: boolean; message: string }> {
+		const purchaseOrder = await db.query.dgtPurchaseOrders.findFirst({
+			where: eq(dgtPurchaseOrders.ccpaymentReference, msg.orderId),
 		});
 
+		if (!purchaseOrder) {
+			logger.warn('CCPaymentWebhookService', 'No matching DGT purchase order for ApiDeposit', { orderId: msg.orderId });
+			return { success: false, message: 'No matching purchase order' };
+		}
+
+		if (purchaseOrder.status === 'completed') {
+			logger.warn('CCPaymentWebhookService', 'Received webhook for already completed order', { orderId: msg.orderId });
+			return { success: true, message: 'Order already completed' };
+		}
+
+		// Credit the exact amount of DGT the user requested.
+		await dgtService.creditDgt(purchaseOrder.userId, purchaseOrder.dgtAmountRequested, {
+			source: 'dgt_purchase',
+			reason: `DGT Purchase via ${purchaseOrder.cryptoCurrencyExpected}`,
+			dgtPurchaseOrderId: purchaseOrder.id,
+		});
+
+		// Mark the order as complete.
+		await db.update(dgtPurchaseOrders)
+			.set({ status: 'completed', updatedAt: new Date() })
+			.where(eq(dgtPurchaseOrders.id, purchaseOrder.id));
+
+		logger.info('CCPaymentWebhookService', 'DGT purchase order fulfilled', { purchaseOrderId: purchaseOrder.id });
+		return { success: true, message: 'DGT purchase fulfilled' };
+	}
+
+	/**
+	 * Fetches the authoritative deposit record from the API.
+	 */
+	private async getDepositRecord(recordId: string): Promise<{ amount: string; coinSymbol: string } | null> {
+		try {
+			const response = await ccpaymentApiService.makeRequest<{ record: any }>(
+				'/ccpayment/v2/getAppDepositRecord',
+				{ recordId }
+			);
+			return response.record;
+		} catch (error) {
+			logger.error('CCPaymentWebhookService', 'Failed to fetch deposit record', { recordId, error });
+			return null;
+		}
+	}
+
+	/**
+	 * Calculates the DGT amount from a given crypto amount based on its USD value.
+	 */
+	private async calculateDgtConversion(cryptoAmount: number, cryptoSymbol: string): Promise<number> {
+		// This is a simplified conversion. A robust implementation would fetch the real-time price.
+		// For now, we assume the webhook provides enough info or we have a price feed.
+		// This part needs to be implemented based on how you get the USD value of the deposit.
+		// Let's assume we need to fetch the price.
+		const priceData = await ccpaymentApiService.makeRequest<{ prices: Record<string, string> }>(
+			'/ccpayment/v2/getCoinUSDTPrice',
+			{ coinIds: [walletConfig.COIN_IDS[cryptoSymbol]] } // Assumes walletConfig has this mapping
+		);
+
+		const usdPrice = parseFloat(priceData.prices[walletConfig.COIN_IDS[cryptoSymbol]]);
+		if (!usdPrice) {
+			throw new Error(`Could not fetch price for ${cryptoSymbol}`);
+		}
+
+		const usdValue = cryptoAmount * usdPrice;
+		const bufferedUsdValue = usdValue * (1 - walletConfig.CONVERSION_RATE_BUFFER);
+		const dgtAmount = Math.floor(bufferedUsdValue / walletConfig.DGT.PRICE_USD);
+
+		logger.debug('DGT conversion calculation', { usdValue, dgtAmount });
 		return dgtAmount;
-	}
-
-	/**
-	 * Handle deposit failure webhook
-	 * @param event Webhook event
-	 * @returns Processing result
-	 */
-	private async handleDepositFailed(
-		event: ExtendedCCPaymentWebhookEvent
-	): Promise<{ success: boolean; message: string }> {
-		try {
-			// Find the DGT purchase order associated with this deposit
-			const [purchaseOrder] = await db
-				.select()
-				.from(dgtPurchaseOrders)
-				.where(eq(dgtPurchaseOrders.ccpaymentReference, event.merchantOrderId))
-				.limit(1);
-
-			if (!purchaseOrder) {
-				logger.warn('No matching purchase order found for failed deposit', {
-					merchantOrderId: event.merchantOrderId
-				});
-
-				return {
-					success: true,
-					message: 'No matching DGT purchase order found for failed deposit'
-				};
-			}
-
-			// TODO: Mark the purchase order as failed in database
-			logger.warn('CCPaymentWebhook', 'Purchase order failed', {
-				orderId: purchaseOrder.id,
-				webhookEventId: event.orderId,
-				failureReason: event.status
-			});
-
-			return {
-				success: true,
-				message: `DGT purchase marked as failed for order ${purchaseOrder.id}`
-			};
-		} catch (error) {
-			logger.error('Error handling deposit failed webhook', error);
-			return {
-				success: false,
-				message: `Error marking DGT purchase as failed: ${error.message}`
-			};
-		}
-	}
-
-	/**
-	 * Handle withdrawal completion webhook
-	 * @param event Webhook event
-	 * @returns Processing result
-	 */
-	private async handleWithdrawalCompleted(
-		event: ExtendedCCPaymentWebhookEvent
-	): Promise<{ success: boolean; message: string }> {
-		try {
-			// Find the transaction associated with this withdrawal
-			const [transaction] = await db
-				.select()
-				.from(transactions)
-				.where(
-					and(
-						eq(transactions.type, 'WITHDRAWAL'),
-						eq(transactions.metadata['ccpaymentOrderId'], event.merchantOrderId)
-					)
-				)
-				.limit(1);
-
-			if (!transaction) {
-				logger.warn('No matching transaction found for completed withdrawal', {
-					merchantOrderId: event.merchantOrderId
-				});
-
-				return {
-					success: true,
-					message: 'No matching transaction found for completed withdrawal'
-				};
-			}
-
-			// Update the transaction with completed status and blockchain details
-			await db
-				.update(transactions)
-				.set({
-					status: 'confirmed',
-					blockchainTxId: event.txHash,
-					updatedAt: new Date(),
-					metadata: {
-						...transaction.metadata,
-						webhookEventId: event.orderId,
-						completedAt: new Date().toISOString(),
-						networkFee: event.actualAmount
-							? (parseFloat(event.amount) - parseFloat(event.actualAmount)).toString()
-							: undefined
-					}
-				})
-				.where(eq(transactions.id, transaction.id));
-
-			return {
-				success: true,
-				message: `Withdrawal transaction ${transaction.id} marked as completed`
-			};
-		} catch (error) {
-			logger.error('Error handling withdrawal completed webhook', error);
-			return {
-				success: false,
-				message: `Error updating withdrawal transaction: ${error.message}`
-			};
-		}
-	}
-
-	/**
-	 * Handle withdrawal failure webhook
-	 * @param event Webhook event
-	 * @returns Processing result
-	 */
-	private async handleWithdrawalFailed(
-		event: ExtendedCCPaymentWebhookEvent
-	): Promise<{ success: boolean; message: string }> {
-		try {
-			// Find the transaction associated with this withdrawal
-			const [transaction] = await db
-				.select()
-				.from(transactions)
-				.where(
-					and(
-						eq(transactions.type, 'WITHDRAWAL'),
-						eq(transactions.metadata['ccpaymentOrderId'], event.merchantOrderId)
-					)
-				)
-				.limit(1);
-
-			if (!transaction) {
-				logger.warn('No matching transaction found for failed withdrawal', {
-					merchantOrderId: event.merchantOrderId
-				});
-
-				return {
-					success: true,
-					message: 'No matching transaction found for failed withdrawal'
-				};
-			}
-
-			// Update the transaction with failed status
-			await db
-				.update(transactions)
-				.set({
-					status: 'failed',
-					updatedAt: new Date(),
-					metadata: {
-						...transaction.metadata,
-						webhookEventId: event.orderId,
-						failureReason: event.status,
-						failedAt: new Date().toISOString()
-					}
-				})
-				.where(eq(transactions.id, transaction.id));
-
-			// If this was a withdrawal, refund the user's crypto balance
-			// This depends on your business logic
-
-			return {
-				success: true,
-				message: `Withdrawal transaction ${transaction.id} marked as failed`
-			};
-		} catch (error) {
-			logger.error('Error handling withdrawal failed webhook', error);
-			return {
-				success: false,
-				message: `Error updating withdrawal transaction: ${error.message}`
-			};
-		}
-	}
-
-	/**
-	 * Handle wallet creation success webhook
-	 * @param event Webhook event
-	 * @returns Processing result
-	 */
-	private async handleWalletCreated(
-		event: ExtendedCCPaymentWebhookEvent
-	): Promise<{ success: boolean; message: string }> {
-		try {
-			logger.info('Processing wallet creation success webhook', {
-				eventType: event.eventType,
-				userId: event.uid,
-				orderId: event.orderId
-			});
-
-			// Just log wallet creation success - welcome bonus is handled in auth controller only
-			if (event.uid) {
-				// Validate the user ID first
-				const userId = validateAndConvertId(event.uid, 'User');
-				if (!userId) {
-					logger.warn('Invalid user ID in wallet creation webhook', {
-						ccpaymentUid: event.uid,
-						orderId: event.orderId
-					});
-					return {
-						success: false,
-						message: 'Invalid user ID format in webhook'
-					};
-				}
-				
-				const [user] = await db.select().from(users).where(eq(users.id, userId)).limit(1);
-
-				if (user) {
-					logger.info('CCPayment wallet creation confirmed for user', {
-						userId: user.id,
-						webhookEventId: event.orderId
-					});
-				}
-			}
-
-			return {
-				success: true,
-				message: 'Wallet creation processed successfully'
-			};
-		} catch (error) {
-			logger.error('Error handling wallet created webhook', error);
-			return {
-				success: false,
-				message: `Error processing wallet creation: ${error.message}`
-			};
-		}
-	}
-
-	/**
-	 * Handle wallet creation failure webhook
-	 * @param event Webhook event
-	 * @returns Processing result
-	 */
-	private async handleWalletFailed(
-		event: ExtendedCCPaymentWebhookEvent
-	): Promise<{ success: boolean; message: string }> {
-		try {
-			logger.warn('Processing wallet creation failure webhook', {
-				eventType: event.eventType,
-				userId: event.uid,
-				orderId: event.orderId,
-				reason: event.status
-			});
-
-			// Log the failure for admin review
-			// In production, you might want to trigger alerts or retry mechanisms
-
-			return {
-				success: true,
-				message: 'Wallet creation failure logged for review'
-			};
-		} catch (error) {
-			logger.error('Error handling wallet failed webhook', error);
-			return {
-				success: false,
-				message: `Error processing wallet failure: ${error.message}`
-			};
-		}
 	}
 }
 
-// Export a singleton instance
 export const ccpaymentWebhookService = new CCPaymentWebhookService();

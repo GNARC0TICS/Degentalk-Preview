@@ -1,40 +1,6 @@
 import { lazy } from 'react';
 import type { ComponentType, LazyExoticComponent } from 'react';
 
-export interface ModuleSettings {
-	[key: string]: any;
-}
-
-export interface AdminModule {
-	id: string;
-	name: string;
-	description?: string;
-	icon: string; // Lucide icon name
-	route: string;
-	component: LazyExoticComponent<ComponentType<any>>;
-	permissions: string[];
-	enabled: boolean;
-	order: number;
-	settings?: ModuleSettings;
-	subModules?: AdminModule[];
-}
-
-export interface AdminConfig {
-	modules: AdminModule[];
-	defaultPermissions: {
-		superAdmin: string[];
-		admin: string[];
-		moderator: string[];
-	};
-	features: {
-		auditLog: boolean;
-		bulkOperations: boolean;
-		advancedAnalytics: boolean;
-		emailTemplates: boolean;
-		backup: boolean;
-	};
-}
-
 // Define all available permissions
 export const ADMIN_PERMISSIONS = {
 	// User Management
@@ -54,11 +20,15 @@ export const ADMIN_PERMISSIONS = {
 	'admin.shop.categories': 'Manage shop categories',
 	'admin.shop.inventory': 'Manage inventory',
 
-	// Wallet & Economy
+	// Wallet & Economy (New granular permissions)
 	'admin.wallet.view': 'View wallet information',
 	'admin.wallet.manage': 'Manage DGT balances',
 	'admin.wallet.transactions': 'View transactions',
 	'admin.wallet.grant': 'Grant DGT tokens',
+	'admin.wallet.user-wallets.view': 'View individual user wallets',
+	'admin.wallet.user-wallets.manage': 'Manage individual user wallets (credit/debit crypto/DGT)',
+	'admin.wallet.treasury.view': 'View platform treasury balances',
+	'admin.wallet.treasury.manage': 'Manage platform treasury (manual transfers)',
 
 	// Forum Management
 	'admin.forum.view': 'View forum structure',
@@ -85,422 +55,50 @@ export const ADMIN_PERMISSIONS = {
 
 export type AdminPermission = keyof typeof ADMIN_PERMISSIONS;
 
-// Admin module definitions
-export const adminConfig: AdminConfig = {
-	modules: [
-		{
-			id: 'dashboard',
-			name: 'Dashboard',
-			description: 'Admin overview and statistics',
-			icon: 'LayoutDashboard',
-			route: '/admin',
-			component: lazy(() => import('@/pages/admin/index')),
-			permissions: ['admin.system.view'],
-			enabled: true,
-			order: 0
-		},
-		{
-			id: 'users',
-			name: 'User Management',
-			description: 'Manage users, roles, and permissions',
-			icon: 'Users',
-			route: '/admin/users',
-			component: lazy(() => import('@/pages/admin/users')),
-			permissions: ['admin.users.view'],
-			enabled: true,
-			order: 1,
-			settings: {
-				enableBulkOperations: true,
-				maxBulkSelection: 100
-			},
-			subModules: [
-				{
-					id: 'roles',
-					name: 'Roles',
-					icon: 'Shield',
-					route: '/admin/roles',
-					component: lazy(() => import('@/pages/admin/roles')),
-					permissions: ['admin.users.manage'],
-					enabled: true,
-					order: 0
-				},
-				{
-					id: 'permissions',
-					name: 'Permissions',
-					icon: 'Key',
-					route: '/admin/permissions',
-					component: lazy(() => import('@/pages/admin/permissions/index')),
-					permissions: ['admin.users.manage'],
-					enabled: true,
-					order: 1
-				}
-			]
-		},
-		{
-			id: 'xp-system',
-			name: 'XP System',
-			description: 'Configure experience points and levels',
-			icon: 'TrendingUp',
-			route: '/admin/xp-system',
-			component: lazy(() => import('@/pages/admin/xp-system')),
-			permissions: ['admin.xp.view'],
-			enabled: true,
-			order: 2,
-			settings: {
-				maxLevel: 100,
-				xpMultiplier: 1.0,
-				enableSeasonalEvents: true
-			}
-		},
-		{
-			id: 'wallets',
-			name: 'Wallet Management',
-			description: 'Manage DGT tokens and transactions',
-			icon: 'Wallet',
-			route: '/admin/wallets',
-			component: lazy(() => import('@/pages/admin/wallets/index')),
-			permissions: ['admin.wallet.view'],
-			enabled: true,
-			order: 3,
-			subModules: [
-				{
-					id: 'treasury',
-					name: 'Treasury',
-					icon: 'Landmark',
-					route: '/admin/treasury',
-					component: lazy(() => import('@/pages/admin/treasury')),
-					permissions: ['admin.wallet.manage'],
-					enabled: true,
-					order: 0
-				},
-				{
-					id: 'dgt-packages',
-					name: 'DGT Packages',
-					icon: 'Package',
-					route: '/admin/dgt-packages',
-					component: lazy(() => import('@/pages/admin/dgt-packages')),
-					permissions: ['admin.wallet.manage'],
-					enabled: true,
-					order: 1
-				}
-			]
-		},
-		{
-			id: 'shop',
-			name: 'Shop Management',
-			description: 'Manage products and inventory',
-			icon: 'ShoppingBag',
-			route: '/admin/shop',
-			component: lazy(() => import('@/pages/admin/shop/index')),
-			permissions: ['admin.shop.view'],
-			enabled: true,
-			order: 4,
-			settings: {
-				enableInventoryTracking: true,
-				lowStockThreshold: 10
-			},
-			subModules: [
-				{
-					id: 'shop-categories',
-					name: 'Categories',
-					icon: 'FolderTree',
-					route: '/admin/shop/categories',
-					component: lazy(() => import('@/pages/admin/shop/categories')),
-					permissions: ['admin.shop.categories'],
-					enabled: true,
-					order: 0
-				}
-			]
-		},
-		{
-			id: 'forum',
-			name: 'Forum Structure',
-			description: 'Manage forums and categories',
-			icon: 'MessageSquare',
-			route: '/admin/forum-structure',
-			component: lazy(() => import('@/pages/admin/forum-structure')),
-			permissions: ['admin.forum.view'],
-			enabled: true,
-			order: 5
-		},
-		{
-			id: 'reports',
-			name: 'Reports',
-			description: 'User reports and moderation',
-			icon: 'Flag',
-			route: '/admin/reports',
-			component: lazy(() => import('@/pages/admin/reports/index')),
-			permissions: ['admin.reports.view'],
-			enabled: true,
-			order: 6
-		},
-		{
-			id: 'analytics',
-			name: 'Analytics',
-			description: 'Platform analytics and insights',
-			icon: 'BarChart3',
-			route: '/admin/stats',
-			component: lazy(() => import('@/pages/admin/stats/index')),
-			permissions: ['admin.analytics.view'],
-			enabled: true,
-			order: 7,
-			subModules: [
-				{
-					id: 'system-analytics',
-					name: 'System Analytics',
-					icon: 'Activity',
-					route: '/admin/system-analytics',
-					component: lazy(() => import('@/pages/admin/system-analytics')),
-					permissions: ['admin.analytics.view'],
-					enabled: true,
-					order: 0
-				}
-			]
-		},
-		{
-			id: 'cosmetics',
-			name: 'Cosmetics',
-			description: 'Manage avatar frames, stickers, and animations',
-			icon: 'Sparkles',
-			route: '/admin/avatar-frames',
-			component: lazy(() => import('@/pages/admin/avatar-frames')),
-			permissions: ['admin.shop.manage'],
-			enabled: true,
-			order: 8,
-			subModules: [
-				{
-					id: 'stickers',
-					name: 'Stickers',
-					icon: 'Sticker',
-					route: '/admin/stickers',
-					component: lazy(() => import('@/pages/admin/stickers')),
-					permissions: ['admin.shop.manage'],
-					enabled: true,
-					order: 0
-				},
-				{
-					id: 'animations',
-					name: 'Animations',
-					icon: 'Zap',
-					route: '/admin/ui/animations',
-					component: lazy(() => import('@/pages/admin/ui/animations')),
-					permissions: ['admin.shop.manage'],
-					enabled: true,
-					order: 1
-				},
-				{
-					id: 'emojis',
-					name: 'Emojis',
-					icon: 'Smile',
-					route: '/admin/emojis',
-					component: lazy(() => import('@/pages/admin/emojis')),
-					permissions: ['admin.shop.manage'],
-					enabled: true,
-					order: 2
-				}
-			]
-		},
-		{
-			id: 'settings',
-			name: 'Settings',
-			description: 'Platform configuration',
-			icon: 'Settings',
-			route: '/admin/settings',
-			component: lazy(() => import('@/pages/admin/social-config')),
-			permissions: ['admin.system.view'],
-			enabled: true,
-			order: 9,
-			subModules: [
-				{
-					id: 'feature-flags',
-					name: 'Feature Flags',
-					icon: 'ToggleLeft',
-					route: '/admin/feature-flags',
-					component: lazy(() => import('@/pages/admin/feature-flags')),
-					permissions: ['admin.system.manage'],
-					enabled: true,
-					order: 0
-				},
-				{
-					id: 'announcements',
-					name: 'Announcements',
-					icon: 'Megaphone',
-					route: '/admin/announcements',
-					component: lazy(() => import('@/pages/admin/announcements/index')),
-					permissions: ['admin.system.manage'],
-					enabled: true,
-					order: 1
-				}
-			]
-		},
-		{
-			id: 'brand-config',
-			name: 'Brand Configuration',
-			description: 'Manage platform design system and themes',
-			icon: 'Palette',
-			route: '/admin/brand-config',
-			component: lazy(() => import('@/pages/admin/brand-config')),
-			permissions: ['admin.system.manage'],
-			enabled: true,
-			order: 10
-		},
-		{
-			id: 'ui-config',
-			name: 'UI Configuration',
-			description: 'Manage hero and footer quotes',
-			icon: 'Quote',
-			route: '/admin/ui-config',
-			component: lazy(() => import('@/pages/admin/ui-config')),
-			permissions: ['admin.system.manage'],
-			enabled: true,
-			order: 11
-		},
-		{
-			id: 'live-database',
-			name: 'Live Database Editor',
-			description: 'Browse and edit database tables for moderation and maintenance',
-			icon: 'Database',
-			route: '/admin/live-database',
-			component: lazy(() => import('@/pages/admin/live-database')),
-			permissions: ['admin.database.view', 'admin.database.edit'],
-			enabled: true,
-			order: 12,
-			settings: {
-				beta: true,
-				restrictToTables: [
-					'users',
-					'threads',
-					'posts',
-					'bans',
-					'reports',
-					'roles',
-					'categories',
-					'forum_structure',
-					'tags'
-				]
-			}
-		}
-	],
-
-	defaultPermissions: {
-		superAdmin: Object.keys(ADMIN_PERMISSIONS) as AdminPermission[],
-		admin: [
-			'admin.users.view',
-			'admin.users.manage',
-			'admin.xp.view',
-			'admin.xp.manage',
-			'admin.shop.view',
-			'admin.shop.manage',
-			'admin.wallet.view',
-			'admin.forum.view',
-			'admin.forum.manage',
-			'admin.reports.view',
-			'admin.reports.manage',
-			'admin.analytics.view',
-			'admin.system.view',
-			'admin.database.view',
-			'admin.database.edit',
-			'admin.database.export'
-		] as AdminPermission[],
-		moderator: [
-			'admin.users.view',
-			'admin.forum.view',
-			'admin.forum.moderate',
-			'admin.reports.view',
-			'admin.reports.manage'
-		] as AdminPermission[]
-	},
-
-	features: {
-		auditLog: true,
-		bulkOperations: true,
-		advancedAnalytics: true,
-		emailTemplates: true,
-		backup: true
-	}
-};
-
-// Helper function to get module by ID
-export function getAdminModuleById(moduleId: string): AdminModule | undefined {
-	function findModule(modules: AdminModule[]): AdminModule | undefined {
-		for (const module of modules) {
-			if (module.id === moduleId) return module;
-			if (module.subModules) {
-				const found = findModule(module.subModules);
-				if (found) return found;
-			}
-		}
-		return undefined;
-	}
-
-	return findModule(adminConfig.modules);
-}
-
-// Helper function to get all modules flattened
-export function getAllAdminModules(): AdminModule[] {
-	const allModules: AdminModule[] = [];
-
-	function collectModules(modules: AdminModule[]) {
-		for (const module of modules) {
-			allModules.push(module);
-			if (module.subModules) {
-				collectModules(module.subModules);
-			}
-		}
-	}
-
-	collectModules(adminConfig.modules);
-	return allModules;
-}
-
-// =============================
-// Admin Config V2 – Consolidated
-// =============================
-// Note: React imports already available from above
-
 export interface AdminModuleV2 {
 	slug: string; // unique slug, used as key
 	label: string;
-	icon: string; // lucide icon name
-	permission: string; // e.g. 'admin:users:view'
+	icon: string; // lucide icon name (e.g., 'layout-dashboard', 'users')
+	permission: AdminPermission; // e.g. 'admin:users:view'
 	component: LazyExoticComponent<ComponentType<any>>;
 	path: string; // URL path for React-Router (absolute)
 	children?: AdminModuleV2[];
+	disabled?: boolean; // Optional: to temporarily disable a module
 }
 
-// Core admin modules.  Only most-used MVP pages are defined here – extend freely.
+// Core admin modules. This is the source of truth for admin navigation and permissions.
 export const adminModulesV2: AdminModuleV2[] = [
 	{
 		slug: 'dashboard',
 		label: 'Dashboard',
 		icon: 'layout-dashboard',
-		permission: 'admin:overview:view',
+		permission: 'admin.system.view',
 		path: '/admin',
-		component: lazy(() => import('@/pages/admin/index'))
+		component: lazy(() => import('@admin/views/dashboard/AdminDashboard'))
 	},
 	{
 		slug: 'users',
 		label: 'Users',
 		icon: 'users',
-		permission: 'admin:users:view',
+		permission: 'admin.users.view',
 		path: '/admin/users',
-		component: lazy(() => import('@/pages/admin/users')),
+		component: lazy(() => import('@admin/views/users/UserManagement')),
 		children: [
 			{
 				slug: 'roles',
 				label: 'Roles',
 				icon: 'shield',
-				permission: 'admin:roles:manage',
-				path: '/admin/roles',
-				component: lazy(() => import('@/pages/admin/roles'))
+				permission: 'admin.users.manage',
+				path: '/admin/users/roles',
+				component: lazy(() => import('@admin/views/users/Roles'))
 			},
 			{
 				slug: 'permissions',
 				label: 'Permissions',
 				icon: 'key',
-				permission: 'admin:permissions:view',
-				path: '/admin/permissions',
-				component: lazy(() => import('@/pages/admin/permissions/index'))
+				permission: 'admin.users.manage',
+				path: '/admin/users/permissions',
+				component: lazy(() => import('@admin/views/users/Permissions'))
 			}
 		]
 	},
@@ -508,25 +106,33 @@ export const adminModulesV2: AdminModuleV2[] = [
 		slug: 'economy',
 		label: 'Economy',
 		icon: 'dollar-sign',
-		permission: 'admin:economy:view',
-		path: '/admin/treasury', // top-level route
-		component: lazy(() => import('@/pages/admin/treasury')),
+		permission: 'admin.wallet.view',
+		path: '/admin/economy', // Top-level path for economy section
+		component: lazy(() => import('@admin/views/wallet/EconomyDashboard')), // New dashboard for economy overview
 		children: [
 			{
-				slug: 'wallets',
-				label: 'Wallets',
+				slug: 'user-wallets',
+				label: 'User Wallets',
 				icon: 'wallet',
-				permission: 'admin:economy:view',
-				path: '/admin/wallets',
-				component: lazy(() => import('@/pages/admin/wallets/index'))
+				permission: 'admin.wallet.user-wallets.view',
+				path: '/admin/economy/user-wallets',
+				component: lazy(() => import('@admin/views/wallet/UserWalletManager'))
+			},
+			{
+				slug: 'platform-treasury',
+				label: 'Platform Treasury',
+				icon: 'landmark',
+				permission: 'admin.wallet.treasury.view',
+				path: '/admin/economy/platform-treasury',
+				component: lazy(() => import('@admin/views/wallet/PlatformTreasury'))
 			},
 			{
 				slug: 'dgt-packages',
 				label: 'DGT Packages',
 				icon: 'package',
-				permission: 'admin:economy:manage',
-				path: '/admin/dgt-packages',
-				component: lazy(() => import('@/pages/admin/dgt-packages'))
+				permission: 'admin.wallet.manage',
+				path: '/admin/economy/dgt-packages',
+				component: lazy(() => import('@admin/views/economy/DgtPackages')) // Assuming this will be moved under economy views
 			}
 		]
 	},
@@ -534,15 +140,152 @@ export const adminModulesV2: AdminModuleV2[] = [
 		slug: 'xp',
 		label: 'XP System',
 		icon: 'trophy',
-		permission: 'admin:xp:view',
+		permission: 'admin.xp.view',
 		path: '/admin/xp-system',
-		component: lazy(() => import('@/pages/admin/xp-system'))
+		component: lazy(() => import('@admin/views/xp/XpSystem'))
+	},
+	{
+		slug: 'shop',
+		label: 'Shop Management',
+		icon: 'shopping-bag',
+		permission: 'admin.shop.view',
+		path: '/admin/shop',
+		component: lazy(() => import('@admin/views/shop/ShopManagement')),
+		children: [
+			{
+				slug: 'shop-categories',
+				label: 'Categories',
+				icon: 'folder-tree',
+				permission: 'admin.shop.categories',
+				path: '/admin/shop/categories',
+				component: lazy(() => import('@admin/views/shop/ShopCategories'))
+			}
+		]
+	},
+	{
+		slug: 'forum',
+		label: 'Forum Structure',
+		icon: 'message-square',
+		permission: 'admin.forum.view',
+		path: '/admin/forum-structure',
+		component: lazy(() => import('@admin/views/forum/ForumStructure'))
+	},
+	{
+		slug: 'reports',
+		label: 'Reports',
+		icon: 'flag',
+		permission: 'admin.reports.view',
+		path: '/admin/reports',
+		component: lazy(() => import('@admin/views/reports/Reports'))
+	},
+	{
+		slug: 'analytics',
+		label: 'Analytics',
+		icon: 'bar-chart-3',
+		permission: 'admin.analytics.view',
+		path: '/admin/analytics',
+		component: lazy(() => import('@admin/views/analytics/AnalyticsDashboard')),
+		children: [
+			{
+				slug: 'system-analytics',
+				label: 'System Analytics',
+				icon: 'activity',
+				permission: 'admin.analytics.view',
+				path: '/admin/analytics/system',
+				component: lazy(() => import('@admin/views/analytics/SystemAnalytics'))
+			}
+		]
+	},
+	{
+		slug: 'cosmetics',
+		label: 'Cosmetics',
+		icon: 'sparkles',
+		permission: 'admin.shop.manage',
+		path: '/admin/cosmetics',
+		component: lazy(() => import('@admin/views/cosmetics/CosmeticsDashboard')),
+		children: [
+			{
+				slug: 'stickers',
+				label: 'Stickers',
+				icon: 'sticker',
+				permission: 'admin.shop.manage',
+				path: '/admin/cosmetics/stickers',
+				component: lazy(() => import('@admin/views/cosmetics/Stickers'))
+			},
+			{
+				slug: 'animations',
+				label: 'Animations',
+				icon: 'zap',
+				permission: 'admin.shop.manage',
+				path: '/admin/cosmetics/animations',
+				component: lazy(() => import('@admin/views/cosmetics/Animations'))
+			},
+			{
+				slug: 'emojis',
+				label: 'Emojis',
+				icon: 'smile',
+				permission: 'admin.shop.manage',
+				path: '/admin/cosmetics/emojis',
+				component: lazy(() => import('@admin/views/cosmetics/Emojis'))
+			}
+		]
+	},
+	{
+		slug: 'settings',
+		label: 'Settings',
+		icon: 'settings',
+		permission: 'admin.system.view',
+		path: '/admin/settings',
+		component: lazy(() => import('@admin/views/settings/SettingsDashboard')),
+		children: [
+			{
+				slug: 'feature-flags',
+				label: 'Feature Flags',
+				icon: 'toggle-left',
+				permission: 'admin.system.manage',
+				path: '/admin/settings/feature-flags',
+				component: lazy(() => import('@admin/views/settings/FeatureFlags'))
+			},
+			{
+				slug: 'announcements',
+				label: 'Announcements',
+				icon: 'megaphone',
+				permission: 'admin.system.manage',
+				path: '/admin/settings/announcements',
+				component: lazy(() => import('@admin/views/settings/Announcements'))
+			}
+		]
+	},
+	{
+		slug: 'brand-config',
+		label: 'Brand Configuration',
+		icon: 'palette',
+		permission: 'admin.system.manage',
+		path: '/admin/brand-config',
+		component: lazy(() => import('@admin/views/system/BrandConfig'))
+	},
+	{
+		slug: 'ui-config',
+		label: 'UI Configuration',
+		icon: 'quote',
+		permission: 'admin.system.manage',
+		path: '/admin/ui-config',
+		component: lazy(() => import('@admin/views/system/UiConfig'))
+	},
+	{
+		slug: 'live-database',
+		label: 'Live Database Editor',
+		icon: 'database',
+		permission: 'admin.database.view',
+		path: '/admin/live-database',
+		component: lazy(() => import('@admin/views/system/LiveDatabaseEditor')),
+		disabled: false, // Set to true to disable this module
+		children: []
 	}
 ];
 
-// -----------------------------
-// Helper utilities
-// -----------------------------
+// Helper utilities (flatten, generateSidebarLinks, generateAdminRouteGroups, permissionToModuleMap)
+// These remain largely the same, but will now operate on adminModulesV2
 
 function flatten(mods: AdminModuleV2[]): AdminModuleV2[] {
 	const result: AdminModuleV2[] = [];
@@ -576,7 +319,7 @@ export function generateAdminRouteGroups() {
 		id: m.slug,
 		label: m.label,
 		icon: (m.icon as any) ?? 'layout-dashboard',
-		permissions: [m.permission.split(':')[0] as any],
+		permissions: [m.permission.split(':')[0] as any], // Simplified for legacy compatibility
 		routes: [
 			{
 				path: m.path,

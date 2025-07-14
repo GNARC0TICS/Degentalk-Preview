@@ -15,18 +15,20 @@ const router = Router();
  * All routes require admin authentication.
  */
 
-// Wallet Configuration Routes
-router.get('/config', adminWalletController.getWalletConfig);
-router.put('/config', validateWalletConfig, adminWalletController.updateWalletConfig);
-router.post('/config/reset', adminWalletController.resetWalletConfig);
+// User Financial Profile Routes
+router.get('/user-profile/:userId', validateUserId, adminWalletController.getUserFinancialProfile);
 
 // DGT Management Routes
 router.get('/dgt/analytics', adminWalletController.getDGTAnalytics);
-router.post('/dgt/credit', validateDGTTransaction, adminWalletController.creditDGTToUser);
-router.post('/dgt/debit', validateDGTTransaction, adminWalletController.debitDGTFromUser);
-router.get('/dgt/user/:userId', validateUserId, adminWalletController.getUserDGTInfo);
+router.post('/dgt/credit', validateDGTTransaction, adminWalletController.creditDgt);
+router.post('/dgt/debit', validateDGTTransaction, adminWalletController.debitDgt);
 
-// System Status Routes
-router.get('/system/status', adminWalletController.getWalletSystemStatus);
+// Crypto Management Routes
+router.post('/crypto/credit', adminWalletController.creditCrypto);
+router.post('/crypto/debit', adminWalletController.debitCrypto);
+
+// TODO: Implement these methods in controller
+// router.get('/dgt/user/:userId', validateUserId, adminWalletController.getUserDGTInfo);
+// router.get('/system/status', adminWalletController.getWalletSystemStatus);
 
 export { router as adminWalletRoutes };

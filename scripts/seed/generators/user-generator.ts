@@ -1,6 +1,6 @@
-import { db } from '@db';
-import * as schema from '@schema';
-import type { UserId } from '@shared/types/ids';
+import { db } from '../../db';
+import * as schema from '../../db/schema';
+import type { UserId } from '../../shared/types/ids';
 import { personas, type Persona } from '../config/personas.config';
 import bcrypt from 'bcryptjs';
 import { v4 as uuidv4 } from 'uuid';

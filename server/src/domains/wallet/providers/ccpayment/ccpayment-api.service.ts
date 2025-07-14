@@ -1,8 +1,9 @@
 /**
  * CCPayment API Service
  *
- * QUALITY IMPROVEMENT: Extracted from ccpayment.service.ts god object
- * Handles low-level CCPayment API interactions with proper separation of concerns
+ * Handles low-level CCPayment API v2 interactions.
+ * This version is updated to use HMAC-SHA256 signatures and v2 endpoints
+ * as per the latest documentation.
  */
 
 import axios, { type AxiosInstance, type AxiosRequestConfig } from 'axios';
@@ -14,11 +15,10 @@ export interface CCPaymentConfig {
 	apiUrl?: string;
 	appId?: string;
 	appSecret?: string;
-	notificationUrl?: string;
 }
 
 export interface CCPaymentApiResponse<T = any> {
-	code: string;
+	code: number; // v2 uses number codes
 	msg: string;
 	data?: T;
 }
@@ -29,33 +29,30 @@ export class CCPaymentApiService {
 
 	constructor(config: CCPaymentConfig = {}) {
 		this.config = {
-			apiUrl: config.apiUrl || process.env.CCPAYMENT_API_URL || 'https://admin.ccpayment.com',
+			apiUrl: config.apiUrl || process.env.CCPAYMENT_API_URL || 'https://ccpayment.com',
 			appId: config.appId || process.env.CCPAYMENT_APP_ID || '',
 			appSecret: config.appSecret || process.env.CCPAYMENT_APP_SECRET || '',
-			notificationUrl: config.notificationUrl || process.env.CCPAYMENT_NOTIFICATION_URL || ''
 		};
 
 		this.client = axios.create({
 			baseURL: this.config.apiUrl,
 			timeout: 30000,
 			headers: {
-				'Content-Type': 'application/json'
-			}
+				'Content-Type': 'application/json',
+			},
 		});
 
 		this.setupInterceptors();
 	}
 
-	/**
-	 * Setup request/response interceptors for logging and error handling
-	 */
 	private setupInterceptors(): void {
 		this.client.interceptors.request.use(
 			(config) => {
 				logger.debug('CCPaymentApiService', 'Outgoing request', {
 					url: config.url,
 					method: config.method,
-					headers: config.headers
+					data: config.data,
+					headers: config.headers,
 				});
 				return config;
 			},
@@ -69,7 +66,7 @@ export class CCPaymentApiService {
 			(response) => {
 				logger.debug('CCPaymentApiService', 'Incoming response', {
 					status: response.status,
-					data: response.data
+					data: response.data,
 				});
 				return response;
 			},
@@ -77,7 +74,7 @@ export class CCPaymentApiService {
 				logger.error('CCPaymentApiService', 'Response interceptor error', {
 					status: error.response?.status,
 					data: error.response?.data,
-					message: error.message
+					message: error.message,
 				});
 				return Promise.reject(error);
 			}
@@ -85,43 +82,45 @@ export class CCPaymentApiService {
 	}
 
 	/**
-	 * Generate signature for CCPayment API requests
+	 * Generate HMAC-SHA256 signature for CCPayment API v2 requests.
+	 * @param timestamp The 10-digit UNIX timestamp.
+	 * @param payload The JSON string of the request body. Can be an empty string.
 	 */
-	private generateSignature(params: Record<string, any>): string {
-		const sortedKeys = Object.keys(params).sort();
-		const signString =
-			sortedKeys.map((key) => `${key}=${params[key]}`).join('&') + `&key=${this.config.appSecret}`;
-
-		return crypto.createHash('md5').update(signString).digest('hex').toUpperCase();
+	private generateSignature(timestamp: string, payload: string): string {
+		const signText = this.config.appId + timestamp + payload;
+		return crypto
+			.createHmac('sha256', this.config.appSecret as string)
+			.update(signText)
+			.digest('hex');
 	}
 
 	/**
-	 * Make authenticated request to CCPayment API
+	 * Make an authenticated request to the CCPayment API v2.
+	 * @param endpoint The API endpoint path (e.g., '/ccpayment/v2/getCoinList').
+	 * @param body The request body object. Can be an empty object.
 	 */
 	async makeRequest<T>(
 		endpoint: string,
-		params: Record<string, any> = {},
-		options: AxiosRequestConfig = {}
+		body: Record<string, any> = {}
 	): Promise<T> {
 		try {
-			const requestParams = {
-				app_id: this.config.appId,
-				timestamp: Math.floor(Date.now() / 1000),
-				...params
+			const timestamp = Math.floor(Date.now() / 1000).toString();
+			const bodyString = Object.keys(body).length > 0 ? JSON.stringify(body) : '';
+			const signature = this.generateSignature(timestamp, bodyString);
+
+			const headers = {
+				Appid: this.config.appId,
+				Sign: signature,
+				Timestamp: timestamp,
 			};
 
-			// Generate signature
-			requestParams.sign = this.generateSignature(requestParams);
+			const response = await this.client.post<CCPaymentApiResponse<T>>(
+				endpoint,
+				bodyString,
+				{ headers }
+			);
 
-			const response = await this.client.request<CCPaymentApiResponse<T>>({
-				url: endpoint,
-				method: 'POST',
-				data: requestParams,
-				...options
-			});
-
-			// Handle CCPayment API response format
-			if (response.data.code !== '10000') {
+			if (response.data.code !== 10000) {
 				throw new WalletError(
 					`CCPayment API error: ${response.data.msg}`,
 					ErrorCodes.PAYMENT_PROVIDER_ERROR,
@@ -138,7 +137,7 @@ export class CCPaymentApiService {
 
 			if (axios.isAxiosError(error)) {
 				const status = error.response?.status || 500;
-				const message = error.response?.data?.message || error.message;
+				const message = error.response?.data?.msg || error.message;
 
 				throw new WalletError(
 					`CCPayment API request failed: ${message}`,
@@ -158,43 +157,53 @@ export class CCPaymentApiService {
 	}
 
 	/**
-	 * Validate webhook signature
+	 * Validate an incoming webhook signature.
+	 * @param payload The raw webhook payload (string).
+	 * @param appId The Appid from the webhook header.
+	 * @param signature The Sign from the webhook header.
+	 * @param timestamp The Timestamp from the webhook header.
 	 */
-	validateWebhookSignature(payload: string, signature: string): boolean {
-		const expectedSignature = crypto
-			.createHash('md5')
-			.update(payload + this.config.appSecret)
-			.digest('hex')
-			.toUpperCase();
+	validateWebhookSignature(
+		payload: string,
+		appId: string,
+		signature: string,
+		timestamp: string
+	): boolean {
+		if (appId !== this.config.appId) {
+			logger.warn('CCPaymentApiService', 'Webhook AppId mismatch', { received: appId });
+			return false;
+		}
 
-		return expectedSignature === signature;
+		const expectedSignature = this.generateSignature(timestamp, payload);
+		const isValid = crypto.timingSafeEqual(
+			Buffer.from(signature),
+			Buffer.from(expectedSignature)
+		);
+
+		if (!isValid) {
+			logger.warn('CCPaymentApiService', 'Invalid webhook signature', {
+				received: signature,
+				expected: expectedSignature,
+			});
+		}
+
+		return isValid;
 	}
 
 	/**
-	 * Get API configuration (without secrets)
-	 */
-	getConfig(): Omit<CCPaymentConfig, 'appSecret'> {
-		return {
-			apiUrl: this.config.apiUrl,
-			appId: this.config.appId,
-			notificationUrl: this.config.notificationUrl
-		};
-	}
-
-	/**
-	 * Health check for CCPayment API
+	 * Health check for CCPayment API.
+	 * We'll use the getFiatList endpoint as it requires no parameters.
 	 */
 	async healthCheck(): Promise<boolean> {
 		try {
-			// Try a simple API call to check connectivity
-			await this.makeRequest('/v1/health', {});
+			await this.makeRequest('/ccpayment/v2/getFiatList');
 			return true;
 		} catch (error) {
-			logger.warn('CCPaymentApiService', 'Health check failed', { error });
+			logger.warn('CCPaymentApiService', 'Health check failed', { error: (error as Error).message });
 			return false;
 		}
 	}
 }
 
-// Export singleton instance
+// Export a singleton instance
 export const ccpaymentApiService = new CCPaymentApiService();

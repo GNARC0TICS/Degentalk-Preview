@@ -156,6 +156,13 @@ app.use(traceMiddleware);
 
 		startupLog('Achievement background processor started.', 'success');
 
+		// Initialize dev auth if enabled
+		if (process.env.NODE_ENV !== 'production' && process.env.DEV_FORCE_AUTH === 'true') {
+			startupLog('Initializing development authentication...');
+			const { initializeDevAuth } = await import('./src/utils/dev-auth-startup');
+			await initializeDevAuth();
+		}
+
 		// Start the server
 		const port = process.env.PORT ? parseInt(process.env.PORT) : 5001;
 		startupLog(`Starting server on port ${port}...`);

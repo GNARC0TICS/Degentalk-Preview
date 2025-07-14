@@ -4,9 +4,10 @@ import { z } from 'zod';
 import { createHash, randomBytes } from 'crypto';
 import passport from 'passport';
 import { insertUserSchema } from '@schema';
-import { users } from '@schema';
+import { users, verificationTokens } from '@schema';
 import { logger } from '@core/logger';
 import { db } from '@core/db'; // Will be refactored in a future step
+import { eq } from 'drizzle-orm';
 import {
 	hashPassword,
 	storeTempDevMetadata,
@@ -17,6 +18,7 @@ import { walletService } from '@server/domains/wallet';
 import { walletConfig } from '@shared/wallet.config';
 import { UserTransformer } from '@server/domains/users/transformers/user.transformer';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
+import { generateToken } from '../utils/jwt.utils';
 
 type User = typeof users.$inferSelect;
 
@@ -204,7 +206,34 @@ export function login(req: Request, res: Response, next: NextFunction) {
 			const userResponse = { ...user };
 			delete userResponse.password;
 
-			sendSuccessResponse(res, userResponse);
+			// Generate JWT token for API access
+			const token = generateToken(user.id);
+			
+			// Decode token to get expiration time
+			const tokenParts = token.split('.');
+			if (tokenParts.length === 3) {
+				try {
+					const payload = JSON.parse(Buffer.from(tokenParts[1], 'base64').toString());
+					const expiresAt = payload.exp ? new Date(payload.exp * 1000).toISOString() : null;
+					
+					sendSuccessResponse(res, {
+						user: userResponse,
+						token,
+						expiresAt
+					});
+				} catch {
+					// If decoding fails, just send token without expiration
+					sendSuccessResponse(res, {
+						user: userResponse,
+						token
+					});
+				}
+			} else {
+				sendSuccessResponse(res, {
+					user: userResponse,
+					token
+				});
+			}
 		});
 	})(req, res, next);
 }

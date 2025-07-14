@@ -24,6 +24,16 @@
 		"allowImportingTsExtensions": true,
 		"verbatimModuleSyntax": false,
 		"types": ["node"],
-		"isolatedModules": true
+		"isolatedModules": true,
+		"baseUrl": ".",
+		"paths": {
+			"@/*": ["client/src/*"],
+			"@admin/*": ["client/src/features/admin/*"],
+			"@server/*": ["server/src/*"],
+			"@db": ["db/index.ts"],
+			"@schema": ["db/schema/index.ts"],
+			"@shared/*": ["shared/*"],
+			"@utils/*": ["client/src/utils/*"]
+		}
 	}
 }

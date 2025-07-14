@@ -5,8 +5,8 @@
  * and general participation achievements.
  */
 
-import { db } from '@db';
-import { achievements } from '@schema';
+import { db } from '../db';
+import { achievements } from '../db/schema';
 import { 
 	CORE_ACHIEVEMENT_TEMPLATES, 
 	CULTURAL_ACHIEVEMENT_TEMPLATES 

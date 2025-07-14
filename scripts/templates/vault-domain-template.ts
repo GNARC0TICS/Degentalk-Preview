@@ -1,4 +1,4 @@
-import type { AdminId } from '@shared/types/ids';
+import type { AdminId } from '../shared/types/ids';
 /**
  * Vault Domain Template
  * 
@@ -657,7 +657,7 @@ export const vaultTestTemplate = `/**
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { vaultService } from '../../src/domains/engagement/vault/vault.service';
 import { dgtService } from '../../src/domains/wallet/dgt.service';
-import { db } from '@db';
+import { db } from '../db';
 import { WalletError } from '../../src/domains/wallet/wallet.errors';
 
 // Mock dependencies

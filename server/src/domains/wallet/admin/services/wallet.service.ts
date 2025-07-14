@@ -1,19 +1,32 @@
+/**
+ * Admin Wallet Service (v2)
+ *
+ * This service provides comprehensive methods for administrators to manage the entire
+ * dual-ledger wallet system, including both the internal DGT ledger and the external
+ * CCPayment cryptocurrency ledger.
+ */
+
 import { db } from '@db';
-import { wallets, transactions, users } from '@schema';
+import { wallets, transactions, users, ccpaymentUsers } from '@schema';
 import { eq, sql } from 'drizzle-orm';
 import type { UserId } from '@shared/types/ids';
 import { logger } from '@core/logger';
 import { WalletError, ErrorCodes } from '@core/errors';
+import { ccpaymentService } from '@server/domains/wallet/providers/ccpayment/ccpayment.service';
+import type { CryptoBalance } from '@server/domains/wallet/providers/ccpayment/ccpayment.service';
 
 export class AdminWalletService {
+
+	// --- DGT Ledger Management --- //
+
 	/**
-	 * Add DGT to a user's wallet. For admin use only.
+	 * Credit DGT to a user's wallet. For admin use only.
 	 */
-	async addDgt(
+	async creditDgt(
 		userId: UserId,
 		amount: number,
 		reason: string,
-		metadata: Record<string, any> = {}
+		metadata: { adminUserId: UserId }
 	): Promise<void> {
 		if (amount <= 0) {
 			throw new WalletError('Amount must be positive.', ErrorCodes.VALIDATION_ERROR);
@@ -21,42 +34,30 @@ export class AdminWalletService {
 
 		await db.transaction(async (tx) => {
 			const wallet = await tx.query.wallets.findFirst({ where: eq(wallets.userId, userId) });
+			if (!wallet) throw new WalletError('User wallet not found.', ErrorCodes.NOT_FOUND);
 
-			if (!wallet) {
-				throw new WalletError('User wallet not found.', ErrorCodes.NOT_FOUND);
-			}
-
-			await tx
-				.update(wallets)
-				.set({ balance: sql`${wallets.balance} + ${amount}` })
-				.where(eq(wallets.id, wallet.id));
-
+			await tx.update(wallets).set({ dgtBalance: sql`${wallets.dgtBalance} + ${amount}` }).where(eq(wallets.id, wallet.id));
 			await tx.insert(transactions).values({
 				userId,
 				walletId: wallet.id,
 				amount,
-				type: 'admin_credit',
+				type: 'admin_credit_dgt',
 				status: 'completed',
 				description: reason,
-				metadata: { ...metadata, admin_action: 'addDgt' }
+				metadata: { ...metadata, admin_action: 'creditDgt' }
 			});
-
-			logger.info('AdminWalletService:addDgt', 'Successfully added DGT to user wallet', {
-				userId,
-				amount,
-				reason
-			});
+			logger.info('AdminWalletService', 'Successfully credited DGT', { userId, amount, reason });
 		});
 	}
 
 	/**
-	 * Deduct DGT from a user's wallet. For admin use only.
+	 * Debit DGT from a user's wallet. For admin use only.
 	 */
-	async deductDgt(
+	async debitDgt(
 		userId: UserId,
 		amount: number,
 		reason: string,
-		metadata: Record<string, any> = {}
+		metadata: { adminUserId: UserId }
 	): Promise<void> {
 		if (amount <= 0) {
 			throw new WalletError('Amount must be positive.', ErrorCodes.VALIDATION_ERROR);
@@ -64,148 +65,88 @@ export class AdminWalletService {
 
 		await db.transaction(async (tx) => {
 			const wallet = await tx.query.wallets.findFirst({ where: eq(wallets.userId, userId) });
+			if (!wallet) throw new WalletError('User wallet not found.', ErrorCodes.NOT_FOUND);
+			if (wallet.dgtBalance < amount) throw new WalletError('Insufficient DGT balance.', ErrorCodes.INSUFFICIENT_FUNDS);
 
-			if (!wallet) {
-				throw new WalletError('User wallet not found.', ErrorCodes.NOT_FOUND);
-			}
-
-			if (wallet.balance < amount) {
-				throw new WalletError('Insufficient balance for deduction.', ErrorCodes.INSUFFICIENT_FUNDS);
-			}
-
-			await tx
-				.update(wallets)
-				.set({ balance: sql`${wallets.balance} - ${amount}` })
-				.where(eq(wallets.id, wallet.id));
-
+			await tx.update(wallets).set({ dgtBalance: sql`${wallets.dgtBalance} - ${amount}` }).where(eq(wallets.id, wallet.id));
 			await tx.insert(transactions).values({
 				userId,
 				walletId: wallet.id,
 				amount: -amount,
-				type: 'admin_debit',
+				type: 'admin_debit_dgt',
 				status: 'completed',
 				description: reason,
-				metadata: { ...metadata, admin_action: 'deductDgt' }
+				metadata: { ...metadata, admin_action: 'debitDgt' }
 			});
-
-			logger.info('AdminWalletService:deductDgt', 'Successfully deducted DGT from user wallet', {
-				userId,
-				amount,
-				reason
-			});
+			logger.info('AdminWalletService', 'Successfully debited DGT', { userId, amount, reason });
 		});
 	}
 
+	// --- CCPayment Crypto Ledger Management --- //
+
 	/**
-	 * Get DGT analytics for admin dashboard.
+	 * Get a user's real cryptocurrency balances from CCPayment.
+	 */
+	async getUserCryptoBalances(userId: UserId): Promise<CryptoBalance[]> {
+		const ccpaymentUserId = await this.getCcpaymentUserId(userId);
+		return ccpaymentService.getUserCryptoBalances(ccpaymentUserId);
+	}
+
+	/**
+	 * Credit a user with real cryptocurrency from the merchant's account.
+	 */
+	async creditUserCrypto(params: { adminUserId: UserId, userId: UserId, coinId: number, amount: string, reason: string }): Promise<void> {
+		const { adminUserId, userId, coinId, amount, reason } = params;
+		const fromUserId = process.env.CCPAYMENT_APP_ID as string; // Merchant's account
+		const toUserId = await this.getCcpaymentUserId(userId);
+		const orderId = `admin_credit_${userId}_${Date.now()}`;
+
+		await ccpaymentService.userTransfer({ fromUserId, toUserId, coinId, amount, orderId });
+		logger.info('AdminWalletService', 'Successfully credited crypto', { ...params });
+		// You might want to create an internal transaction record here as well for audit purposes.
+	}
+
+	/**
+	 * Debit a user's real cryptocurrency to the merchant's account.
+	 */
+	async debitUserCrypto(params: { adminUserId: UserId, userId: UserId, coinId: number, amount: string, reason: string }): Promise<void> {
+		const { adminUserId, userId, coinId, amount, reason } = params;
+		const fromUserId = await this.getCcpaymentUserId(userId);
+		const toUserId = process.env.CCPAYMENT_APP_ID as string; // Merchant's account
+		const orderId = `admin_debit_${userId}_${Date.now()}`;
+
+		await ccpaymentService.userTransfer({ fromUserId, toUserId, coinId, amount, orderId });
+		logger.info('AdminWalletService', 'Successfully debited crypto', { ...params });
+		// You might want to create an internal transaction record here as well for audit purposes.
+	}
+
+	// --- Analytics and Helpers --- //
+
+	/**
+	 * Get DGT analytics for the admin dashboard.
 	 */
 	async getDGTAnalytics(): Promise<any> {
-		const [totalSupplyResult] = await db
-			.select({ total: sql<number>`sum(${wallets.balance})` })
-			.from(wallets);
-		const [totalUsersResult] = await db
-			.select({ count: sql<number>`count(*)` })
-			.from(wallets)
-			.where(sql`${wallets.balance} > 0`);
-		const [totalTransactionsResult] = await db
-			.select({ count: sql<number>`count(*)` })
-			.from(transactions);
-
-		const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
-		const [dailyVolumeResult] = await db
-			.select({ volume: sql<number>`sum(abs(${transactions.amount}))` })
-			.from(transactions)
-			.where(sql`${transactions.createdAt} >= ${oneDayAgo}`);
-
-		const totalSupply = totalSupplyResult?.total || 0;
-		const totalUsers = totalUsersResult?.count || 0;
-		const totalTransactions = totalTransactionsResult?.count || 0;
-		const dailyVolume = dailyVolumeResult?.volume || 0;
-		const averageBalance = totalUsers > 0 ? totalSupply / totalUsers : 0;
+		const [totalSupplyResult] = await db.select({ total: sql<number>`sum(${wallets.dgtBalance})` }).from(wallets);
+		const [totalUsersResult] = await db.select({ count: sql<number>`count(*)` }).from(wallets).where(sql`${wallets.dgtBalance} > 0`);
+		const [totalTransactionsResult] = await db.select({ count: sql<number>`count(*)` }).from(transactions);
 
 		return {
-			totalSupply,
-			totalUsersWithDgt: totalUsers,
-			totalTransactions,
-			dailyVolume,
-			averageBalance
+			totalSupply: totalSupplyResult?.total || 0,
+			totalUsersWithDgt: totalUsersResult?.count || 0,
+			totalTransactions: totalTransactionsResult?.count || 0,
 		};
 	}
 
 	/**
-	 * Freeze a user's wallet (prevents all operations)
+	 * Helper to get the CCPayment User ID for a Degentalk User ID.
 	 */
-	async freezeWallet(
-		userId: UserId,
-		reason: string,
-		metadata: Record<string, any> = {}
-	): Promise<void> {
-		await db.transaction(async (tx) => {
-			const wallet = await tx.query.wallets.findFirst({ where: eq(wallets.userId, userId) });
-
-			if (!wallet) {
-				throw new WalletError('User wallet not found.', ErrorCodes.NOT_FOUND);
-			}
-
-			if (wallet.status === 'frozen') {
-				throw new WalletError('Wallet is already frozen.', ErrorCodes.VALIDATION_ERROR);
-			}
-
-			await tx.update(wallets).set({ status: 'frozen' }).where(eq(wallets.id, wallet.id));
-
-			await tx.insert(transactions).values({
-				userId,
-				walletId: wallet.id,
-				amount: 0,
-				type: 'admin_adjust',
-				status: 'completed',
-				description: `Wallet frozen: ${reason}`,
-				metadata: { ...metadata, admin_action: 'freezeWallet', reason }
-			});
-
-			logger.info('AdminWalletService:freezeWallet', 'Successfully froze user wallet', {
-				userId,
-				reason
-			});
-		});
-	}
-
-	/**
-	 * Unfreeze a user's wallet (restores operations)
-	 */
-	async unfreezeWallet(
-		userId: UserId,
-		reason: string,
-		metadata: Record<string, any> = {}
-	): Promise<void> {
-		await db.transaction(async (tx) => {
-			const wallet = await tx.query.wallets.findFirst({ where: eq(wallets.userId, userId) });
-
-			if (!wallet) {
-				throw new WalletError('User wallet not found.', ErrorCodes.NOT_FOUND);
-			}
-
-			if (wallet.status !== 'frozen') {
-				throw new WalletError('Wallet is not frozen.', ErrorCodes.VALIDATION_ERROR);
-			}
-
-			await tx.update(wallets).set({ status: 'active' }).where(eq(wallets.id, wallet.id));
-
-			await tx.insert(transactions).values({
-				userId,
-				walletId: wallet.id,
-				amount: 0,
-				type: 'admin_adjust',
-				status: 'completed',
-				description: `Wallet unfrozen: ${reason}`,
-				metadata: { ...metadata, admin_action: 'unfreezeWallet', reason }
-			});
-
-			logger.info('AdminWalletService:unfreezeWallet', 'Successfully unfroze user wallet', {
-				userId,
-				reason
-			});
-		});
+	private async getCcpaymentUserId(userId: UserId): Promise<string> {
+		const mapping = await db.query.ccpaymentUsers.findFirst({ where: eq(ccpaymentUsers.userId, userId) });
+		if (!mapping || !mapping.ccpaymentUserId) {
+			// This will implicitly create the user mapping if it doesn't exist.
+			return ccpaymentService.getOrCreateCCPaymentUser(userId);
+		}
+		return mapping.ccpaymentUserId;
 	}
 }
 

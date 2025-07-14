@@ -1,5 +1,5 @@
 import { db } from '../../db';
-import { forumCategories, threads, posts } from '@schema';
+import { forumCategories, threads, posts } from '../db/schema';
 import { sql, eq, and, asc } from 'drizzle-orm';
 
 async function testForumQuery() {

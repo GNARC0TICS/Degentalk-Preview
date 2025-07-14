@@ -1,7 +1,7 @@
-import type { AdminId } from '@shared/types/ids';
+import type { AdminId } from '../shared/types/ids';
 import chalk from 'chalk';
-import { db } from '@db';
-import { roles as rolesTable, users as usersTable, userRoles as userRolesTable } from '@schema';
+import { db } from '../db';
+import { roles as rolesTable, users as usersTable, userRoles as userRolesTable } from '../db/schema';
 import { eq } from 'drizzle-orm';
 
 async function ensureRole(slug: : AdminId, props: Partial<typeof rolesTable.$inferInsert>) {

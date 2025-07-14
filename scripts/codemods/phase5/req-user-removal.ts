@@ -201,7 +201,7 @@ async function ensureAuthHelperExists(project: Project) {
  */
 
 import type { Request } from 'express';
-import type { UserId } from '@shared/types/ids';
+import type { UserId } from '../../shared/types/ids';
 
 export interface AuthenticatedUser {
   id: UserId;

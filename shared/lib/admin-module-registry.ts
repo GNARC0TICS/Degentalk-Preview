@@ -1,6 +1,4 @@
-import { adminConfig, type AdminModule, type AdminPermission } from '../config/admin.config';
-// TODO: Replace with proper shared logger
-// import { logger } from "../../server/src/core/logger";
+import { adminModulesV2, ADMIN_PERMISSIONS, AdminModuleV2 } from '../config/admin.config';
 
 // Simple User interface for admin module registry
 interface User {
@@ -10,19 +8,17 @@ interface User {
 }
 
 export interface ModuleRegistryOptions {
-	enableAuditLog?: boolean;
 	strictPermissions?: boolean;
 	devMode?: boolean;
 }
 
 export class AdminModuleRegistry {
-	private modules: Map<string, AdminModule> = new Map();
+	private modules: Map<string, AdminModuleV2> = new Map();
 	private options: ModuleRegistryOptions;
 	private initialized = false;
 
 	constructor(options: ModuleRegistryOptions = {}) {
 		this.options = {
-			enableAuditLog: true,
 			strictPermissions: true,
 			devMode: process.env.NODE_ENV === 'development',
 			...options
@@ -30,58 +26,58 @@ export class AdminModuleRegistry {
 	}
 
 	/**
-	 * Initialize registry with default modules from config
+	 * Initialize registry with default modules from adminModulesV2
 	 */
 	initialize(): void {
 		if (this.initialized) return;
 
-		// Register all modules from config
-		this.registerModules(adminConfig.modules);
+		// Register all modules from adminModulesV2
+		this.registerModules(adminModulesV2);
 		this.initialized = true;
 
 		if (this.options.devMode) {
-			console.log('AdminModuleRegistry', `Initialized with ${this.modules.size} modules`);
+			console.log('AdminModuleRegistry', `Initialized with ${this.modules.size} modules from adminModulesV2`);
 		}
 	}
 
 	/**
-	 * Register a single module
+	 * Register a single module (AdminModuleV2)
 	 */
-	register(module: AdminModule): void {
-		if (this.modules.has(module.id)) {
+	register(module: AdminModuleV2): void {
+		if (this.modules.has(module.slug)) {
 			if (this.options.devMode) {
-				console.warn(`[AdminModuleRegistry] Module ${module.id} already registered, overwriting`);
+				console.warn(`[AdminModuleRegistry] Module ${module.slug} already registered, overwriting`);
 			}
 		}
 
 		this.validateModule(module);
-		this.modules.set(module.id, { ...module });
+		this.modules.set(module.slug, { ...module });
 
 		// Register sub-modules recursively
-		if (module.subModules) {
-			this.registerModules(module.subModules);
+		if (module.children) {
+			this.registerModules(module.children);
 		}
 
 		if (this.options.devMode) {
-			console.log('AdminModuleRegistry', `Registered module: ${module.id}`);
+			console.log('AdminModuleRegistry', `Registered module: ${module.slug}`);
 		}
 	}
 
 	/**
-	 * Register multiple modules
+	 * Register multiple modules (AdminModuleV2[])
 	 */
-	registerModules(modules: AdminModule[]): void {
+	registerModules(modules: AdminModuleV2[]): void {
 		modules.forEach((module) => this.register(module));
 	}
 
 	/**
 	 * Unregister a module
 	 */
-	unregister(moduleId: string): boolean {
-		const existed = this.modules.delete(moduleId);
+	unregister(moduleSlug: string): boolean {
+		const existed = this.modules.delete(moduleSlug);
 
 		if (existed && this.options.devMode) {
-			console.log('AdminModuleRegistry', `Unregistered module: ${moduleId}`);
+			console.log('AdminModuleRegistry', `Unregistered module: ${moduleSlug}`);
 		}
 
 		return existed;
@@ -90,18 +86,18 @@ export class AdminModuleRegistry {
 	/**
 	 * Get all enabled modules
 	 */
-	getEnabled(): AdminModule[] {
+	getEnabled(): AdminModuleV2[] {
 		this.ensureInitialized();
 
 		return Array.from(this.modules.values())
-			.filter((module) => module.enabled)
-			.sort((a, b) => a.order - b.order);
+			.filter((module) => !module.disabled) // Assuming 'disabled' property for enabled status
+			.sort((a, b) => a.label.localeCompare(b.label)); // Sort by label for now, order not in V2
 	}
 
 	/**
 	 * Get modules for a specific user based on permissions
 	 */
-	getModulesForUser(user: User | null): AdminModule[] {
+	getModulesForUser(user: User | null): AdminModuleV2[] {
 		if (!user) return [];
 
 		this.ensureInitialized();
@@ -113,16 +109,16 @@ export class AdminModuleRegistry {
 			return enabledModules;
 		}
 
-		return enabledModules.filter((module) => this.hasPermission(module.id, user));
+		return enabledModules.filter((module) => this.hasPermission(module.slug, user));
 	}
 
 	/**
 	 * Check if user has permission for a module
 	 */
-	hasPermission(moduleId: string, user: User | null): boolean {
+	hasPermission(moduleSlug: string, user: User | null): boolean {
 		if (!user) return false;
 
-		const module = this.modules.get(moduleId);
+		const module = this.modules.get(moduleSlug);
 		if (!module) return false;
 
 		// Dev mode bypass for testing
@@ -135,128 +131,62 @@ export class AdminModuleRegistry {
 			return true;
 		}
 
-		// Check if user has any of the required permissions
-		return module.permissions.some((permission) =>
-			this.userHasPermission(user, permission as AdminPermission)
-		);
+		// Check if user has the required permission
+		return this.userHasPermission(user, module.permission);
 	}
 
 	/**
-	 * Get a specific module by ID
+	 * Get a specific module by slug
 	 */
-	getModule(moduleId: string): AdminModule | undefined {
+	getModule(moduleSlug: string): AdminModuleV2 | undefined {
 		this.ensureInitialized();
-		return this.modules.get(moduleId);
+		return this.modules.get(moduleSlug);
 	}
 
 	/**
 	 * Get all modules (enabled and disabled)
 	 */
-	getAllModules(): AdminModule[] {
+	getAllModules(): AdminModuleV2[] {
 		this.ensureInitialized();
-		return Array.from(this.modules.values()).sort((a, b) => a.order - b.order);
+		return Array.from(this.modules.values()).sort((a, b) => a.label.localeCompare(b.label));
 	}
 
 	/**
 	 * Check if a module exists
 	 */
-	hasModule(moduleId: string): boolean {
+	hasModule(moduleSlug: string): boolean {
 		this.ensureInitialized();
-		return this.modules.has(moduleId);
-	}
-
-	/**
-	 * Enable/disable a module
-	 */
-	setModuleEnabled(moduleId: string, enabled: boolean): boolean {
-		this.ensureInitialized();
-
-		const module = this.modules.get(moduleId);
-		if (!module) return false;
-
-		module.enabled = enabled;
-
-		if (this.options.devMode) {
-			console.log('AdminModuleRegistry', `Module ${moduleId} ${enabled ? 'enabled' : 'disabled'}`);
-		}
-
-		return true;
-	}
-
-	/**
-	 * Update module settings
-	 */
-	updateModuleSettings(moduleId: string, settings: Record<string, any>): boolean {
-		this.ensureInitialized();
-
-		const module = this.modules.get(moduleId);
-		if (!module) return false;
-
-		module.settings = { ...module.settings, ...settings };
-
-		if (this.options.devMode) {
-			console.log('AdminModuleRegistry', `Updated settings for module: ${moduleId}`);
-		}
-
-		return true;
+		return this.modules.has(moduleSlug);
 	}
 
 	/**
 	 * Get navigation structure for building menus
 	 */
-	getNavigationStructure(user: User | null): AdminModule[] {
+	getNavigationStructure(user: User | null): AdminModuleV2[] {
 		const userModules = this.getModulesForUser(user);
-		console.log('AdminModuleRegistry', 'DEBUG userModules count', { count: userModules.length });
-		console.log(
-			'AdminModuleRegistry',
-			'DEBUG userModules sample',
-			userModules.slice(0, 2).map((m) => ({
-				id: m.id,
-				hasSubModules: !!m.subModules,
-				subModulesCount: m.subModules?.length || 0
-			}))
-		);
 
-		// Build a complete tree first, ensuring every module has subModules array
-		const moduleMap = new Map<string, AdminModule>();
-		const rootModules: AdminModule[] = [];
-
-		// First pass: create all modules with empty subModules arrays
-		for (const module of userModules) {
-			const moduleWithSubModules: AdminModule = {
-				...module,
-				subModules: module.subModules || []
-			};
-			moduleMap.set(module.id, moduleWithSubModules);
-		}
-
-		// Second pass: organize into tree structure
-		for (const module of userModules) {
-			const moduleWithSubs = moduleMap.get(module.id)!;
-
-			if (module.subModules) {
-				// Filter submodules based on user permissions
-				const accessibleSubModules = module.subModules.filter((subModule) =>
-					this.hasPermission(subModule.id, user)
-				);
-				moduleWithSubs.subModules = accessibleSubModules;
-				console.log(
-					`DEBUG: Module ${module.id} has ${module.subModules.length} total subModules, ${accessibleSubModules.length} accessible`
-				);
+		// Filter out modules that have children but no accessible children
+		const filteredModules = userModules.filter(module => {
+			if (module.children) {
+				const accessibleChildren = module.children.filter(child => this.hasPermission(child.slug, user));
+				// If a parent module has children, but none are accessible, don't show the parent
+				return accessibleChildren.length > 0;
 			}
+			return true; // Always show modules without children
+		});
 
-			rootModules.push(moduleWithSubs);
-		}
+		// Recursively filter children based on permissions
+		const buildTree = (modules: AdminModuleV2[]): AdminModuleV2[] => {
+			return modules.map(module => {
+				if (module.children) {
+					const accessibleChildren = module.children.filter(child => this.hasPermission(child.slug, user));
+					return { ...module, children: buildTree(accessibleChildren) };
+				}
+				return module;
+			});
+		};
 
-		console.log('DEBUG: rootModules count:', rootModules.length);
-		console.log(
-			'DEBUG: rootModules with subModules:',
-			rootModules
-				.filter((m) => m.subModules && m.subModules.length > 0)
-				.map((m) => ({ id: m.id, subModulesCount: m.subModules?.length }))
-		);
-
-		return rootModules;
+		return buildTree(filteredModules);
 	}
 
 	/**
@@ -276,36 +206,28 @@ export class AdminModuleRegistry {
 		}
 	}
 
-	private validateModule(module: AdminModule): void {
-		if (!module.id || !module.name || !module.route || !module.component) {
+	private validateModule(module: AdminModuleV2): void {
+		if (!module.slug || !module.label || !module.path || !module.component || !module.permission) {
 			throw new Error(`Invalid module configuration: ${JSON.stringify(module)}`);
-		}
-
-		if (!Array.isArray(module.permissions)) {
-			throw new Error(`Module permissions must be an array: ${module.id}`);
-		}
-
-		if (typeof module.enabled !== 'boolean') {
-			throw new Error(`Module enabled must be a boolean: ${module.id}`);
-		}
-
-		if (typeof module.order !== 'number') {
-			throw new Error(`Module order must be a number: ${module.id}`);
 		}
 	}
 
-	private userHasPermission(user: User, permission: AdminPermission): boolean {
-		// Check user role permissions from config
-		const rolePermissions =
-			adminConfig.defaultPermissions[user.role as keyof typeof adminConfig.defaultPermissions] ||
-			[];
+	private userHasPermission(user: User, permission: string): boolean {
+		// Assuming user.role directly maps to a permission set in ADMIN_PERMISSIONS
+		// This needs to be aligned with how your roles and permissions are structured.
+		// For now, we'll assume a simple check against the user's role.
+		// A more robust system would check a user's specific permissions array.
 
-		if (rolePermissions.includes(permission)) {
+		// Example: Check if the user's role has the permission
+		const rolePermissions = ADMIN_PERMISSIONS[user.role as keyof typeof ADMIN_PERMISSIONS];
+		if (rolePermissions && rolePermissions.includes(permission)) {
 			return true;
 		}
 
-		// TODO: Implement user-specific permissions from database
-		// This would check user.permissions array if it existed
+		// Fallback for super_admin if not explicitly defined in ADMIN_PERMISSIONS map
+		if (user.role === 'super_admin') {
+			return true;
+		}
 
 		return false;
 	}

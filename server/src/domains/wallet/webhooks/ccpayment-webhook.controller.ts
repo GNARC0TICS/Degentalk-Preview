@@ -1,99 +1,60 @@
 /**
- * CCPayment Webhook Controller
+ * CCPayment Webhook Controller (v2)
  *
- * This controller handles webhook requests from CCPayment.
- * It verifies the webhook signature and passes verified events to the service.
+ * This controller is the entry point for all incoming webhook requests from CCPayment.
+ * It is configured to use a raw body parser, as the raw payload is required for
+ * accurate signature verification.
  */
 
 import type { Request, Response } from 'express';
 import { logger } from '@core/logger';
-import { ccpaymentService } from '../providers/ccpayment/ccpayment.service';
 import { ccpaymentWebhookService } from './ccpayment-webhook.service';
-import { WalletError, ErrorCodes as WalletErrorCodes } from '@core/errors';
-import crypto from 'crypto';
-import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
+import { sendSuccessResponse } from '@core/utils/transformer.helpers';
 
-/**
- * CCPayment webhook controller
- */
 export class CCPaymentWebhookController {
 	/**
-	 * Handle webhook POST request from CCPayment
-	 * Note: Input is validated by validateRequest middleware before reaching this controller
-	 * @param req Express request
-	 * @param res Express response
+	 * Handles the raw POST request from CCPayment.
+	 * @param req Express request object, with `req.rawBody` attached by middleware.
+	 * @param res Express response object.
 	 */
 	async handleWebhook(req: Request, res: Response): Promise<void> {
-		try {
-			// req.headers and req.body are now validated by webhookValidation.ccpaymentWebhook schema
-			logger.info('Received CCPayment webhook', {
-				headers: {
-					signature: 'present',
-					timestamp: req.header('X-Timestamp'),
-					appId: req.header('X-App-Id')
-				}
-			});
+		// The raw body is essential for signature verification.
+		// This requires `express.raw({ type: 'application/json' })` middleware to be set up for this route.
+		const rawPayload = (req as any).rawBody;
 
-			// Extract signature headers (already validated)
-			const signature = req.header('X-Signature')!;
-			const timestamp = req.header('X-Timestamp')!;
-			const appId = req.header('X-App-Id')!;
-
-			// Verify webhook signature
-			const isValid = ccpaymentService.verifyWebhookSignature(req.body, signature, timestamp);
-
-			if (!isValid) {
-				logger.warn('Invalid webhook signature');
-				sendErrorResponse(res, 'Invalid webhook signature', 401);
-				return;
-			}
-
-			// Process the webhook event (already validated)
-			const webhookEvent = req.body;
-
-			// Log the webhook event
-			logger.info('Processing verified webhook event', {
-				eventType: webhookEvent.eventType,
-				orderId: webhookEvent.orderId,
-				merchantOrderId: webhookEvent.merchantOrderId,
-				status: webhookEvent.status
-			});
-
-			// Immediately acknowledge the webhook to CCPayment (critical for webhook reliability)
-			sendSuccessResponse(res, {
-				success: true,
-				message: 'Webhook received and validated'
-			});
-
-			// Process the event asynchronously with error boundary
-			try {
-				const result = await ccpaymentWebhookService.processWebhookEvent(webhookEvent);
-				logger.info('Webhook processing completed successfully', result);
-			} catch (processingError) {
-				logger.error('Webhook processing failed after acknowledgment', {
-					error: processingError,
-					eventType: webhookEvent.eventType,
-					orderId: webhookEvent.orderId
-				});
-				// Don't throw - webhook already acknowledged
-			}
-		} catch (error) {
-			logger.error('Critical error handling webhook - signature validation or parsing failed', {
-				error,
-				headers: req.headers,
-				hasSignature: !!req.header('X-Signature')
-			});
-
-			// Always acknowledge webhooks to prevent infinite retries from CCPayment
-			// Even validation/signature failures should return 200 OK
-			sendSuccessResponse(res, {
-				success: false,
-				message: 'Webhook received but validation failed',
-				error: 'Signature verification or request parsing failed'
-			});
+		if (!rawPayload) {
+			logger.error('CCPaymentWebhookController', 'Raw body missing from request. Ensure raw body parser is configured for this route.');
+			// Still send a 200 to prevent CCPayment from retrying on a configuration error.
+			res.status(200).send('Error: Missing raw body');
+			return;
 		}
+
+		const headers = {
+			appid: req.header('Appid'),
+			sign: req.header('Sign'),
+			timestamp: req.header('Timestamp'),
+		};
+
+		logger.info('CCPaymentWebhookController', 'Received webhook, beginning processing.', { headers });
+
+		// Acknowledge the webhook immediately to prevent CCPayment from retrying.
+		// The actual processing will happen asynchronously.
+		sendSuccessResponse(res, { message: 'Webhook received' });
+
+		// Process the webhook in the background.
+		// We don't await this call because we've already sent the response.
+		ccpaymentWebhookService.processWebhook(rawPayload.toString('utf-8'), headers)
+			.then(result => {
+				if (result.success) {
+					logger.info('CCPaymentWebhookController', 'Webhook processed successfully.', { result });
+				} else {
+					logger.warn('CCPaymentWebhookController', 'Webhook processing failed.', { result });
+				}
+			})
+			.catch(error => {
+				logger.error('CCPaymentWebhookController', 'Unhandled exception during webhook processing.', { error });
+			});
 	}
 }
 
-// Export a singleton instance
 export const ccpaymentWebhookController = new CCPaymentWebhookController();
