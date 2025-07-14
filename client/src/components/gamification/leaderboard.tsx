@@ -5,7 +5,7 @@
  */
 
 import { useState } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/utils';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -20,7 +20,7 @@ import {
 	TableRow
 } from '@/components/ui/table';
 import { LevelDisplay, LevelBadge } from './level-display';
-import { formatNumber } from '@/lib/utils';
+import { formatNumber } from '@/utils/utils';
 import {
 	Trophy,
 	TrendingUp,

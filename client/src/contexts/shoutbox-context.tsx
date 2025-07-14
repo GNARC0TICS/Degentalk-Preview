@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiRequest } from '@/lib/queryClient';
+import { apiRequest } from '@/utils/queryClient';
 import { useMobileDetector } from '@/hooks/use-media-query';
 
 // Define ShoutboxPosition type here to avoid import issues

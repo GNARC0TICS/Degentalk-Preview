@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Copy, CheckCircle2, Wallet, ExternalLink, AlertTriangle, QrCode } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/utils';
 
 export interface WalletAddressDisplayProps {
 	walletAddress: string;

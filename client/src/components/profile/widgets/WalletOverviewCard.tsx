@@ -1,6 +1,6 @@
 import React from 'react';
 import { Wallet, DollarSign, Clock, AlertCircle } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/utils';
 
 interface WalletOverviewCardProps {
 	dgtBalance: number;

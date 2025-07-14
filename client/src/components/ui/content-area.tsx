@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/utils';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { TabSwitcher } from '@/components/ui/tab-switcher';
 import { ContentFeed } from '@/components/ui/content-feed';

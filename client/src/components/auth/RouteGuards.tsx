@@ -1,8 +1,8 @@
 import type { ReactNode, ComponentType } from 'react';
 import { Route, Redirect } from 'wouter';
 import { useAuth } from '@/hooks/use-auth';
-import { hasRoleAtLeast } from '@/lib/roles';
-import type { Role } from '@/lib/roles';
+import { hasRoleAtLeast } from '@/utils/roles';
+import type { Role } from '@/utils/roles';
 
 interface RouteGuardProps {
 	children: ReactNode;

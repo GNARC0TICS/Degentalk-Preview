@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
-import { apiRequest } from '@utils/api-request';
+import { apiRequest } from '@/utils/api-request';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import { toast } from 'sonner';

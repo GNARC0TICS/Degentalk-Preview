@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { apiRequest } from '@utils/api-request';
+import { apiRequest } from '@/utils/api-request';
 import { useAuth } from '@/hooks/use-auth';
 import type { UserId } from '@shared/types/ids';
 

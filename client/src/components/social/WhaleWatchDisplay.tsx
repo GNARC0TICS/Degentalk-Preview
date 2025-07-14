@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { apiRequest } from '@/lib/queryClient';
+import { apiRequest } from '@/utils/queryClient';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -20,7 +20,7 @@ import {
 } from 'lucide-react';
 import { Link } from 'wouter';
 import { formatDistanceToNow } from 'date-fns';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/utils';
 
 interface FollowUser {
 	id: string;

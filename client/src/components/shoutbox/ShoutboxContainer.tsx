@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { MessageSquare, Send, Lock } from 'lucide-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiRequest } from '@/lib/queryClient';
+import { apiRequest } from '@/utils/queryClient';
 import { useAuth } from '@/hooks/use-auth';
 import { useToast } from '@/hooks/use-toast';
 import {

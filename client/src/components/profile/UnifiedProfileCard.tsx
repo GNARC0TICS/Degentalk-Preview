@@ -12,7 +12,7 @@ import { UserName } from '@/components/users/Username';
 import { LevelBadge } from '@/features/gamification/components/LevelBadge';
 import { useIdentityDisplay } from '@/hooks/useIdentityDisplay';
 import { brandConfig } from '@/config/brand.config';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/utils';
 import { formatDistanceToNow } from 'date-fns';
 import { MessageSquare, Calendar, Award, Shield, TrendingUp, Eye, Crown } from 'lucide-react';
 import type { ProfileData } from '@/types/profile';

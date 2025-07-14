@@ -15,10 +15,10 @@ import { logger } from '@core/logger';
 import { AdminError, AdminErrorCodes } from '../../admin.errors';
 
 // Import specialized services
-import { settingsQueryService } from './services/settings-query.service';
-import { settingsCommandService } from './services/settings-command.service';
-import { settingsValidationService } from './services/settings-validation.service';
-import { settingsGroupService } from './services/settings-group.service';
+import { settingsQueryService } from './settings-query.service';
+import { settingsCommandService } from './settings-command.service';
+import { settingsValidationService } from './settings-validation.service';
+import { settingsGroupService } from './settings-group.service';
 
 // Import types
 import type {
@@ -29,7 +29,7 @@ import type {
 	UpdateSettingMetadataInput,
 	FilterSettingsInput
 } from './settings.validators';
-import type { ToggleFeatureFlagInput } from './services/settings-command.service';
+import type { ToggleFeatureFlagInput } from './settings-command.service';
 
 export class AdminSettingsService {
 	// =================================

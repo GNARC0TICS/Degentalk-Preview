@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'wouter';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/utils';
 import { AvatarFrame } from '@/components/identity/AvatarFrame';
 import { UserName } from '@/components/users/Username';
 import { LevelBadge } from '@/features/gamification/components/LevelBadge';

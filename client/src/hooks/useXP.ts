@@ -1,8 +1,8 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiRequest } from '@utils/api-request';
+import { apiRequest } from '@/utils/api-request';
 import { toast } from 'sonner';
 import { useEffect, useState } from 'react';
-import { createSafeWebSocket } from '@/lib/safeWebSocket';
+import { createSafeWebSocket } from '@/utils/safeWebSocket';
 import type { TitleId, BadgeId, LevelId } from '@shared/types/ids';
 
 export interface Level {

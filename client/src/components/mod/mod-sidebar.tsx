@@ -18,7 +18,7 @@ import {
 	AccordionItem,
 	AccordionTrigger
 } from '@/components/ui/accordion';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/utils';
 
 export function ModSidebar() {
 	const [location] = useLocation();

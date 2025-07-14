@@ -1,4 +1,4 @@
-import { apiRequest } from '@utils/api-request';
+import { apiRequest } from '@/utils/api-request';
 
 export interface PackPayload {
 	name: string;

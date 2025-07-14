@@ -1,6 +1,6 @@
 import React, { createContext, useContext, ReactNode, useState, useEffect } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { apiRequest } from '@/lib/queryClient';
+import { apiRequest } from '@/utils/queryClient';
 import type { Transaction } from '@/types/wallet';
 import type { WalletBalances } from '@/types/wallet';
 

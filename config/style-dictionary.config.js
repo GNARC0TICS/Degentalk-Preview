@@ -1,4 +1,4 @@
-module.exports = {
+export default {
 	// Source token files
 	source: ['design/tokens/**/*.json'],
 	// Platforms define output formats

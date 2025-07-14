@@ -1,5 +1,4 @@
 import type { AdminId } from '../shared/types/ids';
-#!/usr/bin/env tsx
 
 /**
  * Seed script for user promotion pricing configuration
@@ -290,7 +289,7 @@ function generateAnnouncementSlots(): InsertAnnouncementSlot[] {
     for (let slot = 1; slot <= 3; slot++) {
       for (let hour = 0; hour < 24; hour++) {
         let priority: 'premium' | 'standard' | 'economy';
-        let basePrice: : AdminId;
+        let basePrice: string;
         
         // Slot 1 = Premium, Slot 2 = Standard, Slot 3 = Economy
         switch (slot) {

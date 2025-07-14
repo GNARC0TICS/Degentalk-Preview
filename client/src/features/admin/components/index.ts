@@ -26,4 +26,4 @@ export { AdminDataTable } from './common/AdminDataTable';
 export { VisualJsonTabs } from './VisualJsonTabs';
 
 // Protected Route
-export { default as ProtectedAdminRoute } from '@admin/components/protected-admin-route';
+export { default as ProtectedAdminRoute } from './protected-admin-route';

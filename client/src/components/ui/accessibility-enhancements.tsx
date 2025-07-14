@@ -14,7 +14,7 @@ import {
 	Focus,
 	Settings
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/utils';
 import { useLocalStorage } from '@/hooks/use-local-storage';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';

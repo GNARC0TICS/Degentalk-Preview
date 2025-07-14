@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight, Play, Pause } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ZoneCard, type ZoneCardProps } from '@/components/forum/ZoneCard';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/utils';
 import { useBreakpoint } from '@/hooks/useMediaQuery';
 
 export interface PrimaryZoneCarouselProps {

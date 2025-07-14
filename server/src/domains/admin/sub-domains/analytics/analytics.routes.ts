@@ -5,10 +5,10 @@
  */
 
 import express from 'express';
-import { isAuthenticated, isAdmin } from '../../../auth/middleware/auth.middleware';
-import rainAnalyticsRoutes from './engagement/rain-analytics.routes';
-import tippingAnalyticsRoutes from './engagement/tipping-analytics.routes';
-import platformStatsRoutes from './routes/stats.routes';
+import { isAuthenticated, isAdmin } from '@server/domains/auth/middleware/auth.middleware';
+import rainAnalyticsRoutes from './rain-analytics.routes';
+import tippingAnalyticsRoutes from './tipping-analytics.routes';
+import platformStatsRoutes from './stats.routes';
 // import { systemAnalyticsRoutes } from './system-analytics.routes';
 import { Router } from 'express';
 import { AdminAnalyticsController } from './analytics.controller';

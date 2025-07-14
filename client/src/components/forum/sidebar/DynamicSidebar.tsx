@@ -2,8 +2,8 @@ import React from 'react';
 import { StatsWidget } from './StatsWidget';
 import { HotTopicsWidget } from './HotTopicsWidget';
 import { ActivityFeedWidget } from './ActivityFeedWidget';
-import { getSidebarWidgets, getZoneThemeKey, type WidgetType } from '@/lib/forum/sidebarUtils';
-import { cn } from '@/lib/utils';
+import { getSidebarWidgets, getZoneThemeKey, type WidgetType } from '@/utils/forum/sidebarUtils';
+import { cn } from '@/utils/utils';
 import { type StructureId } from '@shared/types/ids';
 
 interface DynamicSidebarProps {

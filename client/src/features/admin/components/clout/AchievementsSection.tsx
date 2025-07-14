@@ -62,7 +62,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useToast } from '@/hooks/use-toast';
-import { apiRequest } from '@utils/api-request';
+import { apiRequest } from '@/utils/api-request';
 import type { CloutAchievement } from '@schema/economy/cloutAchievements';
 import type { AchievementId } from '@shared/types/ids';
 

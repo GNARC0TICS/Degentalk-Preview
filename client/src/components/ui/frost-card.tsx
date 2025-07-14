@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card } from '@/components/ui/card';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/utils';
 
 export interface FrostCardProps extends React.HTMLAttributes<HTMLDivElement> {
 	/**

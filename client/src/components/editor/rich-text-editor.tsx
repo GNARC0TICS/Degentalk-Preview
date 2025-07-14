@@ -50,7 +50,7 @@ import {
 	SelectTrigger,
 	SelectValue
 } from '@/components/ui/select';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/utils';
 
 export interface RichTextEditorProps {
 	content?: string;

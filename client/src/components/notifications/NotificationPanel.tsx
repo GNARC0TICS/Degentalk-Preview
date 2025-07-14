@@ -15,7 +15,7 @@ import {
 	Award
 } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/utils';
 import { formatDistance } from 'date-fns';
 import { useNotifications } from '@/hooks/use-notifications';
 

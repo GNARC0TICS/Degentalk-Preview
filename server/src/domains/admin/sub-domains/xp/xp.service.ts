@@ -184,7 +184,7 @@ export class XpAdminService {
 		}
 
 		// Use the core XP service for XP adjustments
-		const { xpService } = await import('../../../../domains/xp/xp.service');
+		const { xpService } = await import('@server/domains/xp/xp.service');
 
 		// Use the core service to perform the update
 		const result = await xpService.updateUserXp(userId, amount, adjustmentType, {

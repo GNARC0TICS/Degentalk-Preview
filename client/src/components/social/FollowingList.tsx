@@ -4,7 +4,7 @@ import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Badge } from '@/components/ui/badge';
 import { Link } from 'wouter';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/utils';
 
 interface FollowingListProps {
 	userId: string;

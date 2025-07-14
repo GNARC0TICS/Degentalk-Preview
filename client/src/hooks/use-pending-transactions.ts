@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { apiRequest } from '@utils/api-request';
+import { apiRequest } from '@/utils/api-request';
 import { useWalletOperations } from '@/contexts/wallet-context';
 import type { Transaction } from '@/types/wallet';
 

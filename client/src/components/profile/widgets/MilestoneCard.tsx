@@ -1,6 +1,6 @@
 import React from 'react';
 import { Trophy, Calendar, Star, Zap } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/utils';
 
 interface Milestone {
 	id: string;

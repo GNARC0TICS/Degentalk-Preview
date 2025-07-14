@@ -7,7 +7,7 @@ import { LoadingSpinner } from '@/components/ui/loader';
 import { useAuth } from '@/hooks/use-auth';
 import { useLocation } from 'wouter';
 import { X, CornerDownRight } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/utils';
 import { useBreakpoint } from '@/hooks/useMediaQuery';
 import { getAdaptiveConfig } from '@/utils/adaptiveSpacing';
 import type { PostWithUser } from '@/types/compat/forum';

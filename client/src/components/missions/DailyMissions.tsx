@@ -27,7 +27,7 @@ import {
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useAuth } from '@/hooks/use-auth';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/utils';
 import type { MissionId } from '@shared/types/ids';
 
 /**

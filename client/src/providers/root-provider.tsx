@@ -8,7 +8,7 @@ import { ForumThemeProvider } from '@/contexts/ForumThemeProvider';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { ProfileCardProvider } from '@/contexts/ProfileCardContext';
 import { MotionProvider } from '@/contexts/MotionContext';
-import { getQueryFn } from '@/lib/queryClient';
+import { getQueryFn } from '@/utils/queryClient';
 import { ForumOrderingProvider } from '@/contexts/ForumOrderingContext';
 
 // Initialize React Query client - MAIN APPLICATION QUERY CLIENT

@@ -1,6 +1,6 @@
 import React from 'react';
 import { TrendingUp, Zap, Star, Target, AlertCircle, Crown, Gift } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/utils';
 import type { ProfileData } from '@/types/profile';
 import type { ExtendedProfileStats } from '@/hooks/useProfileStats';
 

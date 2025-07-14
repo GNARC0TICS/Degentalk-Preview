@@ -42,7 +42,7 @@ import * as z from 'zod';
 import { Pencil, Trash, Plus, Image, Play } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiRequest } from '@/lib/queryClient';
+import { apiRequest } from '@/utils/queryClient';
 import { AdminPageShell } from '@/features/admin/components/layout/AdminPageShell';
 import { MediaLibraryModal } from '@/features/admin/components/media/MediaLibraryModal';
 import { mediaApiService } from '@/features/admin/services/media-api.service';

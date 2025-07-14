@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiRequest } from '@/lib/queryClient';
+import { apiRequest } from '@/utils/queryClient';
 import { frameRarityConfig } from '@/config/frames.config';
 import { FramedAvatar } from '@/components/users/framed-avatar';
 import { Button } from '@/components/ui/button';

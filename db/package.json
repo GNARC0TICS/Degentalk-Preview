@@ -12,12 +12,12 @@
 	},
 	"scripts": {
 		"generate": "pnpm --workspace-root db:generate",
-		"migrate": "npx dotenv-cli -e ../env.local -- drizzle-kit generate --config ./drizzle.config.ts",
-		"migrate:apply": "npx dotenv-cli -e ../env.local -- drizzle-kit push --config ./drizzle.config.ts",
-		"push": "npx dotenv-cli -e ../env.local -- drizzle-kit push --config ./drizzle.config.ts",
-		"drop": "drizzle-kit drop --dialect postgresql",
-		"studio": "drizzle-kit studio --dialect postgresql",
-		"introspect": "npx dotenv-cli -e ../env.development.local -- drizzle-kit pull --dialect postgresql"
+		"migrate": "drizzle-kit generate --config ./drizzle.config.ts",
+		"migrate:apply": "drizzle-kit migrate --config ./drizzle.config.ts",
+		"push": "drizzle-kit push --config ./drizzle.config.ts",
+		"drop": "drizzle-kit drop --config ./drizzle.config.ts",
+		"studio": "drizzle-kit studio --config ./drizzle.config.ts",
+		"introspect": "drizzle-kit introspect --config ./drizzle.config.ts"
 	},
 	"dependencies": {
 		"@degentalk/shared": "workspace:*",

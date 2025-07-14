@@ -7,7 +7,7 @@ import {
 	createAnnouncementController,
 	updateAnnouncementController,
 	deactivateAnnouncementController
-} from './controllers/announcements.controller';
+} from './announcements.controller';
 
 // Export a function to register announcement routes
 export function registerAnnouncementRoutes(app: Router) {

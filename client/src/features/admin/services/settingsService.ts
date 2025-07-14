@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { adminApi } from '@admin/lib/adminApi';
+import { adminApi } from '@/features/admin/lib/adminApi';
 import type { SettingValue } from '@/types/admin.types';
 
 // Query keys

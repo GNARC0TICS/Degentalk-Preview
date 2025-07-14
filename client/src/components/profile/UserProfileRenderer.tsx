@@ -1,6 +1,6 @@
 import React from 'react';
 import { UnifiedProfileCard } from './UnifiedProfileCard';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/utils';
 import type { User } from '@/types/compat/user';
 
 export interface UserProfileRendererProps {

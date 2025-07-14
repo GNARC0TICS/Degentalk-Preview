@@ -7,7 +7,7 @@ import { Loader2, CheckCircle2, AlertTriangle, RotateCcw, Save } from 'lucide-re
 import { useToast } from '@/hooks/use-toast';
 import { AdminPageShell } from '@/features/admin/components/layout/AdminPageShell';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { apiRequest } from '@/lib/queryClient';
+import { apiRequest } from '@/utils/queryClient';
 
 interface EconomyConfigResponse {
 	config: Record<string, any>;

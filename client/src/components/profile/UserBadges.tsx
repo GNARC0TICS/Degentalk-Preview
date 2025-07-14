@@ -1,5 +1,5 @@
 import React from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/utils';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { rarityBorderMap } from '@/config/rarity.config';
 import type { BadgeId } from '@shared/types/ids';

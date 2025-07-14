@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { adminApi } from '@admin/lib/adminApi';
+import { adminApi } from '@/features/admin/lib/adminApi';
 import type { InsertXpActionSetting } from '@/types/compat/economy';
 
 const ACTIONS_KEY = ['admin', 'xp-actions'];

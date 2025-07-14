@@ -14,7 +14,7 @@ import {
 
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/utils';
 import { useBreakpoint } from '@/hooks/useMediaQuery';
 
 import MobileForumNavigation from '@/components/forum/enhanced/MobileForumNavigation';

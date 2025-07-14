@@ -1,5 +1,5 @@
 import { useQueries } from '@tanstack/react-query';
-import { apiRequest } from '@utils/api-request';
+import { apiRequest } from '@/utils/api-request';
 
 export interface ZoneStats {
 	todaysPosts: number;

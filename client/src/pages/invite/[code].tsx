@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useRoute, useLocation } from 'wouter';
 import { useMutation } from '@tanstack/react-query';
-import { apiRequest } from '@/lib/queryClient';
+import { apiRequest } from '@/utils/queryClient';
 import { Wide } from '@/layout/primitives/Wide';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';

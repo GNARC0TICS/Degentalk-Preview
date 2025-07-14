@@ -16,7 +16,7 @@ import { LevelBadge } from '@/features/gamification/components/LevelBadge';
 import { useQuery } from '@tanstack/react-query';
 import { formatDistanceToNow } from 'date-fns';
 import { brandConfig } from '@/config/brand.config';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/utils';
 import type { ProfileData } from '@/types/profile';
 
 interface PostSidebarProps {

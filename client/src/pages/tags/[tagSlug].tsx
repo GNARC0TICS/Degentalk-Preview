@@ -3,7 +3,7 @@ import { useParams, Link } from 'wouter';
 import { ThreadCard } from '@/components/forum/ThreadCard';
 import { useTags } from '@/features/forum/hooks/useForumQueries';
 import { useQuery } from '@tanstack/react-query';
-import { apiRequest } from '@/lib/queryClient';
+import { apiRequest } from '@/utils/queryClient';
 import { SiteHeader } from '@/components/header';
 import { SiteFooter } from '@/components/footer';
 import { Button } from '@/components/ui/button';

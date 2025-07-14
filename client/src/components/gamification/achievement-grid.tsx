@@ -5,7 +5,7 @@
  */
 
 import { useState, useMemo } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/utils';
 import { AchievementCard } from './achievement-card';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';

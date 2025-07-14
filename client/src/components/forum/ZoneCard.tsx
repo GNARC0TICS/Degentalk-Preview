@@ -19,7 +19,7 @@ import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/utils';
 import { CARD_STYLES } from '@/utils/card-constants';
 import { useShowHotRibbon } from '@/hooks/useShowHotRibbon';
 import { SafeImage } from '@/components/ui/safe-image';

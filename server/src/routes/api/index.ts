@@ -1,13 +1,13 @@
 import { Router } from 'express';
-import forumRoutes from '../../domains/forum/forum.routes';
-import shopRoutes from '../../domains/shop/shop.routes';
-import activityRoutes from '../../domains/activity/routes';
-import uploadRoutes from '../../domains/uploads/upload.routes';
-import subscriptionRoutes from '../../domains/subscriptions/subscription.routes';
+import forumRoutes from '@server/domains/forum/forum.routes';
+import shopRoutes from '@server/domains/shop/shop.routes';
+import activityRoutes from '@server/domains/activity/routes';
+import uploadRoutes from '@server/domains/uploads/upload.routes';
+import subscriptionRoutes from '@server/domains/subscriptions/subscription.routes';
 import uiRoutes from './ui.routes';
 import storeAvatarFrameRoutes from './store/avatar-frames';
 import userFramesRoutes from './user/frames';
-import shoutboxRoutes from '../../domains/shoutbox/shoutbox.routes';
+import shoutboxRoutes from '@server/domains/shoutbox/shoutbox.routes';
 
 const router = Router();
 

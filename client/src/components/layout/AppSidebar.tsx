@@ -13,7 +13,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/utils';
 import { useLocation } from 'wouter';
 import { HierarchicalZoneNav } from '@/features/forum/components/HierarchicalZoneNav';
 import { ROUTES } from '@/constants/routes';

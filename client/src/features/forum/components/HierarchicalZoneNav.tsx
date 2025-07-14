@@ -13,7 +13,7 @@ import {
 import { useForumStructure } from '@/contexts/ForumStructureContext';
 import { Badge } from '@/components/ui/badge';
 import { motion, AnimatePresence } from 'framer-motion';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/utils';
 import { buildNavigationTree, type NavNode } from '@/navigation/forumNav';
 import { useForumTheme } from '@/contexts/ForumThemeProvider'; // Import the theme hook
 

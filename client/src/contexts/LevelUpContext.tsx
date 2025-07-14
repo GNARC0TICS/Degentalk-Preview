@@ -7,7 +7,7 @@ import React, {
 	useEffect
 } from 'react';
 import LevelUpModal from '@/components/xp/LevelUpModal';
-import { setupLevelUpListener } from '@/lib/queryClient';
+import { setupLevelUpListener } from '@/utils/queryClient';
 
 // Types
 interface Reward {

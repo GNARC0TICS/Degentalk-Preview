@@ -9,7 +9,7 @@
  * - Leaderboard rank
  */
 
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/utils';
 import { useRouter } from 'wouter';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
@@ -17,7 +17,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { LevelDisplay } from './level-display';
-import { formatNumber } from '@/lib/utils';
+import { formatNumber } from '@/utils/utils';
 import { TrendingUp, Trophy, Target, Flame, ChevronRight, Sparkles, Zap, Gift } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useLocation } from 'wouter';

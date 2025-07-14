@@ -4,7 +4,7 @@ import { Send, MessageSquare, User, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { AvatarFrame } from '@/components/identity/AvatarFrame';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/utils';
 import type { ThreadId } from '@shared/types/ids';
 
 interface QuickReplyBoxProps {

@@ -28,7 +28,7 @@ import {
 	BreadcrumbPage,
 	BreadcrumbSeparator
 } from '@/components/ui/breadcrumb';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/utils';
 import { SiteFooter } from '@/components/footer/SiteFooter';
 import { Container } from '@/components/ui/Container';
 

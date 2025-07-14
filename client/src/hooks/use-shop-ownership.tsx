@@ -1,5 +1,5 @@
 import React from 'react';
-import { apiRequest } from '@utils/api-request';
+import { apiRequest } from '@/utils/api-request';
 import { useQuery } from '@tanstack/react-query';
 import { useAuth } from './use-auth';
 

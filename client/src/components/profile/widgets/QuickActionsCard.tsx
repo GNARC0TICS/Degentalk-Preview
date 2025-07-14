@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { UserPlus, MessageCircle, DollarSign, Heart, Share2, Flag } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/utils';
 import { useAuth } from '@/hooks/use-auth';
 import { toast } from 'sonner';
 

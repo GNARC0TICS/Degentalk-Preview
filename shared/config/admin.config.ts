@@ -74,7 +74,7 @@ export const adminModulesV2: AdminModuleV2[] = [
 		icon: 'layout-dashboard',
 		permission: 'admin.system.view',
 		path: '/admin',
-		component: lazy(() => import('@admin/views/dashboard/AdminDashboard'))
+		component: lazy(() => import('@/features/admin/dashboard/AdminDashboard'))
 	},
 	{
 		slug: 'users',
@@ -82,7 +82,7 @@ export const adminModulesV2: AdminModuleV2[] = [
 		icon: 'users',
 		permission: 'admin.users.view',
 		path: '/admin/users',
-		component: lazy(() => import('@admin/views/users/UserManagement')),
+		component: lazy(() => import('@/features/admin/users/UserManagement')),
 		children: [
 			{
 				slug: 'roles',
@@ -90,7 +90,7 @@ export const adminModulesV2: AdminModuleV2[] = [
 				icon: 'shield',
 				permission: 'admin.users.manage',
 				path: '/admin/users/roles',
-				component: lazy(() => import('@admin/views/users/Roles'))
+				component: lazy(() => import('@/features/admin/users/Roles'))
 			},
 			{
 				slug: 'permissions',
@@ -98,7 +98,7 @@ export const adminModulesV2: AdminModuleV2[] = [
 				icon: 'key',
 				permission: 'admin.users.manage',
 				path: '/admin/users/permissions',
-				component: lazy(() => import('@admin/views/users/Permissions'))
+				component: lazy(() => import('@/features/admin/users/permissions/index'))
 			}
 		]
 	},
@@ -108,7 +108,7 @@ export const adminModulesV2: AdminModuleV2[] = [
 		icon: 'dollar-sign',
 		permission: 'admin.wallet.view',
 		path: '/admin/economy', // Top-level path for economy section
-		component: lazy(() => import('@admin/views/wallet/EconomyDashboard')), // New dashboard for economy overview
+		component: lazy(() => import('@/features/admin/wallet/EconomyDashboard')), // New dashboard for economy overview
 		children: [
 			{
 				slug: 'user-wallets',
@@ -116,7 +116,7 @@ export const adminModulesV2: AdminModuleV2[] = [
 				icon: 'wallet',
 				permission: 'admin.wallet.user-wallets.view',
 				path: '/admin/economy/user-wallets',
-				component: lazy(() => import('@admin/views/wallet/UserWalletManager'))
+				component: lazy(() => import('@/features/admin/wallet/UserWalletManager'))
 			},
 			{
 				slug: 'platform-treasury',
@@ -124,7 +124,7 @@ export const adminModulesV2: AdminModuleV2[] = [
 				icon: 'landmark',
 				permission: 'admin.wallet.treasury.view',
 				path: '/admin/economy/platform-treasury',
-				component: lazy(() => import('@admin/views/wallet/PlatformTreasury'))
+				component: lazy(() => import('@/features/admin/wallet/PlatformTreasury'))
 			},
 			{
 				slug: 'dgt-packages',
@@ -132,7 +132,7 @@ export const adminModulesV2: AdminModuleV2[] = [
 				icon: 'package',
 				permission: 'admin.wallet.manage',
 				path: '/admin/economy/dgt-packages',
-				component: lazy(() => import('@admin/views/economy/DgtPackages')) // Assuming this will be moved under economy views
+				component: lazy(() => import('@/features/admin/economy/DgtPackages')) // Assuming this will be moved under economy views
 			}
 		]
 	},
@@ -142,7 +142,7 @@ export const adminModulesV2: AdminModuleV2[] = [
 		icon: 'trophy',
 		permission: 'admin.xp.view',
 		path: '/admin/xp-system',
-		component: lazy(() => import('@admin/views/xp/XpSystem'))
+		component: lazy(() => import('@/features/admin/xp/XpSystem'))
 	},
 	{
 		slug: 'shop',
@@ -150,7 +150,7 @@ export const adminModulesV2: AdminModuleV2[] = [
 		icon: 'shopping-bag',
 		permission: 'admin.shop.view',
 		path: '/admin/shop',
-		component: lazy(() => import('@admin/views/shop/ShopManagement')),
+		component: lazy(() => import('@/features/admin/shop/ShopManagement/index')),
 		children: [
 			{
 				slug: 'shop-categories',
@@ -158,7 +158,7 @@ export const adminModulesV2: AdminModuleV2[] = [
 				icon: 'folder-tree',
 				permission: 'admin.shop.categories',
 				path: '/admin/shop/categories',
-				component: lazy(() => import('@admin/views/shop/ShopCategories'))
+				component: lazy(() => import('@/features/admin/shop/ShopCategories'))
 			}
 		]
 	},
@@ -168,7 +168,7 @@ export const adminModulesV2: AdminModuleV2[] = [
 		icon: 'message-square',
 		permission: 'admin.forum.view',
 		path: '/admin/forum-structure',
-		component: lazy(() => import('@admin/views/forum/ForumStructure'))
+		component: lazy(() => import('@/features/admin/forum/ForumStructure'))
 	},
 	{
 		slug: 'reports',
@@ -176,7 +176,7 @@ export const adminModulesV2: AdminModuleV2[] = [
 		icon: 'flag',
 		permission: 'admin.reports.view',
 		path: '/admin/reports',
-		component: lazy(() => import('@admin/views/reports/Reports'))
+		component: lazy(() => import('@/features/admin/reports/Reports/index'))
 	},
 	{
 		slug: 'analytics',
@@ -184,7 +184,7 @@ export const adminModulesV2: AdminModuleV2[] = [
 		icon: 'bar-chart-3',
 		permission: 'admin.analytics.view',
 		path: '/admin/analytics',
-		component: lazy(() => import('@admin/views/analytics/AnalyticsDashboard')),
+		component: lazy(() => import('@/features/admin/analytics/AnalyticsDashboard/index')),
 		children: [
 			{
 				slug: 'system-analytics',
@@ -192,7 +192,7 @@ export const adminModulesV2: AdminModuleV2[] = [
 				icon: 'activity',
 				permission: 'admin.analytics.view',
 				path: '/admin/analytics/system',
-				component: lazy(() => import('@admin/views/analytics/SystemAnalytics'))
+				component: lazy(() => import('@/features/admin/analytics/SystemAnalytics'))
 			}
 		]
 	},
@@ -202,7 +202,7 @@ export const adminModulesV2: AdminModuleV2[] = [
 		icon: 'sparkles',
 		permission: 'admin.shop.manage',
 		path: '/admin/cosmetics',
-		component: lazy(() => import('@admin/views/cosmetics/CosmeticsDashboard')),
+		component: lazy(() => import('@/features/admin/cosmetics/CosmeticsDashboard')),
 		children: [
 			{
 				slug: 'stickers',
@@ -210,7 +210,7 @@ export const adminModulesV2: AdminModuleV2[] = [
 				icon: 'sticker',
 				permission: 'admin.shop.manage',
 				path: '/admin/cosmetics/stickers',
-				component: lazy(() => import('@admin/views/cosmetics/Stickers'))
+				component: lazy(() => import('@/features/admin/cosmetics/Stickers'))
 			},
 			{
 				slug: 'animations',
@@ -218,7 +218,7 @@ export const adminModulesV2: AdminModuleV2[] = [
 				icon: 'zap',
 				permission: 'admin.shop.manage',
 				path: '/admin/cosmetics/animations',
-				component: lazy(() => import('@admin/views/cosmetics/Animations'))
+				component: lazy(() => import('@/features/admin/cosmetics/Animations'))
 			},
 			{
 				slug: 'emojis',
@@ -226,7 +226,7 @@ export const adminModulesV2: AdminModuleV2[] = [
 				icon: 'smile',
 				permission: 'admin.shop.manage',
 				path: '/admin/cosmetics/emojis',
-				component: lazy(() => import('@admin/views/cosmetics/Emojis'))
+				component: lazy(() => import('@/features/admin/cosmetics/Emojis'))
 			}
 		]
 	},
@@ -236,7 +236,7 @@ export const adminModulesV2: AdminModuleV2[] = [
 		icon: 'settings',
 		permission: 'admin.system.view',
 		path: '/admin/settings',
-		component: lazy(() => import('@admin/views/settings/SettingsDashboard')),
+		component: lazy(() => import('@/features/admin/components/ModularAdminLayout')),
 		children: [
 			{
 				slug: 'feature-flags',
@@ -244,7 +244,7 @@ export const adminModulesV2: AdminModuleV2[] = [
 				icon: 'toggle-left',
 				permission: 'admin.system.manage',
 				path: '/admin/settings/feature-flags',
-				component: lazy(() => import('@admin/views/settings/FeatureFlags'))
+				component: lazy(() => import('@/pages/admin/feature-flags'))
 			},
 			{
 				slug: 'announcements',
@@ -252,7 +252,7 @@ export const adminModulesV2: AdminModuleV2[] = [
 				icon: 'megaphone',
 				permission: 'admin.system.manage',
 				path: '/admin/settings/announcements',
-				component: lazy(() => import('@admin/views/settings/Announcements'))
+				component: lazy(() => import('@/pages/admin/announcements/index'))
 			}
 		]
 	},
@@ -262,7 +262,7 @@ export const adminModulesV2: AdminModuleV2[] = [
 		icon: 'palette',
 		permission: 'admin.system.manage',
 		path: '/admin/brand-config',
-		component: lazy(() => import('@admin/views/system/BrandConfig'))
+		component: lazy(() => import('@/pages/admin/brand-config'))
 	},
 	{
 		slug: 'ui-config',
@@ -270,7 +270,7 @@ export const adminModulesV2: AdminModuleV2[] = [
 		icon: 'quote',
 		permission: 'admin.system.manage',
 		path: '/admin/ui-config',
-		component: lazy(() => import('@admin/views/system/UiConfig'))
+		component: lazy(() => import('@/pages/admin/ui-config'))
 	},
 	{
 		slug: 'live-database',
@@ -278,7 +278,7 @@ export const adminModulesV2: AdminModuleV2[] = [
 		icon: 'database',
 		permission: 'admin.database.view',
 		path: '/admin/live-database',
-		component: lazy(() => import('@admin/views/system/LiveDatabaseEditor')),
+		component: lazy(() => import('@/pages/admin/live-database')),
 		disabled: false, // Set to true to disable this module
 		children: []
 	}

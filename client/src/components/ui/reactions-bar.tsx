@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { ThumbsUp, Heart, Laugh, Frown, Flame, Smile, Coins } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
-import { apiRequest, queryClient } from '@/lib/queryClient';
+import { cn } from '@/utils/utils';
+import { apiRequest, queryClient } from '@/utils/queryClient';
 import { useAuth } from '@/hooks/use-auth';
 import { useToast } from '@/hooks/use-toast';
 import { useMutation, useQueryClient } from '@tanstack/react-query';

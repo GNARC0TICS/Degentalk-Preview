@@ -4,7 +4,7 @@
  * Main dashboard for displaying and managing user missions
  */
 
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/utils';
 import { MissionCard } from './mission-card';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';

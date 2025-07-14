@@ -11,7 +11,7 @@ import {
 	SheetHeader,
 	SheetTitle
 } from '@/components/ui/sheet';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/utils';
 import { useMediaQuery } from '@/hooks/use-media-query';
 import { ENABLE_WIDGETS } from '@/config/featureFlags';
 

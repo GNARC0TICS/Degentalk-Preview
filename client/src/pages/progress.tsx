@@ -10,7 +10,7 @@
 
 import { useState } from 'react';
 import { Helmet } from 'react-helmet';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/utils';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Alert, AlertDescription } from '@/components/ui/alert';

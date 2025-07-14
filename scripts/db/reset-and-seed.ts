@@ -1,5 +1,5 @@
 import '../../server/config/loadEnv';
-import { db } from '../db';
+import { db } from '@degentalk/db';
 import { logSeed } from './utils/seedUtils';
 import { seedXpActions } from './seed-xp-actions';
 import { seedBadges } from './seed-badges';

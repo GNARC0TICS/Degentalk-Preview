@@ -2,7 +2,7 @@ import React, { forwardRef } from 'react';
 import { motion } from 'framer-motion';
 import { Slot } from '@radix-ui/react-slot';
 import { cva, type VariantProps } from 'class-variance-authority';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/utils';
 import { useBreakpoint } from '@/hooks/useMediaQuery';
 import type { EntityId } from '@shared/types/ids';
 

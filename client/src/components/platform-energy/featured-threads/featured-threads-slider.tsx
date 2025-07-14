@@ -13,7 +13,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Badge } from '@/components/ui/badge';
 import { format } from 'date-fns';
 import { MessageSquare, Eye, BookmarkIcon } from 'lucide-react';
-import { getInitials } from '@/lib/utils';
+import { getInitials } from '@/utils/utils';
 
 export type FeaturedThread = {
 	thread_id: string;

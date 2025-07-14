@@ -1,7 +1,7 @@
 import React from 'react';
 import { Clock, Edit3, Users, User } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/utils';
 import { brandConfig } from '@/config/brand.config';
 
 interface PostFooterProps {

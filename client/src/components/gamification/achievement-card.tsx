@@ -5,7 +5,7 @@
  * visual effects based on rarity, and completion status
  */
 
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/utils';
 import { Card, CardContent } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';

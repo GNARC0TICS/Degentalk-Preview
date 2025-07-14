@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ES2022",
+    "moduleResolution": "nodenext",
+    "baseUrl": ".",
+    "paths": {
+      "@db": ["client/src/lib/db.ts"],
+      "@schema/*": ["db/schema/*"],
+      "@shared/*": ["shared/*"],
+      "@admin/*": ["client/src/views/admin/*"]
+    }
+  }
+}

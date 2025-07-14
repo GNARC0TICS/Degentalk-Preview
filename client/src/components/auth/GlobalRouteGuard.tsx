@@ -2,9 +2,9 @@ import type { ReactNode } from 'react';
 import { useEffect } from 'react';
 import { useLocation } from 'wouter';
 import { useAuth } from '@/hooks/use-auth';
-import { getRouteProtection } from '@/lib/routeConfig';
-import { hasRoleAtLeast } from '@/lib/roles';
-import type { Role } from '@/lib/roles';
+import { getRouteProtection } from '@/utils/routeConfig';
+import { hasRoleAtLeast } from '@/utils/roles';
+import type { Role } from '@/utils/roles';
 
 interface GlobalRouteGuardProps {
 	children: ReactNode;

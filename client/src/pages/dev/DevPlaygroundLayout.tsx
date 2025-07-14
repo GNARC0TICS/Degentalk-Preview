@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/utils';
 import { ControlsDrawer } from './ControlsDrawer';
 import { usePlaygroundControls } from '@/stores/usePlaygroundControls';
 

@@ -1,10 +1,10 @@
 import type { AdminId } from '../shared/types/ids';
-import { db } from '../db';
+import { db } from '../../db/index.ts';
 import { users } from '../db/schema/user/users';
 import bcrypt from 'bcrypt';
 import { faker } from '@faker-js/faker';
 import { sql } from 'drizzle-orm';
-import { logger } from '@server/core/logger';
+import { logger } from '../../server/src/core/logger.ts';
 
 // Define types for clarity and stricter type checking for mockUsers
 type UserRole = 'admin' | 'mod' | 'user';

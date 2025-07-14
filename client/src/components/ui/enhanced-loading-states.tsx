@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Loader2, Zap, MessageSquare, Eye, Clock, Crown } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/utils';
 
 // Enhanced loading spinner with micro-animations
 export const EnhancedSpinner = memo(

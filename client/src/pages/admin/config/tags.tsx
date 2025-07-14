@@ -4,7 +4,7 @@ import { Loader2 } from 'lucide-react';
 import { Textarea } from '@/components/ui/textarea.tsx';
 import { Button } from '@/components/ui/button.tsx';
 import { useToast } from '@/hooks/use-toast.ts';
-import { apiRequest, queryClient } from '@/lib/queryClient.ts';
+import { apiRequest, queryClient } from '@/utils/queryClient.ts';
 
 export default function TagConfigPage() {
 	const { toast } = useToast();

@@ -29,7 +29,7 @@ import {
 } from '@/components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { useLocalStorage } from '@/hooks/use-local-storage';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/utils';
 import type { Tag } from '@/types/forum';
 import type { TagId, PrefixId, ThreadId, asTagId, asPrefixId } from '@shared/types/ids';
 

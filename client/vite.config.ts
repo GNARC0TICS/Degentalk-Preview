@@ -1,52 +1,70 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
+import { fileURLToPath } from 'url';
+import runtimeErrorOverlay from '@replit/vite-plugin-runtime-error-modal';
 
-// https://vitejs.dev/config/
-export default defineConfig({
-	plugins: [react()],
-	resolve: {
-		alias: {
-			'@': path.resolve(__dirname, './src'),
-			'@shared': path.resolve(__dirname, '../shared')
-		}
-	},
-	optimizeDeps: {
-		exclude: [
-			'@tiptap/core',
-			'@tiptap/pm',
-			'@tiptap/react',
-			'@tiptap/starter-kit',
-			'@tiptap/suggestion',
-			'@tiptap/extension-bold',
-			'@tiptap/extension-code-block-lowlight',
-			'@tiptap/extension-color',
-			'@tiptap/extension-font-family',
-			'@tiptap/extension-heading',
-			'@tiptap/extension-image',
-			'@tiptap/extension-italic',
-			'@tiptap/extension-link',
-			'@tiptap/extension-mention',
-			'@tiptap/extension-paragraph',
-			'@tiptap/extension-placeholder',
-			'@tiptap/extension-text-align',
-			'@tiptap/extension-text-style',
-			'@tiptap/extension-underline',
-			'@monaco-editor/react',
-			'@lottiefiles/dotlottie-react',
-			'lottie-react',
-			'canvas-confetti',
-			'gsap'
-		],
-		include: ['react', 'react-dom', 'react-router-dom', 'zustand', '@tanstack/react-query']
-	},
-	server: {
-		host: '0.0.0.0',
-		proxy: {
-			'/api': {
-				target: 'http://localhost:5001',
-				changeOrigin: true
-			}
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const projectRoot = path.resolve(__dirname, '..');
+
+export default defineConfig(async () => {
+	const plugins = [react(), runtimeErrorOverlay()];
+
+	if (process.env.NODE_ENV !== 'production' && process.env.REPL_ID !== undefined) {
+		try {
+			const { cartographer } = await import('@replit/vite-plugin-cartographer');
+			plugins.push(cartographer());
+		} catch (e) {
+			// Failed to load cartographer plugin (production build)
 		}
 	}
+
+	return {
+		base: '/',
+		plugins,
+		define: {
+			'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development')
+		},
+		resolve: {
+			alias: [
+				{ find: '@', replacement: path.resolve(projectRoot, 'client/src') },
+				{ find: '@shared', replacement: path.resolve(projectRoot, 'shared') },
+				{ find: '@assets', replacement: path.resolve(projectRoot, 'attached_assets') },
+				{ find: '@db', replacement: path.resolve(projectRoot, 'db/index.ts') },
+				{ find: '@db_types', replacement: path.resolve(projectRoot, 'db/types') },
+				{ find: '@schema', replacement: path.resolve(projectRoot, 'db/schema/index.ts') },
+				{ find: /^@schema\/(.*)/, replacement: path.resolve(projectRoot, 'db/schema/$1') }
+			],
+			dedupe: ['react', 'react-dom']
+		},
+		optimizeDeps: {
+			exclude: ['@lottiefiles/dotlottie-react'],
+			include: ['react-lottie-player']
+		},
+		root: path.resolve(projectRoot, 'client'),
+		server: {
+			port: 5173,
+			proxy: {
+				'/api': {
+					target: 'http://localhost:5001',
+					changeOrigin: true,
+					secure: false
+				}
+			}
+		},
+		build: {
+			outDir: path.resolve(projectRoot, 'dist/public'),
+			emptyOutDir: true,
+			esbuild: {
+				drop: ['console', 'debugger']
+			},
+			rollupOptions: {
+				external: ['./UIVERSE/**']
+			}
+		},
+		css: {
+			    postcss: path.resolve(projectRoot, 'config', 'postcss.config.js'),
+		}
+	};
 });

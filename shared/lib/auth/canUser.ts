@@ -5,7 +5,7 @@
  * the application to ensure consistent access control.
  */
 
-import { db } from '@/lib/db';
+import { db } from '@db';
 import { eq, inArray } from 'drizzle-orm';
 import { users, roles, userRoles, rolePermissions } from '@schema';
 import type { UserId, EntityId } from '@shared/types/ids';

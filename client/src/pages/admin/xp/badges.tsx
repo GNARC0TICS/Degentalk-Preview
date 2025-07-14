@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Badge as UiBadge } from '@/components/ui/badge'; // Renamed to avoid conflict
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { useDebounce } from '@/hooks/use-debounce';
-import { apiRequest } from '@/lib/queryClient';
+import { apiRequest } from '@/utils/queryClient';
 import { useCrudMutation } from '@/hooks/useCrudMutation';
 
 import { AdminPageShell } from '@/features/admin/components/layout/AdminPageShell';

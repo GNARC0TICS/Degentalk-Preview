@@ -5,12 +5,12 @@
  */
 
 import { useEffect } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/utils';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { LevelDisplay } from './level-display';
-import { formatNumber } from '@/lib/utils';
+import { formatNumber } from '@/utils/utils';
 import { Sparkles, Trophy, Gift, ArrowRight, Zap, Star } from 'lucide-react';
 import { motion } from 'framer-motion';
 import confetti from 'canvas-confetti';

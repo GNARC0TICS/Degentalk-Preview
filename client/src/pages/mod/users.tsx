@@ -62,7 +62,7 @@ import {
 	DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { toast } from 'sonner';
-import { apiRequest } from '@/lib/queryClient';
+import { apiRequest } from '@/utils/queryClient';
 import type { BanId, WarningId } from '@shared/types/ids';
 
 // Types

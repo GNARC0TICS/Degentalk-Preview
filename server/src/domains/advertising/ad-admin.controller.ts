@@ -4,6 +4,7 @@ import { adConfigurationService } from './ad-configuration.service';
 import { campaignManagementService } from './campaign-management.service';
 import { logger } from '@core/logger';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
+import { getAuthenticatedUser } from '@core/utils/auth.helpers';
 
 // Admin validation schemas
 const placementConfigSchema = z.object({
@@ -148,12 +149,16 @@ export class AdAdminController {
 	 */
 	async updateSystemConfiguration(req: Request, res: Response): Promise<void> {
 		try {
-			const adminUserId = req.body.userId || 'admin-123'; // TODO: Extract from JWT
+			const user = getAuthenticatedUser(req);
+			if (!user) {
+				return sendErrorResponse(res, 'Authentication required', 401);
+			}
+
 			const configUpdates = systemConfigSchema.parse(req.body);
 
 			const updatedConfig = await adConfigurationService.updateSystemConfiguration(
 				configUpdates,
-				adminUserId
+				user.id
 			);
 
 			sendSuccessResponse(res, updatedConfig);
@@ -410,12 +415,16 @@ export class AdAdminController {
 	 */
 	async createGovernanceProposal(req: Request, res: Response): Promise<void> {
 		try {
-			const proposerUserId = req.body.userId || 'admin-123'; // TODO: Extract from JWT
+			const user = getAuthenticatedUser(req);
+			if (!user) {
+				return sendErrorResponse(res, 'Authentication required', 401);
+			}
+
 			const proposalData = governanceProposalSchema.parse(req.body);
 
 			const proposal = await adConfigurationService.createGovernanceProposal({
 				...proposalData,
-				proposerUserId
+				proposerUserId: user.id
 			});
 
 			sendSuccessResponse(res, proposal);

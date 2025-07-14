@@ -4,7 +4,7 @@ import { AlertTriangle, Home, Users, Search, ArrowLeft, UserX } from 'lucide-rea
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useQuery } from '@tanstack/react-query';
-import { apiRequest } from '@/lib/queryClient';
+import { apiRequest } from '@/utils/queryClient';
 
 interface UserNotFoundProps {
 	username?: string;

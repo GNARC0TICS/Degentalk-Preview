@@ -5,6 +5,7 @@ import { adConfigurationService } from './ad-configuration.service';
 import { userPromotionRoutes } from './user-promotion.routes';
 import { logger } from '@core/logger';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
+import { getAuthenticatedUser } from '@core/utils/auth.helpers';
 
 const router = Router();
 
@@ -122,12 +123,15 @@ router.post('/governance/proposals/:proposalId/vote', async (req, res) => {
 	try {
 		const { proposalId } = req.params;
 		const { vote, reason } = req.body;
-		const voterUserId = req.body.userId || 'user-123'; // TODO: Extract from JWT
+		const user = getAuthenticatedUser(req);
+		if (!user) {
+			return sendErrorResponse(res, 'Authentication required', 401);
+		}
 
 		// TODO: Get user's DGT token balance for voting power
 		const votingPower = 1000; // Mock voting power
 
-		await adConfigurationService.voteOnProposal(proposalId, voterUserId, vote, votingPower, reason);
+		await adConfigurationService.voteOnProposal(proposalId, user.id, vote, votingPower, reason);
 
 		sendSuccessResponse(res, { success: true, message: 'Vote recorded successfully' });
 	} catch (error) {

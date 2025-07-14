@@ -1,6 +1,6 @@
 import type { User } from '@/types/compat/user';
 import { Badge } from '@/components/ui/badge';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/utils';
 
 type UserBadgeProps = {
 	user: Pick<User, 'level' | 'isVerified' | 'isBanned'>;

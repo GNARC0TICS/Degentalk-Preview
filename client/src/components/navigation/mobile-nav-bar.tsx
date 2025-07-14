@@ -12,7 +12,7 @@ import {
 } from 'lucide-react';
 import { NavItem } from './nav-item';
 import type { NavItemProps } from './nav-item';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/utils';
 import { useAuth } from '@/hooks/use-auth.tsx';
 
 export interface MobileNavBarProps {

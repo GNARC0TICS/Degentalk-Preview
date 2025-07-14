@@ -50,7 +50,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useDebounce } from '@/hooks/use-debounce';
-import { apiRequest } from '@/lib/queryClient';
+import { apiRequest } from '@/utils/queryClient';
 import { getLevelForXp, getXpForLevel } from '@shared/economy/reward-calculator';
 import { XP_EASTER_EGGS } from '@/config/easter-eggs.config';
 import { BankruptcyEffect } from '@/features/admin/components/effects/BankruptcyEffect';

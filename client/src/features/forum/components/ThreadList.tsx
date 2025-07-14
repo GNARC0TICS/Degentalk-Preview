@@ -1,7 +1,7 @@
 import React, { useState, memo, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import ThreadCard from '@/components/forum/ThreadCard';
-import { getQueryFn } from '@/lib/queryClient';
+import { getQueryFn } from '@/utils/queryClient';
 import { Pagination } from '@/components/ui/pagination';
 import { ThreadListSkeleton } from '@/components/ui/thread-skeleton';
 import type { ThreadFiltersState } from '@/components/forum/ThreadFilters';

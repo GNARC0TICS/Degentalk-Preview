@@ -1,12 +1,12 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import type { Response, NextFunction } from 'express';
 import { authenticateJWT } from '../authenticate-jwt';
-import * as jwtUtils from '../../domains/auth/utils/jwt.utils';
+import * as jwtUtils from '@server/domains/auth/utils/jwt.utils';
 import { userService } from '@core/services/user.service';
-import type { AuthenticatedRequest } from '../../types/auth.types';
+import type { AuthenticatedRequest } from '@server/types/auth.types';
 
 // Mock dependencies
-vi.mock('../../domains/auth/utils/jwt.utils');
+vi.mock('@server/domains/auth/utils/jwt.utils');
 vi.mock('@core/services/user.service');
 vi.mock('@core/logger', () => ({
 	logger: {

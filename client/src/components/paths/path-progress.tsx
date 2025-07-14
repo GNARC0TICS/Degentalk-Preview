@@ -1,7 +1,7 @@
 import React from 'react';
 import { Progress } from '@/components/ui/progress';
 import { availablePaths, getPathDefinition } from '@shared/path-config';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/utils';
 
 // Icons from Lucide React
 import * as LucideIcons from 'lucide-react';

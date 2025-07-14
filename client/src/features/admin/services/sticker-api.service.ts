@@ -4,7 +4,7 @@
  * API client for sticker system management
  */
 
-import { adminApi } from '@admin/lib/adminApi';
+import { adminApi } from '@/features/admin/lib/adminApi';
 import type { PackId, StickerId } from '@shared/types/ids';
 
 // Types

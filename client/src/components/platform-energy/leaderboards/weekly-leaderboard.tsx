@@ -6,7 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Badge } from '@/components/ui/badge';
-import { getInitials } from '@/lib/utils';
+import { getInitials } from '@/utils/utils';
 import { Award, MessageSquare, TrendingUp, Clock } from 'lucide-react';
 import type { UserId } from '@shared/types/ids';
 

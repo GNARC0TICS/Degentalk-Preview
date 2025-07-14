@@ -56,6 +56,9 @@ function initializeRedis(): Redis | null {
 	}
 }
 
+// Track if we've already logged the warning
+let memoryStoreWarningLogged = false;
+
 /**
  * Create rate limiter with Redis or memory store
  */
@@ -89,9 +92,10 @@ function createRateLimiter(config: any) {
 		});
 	}
 
-	// Fallback to memory store with warning
-	if (env.RATE_LIMIT_ENABLED) {
+	// Fallback to memory store with warning (only log once)
+	if (env.RATE_LIMIT_ENABLED && !memoryStoreWarningLogged) {
 		logger.warn('RateLimit', 'Using memory store - not recommended for production');
+		memoryStoreWarningLogged = true;
 	}
 
 	return rateLimit(baseConfig);

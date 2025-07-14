@@ -38,10 +38,10 @@ import moderatorNotesRoutes from './sub-domains/moderator-notes/moderator-notes.
 import brandConfigRoutes from './sub-domains/brand-config/brand.routes';
 import socialRoutes from './sub-domains/social/social.routes';
 import cacheRoutes from './sub-domains/cache/cache.routes';
-import { adminWalletRoutes } from '../../domains/wallet/admin/wallet.routes';
+import { adminWalletRoutes } from '@server/domains/wallet/admin/wallet.routes';
 import { emailTemplateRoutes } from './sub-domains/email-templates/email-templates.routes';
 import { backupRestoreRoutes } from './sub-domains/backup-restore/backup-restore.routes';
-import { stickerRoutes } from '../../domains/collectibles/stickers/stickers.routes';
+import { stickerRoutes } from '@server/domains/collectibles/stickers/stickers.routes';
 import subscriptionAdminRoutes from './sub-domains/subscriptions/subscription.admin.routes';
 import databaseRoutes from './sub-domains/database/database.routes';
 import securityMonitorRoutes from './routes/security-monitor.routes';

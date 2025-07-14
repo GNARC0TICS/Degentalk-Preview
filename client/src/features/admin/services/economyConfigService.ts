@@ -1,4 +1,4 @@
-import { adminApi } from '@admin/lib/adminApi';
+import { adminApi } from '@/features/admin/lib/adminApi';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 const ECONOMY_KEY = ['admin', 'economy-config'];

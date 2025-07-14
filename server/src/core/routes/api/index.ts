@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import statusRoute from './status';
-import dictionaryRoutes from '../../../domains/dictionary/dictionary.routes';
+import dictionaryRoutes from '@server/domains/dictionary/dictionary.routes';
 
 const router: Router = Router();
 

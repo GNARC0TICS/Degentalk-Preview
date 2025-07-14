@@ -50,7 +50,7 @@ import {
 	DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { toast } from 'sonner';
-import { apiRequest } from '@/lib/queryClient';
+import { apiRequest } from '@/utils/queryClient';
 import type { ApiErrorData } from '@/types/core.types';
 import type { ReportId, ContentId } from '@shared/types/ids';
 

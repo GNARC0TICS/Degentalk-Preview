@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import type { FrameId } from '@shared/types/ids';
 import { isAuthenticated } from '@server/domains/auth/middleware/auth.middleware';
-import { frameEquipService } from '../../../domains/cosmetics/frameEquip.service';
+import { frameEquipService } from '@server/domains/cosmetics/frameEquip.service';
 import { userService } from '@core/services/user.service';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 import { validateAndConvertId } from '@core/helpers/validate-controller-ids';

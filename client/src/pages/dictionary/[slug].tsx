@@ -1,7 +1,7 @@
 import React from 'react';
 import { useParams, Link } from 'wouter';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiRequest } from '@/lib/queryClient';
+import { apiRequest } from '@/utils/queryClient';
 import { LoadingSpinner } from '@/components/ui/loader';
 import { ErrorDisplay } from '@/components/ui/error-display';
 import { Button } from '@/components/ui/button';

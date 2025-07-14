@@ -1,9 +1,10 @@
 {
-	"extends": "../tsconfig.json",
-	"compilerOptions": {
-		"noEmit": true,
-		"tsBuildInfoFile": "./.tscache/.tsbuildinfo"
-	},
-	"include": ["./**/*.ts"],
-	"exclude": ["node_modules", "dist", "**/*.test.ts", "**/*.spec.ts"]
+ "extends": "../tsconfig.base.json",
+ "compilerOptions": {
+   "composite": true,
+   "declaration": true,
+   "outDir": "dist",
+   "rootDir": "."
+ },
+ "include": ["lib", "types"]
 }

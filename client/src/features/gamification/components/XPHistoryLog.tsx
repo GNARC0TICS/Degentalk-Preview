@@ -1,5 +1,5 @@
 import React from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/utils';
 import type { XpAdjustmentEntry } from '@/hooks/useXP';
 import { formatDistanceToNow } from 'date-fns';
 import { Award, Calendar, MessageSquare, Plus, Settings, User, ZapIcon } from 'lucide-react';

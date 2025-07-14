@@ -10,7 +10,7 @@ import {
 import { useForumStructure } from '@/contexts/ForumStructureContext';
 import { buildNavigationTree, type NavNode } from '@/navigation/forumNav';
 import { useLocalStorage } from '@/hooks/use-local-storage';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/utils';
 import { Badge } from '@/components/ui/badge'; // For potential count display
 import { motion, AnimatePresence } from 'framer-motion';
 

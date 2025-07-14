@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/form';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
-import { apiRequest, queryClient } from '@/lib/queryClient';
+import { apiRequest, queryClient } from '@/utils/queryClient';
 import { useAuth } from '@/hooks/use-auth';
 import { useToast } from '@/hooks/use-toast';
 import type { ThreadId, PostId } from '@shared/types/ids';

@@ -1,4 +1,4 @@
-import { db } from '../db';
+import { db } from '../../db/index.ts';
 import { platformTreasurySettings, type InsertPlatformTreasurySetting } from './utils/schema';
 import { logSeed } from './utils/seedUtils';
 import { eq } from 'drizzle-orm';

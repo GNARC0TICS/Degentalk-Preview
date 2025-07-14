@@ -15,7 +15,7 @@ import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { format } from 'date-fns';
 import { MessageSquare, Eye, ArrowRight } from 'lucide-react';
-import { getInitials } from '@/lib/utils';
+import { getInitials } from '@/utils/utils';
 import type { PostId, ThreadId, UserId } from '@shared/types/ids';
 
 export type RecentPost = {

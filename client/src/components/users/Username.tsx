@@ -1,5 +1,5 @@
 import React from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/utils';
 import { Badge } from '@/components/ui/badge';
 import { useUserCosmetics } from '@/hooks/useUserCosmetics';
 import { SYSTEM_ROLE_COLORS } from '@/lib/utils/applyPluginRewards';

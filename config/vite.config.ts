@@ -57,6 +57,7 @@ export default defineConfig(async () => {
 		resolve: {
 			alias: [
 				{ find: '@', replacement: path.resolve(projectRoot, 'client/src') },
+				{ find: '@admin', replacement: path.resolve(projectRoot, 'client/src/features/admin') },
 				{ find: '@shared', replacement: path.resolve(projectRoot, 'shared') },
 				{ find: '@assets', replacement: path.resolve(projectRoot, 'attached_assets') },
 				{ find: '@db', replacement: path.resolve(projectRoot, 'db/index.ts') },

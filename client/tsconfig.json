@@ -1,33 +1,12 @@
 {
-	"extends": "../tsconfig.json",
-	"include": [
-		"src/**/*",
-		"**/*.test.ts",
-		"**/*.test.tsx",
-		"**/*.spec.ts",
-		"**/*.spec.tsx",
-		"vitest.config.ts",
-		"../shared/**/*"
-	],
-	"exclude": [
-		"../node_modules",
-		"build",
-		"dist",
-		"../server/**/*",
-		"../db/**/*",
-		"../scripts/**/*",
-		"**/*.bak.ts",
-		"**/*.bak.tsx",
-		"../UIVERSE",
-		"../archive/**/*",
-		"../shared/fixtures/**"
-	],
-	"compilerOptions": {
-		"baseUrl": ".",
-		"paths": {
-			"@/*": ["src/*"],
-			"@shared/types": ["../shared/types/index.ts"],
-			"@shared/*": ["../shared/*"]
-		}
-	}
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "composite": true,
+    "outDir": "dist",
+   "skipLibCheck": true,
+   "rootDir": "src",
+   "module": "NodeNext"
+ },
+ "include": ["src"],
+  "references": [{ "path": "../shared" }]
 }

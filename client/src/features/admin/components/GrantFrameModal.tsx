@@ -11,7 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { useMutation } from '@tanstack/react-query';
-import { apiRequest } from '@utils/api-request';
+import { apiRequest } from '@/utils/api-request';
 import { LoadingSpinner } from '@/components/ui/loader';
 import type { AvatarFrame } from '@/types/compat/avatar';
 import type { FrameId, UserId } from '@shared/types/ids';

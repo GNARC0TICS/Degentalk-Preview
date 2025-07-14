@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useMemo, useState, useCallback, useEffect } from 'react';
 import type { ReactNode, ComponentType } from 'react';
 import type { LucideProps } from 'lucide-react';
-import { apiRequest } from '@/lib/queryClient'; // Fetch utility
+import { apiRequest } from '@/utils/queryClient'; // Fetch utility
 import {
 	Flame,
 	Target,

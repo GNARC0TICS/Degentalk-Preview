@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Home, Trophy, ShoppingBag, Users, Sparkles, Eye, Bell, Gift } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/utils';
 import { useAuth } from '@/hooks/use-auth';
 
 interface ProfileNavigationProps {

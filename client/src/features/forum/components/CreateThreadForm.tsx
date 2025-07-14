@@ -7,7 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useLocation } from 'wouter';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { apiRequest } from '@/lib/queryClient';
+import { apiRequest } from '@/utils/queryClient';
 import { useToast } from '@/hooks/use-toast';
 import RichTextEditor from '@/components/editor/rich-text-editor';
 import { useAuth } from '@/hooks/use-auth';

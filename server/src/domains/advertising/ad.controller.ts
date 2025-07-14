@@ -5,6 +5,7 @@ import { campaignManagementService } from './campaign-management.service';
 import { adConfigurationService } from './ad-configuration.service';
 import { logger } from '@core/logger';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
+import { getAuthenticatedUser } from '@core/utils/auth.helpers';
 
 // Request validation schemas
 const adRequestSchema = z.object({
@@ -154,12 +155,14 @@ export class AdController {
 	 */
 	async createCampaign(req: Request, res: Response): Promise<void> {
 		try {
-			// TODO: Extract user ID from JWT token
-			const advertiserUserId = req.body.userId || 'user-123';
+			const user = getAuthenticatedUser(req);
+			if (!user) {
+				return sendErrorResponse(res, 'Authentication required', 401);
+			}
 
 			const campaignData = createCampaignSchema.parse(req.body);
 
-			const result = await campaignManagementService.createCampaign(advertiserUserId, {
+			const result = await campaignManagementService.createCampaign(user.id, {
 				...campaignData,
 				startDate: campaignData.startDate ? new Date(campaignData.startDate) : undefined,
 				endDate: campaignData.endDate ? new Date(campaignData.endDate) : undefined
@@ -178,10 +181,13 @@ export class AdController {
 	 */
 	async getCampaign(req: Request, res: Response): Promise<void> {
 		try {
-			const { campaignId } = req.params;
-			const advertiserUserId = req.body.userId || 'user-123';
+			const user = getAuthenticatedUser(req);
+			if (!user) {
+				return sendErrorResponse(res, 'Authentication required', 401);
+			}
 
-			const campaign = await campaignManagementService.getCampaign(campaignId, advertiserUserId);
+			const { campaignId } = req.params;
+			const campaign = await campaignManagementService.getCampaign(campaignId, user.id);
 
 			sendSuccessResponse(res, campaign);
 		} catch (error) {
@@ -196,7 +202,10 @@ export class AdController {
 	 */
 	async listCampaigns(req: Request, res: Response): Promise<void> {
 		try {
-			const advertiserUserId = req.body.userId || 'user-123';
+			const user = getAuthenticatedUser(req);
+			if (!user) {
+				return sendErrorResponse(res, 'Authentication required', 401);
+			}
 
 			const filters = {
 				status: req.query.status as string,
@@ -205,7 +214,7 @@ export class AdController {
 				offset: req.query.offset ? parseInt(req.query.offset as string) : 0
 			};
 
-			const result = await campaignManagementService.listCampaigns(advertiserUserId, filters);
+			const result = await campaignManagementService.listCampaigns(user.id, filters);
 
 			sendSuccessResponse(res, result);
 		} catch (error) {
@@ -221,14 +230,17 @@ export class AdController {
 	async updateCampaign(req: Request, res: Response): Promise<void> {
 		try {
 			const { campaignId } = req.params;
-			const advertiserUserId = req.body.userId || 'user-123';
+			const user = getAuthenticatedUser(req);
+			if (!user) {
+				return sendErrorResponse(res, 'Authentication required', 401);
+			}
 
 			// Validate update data (subset of create schema)
 			const updateData = req.body;
 
 			const campaign = await campaignManagementService.updateCampaign(
 				campaignId,
-				advertiserUserId,
+				user.id,
 				updateData
 			);
 
@@ -246,9 +258,12 @@ export class AdController {
 	async deleteCampaign(req: Request, res: Response): Promise<void> {
 		try {
 			const { campaignId } = req.params;
-			const advertiserUserId = req.body.userId || 'user-123';
+			const user = getAuthenticatedUser(req);
+			if (!user) {
+				return sendErrorResponse(res, 'Authentication required', 401);
+			}
 
-			await campaignManagementService.deleteCampaign(campaignId, advertiserUserId);
+			await campaignManagementService.deleteCampaign(campaignId, user.id);
 
 			res.status(204).end();
 		} catch (error) {
@@ -306,10 +321,13 @@ export class AdController {
 	 */
 	async optimizeCampaign(req: Request, res: Response): Promise<void> {
 		try {
-			const { campaignId } = req.params;
-			const advertiserUserId = req.body.userId || 'user-123';
+			const user = getAuthenticatedUser(req);
+			if (!user) {
+				return sendErrorResponse(res, 'Authentication required', 401);
+			}
 
-			const result = await campaignManagementService.optimizeCampaign(campaignId, advertiserUserId);
+			const { campaignId } = req.params;
+			const result = await campaignManagementService.optimizeCampaign(campaignId, user.id);
 
 			sendSuccessResponse(res, result);
 		} catch (error) {

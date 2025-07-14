@@ -14,7 +14,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useMessages, type Conversation, type Message } from '@/hooks/use-messages';
 import { useAsyncButton } from '@/hooks/use-async-button';
-import { formatRelativeTime, getInitials } from '@/lib/utils';
+import { formatRelativeTime, getInitials } from '@/utils/utils';
 import { Loader2, Send, Trash2, ArrowLeft, Search } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useQuery } from '@tanstack/react-query';

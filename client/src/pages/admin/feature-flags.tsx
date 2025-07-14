@@ -2,7 +2,7 @@ import React from 'react';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
 import { Table, TableHeader, TableRow, TableHead, TableBody } from '@/components/ui/table';
 import { RefreshCw, ToggleLeft } from 'lucide-react';
-import ProtectedAdminRoute from '@admin/components/protected-admin-route';
+import ProtectedAdminRoute from '@/features/admin/components/protected-admin-route';
 import { useAdminModule } from '@/hooks/use-admin-modules';
 import { VisualJsonTabs } from '@/features/admin/components/VisualJsonTabs';
 import { useJsonConfig } from '@/hooks/useJsonConfig';

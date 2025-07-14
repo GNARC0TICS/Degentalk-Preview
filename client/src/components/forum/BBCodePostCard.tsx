@@ -4,7 +4,7 @@ import { Pin, CheckCircle, Link2 } from 'lucide-react';
 import { PostHeader, PostSidebar, PostBody, PostActions, PostFooter } from './bbcode';
 import { UnifiedProfileCard } from '@/components/profile/UnifiedProfileCard';
 import { brandConfig } from '@/config/brand.config';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/utils';
 import type { PostWithUser } from '@/types/compat/forum';
 import type { PostId } from '@shared/types/ids';
 

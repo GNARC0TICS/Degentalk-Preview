@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/utils';
 import { Sparkles } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';

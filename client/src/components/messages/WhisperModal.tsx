@@ -17,7 +17,7 @@ import { useAsyncButton } from '@/hooks/use-async-button';
 import { Loader2, Search, User } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { useToast } from '@/hooks/use-toast';
-import { getInitials } from '@/lib/utils';
+import { getInitials } from '@/utils/utils';
 
 interface User {
 	id: string;

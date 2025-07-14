@@ -2,7 +2,7 @@ import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { LoadingSpinner } from '@/components/ui/loader';
 import { ErrorDisplay } from '@/components/ui/error-display';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/utils';
 // import { useToast } from '@/hooks/use-toast'; // Unused toast
 import {
 	Table,

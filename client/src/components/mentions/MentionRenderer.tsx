@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'wouter';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/utils';
 
 interface MentionRendererProps {
 	content: string;

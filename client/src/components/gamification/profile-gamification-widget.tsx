@@ -8,7 +8,7 @@
  * - Quick stats
  */
 
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/utils';
 import { useRouter } from 'wouter';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -16,7 +16,7 @@ import { Progress } from '@/components/ui/progress';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { LevelDisplay } from './level-display';
-import { formatNumber } from '@/lib/utils';
+import { formatNumber } from '@/utils/utils';
 import { Trophy, Target, Flame, TrendingUp, ChevronRight, Sparkles, Award } from 'lucide-react';
 import { useLocation } from 'wouter';
 import type { UserProgression } from '@/features/gamification/services/gamification-api.service';

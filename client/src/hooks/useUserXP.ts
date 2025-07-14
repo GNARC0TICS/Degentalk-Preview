@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { useToast } from '@/hooks/use-toast';
-import { apiRequest } from '@utils/api-request';
+import { apiRequest } from '@/utils/api-request';
 import type { UserId } from '@shared/types/ids';
 import { toId } from '@shared/utils/id';
 

@@ -5,7 +5,7 @@
  * of interaction with the forum backend endpoints.
  */
 
-import { apiRequest } from '@utils/api-request';
+import { apiRequest } from '@/utils/api-request';
 import { isValidUUID } from '@shared/utils/id-validation';
 import type {
 	ThreadWithUser,

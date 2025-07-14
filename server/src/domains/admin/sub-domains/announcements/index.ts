@@ -7,10 +7,10 @@ export {
 } from './announcements.routes';
 
 // Export services
-export * from './services/announcements.service';
+export * from './announcements.service.js';
 
 // Export controllers
-export * from './controllers/announcements.controller';
+export * from './announcements.controller';
 
 // Mark the original file as deprecated
 export const ORIGINAL_ANNOUNCEMENTS_DEPRECATED = true;

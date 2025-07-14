@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Crown, Trophy, Zap, TrendingUp, Users, Award, Plus, Settings } from 'lucide-react';
 import { AdminPageShell } from '@/features/admin/components/layout/AdminPageShell';
-import { apiRequest } from '@/lib/queryClient';
+import { apiRequest } from '@/utils/queryClient';
 import { CloutTiersSection } from '@/features/admin/components/clout/CloutTiersSection';
 import { AchievementsSection } from '@/features/admin/components/clout/AchievementsSection';
 import { CloutGrantsSection } from '@/features/admin/components/clout/CloutGrantsSection';

@@ -5,7 +5,7 @@
  * and achievement management.
  */
 
-import { apiRequest } from '@utils/api-request';
+import { apiRequest } from '@/utils/api-request';
 import type { AchievementId } from '@shared/types/ids';
 
 export interface UserAchievement {

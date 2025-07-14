@@ -17,7 +17,7 @@ import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/utils';
 import { useBreakpoint } from '@/hooks/useMediaQuery';
 import type { ThreadDisplay } from '@/types/thread.types';
 import type { ThreadId } from '@shared/types/ids';

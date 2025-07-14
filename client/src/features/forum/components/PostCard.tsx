@@ -25,7 +25,7 @@ import { useAuth } from '@/hooks/use-auth';
 import { ButtonTooltip } from '@/components/ui/tooltip-utils';
 import { ModeratorActions } from '@/components/forum/ModeratorActions';
 import TipButton from '@/features/wallet/components/tip-button';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/utils';
 import { useBreakpoint } from '@/hooks/useMediaQuery';
 import { getAdaptiveConfig } from '@/utils/adaptiveSpacing';
 import {

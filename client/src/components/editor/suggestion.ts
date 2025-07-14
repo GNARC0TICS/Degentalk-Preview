@@ -1,6 +1,6 @@
 import { ReactRenderer } from '@tiptap/react';
 import tippy, { type Instance as TippyInstance } from 'tippy.js';
-import { apiRequest } from '@/lib/queryClient';
+import { apiRequest } from '@/utils/queryClient';
 
 // User mention item interface
 interface MentionItem {

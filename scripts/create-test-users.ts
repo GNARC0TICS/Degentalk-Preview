@@ -2,8 +2,10 @@ import { db } from '../db';
 import { users } from '../db/schema/user/users';
 import { userMissionProgress } from '../db/schema/gamification/userMissionProgress';
 import { missions } from '../db/schema/gamification/missions';
-import bcrypt from '../server/node_modules/bcrypt';
+import bcrypt from 'bcrypt';
 import { sql } from 'drizzle-orm';
+
+type User = typeof users.$inferSelect;
 
 async function createTestUsers() {
   console.log('🔧 Creating test users...');
@@ -70,7 +72,7 @@ async function createTestUsers() {
     // Get first mission and assign to admin
     const firstMission = await db.select().from(missions).limit(1);
     if (firstMission.length > 0 && createdUsers.length > 0) {
-      const adminUser = createdUsers.find(u => u.username === 'cryptoadmin');
+      const adminUser = createdUsers.find((u: User) => u.username === 'cryptoadmin');
       if (adminUser) {
         await db.insert(userMissionProgress)
           .values({

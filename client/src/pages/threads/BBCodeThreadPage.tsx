@@ -33,7 +33,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import type { PostWithUser, ThreadWithPostsAndUser } from '@/types/compat/forum';
 import useSearchParams from '@/hooks/useSearchParams';
 import { useForumStructure } from '@/contexts/ForumStructureContext';
-import { createForumBreadcrumbs } from '@/lib/forum/breadcrumbs';
+import { createForumBreadcrumbs } from '@/utils/forum/breadcrumbs';
 import { useAuth } from '@/hooks/use-auth';
 import { DynamicSidebar } from '@/components/forum/sidebar';
 import { ThreadActionsProvider } from '@/features/forum/contexts/ThreadActionsContext';

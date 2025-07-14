@@ -40,7 +40,7 @@ import {
 	CommandInput,
 	CommandItem
 } from '@/components/ui/command';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/utils';
 import { useBreakpoint } from '@/hooks/useMediaQuery';
 import { useLocalStorage } from '@/hooks/use-local-storage';
 import type { PrefixId, EntityId } from '@shared/types/ids';

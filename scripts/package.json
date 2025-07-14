@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "seed:all": "npx dotenv-cli -e ../env.local -- tsx -r tsconfig-paths/register db/reset-and-seed.ts",
+    "seed:all": "DATABASE_URL=$DATABASE_DIRECT_URL npx dotenv-cli -e ../env.local -- tsx -r tsconfig-paths/register db/reset-and-seed.ts",
     "seed:users": "npx dotenv-cli -e ../env.local -- tsx -r tsconfig-paths/register db/seed-users.ts",
     "seed:forums:only": "npx dotenv-cli -e ../env.local -- tsx -r tsconfig-paths/register seed/seed-all-comprehensive.ts --forums-only",
     "seed:dev-wallet": "npx dotenv-cli -e ../env.local -- tsx -r tsconfig-paths/register db/seed-dev-wallet.ts",
@@ -24,8 +24,8 @@
     "scan:icons": "tsx tools/icon-scan.ts"
   },
   "dependencies": {
-    "@degentalk/shared": "workspace:*",
     "@degentalk/db": "workspace:*",
+    "@degentalk/shared": "workspace:*",
     "@faker-js/faker": "^9.8.0",
     "chalk": "^5.4.1",
     "dotenv": "^16.5.0",

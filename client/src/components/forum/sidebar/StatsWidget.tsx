@@ -3,7 +3,7 @@ import { MessageSquare, Users, Eye, TrendingUp, type LucideIcon } from 'lucide-r
 import { SidebarWidgetCard } from './SidebarWidgetCard';
 import { WidgetSkeleton } from './WidgetSkeleton';
 import { useForumMetrics } from '@/features/forum/hooks/useForumStats';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/utils';
 import { type StructureId } from '@shared/types/ids';
 
 interface Stat {

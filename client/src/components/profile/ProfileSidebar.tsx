@@ -16,9 +16,9 @@ import {
 	Globe,
 	MessageCircle
 } from 'lucide-react';
-import { cn, formatNumber, formatCurrency, formatRelativeTime } from '@/lib/utils';
+import { cn, formatNumber, formatCurrency, formatRelativeTime } from '@/utils/utils';
 import { useToast } from '@/hooks/use-toast';
-import { apiRequest } from '@/lib/queryClient';
+import { apiRequest } from '@/utils/queryClient';
 import { useAuth } from '@/hooks/use-auth.tsx';
 import type { ProfileData } from '@/types/profile';
 import { useIdentityDisplay } from '@/hooks/useIdentityDisplay';

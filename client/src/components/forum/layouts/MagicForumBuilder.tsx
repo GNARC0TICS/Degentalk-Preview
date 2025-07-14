@@ -36,7 +36,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/utils';
 
 import ThreadCard from '@/components/forum/ThreadCard';
 import ZoneCard from '@/components/forum/ZoneCard';

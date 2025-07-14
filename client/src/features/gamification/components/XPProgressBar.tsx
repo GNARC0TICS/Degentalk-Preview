@@ -1,6 +1,6 @@
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/utils';
 import { Progress } from '@/components/ui/progress';
-import { formatNumber } from '@/lib/utils';
+import { formatNumber } from '@/utils/utils';
 import { Badge } from '@/components/ui/badge';
 import { Sparkles } from 'lucide-react';
 

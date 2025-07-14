@@ -9,17 +9,17 @@ import {
 	apiPut,
 	apiPatch,
 	apiDelete
-} from '@utils/api-request';
+} from '@/utils/api-request';
 
 export { apiPost, apiPut, apiPatch, apiDelete };
 
 // Wrapper adds XP-gain detection but delegates actual HTTP to base implementation
 export async function apiRequest<T = unknown>(
-	config: import('@/lib/api-request').ApiRequestConfig
+	config: import('@/utils/api-request').ApiRequestConfig
 ): Promise<T>;
 export async function apiRequest<T = unknown>(url: string, options?: RequestInit): Promise<T>;
 export async function apiRequest<T = unknown>(
-	configOrUrl: import('@/lib/api-request').ApiRequestConfig | string,
+	configOrUrl: import('@/utils/api-request').ApiRequestConfig | string,
 	options?: RequestInit
 ): Promise<T> {
 	const data = await baseApiRequest<T>(configOrUrl as any, options as any);

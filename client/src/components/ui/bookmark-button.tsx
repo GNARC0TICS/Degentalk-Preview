@@ -3,8 +3,8 @@
 import { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Bookmark } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { apiRequest } from '@/lib/queryClient';
+import { cn } from '@/utils/utils';
+import { apiRequest } from '@/utils/queryClient';
 import { useAuth } from '@/hooks/use-auth';
 import { useToast } from '@/hooks/use-toast';
 import type { ThreadId } from '@shared/types/ids';

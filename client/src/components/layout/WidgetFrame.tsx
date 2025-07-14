@@ -14,7 +14,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
 import { useShoutbox } from '@/contexts/shoutbox-context';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/utils';
 import { ErrorBoundary } from '@/components/errors/ErrorBoundary';
 
 interface WidgetFrameProps {

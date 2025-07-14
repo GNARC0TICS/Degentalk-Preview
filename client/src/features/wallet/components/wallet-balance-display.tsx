@@ -11,7 +11,7 @@ import {
 import { AnimatedBalance } from './animated-balance';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/utils';
 import type { WalletBalance } from '@/features/wallet/services/wallet-api.service';
 
 export interface WalletBalanceDisplayProps {

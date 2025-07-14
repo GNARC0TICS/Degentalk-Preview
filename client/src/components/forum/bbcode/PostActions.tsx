@@ -23,7 +23,7 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/utils';
 import { brandConfig } from '@/config/brand.config';
 import type { PostId } from '@shared/types/ids';
 

@@ -14,7 +14,7 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Trophy, ChevronRight, Gift, Clock } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/utils';
 
 /**
  * Small widget showing active missions with rewards ready to claim

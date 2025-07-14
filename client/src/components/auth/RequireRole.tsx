@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { useAuth } from '@/hooks/use-auth';
-import { hasRoleAtLeast } from '@/lib/roles';
-import type { Role } from '@/lib/roles';
+import { hasRoleAtLeast } from '@/utils/roles';
+import type { Role } from '@/utils/roles';
 
 interface RequireRoleProps {
 	minRole: Role;

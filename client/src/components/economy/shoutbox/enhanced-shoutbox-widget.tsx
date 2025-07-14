@@ -15,7 +15,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useAuth } from '@/hooks/use-auth';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/utils';
 import {
 	Send,
 	X,
@@ -33,7 +33,7 @@ import {
 	ChevronDown
 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
-import { apiRequest } from '@utils/api-request';
+import { apiRequest } from '@/utils/api-request';
 import type { GroupId, MessageId, RoomId, UserId, EntityId } from '@shared/types/ids';
 
 interface User {

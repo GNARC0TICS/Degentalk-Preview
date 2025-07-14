@@ -14,7 +14,7 @@ import {
 	Settings,
 	ChevronRight
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/utils';
 
 interface NavigationItem {
 	id: string;

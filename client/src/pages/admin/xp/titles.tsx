@@ -34,7 +34,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useDebounce } from '@/hooks/use-debounce';
-import { apiRequest } from '@/lib/queryClient';
+import { apiRequest } from '@/utils/queryClient';
 import { AdminPageShell } from '@/features/admin/components/layout/AdminPageShell';
 import { TitleMediaInput } from '@/features/admin/components/forms/xp/TitleMediaInput';
 import { MediaAsset } from '@/components/media/MediaAsset';
