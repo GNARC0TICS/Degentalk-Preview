@@ -1,11 +1,11 @@
 import type { Router } from 'express';
 
 // Import domain fixtures
-import { usersSettingsFixture } from './users/usersSettings.fixture.js';
+import { usersSettingsFixture } from './users/fixtures/usersSettings.fixture.js';
 import { economySettingsFixture } from './economy/economySettings.fixture.js';
-import { gamificationSettingsFixture } from './gamification/gamificationSettings.fixture.js';
-import { contentSettingsFixture } from './content/contentSettings.fixture.js';
-import { systemSettingsFixture } from './system/systemSettings.fixture.js';
+import { gamificationSettingsFixture } from './gamification/fixtures/gamificationSettings.fixture.js';
+import { contentSettingsFixture } from './content/fixtures/contentSettings.fixture.js';
+import { systemSettingsFixture } from './system/fixtures/systemSettings.fixture.js';
 
 // Import routes
 import gamificationRoutes from './gamification/gamification.routes';

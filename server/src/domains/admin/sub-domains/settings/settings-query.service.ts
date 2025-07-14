@@ -9,12 +9,12 @@ import { db } from '@db';
 import { siteSettings, featureFlags } from '@schema';
 import { eq, and, or, ilike, asc } from 'drizzle-orm';
 import { logger } from '@core/logger';
-import { AdminError, AdminErrorCodes } from '../../../admin.errors';
+import { AdminError, AdminErrorCodes } from '../../admin.errors';
 import {
 	adminCacheService,
 	AdminCacheKeys,
 	CacheResult
-} from '../../../shared/admin-cache.service';
+} from '../../shared/admin-cache.service';
 import type { FilterSettingsInput } from '../settings.validators';
 
 export class SettingsQueryService {

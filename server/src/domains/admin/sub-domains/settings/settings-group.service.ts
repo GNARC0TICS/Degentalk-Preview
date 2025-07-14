@@ -9,7 +9,7 @@ import { db } from '@db';
 import { siteSettings } from '@schema';
 import { eq, sql, and, ne } from 'drizzle-orm';
 import { logger } from '@core/logger';
-import { AdminError, AdminErrorCodes } from '../../../admin.errors';
+import { AdminError, AdminErrorCodes } from '../../admin.errors';
 import type { SettingGroupInput } from '../settings.validators';
 
 export class SettingsGroupService {
