@@ -1,8 +1,13 @@
 /**
  * Standard spacing patterns for forum pages
  * Ensures consistent layout across all forum-facing components
+ *
+ * NOTE: This is transitioning to use UIConfigContext for admin-configurable spacing
  */
 
+import { useUIConfig, buildResponsiveClasses } from '@/contexts/UIConfigContext';
+
+// Static constants for non-React contexts (will be deprecated)
 export const FORUM_SPACING = {
 	// Container padding - matches ResponsiveLayoutWrapper pattern
 	container: 'px-2 sm:px-4 py-6 sm:py-8 md:py-12',
@@ -27,6 +32,28 @@ export const FORUM_SPACING = {
 	headerMargin: 'mb-6',
 	headerPadding: 'pb-3'
 } as const;
+
+// New configurable spacing hook
+export const useForumSpacing = () => {
+	const { spacing } = useUIConfig();
+
+	return {
+		// Configurable spacing from admin panel
+		container: buildResponsiveClasses(spacing.container),
+		section: buildResponsiveClasses(spacing.section),
+		sectionLarge: buildResponsiveClasses(spacing.sectionLarge),
+		card: buildResponsiveClasses(spacing.card),
+		cardCompact: buildResponsiveClasses(spacing.cardCompact),
+		element: buildResponsiveClasses(spacing.element),
+		elementSmall: buildResponsiveClasses(spacing.elementSmall),
+
+		// Static spacing that doesn't need configuration (yet)
+		cardGrid: 'gap-6',
+		cardStack: 'space-y-6',
+		headerMargin: 'mb-6',
+		headerPadding: 'pb-3'
+	};
+};
 
 export const FORUM_LAYOUTS = {
 	// Standard page wrapper

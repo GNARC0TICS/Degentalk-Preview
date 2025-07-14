@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { apiRequest } from '@/lib/api-request';
+import { apiRequest } from '@utils/api-request';
 import { useAuth } from '@/hooks/use-auth';
 
 /**
@@ -142,7 +142,7 @@ export function useFeatureGates() {
  * Hook to check if a user has access to a specific feature
  */
 export function useFeatureAccess(featureId: string) {
-	const { checkAccess, isLoading, isError, error } = useFeatureGates();
+	const { checkAccess, isError, error } = useFeatureGates();
 
 	const access = checkAccess(featureId);
 

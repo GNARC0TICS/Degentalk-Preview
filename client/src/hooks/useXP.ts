@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiRequest } from '@/lib/api-request';
+import { apiRequest } from '@utils/api-request';
 import { toast } from 'sonner';
 import { useEffect, useState } from 'react';
 import { createSafeWebSocket } from '@/lib/safeWebSocket';
