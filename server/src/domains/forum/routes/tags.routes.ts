@@ -2,11 +2,12 @@
  * Tags Routes
  */
 
-import { Router } from 'express';
+import { Router } from 'express'
+import type { Router as RouterType } from 'express';
 import { asyncHandler } from '@core/errors';
 import { tagsController } from '../controllers/tags.controller';
 
-const router = Router();
+const router: RouterType = Router();
 
 router.get('/', asyncHandler(tagsController.getTags.bind(tagsController)));
 

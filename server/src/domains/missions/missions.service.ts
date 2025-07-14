@@ -71,6 +71,63 @@ export class MissionsService {
 	}
 
 	/**
+	 * Check if user meets mission prerequisites
+	 */
+	async checkMissionPrerequisites(userId: UserId, mission: Mission): Promise<boolean> {
+		try {
+			if (!mission.prerequisites) {
+				return true; // No prerequisites means mission is available
+			}
+
+			for (const prereq of mission.prerequisites) {
+				switch (prereq.type) {
+					case 'level':
+						// Check user level - would need to get user data
+						// For now, assume this is checked elsewhere
+						break;
+					case 'badge':
+						// Check if user has specific badge
+						// Would need to query user_badges table
+						break;
+					case 'mission':
+						// Check if user completed another mission
+						const completedMission = await db
+							.select()
+							.from(userMissionProgress)
+							.where(
+								and(
+									eq(userMissionProgress.userId, userId),
+									eq(userMissionProgress.missionId, prereq.value as string),
+									eq(userMissionProgress.isCompleted, true)
+								)
+							)
+							.limit(1);
+						
+						if (completedMission.length === 0) {
+							return false;
+						}
+						break;
+					case 'xp':
+						// Check user XP - would need to get user data
+						// For now, assume this is checked elsewhere
+						break;
+					case 'dgt':
+						// Check user DGT balance - would need to get wallet data
+						// For now, assume this is checked elsewhere
+						break;
+					default:
+						logger.warn(`Unknown prerequisite type: ${prereq.type}`);
+				}
+			}
+
+			return true;
+		} catch (error) {
+			logger.error('Error checking mission prerequisites:', error);
+			return false;
+		}
+	}
+
+	/**
 	 * Get a mission by ID
 	 */
 	async getMission(id: MissionId): Promise<Mission | null> {

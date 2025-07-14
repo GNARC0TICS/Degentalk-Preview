@@ -1,6 +1,7 @@
 import type { Request, Response } from 'express';
 import { userService } from '@core/services/user.service';
 import { systemAnalyticsService } from './system-analytics.service';
+import { platformStatsService } from './platformStats.service';
 import {
 	systemMetricsQuerySchema,
 	performanceHeatmapQuerySchema,
@@ -18,6 +19,30 @@ import { AdminError, AdminErrorCodes } from '@server/domains/admin/admin.errors'
 import { adminCacheService } from '@server/domains/admin/shared/admin-cache.service';
 
 export class SystemAnalyticsController {
+	/**
+	 * GET /api/admin/analytics/platform-stats
+	 * Get platform statistics overview for admin dashboard
+	 */
+	async getPlatformStats(req: Request, res: Response) {
+		const boundary = new AdminOperationBoundary({
+			operation: 'GET_PLATFORM_STATS',
+			entityType: 'platform_analytics'
+		});
+
+		return boundary.execute(async () => {
+			const stats = await platformStatsService.updateAllStats();
+
+			return formatAdminResponse(
+				{
+					platformStats: stats,
+					timestamp: new Date().toISOString()
+				},
+				'GET_PLATFORM_STATS',
+				'platform_analytics'
+			);
+		});
+	}
+
 	/**
 	 * GET /api/admin/analytics/system/metrics
 	 * Get comprehensive system performance metrics

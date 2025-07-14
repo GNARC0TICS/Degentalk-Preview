@@ -5,11 +5,12 @@
  * API endpoints for XP-related functionality
  */
 
-import { Router } from 'express';
+import { Router } from 'express'
+import type { Router as RouterType } from 'express';
 import { authenticateJWT } from '@server/middleware/authenticate-jwt';
 import * as xpController from './xp.controller';
 
-const router = Router();
+const router: RouterType = Router();
 
 // Route to award XP for a specific action (e.g., creating a thread)
 router.post('/award-action', authenticateJWT, xpController.awardActionXp);

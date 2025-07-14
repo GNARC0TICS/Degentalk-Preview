@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowDownToLine, Copy, CheckCircle2, RefreshCw, Lock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { PumpButton } from '@/components/uiverse-clones/buttons';
 import { Input } from '@/components/ui/input';
 import {
 	Select,
@@ -254,18 +255,18 @@ export function DepositButton({ variant = 'default', className, onClick }: Depos
 						</div>
 
 						<div className="flex justify-end pt-4">
-							<Button
-								variant="gradient"
+							<PumpButton
+								variant="pump"
 								onClick={handleSubmitTracking}
 								disabled={
 									!depositAmount ||
 									isNaN(parseFloat(depositAmount)) ||
 									parseFloat(depositAmount) <= 0
 								}
-								className="transition-all hover:shadow-[0_0_10px_rgba(5,150,105,0.5)] active:scale-95"
+								pulse={true}
 							>
 								Track Deposit
-							</Button>
+							</PumpButton>
 						</div>
 					</div>
 				</div>

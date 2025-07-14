@@ -1,5 +1,6 @@
 import { userService } from '@core/services/user.service';
-import { Router } from 'express';
+import { Router } from 'express'
+import type { Router as RouterType } from 'express';
 import { z } from 'zod';
 import { WhaleWatchService } from './whale-watch.service';
 import { isAuthenticated } from '@server/domains/auth/middleware/auth.middleware';
@@ -13,7 +14,7 @@ import {
 	sendTransformedListResponse
 } from '@core/utils/transformer.helpers';
 
-const router = Router();
+const router: RouterType = Router();
 
 // Validation schemas
 const followUserSchema = z.object({

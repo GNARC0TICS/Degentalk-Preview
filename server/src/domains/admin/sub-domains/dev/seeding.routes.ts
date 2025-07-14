@@ -1,4 +1,5 @@
-import { Router } from 'express';
+import { Router } from 'express'
+import type { Router as RouterType } from 'express';
 import { spawn } from 'child_process';
 
 // Re-use existing admin auth middleware
@@ -7,7 +8,7 @@ import { isAdmin } from '../../../auth/middleware/auth.middleware';
 import { asyncHandler } from '../../admin.middleware';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
-const router = Router();
+const router: RouterType = Router();
 
 // Map friendly seed names to npm scripts defined in package.json
 // Only include scripts that are safe to run from the running Node process

@@ -104,4 +104,4 @@ export class CacheService {
 }
 
 // Export singleton instance
-export const cacheService = new CacheService();
+export const forumCacheService = new CacheService();

@@ -214,6 +214,9 @@ function App() {
 						{import.meta.env.MODE === 'development' && (
 							<ProtectedRoute path="/ui-playground" component={UIPlaygroundPage} />
 						)}
+						
+						{/* Uiverse Showcase */}
+						<ProtectedRoute path="/uiverse-showcase" component={React.lazy(() => import('./pages/uiverse-showcase'))} />
 
 						{/* Root route LAST to avoid shadowing */}
 						<ProtectedRoute path="/" component={HomePage} />

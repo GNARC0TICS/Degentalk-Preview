@@ -8,7 +8,8 @@
  * - Leaderboards and analytics
  */
 
-import { Router } from 'express';
+import { Router } from 'express'
+import type { Router as RouterType } from 'express';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 import levelingRoutes from './leveling.routes';
 import achievementRoutes from './achievement.routes';
@@ -16,7 +17,7 @@ import { missionRoutes } from './routes/mission.routes';
 import analyticsRoutes from './analytics.routes';
 import adminRoutes from './admin.routes';
 
-const router = Router();
+const router: RouterType = Router();
 
 // Mount sub-routers with clear prefixes
 router.use('/levels', levelingRoutes);

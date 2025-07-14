@@ -1,4 +1,5 @@
-import { Router } from 'express';
+import { Router } from 'express'
+import type { Router as RouterType } from 'express';
 import { adminWalletController } from './controllers/wallet.controller';
 import {
 	validateWalletConfig,
@@ -6,7 +7,7 @@ import {
 	validateUserId
 } from './validators/wallet.validators';
 
-const router = Router();
+const router: RouterType = Router();
 
 /**
  * Admin Wallet Routes

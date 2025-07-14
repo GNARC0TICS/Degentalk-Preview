@@ -3,7 +3,8 @@
  * Handles all post-specific API endpoints.
  */
 
-import { Router } from 'express';
+import { Router } from 'express'
+import type { Router as RouterType } from 'express';
 import { isAuthenticated } from '../../auth/middleware/auth.middleware';
 import {
 	requirePostEditPermission,
@@ -11,10 +12,10 @@ import {
 } from '../services/permissions.service';
 import { postController } from '../controllers/post.controller';
 import { postValidation } from '../validation/post.validation';
-import { validateRequest } from '@server-middleware/validate-request';
+import { validateRequest } from '@server/middleware/validate-request';
 import { asyncHandler } from '@core/errors';
 
-const router = Router();
+const router: RouterType = Router();
 
 // --- Public Routes ---
 router.get(

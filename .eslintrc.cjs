@@ -25,7 +25,7 @@ module.exports = {
 		sourceType: 'module',
 		project: ['tsconfig.eslint.json']
 	},
-	plugins: ['@typescript-eslint', 'react-hooks', 'drizzle'],
+	plugins: ['@typescript-eslint', 'react-hooks', 'drizzle', 'degen'],
 	extends: [
 		'eslint:recommended',
 		'plugin:@typescript-eslint/recommended',
@@ -45,6 +45,7 @@ module.exports = {
 		{
 			files: ['client/src/**/*.{ts,tsx}'],
 			rules: {
+                'degen/no-cross-context-imports': 'warn',
 				'no-restricted-imports': [
 					'error',
 					{

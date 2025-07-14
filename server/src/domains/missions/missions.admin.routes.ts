@@ -5,12 +5,13 @@
  * API endpoints for mission management in the admin panel
  */
 
-import { Router } from 'express';
+import { Router } from 'express'
+import type { Router as RouterType } from 'express';
 import type { Request, Response, NextFunction } from 'express';
 import * as missionsController from './missions.controller';
 import { isAuthenticated, isAdmin } from '@server/domains/auth/middleware/auth.middleware';
 
-const router = Router();
+const router: RouterType = Router();
 
 // Create a simple asyncHandler utility
 const asyncHandler = (fn) => (req, res, next) => {

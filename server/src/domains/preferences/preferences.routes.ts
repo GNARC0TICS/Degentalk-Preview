@@ -7,8 +7,8 @@ import { userService } from '@core/services/user.service';
  */
 
 import express from 'express';
-import { authenticate } from '@server-middleware/authenticate';
-import { validateRequest } from '@server-middleware/validate-request';
+import { authenticate } from '@server/middleware/authenticate';
+import { validateRequest } from '@server/middleware/validate-request';
 import { preferencesValidation } from './validation/preferences.validation';
 import {
 	getAllPreferences,
@@ -18,7 +18,8 @@ import {
 	changePassword,
 	updateDisplayPreferences
 } from './preferences.service';
-import { Router } from 'express';
+import { Router } from 'express'
+import type { Router as RouterType } from 'express';
 import type { Request, Response } from 'express';
 import { db } from '@core/db';
 import { users, userSettings as userPreferencesSchema } from '@schema';
@@ -36,7 +37,7 @@ import { getUserIdFromRequest } from '@server-utils/auth';
 import { UserPreferencesService } from '../user/user-preferences.service';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
-const router = express.Router();
+const router: RouterType = express.Router();
 
 /**
  * GET /api/users/me/preferences-all

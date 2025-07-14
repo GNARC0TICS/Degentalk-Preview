@@ -1,5 +1,6 @@
 import { userService } from '@core/services/user.service';
-import { Router } from 'express';
+import { Router } from 'express'
+import type { Router as RouterType } from 'express';
 import type { EntityId } from '@shared/types/ids';
 import { DictionaryService, DictionaryStatus } from './dictionary.service';
 import {
@@ -11,7 +12,7 @@ import rateLimit from 'express-rate-limit';
 import { logger } from '@core/logger';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
-const router = Router();
+const router: RouterType = Router();
 
 // GET /api/dictionary
 // sendErrorResponse(res, 'Server error', 500);

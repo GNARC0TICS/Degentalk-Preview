@@ -5,7 +5,8 @@
  * Includes both user-facing and admin routes.
  */
 
-import { Router } from 'express';
+import { Router } from 'express'
+import type { Router as RouterType } from 'express';
 import { AchievementController } from './achievement.controller';
 import {
 	isAuthenticated,
@@ -13,7 +14,7 @@ import {
 	isAdminOrModerator
 } from '@server/domains/auth/middleware/auth.middleware';
 
-const router = Router();
+const router: RouterType = Router();
 const controller = new AchievementController();
 
 // === PUBLIC ROUTES ===
@@ -43,6 +44,12 @@ router.get('/:id', controller.getAchievementById.bind(controller));
 router.get('/templates', controller.getAchievementTemplates.bind(controller));
 
 // === USER ROUTES (require authentication) ===
+
+/**
+ * Get current user's achievement progress
+ * GET /api/achievements/progress
+ */
+router.get('/progress', isAuthenticated, controller.getUserAchievementProgress.bind(controller));
 
 /**
  * Get user's achievements with progress

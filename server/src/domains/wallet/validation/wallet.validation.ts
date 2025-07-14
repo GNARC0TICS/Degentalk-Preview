@@ -249,6 +249,16 @@ const swapCrypto = z.object({
 	})
 });
 
+const purchaseDgtSchema = z.object({
+	body: z.object({
+		fromCoinId: z.number().int().positive('fromCoinId must be a positive integer'),
+		fromAmount: z.number().positive('fromAmount must be positive'),
+		toCoinSymbol: z.literal('DGT', {
+			errorMap: () => ({ message: 'Only DGT purchases are supported' })
+		})
+	})
+});
+
 const getWithdrawFeeSchema = z.object({
 	body: z.object({
 		coinId: z.number().int().positive('coinId must be a positive integer'),
@@ -288,6 +298,7 @@ export const walletValidation = {
 	getTokenInfo: getTokenInfoSchema,
 	validateAddress,
 	swapCrypto,
+	purchaseDgt: purchaseDgtSchema,
 	getWithdrawFee: getWithdrawFeeSchema,
 	walletAdminPatch: walletAdminPatchSchema
 };

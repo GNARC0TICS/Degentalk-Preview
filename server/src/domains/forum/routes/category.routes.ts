@@ -5,7 +5,8 @@
  * Replaces the old category routes with clearer terminology.
  */
 
-import { Router } from 'express';
+import { Router } from 'express'
+import type { Router as RouterType } from 'express';
 import type { Request, Response } from 'express';
 import { forumStructureService } from '../services/structure.service';
 import { logger } from '@core/logger';
@@ -13,7 +14,7 @@ import { asyncHandler } from '@core/errors';
 import { ForumTransformer } from '../transformers/forum.transformer';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
-const router = Router();
+const router: RouterType = Router();
 
 // -------------------------------------------------------------
 // FLAT STRUCTURE ENDPOINT  ✨

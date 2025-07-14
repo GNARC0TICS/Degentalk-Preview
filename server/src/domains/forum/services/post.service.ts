@@ -348,15 +348,62 @@ export class PostService {
 	}
 
 	/**
-	 * Tip a post
-	 * TODO: Implement tipping logic with DGT service integration
+	 * Tip a post with DGT and award XP
 	 */
 	async tipPost(postId: PostId, tipperId: UserId, amount: number): Promise<void> {
-		logger.info('PostService', 'Tipping post (Not Implemented)', { postId, tipperId, amount });
-		// This is a placeholder. The actual implementation will call the DGT/economy service
-		// to handle the transaction and record it.
-		// For now, it does nothing but log the intent.
-		return Promise.resolve();
+		try {
+			// Get the post to find the recipient
+			const post = await this.getPostById(postId);
+			if (!post) {
+				throw new Error('Post not found');
+			}
+
+			// Don't allow self-tipping
+			if (tipperId === post.userId) {
+				throw new Error('Cannot tip your own post');
+			}
+
+			// Import tip service
+			const { tipService } = await import('../../engagement/tip/tip.service');
+
+			// Send the tip using the tip service
+			await tipService.sendTip({
+				fromUserId: tipperId,
+				toUserId: post.userId,
+				amount: amount,
+				currency: 'DGT',
+				source: 'forum_post',
+				contextId: postId,
+				message: `Tip for post #${postId}`
+			});
+
+			// Import XP service for rewards
+			const { xpService } = await import('../../xp/xp.service');
+
+			// Award XP to the tipper for being generous (small amount)
+			await xpService.awardXp(tipperId, 'TIP_GIVEN', {
+				postId,
+				amount,
+				recipientId: post.userId
+			});
+
+			// Award XP to the post author for receiving a tip (larger amount)
+			await xpService.awardXp(post.userId, 'TIP_RECEIVED', {
+				postId,
+				amount,
+				tipperId
+			});
+
+			logger.info('PostService', 'Post tipped successfully', {
+				postId,
+				tipperId,
+				recipientId: post.userId,
+				amount
+			});
+		} catch (error) {
+			logger.error('PostService', 'Error tipping post', { postId, tipperId, amount, error });
+			throw error;
+		}
 	}
 
 	/**

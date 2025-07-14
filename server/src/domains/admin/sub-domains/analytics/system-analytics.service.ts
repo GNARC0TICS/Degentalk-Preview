@@ -8,11 +8,13 @@
 import { eq, desc, count, avg, sum, sql, and, gte, lte } from 'drizzle-orm';
 import { db } from '@db';
 import { adminCacheService } from '@server/domains/admin/shared/admin-cache.service';
+import { CacheStandard, CacheExtended } from '@core/cache/decorators';
+import { invalidateCache } from '@core/cache/invalidateCache';
 import {
 	threads,
 	posts,
 	users,
-	walletTransactions,
+	transactions,
 	xpLogs,
 	shoutboxMessages,
 	analyticsEvents
@@ -117,6 +119,7 @@ export class SystemAnalyticsService {
 	/**
 	 * Get comprehensive system metrics
 	 */
+	@CacheStandard.adminAnalytics
 	async getSystemMetrics(timeRange: '1h' | '24h' | '7d' | '30d' = '24h'): Promise<SystemMetrics> {
 		const cacheKey = `${this.CACHE_KEY_PREFIX}:metrics:${timeRange}`;
 
@@ -215,6 +218,7 @@ export class SystemAnalyticsService {
 	/**
 	 * Get system health assessment
 	 */
+	@CacheStandard.platformStats
 	async getSystemHealth(): Promise<SystemHealth> {
 		const cacheKey = `${this.CACHE_KEY_PREFIX}:health`;
 
@@ -320,6 +324,7 @@ export class SystemAnalyticsService {
 	/**
 	 * Get real-time activity analytics
 	 */
+	@CacheStandard.platformStats
 	async getRealtimeAnalytics(): Promise<{
 		activeUsers: number;
 		requestsPerSecond: number;
@@ -342,11 +347,11 @@ export class SystemAnalyticsService {
 				// DGT transactions in last hour
 				db
 					.select({ count: count() })
-					.from(walletTransactions)
+					.from(transactions)
 					.where(
 						and(
-							gte(walletTransactions.createdAt, oneHourAgo),
-							eq(walletTransactions.currency, 'DGT')
+							gte(transactions.createdAt, oneHourAgo),
+							eq(transactions.currency, 'DGT')
 						)
 					),
 
@@ -418,7 +423,7 @@ export class SystemAnalyticsService {
 				db.select({ count: count() }).from(threads),
 				db.select({ count: count() }).from(posts),
 				db.select({ count: count() }).from(users),
-				db.select({ count: count() }).from(walletTransactions),
+				db.select({ count: count() }).from(transactions),
 				db.select({ count: count() }).from(xpLogs)
 			]);
 
@@ -442,7 +447,7 @@ export class SystemAnalyticsService {
 				indexes: 6
 			},
 			{
-				tableName: 'wallet_transactions',
+				tableName: 'transactions',
 				rowCount: transactionsCount[0]?.count || 0,
 				size: '~25 MB',
 				indexes: 10

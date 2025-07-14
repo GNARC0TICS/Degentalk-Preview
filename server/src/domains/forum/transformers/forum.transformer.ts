@@ -589,7 +589,7 @@ export class ForumTransformer {
 	}
 }
 
-// Export convenience methods
+// Export convenience methods for backward compatibility
 export const {
 	toPublicThread,
 	toSlimThread,
@@ -599,3 +599,7 @@ export const {
 	toAuthenticatedPost,
 	toModerationPost
 } = ForumTransformer;
+
+// Re-export new transformers for easier imports
+export { ThreadTransformer } from './thread.transformer';
+export { PostTransformer } from './post.transformer';

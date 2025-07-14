@@ -1,9 +1,10 @@
-import { Router } from 'express';
+import { Router } from 'express'
+import type { Router as RouterType } from 'express';
 import { uiThemesService } from '@server/domains/admin/sub-domains/ui-config/uiThemes.service';
 import { logger } from '@core/logger';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
-const router = Router();
+const router: RouterType = Router();
 
 /**
  * GET /api/ui/themes

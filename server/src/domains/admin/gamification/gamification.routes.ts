@@ -1,4 +1,5 @@
-import { Router } from 'express';
+import { Router } from 'express'
+import type { Router as RouterType } from 'express';
 import {
 	getLevels,
 	createLevel,
@@ -8,7 +9,7 @@ import {
 	testXpActionAward
 } from './controllers/xp.controller';
 
-const router = Router();
+const router: RouterType = Router();
 
 // XP Level Management
 router.get('/xp/levels', getLevels);

@@ -1,9 +1,10 @@
 // REFACTORED: Updated auth middleware imports to use canonical path
-import { Router } from 'express';
+import { Router } from 'express'
+import type { Router as RouterType } from 'express';
 import { isAuthenticated, isAdmin } from '@server/domains/auth/middleware/auth.middleware';
 import * as missionsController from './missions.controller';
 
-const router = Router();
+const router: RouterType = Router();
 
 // Public routes
 // None for missions - all require authentication

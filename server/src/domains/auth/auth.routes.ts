@@ -1,4 +1,5 @@
-import { Router } from 'express';
+import { Router } from 'express'
+import type { Router as RouterType } from 'express';
 import passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
 import session from 'express-session';
@@ -6,7 +7,7 @@ import { db } from '../../core/db'; // Will be refactored in a future step
 import { users } from '@schema';
 import { eq } from 'drizzle-orm';
 import type { UserId, GroupId } from '@shared/types/ids';
-import { validateRequest } from '@server-middleware/validate-request';
+import { validateRequest } from '@server/middleware/validate-request';
 import { authValidation } from './validation/auth.validation';
 import {
 	comparePasswords,
@@ -34,7 +35,7 @@ import { logger } from '@core/logger';
 import { getAuthenticatedUser } from '@core/utils/auth.helpers';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
-const router = Router();
+const router: RouterType = Router();
 
 /**
  * Initialize Passport.js and configure authentication

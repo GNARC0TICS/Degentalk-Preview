@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { ArrowUpRight, Check, Lock } from 'lucide-react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
+import { PumpButton } from '@/components/uiverse-clones/buttons';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
@@ -378,11 +379,9 @@ export function WithdrawButton({
 
 			{(canWithdrawCrypto || canSpendDGT) && (
 				<div className="flex justify-end pt-2">
-					<Button
-						variant={activeTab === 'dgt' ? 'xp' : 'secondary'}
-						leftIcon={<ArrowUpRight className="h-4 w-4" />}
+					<PumpButton
+						variant={activeTab === 'dgt' ? 'neutral' : 'dump'}
 						onClick={handleWithdraw}
-						isLoading={isWithdrawing}
 						disabled={
 							withdrawSuccess ||
 							!withdrawAmount ||
@@ -399,12 +398,12 @@ export function WithdrawButton({
 									parseFloat(withdrawAmount) > dgtBalance ||
 									parseFloat(withdrawAmount) < 100))
 						}
-						className="transition-all hover:shadow-[0_0_10px_rgba(16,185,129,0.2)] active:scale-95"
+						pulse={false}
 					>
-						{withdrawSuccess
+						{isWithdrawing ? 'Processing...' : withdrawSuccess
 							? 'Request Submitted'
 							: `${activeTab === 'crypto' ? 'Withdraw' : 'Convert'} ${activeTab.toUpperCase()}`}
-					</Button>
+					</PumpButton>
 				</div>
 			)}
 

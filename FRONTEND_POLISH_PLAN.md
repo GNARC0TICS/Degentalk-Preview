@@ -1,4 +1,4 @@
-# 🎨 DegenTalk Frontend Polish & Consistency Plan
+pnpm# 🎨 DegenTalk Frontend Polish & Consistency Plan
 
 ## 📊 Current State Analysis
 

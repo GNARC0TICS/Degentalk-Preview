@@ -2,11 +2,12 @@
  * Forum Structure Routes
  */
 
-import { Router } from 'express';
+import { Router } from 'express'
+import type { Router as RouterType } from 'express';
 import { asyncHandler } from '@core/errors';
 import { forumStructureController } from '../controllers/structure.controller';
 
-const router = Router();
+const router: RouterType = Router();
 
 router.get('/', asyncHandler(forumStructureController.getStructure.bind(forumStructureController)));
 

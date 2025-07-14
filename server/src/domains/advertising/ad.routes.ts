@@ -1,4 +1,5 @@
-import { Router } from 'express';
+import { Router } from 'express'
+import type { Router as RouterType } from 'express';
 import { adController } from './ad.controller';
 import { adAdminController } from './ad-admin.controller';
 import { adConfigurationService } from './ad-configuration.service';
@@ -6,8 +7,10 @@ import { userPromotionRoutes } from './user-promotion.routes';
 import { logger } from '@core/logger';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 import { getAuthenticatedUser } from '@core/utils/auth.helpers';
+import { authenticate, requireAdmin } from '@server/middleware/auth';
+import { rateLimiters } from '@core/services/rate-limit.service';
 
-const router = Router();
+const router: RouterType = Router();
 
 // ============================================================================
 // PUBLIC AD SERVING ROUTES
@@ -30,7 +33,7 @@ const router = Router();
  * - interestSegments: string - Comma-separated interests
  * - activityLevel: string - User activity level
  */
-router.get('/serve', adController.serveAd.bind(adController));
+router.get('/serve', rateLimiters.general, adController.serveAd.bind(adController));
 
 /**
  * Track ad events
@@ -39,7 +42,7 @@ router.get('/serve', adController.serveAd.bind(adController));
  * Event Types: impression | click | conversion
  * Body: { campaign, placement, session, metadata? }
  */
-router.post('/track/:eventType', adController.trackEvent.bind(adController));
+router.post('/track/:eventType', rateLimiters.general, adController.trackEvent.bind(adController));
 
 /**
  * Get available placements
@@ -61,31 +64,31 @@ router.get('/config', adController.getPublicConfig.bind(adController));
  * Create campaign
  * POST /api/ads/campaigns
  */
-router.post('/campaigns', adController.createCampaign.bind(adController));
+router.post('/campaigns', authenticate, adController.createCampaign.bind(adController));
 
 /**
  * List user's campaigns
  * GET /api/ads/campaigns
  */
-router.get('/campaigns', adController.listCampaigns.bind(adController));
+router.get('/campaigns', authenticate, adController.listCampaigns.bind(adController));
 
 /**
  * Get campaign details
  * GET /api/ads/campaigns/:campaignId
  */
-router.get('/campaigns/:campaignId', adController.getCampaign.bind(adController));
+router.get('/campaigns/:campaignId', authenticate, adController.getCampaign.bind(adController));
 
 /**
  * Update campaign
  * PUT /api/ads/campaigns/:campaignId
  */
-router.put('/campaigns/:campaignId', adController.updateCampaign.bind(adController));
+router.put('/campaigns/:campaignId', authenticate, adController.updateCampaign.bind(adController));
 
 /**
  * Delete campaign
  * DELETE /api/ads/campaigns/:campaignId
  */
-router.delete('/campaigns/:campaignId', adController.deleteCampaign.bind(adController));
+router.delete('/campaigns/:campaignId', authenticate, adController.deleteCampaign.bind(adController));
 
 /**
  * Get campaign analytics
@@ -93,6 +96,7 @@ router.delete('/campaigns/:campaignId', adController.deleteCampaign.bind(adContr
  */
 router.get(
 	'/campaigns/:campaignId/analytics',
+	authenticate,
 	adController.getCampaignAnalytics.bind(adController)
 );
 
@@ -102,6 +106,7 @@ router.get(
  */
 router.get(
 	'/campaigns/:campaignId/bid-recommendations',
+	authenticate,
 	adController.getBidRecommendations.bind(adController)
 );
 
@@ -109,7 +114,7 @@ router.get(
  * Optimize campaign automatically
  * POST /api/ads/campaigns/:campaignId/optimize
  */
-router.post('/campaigns/:campaignId/optimize', adController.optimizeCampaign.bind(adController));
+router.post('/campaigns/:campaignId/optimize', authenticate, adController.optimizeCampaign.bind(adController));
 
 // ============================================================================
 // GOVERNANCE ROUTES (PUBLIC VOTING)
@@ -119,7 +124,7 @@ router.post('/campaigns/:campaignId/optimize', adController.optimizeCampaign.bin
  * Vote on governance proposal
  * POST /api/ads/governance/proposals/:proposalId/vote
  */
-router.post('/governance/proposals/:proposalId/vote', async (req, res) => {
+router.post('/governance/proposals/:proposalId/vote', authenticate, async (req, res) => {
 	try {
 		const { proposalId } = req.params;
 		const { vote, reason } = req.body;
@@ -148,19 +153,19 @@ router.post('/governance/proposals/:proposalId/vote', async (req, res) => {
  * Get system configuration (admin)
  * GET /api/ads/admin/config
  */
-router.get('/admin/config', adAdminController.getSystemConfiguration.bind(adAdminController));
+router.get('/admin/config', rateLimiters.admin, requireAdmin, adAdminController.getSystemConfiguration.bind(adAdminController));
 
 /**
  * Update system configuration (admin)
  * PUT /api/ads/admin/config
  */
-router.put('/admin/config', adAdminController.updateSystemConfiguration.bind(adAdminController));
+router.put('/admin/config', rateLimiters.admin, requireAdmin, adAdminController.updateSystemConfiguration.bind(adAdminController));
 
 /**
  * Create ad placement (admin)
  * POST /api/ads/admin/placements
  */
-router.post('/admin/placements', adAdminController.createPlacement.bind(adAdminController));
+router.post('/admin/placements', rateLimiters.admin, requireAdmin, adAdminController.createPlacement.bind(adAdminController));
 
 /**
  * Update ad placement (admin)
@@ -168,6 +173,8 @@ router.post('/admin/placements', adAdminController.createPlacement.bind(adAdminC
  */
 router.put(
 	'/admin/placements/:placementId',
+	rateLimiters.admin,
+	requireAdmin,
 	adAdminController.updatePlacement.bind(adAdminController)
 );
 
@@ -177,6 +184,8 @@ router.put(
  */
 router.delete(
 	'/admin/placements/:placementId',
+	rateLimiters.admin,
+	requireAdmin,
 	adAdminController.deletePlacement.bind(adAdminController)
 );
 
@@ -184,37 +193,37 @@ router.delete(
  * List all placements with analytics (admin)
  * GET /api/ads/admin/placements
  */
-router.get('/admin/placements', adAdminController.listAllPlacements.bind(adAdminController));
+router.get('/admin/placements', rateLimiters.admin, requireAdmin, adAdminController.listAllPlacements.bind(adAdminController));
 
 /**
  * Create global rule (admin)
  * POST /api/ads/admin/rules
  */
-router.post('/admin/rules', adAdminController.createGlobalRule.bind(adAdminController));
+router.post('/admin/rules', rateLimiters.admin, requireAdmin, adAdminController.createGlobalRule.bind(adAdminController));
 
 /**
  * Update global rule (admin)
  * PUT /api/ads/admin/rules/:ruleId
  */
-router.put('/admin/rules/:ruleId', adAdminController.updateGlobalRule.bind(adAdminController));
+router.put('/admin/rules/:ruleId', rateLimiters.admin, requireAdmin, adAdminController.updateGlobalRule.bind(adAdminController));
 
 /**
  * List global rules (admin)
  * GET /api/ads/admin/rules
  */
-router.get('/admin/rules', adAdminController.listGlobalRules.bind(adAdminController));
+router.get('/admin/rules', rateLimiters.admin, requireAdmin, adAdminController.listGlobalRules.bind(adAdminController));
 
 /**
  * Get platform analytics (admin)
  * GET /api/ads/admin/analytics
  */
-router.get('/admin/analytics', adAdminController.getPlatformAnalytics.bind(adAdminController));
+router.get('/admin/analytics', rateLimiters.admin, requireAdmin, adAdminController.getPlatformAnalytics.bind(adAdminController));
 
 /**
  * Get all campaigns (admin)
  * GET /api/ads/admin/campaigns
  */
-router.get('/admin/campaigns', adAdminController.getAllCampaigns.bind(adAdminController));
+router.get('/admin/campaigns', rateLimiters.admin, requireAdmin, adAdminController.getAllCampaigns.bind(adAdminController));
 
 /**
  * Review campaign (admin)
@@ -222,6 +231,8 @@ router.get('/admin/campaigns', adAdminController.getAllCampaigns.bind(adAdminCon
  */
 router.post(
 	'/admin/campaigns/:campaignId/review',
+	rateLimiters.admin,
+	requireAdmin,
 	adAdminController.reviewCampaign.bind(adAdminController)
 );
 
@@ -231,6 +242,8 @@ router.post(
  */
 router.post(
 	'/admin/governance/proposals',
+	rateLimiters.admin,
+	requireAdmin,
 	adAdminController.createGovernanceProposal.bind(adAdminController)
 );
 
@@ -240,6 +253,8 @@ router.post(
  */
 router.post(
 	'/admin/governance/proposals/:proposalId/execute',
+	rateLimiters.admin,
+	requireAdmin,
 	adAdminController.executeGovernanceProposal.bind(adAdminController)
 );
 
@@ -247,35 +262,26 @@ router.post(
  * Get fraud alerts (admin)
  * GET /api/ads/admin/fraud/alerts
  */
-router.get('/admin/fraud/alerts', adAdminController.getFraudAlerts.bind(adAdminController));
+router.get('/admin/fraud/alerts', rateLimiters.admin, requireAdmin, adAdminController.getFraudAlerts.bind(adAdminController));
 
 /**
  * Get revenue report (admin)
  * GET /api/ads/admin/reports/revenue
  */
-router.get('/admin/reports/revenue', adAdminController.getRevenueReport.bind(adAdminController));
+router.get('/admin/reports/revenue', rateLimiters.admin, requireAdmin, adAdminController.getRevenueReport.bind(adAdminController));
 
 /**
  * Export analytics (admin)
  * GET /api/ads/admin/export
  */
-router.get('/admin/export', adAdminController.exportAnalytics.bind(adAdminController));
+router.get('/admin/export', rateLimiters.admin, requireAdmin, adAdminController.exportAnalytics.bind(adAdminController));
 
 // ============================================================================
 // MIDDLEWARE FOR RATE LIMITING AND AUTHENTICATION
 // ============================================================================
 
-// Apply rate limiting to ad serving endpoint
-// TODO: Implement proper rate limiting middleware
-// router.use('/serve', rateLimitMiddleware({ windowMs: 60000, max: 1000 }));
-
-// Apply authentication to campaign routes
-// TODO: Implement JWT authentication middleware
-// router.use('/campaigns', authenticateJWT);
-
-// Apply admin authentication to admin routes
-// TODO: Implement admin authentication middleware
-// router.use('/admin', requireAdminRole);
+// Note: Authentication middleware is applied individually to each route above
+// Rate limiting is handled in the rate-limit service
 
 // ============================================================================
 // USER PROMOTION ROUTES

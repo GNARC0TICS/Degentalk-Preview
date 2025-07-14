@@ -7,7 +7,8 @@ import { userService } from '@core/services/user.service';
 
 import express from 'express';
 import { isAuthenticated } from '@server/domains/auth/middleware/auth.middleware';
-import { Router } from 'express';
+import { Router } from 'express'
+import type { Router as RouterType } from 'express';
 import type { Request, Response } from 'express';
 import { logger, LogLevel, LogAction } from '@core/logger';
 import {
@@ -19,7 +20,7 @@ import {
 
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
-const router = express.Router();
+const router: RouterType = express.Router();
 
 // Apply auth middleware to all notifications routes
 router.use(isAuthenticated);

@@ -21,6 +21,12 @@ export const missions = pgTable('missions', {
 	sortOrder: integer('sort_order').notNull().default(0),
 	// Dynamic mission conditions (JSON string)
 	conditions: text('conditions'),
+	// Mission prerequisites (JSONB)
+	prerequisites: jsonb('prerequisites').$type<Array<{
+		type: 'level' | 'badge' | 'mission' | 'xp' | 'dgt';
+		value: string | number;
+		required: boolean;
+	}>>(),
 	// Stages for progressive/stacking missions (JSONB)
 	stages: jsonb('stages').$type<Array<{
 		count: number;

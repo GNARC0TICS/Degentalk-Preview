@@ -1,6 +1,7 @@
-import { Router } from 'express';
-import { authenticate } from '@server-middleware/auth';
-import { validateRequest } from '@server-middleware/validate-request';
+import { Router } from 'express'
+import type { Router as RouterType } from 'express';
+import { authenticate } from '@server/middleware/auth';
+import { validateRequest } from '@server/middleware/validate-request';
 import { requireAdmin } from '../../forum/services/permissions.service';
 import { missionService } from '../services/mission.service';
 import { getAuthenticatedUser } from '@core/utils/auth.helpers';
@@ -12,7 +13,7 @@ import {
 } from '../schemas/mission.schemas';
 import { toPublicMission, toAuthenticatedMission } from '../transformers/mission.transformer';
 
-const router = Router();
+const router: RouterType = Router();
 
 // Get all active missions with user progress
 router.get('/', authenticate, async (req, res) => {

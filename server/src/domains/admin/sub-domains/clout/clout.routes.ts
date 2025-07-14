@@ -1,8 +1,9 @@
-import { Router } from 'express';
+import { Router } from 'express'
+import type { Router as RouterType } from 'express';
 import { isAdmin } from '../../../auth/middleware/auth.middleware';
 import * as cloutController from './clout.controller';
 
-const router = Router();
+const router: RouterType = Router();
 
 // ----------------- Achievements -----------------
 router.get('/achievements', isAdmin, cloutController.getAllAchievements);

@@ -5,7 +5,8 @@ import { userService } from '@core/services/user.service';
  * Defines API routes for user profile functionality.
  */
 
-import { Router } from 'express';
+import { Router } from 'express'
+import type { Router as RouterType } from 'express';
 import type { Request, Response } from 'express';
 import { db } from '@db';
 import {
@@ -28,7 +29,7 @@ import { referralsService } from './referrals.service';
 import { logger } from '@core/logger';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
-const router = Router();
+const router: RouterType = Router();
 
 // Mount signature routes
 router.use('/signature', signatureRoutes);

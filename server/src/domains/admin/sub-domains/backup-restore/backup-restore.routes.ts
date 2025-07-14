@@ -4,11 +4,12 @@
  * Admin routes for backup and restore operations
  */
 
-import { Router } from 'express';
+import { Router } from 'express'
+import type { Router as RouterType } from 'express';
 import { backupRestoreController } from './backup-restore.controller';
 import { isAdmin } from '../../admin.middleware';
 
-export const backupRestoreRoutes = Router();
+export const backupRestoreRoutes: RouterType = Router();
 
 // Apply admin authentication to all routes
 backupRestoreRoutes.use(isAdmin);

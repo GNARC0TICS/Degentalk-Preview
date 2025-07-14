@@ -19,7 +19,8 @@
       "@degentalk/shared": ["../shared/index.ts"],
       "@shared/*": ["../shared/*"],
       "@db/*": ["../db/*"],
-      "@server/*": ["../server/src/*"]
+      "@server/*": ["../server/src/*"],
+      "@core/*": ["../server/src/core/*"]
     }
   },
   "include": ["./**/*.ts"],

@@ -4,10 +4,11 @@
  * Admin API routes for subscription management
  */
 
-import { Router } from 'express';
+import { Router } from 'express'
+import type { Router as RouterType } from 'express';
 import { adminSubscriptionController } from './subscription.admin.controller';
 
-const router = Router();
+const router: RouterType = Router();
 
 /**
  * @route GET /api/admin/subscriptions/analytics

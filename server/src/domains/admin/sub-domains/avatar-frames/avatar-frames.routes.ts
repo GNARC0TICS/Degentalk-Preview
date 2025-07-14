@@ -1,8 +1,9 @@
-import { Router } from 'express';
+import { Router } from 'express'
+import type { Router as RouterType } from 'express';
 import { avatarFrameController } from './avatar-frames.controller';
-import { isAdmin } from '../../../auth/middleware/auth.middleware';
+import { isAdmin } from '@server/domains/auth/middleware/auth.middleware';
 
-const router = Router();
+const router: RouterType = Router();
 
 // All routes require admin access
 router.use(isAdmin);

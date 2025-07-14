@@ -5,7 +5,7 @@ import {
 	userRelationships,
 	subscriptions,
 	roles,
-	walletTransactions
+	transactions
 } from '@schema';
 import { eq, sql, and, desc, count } from 'drizzle-orm';
 import { logger } from '@core/logger';

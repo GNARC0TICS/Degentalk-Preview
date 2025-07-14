@@ -200,6 +200,64 @@ export class WalletController {
 	}
 
 	/**
+	 * POST /api/wallet/purchase-dgt
+	 * Purchase DGT with crypto
+	 *
+	 * Body: { fromCoinId: number, fromAmount: number, toCoinSymbol: 'DGT' }
+	 */
+	async purchaseDgt(req: Request, res: Response): Promise<void> {
+		try {
+			const user = getAuthenticatedUser(req);
+			const { fromCoinId, fromAmount, toCoinSymbol } = req.body;
+
+			// Validate that user is purchasing DGT
+			if (toCoinSymbol !== 'DGT') {
+				throw new WalletError('Only DGT purchases are supported', ErrorCodes.VALIDATION_ERROR, 400);
+			}
+
+			logger.info('WalletController', 'Processing DGT purchase', {
+				userId: user.id,
+				fromCoinId,
+				fromAmount
+			});
+
+			// Use the swap functionality to convert crypto to DGT
+			// This leverages the existing CCPayment swap infrastructure
+			const result = await walletService.swapCrypto(user.id, {
+				fromCoinId: Number(fromCoinId),
+				toCoinId: 0, // DGT has coinId 0 in most systems
+				fromAmount: fromAmount.toString()
+			});
+
+			// Award XP for making a purchase
+			try {
+				const { xpService } = await import('../../xp/xp.service');
+				await xpService.awardXp(user.id, 'DGT_PURCHASE', {
+					fromCoinId,
+					fromAmount,
+					recordId: result.recordId
+				});
+			} catch (xpError) {
+				logger.warn('WalletController', 'Failed to award XP for DGT purchase', {
+					userId: user.id,
+					recordId: result.recordId,
+					error: xpError
+				});
+			}
+
+			res.json({
+				success: true,
+				data: {
+					recordId: result.recordId,
+					message: 'DGT purchase initiated successfully'
+				}
+			});
+		} catch (error) {
+			this.handleError(res, error, 'Failed to purchase DGT');
+		}
+	}
+
+	/**
 	 * POST /api/wallet/transfer-dgt
 	 * Transfer DGT between users
 	 *

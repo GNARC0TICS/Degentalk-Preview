@@ -1,12 +1,17 @@
 {
-  "extends": "../tsconfig.base.json",
-  "compilerOptions": {
-    "composite": true,
-    "outDir": "dist",
-   "skipLibCheck": true,
-   "rootDir": "src",
-   "module": "NodeNext"
- },
- "include": ["src"],
-  "references": [{ "path": "../shared" }]
+	"extends": "../tsconfig.base.json",
+	"compilerOptions": {
+		"composite": true,
+		"outDir": "dist",
+		"skipLibCheck": true,
+		"rootDir": "src",
+		"module": "NodeNext",
+		"jsx": "react-jsx",
+		"baseUrl": ".",
+		"paths": {
+			"@/*": ["src/*"]
+		}
+	},
+	"include": ["src"],
+	"references": [{ "path": "../shared" }]
 }

@@ -12,6 +12,4 @@ export {
 // Export services
 export * from './services/auth.service';
 
-// Mark original server/auth.ts file as deprecated
-// TODO: Remove the original file after migration is complete
-export const ORIGINAL_AUTH_DEPRECATED = true;
+// Auth domain properly migrated to new structure

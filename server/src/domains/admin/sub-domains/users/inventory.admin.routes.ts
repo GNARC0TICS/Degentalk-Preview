@@ -1,8 +1,9 @@
-import { Router } from 'express';
+import { Router } from 'express'
+import type { Router as RouterType } from 'express';
 import { userInventoryAdminController } from './inventory.admin.controller';
 import { asyncHandler } from '../../admin.middleware'; // Adjust path
 
-const router = Router();
+const router: RouterType = Router();
 
 // GET /api/admin/user-inventory/:userId - View user inventory
 router.get('/:userId', asyncHandler(userInventoryAdminController.viewInventory));

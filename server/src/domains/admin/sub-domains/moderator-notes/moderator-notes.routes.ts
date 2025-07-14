@@ -1,4 +1,5 @@
-import { Router } from 'express';
+import { Router } from 'express'
+import type { Router as RouterType } from 'express';
 import { userService } from '@core/services/user.service';
 import { z } from 'zod';
 import { db } from '@db';
@@ -10,7 +11,7 @@ import { logger } from '@core/logger';
 import type { EntityId } from '@shared/types/ids';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
-const router = Router();
+const router: RouterType = Router();
 
 // Validation schemas
 const createModeratorNoteSchema = z.object({

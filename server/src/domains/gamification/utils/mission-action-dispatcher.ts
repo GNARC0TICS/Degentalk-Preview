@@ -6,7 +6,7 @@
  */
 
 import { missionService } from '../services/mission.service';
-import { logger } from '../../../core/logger';
+import { logger } from '@server-core/logger';
 import type { UserId } from '@shared/types/ids';
 
 // Action type definitions with metadata requirements

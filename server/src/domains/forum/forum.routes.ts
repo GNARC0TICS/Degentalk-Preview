@@ -5,7 +5,8 @@
  * This file now orchestrates between specialized route handlers
  */
 
-import { Router } from 'express';
+import { Router } from 'express'
+import type { Router as RouterType } from 'express';
 import type { Request, Response } from 'express';
 import { db } from '@db';
 import { z } from 'zod';
@@ -41,7 +42,7 @@ import userSearchRoutes from './routes/user-search.routes';
 import prefixesRoutes from './routes/prefixes.routes';
 import tagsRoutes from './routes/tags.routes';
 
-const router = Router();
+const router: RouterType = Router();
 
 // Mount specialized route modules
 router.use('/threads', threadRoutes);

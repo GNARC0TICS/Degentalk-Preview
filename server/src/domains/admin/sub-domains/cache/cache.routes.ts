@@ -4,12 +4,14 @@
  * Provides cache monitoring, management, and optimization tools for admin users
  */
 
-import { Router } from 'express';
+import { Router } from 'express'
+import type { Router as RouterType } from 'express';
 import { AdminCacheController } from './cache.controller';
 import { asyncHandler } from '../../admin.middleware';
+import cacheMetricsRoutes from '../../routes/cache-metrics.routes';
 
 // Create router
-const router = Router();
+const router: RouterType = Router();
 
 // Initialize cache controller
 const cacheController = new AdminCacheController();
@@ -41,5 +43,8 @@ router.post('/clear', asyncHandler(cacheController.clearCache.bind(cacheControll
  * @access Admin
  */
 router.post('/warmup', asyncHandler(cacheController.warmupCache.bind(cacheController)));
+
+// Mount new cache metrics routes
+router.use('/metrics', cacheMetricsRoutes);
 
 export default router;

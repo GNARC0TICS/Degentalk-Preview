@@ -1,12 +1,13 @@
 import { userService } from '@core/services/user.service';
-import { Router } from 'express';
+import { Router } from 'express'
+import type { Router as RouterType } from 'express';
 import { z } from 'zod';
 import { UserPreferencesService } from './user-preferences.service';
 import { requireAuth } from '@server/domains/auth/middleware/auth.middleware';
 import { logger } from '@core/logger';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
-const router = Router();
+const router: RouterType = Router();
 
 // Social privacy preferences schema
 const socialPreferencesSchema = z.object({

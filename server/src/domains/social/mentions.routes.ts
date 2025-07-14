@@ -1,5 +1,6 @@
 import { userService } from '@core/services/user.service';
-import { Router } from 'express';
+import { Router } from 'express'
+import type { Router as RouterType } from 'express';
 import { MentionsService } from './mentions.service';
 import { requireAuth } from '../../../middleware/auth';
 import { z } from 'zod';
@@ -13,7 +14,7 @@ import {
 	sendTransformedListResponse
 } from '@core/utils/transformer.helpers';
 
-const router = Router();
+const router: RouterType = Router();
 
 // Validation schemas
 const getUserMentionsSchema = z.object({

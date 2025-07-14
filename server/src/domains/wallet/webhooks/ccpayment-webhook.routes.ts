@@ -5,7 +5,8 @@
  * Unlike most API routes, webhook endpoints don't require auth.
  */
 
-import { Router } from 'express';
+import { Router } from 'express'
+import type { Router as RouterType } from 'express';
 import { CCPaymentWebhookController } from './ccpayment-webhook.controller';
 import { asyncHandler } from '@core/errors';
 import { validateRequest } from '@server/middleware/validate-request';
@@ -14,7 +15,7 @@ import { ccpaymentWebhookHeadersSchema } from './validation/webhook.validation';
 const ccPaymentWebhookController = new CCPaymentWebhookController();
 
 // Create router
-const router = Router();
+const router: RouterType = Router();
 
 /**
  * @route POST /api/webhook/ccpayment

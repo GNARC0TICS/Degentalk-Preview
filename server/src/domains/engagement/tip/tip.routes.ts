@@ -6,15 +6,16 @@
  * // [REFAC-TIP]
  */
 
-import express from 'express';
+import express from 'express'
+import type { Router as RouterType } from 'express';
 import { tipController } from './tip.controller';
 import { authenticateJWT as requireAuth } from '@server/middleware/authenticate-jwt';
 import { isAdmin as requireAdmin } from '@server/domains/auth/middleware/auth.middleware';
-import { validateRequest } from '@server-middleware/validate-request';
+import { validateRequest } from '@server/middleware/validate-request';
 import { z } from 'zod';
 
 // Create the router
-const router = express.Router();
+const router: RouterType = express.Router();
 
 // Apply authentication to all routes
 router.use(requireAuth);

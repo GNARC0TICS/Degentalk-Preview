@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'wouter';
 import { Button } from '@/components/ui/button';
+import { PumpButton } from '@/components/uiverse-clones/buttons';
 import type { ButtonProps } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
 import { useAuth } from '@/hooks/use-auth';
@@ -42,12 +43,18 @@ export function CreateThreadButton({
 		}
 
 		return (
-			<Button variant="outline" size={size} asChild className={className} {...props}>
-				<Link href={`/auth?redirect_to=${encodeURIComponent(redirectPath)}`}>
-					<Plus className="h-4 w-4 mr-2" />
+			<Link href={`/auth?redirect_to=${encodeURIComponent(redirectPath)}`}>
+				<PumpButton
+					variant="neutral" 
+					size={size === 'sm' ? 'sm' : size === 'lg' ? 'lg' : 'md'}
+					className={className} 
+					pulse={false}
+					{...props}
+				>
+					<Plus className="h-4 w-4" />
 					Sign in to Post
-				</Link>
-			</Button>
+				</PumpButton>
+			</Link>
 		);
 	}
 
@@ -76,11 +83,17 @@ export function CreateThreadButton({
 	}
 
 	return (
-		<Button variant={variant} size={size} className={className} asChild {...props}>
-			<Link href={createThreadUrl}>
-				<Plus className="h-4 w-4 mr-2" />
+		<Link href={createThreadUrl}>
+			<PumpButton 
+				variant="pump" 
+				size={size === 'sm' ? 'sm' : size === 'lg' ? 'lg' : 'md'}
+				className={className}
+				pulse
+				{...props}
+			>
+				<Plus className="h-4 w-4" />
 				New Thread
-			</Link>
-		</Button>
+			</PumpButton>
+		</Link>
 	);
 }

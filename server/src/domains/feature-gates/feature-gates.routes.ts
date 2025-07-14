@@ -1,8 +1,9 @@
-import { Router } from 'express';
+import { Router } from 'express'
+import type { Router as RouterType } from 'express';
 import { isAuthenticated, isAdmin } from '@server/domains/auth/middleware/auth.middleware';
 import * as featureGatesController from './feature-gates.controller';
 
-const router = Router();
+const router: RouterType = Router();
 
 // Public routes
 router.get('/gates', featureGatesController.getAllFeatureGates);

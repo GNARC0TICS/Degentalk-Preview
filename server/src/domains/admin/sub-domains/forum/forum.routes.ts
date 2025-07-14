@@ -4,14 +4,15 @@
  * Defines API routes for forum management.
  */
 
-import { Router } from 'express';
+import { Router } from 'express'
+import type { Router as RouterType } from 'express';
 import { adminForumController } from './forum.controller';
 import { asyncHandler } from '../../admin.middleware';
 import { forumPrefixService } from '../forumPrefix/forumPrefix.service';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 import type { PrefixId } from '@shared/types/ids';
 
-const router = Router();
+const router: RouterType = Router();
 
 // Forum entity management routes (zones, categories, forums)
 router.get(

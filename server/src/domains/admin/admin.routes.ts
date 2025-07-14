@@ -4,7 +4,8 @@
  * Main router for admin panel API endpoints
  */
 
-import { Router, type Express } from 'express'; // Import Express as type
+import { Router, type Express } from 'express'
+import type { Router as RouterType } from 'express'; // Import Express as type
 import { adminController } from './admin.controller';
 import { isAdmin, asyncHandler } from './admin.middleware';
 import { logger } from '@core/logger';
@@ -47,11 +48,10 @@ import databaseRoutes from './sub-domains/database/database.routes';
 import securityMonitorRoutes from './routes/security-monitor.routes';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
-// import userAdminRoutes from './users/users.admin.routes'; // DEPRECATED
-// import economyAdminRoutes from './settings/economy.routes'; // Placeholder for future
+// All admin routes migrated to new domain structure
 
 // Create admin router
-const adminRouter = Router();
+const adminRouter: RouterType = Router();
 
 // Apply admin authentication middleware to all routes
 adminRouter.use(isAdmin);
@@ -102,8 +102,7 @@ adminRouter.use('/emojis', (req, res, next) => {
 
 adminRouter.use('/emojis', emojiRoutes);
 adminRouter.use('/ui-config', uiConfigRoutes);
-// adminRouter.use('/users', userAdminRoutes); // DEPRECATED - Handled by userRoutes
-// economy routes registered above
+// All routes properly registered above
 
 // Dashboard overview route
 adminRouter.get('/dashboard', asyncHandler(adminController.getDashboardStats)); // Corrected method name

@@ -4,11 +4,12 @@
  * Defines API routes for user group management.
  */
 
-import { Router } from 'express';
+import { Router } from 'express'
+import type { Router as RouterType } from 'express';
 import { adminUserGroupsController } from './user-groups.controller';
 import { asyncHandler } from '../../admin.middleware';
 
-const router = Router();
+const router: RouterType = Router();
 
 // Get all user groups (with user counts)
 router.get(

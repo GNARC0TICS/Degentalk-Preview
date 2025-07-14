@@ -4,7 +4,7 @@ import { logger } from '@core/logger';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 import { getAuthenticatedUser } from '@core/utils/auth.helpers';
 import { threadService } from '@server/domains/forum/services/thread.service';
-import { ForumTransformer } from '@server/domains/forum/transformers/forum.transformer';
+import { ThreadTransformer } from '@server/domains/forum/transformers/thread.transformer';
 import type { StructureId, ThreadId, UserId, TagId } from '@shared/types/ids';
 
 class ThreadController {
@@ -25,7 +25,7 @@ class ThreadController {
 
 		const user = getAuthenticatedUser(req);
 		const transformedThreads = result.threads.map((thread) =>
-			user ? ForumTransformer.toSlimThread(thread) : ForumTransformer.toPublicThread(thread)
+			user ? ThreadTransformer.toSlim(thread) : ThreadTransformer.toPublic(thread)
 		);
 
 		return sendSuccessResponse(res, {
@@ -49,8 +49,8 @@ class ThreadController {
 
 		const user = getAuthenticatedUser(req);
 		const transformedThread = user
-			? ForumTransformer.toAuthenticatedThread(thread, user)
-			: ForumTransformer.toPublicThread(thread);
+			? ThreadTransformer.toAuthenticated(thread, user)
+			: ThreadTransformer.toPublic(thread);
 
 		return sendSuccessResponse(res, transformedThread);
 	}
@@ -67,8 +67,8 @@ class ThreadController {
 
 		const user = getAuthenticatedUser(req);
 		const transformedThread = user
-			? ForumTransformer.toAuthenticatedThread(thread, user)
-			: ForumTransformer.toPublicThread(thread);
+			? ThreadTransformer.toAuthenticated(thread, user)
+			: ThreadTransformer.toPublic(thread);
 
 		return sendSuccessResponse(res, transformedThread);
 	}

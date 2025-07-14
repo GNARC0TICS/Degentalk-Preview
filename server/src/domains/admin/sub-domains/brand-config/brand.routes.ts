@@ -1,9 +1,10 @@
-import { Router } from 'express';
+import { Router } from 'express'
+import type { Router as RouterType } from 'express';
 import { brandController } from './brand.controller';
 import { isAdmin } from '../../admin.middleware';
 import { asyncHandler } from '../../admin.middleware';
 
-const router = Router();
+const router: RouterType = Router();
 
 // All routes require admin auth
 router.use(isAdmin);

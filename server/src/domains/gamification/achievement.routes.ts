@@ -5,12 +5,13 @@
  * and reward management.
  */
 
-import { Router } from 'express';
+import { Router } from 'express'
+import type { Router as RouterType } from 'express';
 import { achievementController } from './achievement.controller';
 import { isAuthenticated, isAdmin } from '@server/domains/auth/middleware/auth.middleware';
 import rateLimit from 'express-rate-limit';
 
-const router = Router();
+const router: RouterType = Router();
 
 // Rate limiting
 const publicRateLimit = rateLimit({

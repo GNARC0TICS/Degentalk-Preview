@@ -4,13 +4,14 @@
  * Routes for database browsing, editing, and query functionality.
  */
 
-import { Router } from 'express';
+import { Router } from 'express'
+import type { Router as RouterType } from 'express';
 import { asyncHandler, isAdmin } from '../../admin.middleware';
 import * as databaseController from './database.controller';
 import * as queryController from './query.controller';
 import * as bulkController from './bulk-operations.controller';
 
-const router = Router();
+const router: RouterType = Router();
 
 // Apply admin middleware to all routes
 router.use(isAdmin);

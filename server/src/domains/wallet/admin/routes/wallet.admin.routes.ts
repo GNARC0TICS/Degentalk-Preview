@@ -5,11 +5,12 @@
  * related to the wallet system.
  */
 
-import { Router } from 'express';
+import { Router } from 'express'
+import type { Router as RouterType } from 'express';
 import { adminWalletController } from '../controllers/wallet.controller';
 import { requireAdmin } from '@core/middlewares/auth.middleware';
 
-const router = Router();
+const router: RouterType = Router();
 
 // All routes in this file are protected and require admin privileges.
 router.use(requireAdmin);

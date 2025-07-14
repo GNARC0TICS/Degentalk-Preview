@@ -1,6 +1,7 @@
 import React from 'react';
 import type { DgtPackage } from '@/hooks/use-dgt-packages';
 import { Button } from '@/components/ui/button';
+import { PumpButton } from '@/components/uiverse-clones/buttons';
 import { Coins } from 'lucide-react';
 
 interface Props {
@@ -37,9 +38,9 @@ export const DgtPackageCard: React.FC<Props> = ({ pkg, onBuy }) => {
 				<span className="font-medium">{pkg.dgtAmount.toLocaleString()} DGT</span>
 			</div>
 
-			<Button className="w-full mt-4" onClick={() => onBuy(pkg)}>
+			<PumpButton variant="pump" className="w-full mt-4" onClick={() => onBuy(pkg)} pulse>
 				Buy Now
-			</Button>
+			</PumpButton>
 		</div>
 	);
 };

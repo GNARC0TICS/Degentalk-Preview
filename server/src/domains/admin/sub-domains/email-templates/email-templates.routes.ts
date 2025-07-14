@@ -4,11 +4,12 @@
  * Admin routes for managing email templates
  */
 
-import { Router } from 'express';
+import { Router } from 'express'
+import type { Router as RouterType } from 'express';
 import { emailTemplateController } from './email-templates.controller';
 import { isAdminOrModerator } from '../../admin.middleware';
 
-export const emailTemplateRoutes = Router();
+export const emailTemplateRoutes: RouterType = Router();
 
 // All email template routes require admin or moderator role
 emailTemplateRoutes.use(isAdminOrModerator);

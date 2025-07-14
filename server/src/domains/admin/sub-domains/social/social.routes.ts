@@ -1,9 +1,10 @@
-import { Router } from 'express';
+import { Router } from 'express'
+import type { Router as RouterType } from 'express';
 import { z } from 'zod';
 import { socialController } from './social.controller';
 import { asyncHandler } from '../../admin.middleware';
 
-const router = Router();
+const router: RouterType = Router();
 
 // Validation schemas
 const updateSocialConfigSchema = z.object({

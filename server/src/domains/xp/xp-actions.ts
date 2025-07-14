@@ -22,7 +22,10 @@ export enum XP_ACTION {
 	USER_MENTIONED = 'user_mentioned',
 	REPLY_RECEIVED = 'reply_received',
 	PROFILE_COMPLETED = 'profile_completed',
-	FRAME_EQUIPPED = 'frame_equipped'
+	FRAME_EQUIPPED = 'frame_equipped',
+	TIP_GIVEN = 'tip_given',
+	TIP_RECEIVED = 'tip_received',
+	DGT_PURCHASE = 'dgt_purchase'
 }
 
 /**
@@ -89,6 +92,24 @@ export const DEFAULT_XP_ACTIONS: Record<XP_ACTION, XpActionConfig> = {
 		key: XP_ACTION.FRAME_EQUIPPED,
 		baseValue: 5,
 		description: 'Equipped an avatar frame'
+	},
+	[XP_ACTION.TIP_GIVEN]: {
+		key: XP_ACTION.TIP_GIVEN,
+		baseValue: 2,
+		description: 'Gave a tip to another user',
+		maxPerDay: 20
+	},
+	[XP_ACTION.TIP_RECEIVED]: {
+		key: XP_ACTION.TIP_RECEIVED,
+		baseValue: 5,
+		description: 'Received a tip from another user',
+		maxPerDay: 50
+	},
+	[XP_ACTION.DGT_PURCHASE]: {
+		key: XP_ACTION.DGT_PURCHASE,
+		baseValue: 10,
+		description: 'Purchased DGT with cryptocurrency',
+		maxPerDay: 5
 	}
 };
 

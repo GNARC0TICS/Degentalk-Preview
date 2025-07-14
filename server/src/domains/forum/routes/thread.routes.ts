@@ -3,7 +3,8 @@
  * Handles all thread-specific API endpoints.
  */
 
-import { Router } from 'express';
+import { Router } from 'express'
+import type { Router as RouterType } from 'express';
 import { isAuthenticated, isAdminOrModerator } from '../../auth/middleware/auth.middleware';
 import {
 	requireThreadSolvePermission,
@@ -11,10 +12,10 @@ import {
 } from '../services/permissions.service';
 import { threadController } from '../controllers/thread.controller';
 import { threadValidation } from '../validation/thread.validation';
-import { validateRequest } from '@server-middleware/validate-request';
+import { validateRequest } from '@server/middleware/validate-request';
 import { asyncHandler } from '@core/errors';
 
-const router = Router();
+const router: RouterType = Router();
 
 // --- Public Routes ---
 router.get('/search', asyncHandler(threadController.searchThreads.bind(threadController)));

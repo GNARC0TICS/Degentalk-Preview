@@ -68,6 +68,20 @@ export const campaigns = pgTable('campaigns', {
 	// Performance settings
 	optimizationGoal: varchar('optimization_goal', { length: 50 }),
 	qualityScore: decimal('quality_score', { precision: 3, scale: 2 }),
+	// Performance metrics aggregated data (JSONB)
+	performanceMetrics: jsonb('performance_metrics').$type<{
+		impressions?: number;
+		clicks?: number;
+		conversions?: number;
+		ctr?: number;
+		cpm?: number;
+		cpc?: number;
+		conversionRate?: number;
+		totalSpend?: number;
+		revenue?: number;
+		roas?: number;
+		lastUpdated?: string;
+	}>().default('{}'),
 	// Metadata
 	isActive: boolean('is_active').notNull().default(true),
 	createdAt: timestamp('created_at')

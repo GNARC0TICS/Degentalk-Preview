@@ -4,7 +4,8 @@
  * Defines API routes for user-to-user messaging functionality.
  */
 
-import { Router } from 'express';
+import { Router } from 'express'
+import type { Router as RouterType } from 'express';
 import type { Request, Response } from 'express';
 import type { UserId } from '@shared/types/ids';
 import { z } from 'zod';
@@ -28,7 +29,7 @@ import {
 	sendTransformedListResponse
 } from '@core/utils/transformer.helpers';
 
-const router = Router();
+const router: RouterType = Router();
 
 // Get all conversations for the current user
 router.get('/conversations', isAuthenticated, async (req: Request, res: Response) => {

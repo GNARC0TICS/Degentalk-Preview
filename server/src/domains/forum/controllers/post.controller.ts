@@ -2,7 +2,7 @@ import type { Request, Response } from 'express';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 import { getAuthenticatedUser } from '@core/utils/auth.helpers';
 import { postService } from '@server/domains/forum/services/post.service';
-import { ForumTransformer } from '@server/domains/forum/transformers/forum.transformer';
+import { PostTransformer } from '@server/domains/forum/transformers/post.transformer';
 import type { PostId, UserId } from '@shared/types/ids';
 
 class PostController {
@@ -13,7 +13,7 @@ class PostController {
 			userId: user?.id as UserId
 		});
 
-		const transformedPost = ForumTransformer.toAuthenticatedPost(newPost, user);
+		const transformedPost = PostTransformer.toAuthenticated(newPost, user);
 		return sendSuccessResponse(res, transformedPost, 201);
 	}
 
@@ -22,7 +22,7 @@ class PostController {
 		const user = getAuthenticatedUser(req);
 		const updatedPost = await postService.updatePost(id, req.body);
 
-		const transformedPost = ForumTransformer.toAuthenticatedPost(updatedPost, user);
+		const transformedPost = PostTransformer.toAuthenticated(updatedPost, user);
 		return sendSuccessResponse(res, transformedPost);
 	}
 
@@ -53,10 +53,18 @@ class PostController {
 		const user = getAuthenticatedUser(req);
 		const userId = user?.id as UserId;
 
-		// TODO: Implement tipping logic with DGT service integration
-		await postService.tipPost(postId, userId, amount);
-
-		return sendSuccessResponse(res, null, 'Post tipped successfully');
+		try {
+			await postService.tipPost(postId, userId, amount);
+			
+			return sendSuccessResponse(res, {
+				postId,
+				amount,
+				message: 'Post tipped successfully and XP awarded'
+			});
+		} catch (error) {
+			const errorMessage = error instanceof Error ? error.message : 'Failed to tip post';
+			return sendErrorResponse(res, errorMessage, 400);
+		}
 	}
 
 	async getPostReplies(req: Request, res: Response) {
@@ -65,8 +73,8 @@ class PostController {
 		const user = getAuthenticatedUser(req);
 		const transformedReplies = replies.map((reply) =>
 			user
-				? ForumTransformer.toAuthenticatedPost(reply, user)
-				: ForumTransformer.toPublicPost(reply)
+				? PostTransformer.toAuthenticated(reply, user)
+				: PostTransformer.toPublic(reply)
 		);
 		return sendSuccessResponse(res, transformedReplies);
 	}

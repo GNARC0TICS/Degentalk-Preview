@@ -435,11 +435,24 @@ export class AchievementProcessorService {
 
 			// Award DGT (integrate with existing DGT service)
 			if (achievement.rewardDgt > 0) {
-				// TODO: Integrate with DGT service
-				logger.info(
-					'ACHIEVEMENT_REWARD',
-					`Would award ${achievement.rewardDgt} DGT to user ${userId}`
-				);
+				try {
+					const { walletService } = await import('../../wallet/services/wallet.service');
+					await walletService.creditDgt(userId, achievement.rewardDgt, {
+						source: 'achievement_unlock',
+						reason: `Achievement reward: ${achievement.name}`,
+						achievementId: achievement.id
+					});
+					logger.info(
+						'ACHIEVEMENT_REWARD',
+						`Awarded ${achievement.rewardDgt} DGT to user ${userId} for achievement ${achievement.name}`
+					);
+				} catch (error) {
+					logger.error(
+						'ACHIEVEMENT_REWARD',
+						`Failed to award DGT to user ${userId} for achievement ${achievement.name}`,
+						{ error: error instanceof Error ? error.message : String(error) }
+					);
+				}
 			}
 
 			// Award Clout (integrate with existing Clout service)

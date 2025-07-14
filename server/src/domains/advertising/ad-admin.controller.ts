@@ -4,7 +4,7 @@ import { adConfigurationService } from './ad-configuration.service';
 import { campaignManagementService } from './campaign-management.service';
 import { logger } from '@core/logger';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
-import { getAuthenticatedUser } from '@core/utils/auth.helpers';
+import { getAuthenticatedUser, isAdmin } from '@core/utils/auth.helpers';
 
 // Admin validation schemas
 const placementConfigSchema = z.object({
@@ -134,7 +134,15 @@ export class AdAdminController {
 	 */
 	async getSystemConfiguration(req: Request, res: Response): Promise<void> {
 		try {
-			// TODO: Verify admin permissions
+			const user = getAuthenticatedUser(req);
+			if (!user) {
+				return sendErrorResponse(res, 'Authentication required', 401);
+			}
+
+			if (!isAdmin(user)) {
+				return sendErrorResponse(res, 'Admin privileges required', 403);
+			}
+
 			const config = await adConfigurationService.getSystemConfiguration();
 			sendSuccessResponse(res, config);
 		} catch (error) {
@@ -152,6 +160,10 @@ export class AdAdminController {
 			const user = getAuthenticatedUser(req);
 			if (!user) {
 				return sendErrorResponse(res, 'Authentication required', 401);
+			}
+
+			if (!isAdmin(user)) {
+				return sendErrorResponse(res, 'Admin privileges required', 403);
 			}
 
 			const configUpdates = systemConfigSchema.parse(req.body);
@@ -174,6 +186,15 @@ export class AdAdminController {
 	 */
 	async createPlacement(req: Request, res: Response): Promise<void> {
 		try {
+			const user = getAuthenticatedUser(req);
+			if (!user) {
+				return sendErrorResponse(res, 'Authentication required', 401);
+			}
+
+			if (!isAdmin(user)) {
+				return sendErrorResponse(res, 'Admin privileges required', 403);
+			}
+
 			const placementData = placementConfigSchema.parse(req.body);
 			const placement = await adConfigurationService.createPlacement(placementData);
 
@@ -190,6 +211,15 @@ export class AdAdminController {
 	 */
 	async updatePlacement(req: Request, res: Response): Promise<void> {
 		try {
+			const user = getAuthenticatedUser(req);
+			if (!user) {
+				return sendErrorResponse(res, 'Authentication required', 401);
+			}
+
+			if (!isAdmin(user)) {
+				return sendErrorResponse(res, 'Admin privileges required', 403);
+			}
+
 			const { placementId } = req.params;
 			const updates = req.body;
 
@@ -208,6 +238,15 @@ export class AdAdminController {
 	 */
 	async deletePlacement(req: Request, res: Response): Promise<void> {
 		try {
+			const user = getAuthenticatedUser(req);
+			if (!user) {
+				return sendErrorResponse(res, 'Authentication required', 401);
+			}
+
+			if (!isAdmin(user)) {
+				return sendErrorResponse(res, 'Admin privileges required', 403);
+			}
+
 			const { placementId } = req.params;
 			await adConfigurationService.deletePlacement(placementId);
 
@@ -224,6 +263,15 @@ export class AdAdminController {
 	 */
 	async listAllPlacements(req: Request, res: Response): Promise<void> {
 		try {
+			const user = getAuthenticatedUser(req);
+			if (!user) {
+				return sendErrorResponse(res, 'Authentication required', 401);
+			}
+
+			if (!isAdmin(user)) {
+				return sendErrorResponse(res, 'Admin privileges required', 403);
+			}
+
 			const filters = {
 				position: req.query.position as string,
 				forumZoneSlug: req.query.forumZoneSlug as string,
@@ -254,6 +302,15 @@ export class AdAdminController {
 	 */
 	async createGlobalRule(req: Request, res: Response): Promise<void> {
 		try {
+			const user = getAuthenticatedUser(req);
+			if (!user) {
+				return sendErrorResponse(res, 'Authentication required', 401);
+			}
+
+			if (!isAdmin(user)) {
+				return sendErrorResponse(res, 'Admin privileges required', 403);
+			}
+
 			const ruleData = globalRuleSchema.parse(req.body);
 
 			const rule = await adConfigurationService.createGlobalRule({
@@ -275,6 +332,15 @@ export class AdAdminController {
 	 */
 	async updateGlobalRule(req: Request, res: Response): Promise<void> {
 		try {
+			const user = getAuthenticatedUser(req);
+			if (!user) {
+				return sendErrorResponse(res, 'Authentication required', 401);
+			}
+
+			if (!isAdmin(user)) {
+				return sendErrorResponse(res, 'Admin privileges required', 403);
+			}
+
 			const { ruleId } = req.params;
 			const updates = req.body;
 
@@ -293,6 +359,15 @@ export class AdAdminController {
 	 */
 	async listGlobalRules(req: Request, res: Response): Promise<void> {
 		try {
+			const user = getAuthenticatedUser(req);
+			if (!user) {
+				return sendErrorResponse(res, 'Authentication required', 401);
+			}
+
+			if (!isAdmin(user)) {
+				return sendErrorResponse(res, 'Admin privileges required', 403);
+			}
+
 			const filters = {
 				ruleType: req.query.ruleType as string,
 				isActive: req.query.isActive ? req.query.isActive === 'true' : undefined
@@ -313,6 +388,15 @@ export class AdAdminController {
 	 */
 	async getPlatformAnalytics(req: Request, res: Response): Promise<void> {
 		try {
+			const user = getAuthenticatedUser(req);
+			if (!user) {
+				return sendErrorResponse(res, 'Authentication required', 401);
+			}
+
+			if (!isAdmin(user)) {
+				return sendErrorResponse(res, 'Admin privileges required', 403);
+			}
+
 			const { from, to } = req.query;
 
 			// TODO: Implement platform-wide analytics aggregation
@@ -353,6 +437,15 @@ export class AdAdminController {
 	 */
 	async getAllCampaigns(req: Request, res: Response): Promise<void> {
 		try {
+			const user = getAuthenticatedUser(req);
+			if (!user) {
+				return sendErrorResponse(res, 'Authentication required', 401);
+			}
+
+			if (!isAdmin(user)) {
+				return sendErrorResponse(res, 'Admin privileges required', 403);
+			}
+
 			const filters = {
 				status: req.query.status as string,
 				type: req.query.type as string,
@@ -382,6 +475,15 @@ export class AdAdminController {
 	 */
 	async reviewCampaign(req: Request, res: Response): Promise<void> {
 		try {
+			const user = getAuthenticatedUser(req);
+			if (!user) {
+				return sendErrorResponse(res, 'Authentication required', 401);
+			}
+
+			if (!isAdmin(user)) {
+				return sendErrorResponse(res, 'Admin privileges required', 403);
+			}
+
 			const { campaignId } = req.params;
 			const { action, reason } = req.body; // action: 'approve' | 'reject'
 
@@ -440,6 +542,15 @@ export class AdAdminController {
 	 */
 	async executeGovernanceProposal(req: Request, res: Response): Promise<void> {
 		try {
+			const user = getAuthenticatedUser(req);
+			if (!user) {
+				return sendErrorResponse(res, 'Authentication required', 401);
+			}
+
+			if (!isAdmin(user)) {
+				return sendErrorResponse(res, 'Admin privileges required', 403);
+			}
+
 			const { proposalId } = req.params;
 
 			await adConfigurationService.executeGovernanceProposal(proposalId);
@@ -457,6 +568,15 @@ export class AdAdminController {
 	 */
 	async getFraudAlerts(req: Request, res: Response): Promise<void> {
 		try {
+			const user = getAuthenticatedUser(req);
+			if (!user) {
+				return sendErrorResponse(res, 'Authentication required', 401);
+			}
+
+			if (!isAdmin(user)) {
+				return sendErrorResponse(res, 'Admin privileges required', 403);
+			}
+
 			// TODO: Implement fraud detection system
 			const alerts = [
 				{
@@ -483,6 +603,15 @@ export class AdAdminController {
 	 */
 	async getRevenueReport(req: Request, res: Response): Promise<void> {
 		try {
+			const user = getAuthenticatedUser(req);
+			if (!user) {
+				return sendErrorResponse(res, 'Authentication required', 401);
+			}
+
+			if (!isAdmin(user)) {
+				return sendErrorResponse(res, 'Admin privileges required', 403);
+			}
+
 			const { from, to, granularity = 'daily' } = req.query;
 
 			// TODO: Implement revenue reporting
@@ -516,6 +645,15 @@ export class AdAdminController {
 	 */
 	async exportAnalytics(req: Request, res: Response): Promise<void> {
 		try {
+			const user = getAuthenticatedUser(req);
+			if (!user) {
+				return sendErrorResponse(res, 'Authentication required', 401);
+			}
+
+			if (!isAdmin(user)) {
+				return sendErrorResponse(res, 'Admin privileges required', 403);
+			}
+
 			const { format = 'csv', type = 'campaigns', from, to } = req.query;
 
 			if (!['csv', 'json'].includes(format as string)) {

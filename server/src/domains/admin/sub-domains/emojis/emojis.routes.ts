@@ -1,4 +1,5 @@
-import { Router } from 'express';
+import { Router } from 'express'
+import type { Router as RouterType } from 'express';
 import {
 	getAllEmojis,
 	getEmojiById,
@@ -10,7 +11,7 @@ import {
 } from './emojis.controller';
 import { asyncHandler } from '../../admin.middleware';
 
-const router = Router();
+const router: RouterType = Router();
 
 // Apply asyncHandler to all routes for consistent error handling
 

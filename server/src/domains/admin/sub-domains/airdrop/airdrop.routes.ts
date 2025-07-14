@@ -1,8 +1,9 @@
-import { Router } from 'express';
+import { Router } from 'express'
+import type { Router as RouterType } from 'express';
 import { isAdmin } from '../../../auth/middleware/auth.middleware'; // Adjust path as needed
 import * as airdropController from './airdrop.controller';
 
-const router = Router();
+const router: RouterType = Router();
 
 // POST /api/admin/airdrop - Execute an airdrop
 router.post('/', isAdmin, airdropController.executeAirdrop);

@@ -188,8 +188,11 @@ class RedisCacheAdapter {
 }
 
 // Export singleton instances
-export const cacheService = new RedisCacheAdapter();
+export const legacyCacheService = new RedisCacheAdapter();
 export const memoryCache = new InMemoryCache();
+
+// Re-export new Redis service for enhanced functionality
+export { redisCacheService, Cache, CacheMinute, CacheHour, CacheDay } from './cache/redis.service';
 
 // Clean up memory cache every 5 minutes
 setInterval(

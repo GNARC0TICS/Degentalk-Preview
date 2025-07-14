@@ -6,7 +6,8 @@ import { userService } from '@core/services/user.service';
  * adjustments, and settings.
  */
 
-import { Router } from 'express';
+import { Router } from 'express'
+import type { Router as RouterType } from 'express';
 import type { Request, Response } from 'express';
 import { db } from '@db';
 import { sql } from 'drizzle-orm';
@@ -210,7 +211,7 @@ async function adjustTreasuryBalance(
 	}
 }
 
-const router = Router();
+const router: RouterType = Router();
 
 // Get treasury overview (admin only)
 router.get('/overview', isAdmin, async (req: Request, res: Response) => {

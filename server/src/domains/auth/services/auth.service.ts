@@ -1,12 +1,12 @@
-import { userService } from '../../../core/services/user.service';
-import type { UserId } from '../../../../../shared/types/ids';
+import { userService } from '@server-core/services/user.service';
+import type { UserId } from '@shared/types/ids';
 import { scrypt, randomBytes, timingSafeEqual } from 'crypto';
 import { promisify } from 'util';
-import { featureFlags, users } from '../../../../../db/schema';
-import { db } from '../../../core/db';
+import { featureFlags, users } from '@db/schema';
+import { db } from '@server-core/db';
 import { eq, count } from 'drizzle-orm';
-import { isDevMode } from '../../../utils/environment';
-import { logger } from '../../../core/logger';
+import { isDevMode } from '@server-utils/environment';
+import { logger } from '@server-core/logger';
 import { v4 as uuidv4 } from 'uuid';
 import bcrypt from 'bcrypt';
 

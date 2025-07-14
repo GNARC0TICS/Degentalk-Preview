@@ -2,7 +2,7 @@ import React from 'react';
 import { useDgtPackages } from '@/hooks/use-dgt-packages';
 import { WalletApiService } from '@/features/wallet/services/wallet-api.service';
 import { DgtPackageCard } from './DgtPackageCard';
-import { Loader2 } from 'lucide-react';
+import { DegenLoader } from '@/components/uiverse-clones/loaders';
 
 const walletApi = new WalletApiService();
 
@@ -23,7 +23,7 @@ export const PackagesGrid: React.FC = () => {
 	if (isLoading) {
 		return (
 			<div className="flex justify-center py-10">
-				<Loader2 className="h-8 w-8 animate-spin text-emerald-400" />
+				<DegenLoader size="md" text="Loading DGT packages..." />
 			</div>
 		);
 	}

@@ -1,4 +1,5 @@
-import { Router } from 'express';
+import { Router } from 'express'
+import type { Router as RouterType } from 'express';
 import { isAdmin } from '@server/domains/auth/middleware/auth.middleware';
 import {
 	getAnnouncementsController,
@@ -15,7 +16,7 @@ export function registerAnnouncementRoutes(app: Router) {
 	app.get('/api/announcements', getAnnouncementsController);
 
 	// Admin routes for managing announcements
-	const adminRouter = Router();
+	const adminRouter: RouterType = Router();
 	app.use('/api/admin/announcements', isAdmin, adminRouter);
 
 	// Admin CRUD operations for announcements
@@ -29,14 +30,14 @@ export function registerAnnouncementRoutes(app: Router) {
 }
 
 // Create a standalone router for direct use (useful for testing or when mounting at a different path)
-const announcementsRouter = Router();
-const publicRouter = Router();
+const announcementsRouter: RouterType = Router();
+const publicRouter: RouterType = Router();
 
 // Public routes
 publicRouter.get('/', getAnnouncementsController);
 
 // Admin routes
-const adminRouter = Router();
+const adminRouter: RouterType = Router();
 adminRouter.get('/', getAllAnnouncementsController);
 adminRouter.post('/', createAnnouncementController);
 adminRouter.get('/:id', getAnnouncementByIdController);
@@ -48,7 +49,7 @@ export { publicRouter, adminRouter };
 
 // Export a default router that includes both public and admin routes (protected by isAdmin middleware)
 export default function createAnnouncementRouter() {
-	const router = Router();
+	const router: RouterType = Router();
 
 	// Mount the public routes
 	router.use('/api/announcements', publicRouter);

@@ -4,11 +4,12 @@
  * Defines API routes for platform settings management.
  */
 
-import { Router } from 'express';
+import { Router } from 'express'
+import type { Router as RouterType } from 'express';
 import { adminSettingsController } from './settings.controller';
 import { asyncHandler } from '../../admin.middleware';
 
-const router = Router();
+const router: RouterType = Router();
 
 // Settings management
 router.get('/', asyncHandler(adminSettingsController.getAllSettings.bind(adminSettingsController)));

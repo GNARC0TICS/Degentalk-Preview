@@ -24,6 +24,9 @@
 		"validate:workspace": "pnpm -r exec pnpm why @degentalk/shared",
 		"validate:boundaries": "node scripts/validation/validate-boundaries.cjs",
 		"validate:dependencies": "node scripts/validation/validate-dependencies.cjs",
+		"cache:smoke": "FEATURE_CACHING=true tsx scripts/cache-smoke.ts",
+		"cache:health": "tsx scripts/cache-smoke.ts --health",
+		"cache:test-decorators": "tsx scripts/cache-decorator-test.ts",
 		"clean:artifacts": "find . -name 'package-lock.json' -not -path './node_modules/*' -delete",
 		"build": "pnpm --filter @degentalk/server build",
 		"build:client": "pnpm --filter @degentalk/client build",
@@ -95,6 +98,8 @@
 	},
 	"devDependencies": {
 		"@paralleldrive/cuid2": "^2.2.2",
+		"@tailwindcss/container-queries": "^0.1.1",
+		"@tailwindcss/typography": "^0.5.15",
 		"@types/node": "^20.19.0",
 		"@types/react": "^18.3.20",
 		"@types/ws": "^8.5.13",

@@ -4,7 +4,8 @@
  * Admin endpoints for managing wallet configuration with real-time updates
  */
 
-import { Router, type Request, type Response } from 'express';
+import { Router, type Request, type Response } from 'express'
+import type { Router as RouterType } from 'express';
 import { settingsService } from '@core/services/settings.service';
 import { logger } from '@core/logger';
 import { isAuthenticated } from '@server/domains/auth/middleware/auth.middleware';
@@ -15,7 +16,7 @@ import { validateRequest } from '@server/middleware/validate-request';
 import { z } from 'zod';
 import { toAdminWalletSettings } from '../transformers/wallet-settings.transformer';
 
-const router = Router();
+const router: RouterType = Router();
 
 // Validation schemas
 const walletSettingsUpdateSchema = z.object({

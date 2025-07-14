@@ -1,0 +1,18 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "id": "0001_premium_magik",
+  "prevId": "0000_glamorous_marvex",
+  "tables": {},
+  "enums": {},
+  "schemas": {},
+  "sequences": {},
+  "_meta": {
+    "schemas": {},
+    "tables": {},
+    "columns": {
+      "\"missions\".\"prerequisites\"": "\"missions\".\"prerequisites\"",
+      "\"campaigns\".\"performance_metrics\"": "\"campaigns\".\"performance_metrics\""
+    }
+  }
+}

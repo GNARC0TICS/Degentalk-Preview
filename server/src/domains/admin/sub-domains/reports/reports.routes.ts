@@ -4,11 +4,12 @@
  * Defines API routes for reports and content moderation.
  */
 
-import { Router } from 'express';
+import { Router } from 'express'
+import type { Router as RouterType } from 'express';
 import { adminReportsController } from './reports.controller';
 import { asyncHandler } from '../../admin.middleware';
 
-const router = Router();
+const router: RouterType = Router();
 
 // Get all reports (with filters and pagination)
 router.get('/', asyncHandler(adminReportsController.getReports.bind(adminReportsController)));

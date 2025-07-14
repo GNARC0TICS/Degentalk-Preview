@@ -37,7 +37,12 @@
 	"compilerOptions": {
 		"rootDir": "../",
 		"baseUrl": ".",
+		"experimentalDecorators": true,
+		"emitDecoratorMetadata": true,
+		"experimentalDecorators": true,
+		"emitDecoratorMetadata": true,
 		"paths": {
+			"@config/*": ["../config/*"],
 			"@shared/types": ["../shared/types/index.ts"],
 			"@shared/types/ids": ["../shared/types/ids.ts"],
 			"@shared/*": ["../shared/*"],

@@ -1,4 +1,5 @@
-import { Router } from 'express';
+import { Router } from 'express'
+import type { Router as RouterType } from 'express';
 import { asyncHandler } from '../../admin.middleware';
 import {
 	listPackages,
@@ -8,7 +9,7 @@ import {
 	deletePackage
 } from './dgt-packages.controller';
 
-const router = Router();
+const router: RouterType = Router();
 
 router.get('/', asyncHandler(listPackages));
 router.get('/:packageId', asyncHandler(getPackageById));

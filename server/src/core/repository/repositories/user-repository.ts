@@ -59,13 +59,14 @@ export class UserRepository extends BaseRepository<User> implements IUserReposit
 	/**
 	 * Find users by role
 	 */
-	async findByRole(role: string): Promise<User[]> {
+	async findByRole(role: string, limit: number = 1000): Promise<User[]> {
 		try {
 			const results = await db
 				.select()
 				.from(users)
 				.where(eq(users.role, role))
-				.orderBy(asc(users.username));
+				.orderBy(asc(users.username))
+				.limit(Math.min(limit, 1000)); // Cap at 1000 for performance
 
 			return results;
 		} catch (error) {

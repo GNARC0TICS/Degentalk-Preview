@@ -272,7 +272,7 @@ export class SettingsValidationService {
 	 */
 	private async validateBusinessRules(key: string, value: string) {
 		switch (key) {
-			case 'api_rate_limit':
+			case 'api_rate_limit': {
 				const rateLimit = parseInt(value);
 				if (rateLimit < 10 || rateLimit > 10000) {
 					throw new AdminError(
@@ -282,8 +282,9 @@ export class SettingsValidationService {
 					);
 				}
 				break;
+			}
 
-			case 'max_upload_size':
+			case 'max_upload_size': {
 				const uploadSize = parseInt(value);
 				if (uploadSize < 1 || uploadSize > 100) {
 					throw new AdminError(
@@ -293,8 +294,9 @@ export class SettingsValidationService {
 					);
 				}
 				break;
+			}
 
-			case 'session_timeout':
+			case 'session_timeout': {
 				const timeout = parseInt(value);
 				if (timeout < 300 || timeout > 86400) {
 					throw new AdminError(
@@ -304,6 +306,7 @@ export class SettingsValidationService {
 					);
 				}
 				break;
+			}
 
 			// Add more business rules as needed
 		}

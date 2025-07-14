@@ -4,11 +4,12 @@
  * Defines API routes for treasury management in the admin panel.
  */
 
-import { Router } from 'express';
+import { Router } from 'express'
+import type { Router as RouterType } from 'express';
 import { adminTreasuryController } from './treasury.controller';
 import { asyncHandler } from '../../admin.middleware'; // Assuming isAdmin is applied at a higher level or not needed for these specific routes if they are admin-only by structure
 
-const router = Router();
+const router: RouterType = Router();
 
 // DGT Supply Statistics
 router.get(

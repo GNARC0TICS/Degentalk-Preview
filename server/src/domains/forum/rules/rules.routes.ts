@@ -5,7 +5,8 @@ import { userService } from '@core/services/user.service';
  * Defines API routes for forum rules and user agreements to those rules.
  */
 
-import { Router } from 'express';
+import { Router } from 'express'
+import type { Router as RouterType } from 'express';
 import type { Request, Response } from 'express';
 import { db } from '@db';
 import { count, desc, eq, and, like, sql, inArray } from 'drizzle-orm';
@@ -26,7 +27,7 @@ import { getUserIdFromRequest } from '@server-utils/auth';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 import { logger } from '@core/logger';
 
-const router = Router();
+const router: RouterType = Router();
 
 // Get all published forum rules
 router.get(

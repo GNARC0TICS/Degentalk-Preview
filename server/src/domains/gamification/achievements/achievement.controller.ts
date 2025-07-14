@@ -35,6 +35,34 @@ export class AchievementController {
 	private adminService = new AchievementAdminService();
 
 	/**
+	 * Get user's achievement progress
+	 * GET /api/achievements/progress
+	 */
+	async getUserAchievementProgress(req: Request, res: Response): Promise<void> {
+		try {
+			const { user } = req as any; // From auth middleware
+			const { achievementIds } = req.query;
+			
+			// Import the achievement service
+			const { achievementService } = await import('../../services/achievement.service');
+			
+			// Get progress for all achievements or specific ones
+			const progressData = await achievementService.getUserAchievementProgress(
+				user.id,
+				achievementIds ? (achievementIds as string).split(',') : undefined
+			);
+			
+			sendSuccessResponse(res, progressData);
+		} catch (error) {
+			logger.error('ACHIEVEMENT_CONTROLLER', 'Failed to get user achievement progress', {
+				userId: (req as any).user?.id,
+				error: error instanceof Error ? error.message : String(error)
+			});
+			sendErrorResponse(res, 'Failed to get achievement progress', 500);
+		}
+	}
+
+	/**
 	 * Get user's achievements with progress
 	 * GET /api/achievements/user/:userId
 	 */

@@ -22,6 +22,7 @@ import {
 	transactions
 } from '@schema';
 import { logger } from '@core/logger';
+import { redisCacheService, CacheMinute } from '@core/cache/redis.service';
 import type { UserId, AchievementId } from '@shared/types/ids';
 
 export interface ProgressionMetrics {
@@ -121,11 +122,20 @@ export interface GamificationDashboard {
 
 export class GamificationAnalyticsService {
 	/**
-	 * Generate comprehensive gamification dashboard
+	 * Generate comprehensive gamification dashboard with caching (15 minutes)
 	 */
 	async generateDashboard(
 		timeframe: 'day' | 'week' | 'month' = 'week'
 	): Promise<GamificationDashboard> {
+		const cacheKey = `analytics_dashboard:${timeframe}`;
+		
+		// Try cache first
+		const cached = await redisCacheService.get(cacheKey);
+		if (cached) {
+			logger.debug('AnalyticsService', 'Dashboard cache hit', { timeframe });
+			return cached;
+		}
+
 		try {
 			const timeFilter = this.getTimeFilter(timeframe);
 
@@ -148,7 +158,7 @@ export class GamificationAnalyticsService {
 				this.getTrendData(timeframe)
 			]);
 
-			return {
+			const dashboard = {
 				overview,
 				progression: progressionMetrics,
 				achievements: achievementMetrics,
@@ -157,6 +167,15 @@ export class GamificationAnalyticsService {
 				topPerformers,
 				trends
 			};
+
+			// Cache the result for 15 minutes
+			await redisCacheService.set(cacheKey, dashboard, { 
+				ttl: 15 * 60 * 1000, // 15 minutes
+				prefix: 'analytics'
+			});
+
+			logger.info('AnalyticsService', 'Dashboard generated and cached', { timeframe });
+			return dashboard;
 		} catch (error) {
 			logger.error('ANALYTICS_SERVICE', 'Error generating dashboard:', error);
 			throw error;
@@ -442,8 +461,9 @@ export class GamificationAnalyticsService {
 	}
 
 	/**
-	 * Get top performers
+	 * Get top performers with caching (15 minutes)
 	 */
+	@CacheMinute(15)
 	private async getTopPerformers(limit: number = 10) {
 		const topUsers = await db
 			.select({
@@ -552,8 +572,9 @@ export class GamificationAnalyticsService {
 	}
 
 	/**
-	 * Real-time system health monitoring
+	 * Real-time system health monitoring with light caching (1 minute)
 	 */
+	@CacheMinute(1)
 	async getSystemHealth(): Promise<SystemHealth> {
 		try {
 			const startTime = Date.now();

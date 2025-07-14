@@ -1,5 +1,6 @@
 import { userService } from '@core/services/user.service';
-import { Router } from 'express';
+import { Router } from 'express'
+import type { Router as RouterType } from 'express';
 import type { EntityId } from '@shared/types/ids';
 import { FollowsService } from './follows.service';
 import { requireAuth } from '../../../middleware/auth';
@@ -14,7 +15,7 @@ import {
 	sendTransformedListResponse
 } from '@core/utils/transformer.helpers';
 
-const router = Router();
+const router: RouterType = Router();
 
 // Validation schemas
 const followUserSchema = z.object({

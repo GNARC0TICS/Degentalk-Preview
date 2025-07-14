@@ -3,7 +3,8 @@
  *
  * Provides API endpoints for platform statistics
  */
-import { Router } from 'express';
+import { Router } from 'express'
+import type { Router as RouterType } from 'express';
 import { db } from '@db';
 import { platformStatistics } from '@schema';
 import { eq } from 'drizzle-orm';
@@ -12,7 +13,7 @@ import { isAdmin } from '@server/domains/auth/middleware/auth.middleware';
 import { logger } from '@core/logger';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
-const router = Router();
+const router: RouterType = Router();
 
 // Apply admin authorization middleware to all routes
 router.use(isAdmin);

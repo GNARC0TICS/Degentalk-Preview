@@ -1,6 +1,6 @@
 import { db } from '@db';
-import { mentions, userMentionPreferences, users } from '@schema';
-import { eq, and, desc, sql, inArray } from 'drizzle-orm';
+import { mentions, userMentionPreferences, users, friendships, userFollows } from '@schema';
+import { eq, and, desc, sql, inArray, or } from 'drizzle-orm';
 import type { MentionType } from './mentions.types';
 import { logger } from '@core/logger';
 
@@ -157,21 +157,72 @@ export class MentionsService {
 
 		// If only friends can mention, check friendship
 		if (preferences.onlyFriendsMention) {
-			// TODO: Implement friendship check when friends system is ready
-			// const areFriends = await FriendsService.areFriends(mentioningUserId, mentionedUserId);
-			// return areFriends;
-			return true; // Temporary - allow all until friends system is implemented
+			const areFriends = await this.areFriends(mentioningUserId, mentionedUserId);
+			return areFriends;
 		}
 
 		// If only followers can mention, check follow relationship
 		if (preferences.onlyFollowersMention) {
-			// TODO: Implement follower check when follow system is ready
-			// const isFollower = await FollowsService.isFollowing(mentioningUserId, mentionedUserId);
-			// return isFollower;
-			return true; // Temporary - allow all until follow system is implemented
+			const isFollower = await this.isFollowing(mentioningUserId, mentionedUserId);
+			return isFollower;
 		}
 
 		return true;
+	}
+
+	/**
+	 * Check if two users are friends
+	 */
+	static async areFriends(userId1: string, userId2: string): Promise<boolean> {
+		try {
+			const friendship = await db
+				.select()
+				.from(friendships)
+				.where(
+					and(
+						or(
+							and(
+								eq(friendships.requesterId, userId1),
+								eq(friendships.addresseeId, userId2)
+							),
+							and(
+								eq(friendships.requesterId, userId2),
+								eq(friendships.addresseeId, userId1)
+							)
+						),
+						eq(friendships.status, 'accepted')
+					)
+				)
+				.limit(1);
+
+			return friendship.length > 0;
+		} catch (error) {
+			logger.error('Error checking friendship:', error);
+			return false;
+		}
+	}
+
+	/**
+	 * Check if user is following another user
+	 */
+	static async isFollowing(followerId: string, followeeId: string): Promise<boolean> {
+		try {
+			const follow = await db
+				.select()
+				.from(userFollows)
+				.where(
+					and(
+						eq(userFollows.followerId, followerId),
+						eq(userFollows.followeeId, followeeId)
+					)
+				)
+				.limit(1);
+
+			return follow.length > 0;
+		} catch (error) {
+			logger.error('Error checking follow relationship:', error);
+			return false;
+		}
 	}
 
 	/**

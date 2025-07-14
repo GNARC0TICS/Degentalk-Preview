@@ -543,6 +543,96 @@ export class AdConfigurationService {
 	}
 
 	/**
+	 * Update campaign performance metrics
+	 */
+	async updateCampaignMetrics(
+		campaignId: string,
+		metrics: {
+			impressions?: number;
+			clicks?: number;
+			conversions?: number;
+			totalSpend?: number;
+			revenue?: number;
+		}
+	): Promise<void> {
+		try {
+			// Get current metrics
+			const [existingCampaign] = await db
+				.select({ performanceMetrics: campaigns.performanceMetrics })
+				.from(campaigns)
+				.where(eq(campaigns.id, campaignId))
+				.limit(1);
+
+			if (!existingCampaign) {
+				throw new Error('Campaign not found');
+			}
+
+			// Merge with existing metrics
+			const currentMetrics = existingCampaign.performanceMetrics || {};
+			const updatedMetrics = {
+				...currentMetrics,
+				...metrics,
+				// Calculate derived metrics
+				ctr: metrics.clicks && metrics.impressions ? 
+					(metrics.clicks / metrics.impressions) * 100 : currentMetrics.ctr,
+				cpm: metrics.totalSpend && metrics.impressions ? 
+					(metrics.totalSpend / metrics.impressions) * 1000 : currentMetrics.cpm,
+				cpc: metrics.totalSpend && metrics.clicks ? 
+					metrics.totalSpend / metrics.clicks : currentMetrics.cpc,
+				conversionRate: metrics.conversions && metrics.clicks ? 
+					(metrics.conversions / metrics.clicks) * 100 : currentMetrics.conversionRate,
+				roas: metrics.revenue && metrics.totalSpend ? 
+					metrics.revenue / metrics.totalSpend : currentMetrics.roas,
+				lastUpdated: new Date().toISOString()
+			};
+
+			// Update the campaign
+			await db
+				.update(campaigns)
+				.set({ 
+					performanceMetrics: updatedMetrics,
+					updatedAt: new Date()
+				})
+				.where(eq(campaigns.id, campaignId));
+
+		} catch (error) {
+			logger.error('Error updating campaign metrics:', error);
+			throw error;
+		}
+	}
+
+	/**
+	 * Get campaign performance metrics
+	 */
+	async getCampaignMetrics(campaignId: string): Promise<any> {
+		try {
+			const [campaign] = await db
+				.select({ 
+					performanceMetrics: campaigns.performanceMetrics,
+					name: campaigns.name,
+					status: campaigns.status
+				})
+				.from(campaigns)
+				.where(eq(campaigns.id, campaignId))
+				.limit(1);
+
+			if (!campaign) {
+				throw new Error('Campaign not found');
+			}
+
+			return {
+				campaignId,
+				campaignName: campaign.name,
+				status: campaign.status,
+				metrics: campaign.performanceMetrics || {},
+			};
+		} catch (error) {
+			logger.error('Error getting campaign metrics:', error);
+			throw error;
+		}
+	}
+
+	/**
 	 * Private helper methods
 	 */
 	private async validatePlacementConfig(placement: PlacementConfiguration): Promise<void> {

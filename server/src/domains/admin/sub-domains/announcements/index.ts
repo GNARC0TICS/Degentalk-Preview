@@ -12,5 +12,4 @@ export * from './announcements.service.js';
 // Export controllers
 export * from './announcements.controller';
 
-// Mark the original file as deprecated
-export const ORIGINAL_ANNOUNCEMENTS_DEPRECATED = true;
+// Announcements domain properly migrated to new structure

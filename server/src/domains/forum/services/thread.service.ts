@@ -8,7 +8,7 @@
 import { db } from '@db';
 import { logger } from '@core/logger';
 import { postService } from './post.service';
-import { cacheService } from '@core/cache.service';
+import { redisCacheService, CacheMinute } from '@core/cache/redis.service';
 import { AchievementEventEmitter } from '@core/events/achievement-events.service';
 import { getZoneInfoBatch } from './thread.service.batch-optimization';
 import {
@@ -70,7 +70,7 @@ export class ThreadService {
 	}
 
 	/**
-	 * Fetch threads by tab with caching
+	 * Fetch threads by tab with enhanced caching
 	 * Main entry point for the new content system
 	 */
 	async fetchThreadsByTab(params: TabContentParams): Promise<{
@@ -83,13 +83,13 @@ export class ThreadService {
 	}> {
 		const { tab, page = 1, limit = 20, forumId, userId } = params;
 
-		// Build cache key
-		const cacheKey = `${tab}:${forumId ?? 'all'}:${page}:${limit}:${userId ?? 'anon'}`;
+		// Build cache key with versioning for cache invalidation
+		const cacheKey = `thread_tab:${tab}:${forumId ?? 'all'}:${page}:${limit}:${userId ?? 'anon'}:v2`;
 
-		// Try cache first
-		const cached = await cacheService.get(cacheKey);
+		// Try enhanced Redis cache first
+		const cached = await redisCacheService.get(cacheKey);
 		if (cached) {
-			logger.debug('ThreadService', 'Cache hit for tab content', { tab, cacheKey });
+			logger.debug('ThreadService', 'Redis cache hit for tab content', { tab, cacheKey });
 			return cached;
 		}
 
@@ -114,9 +114,9 @@ export class ThreadService {
 			}
 		};
 
-		// Cache the result (different TTL for different tabs)
+		// Cache the result with 1-minute TTL for forum threads
 		const cacheTTL = this.getCacheTTLForTab(tab);
-		await cacheService.set(cacheKey, response, cacheTTL);
+		await redisCacheService.set(cacheKey, response, { ttl: cacheTTL, prefix: 'forum' });
 
 		logger.info('ThreadService', 'Fetched tab content', {
 			tab,
@@ -753,6 +753,9 @@ export class ThreadService {
 				structureId
 			});
 
+			// Invalidate thread caches since new thread was created
+			await this.invalidateThreadCaches(structureId);
+
 			return completeThread;
 		} catch (error) {
 			logger.error('ThreadService', 'Error creating thread', { input, error });
@@ -891,9 +894,10 @@ export class ThreadService {
 	}
 
 	/**
-	 * Get zone information for a given structure ID
+	 * Get zone information for a given structure ID with caching
 	 * Traverses up the hierarchy to find the top-level zone
 	 */
+	@CacheMinute(5)
 	private async getZoneInfo(structureId: StructureId): Promise<{
 		id: StructureId;
 		name: string;
@@ -1022,6 +1026,27 @@ export class ThreadService {
 			});
 			// Fallback: return empty excerpts for all threads
 			return threadIds.map((threadId) => ({ threadId, excerpt: null }));
+		}
+	}
+
+	/**
+	 * Invalidate thread caches when threads are created or updated
+	 */
+	async invalidateThreadCaches(forumId?: StructureId): Promise<void> {
+		try {
+			// Clear all thread tab caches
+			await redisCacheService.clear('thread_tab');
+			
+			// Clear zone info caches if forum specific
+			if (forumId) {
+				await redisCacheService.delete(`ThreadService:getZoneInfo:${JSON.stringify([forumId])}`, {
+					prefix: 'forum'
+				});
+			}
+			
+			logger.debug('ThreadService', 'Thread caches invalidated', { forumId });
+		} catch (error) {
+			logger.error('ThreadService', 'Error invalidating thread caches', { error });
 		}
 	}
 }

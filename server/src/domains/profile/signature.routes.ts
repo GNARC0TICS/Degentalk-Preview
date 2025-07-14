@@ -4,18 +4,19 @@
  * API endpoints for user signatures and signature shop items.
  */
 
-import { Router } from 'express';
+import { Router } from 'express'
+import type { Router as RouterType } from 'express';
 import type { UserId } from '@shared/types/ids';
 import type { Request, Response } from 'express';
 import { SignatureService } from './signature.service';
 import { z } from 'zod';
-import { validateRequest } from '@server-middleware/validate-request';
+import { validateRequest } from '@server/middleware/validate-request';
 import { getUserIdFromRequest } from '@server-utils/auth';
 import { isValidId } from '@shared/utils/id';
 import { logger } from '@core/logger';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
-const router = Router();
+const router: RouterType = Router();
 
 // Define request validation schemas
 const updateSignatureSchema = z.object({

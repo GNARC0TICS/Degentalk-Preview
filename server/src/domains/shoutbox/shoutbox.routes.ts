@@ -12,7 +12,8 @@ import type { UserId } from '@shared/types/ids';
  * - Room management
  */
 
-import { Router } from 'express';
+import { Router } from 'express'
+import type { Router as RouterType } from 'express';
 import type { Request, Response } from 'express';
 import type { MessageId, RoomId, UserId } from '@shared/types/ids';
 import { db } from '@db';
@@ -52,7 +53,7 @@ import {
 	sendTransformedListResponse
 } from '@core/utils/transformer.helpers';
 
-const router = Router();
+const router: RouterType = Router();
 
 // Enhanced rate limiting for different user types
 const userRateLimiters = {

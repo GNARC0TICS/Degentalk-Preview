@@ -1,11 +1,12 @@
-import { Router } from 'express';
+import { Router } from 'express'
+import type { Router as RouterType } from 'express';
 import { userService } from '@core/services/user.service';
 import { AdminRolesController } from './roles.controller';
 import { canUser } from '@lib/auth/canUser';
 import { sendErrorResponse } from '@core/utils/transformer.helpers';
 
 const controller = new AdminRolesController();
-const router = Router();
+const router: RouterType = Router();
 
 // Permission middleware
 router.use(async (req: any, res, next) => {

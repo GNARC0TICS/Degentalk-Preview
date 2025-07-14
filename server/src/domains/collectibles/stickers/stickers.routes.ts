@@ -4,11 +4,12 @@
  * Admin routes for sticker system management
  */
 
-import { Router } from 'express';
+import { Router } from 'express'
+import type { Router as RouterType } from 'express';
 import { stickerController } from './stickers.controller';
 import { isAdmin } from '@server/domains/admin/admin.middleware';
 
-export const stickerRoutes = Router();
+export const stickerRoutes: RouterType = Router();
 
 // Apply admin authentication to all routes
 stickerRoutes.use(isAdmin);

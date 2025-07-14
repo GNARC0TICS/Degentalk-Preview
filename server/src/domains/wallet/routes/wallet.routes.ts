@@ -5,7 +5,8 @@
  * Includes authentication, validation, and rate limiting
  */
 
-import { Router } from 'express';
+import { Router } from 'express'
+import type { Router as RouterType } from 'express';
 import { walletController } from '../controllers/wallet.controller';
 import { walletValidation } from '../validation/wallet.validation';
 import { validateRequest } from '@server/middleware/validate-request';
@@ -13,8 +14,8 @@ import { authenticateJWT as requireAuth } from '@server/middleware/authenticate-
 import { createCustomRateLimiter as rateLimit } from '@core/services/rate-limit.service';
 import webhookRoutes from '../webhooks/ccpayment-webhook.routes';
 
-const router = Router();
-const publicRouter = Router();
+const router: RouterType = Router();
+const publicRouter: RouterType = Router();
 
 /**
  * GET /api/wallet/supported-coins
@@ -117,6 +118,17 @@ router.get(
 	rateLimit({ windowMs: 60 * 1000, max: 20 }), // 20 requests per minute
 	validateRequest(walletValidation.transactionHistory),
 	walletController.getTransactionHistory.bind(walletController)
+);
+
+/**
+ * POST /api/wallet/purchase-dgt
+ * Purchase DGT with cryptocurrency
+ */
+router.post(
+	'/purchase-dgt',
+	rateLimit({ windowMs: 60 * 1000, max: 10 }), // 10 requests per minute
+	validateRequest(walletValidation.purchaseDgt),
+	walletController.purchaseDgt.bind(walletController)
 );
 
 /**

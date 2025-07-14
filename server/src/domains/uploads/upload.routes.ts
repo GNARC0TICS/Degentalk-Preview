@@ -1,8 +1,9 @@
-import { Router } from 'express';
+import { Router } from 'express'
+import type { Router as RouterType } from 'express';
 import { createPresignedUploadUrlController, confirmUploadController } from './upload.controller';
 import { isAuthenticated } from '@server/domains/auth/middleware/auth.middleware';
 
-const router = Router();
+const router: RouterType = Router();
 
 // POST /api/uploads/presigned-url
 // Generates a presigned URL for the client to upload a file directly to storage.

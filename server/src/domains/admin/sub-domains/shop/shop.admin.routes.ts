@@ -1,10 +1,11 @@
-import { Router } from 'express';
+import { Router } from 'express'
+import type { Router as RouterType } from 'express';
 import { shopAdminController } from './shop.admin.controller';
 import { asyncHandler } from '../../admin.middleware'; // Adjust path if admin.middleware is elsewhere
 import categoryRoutes from './shopCategory.routes';
 import rarityRoutes from './rarity.routes';
 
-const router = Router();
+const router: RouterType = Router();
 
 // GET /api/admin/shop/items - List all products
 router.get('/items', asyncHandler(shopAdminController.listProducts));

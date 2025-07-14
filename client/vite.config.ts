@@ -64,7 +64,14 @@ export default defineConfig(async () => {
 			}
 		},
 		css: {
-			    postcss: path.resolve(projectRoot, 'config', 'postcss.config.js'),
+			postcss: {
+				plugins: [
+					(await import('tailwindcss')).default({
+						config: path.resolve(projectRoot, 'config', 'tailwind.config.ts')
+					}),
+					(await import('autoprefixer')).default
+				]
+			}
 		}
 	};
 });

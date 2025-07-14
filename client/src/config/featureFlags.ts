@@ -5,6 +5,9 @@ export const featureFlags = {
 	forum: {
 		showHotRibbon: true,
 		smartOrdering: false
+	},
+	performance: {
+		enableCaching: false // Start disabled, enable in staging/prod
 	}
 } as const;
 

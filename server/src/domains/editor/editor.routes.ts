@@ -4,7 +4,8 @@
  * Defines API routes for editor functionality including Giphy integration.
  */
 
-import { Router } from 'express';
+import { Router } from 'express'
+import type { Router as RouterType } from 'express';
 import type { Request, Response } from 'express';
 import axios from 'axios';
 import { z } from 'zod';
@@ -16,7 +17,7 @@ import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.
 /**
  * Initialize editor routes
  */
-const router = Router();
+const router: RouterType = Router();
 
 // Check if Giphy is enabled
 // sendErrorResponse(res, 'Server error', 500);

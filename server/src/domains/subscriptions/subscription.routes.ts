@@ -4,11 +4,12 @@
  * API routes for VIP Pass and Degen Pass subscription management
  */
 
-import { Router } from 'express';
+import { Router } from 'express'
+import type { Router as RouterType } from 'express';
 import { subscriptionController } from './subscription.controller';
 import { isAuthenticated } from '@server/domains/auth/middleware/auth.middleware';
 
-const router = Router();
+const router: RouterType = Router();
 
 // Authentication middleware for all subscription routes
 router.use(isAuthenticated);

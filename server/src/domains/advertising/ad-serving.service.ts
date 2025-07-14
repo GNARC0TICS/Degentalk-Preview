@@ -10,6 +10,7 @@ import {
 	type AdPlacement
 } from '@schema';
 import { logger } from '@core/logger';
+import { redisCacheService, CacheMinute } from '@core/cache/redis.service';
 import type { Id } from '@shared/types/ids';
 
 export interface AdRequest {
@@ -105,10 +106,12 @@ export class AdServingService {
 	}
 
 	/**
-	 * Get placement configuration with caching
+	 * Get placement configuration with caching (5 minutes)
 	 */
+	@CacheMinute(5)
 	private async getPlacement(placementSlug: string): Promise<AdPlacement | null> {
-		// TODO: Add Redis caching layer
+		logger.debug('AdServingService', 'Fetching placement from database', { placementSlug });
+		
 		const [placement] = await db
 			.select()
 			.from(adPlacements)
@@ -119,12 +122,18 @@ export class AdServingService {
 	}
 
 	/**
-	 * Get campaigns eligible for the placement
+	 * Get campaigns eligible for the placement (cached for 5 minutes)
 	 */
+	@CacheMinute(5)
 	private async getEligibleCampaigns(
 		placement: AdPlacement,
 		request: AdRequest
 	): Promise<Campaign[]> {
+		logger.debug('AdServingService', 'Fetching eligible campaigns from database', { 
+			placementId: placement.id,
+			deviceType: request.deviceInfo.type
+		});
+		
 		const now = new Date();
 
 		return await db
@@ -230,19 +239,29 @@ export class AdServingService {
 	}
 
 	/**
-	 * Apply campaign rules for dynamic configuration
+	 * Get campaign rules with caching (5 minutes)
+	 */
+	@CacheMinute(5)
+	private async getCampaignRules(campaignId: string): Promise<any[]> {
+		logger.debug('AdServingService', 'Fetching campaign rules from database', { campaignId });
+		
+		return await db
+			.select()
+			.from(campaignRules)
+			.where(and(eq(campaignRules.campaignId, campaignId), eq(campaignRules.isActive, true)))
+			.orderBy(asc(campaignRules.priority));
+	}
+
+	/**
+	 * Apply campaign rules for dynamic configuration (cached for 5 minutes)
 	 */
 	private async applyCampaignRules(
 		campaign: Campaign,
 		request: AdRequest,
 		placement: AdPlacement
 	): Promise<{ blocked: boolean; adjustedBid?: Id<'adjustedBid'>; metadata?: any }> {
-		// Get applicable rules
-		const rules = await db
-			.select()
-			.from(campaignRules)
-			.where(and(eq(campaignRules.campaignId, campaign.id), eq(campaignRules.isActive, true)))
-			.orderBy(asc(campaignRules.priority));
+		// Get applicable rules with caching
+		const rules = await this.getCampaignRules(campaign.id);
 
 		let blocked = false;
 		let bidMultiplier = 1.0;

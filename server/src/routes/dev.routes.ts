@@ -5,14 +5,15 @@
  * Only available in development mode.
  */
 
-import { Router } from 'express';
-import { cacheService } from '@core/cache.service';
+import { Router } from 'express'
+import type { Router as RouterType } from 'express';
+import { legacyCacheService } from '@core/cache.service';
 import { logger } from '@core/logger';
 import { isDevMode } from '@server-utils/environment';
-import { devSecurity } from '@server-middleware/dev-security.middleware';
+import { devSecurity } from '@server/middleware/dev-security.middleware';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
-const router = Router();
+const router: RouterType = Router();
 
 // Ensure dev mode for all routes
 router.use((req, res, next) => {
@@ -36,7 +37,7 @@ router.get('/health', async (req, res) => {
 		const dbLatency = Date.now() - startTime;
 
 		// Get cache stats
-		const cacheStats = cacheService.getStats();
+		const cacheStats = legacyCacheService.getStats();
 
 		// Memory usage
 		const memUsage = process.memoryUsage();
@@ -77,7 +78,7 @@ router.get('/health', async (req, res) => {
  */
 router.post('/clear-cache', devSecurity.ipAllowlist, async (req, res) => {
 	try {
-		await cacheService.clear();
+		await legacyCacheService.clear();
 
 		logger.info('DevRoutes', 'Cache cleared via dev endpoint');
 

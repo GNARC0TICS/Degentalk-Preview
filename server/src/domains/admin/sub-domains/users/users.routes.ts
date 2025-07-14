@@ -4,13 +4,14 @@
  * Define routes for user management in the admin panel
  */
 
-import { Router } from 'express';
+import { Router } from 'express'
+import type { Router as RouterType } from 'express';
 import { adminUsersController } from './users.controller';
 import { AdminUserBulkOperationsController } from './bulk-operations.controller';
 import { asyncHandler } from '../../admin.middleware';
 
 // Create router
-const router = Router();
+const router: RouterType = Router();
 
 // Initialize bulk operations controller
 const bulkOperationsController = new AdminUserBulkOperationsController();

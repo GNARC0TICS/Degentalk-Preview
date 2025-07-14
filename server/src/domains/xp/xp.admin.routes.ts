@@ -4,12 +4,13 @@
  * API endpoints for admin-specific XP system management
  */
 
-import { Router } from 'express';
+import { Router } from 'express'
+import type { Router as RouterType } from 'express';
 import * as adminXpController from './xp.controller';
 import { isAuthenticated, isAdmin } from '@server/domains/auth/middleware/auth.middleware';
 import { asyncHandler } from '@core/errors';
 
-const router = Router();
+const router: RouterType = Router();
 
 // XP adjustments
 router.post('/adjust', asyncHandler(adminXpController.adjustUserXp));

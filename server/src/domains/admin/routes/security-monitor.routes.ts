@@ -3,7 +3,8 @@
  * Admin-only routes for security monitoring and metrics
  */
 
-import { Router } from 'express';
+import { Router } from 'express'
+import type { Router as RouterType } from 'express';
 import { 
 	getSecurityMetrics, 
 	getRecentSecurityEvents,
@@ -11,7 +12,7 @@ import {
 } from '../controllers/security-monitor.controller';
 import { isAuthenticated, isAdmin } from '../../auth/middleware/auth.middleware';
 
-const router = Router();
+const router: RouterType = Router();
 
 // All security monitoring routes require admin access
 router.use(isAuthenticated);

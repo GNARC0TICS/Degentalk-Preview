@@ -15,7 +15,7 @@ import {
 	badges,
 	titles
 } from '@schema';
-import { eq, and, sql, desc, gte, lt } from 'drizzle-orm';
+import { eq, and, sql, desc, gte, lt, inArray } from 'drizzle-orm';
 import { walletService } from '../wallet/services/wallet.service';
 import { logger } from '@core/logger';
 import type { CosmeticId, ItemId, SubscriptionId } from '@shared/types/ids';
@@ -336,23 +336,36 @@ export class SubscriptionService {
 				details: [] as Array<{ userId: string; success: boolean; error?: string }>
 			};
 
+			// OPTIMIZATION: Batch fetch all existing drops to avoid N+1 query
+			const subscriptionIds = activeSubscriptions.map(sub => sub.id);
+			const userIds = activeSubscriptions.map(sub => sub.userId);
+			
+			const existingDropsQuery = await db
+				.select({
+					userId: cosmeticDrops.userId,
+					subscriptionId: cosmeticDrops.subscriptionId
+				})
+				.from(cosmeticDrops)
+				.where(
+					and(
+						inArray(cosmeticDrops.userId, userIds),
+						inArray(cosmeticDrops.subscriptionId, subscriptionIds),
+						eq(cosmeticDrops.dropMonth, currentMonth),
+						eq(cosmeticDrops.dropYear, currentYear)
+					)
+				);
+			
+			// Create lookup map for O(1) access
+			const existingDropsMap = new Set(
+				existingDropsQuery.map(drop => `${drop.userId}:${drop.subscriptionId}`)
+			);
+
 			for (const subscription of activeSubscriptions) {
 				try {
-					// Check if cosmetic drop already processed for this month
-					const existingDrop = await db
-						.select()
-						.from(cosmeticDrops)
-						.where(
-							and(
-								eq(cosmeticDrops.userId, subscription.userId),
-								eq(cosmeticDrops.subscriptionId, subscription.id),
-								eq(cosmeticDrops.dropMonth, currentMonth),
-								eq(cosmeticDrops.dropYear, currentYear)
-							)
-						)
-						.limit(1);
-
-					if (existingDrop.length > 0) {
+					// Check if cosmetic drop already processed for this month (O(1) lookup)
+					const dropKey = `${subscription.userId}:${subscription.id}`;
+					
+					if (existingDropsMap.has(dropKey)) {
 						logger.info(
 							'COSMETIC_DROP',
 							`Cosmetic already dropped for user ${subscription.userId} this month`

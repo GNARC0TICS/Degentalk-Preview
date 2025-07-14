@@ -4,13 +4,14 @@
  * Defines REST API endpoints for UI configuration management
  */
 
-import { Router } from 'express';
+import { Router } from 'express'
+import type { Router as RouterType } from 'express';
 import { uiConfigController } from './ui-config.controller';
 import { asyncHandler } from '../../admin.middleware';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
 // Create router instance
-const router = Router();
+const router: RouterType = Router();
 
 // ==================== QUOTE ROUTES ====================
 

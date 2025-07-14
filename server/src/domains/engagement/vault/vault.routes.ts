@@ -4,7 +4,8 @@
  * Defines API routes for vault functionality (locking and unlocking funds).
  */
 
-import { Router } from 'express';
+import { Router } from 'express'
+import type { Router as RouterType } from 'express';
 import type { Request, Response } from 'express';
 import { z } from 'zod';
 import { db } from '@db';
@@ -39,7 +40,7 @@ const unlockFundsSchema = z.object({
 	vaultId: z.string().uuid()
 });
 
-const router = Router();
+const router: RouterType = Router();
 
 // Admin endpoints for vault management
 // Admin endpoint to get all vaults

@@ -6,7 +6,8 @@
  * // [REFAC-AIRDROP]
  */
 
-import { Router } from 'express';
+import { Router } from 'express'
+import type { Router as RouterType } from 'express';
 import { AirdropController } from './airdrop.controller';
 import { isAuthenticated as authenticate } from '../../auth/middleware/auth.middleware.js';
 import { validateAmountMiddleware } from '../../wallet/wallet.validators';
@@ -14,7 +15,7 @@ import { globalErrorHandler } from '@core/errors.js';
 
 // [REFAC-AIRDROP]
 export function registerAirdropRoutes(app: Router) {
-	const router = Router();
+	const router: RouterType = Router();
 	const airdropController = new AirdropController();
 
 	// Apply error handling middleware

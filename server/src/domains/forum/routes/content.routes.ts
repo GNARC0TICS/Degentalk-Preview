@@ -6,7 +6,8 @@ import { userService } from '@core/services/user.service';
  * Supports trending, recent, and following tabs
  */
 
-import { Router } from 'express';
+import { Router } from 'express'
+import type { Router as RouterType } from 'express';
 import type { Request, Response } from 'express';
 import { logger } from '@core/logger';
 import { isAuthenticatedOptional } from '../../auth/middleware/auth.middleware';
@@ -16,7 +17,7 @@ import type { ForumId } from '@shared/types/ids';
 import { ForumTransformer } from '../transformers/forum.transformer';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
-const router = Router();
+const router: RouterType = Router();
 
 interface ContentQuery {
 	tab: 'trending' | 'recent' | 'following';

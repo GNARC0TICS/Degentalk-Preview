@@ -6,7 +6,8 @@ import { userService } from '@core/services/user.service';
  * Handles bookmark-specific API endpoints with proper separation of concerns
  */
 
-import { Router } from 'express';
+import { Router } from 'express'
+import type { Router as RouterType } from 'express';
 import type { Request, Response } from 'express';
 import { z } from 'zod';
 import { db } from '@db';
@@ -17,7 +18,7 @@ import { logger } from '@core/logger';
 import { asyncHandler } from '@core/errors';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
-const router = Router();
+const router: RouterType = Router();
 
 // Validation schemas
 const createBookmarkSchema = z.object({

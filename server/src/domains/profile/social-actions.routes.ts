@@ -1,9 +1,10 @@
-import { Router } from 'express';
+import { Router } from 'express'
+import type { Router as RouterType } from 'express';
 import { SocialActionsController } from './social-actions.controller';
 import { isAuthenticated } from '@server/domains/auth/middleware/auth.middleware';
 import rateLimit from 'express-rate-limit';
 
-const router = Router();
+const router: RouterType = Router();
 
 /**
  * Social Actions Routes
