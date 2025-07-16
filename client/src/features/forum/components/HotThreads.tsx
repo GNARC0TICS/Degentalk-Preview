@@ -2,7 +2,7 @@ import React from 'react'; // Removed useState
 import { useQuery } from '@tanstack/react-query';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 // Temporarily remove heavy lottie dependency until build issues resolved
-import { Link } from 'wouter';
+import { Link } from 'react-router-dom';
 import { MessageSquare, Eye, ThumbsUp, ArrowRight, Clock, TrendingUp } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { Badge } from '@/components/ui/badge';
@@ -102,7 +102,7 @@ function HotThreads({ className = '', limit = 5, variant = 'widget' }: HotThread
 	// Render individual thread item
 	const renderThreadItem = (thread: ThreadResponse, index: number) => (
 		<div key={thread.thread_id}>
-			<Link href={`/threads/${thread.slug}`}>
+			<Link to={`/threads/${thread.slug}`}>
 				<div className="border-b border-zinc-800/60 last:border-b-0 p-4 hover:bg-zinc-800/40 transition-all duration-200 cursor-pointer group">
 					<div className="space-y-3">
 						{/* Thread title */}
@@ -158,7 +158,7 @@ function HotThreads({ className = '', limit = 5, variant = 'widget' }: HotThread
 							</div>
 
 							{/* Category tag */}
-							<Link href={`/forums/${thread.category_slug}`}>
+							<Link to={`/forums/${thread.category_slug}`}>
 								<span
 									className="bg-zinc-800/50 text-zinc-400 border border-zinc-600 hover:border-orange-500/50 hover:text-orange-300 transition-all text-xs cursor-pointer rounded px-2 py-0.5"
 									onClick={(e) => {
@@ -227,7 +227,7 @@ function HotThreads({ className = '', limit = 5, variant = 'widget' }: HotThread
 				{/* View more button with proper spacing */}
 				<div className="mt-8 pt-4 border-t border-zinc-800/50">
 					<div className="text-center">
-						<Link href="/hot-threads">
+						<Link to="/hot-threads">
 							<div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-orange-500/10 to-red-500/10 hover:from-orange-500/20 hover:to-red-500/20 border border-orange-500/20 hover:border-orange-500/40 rounded-lg text-orange-300 hover:text-orange-200 transition-all duration-300 cursor-pointer">
 								<span className="font-medium">View All Hot Threads</span>
 								<ArrowRight className="h-4 w-4" />

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, memo } from 'react';
-import { Link, useLocation } from 'wouter';
+import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { PanInfo } from 'framer-motion';
 import {
@@ -152,7 +152,7 @@ const MobileForumNav = memo(({ className }: MobileForumNavProps) => {
 					</Button>
 
 					{/* Logo/Title */}
-					<Link href="/" className="flex items-center gap-2">
+					<Link to="/" className="flex items-center gap-2">
 						<div className="w-8 h-8 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-lg flex items-center justify-center">
 							<span className="text-black font-bold text-sm">DT</span>
 						</div>
@@ -375,7 +375,7 @@ const MobileForumNav = memo(({ className }: MobileForumNavProps) => {
 													Level {user.forumStats?.level || 1}
 												</div>
 											</div>
-											<Link href="/settings">
+											<Link to="/settings">
 												<Button variant="ghost" size="icon" className="h-8 w-8">
 													<Settings className="h-4 w-4" />
 												</Button>

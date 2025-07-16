@@ -65,7 +65,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Badge } from '@/components/ui/badge';
-import { useLocation } from 'wouter'; // Fixed import for useLocation
+import { useLocation } from 'react-router-dom'; // Fixed import for useLocation
 import { AdminPageShell } from '@/features/admin/layout/layout/AdminPageShell';
 import { apiRequest } from '@/utils/api-request';
 

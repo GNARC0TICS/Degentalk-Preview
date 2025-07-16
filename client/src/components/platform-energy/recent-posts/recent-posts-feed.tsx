@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Link } from 'wouter';
+import { Link } from 'react-router-dom';
 import {
 	Card,
 	CardContent,
@@ -176,13 +176,13 @@ export function RecentPostsFeed({
 										{post.title}
 									</Link>
 									<div className="flex items-center gap-2 text-xs text-muted-foreground">
-										<Link href={`/user/${post.user_id}`} className="font-medium hover:underline">
+										<Link to={`/user/${post.user_id}`} className="font-medium hover:underline">
 											{post.username}
 										</Link>
 										<span>•</span>
 										<time dateTime={post.created_at}>{formatDate(post.created_at)}</time>
 										<span>•</span>
-										<Link href={`/forums/${post.category_slug}`}>
+										<Link to={`/forums/${post.category_slug}`}>
 											<Badge variant="outline" className="px-2 py-0">
 												{post.category_name}
 											</Badge>
@@ -215,7 +215,7 @@ export function RecentPostsFeed({
 			</CardContent>
 			{showViewMore && (
 				<CardFooter>
-					<Link href="/recent-activity">
+					<Link to="/recent-activity">
 						<Button variant="outline" className="w-full">
 							View More Activity
 							<ArrowRight className="ml-2 h-4 w-4" />

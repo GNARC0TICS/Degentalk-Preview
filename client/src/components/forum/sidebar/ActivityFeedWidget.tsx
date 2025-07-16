@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'wouter';
+import { Link } from 'react-router-dom';
 import { Activity, ChevronRight, Clock } from 'lucide-react';
 import { SidebarWidgetCard } from './SidebarWidgetCard';
 import { WidgetSkeleton } from './WidgetSkeleton';

@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Link } from 'wouter';
+import { Link } from 'react-router-dom';
 import type { FooterLink } from '@/config/footer-navigation';
 
 interface FooterSectionProps {
@@ -32,7 +32,7 @@ export function FooterSection({ title, links, animationDelay = 0 }: FooterSectio
 								{item.label} ↗
 							</motion.a>
 						) : (
-							<Link href={item.href}>
+							<Link to={item.href}>
 								<motion.span
 									className="text-zinc-400 hover:text-emerald-400 transition-colors cursor-pointer inline-block"
 									whileHover={{ x: 5 }}

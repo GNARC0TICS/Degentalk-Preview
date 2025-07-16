@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useShopItems } from '@/hooks/use-shop-items';
 import type { ItemCategory } from '@/hooks/use-vault-items';
 import type { ShopItem } from '@/hooks/use-shop-items';
-import { Link } from 'wouter';
+import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Wide } from '@/layout/primitives';
 
@@ -97,7 +97,7 @@ export default function ShopPage() {
 					animate={{ opacity: 1, y: 0 }}
 					transition={{ duration: 0.5 }}
 				>
-					<Link href="/">
+					<Link to="/">
 						<Button
 							variant="ghost"
 							className="flex items-center text-zinc-400 hover:text-white transition-colors"
@@ -146,7 +146,7 @@ export default function ShopPage() {
 						</div>
 
 						<div className="flex items-center gap-3">
-							<Link href="/shop/dgt-purchase">
+							<Link to="/shop/dgt-purchase">
 								<Button
 									variant="outline"
 									className="bg-zinc-800/50 border-zinc-700 hover:bg-zinc-700 hover:border-zinc-600 backdrop-blur-sm"

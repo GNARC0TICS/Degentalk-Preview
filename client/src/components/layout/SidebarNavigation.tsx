@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { Link, useLocation, useRoute } from 'wouter';
+import { Link, useLocation, useRoute } from 'react-router-dom';
 import {
 	Folder as DefaultFolderIcon,
 	MessageSquare,
@@ -93,7 +93,7 @@ const SidebarNavItem = ({
 	}
 
 	return (
-		<Link href={node.href}>
+		<Link to={node.href}>
 			<a className="block">{content}</a>
 		</Link>
 	);

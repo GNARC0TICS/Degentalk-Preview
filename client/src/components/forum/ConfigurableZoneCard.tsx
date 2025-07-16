@@ -1,6 +1,6 @@
 import type { UserId, ForumId } from '@shared/types/ids';
 import React, { memo } from 'react';
-import { Link } from 'wouter';
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
 	Users,
@@ -202,7 +202,7 @@ const ConfigurableZoneCard = memo(
 				style={themeVars}
 				className="relative"
 			>
-				<Link href={`/forum/${zone.slug}`}>
+				<Link to={`/forum/${zone.slug}`}>
 					<Card className={cardClasses}>
 						{/* Background Banner */}
 						{showBanner && (

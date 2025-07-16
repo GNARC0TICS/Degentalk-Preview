@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Link } from 'wouter';
+import { Link } from 'react-router-dom';
 import { apiRequest } from '@/utils/queryClient';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -46,7 +46,7 @@ export default function DictionaryListPage() {
 					<Card key={entry.id} className="hover:shadow-md transition">
 						<CardHeader>
 							<CardTitle>
-								<Link href={`/dictionary/${entry.slug}`}>{entry.word}</Link>
+								<Link to={`/dictionary/${entry.slug}`}>{entry.word}</Link>
 							</CardTitle>
 						</CardHeader>
 						<CardContent>

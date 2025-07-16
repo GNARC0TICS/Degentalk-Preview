@@ -1,6 +1,6 @@
 import React, { useState, useRef, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { useLocation } from 'wouter';
+import { useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { LoadingSpinner } from '@/components/ui/loader';
 import { ErrorDisplay } from '@/components/ui/error-display';
@@ -75,7 +75,7 @@ export default function ForumsIndexPage() {
 	const handleSearch = (e: React.FormEvent) => {
 		e.preventDefault();
 		if (searchText.trim()) {
-			setLocation(`/search/forums?q=${encodeURIComponent(searchText.trim())}`);
+			navigate(`/search/forums?q=${encodeURIComponent(searchText.trim())}`);
 		}
 	};
 
@@ -118,7 +118,7 @@ export default function ForumsIndexPage() {
 			layout="compact"
 			showPreview={true}
 			className="flex-shrink-0 w-full max-w-md"
-			onEnter={() => setLocation(`/forums/${zone.slug}`)}
+			onEnter={() => navigate(`/forums/${zone.slug}`)}
 		/>
 	);
 

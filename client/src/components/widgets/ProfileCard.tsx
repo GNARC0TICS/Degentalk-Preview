@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'wouter';
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -46,7 +46,7 @@ export function ProfileCard({
 					</div>
 					{!isDevMode && (
 						<Button size="sm" className="mt-2" asChild>
-							<Link href="/login">Sign In</Link>
+							<Link to="/login">Sign In</Link>
 						</Button>
 					)}
 				</CardContent>
@@ -267,7 +267,7 @@ export function ProfileCard({
 								className="w-full bg-zinc-800/50 border-zinc-700 hover:bg-zinc-700/50 text-zinc-300"
 								asChild
 							>
-								<Link href={`/profile/${user.username}`}>
+								<Link to={`/profile/${user.username}`}>
 									<ExternalLink className="h-4 w-4 mr-2" />
 									View Profile
 								</Link>
@@ -280,7 +280,7 @@ export function ProfileCard({
 									className="flex-1 bg-zinc-800/50 border-zinc-700 hover:bg-zinc-700/50 text-zinc-300"
 									asChild
 								>
-									<Link href="/wallet">
+									<Link to="/wallet">
 										<Coins className="h-4 w-4 mr-1" />
 										Wallet
 									</Link>
@@ -292,7 +292,7 @@ export function ProfileCard({
 									className="flex-1 bg-zinc-800/50 border-zinc-700 hover:bg-zinc-700/50 text-zinc-300"
 									asChild
 								>
-									<Link href="/settings">
+									<Link to="/settings">
 										<Settings className="h-4 w-4 mr-1" />
 										Settings
 									</Link>

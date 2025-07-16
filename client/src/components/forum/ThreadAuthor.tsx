@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'wouter';
+import { Link } from 'react-router-dom';
 import { cn } from '@/utils/utils';
 import { AvatarFrame } from '@/components/identity/AvatarFrame';
 import { UserName } from '@/components/users/Username';
@@ -52,7 +52,7 @@ export function ThreadAuthor({
 
 	return (
 		<div className={cn('flex items-center', className)}>
-			<Link href={`/profile/${user?.username}` || '#'} className="flex items-center gap-2 group">
+			<Link to={`/profile/${user?.username}` || '#'} className="flex items-center gap-2 group">
 				<AvatarFrame avatarUrl={avatarUrl} frame={identity?.avatarFrame} size={getAvatarPx()} />
 
 				<div className="flex flex-col">

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useRouter } from 'wouter';
+import { useRouter } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Activity as XPIcon, TrendingUp, Award, Timer } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';

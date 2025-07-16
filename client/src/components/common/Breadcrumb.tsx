@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'wouter';
+import { Link } from 'react-router-dom';
 import {
 	Breadcrumb as ShadBreadcrumb,
 	BreadcrumbList,
@@ -53,7 +53,7 @@ export default function Breadcrumb({ zone, forum, thread, className }: Breadcrum
 						<BreadcrumbItem>
 							{c.href && idx !== crumbs.length - 1 ? (
 								<BreadcrumbLink asChild>
-									<Link href={c.href as string}>{c.label}</Link>
+									<Link to={c.href as string}>{c.label}</Link>
 								</BreadcrumbLink>
 							) : (
 								<BreadcrumbPage>{c.label}</BreadcrumbPage>

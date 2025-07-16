@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
-import { useLocation, useSearch } from 'wouter';
+import { useLocation, useNavigate } from 'react-router-dom';
 import type { ThreadFiltersState, ThreadSortOption } from '@/components/forum/ThreadFilters';
 import type { TagId } from '@shared/types/ids';
 import type { PrefixId } from '@/types/ids';
@@ -21,13 +21,13 @@ export function useForumFilters({
 	syncWithUrl = true,
 	storageKey
 }: UseForumFiltersOptions = {}) {
-	const [, setLocation] = useLocation();
-	const searchParams = useSearch();
-	const urlParams = new URLSearchParams(searchParams);
+	const location = useLocation();
+	const navigate = useNavigate();
+	const urlParams = new URLSearchParams(location.search);
 
 	// Initialize filters from URL or defaults
 	const getInitialFilters = (): ThreadFiltersState => {
-		if (syncWithUrl && searchParams) {
+		if (syncWithUrl && location.search) {
 			const tags = urlParams.getAll('tags[]').map(Number).filter(Boolean);
 			const prefixId = urlParams.get('prefixId') as PrefixId | undefined;
 			const solved = urlParams.get('solved') as 'solved' | 'unsolved' | undefined;

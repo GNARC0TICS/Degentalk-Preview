@@ -1,7 +1,7 @@
 import type { UserId } from '@shared/types/ids';
 import React from 'react';
 // Link is not used directly in CanonicalZoneGrid if ZoneCard handles its own linking.
-// import { Link } from 'wouter';
+// import { Link } from 'react-router-dom';
 import { ShopCard } from '@/components/forum/ShopCard';
 import { motion } from 'framer-motion';
 import { animationConfig } from '@/config/animation.config';

@@ -1,5 +1,5 @@
 import React, { ReactNode, useState, Fragment } from 'react';
-import { Link, useLocation } from 'wouter';
+import { Link, useLocation } from 'react-router-dom';
 import { Search, ExternalLink, Bell, Menu, X, ChevronRight, Home } from 'lucide-react';
 import { ModSidebar } from './mod-sidebar';
 import { Button } from '@/components/ui/button';
@@ -33,7 +33,7 @@ export function ModLayout({ children, title = 'Dashboard' }: ModLayoutProps) {
 			<BreadcrumbList>
 				<BreadcrumbItem>
 					<BreadcrumbLink asChild>
-						<Link href="/mod" className="flex items-center">
+						<Link to="/mod" className="flex items-center">
 							<Home className="h-3 w-3 mr-1" />
 							<span>Mod</span>
 						</Link>
@@ -55,7 +55,7 @@ export function ModLayout({ children, title = 'Dashboard' }: ModLayoutProps) {
 							<BreadcrumbItem>
 								{index === pathSegments.length - 2 ? (
 									<BreadcrumbLink asChild>
-										<Link href={path} className="text-primary hover:underline">
+										<Link to={path} className="text-primary hover:underline">
 											{formattedSegment}
 										</Link>
 									</BreadcrumbLink>
@@ -90,7 +90,7 @@ export function ModLayout({ children, title = 'Dashboard' }: ModLayoutProps) {
 						</SheetContent>
 					</Sheet>
 
-					<Link href="/mod" className="mr-6 flex items-center space-x-2">
+					<Link to="/mod" className="mr-6 flex items-center space-x-2">
 						<span className="font-bold text-primary">Degentalk Moderator</span>
 					</Link>
 
@@ -108,7 +108,7 @@ export function ModLayout({ children, title = 'Dashboard' }: ModLayoutProps) {
 						</Avatar>
 
 						{/* View site button */}
-						<Link href="/">
+						<Link to="/">
 							<Button
 								variant="outline"
 								size="sm"

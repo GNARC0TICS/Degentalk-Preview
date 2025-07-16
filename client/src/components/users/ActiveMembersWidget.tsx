@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'wouter';
+import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import {
 	Card,
@@ -85,7 +85,7 @@ function ActiveMembersWidget({
 								transition={{ delay: index * 0.1 }}
 								className="group"
 							>
-								<Link href={`/profile/${user.id}`}>
+								<Link to={`/profile/${user.id}`}>
 									<div className="flex items-center justify-between p-3 hover:bg-zinc-800/30 transition-colors cursor-pointer">
 										<div className="flex items-center">
 											<Avatar className="h-8 w-8 mr-3 ring-2 ring-transparent group-hover:ring-emerald-500/30 transition-all">

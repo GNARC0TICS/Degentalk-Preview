@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import { createContext, useContext, useState, useEffect, useMemo } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiRequest } from '@/utils/api-request';
-import { useLocation } from 'wouter';
+import { useLocation } from 'react-router-dom';
 import { getUserPermissions } from '@/utils/roles';
 import type { Role } from '@/utils/roles';
 import type { UserId, FrameId } from '@shared/types/ids';

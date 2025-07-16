@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'wouter';
+import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { PumpButton } from '@/components/uiverse-clones/buttons';
 import type { ButtonProps } from '@/components/ui/button';
@@ -43,7 +43,7 @@ export function CreateThreadButton({
 		}
 
 		return (
-			<Link href={`/auth?redirect_to=${encodeURIComponent(redirectPath)}`}>
+			<Link to={`/auth?redirect_to=${encodeURIComponent(redirectPath)}`}>
 				<PumpButton
 					variant="neutral" 
 					size={size === 'sm' ? 'sm' : size === 'lg' ? 'lg' : 'md'}
@@ -83,7 +83,7 @@ export function CreateThreadButton({
 	}
 
 	return (
-		<Link href={createThreadUrl}>
+		<Link to={createThreadUrl}>
 			<PumpButton 
 				variant="pump" 
 				size={size === 'sm' ? 'sm' : size === 'lg' ? 'lg' : 'md'}

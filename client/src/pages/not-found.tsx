@@ -1,4 +1,4 @@
-import { Link } from 'wouter';
+import { Link } from 'react-router-dom';
 import { AlertTriangle, HomeIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { SiteHeader } from '@/components/header'; // Assuming a shared header
@@ -26,7 +26,7 @@ export default function NotFoundPage() {
 						>
 							Go Back
 						</Button>
-						<Link href="/">
+						<Link to="/">
 							<Button className="bg-emerald-700 hover:bg-emerald-600">
 								<HomeIcon className="mr-2 h-4 w-4" />
 								Go to Homepage

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { useLocation, Redirect } from 'wouter';
+import { useLocation, Navigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/use-auth';
 import { Button } from '@/components/ui/button';
 import {
@@ -100,7 +100,7 @@ export default function AuthPage() {
 		registerMutation.mutate(values);
 	};
 
-	// Redirect authenticated users to home page
+	// Navigate authenticated users to home page
 	useEffect(() => {
 		if (user && !isLoading) {
 			navigate('/');

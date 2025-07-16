@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { Link } from 'wouter';
+import { Link } from 'react-router-dom';
 import {
 	Card,
 	CardContent,
@@ -147,7 +147,7 @@ export function FeaturedThreadsSlider({
 									</Badge>
 									<CardTitle className="text-base line-clamp-2">{thread.title}</CardTitle>
 									<CardDescription className="line-clamp-1">
-										<Link href={`/forums/${thread.category_slug}`} className="hover:underline">
+										<Link to={`/forums/${thread.category_slug}`} className="hover:underline">
 											{thread.category_name}
 										</Link>
 									</CardDescription>

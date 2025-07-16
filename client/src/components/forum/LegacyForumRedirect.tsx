@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useParams, useLocation } from 'wouter';
+import { useParams, useLocation } from 'react-router-dom';
 import { useForumStructure } from '@/contexts/ForumStructureContext';
 
 /**
@@ -11,7 +11,7 @@ import { useForumStructure } from '@/contexts/ForumStructureContext';
  * - /zones/{zoneSlug}/{forumSlug}/{subforumSlug} → /forums/{forumSlug}/{subforumSlug}
  * - /forum/{slug} → /forums/{slug} (singular deprecated)
  */
-const LegacyForumRedirect: React.FC = () => {
+const LegacyForumNavigate: React.FC = () => {
 	const params = useParams<{
 		slug?: string;
 		zoneSlug?: string;
@@ -59,7 +59,7 @@ const LegacyForumRedirect: React.FC = () => {
 
 		// Only redirect if we're not already at the target
 		if (location !== targetUrl) {
-			setLocation(targetUrl);
+			navigate(targetUrl);
 		}
 	}, [location, params, getForum, setLocation]);
 
@@ -69,10 +69,10 @@ const LegacyForumRedirect: React.FC = () => {
 				<div className="inline-flex items-center justify-center w-16 h-16 mb-4">
 					<div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
 				</div>
-				<p className="text-zinc-400">Redirecting to forums...</p>
+				<p className="text-zinc-400">Navigateing to forums...</p>
 			</div>
 		</div>
 	);
 };
 
-export default LegacyForumRedirect;
+export default LegacyForumNavigate;

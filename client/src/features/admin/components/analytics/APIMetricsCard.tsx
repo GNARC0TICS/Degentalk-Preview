@@ -123,7 +123,7 @@ export function APIMetricsCard({ api }: APIMetricsCardProps) {
 							<ChartContainer
 								config={{
 									'2xx': { label: '2xx Success', color: '#10b981' },
-									'3xx': { label: '3xx Redirect', color: '#3b82f6' },
+									'3xx': { label: '3xx Navigate', color: '#3b82f6' },
 									'4xx': { label: '4xx Client Error', color: '#f59e0b' },
 									'5xx': { label: '5xx Server Error', color: '#ef4444' }
 								}}

@@ -5,7 +5,7 @@ import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
 import { RichTextEditor } from '@/components/editor/rich-text-editor';
 import { LoadingSpinner } from '@/components/ui/loader';
 import { useAuth } from '@/hooks/use-auth';
-import { useLocation } from 'wouter';
+import { useLocation } from 'react-router-dom';
 import { X, CornerDownRight } from 'lucide-react';
 import { cn } from '@/utils/utils';
 import { useBreakpoint } from '@/hooks/useMediaQuery';
@@ -79,8 +79,8 @@ ${postContent}
 		e.preventDefault();
 
 		if (!isAuthenticated) {
-			// Redirect to login page with return URL
-			setLocation(`/auth?returnUrl=${encodeURIComponent(window.location.pathname)}`);
+			// Navigate to login page with return URL
+			navigate(`/auth?returnUrl=${encodeURIComponent(window.location.pathname)}`);
 			return;
 		}
 
@@ -132,7 +132,7 @@ ${postContent}
 								breakpoint.isMobile && 'min-h-[44px] inline-flex items-center'
 							)}
 							onClick={() =>
-								setLocation(`/auth?returnUrl=${encodeURIComponent(window.location.pathname)}`)
+								navigate(`/auth?returnUrl=${encodeURIComponent(window.location.pathname)}`)
 							}
 						>
 							sign in

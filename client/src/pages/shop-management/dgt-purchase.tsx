@@ -3,13 +3,13 @@ import { useDgtPurchase } from '@/hooks/useDgtPurchase';
 import { StripeElementsWrapper } from '@/components/payment/StripeElementsWrapper';
 import { PaymentForm } from '@/components/payment/PaymentForm';
 import { useToast } from '@/hooks/use-toast';
-import { useLocation } from 'wouter';
+import { useLocation } from 'react-router-dom';
 import { Coins, ChevronLeft, Loader2, Info, CheckCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { Link } from 'wouter';
+import { Link } from 'react-router-dom';
 import { Wide } from '@/layout/primitives';
 import { logger } from '@/lib/logger';
 
@@ -126,7 +126,7 @@ export default function DgtPurchasePage() {
 				await devModePurchase({
 					packageId: pkg.id,
 					onSuccess: () => {
-						setLocation('/shop/purchase-success');
+						navigate('/shop/purchase-success');
 					}
 				});
 			} else {
@@ -284,7 +284,7 @@ export default function DgtPurchasePage() {
 		<Wide className="px-4 py-8">
 			{/* Navigation */}
 			<div className="mb-6">
-				<Link href="/shop">
+				<Link to="/shop">
 					<Button variant="ghost" className="flex items-center text-zinc-400 hover:text-white">
 						<ChevronLeft className="h-4 w-4 mr-1" />
 						Back to Shop

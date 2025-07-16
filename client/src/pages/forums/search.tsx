@@ -1,5 +1,5 @@
 import React from 'react';
-import { useLocation } from 'wouter';
+import { useLocation } from 'react-router-dom';
 import { SiteFooter } from '@/components/footer';
 import {
 	Breadcrumb,
@@ -37,7 +37,7 @@ const ForumSearchPage = () => {
 		if (!currentSearch.trim()) return;
 
 		// Update URL
-		setLocation(`/forums/search?q=${encodeURIComponent(currentSearch.trim())}`);
+		navigate(`/forums/search?q=${encodeURIComponent(currentSearch.trim())}`);
 		setIsLoading(true);
 		// TODO: Implement actual API call to fetch search results
 		// For now, simulate API call

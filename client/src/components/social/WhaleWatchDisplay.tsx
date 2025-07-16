@@ -18,7 +18,7 @@ import {
 	User,
 	MoreHorizontal
 } from 'lucide-react';
-import { Link } from 'wouter';
+import { Link } from 'react-router-dom';
 import { formatDistanceToNow } from 'date-fns';
 import { cn } from '@/utils/utils';
 
@@ -165,7 +165,7 @@ export function WhaleWatchDisplay({
 			</div>
 
 			<Button variant="ghost" size="sm" asChild>
-				<Link href={`/profile/${user.username}`}>
+				<Link to={`/profile/${user.username}`}>
 					<ExternalLink className="h-4 w-4" />
 				</Link>
 			</Button>

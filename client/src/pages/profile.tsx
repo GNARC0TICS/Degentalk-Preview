@@ -5,7 +5,7 @@ import { Card } from '@/components/ui/card';
 import { formatDistanceToNow } from 'date-fns';
 import { Wide } from '@/layout/primitives';
 import { SiteFooter } from '@/components/footer';
-import { Link } from 'wouter';
+import { Link } from 'react-router-dom';
 
 // Demo user profile data
 const demoUser = {
@@ -56,7 +56,7 @@ export default function ProfilePage() {
       {/* Profile Banner */}
       <div className="relative h-48 bg-gradient-to-r from-blue-600 to-purple-600">
         <Wide className="relative h-full">
-          <Link href="/">
+          <Link to="/">
             <Button variant="ghost" size="sm" className="absolute top-4 left-0 text-white/80 hover:text-white">
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Home

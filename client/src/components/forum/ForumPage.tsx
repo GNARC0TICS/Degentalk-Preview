@@ -1,5 +1,5 @@
 import React, { useState, memo, useCallback } from 'react';
-import { useParams } from 'wouter';
+import { useParams } from 'react-router-dom';
 import { Filter } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';

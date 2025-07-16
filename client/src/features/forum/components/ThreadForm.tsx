@@ -14,7 +14,7 @@ import { cn } from '@/utils/utils';
 import { useMutation } from '@tanstack/react-query';
 import { apiRequest } from '@/utils/queryClient';
 import { useToast } from '@/hooks/use-toast';
-import { useLocation } from 'wouter';
+import { useLocation } from 'react-router-dom';
 import type { MergedRules } from '@/contexts/ForumStructureContext';
 import DOMPurify from 'dompurify';
 
@@ -81,7 +81,7 @@ export function ThreadForm({
 				description: 'Your thread has been posted successfully.'
 			});
 			onSuccess(data.slug);
-			setLocation(`/threads/${data.slug}`);
+			navigate(`/threads/${data.slug}`);
 		},
 		onError: (error: Error) => {
 			toast({
@@ -250,7 +250,7 @@ export function ThreadForm({
 				<Button
 					type="button"
 					variant="ghost"
-					onClick={() => setLocation(forumSlug ? `/forums/${forumSlug}` : '/forums')}
+					onClick={() => navigate(forumSlug ? `/forums/${forumSlug}` : '/forums')}
 					disabled={createThreadMutation.isPending}
 					className="text-zinc-400 hover:text-white hover:bg-zinc-800"
 				>

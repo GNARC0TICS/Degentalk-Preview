@@ -1,6 +1,6 @@
 import type { UserId } from '@shared/types/ids';
 import { useState } from 'react';
-import { Link } from 'wouter';
+import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { apiRequest } from '@/utils/queryClient';
 import { useCrudMutation } from '@/hooks/useCrudMutation';
@@ -267,7 +267,7 @@ export default function AdminUsersPage() {
 					<Pencil className="h-4 w-4 mr-2" /> Edit User
 				</DropdownMenuItem>
 				<DropdownMenuItem asChild>
-					<Link href={`/admin/user-inventory/${user.id}`}>
+					<Link to={`/admin/user-inventory/${user.id}`}>
 						{' '}
 						{/* Assuming this route exists */}
 						<Package className="h-4 w-4 mr-2" /> View Inventory

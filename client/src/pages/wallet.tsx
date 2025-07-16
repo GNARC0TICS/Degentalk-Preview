@@ -6,7 +6,7 @@ import { DepositButton } from '@/features/wallet/components/deposit-button';
 import { WithdrawButton } from '@/features/wallet/components/withdraw-button';
 import { BuyDgtButton } from '@/features/wallet/components/buy-dgt-button';
 import { DgtTransfer } from '@/features/wallet/components/dgt-transfer';
-import { Link } from 'wouter';
+import { Link } from 'react-router-dom';
 
 const WalletPage: React.FC = () => {
 	const {

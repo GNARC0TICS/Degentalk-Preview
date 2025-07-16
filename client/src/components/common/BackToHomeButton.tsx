@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Link } from 'wouter';
+import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft, Home } from 'lucide-react';
 
@@ -12,7 +12,7 @@ export function BackToHomeButton() {
 			animate={{ opacity: 1, y: 0 }}
 			transition={{ duration: 0.5 }}
 		>
-			<Link href="/">
+			<Link to="/">
 				<Button
 					variant="ghost"
 					className="flex items-center text-zinc-400 hover:text-white transition-colors"

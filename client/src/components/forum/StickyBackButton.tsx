@@ -1,5 +1,5 @@
 import React from 'react';
-import { useLocation } from 'wouter';
+import { useLocation } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 

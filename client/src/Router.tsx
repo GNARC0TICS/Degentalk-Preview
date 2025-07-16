@@ -43,8 +43,8 @@ import InvitePage from './pages/invite/[code]';
 import PreferencesPage from './pages/preferences/index';
 import UIPlaygroundPage from './pages/ui-playground';
 
-// Legacy Redirect Component
-import LegacyForumRedirect from '@/components/forum/LegacyForumRedirect';
+// Legacy Navigate Component
+import LegacyForumNavigate from '@/components/forum/LegacyForumNavigate';
 
 /**
  * Main Router Configuration
@@ -85,11 +85,11 @@ export const router = createBrowserRouter([
       { path: 'zones/:zoneSlug/:forumSlug', element: <ForumBySlugPage /> },
       { 
         path: 'zones/:slug', 
-        element: <ProtectedRoute><LegacyForumRedirect /></ProtectedRoute> 
+        element: <ProtectedRoute><LegacyForumNavigate /></ProtectedRoute> 
       },
       { 
         path: 'zones', 
-        element: <ProtectedRoute><LegacyForumRedirect /></ProtectedRoute> 
+        element: <ProtectedRoute><LegacyForumNavigate /></ProtectedRoute> 
       },
 
       // Thread Routes

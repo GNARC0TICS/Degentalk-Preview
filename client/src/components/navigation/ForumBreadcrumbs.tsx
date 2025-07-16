@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'wouter';
+import { Link } from 'react-router-dom';
 import { Home, ChevronRight, Map, Layers } from 'lucide-react';
 import { getForumSpacing } from '@/utils/spacing-constants';
 

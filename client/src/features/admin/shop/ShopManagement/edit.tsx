@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/select';
 import { apiRequest } from '@/utils/queryClient';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useParams, Link, useLocation } from 'wouter';
+import { useParams, Link, useLocation } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import type { Id } from '@shared/types/ids';

@@ -10,7 +10,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiRequest } from '@/utils/queryClient';
 import { FramedAvatar } from '@/components/users/framed-avatar';
 import { ShoppingBag, Sparkles, Palette, Frame, Crown, Edit } from 'lucide-react';
-import { Link } from 'wouter';
+import { Link } from 'react-router-dom';
 import { applyPluginRewards } from '@/lib/utils/applyPluginRewards';
 import type { UserInventoryWithProduct } from '@/types/inventory';
 import type { InventoryId, EntityId } from '@shared/types/ids';
@@ -283,7 +283,7 @@ export function CosmeticControlPanel({
 
 				{/* Shop Link */}
 				<div className="text-center pt-4">
-					<Link href="/shop">
+					<Link to="/shop">
 						<Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 border-0 shadow-lg">
 							<ShoppingBag className="mr-2 h-4 w-4" />
 							Want more? Shop Cosmetics

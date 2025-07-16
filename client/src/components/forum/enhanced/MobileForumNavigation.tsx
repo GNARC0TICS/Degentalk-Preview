@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, memo } from 'react';
-import { Link, useLocation } from 'wouter';
+import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
 	Menu,
@@ -240,7 +240,7 @@ const MobileForumNavigation = memo(({ className }: MobileForumNavigationProps) =
 						<div className="flex-1 overflow-y-auto">
 							{/* Quick Actions */}
 							<div className="p-4 space-y-2 border-b border-zinc-800/50">
-								<Link href="/">
+								<Link to="/">
 									<Button
 										variant="ghost"
 										className="w-full justify-start text-zinc-300 hover:text-white hover:bg-zinc-800/50"
@@ -250,7 +250,7 @@ const MobileForumNavigation = memo(({ className }: MobileForumNavigationProps) =
 										Home
 									</Button>
 								</Link>
-								<Link href="/profile">
+								<Link to="/profile">
 									<Button
 										variant="ghost"
 										className="w-full justify-start text-zinc-300 hover:text-white hover:bg-zinc-800/50"
@@ -284,7 +284,7 @@ const MobileForumNavigation = memo(({ className }: MobileForumNavigationProps) =
 														initial={{ opacity: 0, y: 20 }}
 														animate={{ opacity: 1, y: 0 }}
 													>
-														<Link href={`/zones/${zone.slug}`}>
+														<Link to={`/zones/${zone.slug}`}>
 															<div
 																className={cn(
 																	'p-3 rounded-lg border border-zinc-700/50 hover:border-zinc-600/50',
@@ -336,7 +336,7 @@ const MobileForumNavigation = memo(({ className }: MobileForumNavigationProps) =
 													initial={{ opacity: 0, y: 20 }}
 													animate={{ opacity: 1, y: 0 }}
 												>
-													<Link href={`/forums/${forum.slug}`}>
+													<Link to={`/forums/${forum.slug}`}>
 														<div
 															className="p-3 rounded-lg border border-zinc-700/50 hover:border-zinc-600/50 hover:bg-zinc-800/30 transition-all cursor-pointer"
 															onClick={() => setIsOpen(false)}

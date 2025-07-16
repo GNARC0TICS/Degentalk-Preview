@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'wouter';
+import { Link } from 'react-router-dom';
 import {
 	Table,
 	TableBody,
@@ -67,7 +67,7 @@ export function UserDirectoryTable({ users, className = '' }: UserDirectoryTable
 								>
 									{/* Member Info */}
 									<TableCell className="py-3">
-										<Link href={`/profile/${user.id}`} className="block">
+										<Link to={`/profile/${user.id}`} className="block">
 											<div className="flex items-center space-x-3 group-hover:scale-[1.02] transition-transform">
 												<div className="relative">
 													<Avatar className="h-10 w-10 ring-2 ring-transparent group-hover:ring-emerald-500/30 transition-all">

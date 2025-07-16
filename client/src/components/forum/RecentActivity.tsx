@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'wouter';
+import { Link } from 'react-router-dom';
 import { Clock, MessageSquare, UserPlus, Award } from 'lucide-react';
 import { FrostCard } from '@/components/ui/frost-card';
 import { CardContent, CardHeader, CardTitle } from '@/components/ui/card';

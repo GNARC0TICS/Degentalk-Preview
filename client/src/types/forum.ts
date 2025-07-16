@@ -52,7 +52,7 @@ export interface ThreadCardPropsData {
 export interface ThreadCardComponentProps {
 	thread: ThreadCardPropsData;
 	className?: string;
-	linkAs?: 'wouter' | 'next' | undefined; // For choosing link component
+	linkAs?: 'react-router' | 'next' | undefined; // For choosing link component
 	forumSlug?: string;
 	parentForumTheme?: string | null | undefined;
 	tippingEnabled?: boolean | undefined;

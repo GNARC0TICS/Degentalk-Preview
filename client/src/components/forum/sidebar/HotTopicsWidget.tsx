@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'wouter';
+import { Link } from 'react-router-dom';
 import { Flame, MessageSquare, Eye, ChevronRight } from 'lucide-react';
 import { SidebarWidgetCard } from './SidebarWidgetCard';
 import { WidgetSkeleton } from './WidgetSkeleton';
@@ -53,7 +53,7 @@ export function HotTopicsWidget({
 
 						{/* Thread content */}
 						<div className="flex-1 min-w-0">
-							<Link href={`/threads/${thread.slug}`}>
+							<Link to={`/threads/${thread.slug}`}>
 								<h4 className="font-medium text-zinc-100 text-sm leading-snug group-hover:text-emerald-400 transition-colors line-clamp-1">
 									{thread.title}
 								</h4>

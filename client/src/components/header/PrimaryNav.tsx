@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useLocation } from 'wouter';
+import { useLocation } from 'react-router-dom';
 import gsap from 'gsap';
 import { NavLink } from './NavLink';
 import { primaryNavigation, filterNavItems } from '@/config/navigation';

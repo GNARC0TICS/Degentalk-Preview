@@ -1,5 +1,5 @@
 import React from 'react';
-import { useParams, Link } from 'wouter';
+import { useParams, Link } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiRequest } from '@/utils/queryClient';
 import { LoadingSpinner } from '@/components/ui/loader';
@@ -72,7 +72,7 @@ export default function DictionaryDetailPage() {
 				{data.status === 'pending' && <span className="text-amber-400">Awaiting approval</span>}
 			</div>
 
-			<Link href="/dictionary" className="text-blue-400 underline">
+			<Link to="/dictionary" className="text-blue-400 underline">
 				← Back to list
 			</Link>
 		</div>

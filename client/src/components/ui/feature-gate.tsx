@@ -2,7 +2,7 @@ import React from 'react';
 import { useFeatureAccess } from '@/hooks/useFeatureGates';
 import { Lock, AlertCircle, BadgeInfo, ArrowUpCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useLocation } from 'wouter';
+import { useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useEffect } from 'react';
 

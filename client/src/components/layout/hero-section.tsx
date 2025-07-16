@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'wouter';
+import { Link } from 'react-router-dom';
 import { Users, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -139,7 +139,7 @@ export function HeroSection() {
 						animate={{ opacity: 1 }}
 						transition={{ delay: 0.9, duration: 0.8 }}
 					>
-						<Link href="/forums">
+						<Link to="/forums">
 							<motion.div
 								className="flex items-center text-emerald-400 hover:text-emerald-300 transition-colors text-sm group"
 								whileHover={{ x: 5 }}

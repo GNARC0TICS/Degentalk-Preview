@@ -26,7 +26,7 @@ const AdminActivityPage: React.FC = () => {
 		eventType: selectedEventType !== 'all' ? selectedEventType.split(',') : undefined
 	});
 
-	// Redirect if not admin
+	// Navigate if not admin
 	if (user?.role !== 'admin') {
 		return (
 			<Wide className="px-4 py-8">

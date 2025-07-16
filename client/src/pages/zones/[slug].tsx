@@ -1,5 +1,5 @@
 import React from 'react';
-import { useParams, Link } from 'wouter';
+import { useParams, Link } from 'react-router-dom';
 import { useForumStructure } from '@/contexts/ForumStructureContext';
 import type { MergedForum } from '@/contexts/ForumStructureContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -38,7 +38,7 @@ const ZonePage: React.FC = () => {
 	}, [displayName]);
 
 	if (slug === 'general') {
-		// Redirect to forums page with general section
+		// Navigate to forums page with general section
 		React.useEffect(() => {
 			window.location.href = '/forums#general-forums';
 		}, []);
@@ -240,13 +240,13 @@ const ZonePage: React.FC = () => {
 								<CardTitle className="text-lg text-white">Quick Navigation</CardTitle>
 							</CardHeader>
 							<CardContent className="space-y-2">
-								<Link href="/forums">
+								<Link to="/forums">
 									<Button className="w-full justify-start" variant="outline">
 										<Map className="w-4 h-4 mr-2" />
 										Browse All Forums
 									</Button>
 								</Link>
-								<Link href="/">
+								<Link to="/">
 									<Button className="w-full justify-start" variant="outline">
 										<Home className="w-4 h-4 mr-2" />
 										Back to Homepage
@@ -269,7 +269,7 @@ const NotFound: React.FC = () => (
 				<AlertCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
 				<h1 className="text-3xl font-bold text-white mb-2">Zone Not Found</h1>
 				<p className="text-zinc-400 mb-6">The zone you're looking for doesn't exist.</p>
-				<Link href="/">
+				<Link to="/">
 					<Button variant="outline">Return Home</Button>
 				</Link>
 			</div>
@@ -302,7 +302,7 @@ const ErrorState: React.FC<{ error: Error }> = ({ error }) => (
 					<h2 className="text-xl sm:text-2xl font-bold text-white mb-2">Error Loading Zone</h2>
 					<p className="text-red-400 text-sm sm:text-base">{error.message}</p>
 					<Button asChild variant="outline" className="mt-4">
-						<Link href="/zones">Browse Zones</Link>
+						<Link to="/zones">Browse Zones</Link>
 					</Button>
 				</CardContent>
 			</Card>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'wouter';
+import { Link } from 'react-router-dom';
 import { AlertTriangle, Home, MessageSquare, Search, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -72,7 +72,7 @@ export function ThreadNotFound({ threadId, forumSlug, onBack }: ThreadNotFoundPr
 						)}
 
 						{forumSlug && (
-							<Link href={`/forums/${forumSlug}`}>
+							<Link to={`/forums/${forumSlug}`}>
 								<Button variant="outline" className="gap-2">
 									<MessageSquare className="h-4 w-4" />
 									Browse Forum
@@ -80,14 +80,14 @@ export function ThreadNotFound({ threadId, forumSlug, onBack }: ThreadNotFoundPr
 							</Link>
 						)}
 
-						<Link href="/search">
+						<Link to="/search">
 							<Button variant="outline" className="gap-2">
 								<Search className="h-4 w-4" />
 								Search Threads
 							</Button>
 						</Link>
 
-						<Link href="/">
+						<Link to="/">
 							<Button className="gap-2">
 								<Home className="h-4 w-4" />
 								Go Home

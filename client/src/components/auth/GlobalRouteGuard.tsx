@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import { useEffect } from 'react';
-import { useLocation } from 'wouter';
+import { useLocation } from 'react-router-dom';
 import { useAuth } from '@/hooks/use-auth';
 import { getRouteProtection } from '@/utils/routeConfig';
 import { hasRoleAtLeast } from '@/utils/roles';

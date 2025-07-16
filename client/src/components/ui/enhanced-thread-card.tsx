@@ -145,7 +145,7 @@ const EnhancedThreadCard = memo(
 					className={cn(className)}
 				>
 					<Card className="bg-zinc-900/90 border-zinc-800/50 backdrop-blur-sm hover:border-zinc-700/50 transition-all duration-200">
-						<Link href={`/threads/${thread.slug}`}>
+						<Link to={`/threads/${thread.slug}`}>
 							<div className="p-4 space-y-3">
 								{/* Header with user and metadata */}
 								<div className="flex items-center justify-between">
@@ -245,7 +245,7 @@ const EnhancedThreadCard = memo(
 				className={cn(className)}
 			>
 				<Card className="bg-zinc-900/90 border-zinc-800/50 backdrop-blur-sm hover:border-zinc-700/50 transition-all duration-200 group">
-					<Link href={`/threads/${thread.slug}`}>
+					<Link to={`/threads/${thread.slug}`}>
 						<div className="p-6">
 							{/* Enhanced header */}
 							<div className="flex items-start justify-between mb-4">

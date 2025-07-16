@@ -6,7 +6,7 @@
  */
 
 import { useState, useRef, useCallback, useMemo } from 'react';
-import { Link, useLocation } from 'wouter';
+import { Link, useLocation } from 'react-router-dom';
 import {
 	ExternalLink,
 	ChevronDown,
@@ -442,7 +442,7 @@ export default function ModularAdminSidebar({
 					<TooltipProvider>
 						<Tooltip>
 							<TooltipTrigger asChild>
-								<Link href="/" onClick={onLinkClick}>
+								<Link to="/" onClick={onLinkClick}>
 									<ExternalLink className="w-4 h-4 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100" />
 								</Link>
 							</TooltipTrigger>

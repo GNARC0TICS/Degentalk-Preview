@@ -1,6 +1,6 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
-import { Link } from 'wouter';
+import { Link } from 'react-router-dom';
 import { useAuth } from '@/hooks/use-auth';
 import { useGamification } from '@/hooks/use-gamification';
 import { MissionDashboard } from '@/components/gamification';
@@ -72,7 +72,7 @@ export default function MissionsPage() {
 						</h1>
 						<p className="text-zinc-400 mt-1">Complete tasks to earn XP, DGT, and other rewards.</p>
 					</div>
-					<Link href="/progress" passHref>
+					<Link to="/progress" passHref>
 						<Button variant="outline">
 							View Full Progress Hub
 							<ChevronRight className="w-4 h-4 ml-2" />
@@ -99,7 +99,7 @@ export default function MissionsPage() {
 								</p>
 							</div>
 						</div>
-						<Link href="/progress?tab=achievements" passHref>
+						<Link to="/progress?tab=achievements" passHref>
 							<Button variant="secondary" className="bg-amber-600/20 hover:bg-amber-600/40">
 								View Achievements
 								<ChevronRight className="w-4 h-4 ml-2" />

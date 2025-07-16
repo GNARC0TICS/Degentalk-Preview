@@ -10,7 +10,7 @@
  */
 
 import { cn } from '@/utils/utils';
-import { useRouter } from 'wouter';
+import { useRouter } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
@@ -20,7 +20,7 @@ import { LevelDisplay } from './level-display';
 import { formatNumber } from '@/utils/utils';
 import { TrendingUp, Trophy, Target, Flame, ChevronRight, Sparkles, Zap, Gift } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { useLocation } from 'wouter';
+import { useLocation } from 'react-router-dom';
 import type { UserProgression } from '@/features/gamification/services/gamification-api.service';
 
 interface ProgressionCardProps {

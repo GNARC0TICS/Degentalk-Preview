@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'wouter';
+import { Link } from 'react-router-dom';
 import { MessageSquare, Pin, Lock, CheckCircle, Eye, Calendar } from 'lucide-react';
 import type { ThreadDisplay } from '@/types/thread.types';
 import { formatDistanceToNow } from 'date-fns';
@@ -94,7 +94,7 @@ function ThreadRow({ thread, isEven, forumSlug, getPrefixClass }: ThreadRowProps
 								{prefix.name}
 							</span>
 						)}
-						<Link href={`/threads/${thread.slug}`} className="mybb-thread-title">
+						<Link to={`/threads/${thread.slug}`} className="mybb-thread-title">
 							{thread.title}
 						</Link>
 					</div>
@@ -123,7 +123,7 @@ function ThreadRow({ thread, isEven, forumSlug, getPrefixClass }: ThreadRowProps
 				{thread.lastPostAt ? (
 					<div>
 						<div className="truncate">
-							<Link href={`/threads/${thread.slug}#latest`} className="text-blue-400 hover:underline text-xs">
+							<Link to={`/threads/${thread.slug}#latest`} className="text-blue-400 hover:underline text-xs">
 								Last reply
 							</Link>
 						</div>

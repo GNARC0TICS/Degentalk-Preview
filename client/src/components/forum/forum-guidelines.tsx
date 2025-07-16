@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'wouter';
+import { Link } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { BookOpen, FileText, Shield, Users } from 'lucide-react';
@@ -46,7 +46,7 @@ export function ForumGuidelines({ className = '' }: ForumGuidelinesProps) {
 					</div>
 				</motion.div>
 
-				<Link href="/forum-rules">
+				<Link to="/forum-rules">
 					<Button
 						variant="outline"
 						className="border-zinc-700 bg-zinc-800/40 hover:bg-emerald-900/20 hover:border-emerald-500/50 text-zinc-300 hover:text-emerald-300 transition-all group"

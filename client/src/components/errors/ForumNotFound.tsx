@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'wouter';
+import { Link } from 'react-router-dom';
 import { AlertTriangle, Home, Compass, Search, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -50,21 +50,21 @@ export function ForumNotFound({ forumSlug, onBack }: ForumNotFoundProps) {
 							</Button>
 						)}
 
-						<Link href="/zones">
+						<Link to="/zones">
 							<Button variant="outline" className="gap-2">
 								<Compass className="h-4 w-4" />
 								Browse All Zones
 							</Button>
 						</Link>
 
-						<Link href="/search">
+						<Link to="/search">
 							<Button variant="outline" className="gap-2">
 								<Search className="h-4 w-4" />
 								Search Forums
 							</Button>
 						</Link>
 
-						<Link href="/">
+						<Link to="/">
 							<Button className="gap-2">
 								<Home className="h-4 w-4" />
 								Go Home

@@ -1,4 +1,4 @@
-import { Link, useLocation } from 'wouter';
+import { Link, useLocation } from 'react-router-dom';
 import {
 	ShieldCheck,
 	Megaphone,
@@ -34,7 +34,7 @@ export function ModSidebar() {
 			</div>
 
 			<div className="mb-4">
-				<Link href="/">
+				<Link to="/">
 					<Button variant="ghost" className="w-full justify-start px-2">
 						<ArrowLeft size={18} className="mr-2" />
 						<span>Return to Main Site</span>
@@ -56,7 +56,7 @@ export function ModSidebar() {
 					</AccordionTrigger>
 					<AccordionContent className="pb-1">
 						<div className="space-y-1 p-1">
-							<Link href="/mod">
+							<Link to="/mod">
 								<div
 									className={`flex items-center space-x-2 p-2 rounded hover:bg-zinc-800 ${isActive('/mod') && !isActive('/mod/activity') ? 'bg-zinc-800 text-primary' : 'text-zinc-300'}`}
 								>
@@ -64,7 +64,7 @@ export function ModSidebar() {
 									<span>Dashboard</span>
 								</div>
 							</Link>
-							<Link href="/mod/activity">
+							<Link to="/mod/activity">
 								<div
 									className={`flex items-center space-x-2 p-2 rounded hover:bg-zinc-800 ${isActive('/mod/activity') ? 'bg-zinc-800 text-primary' : 'text-zinc-300'}`}
 								>
@@ -85,7 +85,7 @@ export function ModSidebar() {
 					</AccordionTrigger>
 					<AccordionContent className="pb-1">
 						<div className="space-y-1 p-1">
-							<Link href="/mod/threads">
+							<Link to="/mod/threads">
 								<div
 									className={`flex items-center space-x-2 p-2 rounded hover:bg-zinc-800 ${isActive('/mod/threads') ? 'bg-zinc-800 text-primary' : 'text-zinc-300'}`}
 								>
@@ -93,7 +93,7 @@ export function ModSidebar() {
 									<span>Threads</span>
 								</div>
 							</Link>
-							<Link href="/mod/reports">
+							<Link to="/mod/reports">
 								<div
 									className={`flex items-center space-x-2 p-2 rounded hover:bg-zinc-800 ${isActive('/mod/reports') ? 'bg-zinc-800 text-primary' : 'text-zinc-300'}`}
 								>
@@ -101,7 +101,7 @@ export function ModSidebar() {
 									<span>Reports</span>
 								</div>
 							</Link>
-							<Link href="/mod/shoutbox">
+							<Link to="/mod/shoutbox">
 								<div
 									className={`flex items-center space-x-2 p-2 rounded hover:bg-zinc-800 ${isActive('/mod/shoutbox') ? 'bg-zinc-800 text-primary' : 'text-zinc-300'}`}
 								>
@@ -122,7 +122,7 @@ export function ModSidebar() {
 					</AccordionTrigger>
 					<AccordionContent className="pb-1">
 						<div className="space-y-1 p-1">
-							<Link href="/mod/users">
+							<Link to="/mod/users">
 								<div
 									className={`flex items-center space-x-2 p-2 rounded hover:bg-zinc-800 ${isActive('/mod/users') ? 'bg-zinc-800 text-primary' : 'text-zinc-300'}`}
 								>
@@ -130,7 +130,7 @@ export function ModSidebar() {
 									<span>Users</span>
 								</div>
 							</Link>
-							<Link href="/mod/announcements">
+							<Link to="/mod/announcements">
 								<div
 									className={`flex items-center space-x-2 p-2 rounded hover:bg-zinc-800 ${isActive('/mod/announcements') ? 'bg-zinc-800 text-primary' : 'text-zinc-300'}`}
 								>
@@ -144,7 +144,7 @@ export function ModSidebar() {
 			</Accordion>
 
 			<div className="mt-auto pt-4 border-t border-zinc-800">
-				<Link href="/mod/settings">
+				<Link to="/mod/settings">
 					<div
 						className={`flex items-center space-x-2 p-2 rounded hover:bg-zinc-800 ${isActive('/mod/settings') ? 'bg-zinc-800 text-primary' : 'text-zinc-300'}`}
 					>

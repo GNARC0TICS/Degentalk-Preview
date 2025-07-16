@@ -1,5 +1,5 @@
 import React from 'react';
-import { useParams, Link } from 'wouter';
+import { useParams, Link } from 'react-router-dom';
 import { ThreadCard } from '@/components/forum/ThreadCard';
 import { useTags } from '@/features/forum/hooks/useForumQueries';
 import { useQuery } from '@tanstack/react-query';

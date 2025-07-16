@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'wouter';
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ShoppingCart, Sparkles, Coins, TrendingUp, Zap } from 'lucide-react';
 
@@ -22,7 +22,7 @@ export function ShopCard({ className = '', featuredItem }: ShopCardProps) {
 	const shopUrl = '/shop';
 
 	return (
-		<Link href={shopUrl}>
+		<Link to={shopUrl}>
 			<motion.div
 				className={`
           relative

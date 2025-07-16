@@ -121,7 +121,7 @@ function ContentItem({ item, showCategory = true }: { item: ContentItem; showCat
 				<div className="absolute left-0 top-0 bottom-0 w-0.5 bg-gradient-to-b from-orange-500 to-yellow-500" />
 			)}
 
-			<Link href={`/threads/${item.slug}`}>
+			<Link to={`/threads/${item.slug}`}>
 				<div
 					className={cn(
 						'relative p-4 cursor-pointer transition-colors duration-300',
@@ -235,7 +235,7 @@ function ContentItem({ item, showCategory = true }: { item: ContentItem; showCat
 							<div className="flex items-center gap-2">
 								{/* Category tag */}
 								{showCategory && (
-									<Link href={`/forums/${item.category.slug}`}>
+									<Link to={`/forums/${item.category.slug}`}>
 										<span
 											className={cn(
 												'bg-zinc-800/50 text-zinc-400 border border-zinc-600 transition-all text-xs cursor-pointer rounded px-2 py-0.5',

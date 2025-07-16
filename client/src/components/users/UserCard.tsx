@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'wouter';
+import { Link } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
@@ -127,7 +127,7 @@ export function UserCard({ user, className = '' }: UserCardProps) {
 
 					{/* Hover Action */}
 					<div className="mt-3 opacity-0 group-hover:opacity-100 transition-opacity">
-						<Link href={`/profile/${user.id}`}>
+						<Link to={`/profile/${user.id}`}>
 							<motion.button
 								className="w-full py-1.5 px-3 bg-emerald-600/20 hover:bg-emerald-600/30 border border-emerald-500/30 rounded-md text-emerald-400 text-sm transition-colors"
 								whileHover={{ scale: 1.02 }}

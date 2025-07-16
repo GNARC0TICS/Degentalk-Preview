@@ -34,7 +34,7 @@ import {
 	ChevronDown
 } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { useRouter } from 'wouter';
+import { useRouter } from 'react-router-dom';
 import type { LeaderboardEntry } from '@/features/gamification/services/gamification-api.service';
 import type { UserId } from '@shared/types/ids';
 

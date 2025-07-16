@@ -15,7 +15,7 @@ import {
 } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
-import { Link } from 'wouter';
+import { Link } from 'react-router-dom';
 import type { AnnouncementId } from '@shared/types/ids';
 
 interface Announcement {

@@ -1,6 +1,6 @@
 import type { UserId, ForumId } from '@shared/types/ids';
 import React, { memo } from 'react';
-import { Link } from 'wouter';
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
 	Users,
@@ -196,7 +196,7 @@ const ZoneCardPure = memo(
 					ease: animationConfig.easings.standard
 				}}
 			>
-				<Link href={`/forums`} aria-label={`Browse ${derivedZone.name} forums`}>
+				<Link to={`/forums`} aria-label={`Browse ${derivedZone.name} forums`}>
 					<Card
 						style={themeVars}
 						className={cn(

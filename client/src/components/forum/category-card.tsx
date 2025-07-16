@@ -1,4 +1,4 @@
-import { useLocation } from 'wouter';
+import { useLocation } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -43,7 +43,7 @@ export function CategoryCard({
 	const [, setLocation] = useLocation();
 
 	const handleViewCategory = () => {
-		setLocation(`/forums/${slug}`);
+		navigate(`/forums/${slug}`);
 	};
 
 	const formattedLastActivity = lastActivity

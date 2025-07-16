@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { useParams } from 'wouter';
+import { useParams } from 'react-router-dom';
 import { useUserActivityFeed } from '@/features/activity/hooks/useActivityFeed';
 import { EventLogFilters } from '@/features/activity/services/activityApi';
 import { format } from 'date-fns';
 import { useAuth } from '@/hooks/use-auth';
-import { Link } from 'wouter';
+import { Link } from 'react-router-dom';
 import { AdminPageShell } from '@/features/admin/layout/layout/AdminPageShell';
 import { Wide } from '@/layout/primitives';
 
@@ -28,7 +28,7 @@ const UserActivityPage: React.FC = () => {
 		eventType: selectedEventType !== 'all' ? selectedEventType.split(',') : undefined
 	});
 
-	// Redirect if not admin
+	// Navigate if not admin
 	if (user?.role !== 'admin') {
 		return (
 			<Wide className="px-4 py-8">
@@ -115,7 +115,7 @@ const UserActivityPage: React.FC = () => {
 		<AdminPageShell
 			title={`Activity Logs: ${activityFeed?.items[0]?.user?.displayName || username}`}
 			breadcrumb={
-				<Link href="/admin/activity" className="text-blue-500 hover:underline">
+				<Link to="/admin/activity" className="text-blue-500 hover:underline">
 					All Activities
 				</Link>
 			}

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation, Link, useSearch } from 'wouter';
+import { useLocation, Link } from 'react-router-dom';
 import { ThreadForm } from '@/features/forum/components/ThreadForm';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -34,9 +34,9 @@ import { Container } from '@/components/ui/Container';
 
 export default function CreateThreadPage() {
 	const { user } = useAuth();
-	const searchParams = new URLSearchParams(useSearch());
+	const currentLocation = useLocation();
+	const searchParams = new URLSearchParams(currentLocation.search);
 	const forumSlugFromQuery = searchParams.get('forumSlug');
-	const [currentWouterLocation] = useLocation();
 
 	const {
 		getForum,
@@ -106,7 +106,7 @@ export default function CreateThreadPage() {
 					<AlertTriangle className="h-12 w-12 text-red-500 mx-auto mb-4" />
 					<h1 className="text-xl font-semibold text-white mb-2">Error Loading Forums</h1>
 					<p className="text-zinc-400 mb-6">{forumStructureError.message}</p>
-					<Link href="/">
+					<Link to="/">
 						<Button variant="outline" className="border-zinc-700 hover:bg-zinc-800">
 							Return Home
 						</Button>
@@ -123,7 +123,7 @@ export default function CreateThreadPage() {
 					<AlertTriangle className="h-12 w-12 text-amber-500 mx-auto mb-4" />
 					<h1 className="text-xl font-semibold text-white mb-2">Forum Not Found</h1>
 					<p className="text-zinc-400 mb-6">The forum "{forumSlugFromQuery}" doesn't exist.</p>
-					<Link href="/forums">
+					<Link to="/forums">
 						<Button variant="outline" className="border-zinc-700 hover:bg-zinc-800">
 							Browse Forums
 						</Button>
@@ -324,7 +324,7 @@ export default function CreateThreadPage() {
 										<p className="text-zinc-400 text-sm mb-6 max-w-sm mx-auto">
 											You need to be signed in to create threads and participate in discussions.
 										</p>
-										<Link href={`/auth?redirect_to=${encodeURIComponent(currentWouterLocation)}`}>
+										<Link to={`/auth?redirect_to=${encodeURIComponent(currentLocation.pathname)}`}>
 											<Button
 												size="lg"
 												className={cn(
@@ -344,7 +344,7 @@ export default function CreateThreadPage() {
 										<p className="text-zinc-400 text-sm mb-6 max-w-sm mx-auto">
 											Thread creation is currently disabled in "{targetForum.name}".
 										</p>
-										<Link href="/forums">
+										<Link to="/forums">
 											<Button
 												variant="outline"
 												className="border-zinc-700 text-zinc-300 hover:bg-zinc-800"

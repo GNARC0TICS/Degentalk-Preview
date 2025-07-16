@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'wouter';
+import { useLocation } from 'react-router-dom';
 import { Check, Home, ChevronLeft, Wallet, ShoppingCart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Link } from 'wouter';
+import { Link } from 'react-router-dom';
 import confetti from 'canvas-confetti';
 import { Wide } from '@/layout/primitives';
 import useSearchParams from '@/hooks/useSearchParams';
@@ -75,7 +75,7 @@ export default function PurchaseSuccessPage() {
 		<Wide className="px-4 py-8">
 			{/* Navigation */}
 			<div className="mb-6">
-				<Link href="/shop">
+				<Link to="/shop">
 					<Button variant="ghost" className="flex items-center text-zinc-400 hover:text-white">
 						<ChevronLeft className="h-4 w-4 mr-1" />
 						Back to Shop
@@ -112,7 +112,7 @@ export default function PurchaseSuccessPage() {
 					<Button
 						variant="outline"
 						className="bg-zinc-800 border-zinc-700 hover:bg-zinc-700 hover:border-zinc-600"
-						onClick={() => setLocation('/wallet')}
+						onClick={() => navigate('/wallet')}
 					>
 						<Wallet className="h-4 w-4 mr-2 text-emerald-500" />
 						View Wallet
@@ -121,14 +121,14 @@ export default function PurchaseSuccessPage() {
 					<Button
 						variant="outline"
 						className="bg-zinc-800 border-zinc-700 hover:bg-zinc-700 hover:border-zinc-600"
-						onClick={() => setLocation('/shop')}
+						onClick={() => navigate('/shop')}
 					>
 						<ShoppingCart className="h-4 w-4 mr-2 text-primary" />
 						Continue Shopping
 					</Button>
 				</div>
 
-				<Button variant="default" className="px-8" onClick={() => setLocation('/')}>
+				<Button variant="default" className="px-8" onClick={() => navigate('/')}>
 					<Home className="h-4 w-4 mr-2" />
 					Return to Home
 				</Button>

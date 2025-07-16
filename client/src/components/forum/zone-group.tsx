@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Link } from 'wouter';
+import { Link } from 'react-router-dom';
 import { FolderOpen, ChevronDown, ChevronRight, MessageSquare, Megaphone } from 'lucide-react';
 import type { ForumId, ZoneId, ThreadId, EntityId } from '@shared/types/ids';
 

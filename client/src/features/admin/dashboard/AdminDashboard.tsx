@@ -6,7 +6,7 @@
  */
 
 import { useMemo } from 'react';
-import { Link } from 'wouter';
+import { Link } from 'react-router-dom';
 import {
 	TrendingUp,
 	Users,
@@ -226,7 +226,7 @@ export default function AdminDashboard() {
 											variant="ghost"
 											className="opacity-0 group-hover:opacity-100 transition-opacity text-admin-text-secondary hover:text-admin-text-accent"
 										>
-											<Link href={module.route}>
+											<Link to={module.route}>
 												<ExternalLink className="w-3 h-3 mr-1" />
 												Open
 											</Link>
@@ -263,7 +263,7 @@ export default function AdminDashboard() {
 										variant="ghost"
 										className="text-admin-text-secondary hover:text-admin-text-accent"
 									>
-										<Link href={module.route}>
+										<Link to={module.route}>
 											<ExternalLink className="w-3 h-3" />
 										</Link>
 									</Button>

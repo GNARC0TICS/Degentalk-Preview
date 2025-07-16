@@ -37,15 +37,18 @@ if (typeof globalThis.crypto.randomUUID !== 'function') {
 	globalThis.crypto.randomUUID = () => '00000000-0000-0000-0000-000000000000';
 }
 
-// Ensure `Router` is available in any wouter mock.
-vi.mock('wouter', async (importOriginal) => {
+// Mock react-router-dom for tests
+vi.mock('react-router-dom', async (importOriginal) => {
 	const actual = await importOriginal();
 	return {
 		...actual,
-		Router:
-			actual.Router ||
+		BrowserRouter:
+			actual.BrowserRouter ||
 			(({ children }: { children: React.ReactNode }) =>
-				React.createElement(React.Fragment, null, children))
+				React.createElement(React.Fragment, null, children)),
+		useNavigate: vi.fn(() => vi.fn()),
+		useParams: vi.fn(() => ({})),
+		useLocation: vi.fn(() => ({ pathname: '/', search: '', hash: '', state: null }))
 	};
 });
 

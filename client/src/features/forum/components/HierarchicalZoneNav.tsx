@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { Link, useLocation, useRoute } from 'wouter';
+import { Link, useLocation, useRoute } from 'react-router-dom';
 import {
 	ChevronRight,
 	ChevronDown,
@@ -155,7 +155,7 @@ const NavItem = ({
 	}
 
 	return (
-		<Link href={node.href}>
+		<Link to={node.href}>
 			{' '}
 			{/* Use node.href */}
 			<a className="block">{content}</a>

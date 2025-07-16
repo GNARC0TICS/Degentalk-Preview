@@ -1,11 +1,11 @@
 import type { ComponentType } from 'react';
-import { Redirect, Route } from 'wouter';
+import { Navigate, Route } from 'react-router-dom';
 import { useAuth } from '@/hooks/use-auth';
 import { Loader2 } from 'lucide-react';
 
 /**
  * AdminRoute - Verifies the user is authenticated and has admin privileges.
- * Redirects to /auth if not logged in, or / if not an admin.
+ * Navigates to /auth if not logged in, or / if not an admin.
  */
 export function AdminRoute({
 	path,
@@ -41,15 +41,15 @@ export function AdminRoute({
 				if (isDevMode && user && user.role !== 'admin') {
 					// In dev, if logged in as non-admin, show an unauthorized message or redirect
 					// console.warn(`[DEV] AdminRoute: Access to ${path} denied for mock role ${user.role}`);
-					return <Redirect to="/" />; // Or a specific /unauthorized page
+					return <Navigate to="/" />; // Or a specific /unauthorized page
 				}
 
 				if (!user) {
-					return <Redirect to="/auth" />;
+					return <Navigate to="/auth" />;
 				}
 
 				// Default redirect for non-admin users in production
-				return <Redirect to="/" />;
+				return <Navigate to="/" />;
 			}}
 		</Route>
 	);

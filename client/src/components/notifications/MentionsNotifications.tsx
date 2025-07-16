@@ -19,7 +19,7 @@ import {
 	Settings
 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
-import { Link } from 'wouter';
+import { Link } from 'react-router-dom';
 import { cn } from '@/utils/utils';
 import type { MentionId } from '@shared/types/ids';
 

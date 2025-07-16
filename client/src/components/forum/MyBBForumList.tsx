@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'wouter';
+import { Link } from 'react-router-dom';
 import { MessageSquare, Lock, Users, Calendar } from 'lucide-react';
 import type { MergedForum } from '@/contexts/ForumStructureContext';
 import { usePermission } from '@/hooks/usePermission';
@@ -60,7 +60,7 @@ function ForumRow({ forum, isEven }: { forum: MergedForum; isEven: boolean }) {
 			{/* Forum Info */}
 			<td>
 				<div className="flex flex-col">
-					<Link href={`/forums/${forum.slug}`} className="font-semibold text-blue-400 hover:text-blue-300 text-sm">
+					<Link to={`/forums/${forum.slug}`} className="font-semibold text-blue-400 hover:text-blue-300 text-sm">
 						{forum.name}
 					</Link>
 					{forum.description && (
@@ -71,7 +71,7 @@ function ForumRow({ forum, isEven }: { forum: MergedForum; isEven: boolean }) {
 							<span className="text-zinc-500">Subforums: </span>
 							{forum.subforums.map((sub, i) => (
 								<React.Fragment key={sub.id}>
-									<Link href={`/forums/${forum.slug}/${sub.slug}`} className="mybb-subforum-link">
+									<Link to={`/forums/${forum.slug}/${sub.slug}`} className="mybb-subforum-link">
 										{sub.name}
 									</Link>
 									{i < forum.subforums.length - 1 && ', '}
@@ -99,7 +99,7 @@ function ForumRow({ forum, isEven }: { forum: MergedForum; isEven: boolean }) {
 				{forum.threadCount > 0 ? (
 					<div>
 						<div className="truncate">
-							<Link href={`/threads/${lastPost.threadTitle.toLowerCase().replace(/\s+/g, '-')}`} className="text-blue-400 hover:underline text-xs">
+							<Link to={`/threads/${lastPost.threadTitle.toLowerCase().replace(/\s+/g, '-')}`} className="text-blue-400 hover:underline text-xs">
 								{lastPost.threadTitle}
 							</Link>
 						</div>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useRoute, useLocation } from 'wouter';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
 import { apiRequest } from '@/utils/queryClient';
 import { Wide } from '@/layout/primitives/Wide';
@@ -20,10 +20,10 @@ interface ReferralValidation {
 }
 
 export default function InvitePage() {
-	const [match, params] = useRoute('/invite/:code');
-	const [, setLocation] = useLocation();
+	const params = useParams<{ code: string }>();
+	const navigate = useNavigate();
 	const { user } = useAuth();
-	const code = params?.code;
+	const code = params.code;
 
 	const [validation, setValidation] = useState<ReferralValidation | null>(null);
 	const [isValidating, setIsValidating] = useState(true);
@@ -66,8 +66,8 @@ export default function InvitePage() {
 		},
 		onSuccess: () => {
 			toast.success('Referral code applied successfully!');
-			// Redirect to home or dashboard
-			setLocation('/');
+			// Navigate to home or dashboard
+			navigate('/');
 		},
 		onError: (error: any) => {
 			const message = error?.message || 'Failed to apply referral code';

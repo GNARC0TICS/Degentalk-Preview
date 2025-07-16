@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'wouter';
+import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
 import { Card, CardContent } from '@/components/ui/card';
@@ -122,7 +122,7 @@ export function UnifiedProfileCard({
 			>
 				<AvatarFrame avatarUrl={profile.avatarUrl || ''} frame={identity?.avatarFrame} size={32} />
 				<div className="flex items-center space-x-2">
-					<Link href={`/profile/${username}`}>
+					<Link to={`/profile/${username}`}>
 						<UserName
 							username={profile.username}
 							userId={profile.id}
@@ -167,7 +167,7 @@ export function UnifiedProfileCard({
 							initial={animated ? { opacity: 0, y: -20 } : undefined}
 							animate={animated ? { opacity: 1, y: 0 } : undefined}
 						>
-							<Link href={`/profile/${username}`} className="block mb-3">
+							<Link to={`/profile/${username}`} className="block mb-3">
 								<AvatarFrame
 									avatarUrl={profile.avatarUrl || ''}
 									frame={identity?.avatarFrame}
@@ -177,7 +177,7 @@ export function UnifiedProfileCard({
 							</Link>
 
 							<div className="flex items-center justify-center gap-2 mb-2">
-								<Link href={`/profile/${username}`}>
+								<Link to={`/profile/${username}`}>
 									<UserName
 										username={profile.username}
 										userId={profile.id}

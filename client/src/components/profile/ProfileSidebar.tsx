@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'wouter';
+import { Link } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -125,7 +125,7 @@ const ProfileSidebar: React.FC<Props> = ({ profile, isOwnProfile }) => {
 				{/* Actions */}
 				<div className="flex gap-2 w-full mb-6">
 					{isOwnProfile ? (
-						<Link href="/preferences">
+						<Link to="/preferences">
 							<Button className="flex-1 bg-gradient-to-r from-violet-600 to-purple-600 text-white">
 								<Settings className="mr-2 h-4 w-4" />
 								Preferences

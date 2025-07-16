@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { PlusCircle, Edit, Trash2 } from 'lucide-react';
 import { apiRequest } from '@/utils/queryClient'; // As per api-client-pattern.mdc
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Link } from 'wouter';
+import { Link } from 'react-router-dom';
 import { AdminPageShell } from '@/features/admin/layout/layout/AdminPageShell';
 import { AdminDataTable } from '@/features/admin/components/common/AdminDataTable';
 import type { ColumnDef } from '@/features/admin/layout/layout/EntityTable';
@@ -107,7 +107,7 @@ export default function AdminShopItemsPage() {
 
 	const renderActions = (product: Product) => (
 		<div className="flex gap-2">
-			<Link href={`/admin/shop/edit/${product.id}`}>
+			<Link to={`/admin/shop/edit/${product.id}`}>
 				<Button variant="outline" size="sm">
 					<Edit className="h-4 w-4 mr-1" /> Edit
 				</Button>
@@ -124,7 +124,7 @@ export default function AdminShopItemsPage() {
 	);
 
 	const pageActions = (
-		<Link href="/admin/shop/edit/new">
+		<Link to="/admin/shop/edit/new">
 			<Button>
 				<PlusCircle className="mr-2 h-4 w-4" /> Add New Item
 			</Button>

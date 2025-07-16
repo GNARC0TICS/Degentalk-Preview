@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'wouter';
+import { Link } from 'react-router-dom';
 import { cn } from '@/utils/utils';
 
 export interface NavItemProps {
@@ -68,7 +68,7 @@ export function NavItem({
 	);
 
 	return (
-		<Link href={href}>
+		<Link to={href}>
 			<a
 				className={classes}
 				onClick={(e) => {

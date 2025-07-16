@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react';
-import { useLocation, Redirect } from 'wouter';
+import { useLocation, Navigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/use-auth';
 import { useAdminPermission } from '@/hooks/use-admin-modules';
 import { hasRoleAtLeast } from '@/utils/roles';
@@ -64,11 +64,11 @@ export function ProtectedAdminRoute({
 	}
 
 	if (!user) {
-		return <Redirect to="/login" />;
+		return <Navigate to="/login" />;
 	}
 
 	if (!hasRoleAtLeast(user.role as Role, 'moderator')) {
-		return <Redirect to="/" />;
+		return <Navigate to="/" />;
 	}
 
 	if (!hasPermission) {

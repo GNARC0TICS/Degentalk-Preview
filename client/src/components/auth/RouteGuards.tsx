@@ -1,5 +1,5 @@
 import type { ReactNode, ComponentType } from 'react';
-import { Route, Redirect } from 'wouter';
+import { Route, Navigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/use-auth';
 import { hasRoleAtLeast } from '@/utils/roles';
 import type { Role } from '@/utils/roles';
@@ -17,7 +17,7 @@ export function RequireAuth({ children, redirectTo = '/auth' }: RouteGuardProps)
 	}
 
 	if (!isAuthenticated) {
-		return <Redirect to={redirectTo} />;
+		return <Navigate to={redirectTo} />;
 	}
 
 	return <>{children}</>;
@@ -36,17 +36,17 @@ export function RequireRole({ children, minRole, exactRole, redirectTo = '/' }: 
 	}
 
 	if (!isAuthenticated || !user) {
-		return <Redirect to="/auth" />;
+		return <Navigate to="/auth" />;
 	}
 
 	const userRole = user.role as Role;
 
 	if (exactRole && userRole !== exactRole) {
-		return <Redirect to={redirectTo} />;
+		return <Navigate to={redirectTo} />;
 	}
 
 	if (minRole && !hasRoleAtLeast(userRole, minRole)) {
-		return <Redirect to={redirectTo} />;
+		return <Navigate to={redirectTo} />;
 	}
 
 	return <>{children}</>;
@@ -124,13 +124,13 @@ export function PublicOnlyRoute({ children, redirectTo = '/' }: RouteGuardProps)
 	}
 
 	if (isAuthenticated) {
-		return <Redirect to={redirectTo} />;
+		return <Navigate to={redirectTo} />;
 	}
 
 	return <>{children}</>;
 }
 
-// Backwards compatibility component that works with wouter's Route pattern
+// Route guards for react-router-dom
 interface ProtectedRouteProps {
 	path?: string;
 	component?: ComponentType<any>;

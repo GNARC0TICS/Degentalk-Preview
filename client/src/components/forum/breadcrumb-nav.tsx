@@ -1,4 +1,4 @@
-import { Link } from 'wouter';
+import { Link } from 'react-router-dom';
 import { ChevronRight, Home, Layers, FolderOpen } from 'lucide-react';
 import { ROUTES } from '@/constants/routes';
 

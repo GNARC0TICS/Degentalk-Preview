@@ -1,5 +1,5 @@
 import React from 'react';
-import { useLocation } from 'wouter';
+import { useLocation } from 'react-router-dom';
 import { IconRenderer } from '@/components/icons/iconRenderer';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';

@@ -1,6 +1,6 @@
 import React from 'react';
 import DOMPurify from 'dompurify';
-import { Link } from 'wouter';
+import { Link } from 'react-router-dom';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { UnifiedProfileCard } from '@/components/profile/UnifiedProfileCard';
 import { Button } from '@/components/ui/button';
@@ -249,7 +249,7 @@ export function PostCard({
 									</Button>
 								</ButtonTooltip>
 							) : (
-								<Link href="/auth">
+								<Link to="/auth">
 									<Button
 										size={breakpoint.isMobile ? 'default' : 'sm'}
 										variant="ghost"
