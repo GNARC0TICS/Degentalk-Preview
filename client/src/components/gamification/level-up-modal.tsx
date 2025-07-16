@@ -102,7 +102,7 @@ export function LevelUpModal({
 
 	return (
 		<Dialog open={isOpen} onOpenChange={onClose}>
-			<DialogContent className="sm:max-w-md bg-zinc-900 border-purple-600">
+			<DialogContent className="sm:max-w-md bg-popover border-border">
 				<motion.div
 					variants={containerVariants}
 					initial="hidden"

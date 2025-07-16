@@ -10,6 +10,8 @@ import { ProfileCardProvider } from '@/contexts/ProfileCardContext';
 import { MotionProvider } from '@/contexts/MotionContext';
 import { getQueryFn } from '@/utils/queryClient';
 import { ForumOrderingProvider } from '@/contexts/ForumOrderingContext';
+import { WebSocketProvider } from '@/hooks/useWebSocket';
+import { ThemeProvider } from 'next-themes';
 
 // Initialize React Query client - MAIN APPLICATION QUERY CLIENT
 // This is the PRIMARY QueryClient instance used throughout the application
@@ -39,25 +41,29 @@ const queryClient = new QueryClient({
 export function RootProvider({ children }: { children: React.ReactNode }) {
 	return (
 		<React.StrictMode>
-			<QueryClientProvider client={queryClient}>
-				<AuthProvider>
-					<PurchaseModalProvider>
-						<ShoutboxProvider>
-							<ForumStructureProvider>
-								<ForumOrderingProvider>
-									<ForumThemeProvider>
-										<MotionProvider>
-											<ProfileCardProvider>
-												<TooltipProvider>{children}</TooltipProvider>
-											</ProfileCardProvider>
-										</MotionProvider>
-									</ForumThemeProvider>
-								</ForumOrderingProvider>
-							</ForumStructureProvider>
-						</ShoutboxProvider>
-					</PurchaseModalProvider>
-				</AuthProvider>
-			</QueryClientProvider>
+			<ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
+				<QueryClientProvider client={queryClient}>
+					<AuthProvider>
+						<WebSocketProvider>
+							<PurchaseModalProvider>
+								<ShoutboxProvider>
+									<ForumStructureProvider>
+										<ForumOrderingProvider>
+											<ForumThemeProvider>
+												<MotionProvider>
+													<ProfileCardProvider>
+														<TooltipProvider>{children}</TooltipProvider>
+													</ProfileCardProvider>
+												</MotionProvider>
+											</ForumThemeProvider>
+										</ForumOrderingProvider>
+									</ForumStructureProvider>
+								</ShoutboxProvider>
+							</PurchaseModalProvider>
+						</WebSocketProvider>
+					</AuthProvider>
+				</QueryClientProvider>
+			</ThemeProvider>
 		</React.StrictMode>
 	);
 }

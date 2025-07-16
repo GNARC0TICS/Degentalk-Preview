@@ -104,8 +104,8 @@ export const TipPostModal: React.FC<TipPostModalProps> = ({
 								onClick={() => handlePresetClick(preset)}
 								disabled={preset > currentBalance}
 								className={cn(
-									'border-zinc-700 hover:bg-zinc-800',
-									amount === preset.toString() && 'bg-zinc-800 border-emerald-600',
+									'border-border hover:bg-muted',
+									amount === preset.toString() && 'bg-muted border-emerald-600',
 									preset > currentBalance && 'opacity-50 cursor-not-allowed'
 								)}
 							>
@@ -146,7 +146,7 @@ export const TipPostModal: React.FC<TipPostModalProps> = ({
 						variant="outline"
 						onClick={handleClose}
 						disabled={isTipping}
-						className="border-zinc-700 text-zinc-300 hover:bg-zinc-800"
+						className="border-border text-muted-foreground hover:bg-muted"
 					>
 						Cancel
 					</Button>
