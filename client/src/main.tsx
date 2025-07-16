@@ -5,35 +5,33 @@
  * @dependencies
  * - React: Core library for building user interfaces.
  * - ReactDOM: For DOM-specific rendering methods.
- * - App: The root component of the application.
+ * - RouterProvider: React Router v6 provider for routing.
+ * - router: Main router configuration.
  * - index.css: Global CSS styles.
  * - styles/animations.css: Application-wide animation styles.
  * - RootProvider: Aggregates all global context providers.
- * - wouter (Router): Lightweight routing library.
- * - BASE_URL: Base URL constant for routing.
  * @environment Client-side (browser).
- * @important_notes All global providers are managed by `RootProvider`. Do not add providers directly in this file or in `App.tsx`.
- * @status Stable.
- * @last_reviewed 2025-06-01
- * @owner Cline
+ * @important_notes All global providers are managed by `RootProvider`. Router is now handled by react-router-dom.
+ * @status Updated to react-router-dom v6.
+ * @last_reviewed 2025-07-16
+ * @owner Claude
  */
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { RouterProvider } from 'react-router-dom';
 import App from './App';
 import './index.css';
 import './styles/animations.css';
 import './features/admin/styles/admin-theme.css'; // Import admin theme
 import { RootProvider } from './providers/root-provider';
-import { Router } from 'wouter';
-import { BASE_URL } from '@/core/constants';
+import { router } from './Router';
 
 // IMPORTANT: All providers are now managed by RootProvider.
-// Do not add providers directly in this file or in App.tsx.
+// Routing is now handled by react-router-dom RouterProvider.
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
 	<RootProvider>
-		<Router base={BASE_URL}>
-			<App />
-		</Router>
+		<App />
+		<RouterProvider router={router} />
 	</RootProvider>
 );

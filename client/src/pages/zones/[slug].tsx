@@ -38,7 +38,11 @@ const ZonePage: React.FC = () => {
 	}, [displayName]);
 
 	if (slug === 'general') {
-		return <NotFound />;
+		// Redirect to forums page with general section
+		React.useEffect(() => {
+			window.location.href = '/forums#general-forums';
+		}, []);
+		return <LoadingState />;
 	}
 
 	if (!slug) {
@@ -137,15 +141,20 @@ const ZonePage: React.FC = () => {
 							</div>
 						</div>
 
-						<Link href="/threads/create">
+						{zone.forums && zone.forums.length > 0 && (
 							<Button
 								className="bg-emerald-600 hover:bg-emerald-700 text-white w-full sm:w-auto"
 								size="lg"
+								onClick={() => {
+									// Go to the first forum to create a thread
+									const firstForum = zone.forums[0];
+									window.location.href = `/forums/${firstForum.slug}/create`;
+								}}
 							>
 								<Plus className="w-4 h-4 mr-2" />
 								New Thread
 							</Button>
-						</Link>
+						)}
 					</div>
 				</Wide>
 			</div>
@@ -172,7 +181,7 @@ const ZonePage: React.FC = () => {
 										>
 											<ForumListItem
 												forum={forum}
-												href={`/zones/${zone.slug}/${forum.slug}`}
+												href={`/forums/${forum.slug}`}
 												parentZoneColor={theme?.color ?? undefined}
 												zoneSlug={zone.slug}
 											/>
@@ -225,22 +234,22 @@ const ZonePage: React.FC = () => {
 							</CardContent>
 						</Card>
 
-						{/* Quick Actions */}
+						{/* Quick Navigation */}
 						<Card className="bg-zinc-900 border-zinc-800">
 							<CardHeader>
-								<CardTitle className="text-lg text-white">Quick Actions</CardTitle>
+								<CardTitle className="text-lg text-white">Quick Navigation</CardTitle>
 							</CardHeader>
 							<CardContent className="space-y-2">
-								<Link href="/threads/create">
+								<Link href="/forums">
 									<Button className="w-full justify-start" variant="outline">
-										<Plus className="w-4 h-4 mr-2" />
-										Create Thread
+										<Map className="w-4 h-4 mr-2" />
+										Browse All Forums
 									</Button>
 								</Link>
-								<Link href="/zones">
+								<Link href="/">
 									<Button className="w-full justify-start" variant="outline">
-										<Users className="w-4 h-4 mr-2" />
-										Browse All Zones
+										<Home className="w-4 h-4 mr-2" />
+										Back to Homepage
 									</Button>
 								</Link>
 							</CardContent>

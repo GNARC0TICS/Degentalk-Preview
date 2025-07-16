@@ -1,8 +1,8 @@
-import { db } from '../../db';
-import { logger } from '@server/core/logger';
-import * as schema from '../../db/schema';
+import { db } from '../../../db';
+// import { logger } from '@server/core/logger'; // Logger not needed in seeding
+import * as schema from '../../../db/schema';
 import { eq, and, gte, lte, sql, desc } from 'drizzle-orm';
-import type { UserId, ThreadId, PostId, ForumId } from '../../shared/types/ids';
+import type { UserId, ThreadId, PostId, ForumId } from '../../../shared/types/ids';
 import { getSeedConfig } from '../config/seed.config';
 import { personas } from '../config/personas.config';
 import chalk from 'chalk';
@@ -425,14 +425,13 @@ export class TemporalSimulator {
 		// Clear old entries
 		await db
 			.delete(schema.onlineUsers)
-			.where(lte(schema.onlineUsers.lastActivity, new Date(this.currentSimTime.getTime() - 300000))); // 5 min timeout
+			.where(lte(schema.onlineUsers.lastActive, new Date(this.currentSimTime.getTime() - 300000))); // 5 min timeout
 
 		// Update active users
 		for (const user of activeUsers) {
 			await db.insert(schema.onlineUsers).values({
 				userId: user.id,
-				lastActivity: this.currentSimTime,
-				status: 'online',
+				lastActive: this.currentSimTime,
 				metadata: {
 					activity: 'active',
 					client: 'web'
@@ -440,8 +439,7 @@ export class TemporalSimulator {
 			}).onConflictDoUpdate({
 				target: schema.onlineUsers.userId,
 				set: {
-					lastActivity: this.currentSimTime,
-					status: 'online'
+					lastActive: this.currentSimTime
 				}
 			});
 		}

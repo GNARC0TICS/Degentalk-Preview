@@ -15,9 +15,6 @@ const router: RouterType = Router();
 // Route to award XP for a specific action (e.g., creating a thread)
 router.post('/award-action', authenticateJWT, xpController.awardActionXp);
 
-// Route to award XP for an action (test/development endpoint - consider renaming or removing if redundant with award-action)
-router.post('/award', authenticateJWT, xpController.awardXpForAction);
-
 // Route to get user XP info
 router.get('/user/:userId', authenticateJWT, xpController.getUserXpInfo);
 

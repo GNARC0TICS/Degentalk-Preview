@@ -90,7 +90,7 @@ export const createUserMenuItems = (
 ): UserMenuItemConfig[] => [
 	{
 		label: 'Profile',
-		href: `/profile/${username}`,
+		href: '/profile', // Using static profile page for demo
 		icon: React.createElement(IconRenderer, {
 			icon: 'profile',
 			size: 16,

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'wouter';
+import { Link } from 'react-router-dom';
 import { cn } from '@/utils/utils';
 import {
 	MessageSquare,

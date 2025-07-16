@@ -46,13 +46,15 @@ export function useContent(params: UseContentParams = {}) {
 				searchParams.append('forumId', params.forumId.toString());
 			}
 
-			const response = await fetch(`/api/forum/content?${searchParams.toString()}`);
+			const response = await fetch(`/api/forums/content?${searchParams.toString()}`);
 
 			if (!response.ok) {
 				throw new Error(`Failed to fetch content: ${response.statusText}`);
 			}
 
-			return response.json();
+			const result = await response.json();
+			// Handle the API response format {success: true, data: {...}}
+			return result.data || result;
 		},
 		staleTime: 30 * 1000, // 30 seconds
 		refetchInterval: 60 * 1000, // 1 minute auto-refresh

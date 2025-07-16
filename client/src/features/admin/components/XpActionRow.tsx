@@ -1,48 +1,39 @@
-import { Input } from '@/components/ui/input';
-import { Switch } from '@/components/ui/switch';
-import { useState } from 'react';
-import { useUpdateXpAction } from '@/features/admin/services/xpActionsService';
+import React from 'react';
+import { TableCell, TableRow } from '@/components/ui/table';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Pencil, Trash2 } from 'lucide-react';
+import type { XpAction } from '../services/xpActionsService';
 
-export interface XpAction {
-	action: string;
-	description: string;
-	baseValue: number;
-	cloutMultiplier?: number | null;
-	enabled: boolean;
-}
-
-interface Props {
+interface XpActionRowProps {
 	action: XpAction;
+	onEdit: (action: XpAction) => void;
+	onDelete: (action: XpAction) => void;
 }
 
-export function XpActionRow({ action }: Props) {
-	const [xp, setXp] = useState(action.baseValue);
-	const [enabled, setEnabled] = useState(action.enabled);
-	const update = useUpdateXpAction();
-
-	const save = () => {
-		update.mutate({
-			actionKey: action.action,
-			payload: { xp, enabled }
-		});
-	};
-
+export function XpActionRow({ action, onEdit, onDelete }: XpActionRowProps) {
 	return (
-		<tr className="border-b">
-			<td className="p-2 font-mono text-xs">{action.action}</td>
-			<td className="p-2">{action.description}</td>
-			<td className="p-2 w-32">
-				<Input
-					type="number"
-					min={0}
-					value={xp}
-					onChange={(e) => setXp(Number(e.target.value))}
-					onBlur={save}
-				/>
-			</td>
-			<td className="p-2 text-center">
-				<Switch checked={enabled} onCheckedChange={setEnabled} onBlur={save} />
-			</td>
-		</tr>
+		<TableRow>
+			<TableCell className="font-mono">{action.action}</TableCell>
+			<TableCell>{action.description}</TableCell>
+			<TableCell className="text-center">{action.baseValue}</TableCell>
+			<TableCell className="text-center">{action.maxPerDay ?? 'N/A'}</TableCell>
+			<TableCell className="text-center">{action.cooldownSec ?? 'N/A'}</TableCell>
+			<TableCell>
+				<Badge variant={action.enabled ? 'default' : 'destructive'}>
+					{action.enabled ? 'Enabled' : 'Disabled'}
+				</Badge>
+			</TableCell>
+			<TableCell className="text-right">
+				<Button variant="outline" size="sm" className="mr-2" onClick={() => onEdit(action)}>
+					<Pencil className="h-4 w-4 mr-1" />
+					Edit
+				</Button>
+				<Button variant="destructive" size="sm" onClick={() => onDelete(action)}>
+					<Trash2 className="h-4 w-4 mr-1" />
+					Delete
+				</Button>
+			</TableCell>
+		</TableRow>
 	);
 }

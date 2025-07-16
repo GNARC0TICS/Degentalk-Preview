@@ -1,8 +1,8 @@
-import { db } from '../../db';
-import { logger } from '@server/core/logger';
-import * as schema from '../../db/schema';
+import { db } from '../../../db';
+// import { logger } from '@server/core/logger'; // Logger not needed in seeding
+import * as schema from '../../../db/schema';
 import { eq, and, gte, sql } from 'drizzle-orm';
-import type { UserId, ThreadId, PostId } from '../../shared/types/ids';
+import type { UserId, ThreadId, PostId } from '../../../shared/types/ids';
 import { getSeedConfig } from '../config/seed.config';
 import { personas } from '../config/personas.config';
 import chalk from 'chalk';
@@ -39,15 +39,8 @@ export class AbuseSimulator {
 		// Define abuse patterns for different personas
 		this.defineAbusePatterns();
 
-		// Load existing bans/flags
-		const existingFlags = await db
-			.select({ userId: schema.userAbuseFlags.userId })
-			.from(schema.userAbuseFlags)
-			.where(eq(schema.userAbuseFlags.status, 'confirmed'));
-
-		existingFlags.forEach(flag => {
-			this.reportedUsers.add(flag.userId);
-		});
+		// Skip loading existing bans/flags - table doesn't have status field
+		this.log('Skipping existing flags check - table schema mismatch', 'warn');
 
 		this.log(`Initialized with ${this.abusePatterns.size} abuse patterns`, 'success');
 	}

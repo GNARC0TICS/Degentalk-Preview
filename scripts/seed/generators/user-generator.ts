@@ -1,8 +1,8 @@
-import { db } from '../../db';
-import * as schema from '../../db/schema';
-import type { UserId } from '../../shared/types/ids';
+import { db } from '../../../db';
+import * as schema from '../../../db/schema';
+import type { UserId } from '../../../shared/types/ids';
 import { personas, type Persona } from '../config/personas.config';
-import bcrypt from 'bcryptjs';
+import { createHash } from 'crypto';
 import { v4 as uuidv4 } from 'uuid';
 import chalk from 'chalk';
 
@@ -38,7 +38,8 @@ export class UserGenerator {
 			}
 
 			// Hash password
-			const hashedPassword = await bcrypt.hash('password123', 10);
+			// For seeding, use a simple hash instead of bcrypt
+			const hashedPassword = createHash('sha256').update('password123').digest('hex');
 
 			// Create user
 			const [user] = await db.insert(schema.users).values({
@@ -122,7 +123,8 @@ export class UserGenerator {
 				return null;
 			}
 
-			const hashedPassword = await bcrypt.hash('password123', 10);
+			// For seeding, use a simple hash instead of bcrypt
+			const hashedPassword = createHash('sha256').update('password123').digest('hex');
 
 			const [user] = await db.insert(schema.users).values({
 				username,

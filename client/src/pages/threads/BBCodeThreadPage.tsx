@@ -1,5 +1,5 @@
 import React, { useMemo, useEffect, useState, useCallback } from 'react';
-import { useRoute } from 'wouter';
+import { useParams } from 'react-router-dom';
 import {
 	AlertCircle,
 	ArrowUp,
@@ -40,8 +40,7 @@ import { ThreadActionsProvider } from '@/features/forum/contexts/ThreadActionsCo
 
 export default function BBCodeThreadPage() {
 	// Get slug param from route
-	const [match, params] = useRoute<{ thread_slug: string }>('/threads/:thread_slug');
-	const slug = params?.thread_slug;
+	const { slug } = useParams<{ slug: string }>();
 
 	// Authentication state
 	const { user, isAuthenticated } = useAuth();
@@ -240,7 +239,7 @@ export default function BBCodeThreadPage() {
 		// Then refresh the posts or optimistically update the list
 	};
 
-	if (!match) {
+	if (!slug) {
 		return <div>404 Not Found</div>;
 	}
 

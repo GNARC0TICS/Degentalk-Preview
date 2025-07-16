@@ -38,7 +38,6 @@ test-results/
 # Migration backup files
 *.backup.*
 UIVERSE/
-zen-mcp-server
 scripts/codemods/logger-migration.ts
 
 # Database schema compilation artifacts (TypeScript only)
@@ -48,3 +47,6 @@ db/schema/**/*.d.ts
 
 # Claude audit logs
 .claude/audit/
+
+# Ignore Zen MCP server directory (AI orchestration tooling)
+zen-mcp-server/

@@ -1,0 +1,255 @@
+/* MyBB Classic Forum Styles - 2006 Aesthetic */
+
+/* Category Headers - Using theme colors */
+.mybb-category-header {
+  background: linear-gradient(to bottom, theme('colors.zinc.700'), theme('colors.zinc.800'));
+  color: white;
+  padding: 8px 12px;
+  font-weight: bold;
+  font-size: 13px;
+  border: 1px solid theme('colors.zinc.600');
+  border-radius: 0;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
+}
+
+/* Forum Row Styling */
+.mybb-forum-row {
+  background: theme('colors.zinc.900');
+  border: 1px solid theme('colors.zinc.800');
+  border-top: none;
+}
+
+.mybb-forum-row:nth-child(even) {
+  background: theme('colors.zinc.950');
+}
+
+.mybb-forum-row:hover {
+  background: theme('colors.zinc.800/50');
+}
+
+/* Sticky/Pinned Forum Styling */
+.mybb-forum-row.sticky {
+  background: theme('colors.amber.950/20');
+  border-left: 3px solid theme('colors.amber.500');
+}
+
+.mybb-forum-row.sticky:hover {
+  background: theme('colors.amber.900/30');
+}
+
+/* Classic Table Layout */
+.mybb-forum-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: theme('colors.zinc.900');
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.mybb-forum-table td {
+  padding: 10px;
+  border-bottom: 1px solid theme('colors.zinc.800');
+  vertical-align: middle;
+}
+
+/* Forum Status Icons */
+.mybb-status-icon {
+  width: 24px;
+  height: 24px;
+  margin-right: 10px;
+}
+
+.mybb-status-new {
+  background: url('/assets/forum-new.png') no-repeat center;
+  background-size: contain;
+}
+
+.mybb-status-old {
+  background: url('/assets/forum-old.png') no-repeat center;
+  background-size: contain;
+  opacity: 0.6;
+}
+
+/* Last Post Info */
+.mybb-lastpost {
+  font-size: 11px;
+  color: theme('colors.zinc.400');
+  line-height: 1.4;
+}
+
+.mybb-lastpost-user {
+  font-weight: bold;
+  color: theme('colors.blue.400');
+}
+
+.mybb-lastpost-time {
+  color: theme('colors.zinc.500');
+}
+
+/* Stats Columns */
+.mybb-stats {
+  text-align: center;
+  font-size: 12px;
+  color: theme('colors.zinc.400');
+  width: 80px;
+}
+
+.mybb-stats-number {
+  font-weight: bold;
+  color: theme('colors.zinc.200');
+  display: block;
+  font-size: 14px;
+}
+
+/* Subforum Indicator */
+.mybb-subforum-list {
+  font-size: 11px;
+  color: theme('colors.zinc.500');
+  margin-top: 4px;
+}
+
+.mybb-subforum-link {
+  color: theme('colors.blue.400');
+  text-decoration: none;
+  margin-right: 8px;
+}
+
+.mybb-subforum-link:hover {
+  text-decoration: underline;
+}
+
+/* Classic Breadcrumb */
+.mybb-breadcrumb {
+  background: theme('colors.zinc.900');
+  padding: 8px 12px;
+  border: 1px solid theme('colors.zinc.800');
+  font-size: 11px;
+  margin-bottom: 10px;
+}
+
+.mybb-breadcrumb-separator {
+  margin: 0 6px;
+  color: theme('colors.zinc.500');
+}
+
+/* Forum Legend */
+.mybb-legend {
+  background: theme('colors.zinc.900');
+  border: 1px solid theme('colors.zinc.800');
+  padding: 10px;
+  margin-top: 10px;
+  font-size: 11px;
+}
+
+.mybb-legend-item {
+  display: inline-block;
+  margin-right: 15px;
+}
+
+/* Who's Online Bar */
+.mybb-whos-online {
+  background: theme('colors.zinc.900');
+  border: 1px solid theme('colors.zinc.800');
+  padding: 10px;
+  margin-top: 10px;
+  font-size: 12px;
+}
+
+/* Thread List Styles */
+.mybb-thread-row {
+  background: theme('colors.zinc.900');
+  border: 1px solid theme('colors.zinc.800');
+  border-top: none;
+}
+
+.mybb-thread-row:nth-child(even) {
+  background: theme('colors.zinc.950');
+}
+
+.mybb-thread-row:hover {
+  background: theme('colors.zinc.800/50');
+}
+
+/* Sticky Thread Styling */
+.mybb-thread-row.sticky {
+  background: theme('colors.amber.950/20');
+  border-left: 3px solid theme('colors.amber.500');
+}
+
+.mybb-thread-row.sticky:hover {
+  background: theme('colors.amber.900/30');
+}
+
+/* Thread Prefix Badges */
+.mybb-thread-prefix {
+  display: inline-block;
+  padding: 1px 6px;
+  margin-right: 6px;
+  font-size: 10px;
+  font-weight: bold;
+  text-transform: uppercase;
+  border-radius: 2px;
+  background: theme('colors.zinc.700');
+  color: theme('colors.zinc.100');
+  border: 1px solid theme('colors.zinc.600');
+}
+
+.mybb-thread-prefix.live {
+  background: theme('colors.red.900/50');
+  color: theme('colors.red.200');
+  border-color: theme('colors.red.700');
+}
+
+.mybb-thread-prefix.announcement {
+  background: theme('colors.blue.900/50');
+  color: theme('colors.blue.200');
+  border-color: theme('colors.blue.700');
+}
+
+.mybb-thread-prefix.solved {
+  background: theme('colors.green.900/50');
+  color: theme('colors.green.200');
+  border-color: theme('colors.green.700');
+}
+
+/* Thread Icon */
+.mybb-thread-icon {
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+  margin-right: 4px;
+}
+
+/* Thread Title */
+.mybb-thread-title {
+  font-weight: 600;
+  color: theme('colors.blue.400');
+  text-decoration: none;
+  font-size: 13px;
+}
+
+.mybb-thread-title:hover {
+  color: theme('colors.blue.300');
+  text-decoration: underline;
+}
+
+/* Online Indicator */
+.mybb-online-indicator {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: theme('colors.green.500');
+  margin-left: 4px;
+  vertical-align: middle;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+

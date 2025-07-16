@@ -13,10 +13,94 @@ import ThreadList from '@/features/forum/components/ThreadList';
 import { DynamicSidebar } from '@/components/forum/sidebar';
 import { SiteFooter } from '@/components/footer';
 import { ForumHeader } from '@/components/forum/ForumHeader';
-import type { ForumId, StructureId, asStructureId } from '@shared/types/ids';
+import { MyBBThreadList } from '@/components/forum/MyBBThreadList';
+import { asStructureId } from '@shared/types/ids';
+import type { ForumId, StructureId } from '@shared/types/ids';
+import type { ThreadDisplay } from '@/types/thread.types';
 
 export interface ForumPageProps {
 	className?: string;
+}
+
+// Demo threads for fallback mode
+function getDemoThreads(forumSlug: string): ThreadDisplay[] {
+	const baseThreads = [
+		{
+			id: '1',
+			title: '🚀 Bitcoin hitting $100k EOY - Here\'s why',
+			slug: 'bitcoin-hitting-100k-eoy-heres-why',
+			user: { id: '1', username: 'CryptoKing', avatarUrl: null, isOnline: true },
+			createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+			lastPostAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+			viewCount: 1337,
+			postCount: 43,
+			isSticky: true,
+			isLocked: false,
+			isSolved: false
+		},
+		{
+			id: '2',
+			title: '⚠️ WARNING: New DeFi scam targeting wallets',
+			slug: 'warning-new-defi-scam-targeting-wallets',
+			user: { id: '2', username: 'SecurityExpert', avatarUrl: null, isOnline: false },
+			createdAt: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString(),
+			lastPostAt: new Date(Date.now() - 30 * 60 * 1000).toISOString(),
+			viewCount: 2456,
+			postCount: 67,
+			isSticky: false,
+			isLocked: false,
+			isSolved: false
+		},
+		{
+			id: '3',
+			title: '💎 Hidden gem alert: $PEPE mooning soon?',
+			slug: 'hidden-gem-alert-pepe-mooning-soon',
+			user: { id: '3', username: 'MoonBoi', avatarUrl: null, isOnline: true },
+			createdAt: new Date(Date.now() - 12 * 60 * 60 * 1000).toISOString(),
+			lastPostAt: new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString(),
+			viewCount: 892,
+			postCount: 15,
+			isSticky: false,
+			isLocked: false,
+			isSolved: false
+		},
+		{
+			id: '4',
+			title: '📊 Daily market analysis thread',
+			slug: 'daily-market-analysis-thread',
+			user: { id: '4', username: 'TradingGuru', avatarUrl: null, isOnline: false },
+			createdAt: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
+			lastPostAt: new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString(),
+			viewCount: 567,
+			postCount: 23,
+			isSticky: false,
+			isLocked: false,
+			isSolved: true
+		},
+		{
+			id: '5',
+			title: '🎯 Airdrop hunting strategies that actually work',
+			slug: 'airdrop-hunting-strategies',
+			user: { id: '5', username: 'AirdropHunter', avatarUrl: null, isOnline: true },
+			createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+			lastPostAt: null,
+			viewCount: 234,
+			postCount: 1,
+			isSticky: false,
+			isLocked: false,
+			isSolved: false
+		}
+	];
+
+	// Add zone info to threads
+	return baseThreads.map(thread => ({
+		...thread,
+		zoneName: 'Trading',
+		zoneSlug: 'trading',
+		forumName: forumSlug === 'market-analysis' ? 'Market Analysis' : 
+		           forumSlug === 'live-trade-reacts' ? 'Live-Trade Reacts' : 'Shill Zone',
+		forumSlug
+	})) as ThreadDisplay[];
 }
 
 const ForumPage = memo(() => {
@@ -78,8 +162,8 @@ const ForumPage = memo(() => {
 	}, [parentZone, forumSlug]);
 
 	const breadcrumbItems = React.useMemo(() => {
-		if (!parentZone || !forum) return [];
-		return createForumBreadcrumbs.forumInZone(parentZone, forum, parentForum ?? undefined);
+		if (!forum) return [];
+		return createForumBreadcrumbs.smartForum(parentForum, forum);
 	}, [parentZone, forum, parentForum]);
 
 	if (!forum) {
@@ -136,7 +220,13 @@ const ForumPage = memo(() => {
 						)}
 
 						{/* Thread List */}
-						{forum?.id && !isUsingFallback ? (
+						{isUsingFallback ? (
+							<MyBBThreadList
+								threads={getDemoThreads(forum.slug)}
+								forumName={forum.name}
+								forumSlug={forum.slug}
+							/>
+						) : forum?.id ? (
 							<ThreadList
 								forumId={forum.id as ForumId}
 								forumSlug={forum.slug}
@@ -146,7 +236,7 @@ const ForumPage = memo(() => {
 							/>
 						) : (
 							<div className="text-center py-8 text-zinc-400">
-								{isUsingFallback ? 'Forum data is loading...' : 'No forum data available'}
+								{'No forum data available'}
 							</div>
 						)}
 					</div>

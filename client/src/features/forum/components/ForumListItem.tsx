@@ -4,6 +4,7 @@ import type { MergedForum } from '@/contexts/ForumStructureContext';
 import { useState, useEffect } from 'react';
 import { StatChip } from '@/components/ui/stat-chip';
 import { Badge } from '@/components/ui/badge';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { usePermission } from '@/hooks/usePermission';
 import { CARD_STYLES } from '@/utils/card-constants';
 import { useAuth } from '@/hooks/use-auth';
@@ -28,7 +29,7 @@ export function ForumListItem({
 	const [isAnimating, setIsAnimating] = useState(false);
 
 	const { user } = useAuth();
-	const { canPost } = usePermission(forum);
+	const { canPost, reason } = usePermission(forum);
 
 	// Check if counts have changed to trigger animations
 	useEffect(() => {
@@ -45,7 +46,18 @@ export function ForumListItem({
 
 	const renderIcon = () => {
 		if (!canPost) {
-			return <Lock className="h-5 w-5 text-zinc-600" title="Posting disabled" />;
+			return (
+				<TooltipProvider>
+					<Tooltip>
+						<TooltipTrigger asChild>
+							<Lock className="h-5 w-5 text-zinc-600 cursor-help" />
+						</TooltipTrigger>
+						<TooltipContent>
+							<p>{reason || "Posting disabled"}</p>
+						</TooltipContent>
+					</Tooltip>
+				</TooltipProvider>
+			);
 		}
 		if (forum.icon) {
 			return (
@@ -66,22 +78,62 @@ export function ForumListItem({
 
 	// Get access level info
 	const getAccessLevelInfo = () => {
-		const accessLevel = forum.rules?.allowPosting ? 'public' : null; // Simplified for now
-		// You could implement more detailed access level detection here
-		if (!canPost && user) {
+		if (!canPost && reason) {
+			// Determine icon and color based on the reason
+			if (reason.includes('Level')) {
+				return {
+					icon: Star,
+					label: 'Level Required',
+					color: 'text-amber-400',
+					description: reason
+				};
+			}
+			if (reason.includes('VIP')) {
+				return {
+					icon: Crown,
+					label: 'VIP Only',
+					color: 'text-purple-400',
+					description: reason
+				};
+			}
+			if (reason.includes('Moderator')) {
+				return {
+					icon: Shield,
+					label: 'Staff Only',
+					color: 'text-blue-400',
+					description: reason
+				};
+			}
+			if (reason.includes('Administrator')) {
+				return {
+					icon: Shield,
+					label: 'Admin Only',
+					color: 'text-red-400',
+					description: reason
+				};
+			}
+			if (reason.includes('locked')) {
+				return {
+					icon: Lock,
+					label: 'Locked',
+					color: 'text-zinc-500',
+					description: reason
+				};
+			}
+			if (reason.includes('log in')) {
+				return {
+					icon: Lock,
+					label: 'Login Required',
+					color: 'text-zinc-400',
+					description: reason
+				};
+			}
+			// Default restricted access
 			return {
 				icon: Shield,
-				label: 'Restricted Access',
+				label: 'Restricted',
 				color: 'text-amber-400',
-				description: 'Higher level required'
-			};
-		}
-		if (!user && forum.rules?.allowPosting === false) {
-			return {
-				icon: Lock,
-				label: 'Sign in Required',
-				color: 'text-zinc-500',
-				description: 'Sign in to access'
+				description: reason
 			};
 		}
 		return null;
@@ -115,8 +167,8 @@ export function ForumListItem({
 							</div>
 						)}
 						<h3
-							className="text-white font-medium mb-0.5"
-							style={depthLevel === 0 ? { color: accentColor } : undefined}
+							className={`font-medium mb-0.5 ${depthLevel === 0 ? 'text-base' : 'text-sm'}`}
+							style={depthLevel === 0 ? { color: accentColor } : { color: '#ffffff' }}
 						>
 							{forum.name}
 						</h3>
@@ -150,14 +202,22 @@ export function ForumListItem({
 
 						{/* Access Level Badge */}
 						{accessInfo && (
-							<Badge
-								variant="outline"
-								className={`text-[10px] px-2 py-0.5 ${accessInfo.color} border-current`}
-								title={accessInfo.description}
-							>
-								<accessInfo.icon className="h-3 w-3 mr-1" />
-								{accessInfo.label}
-							</Badge>
+							<TooltipProvider>
+								<Tooltip>
+									<TooltipTrigger asChild>
+										<Badge
+											variant="outline"
+											className={`text-[10px] px-2 py-0.5 ${accessInfo.color} border-current cursor-help`}
+										>
+											<accessInfo.icon className="h-3 w-3 mr-1" />
+											{accessInfo.label}
+										</Badge>
+									</TooltipTrigger>
+									<TooltipContent>
+										<p>{accessInfo.description}</p>
+									</TooltipContent>
+								</Tooltip>
+							</TooltipProvider>
 						)}
 					</div>
 				</div>
@@ -185,14 +245,14 @@ export function ForumListItem({
 			)}
 
 			{/* Render Subforums if they exist */}
-			{forum.forums && forum.forums.length > 0 && (
+			{forum.subforums && forum.subforums.length > 0 && (
 				<div
 					className={`subforums-list ${depthLevel === 0 ? 'border-l-2 ml-6' : 'ml-5 border-l'}`}
 					style={{
 						borderColor: 'rgba(113, 113, 122, 0.3)'
 					}}
 				>
-					{forum.forums.map((subForum) => {
+					{forum.subforums.map((subForum) => {
 						// Build clean subforum URL using new /forums/ structure
 						const subforumHref = `/forums/${forum.slug}/${subForum.slug}`;
 

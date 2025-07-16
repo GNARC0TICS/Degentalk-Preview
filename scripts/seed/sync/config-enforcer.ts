@@ -1,10 +1,10 @@
-import { db } from '../../db';
-import { logger } from '@server/core/logger';
-import { forumMap } from '@/config/forumMap.config';
-import { economyConfig } from '../../shared/economy/economy.config';
-import { featureFlags } from '@/config/featureFlags';
-import { themes } from '@/config/themes.config';
-import * as schema from '../../db/schema';
+import { db } from '../../../db';
+// import { logger } from '@server/core/logger'; // Logger not needed in seeding
+import { forumMap } from './config-stubs';
+import { economyConfig } from '../../../shared/economy/economy.config';
+import { featureFlags } from './config-stubs';
+import { themes } from './config-stubs';
+import * as schema from '../../../db/schema';
 import { eq, sql } from 'drizzle-orm';
 import chalk from 'chalk';
 
@@ -128,6 +128,12 @@ export class ConfigEnforcer {
 	async syncEconomy(): Promise<void> {
 		this.log('Syncing economy settings from economy.config.ts...', 'info');
 		
+		// Skip XP action settings sync - economyConfig doesn't have xpRewards
+		this.log('Skipping XP action settings - not implemented in current economyConfig', 'warn');
+		return;
+		
+		// Original code commented out:
+		/*
 		// Sync XP action settings
 		for (const [action, xpAmount] of Object.entries(economyConfig.xpRewards)) {
 			const existing = await db
@@ -162,6 +168,7 @@ export class ConfigEnforcer {
 		});
 
 		this.log('Economy settings synced', 'success');
+		*/
 	}
 
 	/**
@@ -170,23 +177,26 @@ export class ConfigEnforcer {
 	async syncFeatureFlags(): Promise<void> {
 		this.log('Syncing feature flags...', 'info');
 		
-		for (const [key, config] of Object.entries(featureFlags)) {
+		for (const [key, isEnabled] of Object.entries(featureFlags)) {
+			// Convert camelCase key to Title Case for the name
+			const name = key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase()).trim();
+			
 			await db.insert(schema.featureFlags).values({
 				key,
-				enabled: config.enabled,
-				description: config.description || '',
-				rolloutPercentage: config.rolloutPercentage || 100,
-				metadata: config as any
+				name,
+				isEnabled: isEnabled as boolean,
+				description: `Feature flag for ${name}`,
+				rolloutPercentage: '100',
+				config: {}
 			}).onConflictDoUpdate({
 				target: schema.featureFlags.key,
 				set: {
-					enabled: config.enabled,
-					rolloutPercentage: config.rolloutPercentage || 100,
+					isEnabled: isEnabled as boolean,
 					updatedAt: new Date()
 				}
 			});
 			
-			this.log(`Synced feature flag: ${key} (${config.enabled ? 'ON' : 'OFF'})`, 'success');
+			this.log(`Synced feature flag: ${key} (${isEnabled ? 'ON' : 'OFF'})`, 'success');
 		}
 	}
 
@@ -198,15 +208,16 @@ export class ConfigEnforcer {
 		
 		for (const [themeName, themeConfig] of Object.entries(themes)) {
 			await db.insert(schema.uiThemes).values({
-				name: themeName,
-				displayName: themeConfig.displayName || themeName,
-				isActive: true,
-				isDefault: themeName === 'default',
-				config: themeConfig as any
+				themeKey: themeName,
+				label: themeConfig.name,
+				color: `text-${themeConfig.primaryColor}`,
+				bgColor: `bg-${themeConfig.backgroundColor}`,
+				borderColor: `border-${themeConfig.primaryColor}/30`,
+				isActive: true
 			}).onConflictDoUpdate({
-				target: schema.uiThemes.name,
+				target: schema.uiThemes.themeKey,
 				set: {
-					config: themeConfig as any,
+					label: themeConfig.name,
 					updatedAt: new Date()
 				}
 			});

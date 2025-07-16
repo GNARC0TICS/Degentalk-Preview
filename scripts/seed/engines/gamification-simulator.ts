@@ -1,9 +1,9 @@
-import { db } from '../../db';
-import { logger } from '@server/core/logger';
-import * as schema from '../../db/schema';
+import { db } from '../../../db';
+// import { logger } from '@server/core/logger'; // Logger not needed in seeding
+import * as schema from '../../../db/schema';
 import { eq, and, gte, lte, sql } from 'drizzle-orm';
-import type { UserId } from '../../shared/types/ids';
-import { economyConfig } from '../../shared/economy/economy.config';
+import type { UserId } from '../../../shared/types/ids';
+import { economyConfig } from '../../../shared/economy/economy.config';
 import { getSeedConfig } from '../config/seed.config';
 import { personas } from '../config/personas.config';
 import chalk from 'chalk';
@@ -61,15 +61,30 @@ export class GamificationSimulator {
 		this.log('Initializing gamification simulator...', 'info');
 		
 		// Load XP actions from database
-		const xpActions = await db.select().from(schema.xpActionSettings).where(eq(schema.xpActionSettings.isActive, true));
-		xpActions.forEach(action => {
+		const xpActions = await db.select().from(schema.xpActionSettings).where(eq(schema.xpActionSettings.enabled, true));
+		
+		if (xpActions.length === 0) {
+			this.log('No XP actions found in database, using defaults', 'warn');
+			// Add some default actions
+			const defaultActions = [
+				{ action: 'post_create', baseXp: 10, dailyLimit: 100, cooldownSeconds: 60 },
+				{ action: 'thread_create', baseXp: 20, dailyLimit: 50, cooldownSeconds: 300 },
+				{ action: 'receive_like', baseXp: 5, dailyLimit: 200, cooldownSeconds: 0 },
+				{ action: 'daily_login', baseXp: 50, dailyLimit: 1, cooldownSeconds: 86400 }
+			];
+			defaultActions.forEach(action => {
+				this.xpActions.set(action.action, action);
+			});
+		} else {
+			xpActions.forEach(action => {
 			this.xpActions.set(action.action, {
 				action: action.action,
-				baseXp: action.baseXp,
-				dailyLimit: action.dailyLimit || undefined,
-				cooldownSeconds: action.cooldownSeconds || 0
+				baseXp: action.baseValue,
+				dailyLimit: action.maxPerDay || undefined,
+				cooldownSeconds: action.cooldownSec || 0
 			});
 		});
+		}
 		
 		// Load achievements
 		const achievements = await db.select().from(schema.achievements);

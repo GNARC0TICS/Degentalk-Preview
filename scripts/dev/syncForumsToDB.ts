@@ -5,6 +5,6 @@
  *
  * Run via:  npm run sync:forums
  */
-import { seedForumsFromConfig } from '../seed/seedForumsFromConfig';
+import { seedForumsFromConfig } from '../seed/seedForumsFromConfig.js';
 
 await seedForumsFromConfig(); 

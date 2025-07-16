@@ -15,10 +15,11 @@ const router: RouterType = Router();
 // Only include scripts that are safe to run from the running Node process
 const SEED_SCRIPT_MAP: Record<string, string> = {
 	users: 'seed:users',
-	forum: 'seed:forum:new',
-	threads: 'seed:realistic-threads',
-	xp: 'seed:xp',
-	all: 'seed:all'
+	forum: 'seed:forums:only',
+	threads: 'seed:users:tokens',
+	xp: 'seed:enhanced:quick',
+	all: 'seed:all',
+	enhanced: 'seed:enhanced:dev'
 };
 
 /**

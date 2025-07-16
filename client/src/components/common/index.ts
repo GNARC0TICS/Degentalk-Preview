@@ -6,3 +6,4 @@ export type { StatItem } from './StatsBar';
 
 // Existing common components
 export { default as BackToHomeButton } from './BackToHomeButton';
+export * from './OnlineIndicator';

@@ -17,6 +17,7 @@ import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { OnlineIndicator, AvatarWithOnline } from '@/components/common/OnlineIndicator';
 import { cn } from '@/utils/utils';
 import { useBreakpoint } from '@/hooks/useMediaQuery';
 import type { ThreadDisplay } from '@/types/thread.types';
@@ -26,6 +27,7 @@ import { getZoneTheme } from '@shared/config/zoneThemes.config';
 import { useThreadActionsOptional } from '@/features/forum/contexts/ThreadActionsContext';
 import QuickReplyInput from '@/components/forum/QuickReplyInput';
 import { ButtonTooltip } from '@/components/ui/tooltip-utils';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 export interface ThreadCardProps {
 	thread: ThreadDisplay;
@@ -120,23 +122,49 @@ const ThreadCard = memo(
 						<div className="flex items-start justify-between gap-3">
 							<div className="flex items-center gap-3 min-w-0 flex-1">
 								{/* Responsive avatar sizing */}
-								<Avatar
-									className={cn(
-										'ring-2 ring-zinc-700/50',
-										breakpoint.isMobile ? 'h-8 w-8' : 'h-10 w-10'
-									)}
+								<AvatarWithOnline 
+									isOnline={thread.user.isOnline}
+									size={breakpoint.isMobile ? 'xs' : 'sm'}
 								>
-									<AvatarImage src={thread.user.avatarUrl} alt={thread.user.username} />
-									<AvatarFallback className="bg-zinc-800 text-zinc-300">
-										{thread.user.username.slice(0, 2).toUpperCase()}
-									</AvatarFallback>
-								</Avatar>
+									<Avatar
+										className={cn(
+											'ring-2 ring-zinc-700/50',
+											breakpoint.isMobile ? 'h-8 w-8' : 'h-10 w-10'
+										)}
+									>
+										<AvatarImage src={thread.user.avatarUrl} alt={thread.user.username} />
+										<AvatarFallback className="bg-zinc-800 text-zinc-300">
+											{thread.user.username.slice(0, 2).toUpperCase()}
+										</AvatarFallback>
+									</Avatar>
+								</AvatarWithOnline>
 
 								<div className="min-w-0 flex-1">
 									<div className="flex items-center gap-2">
-										<span className="font-medium text-zinc-200 truncate">
-											{thread.user.username}
-										</span>
+										<TooltipProvider>
+											<Tooltip>
+												<TooltipTrigger asChild>
+													<span className="font-medium text-zinc-200 truncate cursor-help">
+														{thread.user.username}
+													</span>
+												</TooltipTrigger>
+												<TooltipContent side="top" align="start">
+													<div className="space-y-1">
+														<p className="font-semibold">{thread.user.username}</p>
+														{thread.user.displayRole && (
+															<p className="text-xs text-zinc-400">Role: {thread.user.displayRole}</p>
+														)}
+														{thread.user.forumStats && (
+															<>
+																<p className="text-xs text-zinc-400">Level {thread.user.forumStats.level} • {thread.user.forumStats.xp} XP</p>
+																<p className="text-xs text-zinc-400">{thread.user.forumStats.totalPosts} posts • {thread.user.forumStats.totalThreads} threads</p>
+															</>
+														)}
+														<p className="text-xs text-zinc-400">Joined {formatDistanceToNow(new Date(thread.user.joinedAt), { addSuffix: true })}</p>
+													</div>
+												</TooltipContent>
+											</Tooltip>
+										</TooltipProvider>
 										{thread.user.isVerified && (
 											<Crown
 												className="w-4 h-4 text-amber-500 flex-shrink-0"
@@ -162,7 +190,16 @@ const ThreadCard = memo(
 										{!breakpoint.isMobile && (
 											<>
 												<span>•</span>
-												<span className="text-zinc-400">{thread.zone.name}</span>
+												<TooltipProvider>
+													<Tooltip>
+														<TooltipTrigger asChild>
+															<span className="text-zinc-400 cursor-help">{thread.zone.name}</span>
+														</TooltipTrigger>
+														<TooltipContent>
+															<p className="text-xs">Click to explore more threads in {thread.zone.name}</p>
+														</TooltipContent>
+													</Tooltip>
+												</TooltipProvider>
 											</>
 										)}
 									</div>

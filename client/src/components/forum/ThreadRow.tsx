@@ -34,7 +34,9 @@ const ThreadRow: React.FC<ThreadRowProps> = ({ thread, index }) => {
 			</td>
 
 			{/* Replies */}
-			<td className="px-3 py-2 text-center text-zinc-200 text-sm w-20">{thread.postCount}</td>
+			<td className="px-3 py-2 text-center text-zinc-200 text-sm w-20">
+				{Math.max(0, (thread.postCount || 1) - 1)}
+			</td>
 
 			{/* Views */}
 			<td className="px-3 py-2 text-center text-zinc-200 text-sm w-20">{thread.viewCount}</td>

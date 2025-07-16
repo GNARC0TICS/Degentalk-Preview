@@ -64,7 +64,7 @@ const ThreadListComponent: React.FC<ThreadListProps> = ({
 				structureId: forumId.toString(),
 				page: page.toString(),
 				limit: threadsPerPage.toString(),
-				sort: filters.sortBy
+				sortBy: filters.sortBy
 			});
 
 			if (filters.tags?.length)

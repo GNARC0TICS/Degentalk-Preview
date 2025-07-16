@@ -167,14 +167,17 @@ export async function canManageThreadTags(user: User, threadId: ThreadId): Promi
 
 /**
  * Check if user can post in a forum
- * Rules: Check forum access level and user permissions
+ * Rules: Check forum access level and user permissions from pluginData
  */
 export async function canPostInForum(user: User, forumId: ForumId): Promise<boolean> {
 	try {
 		const [forum] = await db
 			.select({
-				accessLevel: forumStructure.accessLevel,
-				allowPosting: forumStructure.allowPosting
+				isLocked: forumStructure.isLocked,
+				isVip: forumStructure.isVip,
+				minXp: forumStructure.minXp,
+				minGroupIdRequired: forumStructure.minGroupIdRequired,
+				pluginData: forumStructure.pluginData
 			})
 			.from(forumStructure)
 			.where(eq(forumStructure.id, forumId))
@@ -184,20 +187,54 @@ export async function canPostInForum(user: User, forumId: ForumId): Promise<bool
 			return false;
 		}
 
+		// Check if forum is locked
+		if (forum.isLocked) {
+			return isModerator(user); // Only moderators can post in locked forums
+		}
+
+		// Extract rules from pluginData
+		const rules = (forum.pluginData as any)?.rules || {};
+		const allowPosting = rules.allowPosting ?? true;
+		const accessLevel = rules.accessLevel || 'public';
+		const minXpRequired = rules.minXpRequired || forum.minXp || 0;
+
 		// Check if posting is disabled in this forum
-		if (!forum.allowPosting) {
+		if (!allowPosting) {
 			return isModerator(user); // Only moderators can post in restricted forums
 		}
 
+		// Check VIP requirement
+		if (forum.isVip) {
+			// TODO: Check if user has VIP status
+			// For now, allow moderators to bypass VIP requirement
+			if (!isModerator(user)) {
+				return false;
+			}
+		}
+
+		// Check XP requirement
+		if (minXpRequired > 0) {
+			// Get user's XP level
+			const userDetails = await userService.getUserById(user.id);
+			if (!userDetails || (userDetails.xp || 0) < minXpRequired) {
+				return false;
+			}
+		}
+
 		// Check access level requirements
-		switch (forum.accessLevel) {
+		switch (accessLevel) {
 			case 'public':
 				return true;
 			case 'registered':
 				return true; // All authenticated users can post
 			case 'level_10+':
-				// TODO: Implement level checking when user levels are available
-				return true;
+				// Check user level (assuming level is calculated from XP)
+				const userDetails = await userService.getUserById(user.id);
+				const userLevel = Math.floor((userDetails?.xp || 0) / 1000); // Example: 1000 XP per level
+				return userLevel >= 10;
+			case 'vip':
+				// TODO: Implement proper VIP checking
+				return isModerator(user); // For now, only mods can access VIP forums
 			case 'mod':
 				return isModerator(user);
 			case 'admin':

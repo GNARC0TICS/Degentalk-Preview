@@ -1,7 +1,7 @@
-import { db } from '../../db';
-import * as schema from '../../db/schema';
+import { db } from '../../../db';
+import * as schema from '../../../db/schema';
 import { eq, sql } from 'drizzle-orm';
-import type { UserId } from '../../shared/types/ids';
+import type { UserId } from '../../../shared/types/ids';
 import { personas } from '../config/personas.config';
 import { getSeedConfig } from '../config/seed.config';
 import chalk from 'chalk';
@@ -28,6 +28,12 @@ export class EconomySimulator {
 		targets: { dgtTransfers: number; tips: number; rainEvents: number; shopPurchases: number }
 	): Promise<void> {
 		this.log('Generating economy transactions...', 'info');
+		this.log(`Users available: ${users?.length || 0}`, 'info');
+		
+		if (!users || users.length === 0) {
+			this.log('No users available for economy simulation', 'warn');
+			return;
+		}
 
 		// DGT transfers
 		await this.generateDGTTransfers(users, targets.dgtTransfers);
@@ -44,6 +50,11 @@ export class EconomySimulator {
 	 * Generate DGT transfers
 	 */
 	private async generateDGTTransfers(users: Array<{ id: UserId; personaId: string }>, count: number): Promise<void> {
+		if (users.length < 2) {
+			this.log('Not enough users for transfers', 'warn');
+			return;
+		}
+
 		let transfersCreated = 0;
 
 		for (let i = 0; i < count; i++) {

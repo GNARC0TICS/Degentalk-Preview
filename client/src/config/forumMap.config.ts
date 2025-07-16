@@ -459,68 +459,6 @@ const PRIMARY_ZONES: Zone[] = [
 				}
 			}
 		]
-	},
-	{
-		slug: 'degenshop',
-		name: 'DegenShop™',
-		description:
-			'Cosmetic & utility marketplace: avatar frames, username glows, XP boosts, prefix unlocks.',
-		type: 'general',
-		position: 13,
-		theme: THEME_PRESETS.shop,
-		defaultRules: {
-			allowPosting: false,
-			xpEnabled: false,
-			tippingEnabled: false
-		},
-		forums: [
-			{
-				slug: 'hot-items',
-				name: 'Hot Items',
-				description: 'Featured and trending shop items',
-				position: 1,
-				rules: {
-					allowPosting: false,
-					xpEnabled: false,
-					tippingEnabled: false,
-					customComponent: 'HotItemsSlider',
-					customRules: {
-						purchaseEndpoint: '/api/shop/purchase',
-						itemType: 'shop'
-					}
-				}
-			},
-			{
-				slug: 'cosmetics-grid',
-				name: 'Cosmetics Grid',
-				description: 'All available cosmetic items and upgrades',
-				position: 2,
-				rules: {
-					allowPosting: false,
-					xpEnabled: false,
-					tippingEnabled: false,
-					customComponent: 'CosmeticsGrid',
-					customRules: {
-						categories: ['frames', 'glows', 'badges', 'titles'],
-						doubleXPWeekends: true
-					}
-				}
-			},
-			{
-				slug: 'wishlist-queue',
-				name: 'Wishlist Queue',
-				description: 'Community requested items and upcoming releases',
-				position: 3,
-				rules: {
-					...DEFAULT_FORUM_RULES,
-					xpEnabled: true,
-					availablePrefixes: ['[REQUEST]', '[WISHLIST]', '[COMING-SOON]'],
-					customRules: {
-						voteForItems: true
-					}
-				}
-			}
-		]
 	}
 ];
 
