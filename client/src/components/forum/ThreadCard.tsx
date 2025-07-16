@@ -1,5 +1,5 @@
 import React, { useState, memo } from 'react';
-import { Link } from 'wouter';
+import { Link } from 'react-router-dom';
 import { formatDistanceToNow } from 'date-fns';
 import {
 	Clock,
@@ -94,7 +94,7 @@ const ThreadCard = memo(
 		const zoneThemeClass = zoneTheme.border ?? 'border-zinc-700/30 hover:border-zinc-600/60';
 
 		return (
-			<Link href={`/threads/${thread.slug}`}>
+			<Link to={`/threads/${thread.slug}`}>
 				<Card
 					className={cn(
 						'group relative cursor-pointer transition-colors duration-200',

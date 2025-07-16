@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'wouter';
+import { Link } from 'react-router-dom';
 import { Flame, MessageSquare, Clock } from 'lucide-react';
 import { FrostCard } from '@/components/ui/frost-card';
 import { CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -80,7 +80,7 @@ export function HotTopics({ threads = [], isLoading = false, limit = 5 }: HotTop
 								)}
 								<div className="flex-grow min-w-0">
 									<Link
-										href={`/threads/${thread.slug}`}
+										to={`/threads/${thread.slug}`}
 										className="block hover:text-emerald-400 transition-colors"
 									>
 										<h4 className="font-medium text-white text-sm leading-snug group-hover:text-emerald-400 transition-colors line-clamp-2">
@@ -89,7 +89,7 @@ export function HotTopics({ threads = [], isLoading = false, limit = 5 }: HotTop
 									</Link>
 									<div className="flex items-center space-x-3 mt-1">
 										<Link
-											href={`/forums/${thread.forumSlug}`}
+											to={`/forums/${thread.forumSlug}`}
 											className="text-xs text-zinc-400 hover:text-emerald-400 transition-colors"
 										>
 											{thread.forumName}

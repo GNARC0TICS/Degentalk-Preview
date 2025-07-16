@@ -1,4 +1,4 @@
-import { Link } from 'wouter';
+import { Link } from 'react-router-dom';
 
 interface LogoProps {
 	className?: string;
@@ -6,12 +6,10 @@ interface LogoProps {
 
 export function Logo({ className }: LogoProps) {
 	return (
-		<Link href="/">
-			<div className={`flex items-center cursor-pointer ${className || ''}`}>
-				<span className="text-xl font-bold text-white">
-					Degentalk<sup className="text-xs text-zinc-400 font-normal">™</sup>
-				</span>
-			</div>
+		<Link to="/" className={`flex items-center cursor-pointer ${className || ''}`}>
+			<span className="text-xl font-bold text-white">
+				Degentalk<sup className="text-xs text-zinc-400 font-normal">™</sup>
+			</span>
 		</Link>
 	);
 }

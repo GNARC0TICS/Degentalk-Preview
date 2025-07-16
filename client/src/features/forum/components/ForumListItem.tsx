@@ -1,4 +1,4 @@
-import { Link } from 'wouter';
+import { Link } from 'react-router-dom';
 import { MessageSquare, CornerDownRight, Lock, Shield, Star, Crown, Flame } from 'lucide-react';
 import type { MergedForum } from '@/contexts/ForumStructureContext';
 import { useState, useEffect } from 'react';
@@ -232,8 +232,8 @@ export function ForumListItem({
 	return (
 		<div className={`${isParentForum ? 'mb-2' : ''}`}>
 			{canHaveThreads ? (
-				<Link href={href}>
-					<a className="block">{forumItemContent}</a>
+				<Link to={href} className="block">
+					{forumItemContent}
 				</Link>
 			) : (
 				<div

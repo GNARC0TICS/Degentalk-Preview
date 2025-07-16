@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'wouter';
+import { Link } from 'react-router-dom';
 import { Home } from 'lucide-react';
 
 interface BreadcrumbItem {
@@ -14,17 +14,15 @@ interface MyBBBreadcrumbProps {
 export function MyBBBreadcrumb({ items }: MyBBBreadcrumbProps) {
 	return (
 		<div className="mybb-breadcrumb">
-			<Link href="/">
-				<a className="text-blue-600 hover:text-blue-800">
-					<Home className="inline w-3 h-3 mb-0.5" />
-				</a>
+			<Link to="/" className="text-blue-600 hover:text-blue-800">
+				<Home className="inline w-3 h-3 mb-0.5" />
 			</Link>
 			{items.map((item, index) => (
 				<React.Fragment key={index}>
 					<span className="mybb-breadcrumb-separator">»</span>
 					{item.href ? (
-						<Link href={item.href}>
-							<a className="text-blue-600 hover:text-blue-800">{item.label}</a>
+						<Link to={item.href} className="text-blue-600 hover:text-blue-800">
+							{item.label}
 						</Link>
 					) : (
 						<span className="text-gray-700">{item.label}</span>

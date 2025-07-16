@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'wouter';
+import { Link } from 'react-router-dom';
 import { trackNavigation } from '@/config/navigation';
 
 interface NavLinkProps {
@@ -30,22 +30,20 @@ export function NavLink({
 	};
 
 	return (
-		<Link href={href} {...props}>
-			<div
-				className={className}
-				onClick={handleClick}
-				aria-label={ariaLabel}
-				role="link"
-				tabIndex={0}
-				onKeyDown={(e) => {
-					if (e.key === 'Enter' || e.key === ' ') {
-						e.preventDefault();
-						handleClick();
-					}
-				}}
-			>
-				{children}
-			</div>
+		<Link
+			to={href}
+			className={className}
+			onClick={handleClick}
+			aria-label={ariaLabel}
+			onKeyDown={(e) => {
+				if (e.key === 'Enter' || e.key === ' ') {
+					e.preventDefault();
+					handleClick();
+				}
+			}}
+			{...props}
+		>
+			{children}
 		</Link>
 	);
 }

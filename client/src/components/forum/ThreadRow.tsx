@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'wouter';
+import { Link } from 'react-router-dom';
 import { formatDistanceToNow } from 'date-fns';
 import type { ThreadDisplay } from '@/types/thread.types';
 
@@ -27,7 +27,7 @@ const ThreadRow: React.FC<ThreadRowProps> = ({ thread, index }) => {
 
 			{/* Thread title & author */}
 			<td className="px-3 py-2">
-				<Link href={`/threads/${thread.slug}`} className="text-blue-400 hover:underline">
+				<Link to={`/threads/${thread.slug}`} className="text-blue-400 hover:underline">
 					{thread.title}
 				</Link>
 				<div className="text-zinc-500 text-xs">by {thread.user.username}</div>
