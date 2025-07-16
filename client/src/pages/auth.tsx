@@ -113,8 +113,8 @@ export default function AuthPage() {
 	}
 
 	return (
-		<div className="min-h-screen bg-[url('/images/auth-bg.jpg')] bg-cover bg-center">
-			<div className="min-h-screen flex justify-center items-center backdrop-blur-sm backdrop-brightness-50 p-4">
+		<div className="min-h-screen bg-background bg-[url('/images/auth-bg.jpg')] bg-cover bg-center">
+			<div className="min-h-screen flex justify-center items-center backdrop-blur-sm backdrop-brightness-75 p-4 bg-background/50">
 				<div className="container max-w-screen-xl grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
 					{/* Hero section */}
 					<div className="text-white space-y-4">
@@ -132,19 +132,19 @@ export default function AuthPage() {
 
 					{/* Auth forms */}
 					<div className="w-full max-w-md mx-auto">
-						<Card className="bg-black/80 border-gray-700 text-white">
+						<Card className="bg-card/90 backdrop-blur-sm border-border">
 							<Tabs defaultValue="login" value={activeTab} onValueChange={setActiveTab}>
 								<CardHeader>
-									<TabsList className="grid w-full grid-cols-2 bg-gray-800/50">
+									<TabsList className="grid w-full grid-cols-2 bg-muted/50">
 										<TabsTrigger
 											value="login"
-											className="text-white data-[state=active]:bg-primary"
+											className="text-muted-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
 										>
 											Login
 										</TabsTrigger>
 										<TabsTrigger
 											value="register"
-											className="text-white data-[state=active]:bg-primary"
+											className="text-muted-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
 										>
 											Register
 										</TabsTrigger>
@@ -163,7 +163,7 @@ export default function AuthPage() {
 															<FormControl>
 																<Input
 																	{...field}
-																	className="bg-gray-800/50 border-gray-700 text-white"
+																	className="bg-input border-input"
 																	placeholder="Enter your username"
 																/>
 															</FormControl>
@@ -181,7 +181,7 @@ export default function AuthPage() {
 																<Input
 																	{...field}
 																	type="password"
-																	className="bg-gray-800/50 border-gray-700 text-white"
+																	className="bg-input border-input"
 																	placeholder="Enter your password"
 																/>
 															</FormControl>
@@ -217,7 +217,7 @@ export default function AuthPage() {
 															<FormControl>
 																<Input
 																	{...field}
-																	className="bg-gray-800/50 border-gray-700 text-white"
+																	className="bg-input border-input"
 																	placeholder="Choose a username"
 																/>
 															</FormControl>
@@ -235,7 +235,7 @@ export default function AuthPage() {
 																<Input
 																	{...field}
 																	type="email"
-																	className="bg-gray-800/50 border-gray-700 text-white"
+																	className="bg-input border-input"
 																	placeholder="Enter your email"
 																/>
 															</FormControl>
@@ -253,7 +253,7 @@ export default function AuthPage() {
 																<Input
 																	{...field}
 																	type="password"
-																	className="bg-gray-800/50 border-gray-700 text-white"
+																	className="bg-input border-input"
 																	placeholder="Create a password"
 																/>
 															</FormControl>
@@ -271,7 +271,7 @@ export default function AuthPage() {
 																<Input
 																	{...field}
 																	type="password"
-																	className="bg-gray-800/50 border-gray-700 text-white"
+																	className="bg-input border-input"
 																	placeholder="Confirm your password"
 																/>
 															</FormControl>
@@ -297,13 +297,13 @@ export default function AuthPage() {
 										</Form>
 									</TabsContent>
 								</CardContent>
-								<CardFooter className="flex justify-center text-sm text-gray-400">
+								<CardFooter className="flex justify-center text-sm text-muted-foreground">
 									{activeTab === 'login' ? (
 										<p>
 											Don't have an account?{' '}
 											<Button
 												variant="link"
-												className="p-0 h-auto"
+												className="p-0 h-auto text-primary hover:text-primary/80"
 												onClick={() => setActiveTab('register')}
 											>
 												Register
@@ -314,7 +314,7 @@ export default function AuthPage() {
 											Already have an account?{' '}
 											<Button
 												variant="link"
-												className="p-0 h-auto"
+												className="p-0 h-auto text-primary hover:text-primary/80"
 												onClick={() => setActiveTab('login')}
 											>
 												Login

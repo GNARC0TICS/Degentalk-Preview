@@ -7,6 +7,7 @@ import { spawn } from 'child_process';
 import { isAdmin } from '../../../auth/middleware/auth.middleware';
 import { asyncHandler } from '../../admin.middleware';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
+import { logger } from '@core/logger';
 
 const router: RouterType = Router();
 
@@ -48,10 +49,11 @@ router.post(
 
 		// Spawn a child process to execute the npm script.
 		// Using stdio: "pipe" so we can capture output and return once finished.
+		// SECURITY: Removed shell: true to prevent command injection
 		const child = spawn('npm', ['run', npmScript, '--silent'], {
 			cwd: process.cwd(),
 			env: process.env,
-			shell: true,
+			shell: false, // Security: Prevent command injection
 			stdio: ['ignore', 'pipe', 'pipe']
 		});
 
@@ -66,7 +68,23 @@ router.post(
 			stderr += chunk.toString();
 		});
 
-		sendSuccessResponse(res, '✅ Seed script ');
+		// Wait for the process to complete
+		child.on('close', (code) => {
+			if (code === 0) {
+				sendSuccessResponse(res, {
+					message: `✅ Seed script '${scriptName}' completed successfully`,
+					output: stdout,
+					script: npmScript
+				});
+			} else {
+				sendErrorResponse(res, `Seed script failed with code ${code}: ${stderr}`, 500);
+			}
+		});
+
+		child.on('error', (err) => {
+			logger.error('SeedingRoutes', 'Failed to spawn process', { error: err.message });
+			sendErrorResponse(res, `Failed to execute seed script: ${err.message}`, 500);
+		});
 	})
 );
 

@@ -3,7 +3,7 @@
  */
 
 // STREAM-LOCK: B
-import { BaseFactory } from '../core/factory';
+import { BaseFactory } from '../core/factory.js';
 import type { User } from '@schema';
 import type { UserStats, LevelConfig, DisplaySettings } from '../../types/core/user.types';
 import { generateId } from '@shared/utils/id';

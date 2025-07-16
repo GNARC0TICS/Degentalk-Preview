@@ -1,4 +1,4 @@
-import type { AdminId, ModeratorId, EntityId } from '@shared/types/ids';
+import type { AdminId, ModeratorId, EntityId } from '../../types/ids.js';
 
 export type VisibilityStatus =
 	| 'draft'

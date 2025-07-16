@@ -36,20 +36,28 @@ export function SiteHeader() {
 			<div className="px-4">
 				<div className="flex items-center justify-between h-16">
 					{/* Left Section: Logo + Navigation */}
-					<div className="flex items-center space-x-6">
+					<div className="flex items-center space-x-4 lg:space-x-6">
 						<Logo />
 						<PrimaryNav />
 					</div>
 
 					{/* Search Box - Center with better responsive sizing */}
-					<div className="hidden md:flex flex-1 max-w-md lg:max-w-lg xl:max-w-xl mx-6">
+					{/*
+					  Search bar is now visible at md and up (≥768px), matching the desktop nav and icons.
+					*/}
+					<div className="hidden md:flex flex-1 max-w-sm xl:max-w-md 2xl:max-w-lg mx-4 lg:mx-6">
 						<SearchBox />
 					</div>
 
 					{/* User Section */}
+					{/*
+					  Desktop user icons are only shown at md and up (≥768px).
+					  Hamburger menu is only shown below md (<768px).
+					  This ensures a clean switch between desktop and mobile views at the 768px breakpoint.
+					*/}
 					<div className="hidden md:flex items-center">
 						{isAuthenticated ? (
-							<div className="flex items-center space-x-4">
+							<div className="flex items-center space-x-2 lg:space-x-3 xl:space-x-4">
 								{/* Left Plugin Slot */}
 								<HeaderPluginSlot position="left" />
 
@@ -73,8 +81,12 @@ export function SiteHeader() {
 						)}
 					</div>
 
-					{/* Mobile menu button */}
-					<div className="md:hidden flex items-center">
+					{/* Mobile/Tablet menu button */}
+					{/*
+					  Hamburger menu is shown on screens smaller than md (<768px).
+					  This matches the desktop icon breakpoint above, so only one is ever visible.
+					*/}
+					<div className="flex md:hidden items-center">
 						<div className="p-1.5">
 							<ChartMenu
 								isActive={isMobileMenuOpen}

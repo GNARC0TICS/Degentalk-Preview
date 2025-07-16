@@ -1,4 +1,4 @@
-import type { CreateMentionsIndexParams } from './types';
+import type { CreateMentionsIndexParams } from './types.js';
 
 /**
  * @deprecated This file now only exports types for cross-boundary compatibility.

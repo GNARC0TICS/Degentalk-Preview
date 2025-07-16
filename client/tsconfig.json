@@ -5,11 +5,18 @@
 		"outDir": "dist",
 		"skipLibCheck": true,
 		"rootDir": "src",
-		"module": "NodeNext",
+		"module": "ESNext",
+		"moduleResolution": "bundler",
 		"jsx": "react-jsx",
 		"baseUrl": ".",
 		"paths": {
-			"@/*": ["src/*"]
+			"@/*": ["src/*"],
+			"@shared/*": ["../shared/*"],
+			"@assets/*": ["../attached_assets/*"],
+			"@db": ["../db/index.ts"],
+			"@db_types/*": ["../db/types/*"],
+			"@schema": ["../db/schema/index.ts"],
+			"@schema/*": ["../db/schema/*"]
 		}
 	},
 	"include": ["src"],

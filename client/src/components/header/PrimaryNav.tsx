@@ -6,27 +6,29 @@ import { primaryNavigation, filterNavItems } from '@/config/navigation';
 import { useHeader } from './HeaderContext';
 
 // Function to generate random underline paths (from original header)
-const generateRandomPath = () => {
-	const width = 100;
-	const startX = 0;
-	const startY = 28 + Math.random() * 4;
-	const numPoints = 3 + Math.floor(Math.random() * 3);
-	const section = width / (numPoints + 1);
+const generateRandomPath = (isWide = false) => {
+	const width = isWide ? 100 : 70; // Shorter for regular buttons, wider for Leaderboard
+	const startX = 5; // Start further from edge
+	const endX = width - 5; // End further from edge
+	const centerY = 10;
+	const startY = centerY + (Math.random() - 0.5) * 3;
+	const numPoints = 2;
+	const section = (endX - startX) / (numPoints + 1);
 	const points: { x: number; y: number }[] = [];
 
 	for (let i = 1; i <= numPoints; i++) {
-		const x = section * i + (Math.random() - 0.5) * section * 0.4;
-		const y = 25 + Math.random() * 10;
+		const x = startX + section * i + (Math.random() - 0.5) * section * 0.2;
+		const y = centerY + (Math.random() - 0.5) * 3;
 		points.push({ x, y });
 	}
 
-	points.push({ x: width, y: 28 + Math.random() * 4 });
+	points.push({ x: endX, y: centerY + (Math.random() - 0.5) * 3 });
 
 	let path = `M${startX} ${startY}`;
 	points.forEach((point, i) => {
 		const prev = i === 0 ? { x: startX, y: startY } : points[i - 1];
 		const controlX = prev.x + (point.x - prev.x) / 2;
-		const controlY = prev.y + (Math.random() - 0.5) * 10;
+		const controlY = prev.y + (Math.random() - 0.5) * 2;
 		path += ` Q${controlX} ${controlY}, ${point.x} ${point.y}`;
 	});
 
@@ -54,7 +56,10 @@ export function PrimaryNav({ className }: PrimaryNavProps) {
 
 	// Generate random paths on component mount and set up GSAP animations
 	useEffect(() => {
-		const paths = visibleNavigation.map(() => generateRandomPath());
+		const paths = visibleNavigation.map((item) => {
+			const isLeaderboard = item.label === 'Leaderboard';
+			return generateRandomPath(isLeaderboard);
+		});
 		setNavPaths(paths);
 		navRefs.current = navRefs.current.slice(0, visibleNavigation.length);
 
@@ -135,6 +140,10 @@ export function PrimaryNav({ className }: PrimaryNavProps) {
 		<nav className={`hidden md:flex items-center space-x-1 ${className || ''}`}>
 			{visibleNavigation.map((item, index) => {
 				const isActive = item.href === location;
+				const isLeaderboard = item.label === 'Leaderboard';
+				const viewBoxWidth = isLeaderboard ? 100 : 70;
+				const defaultPath = isLeaderboard ? 'M5 10Q50 12 95 10' : 'M5 10Q35 12 65 10';
+				
 				return (
 					<NavLink
 						key={item.label}
@@ -153,8 +162,8 @@ export function PrimaryNav({ className }: PrimaryNavProps) {
 							<span className="relative z-10">{item.label}</span>
 							{/* SVG underline with randomized path */}
 							<svg
-								className="w-full h-[8px] underline-svg"
-								viewBox="0 0 100 41"
+								className="underline-svg w-full"
+								viewBox={`0 0 ${viewBoxWidth} 20`}
 								fill="none"
 								preserveAspectRatio="none"
 								style={{ overflow: 'visible' }}
@@ -166,9 +175,9 @@ export function PrimaryNav({ className }: PrimaryNavProps) {
 										}
 									}}
 									className="nav-underline"
-									d={navPaths[index] || 'M5 30L25 32S50 34 75 31L95 30'}
+									d={navPaths[index] || defaultPath}
 									stroke={isActive ? '#e55050' : '#10b981'}
-									strokeWidth="6"
+									strokeWidth="3"
 									strokeLinecap="round"
 								/>
 							</svg>

@@ -26,6 +26,7 @@ import { logger } from '@core/logger';
 import { createId } from '@paralleldrive/cuid2';
 import type { NewShoutboxConfig, ShoutboxConfig } from '@schema/admin/shoutboxConfig';
 import type { RoomId } from '@shared/types/ids';
+import { wsService } from '@core/websocket/websocket.service';
 
 interface MessageContext {
 	userId: UserId;
@@ -344,7 +345,26 @@ export class ShoutboxService {
 				// Create system message about the tip
 				const systemMessage = `💰 ${context.username} tipped @${targetUsername} ${amount} DGT${tipMessage ? `: ${tipMessage}` : ''}`;
 
-				await this.createSystemMessage(context.roomId, systemMessage);
+				await this.createSystemMessage(context.roomId, systemMessage, 'tip', {
+					amount,
+					recipientId: tipResult.data.toUserId,
+					recipientName: targetUsername
+				});
+				
+				// Broadcast tip event via WebSocket
+				wsService.broadcastToRoom(context.roomId, 'tip_received', {
+					sender: {
+						id: context.userId,
+						username: context.username
+					},
+					recipient: {
+						id: tipResult.data.toUserId,
+						username: targetUsername
+					},
+					amount,
+					message: tipMessage,
+					roomId: context.roomId
+				});
 
 				return {
 					success: true,
@@ -434,7 +454,22 @@ export class ShoutboxService {
 			if (rainResult.success) {
 				const systemMessage = `🌧️ ${context.username} started a rain of ${totalAmount} DGT for ${userCount} users! ${rainMessage || ''}`;
 
-				await this.createSystemMessage(context.roomId, systemMessage);
+				await this.createSystemMessage(context.roomId, systemMessage, 'rain', {
+					amount: totalAmount,
+					recipientCount: userCount
+				});
+				
+				// Broadcast rain event via WebSocket
+				wsService.broadcastToRoom(context.roomId, 'rain_received', {
+					sender: {
+						id: context.userId,
+						username: context.username
+					},
+					amount: totalAmount,
+					recipients: rainResult.data.recipients || [],
+					message: rainMessage,
+					roomId: context.roomId
+				});
 
 				return {
 					success: true,
@@ -835,10 +870,33 @@ export class ShoutboxService {
 				});
 			}
 
+			// Broadcast new message via WebSocket
+			wsService.broadcastToRoom(context.roomId, {
+				type: 'new_message',
+				payload: {
+					message: {
+						id: message.id,
+						userId: message.userId,
+						roomId: message.roomId,
+						content: message.content,
+						createdAt: message.createdAt,
+						user: {
+							id: context.userId,
+							username: context.username,
+							level: context.userLevel
+						}
+					}
+				}
+			});
+
 			return {
 				success: true,
 				message: 'Message sent successfully',
-				data: message
+				data: message,
+				broadcastData: {
+					type: 'new_message',
+					message
+				}
 			};
 		} catch (error) {
 			logger.error('ShoutboxService', 'Error creating message', { error, context });
@@ -853,13 +911,20 @@ export class ShoutboxService {
 	/**
 	 * Create a system message
 	 */
-	private static async createSystemMessage(roomId: RoomId, content: string): Promise<void> {
+	private static async createSystemMessage(
+		roomId: RoomId, 
+		content: string,
+		type: 'normal' | 'rain' | 'tip' | 'system' = 'system',
+		metadata?: any
+	): Promise<void> {
 		try {
 			await db.insert(shoutboxMessages).values({
 				userId: null, // System message
 				roomId,
 				content,
-				isDeleted: false
+				isDeleted: false,
+				type,
+				metadata: metadata ? JSON.stringify(metadata) : null
 			});
 		} catch (error) {
 			logger.error('ShoutboxService', 'Error creating system message', { error, roomId, content });

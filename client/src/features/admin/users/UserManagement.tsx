@@ -27,11 +27,11 @@ import {
 	Package
 } from 'lucide-react';
 
-import { AdminPageShell } from '@/features/admin/components/layout/AdminPageShell';
+import { AdminPageShell } from '@/features/admin/layout/layout/AdminPageShell';
 import { AdminDataTable } from '@/features/admin/components/common/AdminDataTable';
 import type { AdminDataTableProps } from '@/features/admin/components/common/AdminDataTable';
-import { EntityFilters } from '@/features/admin/components/layout/EntityFilters';
-import type { FilterConfig, FilterValue } from '@/features/admin/components/layout/EntityFilters'; // Type-only imports
+import { EntityFilters } from '@/features/admin/layout/layout/EntityFilters';
+import type { FilterConfig, FilterValue } from '@/features/admin/layout/layout/EntityFilters'; // Type-only imports
 import UserFormDialog from '@/features/admin/components/forms/users/UserFormDialog';
 import {
 	BanUserDialog,

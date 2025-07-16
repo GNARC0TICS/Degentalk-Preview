@@ -5,7 +5,7 @@
  * Ensures type safety at API boundaries and data ingestion points.
  */
 
-import type { UserId } from '../ids';
+import type { UserId } from '../ids.js';
 
 // UUID validation
 export function isValidUuid(value: unknown): value is string {

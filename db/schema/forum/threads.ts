@@ -76,11 +76,11 @@ export const threads = pgTable(
 	(table) => ({
 		// parentForumSlugIdx: index('idx_threads_parent_forum_slug').on(table.parentForumSlug), // REMOVED
 		structureIdx: index('idx_threads_structure_id').on(table.structureId),
-		userIdx: index('idx_threads_user_id').on(table.userId),
+		userIdx: index('idx_threads_author_id').on(table.userId),
 		createdAtIdx: index('idx_threads_created_at').on(table.createdAt),
 		slugUnique: unique('threads_slug_visible_unique').on(table.slug),
 		hotScoreIdx: index('idx_threads_hot_score').on(table.hotScore),
-		isBoostedIdx: index('idx_threads_is_boosted').on(table.isBoosted)
+		isBoostedIdx: index('idx_threads_is_boosted_flag').on(table.isBoosted)
 	})
 );
 // Placeholder for relations

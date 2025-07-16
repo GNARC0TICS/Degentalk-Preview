@@ -9,7 +9,7 @@ import { apiRequest } from '@/utils/queryClient';
 import { useCrudMutation } from '@/hooks/useCrudMutation'; // Import the new hook
 import { Plus, Pencil, Trash2 } from 'lucide-react';
 
-import { AdminPageShell } from '@/features/admin/components/layout/AdminPageShell';
+import { AdminPageShell } from '@/features/admin/layout/layout/AdminPageShell';
 import { AdminDataTable } from '@/features/admin/components/common/AdminDataTable';
 import { RoleFormDialog, roleSchema } from '@/features/admin/components/forms/roles/RoleFormDialog';
 import type { RoleFormValues } from '@/features/admin/components/forms/roles/RoleFormDialog';

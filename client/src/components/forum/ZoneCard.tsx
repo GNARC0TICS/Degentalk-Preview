@@ -339,7 +339,7 @@ const ZoneCardPure = memo(
 										>
 											<div className="flex items-center justify-center gap-1 text-xs text-zinc-500">
 												<MessageSquare className="w-2.5 h-2.5" />
-												<span className="text-xs">Forums</span>
+												<span className="text-xs">Subforums</span>
 											</div>
 											<div className="text-sm font-semibold text-white mt-0.5">
 												{derivedZone.forums?.length ?? 0}
@@ -357,7 +357,7 @@ const ZoneCardPure = memo(
 										>
 											<div className="flex items-center justify-center gap-1 text-xs text-zinc-500">
 												<Activity className="w-2.5 h-2.5" />
-												<span className="text-xs">Threads</span>
+												<span className="text-xs">Posts</span>
 											</div>
 											<div className="text-sm font-semibold text-white mt-0.5">
 												{derivedZone.forums?.reduce((sum, f) => sum + (f.threadCount || 0), 0)}
@@ -407,7 +407,7 @@ const ZoneCardPure = memo(
 								derivedZone.forums.length > 0 &&
 								(slots?.preview ?? (
 									<div className="space-y-2">
-										<div className="text-xs font-medium text-zinc-300 mb-2">Forums:</div>
+										<div className="text-xs font-medium text-zinc-300 mb-2">Subforums:</div>
 										{previewForums.map(
 											(forumItem: { id: ForumId; name: string; threadCount?: number }) => (
 												<div

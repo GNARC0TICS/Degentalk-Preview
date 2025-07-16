@@ -3,8 +3,8 @@
  * Convenience functions for testing with realistic Degentalk fixtures
  */
 
-import { Factory } from '../core/factory';
-import { scenarioGenerator, AvailableScenario } from './scenario-generator';
+import { Factory } from '../core/factory.js';
+import { scenarioGenerator, AvailableScenario } from './scenario-generator.js';
 import type { AdminId } from '@shared/types/ids';
 // TODO: Replace with proper shared logger
 // import { logger } from "../../../server/src/core/logger";

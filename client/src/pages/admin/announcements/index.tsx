@@ -68,7 +68,7 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/utils/queryClient';
-import { AdminPageShell } from '@/features/admin/components/layout/AdminPageShell';
+import { AdminPageShell } from '@/features/admin/layout/layout/AdminPageShell';
 
 // Define the Announcement type
 interface Announcement {

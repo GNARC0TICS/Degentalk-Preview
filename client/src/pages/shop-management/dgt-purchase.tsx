@@ -11,6 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Link } from 'wouter';
 import { Wide } from '@/layout/primitives';
+import { logger } from '@/lib/logger';
 
 // Define the package type for DGT purchases
 interface Package {
@@ -101,7 +102,7 @@ export default function DgtPurchasePage() {
 				const data = await response.json();
 				setPackages(data);
 			} catch (error) {
-				console.error('Error fetching DGT packages:', error);
+				logger.error('DGTPurchase', 'Failed to fetch DGT packages', { error });
 				toast({
 					variant: 'destructive',
 					title: 'Error',
@@ -137,7 +138,7 @@ export default function DgtPurchasePage() {
 				});
 			}
 		} catch (error) {
-			console.error('Failed to process package selection:', error);
+			logger.error('DGTPurchase', 'Failed to process package selection', { error });
 		}
 	};
 

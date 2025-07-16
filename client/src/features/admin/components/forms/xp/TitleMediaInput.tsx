@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Upload } from 'lucide-react';
 import { MediaAsset } from '@/components/media/MediaAsset';
-import { MediaPickerModal } from '@/features/admin/components/media/MediaPickerModal';
+import { MediaPickerModal } from '@/features/admin/media/media/MediaPickerModal';
 import type { EntityId } from '@shared/types/ids';
 
 interface Props {

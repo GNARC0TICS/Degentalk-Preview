@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { initiateXLogin, handleXCallback, unlinkXAccount } from '../services/xAuthService';
 import { isAuthenticated } from '../auth.routes';
 
-const router = Router();
+const router: Router = Router();
 
 // GET /api/auth/x/login – redirect to Twitter
 router.get('/login', initiateXLogin);

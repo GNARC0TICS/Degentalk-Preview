@@ -1,7 +1,4 @@
 @import './tokens/animations.css';
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
 
 /* ------------------------------------------------------------------ */
 /* Animation utility classes                                           */

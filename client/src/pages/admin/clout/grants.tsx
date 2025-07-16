@@ -48,7 +48,7 @@ import { useDebounce } from '@/hooks/use-debounce';
 import { apiRequest } from '@/utils/queryClient';
 import { calculateCloutTierImpact, getTierForClout } from '@shared/economy/clout-calculator';
 import { CLOUT_EASTER_EGGS } from '@/config/easter-eggs.config';
-import { CloutObliterationEffect } from '@/features/admin/components/effects/CloutObliterationEffect';
+import { CloutObliterationEffect } from '@/features/admin/effects/CloutObliterationEffect';
 
 // Types
 interface User {

@@ -21,7 +21,7 @@ import {
 	SelectValue
 } from '@/components/ui/select';
 import { Upload } from 'lucide-react';
-import { MediaPickerModal } from '@/features/admin/components/media/MediaPickerModal';
+import { MediaPickerModal } from '@/features/admin/media/media/MediaPickerModal';
 import { MediaAsset } from '@/components/media/MediaAsset';
 import type { BadgeId, EntityId } from '@shared/types/ids';
 

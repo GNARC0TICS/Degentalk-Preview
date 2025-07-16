@@ -1,4 +1,4 @@
-import { pgTable, text, timestamp, boolean, index, uuid, integer } from 'drizzle-orm/pg-core';
+import { pgTable, text, timestamp, boolean, index, uuid, integer, jsonb } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users'; // Adjusted path
 import { chatRooms } from './chatRooms'; // Adjusted path
@@ -9,7 +9,6 @@ export const shoutboxMessages = pgTable(
 	{
 		id: uuid('id').primaryKey().defaultRandom(),
 		userId: uuid('user_id')
-			.notNull()
 			.references(() => users.id, { onDelete: 'cascade' }),
 		roomId: uuid('room_id').references(() => chatRooms.id, { onDelete: 'cascade' }), // Updated to uuid
 		content: text('content').notNull(),
@@ -19,7 +18,9 @@ export const shoutboxMessages = pgTable(
 		editedAt: timestamp('edited_at'),
 		isDeleted: boolean('is_deleted').notNull().default(false),
 		isPinned: boolean('is_pinned').notNull().default(false),
-		tipAmount: integer('tip_amount') // Kept as integer
+		tipAmount: integer('tip_amount'), // Kept as integer
+		type: text('type').notNull().default('normal'), // 'normal' | 'rain' | 'tip' | 'system'
+		metadata: jsonb('metadata') // Additional data for special message types
 	},
 	(table) => ({
 		userIdx: index('idx_shoutbox_messages_user_id').on(table.userId),
@@ -36,7 +37,9 @@ export const insertShoutboxMessageSchema = createInsertSchema(shoutboxMessages, 
 	editedAt: true,
 	isDeleted: true,
 	isPinned: true,
-	tipAmount: true
+	tipAmount: true,
+	type: true,
+	metadata: true
 });
 export type ShoutboxMessage = typeof shoutboxMessages.$inferSelect;
 export type InsertShoutboxMessage = z.infer<typeof insertShoutboxMessageSchema>;

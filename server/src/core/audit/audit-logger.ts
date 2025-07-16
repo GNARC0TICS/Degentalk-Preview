@@ -476,10 +476,10 @@ class AuditLogger {
 	private getLogLevel(severity: AuditSeverity): 'info' | 'warn' | 'error' {
 		switch (severity) {
 			case 'critical':
-			case 'high':
 				return 'error';
-			case 'medium':
+			case 'high':
 				return 'warn';
+			case 'medium':
 			default:
 				return 'info';
 		}
@@ -503,10 +503,28 @@ export function auditMiddleware(req: any, res: any, next: any) {
 	res.on('finish', async () => {
 		const responseTime = Date.now() - startTime;
 
-		// Only audit significant events or errors
-		if (res.statusCode >= 400 || req.method !== 'GET') {
+		// Only audit significant security events, not routine 404s
+		const shouldAudit = 
+			// Audit authentication failures
+			(res.statusCode === 401) ||
+			// Audit forbidden access attempts
+			(res.statusCode === 403) ||
+			// Audit server errors
+			(res.statusCode >= 500) ||
+			// Audit non-GET requests that fail (except 404s)
+			(req.method !== 'GET' && res.statusCode >= 400 && res.statusCode !== 404) ||
+			// Audit suspicious patterns (e.g., SQL injection attempts, path traversal)
+			(req.path.includes('..') || req.path.includes('SELECT') || req.path.includes('DROP'));
+
+		if (shouldAudit) {
+			const eventType = res.statusCode === 401 || res.statusCode === 403 
+				? 'security.permission_denied' 
+				: res.statusCode >= 500 
+				? 'system.error' 
+				: 'security.suspicious_activity';
+
 			await auditLogger.log(
-				'security.permission_denied',
+				eventType,
 				`${req.method} ${req.path}`,
 				{
 					userId: user?.id,

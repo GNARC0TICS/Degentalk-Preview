@@ -2,7 +2,7 @@
  * Forum content factories for realistic crypto community discussions
  */
 
-import { BaseFactory } from '../core/factory';
+import { BaseFactory } from '../core/factory.js';
 import type { Thread, Post, ForumCategory } from '@schema';
 import { generateId } from '@shared/utils/id';
 

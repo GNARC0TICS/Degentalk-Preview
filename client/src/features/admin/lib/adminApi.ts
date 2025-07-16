@@ -28,7 +28,7 @@ export class AdminApi {
 		init: RequestInit = {}
 	) {
 		// Lazy import to avoid circular deps if apiRequest imports from this file later
-		const { apiRequest } = await import('./api-request');
+		const { apiRequest } = await import('@/utils/api-request');
 
 		return apiRequest<T>(`${this.basePath}${endpoint}`, {
 			...init,

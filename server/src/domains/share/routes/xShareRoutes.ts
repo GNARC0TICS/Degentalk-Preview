@@ -5,7 +5,7 @@ import { isAuthenticated } from '../../auth/auth.routes';
 import type { ContentId } from '@shared/types/ids';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
-const router = Router();
+const router: Router = Router();
 
 // TODO: Implement sharing routes
 

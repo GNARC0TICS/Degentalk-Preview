@@ -5,12 +5,19 @@ import { Button } from '@/components/ui/button';
 import { ZoneCard, type ZoneCardProps } from '@/components/forum/ZoneCard';
 import { cn } from '@/utils/utils';
 import { useBreakpoint } from '@/hooks/useMediaQuery';
+import './PrimaryZoneCarousel.css';
+
+// Content type for future extensibility (ads, promotions, etc.)
+export type CarouselContent = 
+	| { type: 'zone'; data: ZoneCardProps['zone'] }
+	| { type: 'ad'; data: { id: string; imageUrl: string; link: string; altText: string } };
 
 export interface PrimaryZoneCarouselProps {
 	zones: ZoneCardProps['zone'][];
 	autoRotateMs?: number;
 	className?: string;
 	onZoneClick?: (zoneId: string) => void;
+	// Future: content?: CarouselContent[] to support mixed content
 }
 
 interface CarouselState {
@@ -41,7 +48,8 @@ const PrimaryZoneCarousel = memo(
 		// Responsive cards per view – fallback to 1 until mounted
 		const cardsPerView = React.useMemo(() => {
 			if (!isMounted) return 1;
-			return breakpoint.isMobile ? 1 : breakpoint.isTablet ? 2 : 3;
+			// Mobile: 1, Tablet & Desktop: 2 (better for constrained width)
+			return breakpoint.isMobile ? 1 : 2;
 		}, [isMounted, breakpoint]);
 
 		// Ensure currentIndex never exceeds the new maxIndex (handles viewport resize)
@@ -52,7 +60,9 @@ const PrimaryZoneCarousel = memo(
 			});
 		}, [cardsPerView, zones.length]);
 
-		const maxIndex = Math.max(0, zones.length - cardsPerView);
+		// Calculate number of pages for dot indicators
+		const numPages = Math.ceil(zones.length / cardsPerView);
+		const maxIndex = Math.max(0, numPages - 1);
 
 		// Auto-rotation effect
 		useEffect(() => {
@@ -157,15 +167,14 @@ const PrimaryZoneCarousel = memo(
 							initial="hidden"
 							animate="visible"
 							className={cn(
-								'grid gap-6',
-								zones.length === 1 && 'grid-cols-1 max-w-md mx-auto',
-								zones.length === 2 && 'grid-cols-1 lg:grid-cols-2 max-w-4xl mx-auto',
-								zones.length === 3 && 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'
+								'grid gap-4',
+								zones.length === 1 && 'grid-cols-1 max-w-lg mx-auto',
+								zones.length >= 2 && 'grid-cols-1 md:grid-cols-2'
 							)}
 						>
 							{zones.map((zone) => (
 								<motion.div key={zone.id} variants={cardVariants}>
-									<ZoneCard zone={zone} layout="compact" onEnter={handleZoneEnter} />
+									<ZoneCard zone={zone} layout="compact" onEnter={handleZoneEnter} className="w-full" />
 								</motion.div>
 							))}
 						</motion.div>
@@ -232,37 +241,35 @@ const PrimaryZoneCarousel = memo(
 					</div>
 
 					{/* Carousel Container */}
-					<div className="relative overflow-hidden">
+					<div className="zone-carousel-container relative overflow-x-hidden w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 						<motion.div
-							className="flex transition-transform duration-500 ease-in-out"
-							animate={{
-								x: `-${(state.currentIndex * 100) / cardsPerView}%`
-							}}
-							style={{
-								width: `${(zones.length * 100) / cardsPerView}%`
-							}}
+							className="flex"
+							animate={{ x: `-${state.currentIndex * 100}%` }}
+							transition={{ duration: 0.5, ease: 'easeInOut' }}
+							style={{ width: '100%' }}
 						>
 							{zones.map((zone, index) => (
 								<div
 									key={zone.id}
-									className={cn(
-										'flex-shrink-0 px-3',
-										cardsPerView === 1 && 'w-full',
-										cardsPerView === 2 && 'w-1/2',
-										cardsPerView === 3 && 'w-1/3'
-									)}
+									className="zone-carousel-item flex-shrink-0 px-2"
+									style={{
+										flex: `0 0 calc(100% / ${cardsPerView})`,
+										maxWidth: `calc(100% / ${cardsPerView})`
+									}}
 								>
+									{/* Future: Replace with content renderer that handles both zones and ads
+									    Example:
+									    {content.type === 'zone' ? (
+									      <ZoneCard zone={content.data} ... />
+									    ) : (
+									      <AdCard ad={content.data} ... />
+									    )}
+									*/}
 									<ZoneCard
 										zone={zone}
 										layout="compact"
 										onEnter={handleZoneEnter}
-										className={cn(
-											'transition-all duration-300',
-											// Highlight current cards
-											index >= state.currentIndex && index < state.currentIndex + cardsPerView
-												? 'opacity-100 scale-100'
-												: 'opacity-60 scale-95'
-										)}
+										className="w-full transition-opacity duration-300"
 									/>
 								</div>
 							))}
@@ -271,7 +278,7 @@ const PrimaryZoneCarousel = memo(
 
 					{/* Indicators */}
 					<div className="flex justify-center mt-6 gap-2">
-						{Array.from({ length: maxIndex + 1 }).map((_, index) => (
+						{Array.from({ length: numPages }).map((_, index) => (
 							<button
 								key={index}
 								onClick={() =>

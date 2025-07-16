@@ -44,6 +44,8 @@ import { initEventNotificationListener } from './src/domains/notifications/event
 import './src/core/background-processor';
 import { logger } from './src/core/logger';
 import { sendErrorResponse } from './src/core/utils/transformer.helpers';
+import { wsService } from './src/core/websocket/websocket.service';
+import { sentinelBot } from './src/domains/shoutbox/services/sentinel-bot.service';
 
 // Startup logging helper
 const startupLog = (message: string, type: 'info' | 'success' | 'error' | 'warning' = 'info') => {
@@ -181,6 +183,19 @@ app.use(traceMiddleware);
 
 		server.on('listening', () => {
 			startupLog(`Backend API running on http://localhost:${port}`, 'success');
+
+			// Initialize WebSocket service
+			startupLog('Initializing WebSocket service...');
+			wsService.initialize(server);
+			startupLog('WebSocket service initialized.', 'success');
+
+			// Initialize Sentinel bot
+			startupLog('Initializing Sentinel bot...');
+			sentinelBot.initialize();
+			startupLog('Sentinel bot initialized.', 'success');
+
+			// Make WebSocket service available to Express routes
+			(app as any).wss = wsService;
 
 			startupLog('Initializing scheduled tasks...');
 			runScheduledTasks();

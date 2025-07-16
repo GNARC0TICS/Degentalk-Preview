@@ -1,4 +1,4 @@
-import type { CategoryId } from '@shared/types/ids';
+import type { CategoryId } from './types/ids.js';
 
 /**
  * Degentalk Dynamic Path System Configuration

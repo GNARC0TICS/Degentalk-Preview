@@ -43,7 +43,7 @@ import {
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
-import { AdminPageShell } from '@/features/admin/components/layout/AdminPageShell';
+import { AdminPageShell } from '@/features/admin/layout/layout/AdminPageShell';
 import type { UserId } from '@shared/types/ids';
 
 // Form schema for user search

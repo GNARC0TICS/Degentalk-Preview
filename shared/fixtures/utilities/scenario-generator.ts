@@ -3,11 +3,11 @@
  * Generates complex, realistic test scenarios for the Degentalk platform
  */
 
-import { Factory } from '../core/factory';
-import { UserFactory, AdminUserFactory, CryptoWhaleFactory } from '../factories/user.factory';
-import { ThreadFactory, PostFactory, ForumCategoryFactory } from '../factories/forum.factory';
-import type { AdminId, WhaleId } from '@shared/types/ids';
-import type { UserId, ThreadId } from '@shared/types/ids';
+import { Factory } from '../core/factory.js';
+import { UserFactory, AdminUserFactory, CryptoWhaleFactory } from '../factories/user.factory.js';
+import { ThreadFactory, PostFactory, ForumCategoryFactory } from '../factories/forum.factory.js';
+import type { AdminId, WhaleId } from '../../types/ids.js';
+import type { UserId, ThreadId } from '../../types/ids.js';
 
 // Register all factories
 Factory.register('user', new UserFactory());

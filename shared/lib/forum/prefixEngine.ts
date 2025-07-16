@@ -1,5 +1,5 @@
 import type { AdminId } from '@shared/types/ids';
-import { getForumRules } from './getForumRules';
+import { getForumRules } from './getForumRules.js';
 
 export type ThreadEngagementStats = {
 	replies: number;

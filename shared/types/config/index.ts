@@ -6,7 +6,7 @@
  */
 
 // XP Configuration
-export type { XpConfig, XpAction, XpMultiplier, LevelFormula, LevelMilestone } from './xp.schema';
+export type { XpConfig, XpAction, XpMultiplier, LevelFormula, LevelMilestone } from './xp.schema.js';
 
 export {
 	XpConfigSchema,
@@ -17,7 +17,7 @@ export {
 	validateXpConfig,
 	validatePartialXpConfig,
 	defaultXpConfig
-} from './xp.schema';
+} from './xp.schema.js';
 
 // Economy Configuration
 export type {
@@ -28,7 +28,7 @@ export type {
 	DistributionConfig,
 	StakingConfig,
 	ShopPricing
-} from './economy.schema';
+} from './economy.schema.js';
 
 export {
 	EconomyConfigSchema,
@@ -41,7 +41,7 @@ export {
 	validateEconomyConfig,
 	validatePartialEconomyConfig,
 	defaultEconomyConfig
-} from './economy.schema';
+} from './economy.schema.js';
 
 // Features & Access Control Configuration
 export type {
@@ -52,7 +52,7 @@ export type {
 	Role,
 	AccessRule,
 	ForumAccess
-} from './features.schema';
+} from './features.schema.js';
 
 export {
 	FeaturesConfigSchema,
@@ -66,7 +66,7 @@ export {
 	validatePartialFeaturesConfig,
 	defaultFeaturesConfig,
 	evaluateFeatureFlag
-} from './features.schema';
+} from './features.schema.js';
 
 // Core Entity Schemas
 export type {
@@ -77,7 +77,7 @@ export type {
 	WalletSchemaType,
 	TransactionSchemaType,
 	ShopItemSchemaType
-} from './core-entities.schema';
+} from './core-entities.schema.js';
 
 export {
 	UserSchema,
@@ -106,4 +106,4 @@ export {
 	validateWallet,
 	validateTransaction,
 	validateShopItem
-} from './core-entities.schema';
+} from './core-entities.schema.js';

@@ -44,13 +44,23 @@ function ActiveMembersWidget({
 	limit = 5,
 	viewAllLink = '/degen-index'
 }: ActiveMembersWidgetProps) {
-	const { data: users = [], isLoading } = useQuery<ActiveUser[]>({
+	const { data: response, isLoading } = useQuery<ActiveUser[] | { error: string }>({
 		queryKey: createWidgetQueryKey('active-members'),
-		queryFn: () => fetch('/api/forum/active-members').then((r) => r.json()),
-		staleTime: 30_000
+		queryFn: async () => {
+			const res = await fetch('/api/forum/active-members');
+			const data = await res.json();
+			if (!res.ok) {
+				throw new Error(data.error || 'Failed to fetch active members');
+			}
+			return data;
+		},
+		staleTime: 30_000,
+		retry: 3,
+		retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000)
 	});
 
-	// Limit the number of users displayed
+	// Safely handle response - check if it's an array
+	const users = Array.isArray(response) ? response : [];
 	const displayedUsers = users.slice(0, limit);
 
 	return (

@@ -1,0 +1,25 @@
+/* Primary Zone Carousel Styles */
+
+/* Ensure proper box-sizing for carousel */
+.zone-carousel-container * {
+  box-sizing: border-box;
+}
+
+/* Override zone-card padding when in carousel */
+.zone-carousel-item .zone-card {
+  width: 100%;
+  margin: 0;
+}
+
+/* Ensure cards don't overflow their containers */
+.zone-carousel-item {
+  overflow: hidden;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .zone-carousel-item {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}

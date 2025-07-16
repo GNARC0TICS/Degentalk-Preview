@@ -9,8 +9,6 @@ import { db } from '@db';
 import { logger } from '@core/logger';
 import { forumStructure, threads, threadPrefixes, tags } from '@schema';
 import { sql, desc, asc, and, eq, inArray } from 'drizzle-orm';
-import { CacheStandard, CacheExtended } from '@core/cache/decorators';
-import { invalidateCache } from '@core/cache/invalidateCache';
 import type { ForumStructureWithStats, ThreadWithPostsAndUser } from '@db/types/forum.types';
 // Import specialized services
 import { forumStructureService } from './services/structure.service';
@@ -107,7 +105,6 @@ export const forumService = {
 	/**
 	 * Get complete forum structure with zones and forums
 	 */
-	@CacheExtended.forumStructure
 	async getForumStructure(): Promise<{
 		zones: ForumStructureWithStats[];
 		forums: ForumStructureWithStats[];
@@ -127,7 +124,6 @@ export const forumService = {
 	/**
 	 * Get structures with statistics - delegates to StructureService
 	 */
-	@CacheStandard.forumStats
 	async getStructuresWithStats(includeCounts: boolean = true): Promise<ForumStructureWithStats[]> {
 		return forumStructureService.getStructuresWithStats();
 	},
@@ -241,7 +237,6 @@ export const forumService = {
 	/**
 	 * Get thread prefixes - simple delegation
 	 */
-	@CacheStandard.forumStats
 	async getPrefixes(forumId?: StructureId) {
 		if (forumId) {
 			return db
@@ -367,7 +362,6 @@ export const forumService = {
 	/**
 	 * Get threads in forum by slug
 	 */
-	@CacheStandard.forumRecent
 	async getThreadsInForum(slug: string, limit: number = 50, offset: number = 0) {
 		// Validate against config
 		configService.ensureValidLeafForum(slug);

@@ -128,11 +128,11 @@ async generateDashboard(timeframe: 'day' | 'week' | 'month') {
 ```typescript
 // Location: server/src/domains/analytics/services/session-tracking.service.ts
 export class SessionTrackingService {
-  async startSession(sessionId: string, data: SessionData)
-  async trackPageView(sessionId: string, page: string, userId?: UserId)
-  async endSession(sessionId: string)
-  async getSessionMetrics(timeframe: 'day' | 'week' | 'month')
-  async getRetentionCohorts(weeks: number)
+	async startSession(sessionId: string, data: SessionData);
+	async trackPageView(sessionId: string, page: string, userId?: UserId);
+	async endSession(sessionId: string);
+	async getSessionMetrics(timeframe: 'day' | 'week' | 'month');
+	async getRetentionCohorts(weeks: number);
 }
 ```
 
@@ -152,10 +152,10 @@ app.use('/api/auth/logout', endSessionMiddleware);
 
 ```typescript
 interface CacheMetrics {
-  hits: number;
-  misses: number;
-  errors: number;
-  hitRate: number;
+	hits: number;
+	misses: number;
+	errors: number;
+	hitRate: number;
 }
 ```
 
@@ -326,4 +326,4 @@ All performance targets have been met or exceeded, with significant improvements
 
 ---
 
-*Implementation completed by Claude Code for DegenTalk Workstream 5: Performance & Caching*
+_Implementation completed by Claude Code for DegenTalk Workstream 5: Performance & Caching_

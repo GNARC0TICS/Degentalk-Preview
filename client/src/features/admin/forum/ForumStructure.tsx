@@ -11,9 +11,9 @@ import {
 	SelectTrigger,
 	SelectValue
 } from '@/components/ui/select';
-import { AdminPageShell } from '@/features/admin/components/layout/AdminPageShell';
+import { AdminPageShell } from '@/features/admin/layout/layout/AdminPageShell';
 import { AdminDataTable } from '@/features/admin/components/common/AdminDataTable';
-import type { ColumnDef } from '@/features/admin/components/layout/EntityTable';
+import type { ColumnDef } from '@/features/admin/layout/layout/EntityTable';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';

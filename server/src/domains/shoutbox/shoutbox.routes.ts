@@ -120,7 +120,8 @@ router.get('/config', isAdmin, async (req: Request, res: Response) => {
 router.patch('/config', isAdmin, async (req: Request, res: Response) => {
 	try {
 		const roomId = req.query.roomId ? (req.query.roomId as string) : undefined;
-		const userId = userService.getUserFromRequest(req);
+		const user = userService.getUserFromRequest(req);
+		const userId = user?.id;
 
 		const updatedConfig = await ShoutboxService.updateConfig(
 			{
@@ -142,7 +143,8 @@ router.patch('/config', isAdmin, async (req: Request, res: Response) => {
  */
 router.get('/rooms', isAuthenticatedOptional, async (req: Request, res: Response) => {
 	try {
-		const userId = userService.getUserFromRequest(req);
+		const user = userService.getUserFromRequest(req);
+		const userId = user?.id;
 		const includeStats = req.query.includeStats === 'true';
 
 		if (includeStats) {
@@ -169,7 +171,8 @@ router.get('/rooms', isAuthenticatedOptional, async (req: Request, res: Response
  */
 router.post('/rooms', isAdmin, async (req: Request, res: Response) => {
 	try {
-		const userId = userService.getUserFromRequest(req);
+		const user = userService.getUserFromRequest(req);
+		const userId = user?.id;
 		const roomData = createRoomSchema.parse({
 			...req.body,
 			createdBy: userId
@@ -200,7 +203,8 @@ router.post('/rooms', isAdmin, async (req: Request, res: Response) => {
 router.patch('/rooms/:roomId', isAdmin, async (req: Request, res: Response) => {
 	try {
 		const roomId = req.params.roomId as RoomId;
-		const userId = userService.getUserFromRequest(req);
+		const user = userService.getUserFromRequest(req);
+		const userId = user?.id;
 
 		const result = await RoomService.updateRoom(roomId, req.body, userId);
 
@@ -222,7 +226,8 @@ router.patch('/rooms/:roomId', isAdmin, async (req: Request, res: Response) => {
 router.delete('/rooms/:roomId', isAdmin, async (req: Request, res: Response) => {
 	try {
 		const roomId = req.params.roomId as RoomId;
-		const userId = userService.getUserFromRequest(req);
+		const user = userService.getUserFromRequest(req);
+		const userId = user?.id;
 
 		const result = await RoomService.deleteRoom(roomId, userId);
 
@@ -268,7 +273,8 @@ router.patch('/rooms/reorder', isAdmin, async (req: Request, res: Response) => {
  */
 router.get('/messages', isAuthenticatedOptional, async (req: Request, res: Response) => {
 	try {
-		const userId = userService.getUserFromRequest(req);
+		const user = userService.getUserFromRequest(req);
+		const userId = user?.id;
 		const roomId = req.query.roomId ? (req.query.roomId as string) : null;
 		const limit = Math.min(parseInt(req.query.limit as string) || 50, 100);
 		const before = req.query.before ? parseInt(req.query.before as string) : null;
@@ -311,6 +317,8 @@ router.get('/messages', isAuthenticatedOptional, async (req: Request, res: Respo
 				isDeleted: shoutboxMessages.isDeleted,
 				isPinned: shoutboxMessages.isPinned,
 				tipAmount: shoutboxMessages.tipAmount,
+				type: shoutboxMessages.type,
+				metadata: shoutboxMessages.metadata,
 				// User data
 				username: users.username,
 				avatarUrl: users.avatarUrl,
@@ -346,10 +354,13 @@ router.get('/messages', isAuthenticatedOptional, async (req: Request, res: Respo
 	}
 });
 
-// Dynamic rate-limiter middleware that picks limiter based on user role/level
+/**
+ * Dynamic rate-limiter middleware that picks limiter based on user role/level
+ */
 async function dynamicRateLimiter(req: Request, res: Response, next: Function) {
 	try {
-		const userId = userService.getUserFromRequest(req);
+		const authUser = userService.getUserFromRequest(req);
+		const userId = authUser?.id;
 		if (!userId) return sendErrorResponse(res, 'Unauthorized', 401);
 
 		const user = await db.query.users.findFirst({
@@ -393,8 +404,8 @@ router.post(
 	dynamicRateLimiter,
 	async (req: Request, res: Response) => {
 		try {
-			const userId = userService.getUserFromRequest(req);
-			const user = (req as any).currentUser;
+			const user = (req as any).currentUser || userService.getUserFromRequest(req);
+			const userId = user?.id;
 			const messageData = messageSchema.parse(req.body);
 
 			// Determine room ID
@@ -463,7 +474,8 @@ router.patch(
 		try {
 			const messageId = req.params.messageId as MessageId;
 			const { isPinned } = req.body;
-			const userId = userService.getUserFromRequest(req);
+			const user = userService.getUserFromRequest(req);
+		const userId = user?.id;
 
 			if (typeof isPinned !== 'boolean') {
 				return sendErrorResponse(res, 'Invalid parameters', 400);
@@ -556,7 +568,8 @@ router.patch(
 router.delete('/messages/:messageId', isAdminOrModerator, async (req: Request, res: Response) => {
 	try {
 		const messageId = req.params.messageId as MessageId;
-		const userId = userService.getUserFromRequest(req);
+		const user = userService.getUserFromRequest(req);
+		const userId = user?.id;
 
 		// Soft delete message
 		const [deletedMessage] = await db
@@ -609,7 +622,8 @@ router.delete('/messages/:messageId', isAdminOrModerator, async (req: Request, r
  */
 router.post('/ignore', isAuthenticated, async (req: Request, res: Response) => {
 	try {
-		const userId = userService.getUserFromRequest(req);
+		const user = userService.getUserFromRequest(req);
+		const userId = user?.id;
 		const { targetUserId, roomId, options } = req.body;
 
 		if (!targetUserId || !isValidId(targetUserId)) {
@@ -632,7 +646,8 @@ router.post('/ignore', isAuthenticated, async (req: Request, res: Response) => {
 
 router.delete('/ignore/:targetUserId', isAuthenticated, async (req: Request, res: Response) => {
 	try {
-		const userId = userService.getUserFromRequest(req);
+		const user = userService.getUserFromRequest(req);
+		const userId = user?.id;
 		const targetUserId = req.params.targetUserId as UserId;
 		const roomId = req.query.roomId ? (req.query.roomId as string) : undefined;
 
@@ -843,7 +858,8 @@ router.get('/messages/optimized', isAuthenticatedOptional, async (req: Request, 
 		const limit = req.query.limit ? parseInt(req.query.limit as string) : 50;
 		const cursor = req.query.cursor ? parseInt(req.query.cursor as string) : undefined;
 		const direction = (req.query.direction as 'before' | 'after') || 'before';
-		const userId = userService.getUserFromRequest(req);
+		const user = userService.getUserFromRequest(req);
+		const userId = user?.id;
 
 		if (!roomId) {
 			return sendErrorResponse(res, 'Room ID is required', 400);

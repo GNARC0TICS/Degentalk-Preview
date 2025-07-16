@@ -5,9 +5,9 @@ import { PlusCircle, Edit, Trash2 } from 'lucide-react';
 import { apiRequest } from '@/utils/queryClient'; // As per api-client-pattern.mdc
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Link } from 'wouter';
-import { AdminPageShell } from '@/features/admin/components/layout/AdminPageShell';
+import { AdminPageShell } from '@/features/admin/layout/layout/AdminPageShell';
 import { AdminDataTable } from '@/features/admin/components/common/AdminDataTable';
-import type { ColumnDef } from '@/features/admin/components/layout/EntityTable';
+import type { ColumnDef } from '@/features/admin/layout/layout/EntityTable';
 import { Badge } from '@/components/ui/badge';
 import type { UserId } from '@shared/types/ids';
 

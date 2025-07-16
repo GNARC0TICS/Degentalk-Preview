@@ -1,3 +1,3 @@
 // STREAM-LOCK: B
-export * from './user';
-export * from './common.schemas';
+export * from './user.js';
+export * from './common.schemas.js';

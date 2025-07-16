@@ -4,7 +4,7 @@
  */
 
 // Core factory system
-export { BaseFactory, FactoryBuilder, FactoryRegistry, Factory } from './core/factory';
+export { BaseFactory, FactoryBuilder, FactoryRegistry, Factory } from './core/factory.js';
 export type {
 	FactoryOptions,
 	BuildOptions,
@@ -18,16 +18,16 @@ export {
 	AdminUserFactory,
 	CryptoWhaleFactory,
 	NewbieUserFactory
-} from './factories/user.factory';
+} from './factories/user.factory.js';
 
-export { ThreadFactory, PostFactory, ForumCategoryFactory } from './factories/forum.factory';
+export { ThreadFactory, PostFactory, ForumCategoryFactory } from './factories/forum.factory.js';
 
 // Scenario generation
 export {
 	ScenarioGenerator,
 	scenarioGenerator,
 	availableScenarios
-} from './utilities/scenario-generator';
+} from './utilities/scenario-generator.js';
 export type {
 	ScenarioConfig,
 	ScenarioResult as GeneratedScenario,
@@ -47,12 +47,12 @@ export {
 	expectValidUser,
 	expectValidThread,
 	expectValidPost
-} from './utilities/test-helpers';
+} from './utilities/test-helpers.js';
 
 // Factory registration and initialization
-import { Factory } from './core/factory';
-import { UserFactory, AdminUserFactory, CryptoWhaleFactory } from './factories/user.factory';
-import { ThreadFactory, PostFactory, ForumCategoryFactory } from './factories/forum.factory';
+import { Factory } from './core/factory.js';
+import { UserFactory, AdminUserFactory, CryptoWhaleFactory } from './factories/user.factory.js';
+import { ThreadFactory, PostFactory, ForumCategoryFactory } from './factories/forum.factory.js';
 // TODO: Replace with proper shared logger
 // import { logger } from "../../server/src/core/logger";
 

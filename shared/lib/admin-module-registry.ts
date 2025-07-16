@@ -1,4 +1,4 @@
-import { adminModulesV2, ADMIN_PERMISSIONS, AdminModuleV2 } from '../config/admin.config';
+import { adminModulesV2, ADMIN_PERMISSIONS, AdminModuleV2 } from '../config/admin.config.js';
 
 // Simple User interface for admin module registry
 interface User {

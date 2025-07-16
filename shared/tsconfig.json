@@ -4,7 +4,10 @@
 		"composite": true,
 		"declaration": true,
 		"outDir": "dist",
-		"rootDir": "."
+		"rootDir": ".",
+		"module": "NodeNext",
+		"moduleResolution": "NodeNext",
+		"types": ["node"]
 	},
-	"include": ["lib", "types"]
+	"include": ["lib", "types", "config", "utils", "economy", "enums", "signature", "dto", "validation", "validators", "fixtures", "test-utils", "admin-core", "transformers", "*.ts"]
 }

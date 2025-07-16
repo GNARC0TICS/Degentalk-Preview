@@ -5,7 +5,7 @@ import {
 	animationPackApiService,
 	type PackPayload
 } from '@/features/admin/services/animation-pack-api.service';
-import { AdminPageShell } from '@/features/admin/components/layout/AdminPageShell';
+import { AdminPageShell } from '@/features/admin/layout/layout/AdminPageShell';
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';

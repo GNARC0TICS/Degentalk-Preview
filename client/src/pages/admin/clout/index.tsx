@@ -5,12 +5,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Crown, Trophy, Zap, TrendingUp, Users, Award, Plus, Settings } from 'lucide-react';
-import { AdminPageShell } from '@/features/admin/components/layout/AdminPageShell';
+import { AdminPageShell } from '@/features/admin/layout/layout/AdminPageShell';
 import { apiRequest } from '@/utils/queryClient';
-import { CloutTiersSection } from '@/features/admin/components/clout/CloutTiersSection';
-import { AchievementsSection } from '@/features/admin/components/clout/AchievementsSection';
-import { CloutGrantsSection } from '@/features/admin/components/clout/CloutGrantsSection';
-import { CloutLogsSection } from '@/features/admin/components/clout/CloutLogsSection';
+import { CloutTiersSection } from '@/features/admin/clout/CloutTiersSection';
+import { AchievementsSection } from '@/features/admin/clout/AchievementsSection';
+import { CloutGrantsSection } from '@/features/admin/clout/CloutGrantsSection';
+import { CloutLogsSection } from '@/features/admin/clout/CloutLogsSection';
 import { type AchievementId } from '@shared/types/ids';
 
 // Types

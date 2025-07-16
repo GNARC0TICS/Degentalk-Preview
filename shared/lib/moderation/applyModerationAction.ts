@@ -1,4 +1,4 @@
-import type { VisibilityStatus, ApplyModerationActionParams } from './types';
+import type { VisibilityStatus, ApplyModerationActionParams } from './types.js';
 
 /**
  * @deprecated This file now only exports types for cross-boundary compatibility.

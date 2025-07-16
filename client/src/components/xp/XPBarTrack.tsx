@@ -12,8 +12,7 @@ const XPBarTrack: React.FC<XPBarTrackProps> = ({ track, xp }) => {
 
 	return (
 		<div
-			className="xp-bar-track flex flex-col gap-1 p-4 rounded-xl shadow-lg bg-opacity-60 backdrop-blur-md"
-			style={{ background: 'rgba(30, 30, 40, 0.7)' }}
+			className="xp-bar-track flex flex-col gap-1 p-4 rounded-xl shadow-lg bg-card/70 backdrop-blur-md border border-border/50"
 			aria-label={`${track.label} Progress Bar`}
 			role="progressbar"
 			aria-valuenow={xp}
@@ -22,12 +21,11 @@ const XPBarTrack: React.FC<XPBarTrackProps> = ({ track, xp }) => {
 			tabIndex={0}
 		>
 			<div className="flex items-center justify-between mb-1">
-				<span className="font-bold text-lg text-white drop-shadow">{track.label}</span>
-				<span className="text-sm text-gray-300">Level {level}</span>
+				<span className="font-bold text-lg text-foreground drop-shadow">{track.label}</span>
+				<span className="text-sm text-muted-foreground">Level {level}</span>
 			</div>
 			<div
-				className="relative h-6 w-full rounded-full overflow-hidden"
-				style={{ background: '#222' }}
+				className="relative h-6 w-full rounded-full overflow-hidden bg-muted"
 			>
 				<div
 					className="absolute inset-0"

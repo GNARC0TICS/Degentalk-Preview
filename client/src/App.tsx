@@ -1,7 +1,7 @@
 import React from 'react';
 import { Switch, Route, useLocation, Redirect } from 'wouter';
 import { Toaster } from '@/components/ui/toaster';
-import { ModularAdminLayout } from '@/features/admin/components';
+import ModularAdminLayout from '@/features/admin/layout/admin-layout';
 import { ModLayout } from './components/mod/mod-layout';
 import { SiteHeader, HeaderProvider } from '@/components/header';
 import { GlobalRouteGuard } from '@/components/auth/GlobalRouteGuard';

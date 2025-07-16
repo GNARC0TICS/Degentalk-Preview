@@ -1,6 +1,6 @@
 import type { UserId } from '@shared/types/ids';
 import React from 'react';
-import { EntityTable } from '@/features/admin/components/layout/EntityTable';
+import { EntityTable } from '@/features/admin/layout/layout/EntityTable';
 
 /**
  * Unified AdminDataTable – thin wrapper around existing EntityTable so we can

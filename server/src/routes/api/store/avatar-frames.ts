@@ -14,7 +14,7 @@ import { logger } from '@core/logger';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 import { validateAndConvertId } from '@core/helpers/validate-controller-ids';
 
-const router = Router();
+const router: Router = Router();
 
 // GET /api/store/avatar-frames
 router.get('/', async (_req, res) => {

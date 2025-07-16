@@ -66,7 +66,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Badge } from '@/components/ui/badge';
 import { useLocation } from 'wouter'; // Fixed import for useLocation
-import { AdminPageShell } from '@/features/admin/components/layout/AdminPageShell';
+import { AdminPageShell } from '@/features/admin/layout/layout/AdminPageShell';
 import { apiRequest } from '@/utils/api-request';
 
 const categorySchema = z.object({

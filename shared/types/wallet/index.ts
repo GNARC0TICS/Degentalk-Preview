@@ -1,3 +1,3 @@
-export type * from './wallet.types';
-export type * from './payment.types';
-export type * from './transaction.types';
+export type * from './wallet.types.js';
+export type * from './payment.types.js';
+export type * from './transaction.types.js';

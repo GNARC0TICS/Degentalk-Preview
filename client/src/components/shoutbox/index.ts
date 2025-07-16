@@ -2,6 +2,8 @@
 export { default as ShoutboxWidget } from './shoutbox-widget';
 export { PositionedShoutbox } from './positioned-shoutbox';
 export { ShoutboxPositionSelector } from './shoutbox-position-selector';
+export { EnhancedShoutbox } from './EnhancedShoutbox';
+export { EmojiPanel } from './EmojiPanel';
 
 // Tip and rain related components
 export { ShoutboxRainNotification, RainNotifications } from './shoutbox-rain-notification';

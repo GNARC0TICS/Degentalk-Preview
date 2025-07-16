@@ -6,7 +6,7 @@ import { userService } from '@core/services/user.service';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 import { validateAndConvertId } from '@core/helpers/validate-controller-ids';
 
-const router = Router();
+const router: Router = Router();
 
 // POST /api/users/me/frames/:id/equip
 router.post('/:id/equip', isAuthenticated, async (req, res) => {

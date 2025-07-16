@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Loader2, CheckCircle2, AlertTriangle, RotateCcw, Save } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { AdminPageShell } from '@/features/admin/components/layout/AdminPageShell';
+import { AdminPageShell } from '@/features/admin/layout/layout/AdminPageShell';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { apiRequest } from '@/utils/queryClient';
 

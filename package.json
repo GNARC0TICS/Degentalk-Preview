@@ -100,6 +100,7 @@
 		"@paralleldrive/cuid2": "^2.2.2",
 		"@tailwindcss/container-queries": "^0.1.1",
 		"@tailwindcss/typography": "^0.5.15",
+		"@types/dompurify": "^3.2.0",
 		"@types/node": "^20.19.0",
 		"@types/react": "^18.3.20",
 		"@types/ws": "^8.5.13",

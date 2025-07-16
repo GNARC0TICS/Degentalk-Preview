@@ -1,5 +1,5 @@
 import { useXpActions } from '@/features/admin/services/xpActionsService';
-import { XpActionRow } from '@/features/admin/components/XpActionRow';
+import { XpActionRow } from '@/features/admin/XpActionRow';
 import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 

@@ -29,7 +29,7 @@ export type {
 	UserWithStats,
 	PublicUser,
 	UserSummary
-} from './user.types';
+} from './user.types.js';
 
 // Security-enhanced user types (preferred for new development)
 export type {
@@ -49,7 +49,7 @@ export type {
 	AdminUpdateUserRequest,
 	// SecureUserResponse, // Temporarily disabled due to circular imports
 	UserContext
-} from './user-secure.types';
+} from './user-secure.types.js';
 
 // User type guards
 export {
@@ -58,7 +58,7 @@ export {
 	isUserAchievement,
 	isInventoryItem,
 	isUserInventory
-} from './user.types';
+} from './user.types.js';
 
 // Forum domain types
 export type {
@@ -85,7 +85,7 @@ export type {
 	ThreadSummary,
 	ForumHierarchy,
 	ThreadPreview
-} from './forum.types';
+} from './forum.types.js';
 
 // Forum type guards
 export {
@@ -95,7 +95,7 @@ export {
 	isThreadSubscription,
 	isThreadView,
 	isPostReaction
-} from './forum.types';
+} from './forum.types.js';
 
 // Economy domain types
 export type {
@@ -122,7 +122,7 @@ export type {
 	TransactionWithWallets,
 	WalletSummary,
 	TransactionSummary
-} from './economy.types';
+} from './economy.types.js';
 
 // Economy type guards and helpers
 export {
@@ -135,7 +135,7 @@ export {
 	fromDGTAmount,
 	DGT_DECIMALS,
 	DGT_PRECISION
-} from './economy.types';
+} from './economy.types.js';
 
 // Cosmetics domain types
 export type {
@@ -167,7 +167,7 @@ export type {
 	ShopItemPreview,
 	ItemWithOwnership,
 	RarityConfig
-} from './cosmetics.types';
+} from './cosmetics.types.js';
 
 // Cosmetics type guards and constants
 export {
@@ -178,4 +178,4 @@ export {
 	isItemBundle,
 	isUserCosmetics,
 	RARITY_COLORS
-} from './cosmetics.types';
+} from './cosmetics.types.js';

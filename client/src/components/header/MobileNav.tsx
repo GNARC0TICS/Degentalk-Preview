@@ -30,7 +30,7 @@ export function MobileNav({ isOpen, onClose, onLogout }: MobileNavProps) {
 	if (!isOpen) return null;
 
 	return (
-		<div className="md:hidden bg-zinc-900 border-t border-zinc-800">
+		<div className="lg:hidden bg-zinc-900 border-t border-zinc-800">
 			<div className="px-2 pt-2 pb-3 space-y-1">
 				{/* Mobile Search */}
 				<div className="p-2">

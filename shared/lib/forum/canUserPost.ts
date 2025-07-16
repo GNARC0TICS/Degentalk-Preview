@@ -1,5 +1,5 @@
-import type { AdminId } from '@shared/types/ids';
-import { getForumRules } from './getForumRules';
+import type { AdminId } from '../../types/ids.js';
+import { getForumRules } from './getForumRules.js';
 
 export type User = {
 	id: string;

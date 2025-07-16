@@ -119,22 +119,7 @@ export function AnnouncementTicker() {
 			? announcements
 			: fallbackAnnouncements;
 
-	const [isHovered, setIsHovered] = useState(false);
-
-	const contentRef = useRef<HTMLDivElement>(null);
-	const trackRef = useRef<HTMLDivElement>(null);
-
-	// Ensure animation duration scales with content width for smoother feel
-	useEffect(() => {
-		if (!contentRef.current || !trackRef.current) return;
-		const contentWidth = contentRef.current.scrollWidth;
-		const trackWidth = trackRef.current.clientWidth;
-		if (contentWidth === 0) return;
-		// Duration: 15s per full track length (default). Scale proportionally
-		const baseDuration = 15000; // ms
-		const duration = (contentWidth / trackWidth) * baseDuration;
-		contentRef.current.style.setProperty('--ticker-duration', `${duration}ms`);
-	}, [displayAnnouncements]);
+	// Removed unused state and refs for cleaner implementation
 
 	// Don't show the ticker if there are no announcements
 	if (!displayAnnouncements || displayAnnouncements.length === 0) {
@@ -142,11 +127,7 @@ export function AnnouncementTicker() {
 	}
 
 	return (
-		<div
-			className="bg-zinc-900/80 border-y border-zinc-800 h-10 relative"
-			onMouseEnter={() => setIsHovered(true)}
-			onMouseLeave={() => setIsHovered(false)}
-		>
+		<div className="bg-zinc-900/80 border-y border-zinc-800 h-10 relative">
 			<div className="h-full flex items-center">
 				{/* Static icon container */}
 				<div className="absolute left-0 top-0 h-full flex items-center px-4 bg-zinc-900/80 z-10">
@@ -162,74 +143,26 @@ export function AnnouncementTicker() {
 				<div className="absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-zinc-900/60 to-transparent z-[5]" />
 
 				{/* Scrolling text container */}
-				<div ref={trackRef} className="ticker-track ml-12 w-full overflow-hidden">
-					<div ref={contentRef} className={`ticker-content ${isHovered ? 'paused' : ''}`}>
-						{displayAnnouncements.map((announcement, index) => {
-							// Prepare custom styles
+				<div className="announcement-ticker-wrapper ml-12">
+					<div className="announcement-ticker-content">
+						{/* Triple the content for seamless scrolling */}
+						{[...displayAnnouncements, ...displayAnnouncements, ...displayAnnouncements].map((announcement, index) => {
 							const customStyle: CSSProperties = {};
-
-							if (announcement.bgColor) {
-								customStyle.backgroundColor = announcement.bgColor;
-							}
-
-							if (announcement.textColor) {
-								customStyle.color = announcement.textColor;
-							}
-
-							const AnnouncementContent = () => (
-								<span
-									className="inline-flex items-center px-8 text-sm text-gray-100 whitespace-nowrap h-10"
-									style={customStyle}
-								>
-									<span className="ml-2">{announcement.content}</span>
-								</span>
-							);
-
-							// If announcement has a link, wrap it in a Link component
-							return announcement.link ? (
-								<Link
-									key={`ann-link-${announcement.id}-${index}`}
-									to={announcement.link}
-									className="hover:underline"
-								>
-									<AnnouncementContent />
-								</Link>
-							) : (
-								<span key={`ann-${announcement.id}-${index}`}>
-									<AnnouncementContent />
-								</span>
-							);
-						})}
-
-						{/* Duplicate announcements op */}
-						{[...displayAnnouncements].map((announcement, index) => {
-							// duplicate set for seamless scrolling
-							const customStyle: CSSProperties = {};
-
 							if (announcement.bgColor) customStyle.backgroundColor = announcement.bgColor;
 							if (announcement.textColor) customStyle.color = announcement.textColor;
 
-							const AnnouncementContent = () => (
-								<span
-									className="inline-flex items-center px-8 text-sm text-gray-100 whitespace-nowrap h-10"
-									style={customStyle}
-								>
-									<span className="ml-2">{announcement.content}</span>
+							const content = (
+								<span className="announcement-item" style={customStyle}>
+									{announcement.content}
 								</span>
 							);
 
 							return announcement.link ? (
-								<Link
-									key={`ann-dup-link-${announcement.id}-${index}`}
-									to={announcement.link}
-									className="hover:underline"
-								>
-									<AnnouncementContent />
+								<Link key={`ann-${index}`} to={announcement.link} className="hover:underline">
+									{content}
 								</Link>
 							) : (
-								<span key={`ann-dup-${announcement.id}-${index}`}>
-									<AnnouncementContent />
-								</span>
+								<span key={`ann-${index}`}>{content}</span>
 							);
 						})}
 					</div>

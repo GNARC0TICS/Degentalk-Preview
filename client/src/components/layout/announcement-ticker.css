@@ -1,31 +1,37 @@
-/* Announcement ticker animations - single source of truth */
-@keyframes announcement-ticker {
-	0% {
-		transform: translateX(0);
+/* Simple announcement ticker animation */
+.announcement-ticker-wrapper {
+	position: relative;
+	overflow: hidden;
+	width: 100%;
+	height: 40px;
+}
+
+.announcement-ticker-content {
+	display: flex;
+	position: absolute;
+	top: 0;
+	animation: ticker-scroll 25s linear infinite;
+	height: 100%;
+	align-items: center;
+}
+
+.announcement-ticker-content:hover {
+	animation-play-state: paused;
+}
+
+@keyframes ticker-scroll {
+	from {
+		transform: translateX(100%);
 	}
-	100% {
+	to {
 		transform: translateX(-100%);
 	}
 }
 
-:root {
-	--ticker-duration: 15s;
-}
-
-.ticker-track {
-	width: 100%;
-	height: 40px;
-	overflow: hidden;
-	position: relative;
-	line-height: 40px;
-}
-
-.ticker-content {
-	display: inline-block;
+.announcement-item {
+	display: inline-flex;
+	padding: 0 2rem;
 	white-space: nowrap;
-	animation: announcement-ticker var(--ticker-duration) linear infinite !important;
-}
-
-.ticker-content.paused {
-	animation-play-state: paused !important;
+	font-size: 0.875rem;
+	color: #f3f4f6;
 }

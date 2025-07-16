@@ -11,7 +11,7 @@ import type {
 	SupportedNetwork,
 	DgtTransfer,
 	CCPaymentWithdrawFee
-} from './wallet.types';
+} from './wallet.types.js';
 
 /**
  * Public wallet balance DTO (no sensitive data)

@@ -33,6 +33,8 @@ import preferencesRoutes from './src/domains/preferences/preferences.routes';
 import { adRoutes } from './src/domains/advertising/ad.routes';
 import { globalErrorHandler } from './src/core/errors';
 import { registerPathRoutes } from './src/domains/paths/paths.routes';
+import userInventoryRoutes from './src/routes/api/user/inventory';
+import notificationStubRoutes from './src/routes/api/notifications';
 import { awardPathXp } from './utils/path-utils';
 import { xpRewards } from '@shared/path-config';
 import { PlatformAnalyticsService } from './src/domains/analytics/services/platform.service';
@@ -298,6 +300,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
 	apiRouter.use('/share', xShareRoutes);
 	apiRouter.use('/gamification', gamificationRoutes);
 	apiRouter.use('/achievements', achievementRoutes);
+	
+	// Stub routes to prevent 404 spam
+	apiRouter.use('/user', userInventoryRoutes);
+	apiRouter.use('/', notificationStubRoutes);
 
 	app.use('/api', apiRouter);
 	app.use('/api/webhooks/ccpayment', ccpaymentWebhookRoutes);

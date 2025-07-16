@@ -22,7 +22,7 @@ export type {
 	TypedRequest,
 	TypedResponse,
 	ExtractApiData
-} from './api.types';
+} from './api.types.js';
 
 export type {
 	BaseConfig,
@@ -44,7 +44,7 @@ export type {
 	ConfigChange,
 	ConfigAuditLog,
 	ConfigService
-} from './config.types';
+} from './config.types.js';
 
 // Core domain types
 export type {
@@ -159,7 +159,7 @@ export type {
 	ShopItemPreview,
 	ItemWithOwnership,
 	RarityConfig
-} from './core';
+} from './core.js';
 
 // Type guards
 export {
@@ -174,10 +174,10 @@ export {
 	isFrame,
 	isBadge,
 	isTitle
-} from './core';
+} from './core.js';
 
 // Economy helpers
-export { toDGTAmount, fromDGTAmount, DGT_DECIMALS, DGT_PRECISION, RARITY_COLORS } from './core';
+export { toDGTAmount, fromDGTAmount, DGT_DECIMALS, DGT_PRECISION, RARITY_COLORS } from './core.js';
 
 // Configuration schemas and types
 export type {
@@ -200,7 +200,7 @@ export type {
 	Role,
 	AccessRule,
 	ForumAccess
-} from './config';
+} from './config.js';
 
 // Schema validators
 export {
@@ -231,10 +231,10 @@ export {
 	validateFeaturesConfig,
 	validatePartialFeaturesConfig,
 	evaluateFeatureFlag
-} from './config';
+} from './config.js';
 
 // Validation utilities
-export type { ValidationError } from './validation';
+export type { ValidationError } from './validation.js';
 
 export {
 	isValidUuid,
@@ -256,7 +256,7 @@ export {
 	validatePaginationParams,
 	validateSortParams,
 	createValidationError
-} from './validation';
+} from './validation.js';
 
 // Frontend-safe ID types
 export type {
@@ -324,7 +324,7 @@ export type {
 
 	// Generic ID helper
 	Id
-} from './ids';
+} from './ids.js';
 
 // ID validation utilities
 export {
@@ -351,7 +351,7 @@ export {
 	asFrameId,
 	asBadgeId,
 	asTitleId
-} from './ids';
+} from './ids.js';
 
 // Common utility types
 export type Nullable<T> = T | null;
@@ -415,7 +415,7 @@ export type {
 	TransactionStatus,
 	WithdrawalStatus,
 	VaultStatus
-} from './economy';
+} from './economy.js';
 
 // Economy validation and utilities
 export {
@@ -432,7 +432,7 @@ export {
 	toUsdAmount,
 	toXpAmount,
 	ECONOMY_CONSTANTS
-} from './economy';
+} from './economy.js';
 
 // Branded ID types
-export * from './ids';
+export * from './ids.js';

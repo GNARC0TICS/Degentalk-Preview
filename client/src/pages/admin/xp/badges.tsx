@@ -9,7 +9,7 @@ import { useDebounce } from '@/hooks/use-debounce';
 import { apiRequest } from '@/utils/queryClient';
 import { useCrudMutation } from '@/hooks/useCrudMutation';
 
-import { AdminPageShell } from '@/features/admin/components/layout/AdminPageShell';
+import { AdminPageShell } from '@/features/admin/layout/layout/AdminPageShell';
 import { AdminDataTable } from '@/features/admin/components/common/AdminDataTable';
 import {
 	BadgeFormDialogComponent,

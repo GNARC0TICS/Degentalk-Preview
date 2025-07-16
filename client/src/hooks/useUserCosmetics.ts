@@ -49,19 +49,35 @@ export function useUserCosmetics(targetUserId?: string | number): {
 		isError
 	} = useQuery<UserInventoryWithProduct[], Error>({
 		queryKey: ['userCosmeticsInventory', effectiveUserId],
-		queryFn: () => {
+		queryFn: async () => {
 			if (!effectiveUserId) {
 				return Promise.reject(new Error('User ID is required to fetch inventory.'));
 			}
-			// Assuming an API endpoint to fetch a user's inventory with product details
-			// This endpoint should join userInventory with products to get pluginReward
-			return apiRequest<UserInventoryWithProduct[]>({
-				url: `/api/user/${effectiveUserId}/inventory`
-			});
+			try {
+				const response = await apiRequest<UserInventoryWithProduct[]>({
+					url: `/api/user/${effectiveUserId}/inventory`
+				});
+				return response || [];
+			} catch (error: any) {
+				// If rate limited, return empty array to avoid breaking the UI
+				if (error?.status === 429) {
+					console.warn('Rate limited on inventory fetch, using empty inventory');
+					return [];
+				}
+				throw error;
+			}
 		},
 		enabled: !!effectiveUserId, // Only fetch if user ID is available
-		staleTime: 5 * 60 * 1000, // Data considered fresh for 5 minutes
-		gcTime: 10 * 60 * 1000 // Data remains in cache for 10 minutes
+		staleTime: 30 * 60 * 1000, // Data considered fresh for 30 minutes (increased from 5)
+		gcTime: 60 * 60 * 1000, // Data remains in cache for 1 hour (increased from 10 minutes)
+		retry: (failureCount, error: any) => {
+			// Don't retry on rate limit errors
+			if (error?.status === 429) {
+				return false;
+			}
+			return failureCount < 3;
+		},
+		retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000)
 	});
 
 	const [appliedCosmetics, setAppliedCosmetics] = useState<AppliedCosmetics>({

@@ -1,2 +1,2 @@
 // STREAM-LOCK: B
-export * from './user';
+export * from './user.js';

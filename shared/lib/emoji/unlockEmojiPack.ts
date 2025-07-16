@@ -1,4 +1,4 @@
-import type { UnlockEmojiPackParams, UnlockEmojiPackResult } from './types';
+import type { UnlockEmojiPackParams, UnlockEmojiPackResult } from './types.js';
 
 /**
  * @deprecated This file now only exports types for cross-boundary compatibility.
