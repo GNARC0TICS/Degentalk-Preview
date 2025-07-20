@@ -189,7 +189,7 @@ export function UnifiedProfileCard({
 									/>
 								</Link>
 								{profile.role === 'admin' && (
-									<Crown className="h-5 w-5 text-yellow-400" title="Admin" />
+									<Crown className="h-5 w-5 text-yellow-400" aria-label="Admin" />
 								)}
 							</div>
 

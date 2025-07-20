@@ -50,7 +50,7 @@ function ForumRow({ forum, isEven }: { forum: MergedForum; isEven: boolean }) {
 			<td width="30" className="text-center">
 				<div className={`mybb-status-icon ${forum.threadCount > 0 ? 'mybb-status-new' : 'mybb-status-old'}`}>
 					{!canPost ? (
-						<Lock className="w-5 h-5 text-zinc-500" title={reason} />
+						<Lock className="w-5 h-5 text-zinc-500" aria-label={reason} />
 					) : (
 						<MessageSquare className="w-5 h-5 text-blue-500" />
 					)}

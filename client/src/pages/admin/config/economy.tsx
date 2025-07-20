@@ -166,7 +166,7 @@ export default function EconomyConfigPage() {
 		<div className="flex items-center gap-2">
 			Economy Configuration
 			{hasOverrides && (
-				<CheckCircle2 className="h-5 w-5 text-yellow-500" title="Custom overrides active" />
+				<CheckCircle2 className="h-5 w-5 text-yellow-500" aria-label="Custom overrides active" />
 			)}
 		</div>
 	);

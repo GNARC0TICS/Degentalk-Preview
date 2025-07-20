@@ -102,7 +102,7 @@ const ProfileSidebar: React.FC<Props> = ({ profile, isOwnProfile }) => {
 						className="text-2xl font-bold text-center" 
 					/>
 					{whaleStatus?.isWhale && (
-						<Crown className="h-6 w-6 text-yellow-400" title="Whale - High Follower Count" />
+						<Crown className="h-6 w-6 text-yellow-400" aria-label="Whale - High Follower Count" />
 					)}
 				</div>
 

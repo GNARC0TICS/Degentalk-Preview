@@ -150,7 +150,7 @@ export function WhaleWatchDisplay({
 						{whaleStatus?.isWhale &&
 							user.followerCount &&
 							user.followerCount >= whaleStatus.threshold && (
-								<Crown className="h-4 w-4 text-yellow-400" title="Whale" />
+								<Crown className="h-4 w-4 text-yellow-400" aria-label="Whale" />
 							)}
 					</div>
 
@@ -246,7 +246,7 @@ export function WhaleWatchDisplay({
 							<Eye className="h-5 w-5 text-emerald-400" />
 							Whale Watch
 							{whaleStatus?.isWhale && (
-								<Crown className="h-5 w-5 text-yellow-400" title="This user is a whale!" />
+								<Crown className="h-5 w-5 text-yellow-400" aria-label="This user is a whale!" />
 							)}
 						</CardTitle>
 						<CardDescription>
