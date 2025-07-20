@@ -199,7 +199,7 @@ const ConfigurableZoneCard = memo(
 				animate={{ opacity: 1, y: 0 }}
 				exit={{ opacity: 0, y: -20 }}
 				transition={animationConfig.card}
-				style={themeVars}
+				style={themeVars as React.CSSProperties}
 				className="relative"
 			>
 				<Link to={`/forum/${zone.slug}`}>
@@ -228,7 +228,7 @@ const ConfigurableZoneCard = memo(
 						{/* XP Boost Badge */}
 						{zone.features?.hasXpBoost && (
 							<div className="absolute top-2 left-2 z-10">
-								<XpBoostBadge multiplier={zone.features.boostMultiplier} />
+								<XpBoostBadge boostMultiplier={zone.features.boostMultiplier} />
 							</div>
 						)}
 

@@ -8,6 +8,10 @@ export const animationConfig = {
 	hoverScale: 1.05,
 	easings: {
 		standard: [0.25, 0.8, 0.25, 1] as const
+	},
+	card: {
+		duration: 0.3,
+		ease: [0.25, 0.8, 0.25, 1] as const
 	}
 } as const;
 
