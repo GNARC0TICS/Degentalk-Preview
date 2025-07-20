@@ -10,6 +10,8 @@ import {
 	type CampaignRule,
 	type AdGovernanceProposal
 } from '@schema';
+import { users } from '@schema/users';
+import { logger } from '@core/logger';
 
 export interface PlacementConfiguration {
 	id?: string;
@@ -152,7 +154,15 @@ export class AdConfigurationService {
 		config: Partial<AdSystemConfiguration>,
 		adminUserId: string
 	): Promise<AdSystemConfiguration> {
-		// TODO: Verify admin permissions
+		// Verify admin permissions (defensive – controller already enforced)
+		const [adminUser] = await db
+			.select({ role: users.role })
+			.from(users)
+			.where(eq(users.id, adminUserId))
+			.limit(1);
+		if (!adminUser || (adminUser.role !== 'admin' && adminUser.role !== 'super_admin')) {
+			throw new Error('Admin privileges required');
+		}
 
 		// Create governance proposal for significant changes
 		if (this.isSignificantChange(config)) {

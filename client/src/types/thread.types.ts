@@ -86,6 +86,7 @@ export interface ThreadDisplay extends CanonicalThread {
 	// Additional display-specific fields
 	relativeTime?: string; // "2 hours ago", "3 days ago"
 	excerpt?: string; // First 150 chars of content for previews
+	isHot?: boolean; // Thread has high engagement/activity
 
 	// Enhanced zone data (automatically provided by backend)
 	zone: ResolvedZone;

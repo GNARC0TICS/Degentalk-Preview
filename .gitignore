@@ -44,6 +44,8 @@ scripts/codemods/logger-migration.ts
 db/schema/**/*.js
 db/schema/**/*.js.map
 db/schema/**/*.d.ts
+db/schema/**/*.map
+!db/schema/index.js
 
 # Claude audit logs
 .claude/audit/

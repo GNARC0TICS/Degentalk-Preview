@@ -7,3 +7,4 @@ scripts/**
 playwright.config.ts
 dist/**
 server/dist/** 
+db/schema/index.js 

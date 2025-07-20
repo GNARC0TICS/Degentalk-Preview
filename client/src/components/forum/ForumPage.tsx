@@ -15,7 +15,7 @@ import { SiteFooter } from '@/components/footer';
 import { ForumHeader } from '@/components/forum/ForumHeader';
 import { MyBBThreadList } from '@/components/forum/MyBBThreadList';
 import { asStructureId } from '@shared/types/ids';
-import type { ForumId, StructureId } from '@shared/types/ids';
+import type { ForumId, StructureId, ZoneId } from '@shared/types/ids';
 import type { ThreadDisplay } from '@/types/thread.types';
 
 export interface ForumPageProps {
@@ -31,6 +31,7 @@ function getDemoThreads(forumSlug: string): ThreadDisplay[] {
 			slug: 'bitcoin-hitting-100k-eoy-heres-why',
 			user: { id: '1', username: 'CryptoKing', avatarUrl: null, isOnline: true },
 			createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+			updatedAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
 			lastPostAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
 			viewCount: 1337,
 			postCount: 43,
@@ -92,9 +93,74 @@ function getDemoThreads(forumSlug: string): ThreadDisplay[] {
 		}
 	];
 
-	// Add zone info to threads
+	// Add required properties to make threads conform to ThreadDisplay/CanonicalThread
 	return baseThreads.map(thread => ({
 		...thread,
+		// Add missing CanonicalThread properties
+		structureId: 'struct_1' as StructureId,
+		isHidden: false,
+		firstPostLikeCount: 0,
+		userId: thread.user.id as UserId,
+		
+		// Add structure relationship
+		structure: {
+			id: 'struct_1' as StructureId,
+			name: forumSlug === 'market-analysis' ? 'Market Analysis' : 
+			      forumSlug === 'live-trade-reacts' ? 'Live-Trade Reacts' : 'Shill Zone',
+			slug: forumSlug,
+			type: 'forum' as const
+		},
+		
+		// Add zone relationship (ThreadDisplay requires full zone)
+		zone: {
+			id: 'zone_1' as ZoneId,
+			name: 'Trading',
+			slug: 'trading',
+			colorTheme: 'emerald',
+			description: 'Trading and market discussion',
+			isPrimary: true,
+			sortOrder: 1,
+			isVisible: true,
+			bannerImage: null,
+			icon: null,
+			forums: [],
+			stats: {
+				totalForums: 3,
+				totalThreads: 150,
+				totalPosts: 1200,
+				lastActivity: undefined
+			},
+			createdAt: new Date().toISOString(),
+			updatedAt: new Date().toISOString()
+		},
+		
+		// Add enhanced user data for ThreadDisplay
+		user: {
+			...thread.user,
+			displayName: thread.user.username,
+			activeAvatarUrl: thread.user.avatarUrl,
+			role: 'user' as const,
+			forumStats: {
+				level: 1,
+				xp: 100,
+				reputation: 50,
+				totalPosts: 10,
+				totalThreads: 2,
+				totalLikes: 5,
+				totalTips: 0
+			},
+			lastSeenAt: new Date().toISOString(),
+			joinedAt: new Date().toISOString(),
+			isAdmin: false,
+			isModerator: false,
+			isVerified: false,
+			isBanned: false
+		},
+		
+		// Add tags array
+		tags: [],
+		
+		// Legacy fields for compatibility
 		zoneName: 'Trading',
 		zoneSlug: 'trading',
 		forumName: forumSlug === 'market-analysis' ? 'Market Analysis' : 
