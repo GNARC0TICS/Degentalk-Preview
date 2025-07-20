@@ -6,7 +6,7 @@
 
 import { useState, useMemo } from 'react';
 import { cn } from '@/utils/utils';
-import { AchievementCard } from './achievement-card';
+import { AchievementCard } from './achievement-card.tsx';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';

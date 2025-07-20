@@ -1,6 +1,6 @@
 import React, { ReactNode, useState, useEffect } from 'react';
-import { ShoutboxProvider } from './shoutbox-context';
-import { MockShoutboxProvider } from './mock-shoutbox-context';
+import { ShoutboxProvider } from './shoutbox-context.tsx';
+import { MockShoutboxProvider } from './mock-shoutbox-context.tsx';
 import { IS_PRODUCTION } from '@/constants/env';
 
 interface SafeShoutboxProviderProps {

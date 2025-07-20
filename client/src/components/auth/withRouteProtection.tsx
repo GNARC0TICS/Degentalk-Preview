@@ -5,7 +5,7 @@ import {
 	RequireModerator,
 	RequireSuperAdmin,
 	RequireRole
-} from './RouteGuards';
+} from './RouteGuards.tsx';
 import type { Role } from '@/utils/roles';
 
 export function withRouteProtection<P extends object>(

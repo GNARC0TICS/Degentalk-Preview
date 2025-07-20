@@ -33,9 +33,9 @@ import {
 	Loader2
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { PreferencesCard } from './PreferencesCard';
-import { PreferencesGroup } from './PreferencesGroup';
-import { PreferencesToggle } from './PreferencesToggle';
+import { PreferencesCard } from './PreferencesCard.tsx';
+import { PreferencesGroup } from './PreferencesGroup.tsx';
+import { PreferencesToggle } from './PreferencesToggle.tsx';
 
 interface User {
 	id: string;

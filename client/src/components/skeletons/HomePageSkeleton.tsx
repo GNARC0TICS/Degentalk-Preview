@@ -1,5 +1,5 @@
 import React from 'react';
-import ZoneCardSkeleton from './ZoneCardSkeleton';
+import ZoneCardSkeleton from './ZoneCardSkeleton.tsx';
 
 export default function HomePageSkeleton() {
 	return (

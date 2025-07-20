@@ -39,6 +39,11 @@ export interface User {
 	lastActiveAt: Date;
 	settings: UserSettings;
 	stats: UserStats;
+	isVerified?: boolean;
+	isBanned?: boolean;
+	roles?: string[];
+	isAdmin?: boolean;
+	isModerator?: boolean;
 }
 
 export interface UserSettings {

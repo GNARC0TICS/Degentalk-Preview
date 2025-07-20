@@ -6,8 +6,8 @@
  */
 
 import axios from 'axios';
-import { createSignature, verifyWebhookSignature } from './utils';
-import { CCPaymentConfig, DepositRequest, WithdrawalRequest, TransactionStatus } from './types';
+import { createSignature, verifyWebhookSignature } from './utils.ts';
+import { CCPaymentConfig, DepositRequest, WithdrawalRequest, TransactionStatus } from './types.ts';
 
 // Default config from environment variables
 const DEFAULT_CONFIG = {

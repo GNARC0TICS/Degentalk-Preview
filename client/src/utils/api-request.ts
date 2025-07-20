@@ -3,8 +3,8 @@
  * Supports both object-based config and legacy string URL
  */
 
-import { extractApiData, isStandardApiResponse } from './api-response';
-import { getAuthToken } from './auth-token';
+import { extractApiData, isStandardApiResponse } from './api-response.ts';
+import { getAuthToken } from './auth-token.ts';
 
 export interface ApiError extends Error {
 	status?: number | undefined;

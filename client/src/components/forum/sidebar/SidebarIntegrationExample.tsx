@@ -7,7 +7,7 @@
  */
 
 import React from 'react';
-import { DynamicSidebar } from './DynamicSidebar';
+import { DynamicSidebar } from './DynamicSidebar.tsx';
 import type { StructureId } from '@shared/types/ids';
 
 // BEFORE: Manual widget management

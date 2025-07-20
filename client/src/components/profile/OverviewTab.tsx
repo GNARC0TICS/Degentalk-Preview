@@ -1,12 +1,12 @@
 import React from 'react';
 import { BarChart2, ShoppingBag, Award } from 'lucide-react';
 import { XPProgressBar } from '@/components/profile/XPProgressBar';
-import StatCard from './StatCard';
-import { ReputationCard } from './widgets/ReputationCard';
-import { ActivityStatsCard } from './widgets/ActivityStatsCard';
-import { WalletOverviewCard } from './widgets/WalletOverviewCard';
-import { SocialStatsCard } from './widgets/SocialStatsCard';
-import { MilestoneCard } from './widgets/MilestoneCard';
+import StatCard from './StatCard.tsx';
+import { ReputationCard } from './widgets/ReputationCard.tsx';
+import { ActivityStatsCard } from './widgets/ActivityStatsCard.tsx';
+import { WalletOverviewCard } from './widgets/WalletOverviewCard.tsx';
+import { SocialStatsCard } from './widgets/SocialStatsCard.tsx';
+import { MilestoneCard } from './widgets/MilestoneCard.tsx';
 import { useProfileStatsAvailable } from '@/hooks/useProfileStats';
 import type { ProfileData } from '@/types/profile';
 

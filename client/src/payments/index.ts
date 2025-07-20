@@ -6,7 +6,7 @@
  */
 
 // Export shared utilities
-export * from './shared';
+export * from './shared.ts';
 
 // Export CCPayment module
 export * as CCPayment from './ccpayment';

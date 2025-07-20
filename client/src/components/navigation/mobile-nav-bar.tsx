@@ -10,10 +10,10 @@ import {
 	Target,
 	Trophy
 } from 'lucide-react';
-import { NavItem } from './nav-item';
-import type { NavItemProps } from './nav-item';
+import { NavItem } from './nav-item.tsx';
+import type { NavItemProps } from './nav-item.tsx';
 import { cn } from '@/utils/utils';
-import { useAuth } from '@/hooks/use-auth.tsx';
+import { useAuth } from '@/hooks/use-auth';
 
 export interface MobileNavBarProps {
 	/** Custom navigation items (optional - will use defaults if not provided) */

@@ -19,7 +19,7 @@ import {
 	TableHeader,
 	TableRow
 } from '@/components/ui/table';
-import { LevelDisplay, LevelBadge } from './level-display';
+import { LevelDisplay, LevelBadge } from './level-display.tsx';
 import { formatNumber } from '@/utils/utils';
 import {
 	Trophy,

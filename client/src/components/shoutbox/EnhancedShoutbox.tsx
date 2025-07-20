@@ -72,7 +72,7 @@ import type { UserId, RoomId, MessageId } from '@shared/types/ids';
 // Components
 import RainButton from '@/features/wallet/components/rain-button';
 import TipButton from '@/features/wallet/components/tip-button';
-import { RainAnimation } from './RainAnimation';
+import { RainAnimation } from './RainAnimation.tsx';
 import { useToast } from '@/hooks/use-toast';
 
 interface ShoutboxUser {

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDgtPackages } from '@/hooks/use-dgt-packages';
 import { WalletApiService } from '@/features/wallet/services/wallet-api.service';
-import { DgtPackageCard } from './DgtPackageCard';
+import { DgtPackageCard } from './DgtPackageCard.tsx';
 import { DegenLoader } from '@/components/uiverse-clones/loaders';
 
 const walletApi = new WalletApiService();

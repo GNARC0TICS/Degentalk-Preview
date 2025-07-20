@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import XPBarsContainer from '../../components/xp/XPBarsContainer';
+import XPBarsContainer from '../../components/xp/XPBarsContainer.tsx';
 
 // Mock initial XP for demo
 const initialXP = {

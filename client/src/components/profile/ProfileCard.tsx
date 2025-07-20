@@ -1,5 +1,5 @@
 import React from 'react';
-import { UnifiedProfileCard } from './UnifiedProfileCard';
+import { UnifiedProfileCard } from './UnifiedProfileCard.tsx';
 import { cn } from '@/utils/utils';
 
 interface ProfileCardProps {

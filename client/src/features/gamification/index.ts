@@ -8,4 +8,4 @@
 export * from './components';
 
 // Services
-export * from './services/gamification-api.service';
+export * from './services/gamification-api.service.ts';

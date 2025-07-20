@@ -14,11 +14,11 @@ import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight';
 import { common, createLowlight } from 'lowlight';
 import Mention from '@tiptap/extension-mention';
 // Temporarily disabled for build test
-// import suggestion from './suggestion';
+// import suggestion from './suggestion.ts';
 const lowlight = createLowlight(common);
 import { Button } from '@/components/ui/button';
-import { GifPicker } from './gif-picker';
-import { EnhancedGifPicker } from './enhanced-gif-picker';
+import { GifPicker } from './gif-picker.tsx';
+import { EnhancedGifPicker } from './enhanced-gif-picker.tsx';
 import {
 	Bold,
 	Italic,

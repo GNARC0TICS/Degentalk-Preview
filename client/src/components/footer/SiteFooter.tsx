@@ -1,9 +1,9 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { LiveStats } from './LiveStats';
-import { FooterBrand } from './FooterBrand';
-import { FooterSection } from './FooterSection';
-import { RandomTagline } from './RandomTagline';
+import { LiveStats } from './LiveStats.tsx';
+import { FooterBrand } from './FooterBrand.tsx';
+import { FooterSection } from './FooterSection.tsx';
+import { RandomTagline } from './RandomTagline.tsx';
 import { footerNavigation } from '@/config/footer-navigation';
 
 export function SiteFooter() {

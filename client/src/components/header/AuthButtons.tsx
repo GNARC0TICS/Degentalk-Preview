@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { NavLink } from './NavLink';
+import { NavLink } from './NavLink.tsx';
 
 interface AuthButtonsProps {
 	className?: string;

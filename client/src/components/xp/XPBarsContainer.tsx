@@ -1,7 +1,7 @@
 import React from 'react';
-import XPBarTrack from './XPBarTrack';
-import { xpTracks } from './tracks';
-// import LevelUpModal from './LevelUpModal'; // Stub for future
+import XPBarTrack from './XPBarTrack.tsx';
+import { xpTracks } from './tracks.ts';
+// import LevelUpModal from './LevelUpModal.tsx'; // Stub for future
 
 export type UserXP = {
 	[trackId: string]: number;

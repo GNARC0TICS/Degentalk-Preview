@@ -1,7 +1,7 @@
 import React from 'react';
-import { StatsWidget } from './StatsWidget';
-import { HotTopicsWidget } from './HotTopicsWidget';
-import { ActivityFeedWidget } from './ActivityFeedWidget';
+import { StatsWidget } from './StatsWidget.tsx';
+import { HotTopicsWidget } from './HotTopicsWidget.tsx';
+import { ActivityFeedWidget } from './ActivityFeedWidget.tsx';
 import { getSidebarWidgets, getZoneThemeKey, type WidgetType } from '@/utils/forum/sidebarUtils';
 import { cn } from '@/utils/utils';
 import { type StructureId } from '@shared/types/ids';

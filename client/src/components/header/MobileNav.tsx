@@ -3,10 +3,10 @@ import { useLocation } from 'react-router-dom';
 import { IconRenderer } from '@/components/icons/iconRenderer';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { NavLink } from './NavLink';
-import { SearchBox } from './SearchBox';
+import { NavLink } from './NavLink.tsx';
+import { SearchBox } from './SearchBox.tsx';
 import { primaryNavigation, filterNavItems } from '@/config/navigation';
-import { useHeader } from './HeaderContext';
+import { useHeader } from './HeaderContext.tsx';
 
 interface MobileNavProps {
 	isOpen: boolean;

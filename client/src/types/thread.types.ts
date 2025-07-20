@@ -6,7 +6,7 @@
  * ALL frontend thread views MUST use ThreadDisplay type
  */
 
-import type { CanonicalThread, CanonicalUser, CanonicalZone } from './canonical.types';
+import type { CanonicalThread, CanonicalUser, CanonicalZone } from './canonical.types.ts';
 import type { UserId } from '@shared/types/ids';
 
 // Canonical zone with optional isPrimary flag for frontend helpers

@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import gsap from 'gsap';
-import { NavLink } from './NavLink';
+import { NavLink } from './NavLink.tsx';
 import { primaryNavigation, filterNavItems } from '@/config/navigation';
-import { useHeader } from './HeaderContext';
+import { useHeader } from './HeaderContext.tsx';
 
 // Function to generate random underline paths (from original header)
 const generateRandomPath = (isWide = false) => {

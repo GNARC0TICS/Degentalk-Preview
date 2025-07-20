@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useToast } from './use-toast';
+import { useToast } from './use-toast.ts';
 import { useLevelUp } from '@/contexts/LevelUpContext';
 
 // Type for XP gain response

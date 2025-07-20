@@ -1,7 +1,7 @@
 import React, { ReactNode, useState, Fragment } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Search, ExternalLink, Bell, Menu, X, ChevronRight, Home } from 'lucide-react';
-import { ModSidebar } from './mod-sidebar';
+import { ModSidebar } from './mod-sidebar.tsx';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';

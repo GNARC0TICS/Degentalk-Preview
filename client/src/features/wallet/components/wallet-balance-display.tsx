@@ -8,7 +8,7 @@ import {
 	CheckCircle2,
 	RefreshCw
 } from 'lucide-react';
-import { AnimatedBalance } from './animated-balance';
+import { AnimatedBalance } from './animated-balance.tsx';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/utils/utils';

@@ -6,8 +6,8 @@
  */
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { forumApi } from '../services/forumApi';
-import type { ThreadSearchParams as OriginalThreadSearchParams } from '../services/forumApi';
+import { forumApi } from '../services/forumApi.ts';
+import type { ThreadSearchParams as OriginalThreadSearchParams } from '../services/forumApi.ts';
 import { toast } from 'sonner';
 import type { Tag } from '@/types/forum';
 import type { ForumTag } from '@/types/compat/forum';

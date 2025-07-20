@@ -5,7 +5,7 @@
  */
 
 import { cn } from '@/utils/utils';
-import { MissionCard } from './mission-card';
+import { MissionCard } from './mission-card.tsx';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';

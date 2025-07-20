@@ -2,7 +2,7 @@ import React from 'react';
 import { PlaygroundSection } from '@/pages/dev';
 import { Users } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-import { userTitles } from '../demo-data';
+import { userTitles } from '../demo-data.ts';
 import { frameRarityConfig } from '@/config/frames.config';
 
 export const AvatarBadgesSection: React.FC = () => (

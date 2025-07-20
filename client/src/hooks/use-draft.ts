@@ -1,8 +1,8 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { useLocalStorage } from './use-local-storage';
+import { useLocalStorage } from './use-local-storage.ts';
 import { useMutation } from '@tanstack/react-query';
 import { apiRequest } from '@/utils/api-request';
-import { useToast } from './use-toast';
+import { useToast } from './use-toast.ts';
 import { useAuth } from './use-auth';
 // Simple debounce utility function
 const debounce = <T extends (...args: any[]) => any>(

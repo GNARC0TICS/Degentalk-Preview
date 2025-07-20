@@ -25,7 +25,7 @@ import { useShowHotRibbon } from '@/hooks/useShowHotRibbon';
 import { SafeImage } from '@/components/ui/safe-image';
 import { animationConfig } from '@/config/animation.config';
 import { getZoneTheme } from '@shared/config/zoneThemes.config';
-import XpBoostBadge from './XpBoostBadge';
+import XpBoostBadge from './XpBoostBadge.tsx';
 
 export interface ZoneCardProps {
 	zone: {

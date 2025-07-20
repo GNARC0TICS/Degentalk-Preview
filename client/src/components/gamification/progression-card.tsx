@@ -16,7 +16,7 @@ import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { LevelDisplay } from './level-display';
+import { LevelDisplay } from './level-display.tsx';
 import { formatNumber } from '@/utils/utils';
 import { TrendingUp, Trophy, Target, Flame, ChevronRight, Sparkles, Zap, Gift } from 'lucide-react';
 import { motion } from 'framer-motion';

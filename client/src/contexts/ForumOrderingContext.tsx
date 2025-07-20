@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useMemo } from 'react';
 import type { ReactNode } from 'react';
-import { useZones } from './ForumStructureContext';
-import type { MergedZone } from './ForumStructureContext';
+import { useZones } from './ForumStructureContext.tsx';
+import type { MergedZone } from './ForumStructureContext.tsx';
 import { featureFlags } from '@/config/featureFlags';
 
 interface ForumOrderingContextValue {

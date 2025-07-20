@@ -5,7 +5,7 @@
  */
 
 import crypto from 'crypto';
-import { CCPaymentTransactionStatus } from './types';
+import { CCPaymentTransactionStatus } from './types.ts';
 import { type OrderId } from '@shared/types/ids';
 
 /**

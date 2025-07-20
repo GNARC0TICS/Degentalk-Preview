@@ -19,12 +19,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { RouterProvider } from 'react-router-dom';
-import App from './App';
+import App from './App.tsx';
 import './index.css';
 import './styles/animations.css';
 import './features/admin/styles/admin-theme.css'; // Import admin theme
-import { RootProvider } from './providers/root-provider';
-import { router } from './Router';
+import { RootProvider } from './contexts/root-provider.tsx';
+import { router } from './Router.tsx';
 
 // IMPORTANT: All providers are now managed by RootProvider.
 // Routing is now handled by react-router-dom RouterProvider.

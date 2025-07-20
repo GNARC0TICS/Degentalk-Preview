@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { dictionaryApi } from '../services/dictionaryApi';
+import { dictionaryApi } from '../services/dictionaryApi.ts';
 import { z } from 'zod';
 import { generateSlug } from '@/lib/utils/generateSlug';
 import { useToast } from '@/hooks/use-toast';

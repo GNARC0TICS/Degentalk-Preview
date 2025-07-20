@@ -1,8 +1,8 @@
 import React from 'react';
 import type { User } from '@/types/compat/user';
 import { useUserReferrals } from '@/features/users/hooks/useUserReferrals';
-import { PreferencesCard } from './PreferencesCard';
-import { PreferencesGroup } from './PreferencesGroup';
+import { PreferencesCard } from './PreferencesCard.tsx';
+import { PreferencesGroup } from './PreferencesGroup.tsx';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';

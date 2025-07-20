@@ -1,8 +1,8 @@
 import React from 'react';
 import * as Tabs from '@radix-ui/react-tabs';
 import { ZodSchema } from 'zod';
-import { JsonEditor } from './form-controls/JsonEditor';
-import { InlineError } from './form-controls/InlineError';
+import { JsonEditor } from './form-controls/JsonEditor.tsx';
+import { InlineError } from './form-controls/InlineError.tsx';
 
 export interface VisualJsonTabsProps<T> {
 	shapeSchema: ZodSchema<T>;

@@ -4,4 +4,4 @@
 // import styles resolve to the same module, avoiding duplicate implementations
 // and case-sensitivity issues in CI / Linux environments.
 
-export { useMediaQuery, useBreakpoint, useMobileDetector } from './useMediaQuery';
+export { useMediaQuery, useBreakpoint, useMobileDetector } from './useMediaQuery.ts';

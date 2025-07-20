@@ -1,5 +1,5 @@
 import React from 'react';
-import { PathProgress } from './path-progress';
+import { PathProgress } from './path-progress.tsx';
 import { getDominantPath } from '@shared/path-config';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Lightbulb } from 'lucide-react';

@@ -1,6 +1,6 @@
 import React from 'react';
-import { Skeleton } from './skeleton';
-import { Card, CardContent, CardHeader } from './card';
+import { Skeleton } from './skeleton.tsx';
+import { Card, CardContent, CardHeader } from './card.tsx';
 
 export const ThreadCardSkeleton = () => (
 	<Card className="mb-4 bg-zinc-900/60 border border-zinc-800">

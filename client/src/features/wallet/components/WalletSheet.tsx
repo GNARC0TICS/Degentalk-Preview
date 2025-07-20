@@ -10,10 +10,10 @@ import {
 } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { WalletBalanceDisplay } from './wallet-balance-display';
-import { WalletAddressDisplay } from './wallet-address-display';
-import TransactionHistory from './transaction-history';
-import { TransactionSheet } from './TransactionSheet';
+import { WalletBalanceDisplay } from './wallet-balance-display.tsx';
+import { WalletAddressDisplay } from './wallet-address-display.tsx';
+import TransactionHistory from './transaction-history.tsx';
+import { TransactionSheet } from './TransactionSheet.tsx';
 import { useWallet } from '@/hooks/use-wallet';
 import {
 	Wallet,

@@ -33,7 +33,9 @@
 			"@db": ["db/index.ts"],
 			"@schema": ["db/schema/index.ts"],
 			"@shared/*": ["shared/*"],
-			"@utils/*": ["client/src/utils/*"]
+			"@utils/*": ["client/src/utils/*"],
+			"@db/*": ["db/*"],
+			"@schema/*": ["db/schema/*"]
 		},
 		"composite": true
 	},

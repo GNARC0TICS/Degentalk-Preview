@@ -2,18 +2,18 @@ import React, { useState } from 'react';
 import ChartMenu from '@/components/ui/candlestick-menu';
 import { WalletSheet } from '@/features/wallet/components/WalletSheet';
 import { useAuthWrapper } from '@/hooks/wrappers/use-auth-wrapper';
-import { HeaderThemeWrapper } from './HeaderThemeWrapper';
-import { HeaderPluginSlot } from './HeaderPluginSlot';
-import { Logo } from './Logo';
-import { PrimaryNav } from './PrimaryNav';
-import { SearchBox } from './SearchBox';
-import { NotificationButton } from './NotificationButton';
-import { WalletButton } from './WalletButton';
-import { AdminButton } from './AdminButton';
-import { UserMenu } from './UserMenu';
-import { AuthButtons } from './AuthButtons';
-import { MobileNav } from './MobileNav';
-import { useHeader } from './HeaderContext';
+import { HeaderThemeWrapper } from './HeaderThemeWrapper.tsx';
+import { HeaderPluginSlot } from './HeaderPluginSlot.tsx';
+import { Logo } from './Logo.tsx';
+import { PrimaryNav } from './PrimaryNav.tsx';
+import { SearchBox } from './SearchBox.tsx';
+import { NotificationButton } from './NotificationButton.tsx';
+import { WalletButton } from './WalletButton.tsx';
+import { AdminButton } from './AdminButton.tsx';
+import { UserMenu } from './UserMenu.tsx';
+import { AuthButtons } from './AuthButtons.tsx';
+import { MobileNav } from './MobileNav.tsx';
+import { useHeader } from './HeaderContext.tsx';
 
 // Removed dev mode check - using real auth only
 

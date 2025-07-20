@@ -2,7 +2,7 @@
 export { useAuth } from './use-auth';
 
 // UI hooks
-export { useToast } from './use-toast';
+export { useToast } from './use-toast.ts';
 
 // Data/API hooks
 export { useMessages } from './use-messages';
@@ -10,7 +10,7 @@ export { useInfiniteScroll } from './use-infinite-scroll';
 export { useWebSocketStatus } from './use-websocket-status';
 
 // Feature-specific hooks
-export { useRainNotifications } from './use-rain-notifications';
+export { useRainNotifications } from './use-rain-notifications.ts';
 export { useDgtPurchase } from './use-dgt-purchase';
 
 // Media hooks
@@ -18,4 +18,4 @@ export { useImageUpload } from './use-image-upload';
 export { useAvatarUpload } from './use-avatar-upload';
 
 // Responsive hooks - all from the canonical useMediaQuery file
-export { useMediaQuery, useBreakpoint, useMobileDetector } from './useMediaQuery';
+export { useMediaQuery, useBreakpoint, useMobileDetector } from './useMediaQuery.ts';

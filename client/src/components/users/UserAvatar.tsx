@@ -1,5 +1,5 @@
 import React from 'react';
-import { FramedAvatar } from './framed-avatar';
+import { FramedAvatar } from './framed-avatar.tsx';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/utils/utils';
 import { useUserCosmetics } from '@/hooks/useUserCosmetics';
