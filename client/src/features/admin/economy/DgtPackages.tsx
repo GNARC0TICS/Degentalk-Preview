@@ -1,5 +1,5 @@
 import React from 'react';
-import { useDgtPackages } from './hooks/useDgtPackages.ts';
+import { useDgtPackages } from './hooks/useDgtPackages';
 
 const DgtPackages: React.FC = () => {
   const { data, error, isLoading } = useDgtPackages();

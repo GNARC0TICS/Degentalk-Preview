@@ -8,6 +8,7 @@ import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import type { ApiErrorData } from '@/types/core.types';
+import type { BasicRole } from '@shared/types/index';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -71,7 +72,7 @@ interface User {
 	username: string;
 	email: string;
 	avatar?: string;
-	role: 'user' | 'moderator' | 'admin';
+	role: BasicRole;
 	status: 'active' | 'banned' | 'suspended' | 'pending';
 	joinedAt: string;
 	lastActive: string;

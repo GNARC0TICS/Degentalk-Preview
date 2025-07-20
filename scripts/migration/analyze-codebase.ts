@@ -125,7 +125,7 @@ const DOMAIN_PATTERNS = {
     'friend', 'message', 'notification', 'mention', 'subscription'
   ],
   'moderation': [
-    'admin', 'mod', 'report', 'ban', 'role', 'permission'
+    'admin', 'moderator', 'report', 'ban', 'role', 'permission'
   ],
   'engagement': [
     'shoutbox', 'rain', 'airdrop', 'vault', 'engagement'

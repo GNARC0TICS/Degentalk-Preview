@@ -19,7 +19,7 @@ interface TestUser {
 	username: string;
 	password: string;
 	email: string;
-	role: 'admin' | 'mod' | 'user';
+	role: 'admin' | 'moderator' | 'user';
 	xp: number;
 	level: number;
 }
@@ -49,7 +49,7 @@ const TEST_USERS: TestUser[] = [
 		username: 'testmod',
 		password: TEST_PASSWORD,
 		email: 'testmod@degentalk.dev',
-		role: 'mod',
+		role: 'moderator',
 		xp: 5000,
 		level: 25
 	},

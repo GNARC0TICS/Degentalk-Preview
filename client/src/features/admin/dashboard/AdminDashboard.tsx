@@ -26,7 +26,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { useAdminModules } from '@/hooks/use-admin-modules';
 import { useAuth } from '@/hooks/use-auth';
-import { getModuleStatusInfo } from '../lib/admin-utils.ts';
+import { getModuleStatusInfo } from '../lib/admin-utils';
 import type { AdminModule } from '@shared/config/admin.config';
 
 // Quick stats interface

@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { dictionaryApi } from '../services/dictionaryApi.ts';
+import { dictionaryApi } from '../services/dictionaryApi';
 import { z } from 'zod';
 import { generateSlug } from '@/lib/utils/generateSlug';
 import { useToast } from '@/hooks/use-toast';
@@ -42,7 +42,12 @@ export const AddWordModal: React.FC<Props> = ({ open, onClose }) => {
 	const { toast } = useToast();
 	const mutation = useMutation({
 		mutationFn: async (data: WordSubmission) => {
-			return dictionaryApi.submit(data);
+			return dictionaryApi.submit({
+				term: data.word,
+				definition: data.definition,
+				example: data.usageExample,
+				tags: data.tags
+			});
 		},
 		onSuccess: () => {
 			toast({ description: '📖 Word submitted for review!' });

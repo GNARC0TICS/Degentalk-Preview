@@ -39,7 +39,8 @@ export function useZoneStatsMap(slugs: string[]) {
 			queryKey: ['zoneStats', slug],
 			queryFn: async () => {
 				const data = await apiRequest<ZoneStatsApiResponse>({
-					url: `/api/forum/zone-stats?slug=${slug}`
+					url: `/api/forum/zone-stats?slug=${slug}`,
+					method: 'GET'
 				});
 				return transform(data);
 			},

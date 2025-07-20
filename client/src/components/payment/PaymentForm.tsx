@@ -59,15 +59,21 @@ export const PaymentForm: React.FC<PaymentFormProps> = ({ packageDetail, returnU
 
 		try {
 			// Submit the form
+			const confirmParams: any = {
+				return_url: returnUrl
+			};
+			
+			if (savePaymentMethod) {
+				confirmParams.payment_method_options = {
+					card: {
+						setup_future_usage: 'off_session'
+					}
+				};
+			}
+			
 			const { error } = await stripe.confirmPayment({
 				elements,
-				confirmParams: {
-					return_url: returnUrl,
-					payment_method_data: {
-						// If the user wants to save their payment method
-						...(savePaymentMethod && { setup_future_usage: 'off_session' })
-					}
-				}
+				confirmParams
 			});
 
 			// Handle errors from Stripe

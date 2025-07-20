@@ -1,0 +1,5 @@
+client/src/components/editor/suggestion.ts
+client/src/components/social/WhaleWatchDashboard.tsx
+client/src/components/social/WhaleWatchDisplay.tsx
+client/src/components/social/FriendsManager.tsx
+client/src/components/mentions/MentionAutocomplete.tsx

@@ -1,8 +1,11 @@
 {
-	"extends": "../tsconfig.json",
+	"extends": "../tsconfig.base.json",
 	"compilerOptions": {
 		"types": [],
-		"noEmit": true,
+		"composite": true,
+		"outDir": "./dist",
+		"module": "ESNext",
+		"moduleResolution": "bundler",
 		"tsBuildInfoFile": "./.tscache/.tsbuildinfo"
 	},
 	"include": ["./**/*.ts"],

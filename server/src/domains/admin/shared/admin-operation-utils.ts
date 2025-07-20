@@ -12,7 +12,7 @@ import type { AdminId, EntityId } from '@shared/types/ids';
 // Common role definitions
 export const USER_ROLES = {
 	USER: 'user',
-	MODERATOR: 'mod',
+	MODERATOR: 'moderator',
 	ADMIN: 'admin'
 } as const;
 

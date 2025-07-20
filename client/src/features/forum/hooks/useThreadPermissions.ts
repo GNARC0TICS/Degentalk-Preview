@@ -74,7 +74,7 @@ export const useThreadPermissions = (
 	const userId = user?.id;
 
 	// Helper to check if user is moderator or admin
-	const isModerator = userRole === 'mod' || userRole === 'admin';
+	const isModerator = userRole === 'moderator' || userRole === 'admin';
 	const isAdmin = userRole === 'admin';
 
 	// Helper to check forum-level permissions

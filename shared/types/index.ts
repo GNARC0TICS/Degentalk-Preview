@@ -159,7 +159,7 @@ export type {
 	ShopItemPreview,
 	ItemWithOwnership,
 	RarityConfig
-} from './core.js';
+} from './core/index.js';
 
 // Type guards
 export {
@@ -174,10 +174,35 @@ export {
 	isFrame,
 	isBadge,
 	isTitle
-} from './core.js';
+} from './core/index.js';
 
 // Economy helpers
-export { toDGTAmount, fromDGTAmount, DGT_DECIMALS, DGT_PRECISION, RARITY_COLORS } from './core.js';
+export { toDGTAmount, fromDGTAmount, DGT_DECIMALS, DGT_PRECISION, RARITY_COLORS } from './core/index.js';
+
+// Role types (unified source of truth)
+export type { 
+	Role, 
+	BasicRole
+} from './role.types.js';
+
+export {
+	roleHierarchy,
+	roleAliases,
+	getCanonicalRole,
+	hasRoleAtLeast,
+	isRole,
+	isValidRole,
+	canModerateShoutbox,
+	canAccessAdminPanel,
+	canModerateContent,
+	canModerateMarket,
+	isAdmin,
+	isSuperAdmin,
+	isModerator,
+	isAdminOrModerator,
+	getUserPermissions,
+	hasRoleOrHigher
+} from './role.types.js';
 
 // Configuration schemas and types
 export type {
@@ -197,10 +222,9 @@ export type {
 	FeatureFlag,
 	RolloutStrategy,
 	Permission as ConfigPermission,
-	Role,
 	AccessRule,
 	ForumAccess
-} from './config.js';
+} from './config/index.js';
 
 // Schema validators
 export {
@@ -231,10 +255,10 @@ export {
 	validateFeaturesConfig,
 	validatePartialFeaturesConfig,
 	evaluateFeatureFlag
-} from './config.js';
+} from './config/index.js';
 
 // Validation utilities
-export type { ValidationError } from './validation.js';
+export type { ValidationError } from './validation/index.js';
 
 export {
 	isValidUuid,
@@ -256,7 +280,7 @@ export {
 	validatePaginationParams,
 	validateSortParams,
 	createValidationError
-} from './validation.js';
+} from './validation/index.js';
 
 // Frontend-safe ID types
 export type {
@@ -436,3 +460,40 @@ export {
 
 // Branded ID types
 export * from './ids.js';
+
+// ID creation helpers from utils
+export {
+	toUserId,
+	toThreadId,
+	toPostId,
+	toForumId,
+	toStructureId,
+	toZoneId,
+	toParentZoneId,
+	toTransactionId,
+	toWalletId,
+	toItemId,
+	toFrameId,
+	toBadgeId,
+	toTitleId,
+	toTagId,
+	toMissionId,
+	toAchievementId,
+	toProductId,
+	toPathId,
+	toAdminId,
+	toReportId,
+	toConversationId,
+	toRoomId,
+	toLevelId,
+	toEntityId,
+	toId,
+	parseId,
+	generateId,
+	idsEqual,
+	filterValidIds,
+	parseIdParam,
+	assertValidId,
+	isValidNumericId,
+	parseEntityIdParam
+} from '../utils/id.js';

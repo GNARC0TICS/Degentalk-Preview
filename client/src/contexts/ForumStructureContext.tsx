@@ -4,7 +4,7 @@ import { z } from 'zod';
 import { forumMap } from '@/config/forumMap.config';
 import type { Zone } from '@/config/forumMap.config';
 import type { CategoryId, ForumId, GroupId, ParentZoneId, ZoneId } from '@shared/types/ids';
-import { toId, parseId } from '@shared/utils/id';
+import { toId, parseId, toParentZoneId } from '@shared/types/index';
 
 // ===========================================================
 // ForumStructureContext v2.0  🛠️  (2025-06-16)
@@ -33,6 +33,24 @@ const PluginDataSchema = z
 		features: z.union([z.array(z.string()), z.record(z.unknown())]).optional(),
 		customComponents: z.array(z.string()).optional(),
 		staffOnly: z.boolean().optional(),
+		rules: z.object({
+			allowPosting: z.boolean().optional(),
+			xpEnabled: z.boolean().optional(),
+			tippingEnabled: z.boolean().optional(),
+			allowPolls: z.boolean().optional(),
+			allowTags: z.boolean().optional(),
+			accessLevel: z.string().optional(),
+			minXpRequired: z.number().optional(),
+			availablePrefixes: z.array(z.unknown()).optional(),
+			requiredPrefix: z.boolean().optional()
+		}).optional(),
+		allowPosting: z.boolean().optional(),
+		xpEnabled: z.boolean().optional(),
+		allowPolls: z.boolean().optional(),
+		allowTags: z.boolean().optional(),
+		availablePrefixes: z.array(z.unknown()).optional(),
+		requiredPrefix: z.boolean().optional(),
+		prefixGrantRules: z.record(z.unknown()).optional(),
 		xpChallenges: z
 			.array(
 				z.object({
@@ -147,7 +165,7 @@ export interface MergedRules {
 	prefixGrantRules?: Record<string, unknown>;
 	allowPolls: boolean;
 	allowTags: boolean;
-	accessLevel?: 'public' | 'registered' | 'level_10+' | 'vip' | 'mod' | 'admin';
+	accessLevel?: 'public' | 'registered' | 'level_10+' | 'vip' | 'moderator' | 'admin';
 	minXpRequired?: number;
 	availablePrefixes?: string[];
 	requiredPrefix?: boolean;
@@ -390,7 +408,7 @@ function fallbackStructure(staticZones: Zone[]) {
 				description: f.description,
 				type: 'forum',
 				parentId: zoneId,
-				parentZoneId: zoneId,
+				parentZoneId: toParentZoneId(zoneId),
 				isSubforum: false,
 				subforums: [],
 				isVip: false,
@@ -438,7 +456,7 @@ function fallbackStructure(staticZones: Zone[]) {
 						description: subforum.description,
 						type: 'forum',
 						parentId: forumId,
-						parentZoneId: zoneId,
+						parentZoneId: toParentZoneId(zoneId),
 						isSubforum: true,
 						subforums: [],
 						isVip: false,

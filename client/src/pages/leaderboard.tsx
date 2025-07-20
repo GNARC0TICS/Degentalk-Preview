@@ -14,7 +14,7 @@ import {
 } from '@/components/ui/table';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import type { UserId } from '@shared/types/ids';
-import { toId } from '@shared/utils/id';
+import { toId } from '@shared/types/index';
 import { Trophy } from 'lucide-react'; // Removed TrendingUp, CircleDollarSign, Diamond
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { motion } from 'framer-motion';

@@ -114,7 +114,7 @@ export default function AdminUserInventoryPage() {
 	return (
 		<div className="p-6">
 			<Link
-				href="/admin/users"
+				to="/admin/users"
 				className="inline-flex items-center text-sm text-zinc-400 hover:text-white mb-4"
 			>
 				<ArrowLeft className="mr-2 h-4 w-4" /> Back to User List (assuming /admin/users exists)

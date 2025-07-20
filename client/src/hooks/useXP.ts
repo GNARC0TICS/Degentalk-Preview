@@ -89,7 +89,7 @@ export function useXP(userId?: string): {
 	xpHistory: XpAdjustmentEntry[];
 	isLoading: boolean;
 	error: Error | null;
-	equipTitle: (titleId: TitleId) => void;
+	equipTitle: (title: UserTitle) => void;
 } {
 	// Changed to string
 	const queryClient = useQueryClient();
@@ -144,9 +144,9 @@ export function useXP(userId?: string): {
 	});
 
 	// Equip a title mutation
-	const equipTitle = useMutation({
-		mutationFn: async (titleId: TitleId) => {
-			return apiRequest({ method: 'POST', url: '/api/xp/me/titles/equip', data: { titleId } });
+	const equipTitleMutation = useMutation({
+		mutationFn: async (title: UserTitle) => {
+			return apiRequest({ method: 'POST', url: '/api/xp/me/titles/equip', data: { titleId: title.id } });
 		},
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ['xp', userId] });
@@ -192,6 +192,6 @@ export function useXP(userId?: string): {
 		xpHistory,
 		isLoading: isLoading || isHistoryLoading,
 		error,
-		equipTitle: (titleId: TitleId) => equipTitle.mutate(titleId)
+		equipTitle: (title: UserTitle) => equipTitleMutation.mutate(title)
 	};
 }

@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { activityApi } from '@/features/activity/services/activityApi';
 import { useAuth } from '@/hooks/use-auth';
 import type { EventLogFilters } from '@/features/activity/types/activity.types';
+import { toUserId } from '@shared/types/ids';
 
 /**
  * Hook for fetching and managing user activity feed
@@ -18,7 +19,7 @@ export const useActivityFeed = (filters?: EventLogFilters) => {
 				throw new Error('User ID is required');
 			}
 
-			return activityApi.getCurrentUserEventLogs(userId, filters);
+			return activityApi.getCurrentUserEventLogs(toUserId(userId), filters);
 		},
 		enabled: !!userId,
 		placeholderData: (previousData) => previousData
@@ -62,7 +63,7 @@ export const useUserActivityFeed = (userId: string, filters?: EventLogFilters) =
 			if (!userId) {
 				throw new Error('User ID is required');
 			}
-			return activityApi.getUserEventLogs(userId, filters);
+			return activityApi.getUserEventLogs(toUserId(userId), filters);
 		},
 		enabled: !!userId,
 		placeholderData: (previousData) => previousData

@@ -240,7 +240,7 @@ export class CosmeticsEffectsEngine {
 		if (persona.cosmetics.owned === 'all') {
 			this.cosmeticItems.forEach((item, id) => {
 				if (!item.effects?.special?.includes('admin_only') || persona.role === 'admin') {
-					if (!item.effects?.special?.includes('mod_only') || ['admin', 'mod'].includes(persona.role)) {
+					if (!item.effects?.special?.includes('mod_only') || ['admin', 'moderator'].includes(persona.role)) {
 						owned.add(id);
 					}
 				}
@@ -258,7 +258,7 @@ export class CosmeticsEffectsEngine {
 			owned.add('golden_frame');
 		}
 
-		if (persona.role === 'mod') {
+		if (persona.role === 'moderator') {
 			owned.add('mod_badge');
 			owned.add('red_alert_frame');
 			owned.add('ban_hammer_cursor');

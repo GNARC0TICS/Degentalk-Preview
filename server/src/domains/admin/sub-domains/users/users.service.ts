@@ -462,7 +462,7 @@ export class AdminUsersService {
 			}
 
 			// Validate role
-			const validRoles = ['user', 'mod', 'admin'];
+			const validRoles = ['user', 'moderator', 'admin'];
 			if (!validRoles.includes(newRole)) {
 				throw new AdminError(
 					`Invalid role: ${newRole}. Must be one of: ${validRoles.join(', ')}`,

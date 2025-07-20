@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiRequest } from '@/lib/api';
-import { useAuth } from '@/hooks/useAuth';
+import { apiRequest } from '@/utils/api-request';
+import { useAuth } from '@/hooks/use-auth';
 import { useWebSocket } from '@/hooks/useWebSocket';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -185,8 +185,8 @@ export function EnhancedShoutbox() {
   const { subscribe, unsubscribe, isConnected } = useWebSocket();
 
   // Check if user has mod/admin privileges
-  const isModerator = user?.roles?.includes('moderator') || user?.roles?.includes('admin');
-  const isAdmin = user?.roles?.includes('admin');
+  const isModerator = user?.role === 'moderator' || user?.role === 'admin';
+  const isAdmin = user?.role === 'admin';
 
   // Fetch messages
   const { data: messagesData, isLoading } = useQuery({
@@ -195,7 +195,10 @@ export function EnhancedShoutbox() {
       const response = await apiRequest<{ 
         data: ShoutboxMessage[];
         meta: { count: number; activeUsers: number };
-      }>(`/api/shoutbox/messages?roomId=${currentRoom}&limit=50`);
+      }>({
+        url: `/api/shoutbox/messages?roomId=${currentRoom}&limit=50`,
+        method: 'GET'
+      });
       
       // Update active users count
       if (response.meta?.activeUsers) {
@@ -212,9 +215,10 @@ export function EnhancedShoutbox() {
   // Send message mutation
   const sendMessageMutation = useMutation({
     mutationFn: async (content: string) => {
-      return apiRequest('/api/shoutbox/messages', {
+      return apiRequest({
+        url: '/api/shoutbox/messages',
         method: 'POST',
-        body: { content, roomId: currentRoom },
+        data: { content, roomId: currentRoom },
       });
     },
     onSuccess: () => {
@@ -226,9 +230,10 @@ export function EnhancedShoutbox() {
   // Pin message mutation
   const pinMessageMutation = useMutation({
     mutationFn: async ({ messageId, isPinned }: { messageId: MessageId; isPinned: boolean }) => {
-      return apiRequest(`/api/shoutbox/messages/${messageId}/pin`, {
+      return apiRequest({
+        url: `/api/shoutbox/messages/${messageId}/pin`,
         method: 'PATCH',
-        body: { isPinned },
+        data: { isPinned },
       });
     },
   });
@@ -236,7 +241,8 @@ export function EnhancedShoutbox() {
   // Delete message mutation
   const deleteMessageMutation = useMutation({
     mutationFn: async (messageId: MessageId) => {
-      return apiRequest(`/api/shoutbox/messages/${messageId}`, {
+      return apiRequest({
+        url: `/api/shoutbox/messages/${messageId}`,
         method: 'DELETE',
       });
     },
@@ -374,7 +380,7 @@ export function EnhancedShoutbox() {
       if (cmd.requiresAuth && !user) return false;
       
       // Check role requirements
-      if (cmd.requiresRole && !cmd.requiresRole.some(role => user?.roles?.includes(role))) {
+      if (cmd.requiresRole && !cmd.requiresRole.includes(user?.role || '')) {
         return false;
       }
       

@@ -155,7 +155,7 @@ const XpLogView: React.FC<{ userId?: string }> = ({ userId }) => {
 				params.append('action', selectedAction);
 			}
 
-			return apiRequest<XpLogResponse>({ url: `${url}?${params.toString()}` });
+			return apiRequest<XpLogResponse>({ url: `${url}?${params.toString()}`, method: 'GET' });
 		}
 	});
 
@@ -163,7 +163,7 @@ const XpLogView: React.FC<{ userId?: string }> = ({ userId }) => {
 	const { data: xpActionsQueryData } = useQuery<XpActionsResponse, Error>({
 		queryKey: ['xpActions'],
 		queryFn: async () => {
-			return apiRequest<XpActionsResponse>({ url: '/api/xp/actions' });
+			return apiRequest<XpActionsResponse>({ url: '/api/xp/actions', method: 'GET' });
 		}
 	});
 

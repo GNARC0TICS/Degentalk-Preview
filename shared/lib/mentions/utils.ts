@@ -11,7 +11,9 @@ export function extractMentionsFromText(text: string): string[] {
 	const matches: string[] = [];
 	let m;
 	while ((m = regex.exec(text)) !== null) {
-		matches.push(m[1].toLowerCase());
+		if (m[1]) {
+			matches.push(m[1].toLowerCase());
+		}
 	}
 	return Array.from(new Set(matches));
 }

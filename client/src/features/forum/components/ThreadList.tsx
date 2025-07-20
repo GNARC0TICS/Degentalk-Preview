@@ -1,5 +1,6 @@
 import React, { useState, memo, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import type { QueryFunctionContext } from '@tanstack/react-query';
 import ThreadCard from '@/components/forum/ThreadCard';
 import { getQueryFn } from '@/utils/queryClient';
 import { Pagination } from '@/components/ui/pagination';
@@ -86,7 +87,7 @@ const ThreadListComponent: React.FC<ThreadListProps> = ({
 			// The queryKey passed to the fetcher should ideally be just the URL or a specific identifier if getQueryFn uses it.
 			// For now, we pass a minimal context.
 			try {
-				const response = await fetcher({ queryKey: [url], meta: undefined } as any);
+				const response = await fetcher({ queryKey: [url], meta: undefined } as QueryFunctionContext<ThreadsApiResponse>);
 				// Processing API response
 
 				// Handle wrapped API response

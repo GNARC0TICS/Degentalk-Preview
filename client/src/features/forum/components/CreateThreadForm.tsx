@@ -16,6 +16,7 @@ import type { CreateThreadParams } from '@/features/forum/hooks/useForumQueries'
 import { PrefixBadge } from '@/components/forum/prefix-badge';
 import { useDraft } from '@/hooks/use-draft';
 import { Clock, Save } from 'lucide-react';
+import { toPrefixId } from '@shared/types/ids';
 import {
 	Dialog,
 	DialogContent,
@@ -365,7 +366,7 @@ export function CreateThreadForm({
 			forumSlug: activeForumData.slug,
 			prefixId:
 				values.prefixId && values.prefixId.trim() !== '' && values.prefixId !== 'none'
-					? values.prefixId
+					? toPrefixId(values.prefixId)
 					: undefined,
 			tags: values.tags,
 			editorState: values.editorState

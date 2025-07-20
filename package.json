@@ -38,6 +38,7 @@
 		"lint": "pnpm -r lint && eslint . --ext .ts,.tsx",
 		"lint:client": "pnpm --filter @degentalk/client lint",
 		"lint:server": "pnpm --filter @degentalk/server lint",
+		"pretypecheck": "pnpm --filter @degentalk/shared run build",
 		"typecheck": "pnpm -r typecheck",
 		"format": "prettier --write .",
 		"format:check": "prettier --check .",
@@ -97,6 +98,7 @@
 		"db:sync:forums": "tsx -r tsconfig-paths/register scripts/db/sync-forum-config.ts"
 	},
 	"devDependencies": {
+		"@faker-js/faker": "^9.8.0",
 		"@paralleldrive/cuid2": "^2.2.2",
 		"@tailwindcss/container-queries": "^0.1.1",
 		"@tailwindcss/typography": "^0.5.15",
@@ -117,10 +119,13 @@
 		"eslint": "^8.57.0",
 		"eslint-plugin-degen": "file:./eslint-plugins/degen",
 		"eslint-plugin-drizzle": "^0.2.3",
+		"gel": "^2.1.1",
 		"glob": "^10.3.10",
 		"lint-staged": "^15.2.10",
 		"minimist": "^1.2.8",
+		"mysql2": "^3.14.2",
 		"ora": "8.1.1",
+		"pg-protocol": "^1.10.3",
 		"postcss": "^8.4.47",
 		"prettier": "^3.5.3",
 		"recast": "^0.23.4",
@@ -222,6 +227,7 @@
 	"dependencies": {
 		"pg": "^8.11.0",
 		"redis": "^5.6.0",
-		"tippy.js": "^6.3.7"
+		"tippy.js": "^6.3.7",
+		"zod": "^3.24.2"
 	}
 }

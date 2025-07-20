@@ -116,7 +116,7 @@ function ActiveMembersWidget({
 			</CardContent>
 			<CardFooter className="bg-zinc-900/90 p-3 border-t border-zinc-800">
 				<Link
-					href={viewAllLink}
+					to={viewAllLink}
 					className="group text-sm text-zinc-400 hover:text-emerald-400 flex items-center w-full justify-center transition-colors"
 				>
 					View All Members

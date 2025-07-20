@@ -61,7 +61,7 @@ export const withdrawalStatusEnum = pgEnum('withdrawal_status', [
 	'rejected'
 ]);
 export const vaultStatusEnum = pgEnum('vault_status', ['locked', 'unlocked', 'pending_unlock']);
-import { userRoleEnum } from '../../../shared/enums/user';
+import { userRoleEnum } from '../../enums/user';
 export { userRoleEnum };
 export const contentEditStatusEnum = pgEnum('content_edit_status', [
 	'draft',

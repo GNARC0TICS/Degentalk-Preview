@@ -91,7 +91,7 @@ export async function isAdminOrModerator(req: Request, res: Response, next: Next
 
 			if (devUser) {
 				// For admin routes, ensure the DevUser has admin or mod privileges
-				if (devUser.role !== 'admin' && devUser.role !== 'mod') {
+				if (devUser.role !== 'admin' && devUser.role !== 'moderator') {
 					logger.warn(
 						'AdminMiddleware',
 						'DevUser exists but does not have admin/mod role. Updating to admin role.',

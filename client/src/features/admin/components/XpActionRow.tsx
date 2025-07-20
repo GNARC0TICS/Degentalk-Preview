@@ -3,7 +3,7 @@ import { TableCell, TableRow } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Pencil, Trash2 } from 'lucide-react';
-import type { XpAction } from '../services/xpActionsService.ts';
+import type { XpAction } from '../services/xpActionsService';
 
 interface XpActionRowProps {
 	action: XpAction;

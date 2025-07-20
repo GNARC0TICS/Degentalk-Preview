@@ -89,6 +89,7 @@ export function useRain() {
 			try {
 				return await apiRequest<RecentRainResponse>({
 					url: '/api/engagement/rain/recent',
+					method: 'GET',
 					params: { limit: '10' }
 				});
 			} catch (error) {

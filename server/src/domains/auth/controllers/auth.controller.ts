@@ -260,7 +260,7 @@ export function getCurrentUser(req: Request, res: Response) {
 
 	// Add computed role properties for frontend compatibility
 	userResponse.isAdmin = ['admin', 'super_admin'].includes(userResponse.role);
-	userResponse.isModerator = ['moderator', 'mod'].includes(userResponse.role);
+	userResponse.isModerator = ['moderator', 'moderator'].includes(userResponse.role);
 	userResponse.isSuperAdmin = userResponse.role === 'super_admin';
 
 	sendSuccessResponse(res, UserTransformer.toAuthenticatedSelf(userResponse));

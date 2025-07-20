@@ -56,8 +56,7 @@ function ReferralsPage() {
 	} = useQuery<ReferralStats>({
 		queryKey: ['referrals', 'stats'],
 		queryFn: async () => {
-			const res = await apiRequest({ url: '/api/referrals/stats', method: 'GET' });
-			return res.json();
+			return await apiRequest<ReferralStats>({ url: '/api/referrals/stats', method: 'GET' });
 		},
 		enabled: !!user
 	});
@@ -66,8 +65,7 @@ function ReferralsPage() {
 	const { data: codes, isLoading: codesLoading } = useQuery<ReferralCode[]>({
 		queryKey: ['referrals', 'codes'],
 		queryFn: async () => {
-			const res = await apiRequest({ url: '/api/referrals/codes', method: 'GET' });
-			return res.json();
+			return await apiRequest<ReferralCode[]>({ url: '/api/referrals/codes', method: 'GET' });
 		},
 		enabled: !!user
 	});
@@ -76,8 +74,7 @@ function ReferralsPage() {
 	const { data: referrals, isLoading: referralsLoading } = useQuery<Referral[]>({
 		queryKey: ['referrals', 'list'],
 		queryFn: async () => {
-			const res = await apiRequest({ url: '/api/referrals/list', method: 'GET' });
-			return res.json();
+			return await apiRequest<Referral[]>({ url: '/api/referrals/list', method: 'GET' });
 		},
 		enabled: !!user
 	});
@@ -85,11 +82,10 @@ function ReferralsPage() {
 	// Create new referral code
 	const createCodeMutation = useMutation({
 		mutationFn: async () => {
-			const res = await apiRequest({
+			return await apiRequest<ReferralCode>({
 				url: '/api/referrals/codes',
 				method: 'POST'
 			});
-			return res.json();
 		},
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ['referrals', 'codes'] });

@@ -22,7 +22,7 @@ const useUser = (): UserContextType => {
 		user: {
 			id: crypto.randomUUID(),
 			username: 'TestUser',
-			role: undefined // Change to 'admin', 'mod', or 'dev' to test role colors
+			role: undefined // Change to 'admin', 'moderator', or 'dev' to test role colors
 		},
 		isLoading: false
 	};
@@ -55,7 +55,8 @@ export function useUserCosmetics(targetUserId?: string | number): {
 			}
 			try {
 				const response = await apiRequest<UserInventoryWithProduct[]>({
-					url: `/api/user/${effectiveUserId}/inventory`
+					url: `/api/user/${effectiveUserId}/inventory`,
+					method: 'GET'
 				});
 				return response || [];
 			} catch (error: any) {

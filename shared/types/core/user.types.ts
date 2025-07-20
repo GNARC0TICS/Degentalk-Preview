@@ -1,5 +1,5 @@
 // STREAM-LOCK: B
-import type { UserId, WalletId } from '../ids';
+import type { UserId, WalletId } from '../ids.js';
 import type { UserRole } from '@db/schema/core/enums';
 
 // UserLevel is a numeric value, not an enum

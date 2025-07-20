@@ -6,7 +6,7 @@ import { useBookmarkThread, useRemoveBookmark } from '@/features/forum/hooks/use
 import type { ThreadDisplay } from '@/types/thread.types';
 import { useQueryClient } from '@tanstack/react-query';
 import type { UserId, ThreadId } from '@shared/types/ids';
-import { toId, parseId } from '@shared/utils/id';
+import { toId, parseId } from '@shared/types/index';
 
 interface ThreadActionsContextValue {
 	isBookmarked: boolean;

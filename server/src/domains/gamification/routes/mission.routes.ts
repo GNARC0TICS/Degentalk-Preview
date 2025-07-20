@@ -12,6 +12,7 @@ import {
 	CreateFromTemplatesSchema 
 } from '../schemas/mission.schemas';
 import { toPublicMission, toAuthenticatedMission } from '../transformers/mission.transformer';
+import { send } from '@server-utils/response';
 
 const router: RouterType = Router();
 
@@ -29,7 +30,7 @@ router.get('/', authenticate, async (req, res) => {
 			})
 		);
 
-		res.json({ missions: enriched });
+		send(res, enriched);
 	} catch (error) {
 		logger.error({ error }, 'Failed to get missions');
 		res.status(500).json({ error: 'Failed to get missions' });
@@ -48,7 +49,7 @@ router.get('/daily', authenticate, async (req, res) => {
 		const missions = await missionService.getDailyMissions(user.id);
 		const transformed = missions.map(m => toAuthenticatedMission(m, m.progress));
 
-		res.json({ missions: transformed });
+		send(res, transformed);
 	} catch (error) {
 		logger.error({ error }, 'Failed to get daily missions');
 		res.status(500).json({ error: 'Failed to get daily missions' });
@@ -64,7 +65,7 @@ router.get('/weekly', authenticate, async (req, res) => {
 		const missions = await missionService.getWeeklyMissions(user.id);
 		const transformed = missions.map(m => toAuthenticatedMission(m, m.progress));
 
-		res.json({ missions: transformed });
+		send(res, transformed);
 	} catch (error) {
 		logger.error({ error }, 'Failed to get weekly missions');
 		res.status(500).json({ error: 'Failed to get weekly missions' });
@@ -82,13 +83,10 @@ router.post('/:missionId/progress', authenticate, validateRequest(ProgressUpdate
 
 		const progress = await missionService.updateProgress(user.id, missionId, increment);
 		
-		res.json({ 
-			success: true,
-			progress: {
-				currentCount: progress.currentCount,
-				isCompleted: progress.isCompleted,
-				isRewardClaimed: progress.isRewardClaimed
-			}
+		send(res, {
+			currentCount: progress.currentCount,
+			isCompleted: progress.isCompleted,
+			isRewardClaimed: progress.isRewardClaimed
 		});
 	} catch (error) {
 		logger.error({ error }, 'Failed to update mission progress');
@@ -106,7 +104,7 @@ router.post('/:missionId/claim', authenticate, async (req, res) => {
 		
 		const result = await missionService.claimReward(user.id, missionId);
 		
-		res.json(result);
+		send(res, result);
 	} catch (error) {
 		logger.error({ error }, 'Failed to claim mission reward');
 		res.status(500).json({ error: error instanceof Error ? error.message : 'Failed to claim reward' });
@@ -117,7 +115,7 @@ router.post('/:missionId/claim', authenticate, async (req, res) => {
 router.post('/event', authenticate, requireAdmin, validateRequest(CreateEventMissionSchema), async (req, res) => {
 	try {
 		const mission = await missionService.createEventMission(req.body);
-		res.json({ mission: toPublicMission(mission) });
+		send(res, toPublicMission(mission));
 	} catch (error) {
 		logger.error({ error }, 'Failed to create event mission');
 		res.status(500).json({ error: 'Failed to create event mission' });
@@ -128,7 +126,7 @@ router.post('/event', authenticate, requireAdmin, validateRequest(CreateEventMis
 router.get('/templates', authenticate, requireAdmin, async (req, res) => {
 	try {
 		const templates = missionService.getMissionTemplates();
-		res.json({ templates });
+		send(res, templates);
 	} catch (error) {
 		logger.error({ error }, 'Failed to get mission templates');
 		res.status(500).json({ error: 'Failed to get templates' });
@@ -140,8 +138,7 @@ router.post('/templates/create', authenticate, requireAdmin, validateRequest(Cre
 	try {
 		const { templateIds } = req.body;
 		const missions = await missionService.createMissionsFromTemplates(templateIds);
-		res.json({ 
-			success: true,
+		send(res, {
 			created: missions.length,
 			missions: missions.map(m => toPublicMission(m))
 		});
@@ -164,7 +161,7 @@ router.post('/reset/:type', authenticate, requireAdmin, async (req, res) => {
 			return res.status(400).json({ error: 'Invalid reset type' });
 		}
 
-		res.json({ success: true, type });
+		send(res, { type });
 	} catch (error) {
 		logger.error({ error }, 'Failed to reset missions');
 		res.status(500).json({ error: 'Failed to reset missions' });
@@ -179,7 +176,7 @@ router.get('/summary', authenticate, async (req, res) => {
 
 		const summary = await missionService.getUserMissionSummary(user.id);
 		
-		res.json({ summary });
+		send(res, summary);
 	} catch (error) {
 		logger.error({ error }, 'Failed to get mission summary');
 		res.status(500).json({ error: 'Failed to get mission summary' });

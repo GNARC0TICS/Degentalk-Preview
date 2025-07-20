@@ -14,7 +14,7 @@ import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight';
 import { common, createLowlight } from 'lowlight';
 import Mention from '@tiptap/extension-mention';
 // Temporarily disabled for build test
-// import suggestion from './suggestion.ts';
+// import suggestion from './suggestion';
 const lowlight = createLowlight(common);
 import { Button } from '@/components/ui/button';
 import { GifPicker } from './gif-picker';
@@ -81,13 +81,13 @@ const defaultFeatureLevels = {
 
 // Map features to role overrides - users with these roles can use features regardless of level
 const defaultRoleOverrides = {
-	images: ['mod', 'admin'],
-	gifs: ['mod', 'admin'],
-	link_embeds: ['mod', 'admin'],
-	custom_emojis: ['mod', 'admin'],
-	colored_text: ['mod', 'admin'],
-	code_blocks: ['developer', 'mod', 'admin'],
-	mentions: ['mod', 'admin']
+	images: ['moderator', 'admin'],
+	gifs: ['moderator', 'admin'],
+	link_embeds: ['moderator', 'admin'],
+	custom_emojis: ['moderator', 'admin'],
+	colored_text: ['moderator', 'admin'],
+	code_blocks: ['developer', 'moderator', 'admin'],
+	mentions: ['moderator', 'admin']
 };
 
 export function RichTextEditor({

@@ -52,6 +52,7 @@ export interface AdminUser {
 	posts: number;
 	threads: number;
 	createdAt: string; // Consider Date object if you do transformations
+	updatedAt: string;
 	// Add any other fields that might be returned or needed
 }
 
@@ -213,7 +214,7 @@ export default function AdminUsersPage() {
 			header: 'Username',
 			render: (user: AdminUser) => (
 				<Link
-					href={`${ROUTES.ADMIN_USERS}/${user.id}`}
+					to={`${ROUTES.ADMIN_USERS}/${user.id}`}
 					className="font-medium text-primary hover:underline"
 				>
 					{user.username}

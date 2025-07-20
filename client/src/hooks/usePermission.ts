@@ -83,15 +83,15 @@ export function usePermission(forum?: MergedForum | null): PermissionResult {
 				
 			case 'vip':
 				// Check VIP status or elevated role
-				const hasVipAccess = userRole === 'mod' || userRole === 'admin' || user?.isVip;
+				const hasVipAccess = userRole === 'moderator' || userRole === 'admin' || user?.isVip;
 				if (!hasVipAccess) {
 					return { canPost: false, reason: 'VIP members only.' };
 				}
 				break;
 				
-			case 'mod':
+			case 'moderator':
 				// Moderators and admins only
-				if (userRole !== 'mod' && userRole !== 'admin') {
+				if (userRole !== 'moderator' && userRole !== 'admin') {
 					return { canPost: false, reason: 'Moderators only.' };
 				}
 				break;
@@ -105,7 +105,7 @@ export function usePermission(forum?: MergedForum | null): PermissionResult {
 		}
 		
 		// 5. Legacy VIP flag check (for backward compatibility)
-		if (forum.isVip && userRole !== 'mod' && userRole !== 'admin' && !user?.isVip) {
+		if (forum.isVip && userRole !== 'moderator' && userRole !== 'admin' && !user?.isVip) {
 			return { canPost: false, reason: 'VIP forum – VIP members only.' };
 		}
 

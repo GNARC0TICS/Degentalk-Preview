@@ -192,7 +192,7 @@ export const transactionTypeSchema = z.enum([
 export const threadTypeSchema = z.enum(['discussion', 'question', 'announcement', 'poll']);
 export const postTypeSchema = z.enum(['post', 'reply']);
 
-export const forumAccessLevelSchema = z.enum(['public', 'registered', 'level_10+', 'mod', 'admin']);
+export const forumAccessLevelSchema = z.enum(['public', 'registered', 'level_10+', 'moderator', 'admin']);
 
 // Social features schemas
 export const friendshipStatusSchema = z.enum(['pending', 'accepted', 'blocked', 'declined']);
@@ -305,8 +305,8 @@ export function validateId(id: unknown): string {
 	return z.string().uuid().parse(id);
 }
 
-export function validateEmail(email: unknown): string {
-	return email.parse(email);
+export function validateEmail(emailValue: unknown): string {
+	return email.parse(emailValue);
 }
 
 export function validatePagination(query: unknown) {

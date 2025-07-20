@@ -29,7 +29,7 @@ export const AdminUserCreateSchema = z.object({
 	isActive: z.boolean(),
 	isVerified: z.boolean(),
 	isBanned: z.boolean(),
-	role: z.enum(['user', 'mod', 'admin'])
+	role: z.enum(['user', 'moderator', 'admin'])
 });
 
 export const AdminUserUpdateSchema = AdminUserCreateSchema.partial();

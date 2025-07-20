@@ -4,8 +4,8 @@
  * This module provides currency swap functionality using CCPayment
  */
 
-import { generateOrderId } from './utils.ts';
-import { SupportedCurrency } from './types.ts';
+import { generateOrderId } from './utils';
+import { SupportedCurrency } from './types';
 import type { UserId, OrderId } from '@shared/types/ids';
 
 /**

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useXP } from '@/hooks/useXP';
+import { useXP, type UserTitle } from '@/hooks/useXP';
 import { XPProgressBar } from '@/features/gamification/components/XPProgressBar';
 import { XPHistoryLog } from '@/features/gamification/components/XPHistoryLog';
 import { BadgeShowcase } from '@/features/gamification/components/BadgeShowcase';
@@ -17,7 +17,12 @@ type XPProfileSectionProps = {
  * Component that combines XP-related components for a user profile page
  */
 export function XPProfileSection({ userId, className }: XPProfileSectionProps) {
-	const { xpData, xpHistory, isLoading, equipTitle } = useXP(userId);
+	const { xpData, xpHistory, isLoading, equipTitle: originalEquipTitle } = useXP(userId);
+	
+	// Wrapper to handle UserTitle object
+	const equipTitle = (title: UserTitle) => {
+		originalEquipTitle(title.id);
+	};
 
 	// Level-up notification (controlled via XP hooks in future)
 	const [showLevelUp, setShowLevelUp] = useState(false);
@@ -73,7 +78,7 @@ export function XPProfileSection({ userId, className }: XPProfileSectionProps) {
 				<TabsContent value="titles" className="mt-0">
 					<TitleSelector
 						titles={xpData.titles}
-						equippedTitle={xpData.equippedTitle}
+						equippedTitle={xpData.titles?.find(t => t.name === xpData.equippedTitle) || null}
 						onEquipTitle={equipTitle}
 					/>
 				</TabsContent>

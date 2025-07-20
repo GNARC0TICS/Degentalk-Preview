@@ -1,4 +1,3 @@
-/* eslint-disable */
 /**
  * @file db/schema/index.ts
  * @description Barrel file re-exporting all Drizzle ORM schema definitions for the Degentalk project.
@@ -183,4 +182,3 @@ export * from './advertising/payments.js';
 export * from './advertising/user-promotions.js';
 // Note: './forum/threadDrafts.ts' was commented out as it was empty in the previous steps.
 // Ensure all files listed for export actually exist and contain exports.
-//# sourceMappingURL=index.js.map

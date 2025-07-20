@@ -1,15 +1,14 @@
-export * from './admin-module-registry.js';
+// admin-module-registry moved to client - requires admin.config
 
 // Auth utilities
-export * from './auth/canUser.js';
+// canUser moved to server - requires DB access
 
 // Emoji utilities
 export * from './emoji/unlockEmojiPack.js';
 
 // Forum utilities
-export * from './forum/canUserPost.js';
+// canUserPost and getForumRules moved to client - require client context
 export * from './forum/getAvailablePrefixes.js';
-export * from './forum/getForumRules.js';
 export * from './forum/prefixEngine.js';
 export * from './forum/shouldAwardXP.js';
 

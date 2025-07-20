@@ -15,6 +15,10 @@
 		"./paths": "./paths.config.ts",
 		"./wallet": "./wallet.config.ts"
 	},
+	"scripts": {
+		"build": "tsc -b",
+		"typecheck": "tsc -b --noEmit"
+	},
 	"dependencies": {
 		"zod": "^3.24.2",
 		"date-fns": "^3.6.0",

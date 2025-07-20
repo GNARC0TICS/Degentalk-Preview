@@ -272,7 +272,7 @@ export default function ModularAdminSidebar({
 				<div key={module.id} className={cn('space-y-1', isSubModule && 'ml-6')}>
 					{/* Main module link */}
 					<Link
-						href={hasSubModules ? '#' : module.route}
+						to={hasSubModules ? '#' : module.route}
 						onClick={(e) => handleLinkClick(module, e)}
 						className={cn(
 							'flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg group transition-all duration-200',
@@ -426,7 +426,7 @@ export default function ModularAdminSidebar({
 				{!collapsed ? (
 					<div className="space-y-2">
 						<Link
-							href="/"
+							to="/"
 							className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
 							onClick={onLinkClick}
 						>

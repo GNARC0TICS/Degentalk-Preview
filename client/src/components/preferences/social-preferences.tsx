@@ -169,16 +169,10 @@ export function SocialPreferences({ user }: SocialPreferencesProps) {
 			</div>
 
 			{/* Mentions Settings */}
-			<PreferencesCard>
-				<CardHeader>
-					<CardTitle className="flex items-center gap-2">
-						<MessageSquare className="h-5 w-5 text-blue-400" />
-						Mentions
-					</CardTitle>
-					<CardDescription>
-						Control who can mention you using @{user.username} and how you're notified
-					</CardDescription>
-				</CardHeader>
+			<PreferencesCard
+				title="Mentions"
+				description="Control who can mention you using @{user.username} and how you're notified"
+			>
 				<CardContent className="space-y-4">
 					<PreferencesToggle
 						id="allow-mentions"
@@ -257,16 +251,10 @@ export function SocialPreferences({ user }: SocialPreferencesProps) {
 			</PreferencesCard>
 
 			{/* Following/Whale Watch Settings */}
-			<PreferencesCard>
-				<CardHeader>
-					<CardTitle className="flex items-center gap-2">
-						<Crown className="h-5 w-5 text-yellow-400" />
-						Following & Whale Watch
-					</CardTitle>
-					<CardDescription>
-						Control who can follow you and how your follower information is displayed
-					</CardDescription>
-				</CardHeader>
+			<PreferencesCard
+				title="Following & Whale Watch"
+				description="Control who can follow you and how your follower information is displayed"
+			>
 				<CardContent className="space-y-4">
 					<PreferencesToggle
 						id="allow-followers"
@@ -326,14 +314,10 @@ export function SocialPreferences({ user }: SocialPreferencesProps) {
 			</PreferencesCard>
 
 			{/* Friends Settings */}
-			<PreferencesCard>
-				<CardHeader>
-					<CardTitle className="flex items-center gap-2">
-						<UserPlus className="h-5 w-5 text-green-400" />
-						Friends
-					</CardTitle>
-					<CardDescription>Manage friend requests and friendship privacy settings</CardDescription>
-				</CardHeader>
+			<PreferencesCard
+				title="Friends"
+				description="Manage friend requests and friendship privacy settings"
+			>
 				<CardContent className="space-y-4">
 					<PreferencesToggle
 						id="allow-friend-requests"
@@ -423,14 +407,10 @@ export function SocialPreferences({ user }: SocialPreferencesProps) {
 			</PreferencesCard>
 
 			{/* General Social Privacy */}
-			<PreferencesCard>
-				<CardHeader>
-					<CardTitle className="flex items-center gap-2">
-						<Shield className="h-5 w-5 text-purple-400" />
-						General Privacy
-					</CardTitle>
-					<CardDescription>Overall social visibility and interaction settings</CardDescription>
-				</CardHeader>
+			<PreferencesCard
+				title="General Privacy"
+				description="Overall social visibility and interaction settings"
+			>
 				<CardContent className="space-y-4">
 					<PreferencesToggle
 						id="show-social-activity"

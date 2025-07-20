@@ -1,6 +1,6 @@
 import React from 'react';
 import { getProgressWithinLevel } from '@/shared/economy/reward-calculator';
-import type { XPTrack } from './tracks.ts';
+import type { XPTrack } from './tracks';
 
 export type XPBarTrackProps = {
 	track: XPTrack;

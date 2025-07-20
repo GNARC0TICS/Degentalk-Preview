@@ -1,4 +1,3 @@
-import { isValidId } from '@shared/utils/id';
 /* eslint-disable degen/no-missing-branded-id-import */
 /**
  * Frontend-Safe ID Types
@@ -56,6 +55,7 @@ export type MentionId = Id<'MentionId'>;
 export type FriendId = Id<'FriendId'>;
 export type FollowId = Id<'FollowId'>;
 export type RequestId = Id<'RequestId'>;
+export type WhaleId = Id<'WhaleId'>;
 
 // Admin & moderation IDs
 export type AdminUserId = Id<'AdminUserId'>;
@@ -114,49 +114,23 @@ export const isValidUUID = (id: string): boolean => {
 	return uuidRegex.test(id);
 };
 
-// Re-export isValidId for backwards compatibility
-export { isValidId };
 
-/**
- * Generic helper to create a branded ID validator using the shared `isValidId` util.
- */
-export const createIdValidator =
-	<T extends string>() =>
-	(id: unknown): id is Id<T> =>
-		isValidId(id);
+// Re-export validators from utils/id
+export { 
+	isValidId,
+	createIdValidator,
+	isUserId,
+	isThreadId,
+	isPostId,
+	isWalletId,
+	isTransactionId,
+	isForumId,
+	isItemId,
+	isFrameId,
+	isBadgeId,
+	isTitleId
+} from '../utils/id.js';
 
-// Specific ID validators
-export const isUserId = createIdValidator<'UserId'>();
-export const isThreadId = createIdValidator<'ThreadId'>();
-export const isPostId = createIdValidator<'PostId'>();
-export const isWalletId = createIdValidator<'WalletId'>();
-export const isTransactionId = createIdValidator<'TransactionId'>();
-export const isForumId = createIdValidator<'ForumId'>();
-export const isItemId = createIdValidator<'ItemId'>();
-export const isFrameId = createIdValidator<'FrameId'>();
-export const isBadgeId = createIdValidator<'BadgeId'>();
-export const isTitleId = createIdValidator<'TitleId'>();
-
-// Dictionary & content ID validators
-export const isDictionaryEntryId = createIdValidator<'DictionaryEntryId'>();
-export const isEntryId = createIdValidator<'EntryId'>();
-export const isRuleId = createIdValidator<'RuleId'>();
-
-// Settings & configuration ID validators
-export const isSettingId = createIdValidator<'SettingId'>();
-export const isConfigId = createIdValidator<'ConfigId'>();
-export const isLogEntryId = createIdValidator<'LogEntryId'>();
-export const isAuditLogId = createIdValidator<'AuditLogId'>();
-export const isNotificationId = createIdValidator<'NotificationId'>();
-
-// Sticker & pack ID validators
-export const isStickerId = createIdValidator<'StickerId'>();
-export const isPackId = createIdValidator<'PackId'>();
-
-// Social ID validators
-export const isFriendId = createIdValidator<'FriendId'>();
-export const isFollowId = createIdValidator<'FollowId'>();
-export const isRequestId = createIdValidator<'RequestId'>();
 
 /**
  * ⚠️ DEPRECATED - SECURITY VULNERABILITY ⚠️

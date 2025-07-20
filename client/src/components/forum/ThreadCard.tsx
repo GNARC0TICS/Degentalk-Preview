@@ -22,7 +22,7 @@ import { cn } from '@/utils/utils';
 import { useBreakpoint } from '@/hooks/useMediaQuery';
 import type { ThreadDisplay } from '@/types/thread.types';
 import type { ThreadId } from '@shared/types/ids';
-import { toId, parseId } from '@shared/utils/id';
+import { toId, parseId } from '@shared/types/index';
 import { getZoneTheme } from '@shared/config/zoneThemes.config';
 import { useThreadActionsOptional } from '@/features/forum/contexts/ThreadActionsContext';
 import QuickReplyInput from '@/components/forum/QuickReplyInput';

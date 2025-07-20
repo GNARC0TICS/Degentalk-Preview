@@ -105,7 +105,7 @@ export const getZoneThemeVars = (colorTheme: string): React.CSSProperties => {
 		'--zone-gradient-to': `${accentColor}1a`, // 10% opacity
 		'--zone-glow': `${accentColor}33`, // 20% opacity
 		'--zone-border': `${accentColor}4d` // 30% opacity
-	};
+	} as React.CSSProperties;
 };
 
 // -------- Pure component that expects the new { zone } prop --------
@@ -261,7 +261,7 @@ const ZoneCardPure = memo(
 						{/* HOT Ribbon */}
 						{showHotRibbonFeature && hasHotForums && (
 							<Link
-								href={`/forums`}
+								to={`/forums`}
 								className={cn(
 									'absolute -left-6 top-3 -rotate-45 badge--primary text-[10px] font-bold px-8 py-1 shadow-lg z-20',
 									'text-[var(--zone-accent)]'

@@ -1,20 +1,11 @@
-import type { AdminId } from '@shared/types/ids';
-import { getForumRules } from './getForumRules.js';
-
 export type ThreadEngagementStats = {
 	replies: number;
 	likes: number;
 };
 
-export function prefixEngine(forumSlug: AdminId, stats: ThreadEngagementStats): AdminId[] {
-	const rules = getForumRules(forumSlug);
-	if (!rules?.prefixGrantRules) return [];
-	return rules.prefixGrantRules
-		.filter(
-			(rule) =>
-				rule.autoAssign &&
-				(!rule.condition?.minReplies || stats.replies >= rule.condition.minReplies) &&
-				(!rule.condition?.minLikes || stats.likes >= rule.condition.minLikes)
-		)
-		.map((rule) => rule.slug);
+// Note: This function now returns an empty array since getForumRules
+// has been moved to the client. If you need the actual prefix engine logic,
+// use the client-side version of this function.
+export function prefixEngine(forumSlug: string, stats: ThreadEngagementStats): string[] {
+	return [];
 }

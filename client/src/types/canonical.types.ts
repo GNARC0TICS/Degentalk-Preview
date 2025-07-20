@@ -8,6 +8,7 @@ import type {
 	PostId,
 	TagId
 } from '@shared/types/ids';
+import type { BasicRole } from '@shared/types/index';
 
 /**
  * Canonical Forum Types
@@ -166,7 +167,9 @@ export interface CanonicalThread {
 	isLocked: boolean;
 	isHidden: boolean;
 	isSolved: boolean;
+	isPinned?: boolean; // Additional pin status
 	solvingPostId?: PostId;
+	participantCount?: number; // Number of unique participants
 
 	// Content stats
 	viewCount: number;
@@ -177,6 +180,7 @@ export interface CanonicalThread {
 	createdAt: string;
 	updatedAt: string;
 	lastPostAt?: string;
+	lastActivityAt?: string;
 
 	// Author relationship
 	userId: UserId;
@@ -258,7 +262,7 @@ export interface CanonicalUser {
 	displayName?: string;
 	avatarUrl?: string;
 	activeAvatarUrl?: string;
-	role: 'user' | 'mod' | 'admin';
+	role: BasicRole;
 
 	// Forum-specific data
 	forumStats: {
@@ -281,6 +285,9 @@ export interface CanonicalUser {
 	isModerator: boolean;
 	isVerified?: boolean;
 	isBanned?: boolean;
+	
+	// Convenience properties for component compatibility
+	reputation?: number; // Alias for forumStats.reputation
 }
 
 /**

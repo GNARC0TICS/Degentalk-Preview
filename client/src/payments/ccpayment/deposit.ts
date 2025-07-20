@@ -4,9 +4,9 @@
  * This module provides deposit functionality using CCPayment
  */
 
-import { ccpaymentClient } from './ccpayment-client.ts';
-import { generateOrderId } from './utils.ts';
-import { SupportedCurrency } from './types.ts';
+import { ccpaymentClient } from './ccpayment-client';
+import { generateOrderId } from './utils';
+import { SupportedCurrency } from './types';
 import type { UserId, OrderId } from '@shared/types/ids';
 
 /**

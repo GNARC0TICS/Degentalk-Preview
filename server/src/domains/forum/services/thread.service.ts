@@ -451,7 +451,7 @@ export class ThreadService {
 						canDelete: false, // TODO: Implement proper permission checking
 						canReply: true, // TODO: Check forum rules and user permissions
 						canMarkSolved: false, // TODO: Check if user can mark as solved
-						canModerate: userResult?.role === 'admin' || userResult?.role === 'mod'
+						canModerate: userResult?.role === 'admin' || userResult?.role === 'moderator'
 					},
 					// Legacy compatibility fields (deprecated but keeping for now)
 					canEdit: false,

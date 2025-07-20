@@ -39,7 +39,7 @@ export function UserCard({ user, className = '' }: UserCardProps) {
 					{/* Header with Avatar and Online Status */}
 					<div className="flex items-start justify-between mb-4">
 						<Link
-							href={`/profile/${user.id}`}
+							to={`/profile/${user.id}`}
 							className="flex items-center space-x-3 group-hover:scale-105 transition-transform"
 						>
 							<div className="relative">

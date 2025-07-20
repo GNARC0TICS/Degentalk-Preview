@@ -1,6 +1,6 @@
-import type { UserId } from '@shared/types/ids';
+import type { UserId } from '../../types/ids.js';
 
-export function logDevEvent(action: string, result: any, setLog: (lines: string[]) => void) {
+export function logDevEvent(action: string, result: any, setLog: (fn: (prev: string[]) => string[]) => void) {
 	setLog((prev) => [
 		...prev,
 		`[${new Date().toLocaleTimeString()}] ${action}: ${JSON.stringify(result)}`

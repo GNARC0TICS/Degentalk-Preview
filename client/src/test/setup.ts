@@ -24,22 +24,19 @@ class ResizeObserverStub {
 	unobserve() {}
 	disconnect() {}
 }
-// @ts-expect-error - ResizeObserver is not available in JSDOM
 window.ResizeObserver = window.ResizeObserver || ResizeObserverStub;
 
 // Ensure crypto.randomUUID is stubbed for the JSDOM test environment
 if (typeof globalThis.crypto === 'undefined') {
-	// @ts-expect-error – jsdom global augmentation
 	globalThis.crypto = {} as Crypto;
 }
 if (typeof globalThis.crypto.randomUUID !== 'function') {
-	// @ts-expect-error - We are intentionally assigning to readonly for test env
 	globalThis.crypto.randomUUID = () => '00000000-0000-0000-0000-000000000000';
 }
 
 // Mock react-router-dom for tests
 vi.mock('react-router-dom', async (importOriginal) => {
-	const actual = await importOriginal();
+	const actual = await importOriginal() as any;
 	return {
 		...actual,
 		BrowserRouter:
@@ -54,7 +51,7 @@ vi.mock('react-router-dom', async (importOriginal) => {
 
 // Ensure `useMobileDetector` export exists even when test files partially mock the module.
 vi.mock('@/hooks/useMediaQuery', async (importOriginal) => {
-	const actual = await importOriginal();
+	const actual = await importOriginal() as any;
 	return {
 		...actual,
 		useMobileDetector:

@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { adminModuleRegistry } from '@shared/lib/admin-module-registry';
+import { adminModuleRegistry } from '@/lib/admin-module-registry';
 import { useAuth } from '@/hooks/use-auth';
 import type { AdminModule } from '@shared/config/admin.config';
 

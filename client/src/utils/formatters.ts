@@ -12,7 +12,7 @@ export {
 	formatTimeAgo,
 	formatTimestamp,
 	formatTime
-} from './format-date.ts';
+} from './format-date';
 
 /**
  * Format a currency value with the appropriate symbol

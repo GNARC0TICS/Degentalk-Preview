@@ -78,7 +78,7 @@ export const availablePaths: Record<string, PathDefinition> = {
 
 // Define which categories map to which paths
 // The keys are category IDs, values are path IDs
-export const categoryPathMappings: Record<number, string> = {
+export const categoryPathMappings: Record<string, string> = {
 	// Example mappings - update with real category IDs
 	1: 'gambler', // Casinos & Gambling category
 	2: 'shiller', // Project Announcements category

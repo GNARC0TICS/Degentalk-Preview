@@ -452,7 +452,7 @@ export class TemporalSimulator {
 		if (persona.behavior.toxicity > 0.5 || persona.behavior.exploitsXPLoops) {
 			return 'night_owl';
 		}
-		if (persona.behavior.helpfulness > 0.7 || persona.role === 'mod') {
+		if (persona.behavior.helpfulness > 0.7 || persona.role === 'moderator') {
 			return 'early_bird';
 		}
 		if (persona.behavior.postFrequency === 'burst') {

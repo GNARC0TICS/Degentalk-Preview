@@ -47,6 +47,7 @@ export function useShopItems(category?: ItemCategory) {
 		queryFn: async () => {
 			return await apiRequest<ShopItem[]>({
 				url: '/api/shop/items',
+				method: 'GET',
 				params: category ? { category } : undefined
 			});
 		},
@@ -77,7 +78,8 @@ export function useShopItem(itemId: string) {
 		queryKey: ['shopItem', itemId],
 		queryFn: async () => {
 			return await apiRequest<ShopItem>({
-				url: `/api/shop/items/${itemId}`
+				url: `/api/shop/items/${itemId}`,
+				method: 'GET'
 			});
 		},
 		staleTime: 5 * 60 * 1000, // 5 minutes

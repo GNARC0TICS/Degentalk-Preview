@@ -2,6 +2,7 @@ import React from 'react';
 import { cn } from '@/utils/utils';
 import type { UserTitle } from '@/hooks/useXP';
 import type { TitleId } from '@shared/types/ids';
+import type { UserTitle } from '@/hooks/useXP';
 import { Check, ChevronDown, Crown, Info } from 'lucide-react';
 import {
 	DropdownMenu,
@@ -20,7 +21,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 type TitleSelectorProps = {
 	titles: UserTitle[];
 	equippedTitle: UserTitle | null;
-	onEquipTitle: (titleId: TitleId) => void;
+	onEquipTitle: (title: UserTitle) => void;
 	isLoading?: boolean;
 	className?: string;
 	compact?: boolean;
@@ -146,7 +147,7 @@ export function TitleSelector({
 									'flex items-center justify-between cursor-pointer',
 									title.isEquipped && 'bg-zinc-800'
 								)}
-								onClick={() => onEquipTitle(title.id)}
+								onClick={() => onEquipTitle(title)}
 							>
 								<div className="flex items-center">
 									<span className={cn('font-medium', getTitleColorClass(title.rarity))}>
@@ -228,7 +229,7 @@ export function TitleSelector({
 										'flex items-center justify-between p-2 rounded-md cursor-pointer hover:bg-zinc-850 transition-colors',
 										title.isEquipped && 'bg-zinc-850 border border-zinc-700'
 									)}
-									onClick={() => onEquipTitle(title.id)}
+									onClick={() => onEquipTitle(title)}
 								>
 									<div className="flex items-center gap-2">
 										<span className={cn('font-medium', getTitleColorClass(title.rarity))}>

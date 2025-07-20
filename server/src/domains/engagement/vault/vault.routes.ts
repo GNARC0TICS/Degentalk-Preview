@@ -20,7 +20,7 @@ import {
 	isAdmin
 } from '../../auth/middleware/auth.middleware';
 import { getUserIdFromRequest } from '@server-utils/auth';
-import { isValidId } from '@shared/utils/id';
+import { isValidId } from '@shared/types';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
 // Initialize the service

@@ -143,7 +143,7 @@ export function validateRouteParams<T extends Record<string, unknown>>(
 	validators: Record<keyof T, z.ZodSchema>
 ): T {
 	const schema = z.object(validators);
-	return schema.parse(params);
+	return schema.parse(params) as T;
 }
 
 /**

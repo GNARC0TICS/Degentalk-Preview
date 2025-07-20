@@ -81,7 +81,7 @@ export const CommonValidation = {
 	}),
 
 	// Role validation
-	Role: z.enum(['user', 'mod', 'admin']),
+	Role: z.enum(['user', 'moderator', 'admin']),
 
 	// Amount validation (for DGT, XP, etc.)
 	Amount: z.number().min(0).max(1000000)

@@ -31,7 +31,8 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { useLocalStorage } from '@/hooks/use-local-storage';
 import { cn } from '@/utils/utils';
 import type { Tag } from '@/types/forum';
-import type { TagId, PrefixId, ThreadId, asTagId, asPrefixId } from '@shared/types/ids';
+import type { TagId, PrefixId, ThreadId } from '@shared/types/ids';
+import { asTagId, asPrefixId } from '@shared/types/ids';
 
 export type ThreadSortOption =
 	| 'latest'

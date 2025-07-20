@@ -10,6 +10,7 @@ import { logger } from '@core/logger';
 import { sessionTrackingService } from '../services/session-tracking.service';
 import { redisCacheService } from '@core/cache/redis.service';
 import { getAuthenticatedUser } from '@utils/request-user';
+import { send } from '@server-utils/response';
 
 export class AnalyticsController {
   /**
@@ -21,11 +22,7 @@ export class AnalyticsController {
       
       const metrics = await sessionTrackingService.getSessionMetrics(timeframe);
       
-      res.json({
-        success: true,
-        data: metrics,
-        timestamp: new Date().toISOString()
-      });
+      send(res, metrics);
     } catch (error) {
       logger.error('AnalyticsController', 'Error getting session metrics', { error });
       res.status(500).json({
@@ -44,11 +41,7 @@ export class AnalyticsController {
       
       const cohorts = await sessionTrackingService.getRetentionCohorts(weeks);
       
-      res.json({
-        success: true,
-        data: cohorts,
-        timestamp: new Date().toISOString()
-      });
+      send(res, cohorts);
     } catch (error) {
       logger.error('AnalyticsController', 'Error getting retention cohorts', { error });
       res.status(500).json({
@@ -66,16 +59,13 @@ export class AnalyticsController {
       const sessionStats = sessionTrackingService.getSessionStats();
       const cacheStats = redisCacheService.getStats();
       
-      res.json({
-        success: true,
-        data: {
-          sessions: sessionStats,
-          cache: cacheStats,
-          server: {
-            uptime: process.uptime(),
-            memoryUsage: process.memoryUsage(),
-            timestamp: new Date().toISOString()
-          }
+      send(res, {
+        sessions: sessionStats,
+        cache: cacheStats,
+        server: {
+          uptime: process.uptime(),
+          memoryUsage: process.memoryUsage(),
+          timestamp: new Date().toISOString()
         }
       });
     } catch (error) {
@@ -95,13 +85,10 @@ export class AnalyticsController {
       const metrics = redisCacheService.getMetrics();
       const stats = redisCacheService.getStats();
       
-      res.json({
-        success: true,
-        data: {
-          performance: metrics,
-          status: stats,
-          timestamp: new Date().toISOString()
-        }
+      send(res, {
+        performance: metrics,
+        status: stats,
+        timestamp: new Date().toISOString()
       });
     } catch (error) {
       logger.error('AnalyticsController', 'Error getting cache metrics', { error });
@@ -135,10 +122,7 @@ export class AnalyticsController {
         prefix: prefix || 'all'
       });
       
-      res.json({
-        success: true,
-        message: `Cache cleared${prefix ? ` for prefix: ${prefix}` : ''}`
-      });
+      send(res, { message: `Cache cleared${prefix ? ` for prefix: ${prefix}` : ''}` });
     } catch (error) {
       logger.error('AnalyticsController', 'Error clearing cache', { error });
       res.status(500).json({
@@ -161,17 +145,14 @@ export class AnalyticsController {
         sessionTrackingService.getSessionStats()
       ]);
       
-      res.json({
-        success: true,
-        data: {
-          sessions: sessionMetrics,
-          cache: {
-            performance: cacheMetrics,
-            status: redisCacheService.getStats()
-          },
-          realtime: realtimeStats,
-          timestamp: new Date().toISOString()
-        }
+      send(res, {
+        sessions: sessionMetrics,
+        cache: {
+          performance: cacheMetrics,
+          status: redisCacheService.getStats()
+        },
+        realtime: realtimeStats,
+        timestamp: new Date().toISOString()
       });
     } catch (error) {
       logger.error('AnalyticsController', 'Error getting performance dashboard', { error });

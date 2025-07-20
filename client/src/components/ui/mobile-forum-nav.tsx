@@ -301,10 +301,10 @@ const MobileForumNav = memo(({ className }: MobileForumNavProps) => {
 																<div
 																	className={cn(
 																		'w-3 h-3 rounded-full',
-																		zone.colorTheme === 'pit' && 'bg-red-500',
-																		zone.colorTheme === 'mission' && 'bg-blue-500',
-																		zone.colorTheme === 'casino' && 'bg-purple-500',
-																		!['pit', 'mission', 'casino'].includes(zone.colorTheme) &&
+																		zone.theme?.colorTheme === 'pit' && 'bg-red-500',
+																		zone.theme?.colorTheme === 'mission' && 'bg-blue-500',
+																		zone.theme?.colorTheme === 'casino' && 'bg-purple-500',
+																		!['pit', 'mission', 'casino'].includes(zone.theme?.colorTheme || '') &&
 																			'bg-emerald-500'
 																	)}
 																/>
@@ -344,7 +344,7 @@ const MobileForumNav = memo(({ className }: MobileForumNavProps) => {
 																		>
 																			<span className="text-sm">{forum.name}</span>
 																			<div className="flex items-center gap-2 text-xs text-zinc-500">
-																				<span>{forum.stats?.totalThreads || 0}</span>
+																				<span>{forum.threadCount || 0}</span>
 																				<MessageSquare className="w-3 h-3" />
 																			</div>
 																		</Link>
@@ -372,7 +372,7 @@ const MobileForumNav = memo(({ className }: MobileForumNavProps) => {
 												<p className="font-medium text-white truncate">{user.username}</p>
 												<div className="flex items-center gap-2 text-xs text-zinc-400">
 													<Crown className="w-3 h-3" />
-													Level {user.forumStats?.level || 1}
+													Level {user.level || 1}
 												</div>
 											</div>
 											<Link to="/settings">

@@ -90,6 +90,7 @@ export const achievementApi = {
 	getUserAchievements: (userId: string, filters?: AchievementFilters) =>
 		apiRequest<{ data: UserAchievement[] }>({
 			url: `/api/achievements/user/${userId}`,
+			method: 'GET',
 			params: filters
 		}),
 
@@ -99,6 +100,7 @@ export const achievementApi = {
 	getAchievements: (filters?: AchievementFilters & { page?: number; limit?: number }) =>
 		apiRequest<PaginatedResponse<Achievement>>({
 			url: '/api/achievements',
+			method: 'GET',
 			params: filters
 		}),
 
@@ -107,7 +109,8 @@ export const achievementApi = {
 	 */
 	getAchievementStats: () =>
 		apiRequest<{ data: AchievementStats }>({
-			url: '/api/achievements/stats'
+			url: '/api/achievements/stats',
+			method: 'GET'
 		}),
 
 	/**
@@ -115,7 +118,8 @@ export const achievementApi = {
 	 */
 	getAchievementById: (id: AchievementId) =>
 		apiRequest<{ data: Achievement }>({
-			url: `/api/achievements/${id}`
+			url: `/api/achievements/${id}`,
+			method: 'GET'
 		}),
 
 	/**
@@ -124,7 +128,8 @@ export const achievementApi = {
 	getAchievementCompletions: (id: AchievementId, page = 1, limit = 50) =>
 		apiRequest<PaginatedResponse<any>>({
 			url: `/api/achievements/${id}/completions`,
-			params: { page, limit }
+			method: 'GET',
+			params: { page: String(page), limit: String(limit) }
 		}),
 
 	/**
@@ -182,6 +187,7 @@ export const achievementApi = {
 	getAchievementTemplates: (filters?: { category?: string; tags?: string }) =>
 		apiRequest<{ data: any }>({
 			url: '/api/achievements/templates',
+			method: 'GET',
 			params: filters
 		}),
 

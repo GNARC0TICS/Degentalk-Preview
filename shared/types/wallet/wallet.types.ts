@@ -19,7 +19,7 @@ import type {
 	TransactionStatus,
 	WithdrawalStatus,
 	EntityId
-} from '@shared/types/ids';
+} from '../ids.js';
 
 // ================================================================= //
 // C O R E   W A L L E T   S T R U C T U R E S

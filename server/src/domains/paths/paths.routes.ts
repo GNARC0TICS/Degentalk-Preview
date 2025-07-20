@@ -17,7 +17,7 @@ import {
 	isAdmin
 } from '@server/domains/auth/middleware/auth.middleware';
 import { getUserId } from '../auth/services/auth.service';
-import { isValidId } from '@shared/utils/id';
+import { isValidId } from '@shared/types';
 import { logger } from '@core/logger';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 

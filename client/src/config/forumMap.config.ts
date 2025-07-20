@@ -27,7 +27,7 @@ export interface ForumRules {
 	xpMultiplier?: number;
 
 	// Access control
-	accessLevel?: 'public' | 'registered' | 'level_10+' | 'vip' | 'mod' | 'admin';
+	accessLevel?: 'public' | 'registered' | 'level_10+' | 'vip' | 'moderator' | 'admin';
 	minXpRequired?: number;
 
 	// Content features
@@ -242,7 +242,7 @@ const PRIMARY_ZONES: Zone[] = [
 					accessLevel: 'level_10+',
 					availablePrefixes: ['[ALPHA]', '[LEAK]', '[INSIDER]', '[CONFIRMED]'],
 					customRules: {
-						threadCreationLocked: ['mod', 'admin']
+						threadCreationLocked: ['moderator', 'admin']
 					}
 				}
 			},

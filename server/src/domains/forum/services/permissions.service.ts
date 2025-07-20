@@ -235,7 +235,7 @@ export async function canPostInForum(user: User, forumId: ForumId): Promise<bool
 			case 'vip':
 				// TODO: Implement proper VIP checking
 				return isModerator(user); // For now, only mods can access VIP forums
-			case 'mod':
+			case 'moderator':
 				return isModerator(user);
 			case 'admin':
 				return isAdmin(user);

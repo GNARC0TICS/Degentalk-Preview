@@ -270,7 +270,7 @@ export function MentionsNotifications({
 
 									<div className="flex-1 min-w-0">
 										<Link
-											href={getMentionUrl(mention)}
+											to={getMentionUrl(mention)}
 											onClick={() => handleMentionClick(mention)}
 											className="block"
 										>

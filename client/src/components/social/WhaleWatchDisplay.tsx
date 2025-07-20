@@ -109,7 +109,7 @@ export function WhaleWatchDisplay({
 		switch (role) {
 			case 'admin':
 				return 'bg-red-900/60 text-red-300 border-red-700/30';
-			case 'mod':
+			case 'moderator':
 				return 'bg-blue-900/60 text-blue-300 border-blue-700/30';
 			default:
 				return 'bg-zinc-700/60 text-zinc-300 border-zinc-600/30';
@@ -135,7 +135,7 @@ export function WhaleWatchDisplay({
 				<div className="flex-1 min-w-0">
 					<div className="flex items-center gap-2 mb-1">
 						<Link
-							href={`/profile/${user.username}`}
+							to={`/profile/${user.username}`}
 							className="font-medium text-zinc-200 hover:text-emerald-400 transition-colors truncate"
 						>
 							{user.username}
@@ -143,7 +143,7 @@ export function WhaleWatchDisplay({
 
 						{user.role && user.role !== 'user' && (
 							<Badge className={cn('text-xs px-1.5 py-0', getRoleColor(user.role))}>
-								{user.role === 'admin' ? 'Admin' : 'Mod'}
+								{user.role === 'admin' ? 'Admin' : 'Moderator'}
 							</Badge>
 						)}
 

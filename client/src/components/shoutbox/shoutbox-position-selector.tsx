@@ -66,7 +66,7 @@ export function ShoutboxPositionSelector({ instanceId }: ShoutboxPositionSelecto
 	const { position, updatePosition } = useShoutbox();
 	const [open, setOpen] = React.useState(false);
 	const { toast } = useToast();
-	const isMobile = useMobileDetector();
+	const isMobile = useMobileDetector('(max-width: 767px)');
 
 	// Layout store hooks if instanceId is provided
 	const order = useLayoutStore((s) => s.order);

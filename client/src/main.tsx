@@ -23,7 +23,7 @@ import App from './App';
 import './index.css';
 import './styles/animations.css';
 import './features/admin/styles/admin-theme.css'; // Import admin theme
-import { RootProvider } from './contexts/root-provider';
+import { RootProvider } from './providers/root-provider';
 import { router } from './Router';
 
 // IMPORTANT: All providers are now managed by RootProvider.

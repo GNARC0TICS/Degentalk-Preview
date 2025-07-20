@@ -82,7 +82,8 @@ export function useTip() {
 		queryFn: async () => {
 			try {
 				return await apiRequest<TipHistoryResponse>({
-					url: '/api/engagement/tip/history'
+					url: '/api/engagement/tip/history',
+					method: 'GET'
 				});
 			} catch (error) {
 				console.error('Error fetching tip history:', error);

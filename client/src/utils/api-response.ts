@@ -104,7 +104,8 @@ export function createPaginatedResponse<T>(
 		},
 		{
 			meta: {
-				pagination
+				pagination,
+				timestamp: new Date().toISOString()
 			}
 		}
 	);

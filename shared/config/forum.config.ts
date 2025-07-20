@@ -27,7 +27,7 @@ export interface ForumRules {
 	xpMultiplier?: number;
 
 	// Access control
-	accessLevel?: 'public' | 'registered' | 'level_10+' | 'vip' | 'mod' | 'admin';
+	accessLevel?: 'public' | 'registered' | 'level_10+' | 'vip' | 'moderator' | 'admin';
 	minXpRequired?: number;
 
 	// Content features

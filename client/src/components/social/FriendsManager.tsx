@@ -28,7 +28,7 @@ import {
 	Activity,
 	Check,
 	X,
-	Block,
+	Blocks as Block,
 	Search,
 	Clock,
 	Send,
@@ -246,7 +246,7 @@ export function FriendsManager() {
 		switch (role) {
 			case 'admin':
 				return 'bg-red-900/60 text-red-300 border-red-700/30';
-			case 'mod':
+			case 'moderator':
 				return 'bg-blue-900/60 text-blue-300 border-blue-700/30';
 			default:
 				return 'bg-zinc-700/60 text-zinc-300 border-zinc-600/30';
@@ -257,8 +257,8 @@ export function FriendsManager() {
 		switch (role) {
 			case 'admin':
 				return 'Admin';
-			case 'mod':
-				return 'Mod';
+			case 'moderator':
+				return 'Moderator';
 			default:
 				return 'User';
 		}
@@ -280,7 +280,7 @@ export function FriendsManager() {
 				<div className="flex-1 min-w-0">
 					<div className="flex items-center gap-2 mb-1">
 						<Link
-							href={`/profile/${friendship.friend.username}`}
+							to={`/profile/${friendship.friend.username}`}
 							className="font-medium text-zinc-200 hover:text-emerald-400 transition-colors"
 						>
 							{friendship.friend.username}
@@ -376,7 +376,7 @@ export function FriendsManager() {
 					<div className="flex-1 min-w-0">
 						<div className="flex items-center gap-2 mb-1">
 							<Link
-								href={`/profile/${user.username}`}
+								to={`/profile/${user.username}`}
 								className="font-medium text-zinc-200 hover:text-emerald-400 transition-colors"
 							>
 								{user.username}
@@ -452,7 +452,7 @@ export function FriendsManager() {
 				<div className="flex-1 min-w-0">
 					<div className="flex items-center gap-2 mb-1">
 						<Link
-							href={`/profile/${user.username}`}
+							to={`/profile/${user.username}`}
 							className="font-medium text-zinc-200 hover:text-emerald-400 transition-colors"
 						>
 							{user.username}

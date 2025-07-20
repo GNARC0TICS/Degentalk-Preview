@@ -10,7 +10,7 @@
  */
 
 import { cn } from '@/utils/utils';
-import { useRouter } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
@@ -36,7 +36,7 @@ export function ProgressionCard({
 	variant = 'full',
 	onViewDetails
 }: ProgressionCardProps) {
-	const router = useRouter();
+	const navigate = useNavigate();
 
 	// Animation for progress bar fill
 	const progressVariants = {
@@ -253,11 +253,11 @@ export function ProgressionCard({
 
 				{/* Action buttons */}
 				<div className="flex gap-2">
-					<Button variant="outline" className="flex-1" onClick={() => router.push('/leaderboard')}>
+					<Button variant="outline" className="flex-1" onClick={() => navigate('/leaderboard')}>
 						<Trophy className="w-4 h-4 mr-2" />
 						Leaderboard
 					</Button>
-					<Button variant="outline" className="flex-1" onClick={() => router.push('/achievements')}>
+					<Button variant="outline" className="flex-1" onClick={() => navigate('/achievements')}>
 						<Sparkles className="w-4 h-4 mr-2" />
 						Achievements
 					</Button>

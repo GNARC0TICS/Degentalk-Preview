@@ -4,7 +4,7 @@
  * Provides consistent UUID mocking for tests in the UUID-first architecture
  */
 
-import type { UserId, ThreadId, PostId, MissionId, AchievementId } from '@shared/types/ids';
+import type { UserId, ThreadId, PostId, MissionId, AchievementId } from '../types/ids.js';
 
 /* eslint-disable @typescript-eslint/no-var-requires */
 

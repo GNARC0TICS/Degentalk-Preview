@@ -35,6 +35,7 @@ import './config/loadEnv'; // Ensures environment variables are loaded first
 
 // All other imports follow
 import express, { type Request, type Response, type NextFunction } from 'express';
+import { send } from './src/utils/response';
 import { createServer } from 'http';
 import { registerRoutes } from './routes';
 import { runScheduledTasks } from './utils/task-scheduler';
@@ -117,15 +118,14 @@ app.use(traceMiddleware);
 
 		// TEMP: Simple routes for debugging
 		app.get('/', (req, res) => {
-			res.json({
+			send(res, {
 				message: 'Degentalk API Server Running!',
-				status: 'ok',
-				timestamp: new Date().toISOString()
+				status: 'ok'
 			});
 		});
 
 		app.get('/api/health', (req, res) => {
-			res.json({ status: 'healthy', uptime: process.uptime() });
+			send(res, { status: 'healthy', uptime: process.uptime() });
 		});
 
 		// Register API routes
@@ -146,7 +146,7 @@ app.use(traceMiddleware);
 				logger.error('ExpressErrorHandler', err.stack);
 			}
 
-			res.status(status).json({ success: false, error: message });
+			sendErrorResponse(res, message, status);
 		});
 
 		// Pure API server - no client serving

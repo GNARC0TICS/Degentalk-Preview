@@ -78,9 +78,10 @@ export function ButtonTooltip({
 	const { sideOffset = 4, collisionPadding = 8, ...rest } = props;
 
 	// Make sure the child has necessary a11y attributes for buttons
+	const childProps = (children as React.ReactElement).props || {};
 	const enhancedChild = React.cloneElement(children, {
-		role: children.props.role || 'button',
-		tabIndex: children.props.tabIndex || 0
+		role: childProps.role || 'button',
+		tabIndex: childProps.tabIndex ?? 0
 	});
 
 	return (

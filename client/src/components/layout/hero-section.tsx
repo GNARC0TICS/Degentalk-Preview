@@ -7,7 +7,7 @@ import { uiConfig } from '@/config/ui.config';
 import type { HeroQuote } from '@/config/ui.config';
 
 // Fisher-Yates shuffle
-function shuffleArray<T>(array: T[]): T[] {
+function shuffleArray<T>(array: readonly T[]): T[] {
 	const arr = [...array];
 	for (let i = arr.length - 1; i > 0; i--) {
 		const j = Math.floor(Math.random() * (i + 1));
@@ -24,12 +24,12 @@ function shuffleArray<T>(array: T[]): T[] {
 export function HeroSection() {
 	const [currentQuoteIndex, setCurrentQuoteIndex] = useState(0);
 	const [shuffledQuotes, setShuffledQuotes] = useState<HeroQuote[]>(() =>
-		shuffleArray(uiConfig.heroQuotes)
+		shuffleArray([...uiConfig.heroQuotes])
 	);
 
 	useEffect(() => {
 		// Shuffle once per mount/session
-		setShuffledQuotes(shuffleArray(uiConfig.heroQuotes));
+		setShuffledQuotes(shuffleArray([...uiConfig.heroQuotes]));
 	}, []);
 
 	useEffect(() => {

@@ -12,7 +12,7 @@ import {
 	type SystemHealthParams,
 	type RealtimeAnalyticsParams,
 	type CacheOperationParams
-} from '../api/system-analytics.api.ts';
+} from '../api/system-analytics.api';
 import { toast } from 'sonner';
 
 // ============ QUERY KEYS ============

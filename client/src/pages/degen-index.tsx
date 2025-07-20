@@ -11,7 +11,7 @@ import { UserDirectoryTable } from '@/components/users/UserDirectoryTable';
 import { UserFilters } from '@/components/users/UserFilters';
 import { motion } from 'framer-motion';
 import type { UserId } from '@shared/types/ids';
-import { toId } from '@shared/utils/id';
+import { toId } from '@shared/types/index';
 
 export interface DegenUser {
 	id: UserId;

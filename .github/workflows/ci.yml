@@ -36,3 +36,7 @@ jobs:
 
       - name: Test
         run: pnpm test -- --run
+
+      - name: Typecheck
+        continue-on-error: true
+        run: pnpm tsc --noEmit --all

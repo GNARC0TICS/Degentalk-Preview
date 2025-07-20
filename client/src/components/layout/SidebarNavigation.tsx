@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { Link, useLocation, useRoute } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import {
 	Folder as DefaultFolderIcon,
 	MessageSquare,

@@ -134,24 +134,29 @@ const EnhancedButton = forwardRef<HTMLButtonElement, EnhancedButtonProps>(
 			}
 		};
 
+		const buttonProps = {
+			className: cn(
+				buttonVariants({ variant, size: adjustedSize, feedback, className }),
+				loading && 'cursor-not-allowed',
+				ripple && 'relative overflow-hidden',
+				// Enhanced focus styles for accessibility
+				'focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-900'
+			),
+			ref,
+			disabled: disabled || loading,
+			onClick: handleClick,
+			...props
+		};
+		
+		const motionProps = asChild ? {} : {
+			variants: motionVariants,
+			initial: "idle",
+			whileHover: !disabled && !loading ? 'hover' : 'idle',
+			whileTap: !disabled && !loading ? 'tap' : 'idle'
+		};
+
 		return (
-			<Comp
-				className={cn(
-					buttonVariants({ variant, size: adjustedSize, feedback, className }),
-					loading && 'cursor-not-allowed',
-					ripple && 'relative overflow-hidden',
-					// Enhanced focus styles for accessibility
-					'focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-900'
-				)}
-				ref={ref}
-				disabled={disabled || loading}
-				onClick={handleClick}
-				variants={motionVariants}
-				initial="idle"
-				whileHover={!disabled && !loading ? 'hover' : 'idle'}
-				whileTap={!disabled && !loading ? 'tap' : 'idle'}
-				{...props}
-			>
+			<Comp {...buttonProps} {...motionProps}>
 				{/* Ripple effect */}
 				{ripple && (
 					<span className="absolute inset-0 overflow-hidden rounded-[inherit]">

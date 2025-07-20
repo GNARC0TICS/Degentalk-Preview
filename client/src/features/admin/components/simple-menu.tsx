@@ -19,7 +19,7 @@ export default function SimpleMenu({ onItemClick }: SimpleMenuProps) {
 		return (
 			<Link
 				key={item.href}
-				href={item.href!}
+				to={item.href!}
 				onClick={onItemClick}
 				className={`flex items-center px-4 py-3 text-sm rounded transition-colors ${
 					isActive ? 'bg-emerald-500 text-white' : 'hover:bg-gray-800'

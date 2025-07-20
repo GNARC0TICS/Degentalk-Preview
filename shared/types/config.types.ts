@@ -1,4 +1,4 @@
-import type { UserId } from '@shared/types/ids';
+import type { UserId } from './ids.js';
 
 /**
  * Shared Configuration Types

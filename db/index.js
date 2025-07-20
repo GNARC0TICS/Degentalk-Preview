@@ -38,4 +38,3 @@ else {
 }
 export { pool, db };
 export * from './schema'; // optional: re-export schema for convenience
-//# sourceMappingURL=index.js.map

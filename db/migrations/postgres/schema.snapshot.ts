@@ -29,7 +29,7 @@ export const ticketStatus = pgEnum("ticket_status", ['open', 'pending', 'resolve
 export const tokenTypeAdminAirdrop = pgEnum("token_type_admin_airdrop", ['XP', 'DGT'])
 export const transactionStatus = pgEnum("transaction_status", ['pending', 'confirmed', 'failed', 'reversed', 'disputed'])
 export const transactionType = pgEnum("transaction_type", ['TIP', 'DEPOSIT', 'WITHDRAWAL', 'ADMIN_ADJUST', 'RAIN', 'AIRDROP', 'SHOP_PURCHASE', 'REWARD', 'REFERRAL_BONUS', 'FEE', 'VAULT_LOCK', 'VAULT_UNLOCK'])
-export const userRole = pgEnum("user_role", ['user', 'mod', 'admin'])
+export const userRole = pgEnum("user_role", ['user', 'moderator', 'admin'])
 export const vaultStatus = pgEnum("vault_status", ['locked', 'unlocked', 'pending_unlock'])
 export const withdrawalStatus = pgEnum("withdrawal_status", ['pending', 'approved', 'rejected'])
 
@@ -409,7 +409,7 @@ export const backupSettings = pgTable("backup_settings", {
 	maxScheduledBackups: integer("max_scheduled_backups").default(100),
 	requireApprovalForRestore: boolean("require_approval_for_restore").default(true),
 	allowedRestoreRoles: jsonb("allowed_restore_roles").default(["admin"]),
-	allowedBackupRoles: jsonb("allowed_backup_roles").default(["admin","mod"]),
+	allowedBackupRoles: jsonb("allowed_backup_roles").default(["admin","moderator"]),
 	defaultNotificationEmails: jsonb("default_notification_emails").default([]),
 	notifyOnLargeBackups: boolean("notify_on_large_backups").default(true),
 	largeBackupThresholdMb: integer("large_backup_threshold_mb").default(1000),

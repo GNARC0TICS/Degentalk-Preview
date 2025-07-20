@@ -40,7 +40,7 @@ import { useAuth } from '@/hooks/use-auth';
 import { cn } from '@/utils/utils';
 import { useSolveThread, useUnsolveThread } from '@/features/forum/hooks/useForumQueries';
 import type { ThreadId, PostId } from '@shared/types/ids';
-import { parseId, toId } from '@shared/utils/id';
+import { parseId, toId } from '@shared/types/index';
 
 interface ModeratorActionsProps {
 	type: 'thread' | 'post';
@@ -73,7 +73,7 @@ export function ModeratorActions({
 	const [moderatorNote, setModeratorNote] = useState('');
 
 	// Check if user is moderator or admin
-	const isModerator = user?.role === 'mod' || user?.role === 'admin';
+	const isModerator = user?.role === 'moderator' || user?.role === 'admin';
 
 	// Thread actions
 	const toggleLock = useMutation({

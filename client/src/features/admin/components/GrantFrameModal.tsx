@@ -15,7 +15,7 @@ import { apiRequest } from '@/utils/api-request';
 import { LoadingSpinner } from '@/components/ui/loader';
 import type { AvatarFrame } from '@/types/compat/avatar';
 import type { FrameId, UserId } from '@shared/types/ids';
-import { toId, parseId } from '@shared/utils/id';
+import { toId, parseId } from '@shared/types/index';
 
 interface Props {
 	frame: AvatarFrame | null;

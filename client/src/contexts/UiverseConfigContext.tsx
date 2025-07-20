@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import type { UiverseComponentsConfig } from '../../../config/uiverse-components.config.ts';
-import { defaultUiverseConfig, getCurrentSeason, getUserLevelConfig } from '../../../config/uiverse-components.config.ts';
+import type { UiverseComponentsConfig } from '../../../config/uiverse-components.config';
+import { defaultUiverseConfig, getCurrentSeason, getUserLevelConfig } from '../../../config/uiverse-components.config';
 import { useAuth } from '@/hooks/use-auth';
 
 interface UiverseConfigContextValue {

@@ -7,7 +7,7 @@ import { validateRequestBody, AdminOperationBoundary, formatAdminResponse } from
 
 const bulkRoleAssignmentSchema = z.object({
 	userIds: z.array(z.number()).min(1).max(100), // Limit to 100 users per operation
-	newRole: z.enum(['user', 'mod', 'admin']),
+	newRole: z.enum(['user', 'moderator', 'admin']),
 	reason: z.string().optional()
 });
 

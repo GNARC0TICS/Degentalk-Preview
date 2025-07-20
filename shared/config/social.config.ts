@@ -114,7 +114,7 @@ export const defaultSocialConfig: SocialConfig = {
 	mentions: {
 		enabled: true,
 		minLevel: 2,
-		allowedRoles: ['user', 'mod', 'admin'],
+		allowedRoles: ['user', 'moderator', 'admin'],
 		settings: {
 			// Mention detection
 			mentionTrigger: '@',
@@ -139,7 +139,7 @@ export const defaultSocialConfig: SocialConfig = {
 	whaleWatch: {
 		enabled: true,
 		minLevel: 1,
-		allowedRoles: ['user', 'mod', 'admin'],
+		allowedRoles: ['user', 'moderator', 'admin'],
 		settings: {
 			// Following limits
 			maxFollowing: 1000,
@@ -166,7 +166,7 @@ export const defaultSocialConfig: SocialConfig = {
 	friends: {
 		enabled: true,
 		minLevel: 1,
-		allowedRoles: ['user', 'mod', 'admin'],
+		allowedRoles: ['user', 'moderator', 'admin'],
 		settings: {
 			// Friend limits
 			maxFriends: 500,
@@ -238,7 +238,7 @@ export class SocialConfigHelper {
 		// Check level requirements
 		if (featureConfig.minLevel && userLevel < featureConfig.minLevel) {
 			// Check if user has override roles
-			const overrideRoles = ['mod', 'admin'];
+			const overrideRoles = ['moderator', 'admin'];
 			if (!overrideRoles.some((role) => userRoles.includes(role))) {
 				return false;
 			}
@@ -261,7 +261,7 @@ export class SocialConfigHelper {
 	): boolean {
 		const thresholds = config.whaleWatch.settings.whaleThresholds;
 
-		return (
+		return !!(
 			(user.dgtBalance && user.dgtBalance >= thresholds.dgtBalance) ||
 			(user.level && user.level >= thresholds.level) ||
 			(user.postCount && user.postCount >= thresholds.postCount) ||
@@ -284,7 +284,7 @@ export class SocialConfigHelper {
 			};
 		}
 
-		if (userRoles.includes('mod')) {
+		if (userRoles.includes('moderator')) {
 			return {
 				mentionsPerHour: baseLimits.mentionsPerHour * 3,
 				followsPerHour: baseLimits.followsPerHour * 3,

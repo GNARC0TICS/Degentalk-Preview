@@ -170,7 +170,8 @@ export const ForumThemeProvider: React.FC<{
 				const remoteThemes = await apiRequest<
 					Record<string, Partial<ThemeSettings & { icon?: string; hexColor?: string }>>
 				>({
-					url: UI_THEMES_ENDPOINT
+					url: UI_THEMES_ENDPOINT,
+					method: 'GET'
 				});
 
 				if (remoteThemes) {

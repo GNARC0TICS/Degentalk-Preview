@@ -37,7 +37,7 @@ export const ForumBreadcrumbs: React.FC<ForumBreadcrumbsProps> = ({ items, class
 					) : (
 						// Clickable items
 						<Link
-							href={item.href}
+							to={item.href}
 							className="flex items-center hover:text-white transition-colors"
 							aria-label={typeof item.label === 'string' ? item.label : undefined}
 						>

@@ -16,7 +16,7 @@ async function main() {
   console.log(chalk.bold.magenta('🔄 Migrating legacy users to roles…'));
 
   const adminRoleId = await ensureRole('admin', { name: 'Admin', rank: 90, xpMultiplier: 2, permissions: ['*'], isSystemRole: true, isAdmin: true, isStaff: true });
-  const modRoleId = await ensureRole('mod', { name: 'Moderator', rank: 80, xpMultiplier: 1.1, permissions: ['moderation:*'], isSystemRole: true, isModerator: true, isStaff: true });
+  const modRoleId = await ensureRole('moderator', { name: 'Moderator', rank: 80, xpMultiplier: 1.1, permissions: ['moderation:*'], isSystemRole: true, isModerator: true, isStaff: true });
   const defaultRoleId = await ensureRole('default', { name: 'Member', rank: 10, xpMultiplier: 1.0, permissions: [] });
 
   const users = await db.select({ id: usersTable.id, roleEnum: usersTable.role, primaryRoleId: usersTable.primaryRoleId }).from(usersTable);
@@ -28,7 +28,7 @@ async function main() {
     if (user.roleEnum === 'admin') {
       targetRoleId = adminRoleId;
       adminCount++;
-    } else if (user.roleEnum === 'mod') {
+    } else if (user.roleEnum === 'moderator') {
       targetRoleId = modRoleId;
       modCount++;
     } else {

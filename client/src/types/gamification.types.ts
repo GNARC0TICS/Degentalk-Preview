@@ -4,7 +4,7 @@
  */
 
 import type { UserId } from '@shared/types/ids';
-import type { StandardApiResponse } from './core.types.ts';
+import type { StandardApiResponse } from './core.types';
 
 // Achievement System
 export interface Achievement {

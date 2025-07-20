@@ -1,4 +1,4 @@
-import type { UserId } from '@shared/types/ids';
+import type { UserId } from '../../types/ids.js';
 
 export interface CreateMentionsIndexParams {
 	sourceType: 'thread' | 'post' | 'shout';

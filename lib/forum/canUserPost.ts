@@ -2,7 +2,7 @@ import { getForumRules } from './getForumRules';
 
 export type User = {
 	id: string;
-	role: 'user' | 'mod' | 'admin';
+	role: 'user' | 'moderator' | 'admin';
 	level?: number;
 	isRegistered?: boolean;
 };
@@ -18,8 +18,8 @@ export function canUserPost(forumSlug: string, user: User): boolean {
 			return !!user.isRegistered;
 		case 'level_10+':
 			return (user.level ?? 0) >= 10;
-		case 'mod':
-			return user.role === 'mod' || user.role === 'admin';
+		case 'moderator':
+			return user.role === 'moderator' || user.role === 'admin';
 		case 'admin':
 			return user.role === 'admin';
 		default:

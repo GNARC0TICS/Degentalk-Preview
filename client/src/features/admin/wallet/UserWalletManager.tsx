@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import UserSearchForm from './components/UserSearchForm';
-import { useUserFinancialProfile } from './hooks/useUserFinancialProfile.ts';
+import { useUserFinancialProfile } from './hooks/useUserFinancialProfile';
 import BalanceCard from './components/BalanceCard';
 import ManualCreditForm from './components/ManualCreditForm';
 import ManualDebitForm from './components/ManualDebitForm';

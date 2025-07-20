@@ -201,7 +201,7 @@ export default function CreateThreadPage() {
 											) : (
 												<BreadcrumbLink asChild>
 													<Link
-														href={item.href}
+														to={item.href}
 														className="flex items-center gap-2 text-zinc-400 hover:text-white transition-colors"
 													>
 														<Icon className="h-4 w-4" />

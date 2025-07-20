@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { getUserPermissions } from '@/utils/roles';
 import type { Role } from '@/utils/roles';
 import type { UserId, FrameId } from '@shared/types/ids';
-import { toId } from '@shared/utils/id';
+import { toId } from '@shared/types/index';
 import { setAuthToken, removeAuthToken } from '@/utils/auth-token';
 
 // Define user type

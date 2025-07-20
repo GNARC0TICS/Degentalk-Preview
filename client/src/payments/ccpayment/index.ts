@@ -7,7 +7,7 @@ import { type OrderId } from '@shared/types/ids';
  */
 
 // Export client
-export { CCPaymentClient, ccpaymentClient } from './ccpayment-client.ts';
+export { CCPaymentClient, ccpaymentClient } from './ccpayment-client';
 
 // Export deposit functionality
 export {
@@ -15,7 +15,7 @@ export {
 	checkDepositStatus,
 	type CreateDepositParams,
 	type DepositResponse
-} from './deposit.ts';
+} from './deposit';
 
 // Export withdrawal functionality
 export {
@@ -24,10 +24,10 @@ export {
 	validateWithdrawal,
 	type CreateWithdrawalParams,
 	type WithdrawalResponse
-} from './withdraw.ts';
+} from './withdraw';
 
 // Export swap functionality
-export { createSwap, getExchangeRates, type CreateSwapParams, type SwapResponse } from './swap.ts';
+export { createSwap, getExchangeRates, type CreateSwapParams, type SwapResponse } from './swap';
 
 // Export utility functions
 export {
@@ -35,7 +35,7 @@ export {
 	verifyWebhookSignature,
 	formatTransactionStatus,
 	generateOrderId
-} from './utils.ts';
+} from './utils';
 
 // Export types
 export {
@@ -46,4 +46,4 @@ export {
 	type CCPaymentWebhookEvent,
 	type SupportedCurrency,
 	CCPaymentTransactionStatus
-} from './types.ts';
+} from './types';

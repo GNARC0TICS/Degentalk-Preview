@@ -10,7 +10,7 @@ import {
 	type CampaignRule,
 	type AdGovernanceProposal
 } from '@schema';
-import { users } from '@schema/users';
+import { users } from '@schema/user/users';
 import { logger } from '@core/logger';
 
 export interface PlacementConfiguration {

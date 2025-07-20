@@ -95,12 +95,12 @@ export function WalletSheet({ isOpen, onOpenChange }: WalletSheetProps) {
 		}
 	};
 
-	// Prepare data for wallet display by typecasting to match the expected interface
-	const walletDataWithDefaults = {
-		walletBalanceUSDT: (balance as any)?.walletBalanceUSDT || 0,
-		dgtPoints: (balance as any)?.dgtPoints || 0,
-		pendingWithdrawals: (balance as any)?.walletPendingWithdrawals || [],
-		walletAddress: (balance as any)?.walletAddress || ''
+	// Prepare data for wallet display
+	const walletDataWithDefaults: WalletBalanceData = {
+		walletBalanceUSDT: balance?.walletBalanceUSDT ?? 0,
+		dgtPoints: balance?.dgtPoints ?? 0,
+		pendingWithdrawals: balance?.walletPendingWithdrawals ?? [],
+		walletAddress: balance?.walletAddress ?? ''
 	};
 
 	// Calculate responsive values

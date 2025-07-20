@@ -20,10 +20,10 @@ export function MobileNav({ isOpen, onClose, onLogout }: MobileNavProps) {
 
 	const isAuthenticated = authStatus !== 'guest' && authStatus !== 'loading';
 	const userRoles = user?.isAdmin
-		? (['admin', 'mod', 'user'] as const)
+		? (['admin', 'moderator', 'user'] as ('admin' | 'moderator' | 'user')[])
 		: user?.isModerator
-			? (['mod', 'user'] as const)
-			: (['user'] as const);
+			? (['moderator', 'user'] as ('admin' | 'moderator' | 'user')[])
+			: (['user'] as ('admin' | 'moderator' | 'user')[]);
 
 	const visibleNavigation = filterNavItems(primaryNavigation, isAuthenticated, userRoles);
 

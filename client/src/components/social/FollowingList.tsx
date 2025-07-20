@@ -44,7 +44,7 @@ export function FollowingList({ userId, isCurrentUser = false, className }: Foll
 							</Avatar>
 
 							<Link
-								href={`/profile/${u.username}`}
+								to={`/profile/${u.username}`}
 								className="font-medium text-zinc-200 hover:text-emerald-400 transition-colors truncate"
 							>
 								{u.username}

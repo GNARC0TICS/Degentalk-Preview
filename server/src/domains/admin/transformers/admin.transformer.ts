@@ -8,7 +8,7 @@
 import type { AdminId, UserId, DgtAmount } from '@shared/types/ids';
 import { createHash } from 'crypto';
 import { logger } from '@core/logger';
-import { toId } from '@shared/utils/id';
+import { toId } from '@shared/types';
 
 // Admin Dashboard Interfaces
 export interface AdminDashboardStats {

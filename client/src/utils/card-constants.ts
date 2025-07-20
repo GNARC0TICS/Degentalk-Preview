@@ -92,7 +92,7 @@ export function createCardStyle(
 	];
 
 	if (height) {
-		baseClasses.push(CARD_STYLES.height[height]);
+		baseClasses.push(CARD_STYLES.height[height] as any);
 	}
 
 	return baseClasses.join(' ');

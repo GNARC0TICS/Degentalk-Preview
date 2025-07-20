@@ -1,10 +1,10 @@
 import { useUserCosmetics } from '@/hooks/useUserCosmetics';
 import { useUserXP } from '@/hooks/useUserXP';
 import type { UserId, RoleId } from '@shared/types/ids';
-import { parseId, toId } from '@shared/utils/id';
+import { parseId, toId } from '@shared/types/index';
 
 interface BaseUser {
-	id: string;
+	id: UserId;
 	username: string;
 	roles?: Array<{ id: RoleId; name: string; hexColor?: string | null }>;
 	level?: number;
@@ -42,9 +42,7 @@ export function useIdentityDisplay(
 	user: BaseUser | Partial<BaseUser> | null | undefined
 ): IdentityDisplay | null {
 	const { cosmetics } = useUserCosmetics(user?.id);
-	const { data: xpData } = useUserXP(
-		user?.id ? parseId<'UserId'>(user.id) || toId<'UserId'>(user.id) : undefined
-	);
+	const { data: xpData } = useUserXP(user?.id);
 
 	if (!user || !user.username) return null;
 

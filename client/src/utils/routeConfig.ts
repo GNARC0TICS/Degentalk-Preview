@@ -1,4 +1,4 @@
-import type { Role } from './roles.ts';
+import type { Role } from './roles';
 
 export interface RouteConfig {
 	path: string;

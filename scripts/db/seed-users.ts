@@ -7,7 +7,7 @@ import { sql } from 'drizzle-orm';
 import { logger } from '../../server/src/core/logger';
 
 // Define types for clarity and stricter type checking for mockUsers
-type UserRole = 'admin' | 'mod' | 'user';
+type UserRole = 'admin' | 'moderator' | 'user';
 type UserSeedData = {
   username: string;
   email: string;
@@ -61,7 +61,7 @@ export async function seedUsers() {
       username: 'degenmod',
       email: 'mod@degentalk.dev',
       password: passwordHash,
-      role: 'mod',
+      role: 'moderator',
       xp: 25000,
       clout: 2500,
       level: 50,

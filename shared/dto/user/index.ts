@@ -4,4 +4,4 @@ export type {
 	AuthenticatedUserSelfDTO,
 	UserProfileDTO,
 	AdminUserDetailDTO
-} from './UserDTO';
+} from './UserDTO.js';

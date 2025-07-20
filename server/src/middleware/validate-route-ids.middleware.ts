@@ -13,7 +13,7 @@
  */
 
 import type { Request, Response, NextFunction } from 'express';
-import { isValidId } from '@shared/utils/id';
+import { isValidId } from '@shared/types';
 import { logger } from '@core/logger';
 import { sendErrorResponse } from '@core/utils/transformer.helpers';
 import { securityMonitor } from '@core/security/security-monitor.service';

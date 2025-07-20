@@ -1,2 +1,2 @@
-export * from './useActiveUsers.ts';
-export { default as useActiveUsers } from './useActiveUsers.ts';
+export * from './useActiveUsers';
+export { default as useActiveUsers } from './useActiveUsers';

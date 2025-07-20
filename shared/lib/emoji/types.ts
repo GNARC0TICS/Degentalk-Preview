@@ -1,4 +1,4 @@
-import type { EmojiPackId, UserId } from '@shared/types/ids';
+import type { EmojiPackId, UserId } from '../../types/ids.js';
 
 export interface UnlockEmojiPackParams {
 	userId: UserId;

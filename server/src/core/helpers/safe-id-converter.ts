@@ -11,7 +11,7 @@
  * - Maintain type safety with branded IDs
  */
 
-import { toId, isValidId } from '@shared/utils/id';
+import { toId, isValidId } from '@shared/types';
 import type {
 	UserId,
 	ThreadId,

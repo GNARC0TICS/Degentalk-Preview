@@ -3,8 +3,8 @@
  * Supports both object-based config and legacy string URL
  */
 
-import { extractApiData, isStandardApiResponse } from './api-response.ts';
-import { getAuthToken } from './auth-token.ts';
+import { extractApiData, isStandardApiResponse } from './api-response';
+import { getAuthToken } from './auth-token';
 
 export interface ApiError extends Error {
 	status?: number | undefined;
@@ -33,7 +33,14 @@ export async function apiRequest<T = unknown>(
 ): Promise<T> {
 	// Handle both object config and legacy string URL
 	const config: ApiRequestConfig =
-		typeof configOrUrl === 'string' ? { url: configOrUrl, method: 'GET', ...options } : configOrUrl;
+		typeof configOrUrl === 'string' 
+			? { 
+				url: configOrUrl, 
+				method: (options.method as ApiRequestConfig['method']) || 'GET',
+				...(options.body ? { data: options.body } : {}),
+				headers: options.headers as Record<string, string> | undefined
+			} 
+			: configOrUrl;
 
 	// Build URL with query parameters
 	let url = config.url;

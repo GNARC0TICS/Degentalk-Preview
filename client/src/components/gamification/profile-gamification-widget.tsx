@@ -9,7 +9,7 @@
  */
 
 import { cn } from '@/utils/utils';
-import { useRouter } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
@@ -32,7 +32,7 @@ export function ProfileGamificationWidget({
 	isOwnProfile = false,
 	className
 }: ProfileGamificationWidgetProps) {
-	const router = useRouter();
+	const navigate = useNavigate();
 
 	// Calculate days until next level
 	const getDaysToNextLevel = () => {
@@ -54,7 +54,7 @@ export function ProfileGamificationWidget({
 						Gamification Stats
 					</span>
 					{isOwnProfile && (
-						<Button variant="ghost" size="sm" onClick={() => router.push('/progress')}>
+						<Button variant="ghost" size="sm" onClick={() => navigate('/progress')}>
 							View All
 							<ChevronRight className="w-4 h-4 ml-1" />
 						</Button>
@@ -178,12 +178,12 @@ export function ProfileGamificationWidget({
 						<Button
 							variant="outline"
 							size="sm"
-							onClick={() => router.push('/progress?tab=achievements')}
+							onClick={() => navigate('/progress?tab=achievements')}
 						>
 							<Trophy className="w-3 h-3 mr-1" />
 							Achievements
 						</Button>
-						<Button variant="outline" size="sm" onClick={() => router.push('/missions')}>
+						<Button variant="outline" size="sm" onClick={() => navigate('/missions')}>
 							<Target className="w-3 h-3 mr-1" />
 							Missions
 						</Button>

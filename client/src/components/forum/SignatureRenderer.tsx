@@ -44,18 +44,16 @@ export function SignatureRenderer({
 		],
 		ALLOWED_ATTR: ['href', 'src', 'alt', 'title', 'class', 'style', 'target', 'rel'],
 		ALLOW_DATA_ATTR: false,
-		ADD_ATTR: ['target'],
 		// Force external links to open in new tab
-		HOOK_ATTRIBUTES: {
-			a: function (node) {
-				const href = node.getAttribute('href');
-				if (href && (href.startsWith('http') || href.startsWith('//'))) {
+		HOOKS: {
+			afterSanitizeAttributes: function (node: Element) {
+				if ('href' in node) {
 					node.setAttribute('target', '_blank');
 					node.setAttribute('rel', 'noopener noreferrer');
 				}
 			}
 		}
-	});
+	} as any);
 
 	return (
 		<div className={`border-t border-zinc-800/30 pt-3 mt-3 ${className}`}>

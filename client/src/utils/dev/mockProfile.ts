@@ -1,5 +1,6 @@
 import type { ProfileData } from '@/types/profile';
 import type { BadgeId, FrameId, TitleId } from '@shared/types/ids';
+import { toUserId } from '@shared/types/ids';
 
 /**
  * Generates mock `ProfileData` for local development.
@@ -7,7 +8,7 @@ import type { BadgeId, FrameId, TitleId } from '@shared/types/ids';
  */
 export function generateMockProfile(username: string): ProfileData {
 	return {
-		id: 'mock-user',
+		id: toUserId('550e8400-e29b-41d4-a716-446655440000'),
 		username,
 		avatarUrl: 'https://i.pravatar.cc/300',
 		role: 'Developer',

@@ -1,4 +1,4 @@
-import type { UserId, TransactionId } from '@shared/types/ids';
+import type { UserId, TransactionId } from '../ids.js';
 
 /**
  * Transaction type categories

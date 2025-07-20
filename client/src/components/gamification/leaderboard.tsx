@@ -34,7 +34,7 @@ import {
 	ChevronDown
 } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { useRouter } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import type { LeaderboardEntry } from '@/features/gamification/services/gamification-api.service';
 import type { UserId } from '@shared/types/ids';
 
@@ -53,7 +53,7 @@ export function Leaderboard({
 	onTypeChange,
 	className
 }: LeaderboardProps) {
-	const router = useRouter();
+	const navigate = useNavigate();
 	const [expandedRows, setExpandedRows] = useState<Set<UserId>>(new Set());
 
 	// Get rank icon based on position
@@ -164,7 +164,7 @@ export function Leaderboard({
 											getRankStyle(index + 1),
 											currentUserId === entry.userId && 'ring-2 ring-purple-500'
 										)}
-										onClick={() => router.push(`/user/${entry.username}`)}
+										onClick={() => navigate(`/user/${entry.username}`)}
 									>
 										{/* Rank badge */}
 										<div className="absolute top-2 right-2">{getRankIcon(index + 1)}</div>

@@ -8,7 +8,7 @@
 export * from './components';
 
 // Services
-export * from './services/wallet-api.service.ts';
+export * from './services/wallet-api.service';
 
 // Re-export types for convenience
 export type {

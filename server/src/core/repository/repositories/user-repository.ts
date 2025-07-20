@@ -216,7 +216,7 @@ export class UserRepository extends BaseRepository<User> implements IUserReposit
 			});
 		}
 
-		if (data.role !== undefined && !['user', 'mod', 'admin', 'banned'].includes(data.role)) {
+		if (data.role !== undefined && !['user', 'moderator', 'admin', 'banned'].includes(data.role)) {
 			throw new RepositoryError('Invalid user role', 'VALIDATION_ERROR', 400, {
 				field: 'role',
 				value: data.role

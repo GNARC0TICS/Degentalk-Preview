@@ -167,7 +167,7 @@ export const backupSettings = pgTable('backup_settings', {
 	// Security and permissions
 	requireApprovalForRestore: boolean('require_approval_for_restore').default(true),
 	allowedRestoreRoles: jsonb('allowed_restore_roles').default('["admin"]'), // Array of role names
-	allowedBackupRoles: jsonb('allowed_backup_roles').default('["admin", "mod"]'),
+	allowedBackupRoles: jsonb('allowed_backup_roles').default('["admin", "moderator"]'),
 	// Notification settings
 	defaultNotificationEmails: jsonb('default_notification_emails').default('[]'),
 	notifyOnLargeBackups: boolean('notify_on_large_backups').default(true),

@@ -35,15 +35,15 @@ export function DisplayPreferences({ user }: DisplayPreferencesProps) {
 	});
 
 	useEffect(() => {
-		if (userSettings?.display) {
+		if ((userSettings as any)?.display) {
 			setFormData({
-				theme: userSettings.display.theme || 'system',
-				fontSize: userSettings.display.fontSize || 'medium',
-				threadDisplayMode: userSettings.display.threadDisplayMode || 'card',
-				reducedMotion: userSettings.display.reducedMotion || false,
-				hideNsfw: userSettings.display.hideNsfw || true,
-				showMatureContent: userSettings.display.showMatureContent || false,
-				showOfflineUsers: userSettings.display.showOfflineUsers || true
+				theme: (userSettings as any).display.theme || 'system',
+				fontSize: (userSettings as any).display.fontSize || 'medium',
+				threadDisplayMode: (userSettings as any).display.threadDisplayMode || 'card',
+				reducedMotion: (userSettings as any).display.reducedMotion || false,
+				hideNsfw: (userSettings as any).display.hideNsfw || true,
+				showMatureContent: (userSettings as any).display.showMatureContent || false,
+				showOfflineUsers: (userSettings as any).display.showOfflineUsers || true
 			});
 		}
 	}, [userSettings]);

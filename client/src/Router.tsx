@@ -10,7 +10,6 @@ import AuthPage from './pages/auth';
 import ForumsPage from './pages/forums';
 import ForumBySlugPage from './pages/forums/[forumSlug]';
 import ForumSearchPage from './pages/forums/search';
-import ThreadPage from './pages/threads/BBCodeThreadPage';
 import CreateThreadPage from './pages/threads/create';
 import ShopPage from './pages/shop';
 import LeaderboardPage from './pages/leaderboard';
@@ -42,9 +41,6 @@ import ReferralsPage from './pages/referrals/index';
 import InvitePage from './pages/invite/[code]';
 import PreferencesPage from './pages/preferences/index';
 import UIPlaygroundPage from './pages/ui-playground';
-
-// Legacy Navigate Component
-import LegacyForumNavigate from '@/components/forum/LegacyForumNavigate';
 
 /**
  * Main Router Configuration
@@ -80,24 +76,11 @@ export const router = createBrowserRouter([
         element: <ProtectedRoute><ForumSearchPage /></ProtectedRoute> 
       },
 
-      // Legacy redirects from old /zones/ structure
-      { path: 'zones/:zoneSlug/:forumSlug/:subforumSlug', element: <ForumBySlugPage /> },
-      { path: 'zones/:zoneSlug/:forumSlug', element: <ForumBySlugPage /> },
-      { 
-        path: 'zones/:slug', 
-        element: <ProtectedRoute><LegacyForumNavigate /></ProtectedRoute> 
-      },
-      { 
-        path: 'zones', 
-        element: <ProtectedRoute><LegacyForumNavigate /></ProtectedRoute> 
-      },
-
       // Thread Routes
       { 
         path: 'threads/create', 
         element: <ProtectedRoute><CreateThreadPage /></ProtectedRoute> 
       },
-      { path: 'threads/:slug', element: <ThreadPage /> },
 
       // Shop Routes
       { 

@@ -1,8 +1,8 @@
 import React from 'react';
 import type { LucideIcon } from 'lucide-react';
 import Player from 'react-lottie-player';
-import { iconMap, type IconKey } from './iconMap.config.ts';
-import type { Theme } from './types.ts';
+import { iconMap, type IconKey } from './iconMap.config';
+import type { Theme } from './types';
 
 export interface IconRendererProps extends React.SVGProps<SVGSVGElement> {
 	icon: IconKey;
@@ -54,7 +54,7 @@ export const IconRenderer: React.FC<IconRendererProps> = ({
 	}
 
 	// 1. Theme variant or default lucide icon
-	const variant = config.themeVariants?.[theme];
+	const variant = (config as any).themeVariants?.[theme];
 	if (variant) {
 		if (isLucideIcon(variant)) {
 			const Lucide = variant;
@@ -66,18 +66,18 @@ export const IconRenderer: React.FC<IconRendererProps> = ({
 		}
 	}
 
-	if (config.lucide) {
-		const Lucide = config.lucide;
+	if ((config as any).lucide) {
+		const Lucide = (config as any).lucide;
 		return <Lucide width={size} height={size} {...rest} />;
 	}
 
 	// 2. Lottie animation (requires lottie-player web component globally available)
-	if (config.lottie) {
+	if ((config as any).lottie) {
 		return (
 			<Player
 				autoplay
 				loop
-				src={config.lottie}
+				src={(config as any).lottie}
 				style={{ width: size, height: size }}
 				{...(rest as any)}
 			/>
@@ -85,18 +85,18 @@ export const IconRenderer: React.FC<IconRendererProps> = ({
 	}
 
 	// 3. SVG fallback
-	if (config.fallbackSvg) {
+	if ((config as any).fallbackSvg) {
 		const imgProps = getImgProps(rest);
 		return (
-			<img src={config.fallbackSvg} width={size} height={size} alt={`${icon}-icon`} {...imgProps} />
+			<img src={(config as any).fallbackSvg} width={size} height={size} alt={`${icon}-icon`} {...imgProps} />
 		);
 	}
 
 	// 4. PNG fallback
-	if (config.fallbackPng) {
+	if ((config as any).fallbackPng) {
 		const imgProps = getImgProps(rest);
 		return (
-			<img src={config.fallbackPng} width={size} height={size} alt={`${icon}-icon`} {...imgProps} />
+			<img src={(config as any).fallbackPng} width={size} height={size} alt={`${icon}-icon`} {...imgProps} />
 		);
 	}
 

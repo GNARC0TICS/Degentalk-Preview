@@ -1,4 +1,4 @@
-import type { UserId } from './types/ids';
+import type { UserId } from './types/ids.js';
 
 // Unified Wallet System Configuration
 // Consolidated from 3 separate configs for single source of truth

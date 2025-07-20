@@ -48,7 +48,7 @@ const UserActivityPage: React.FC = () => {
 					<h2 className="text-xl font-semibold mb-2 text-yellow-800">Invalid User ID</h2>
 					<p className="text-yellow-600">Please provide a valid user ID.</p>
 					<Link
-						href="/admin/activity"
+						to="/admin/activity"
 						className="mt-4 inline-block px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
 					>
 						Back to All Activities

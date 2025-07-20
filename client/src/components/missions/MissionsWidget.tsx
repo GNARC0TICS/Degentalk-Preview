@@ -1,5 +1,5 @@
 import React from 'react';
-import { useLocation, useRouter } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useMissions } from '@/hooks/useMissions';
 import {
 	Card,
@@ -22,7 +22,7 @@ import { cn } from '@/utils/utils';
  */
 export function MissionsWidget() {
 	const { missionsWithProgress, isLoading, getDailyMissions, getWeeklyMissions } = useMissions();
-	const router = useRouter();
+	const navigate = useNavigate();
 
 	// Skip rendering if still loading or no data
 	if (isLoading || !missionsWithProgress) {
@@ -66,7 +66,7 @@ export function MissionsWidget() {
 
 	// Navigation to missions page
 	const goToMissions = () => {
-		router.push('/missions');
+		navigate('/missions');
 	};
 
 	return (

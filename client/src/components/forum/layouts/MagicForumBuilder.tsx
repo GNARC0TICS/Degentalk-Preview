@@ -129,10 +129,13 @@ const MagicForumBuilder = memo(
 			setConfig((prev) => ({ ...prev, ...updates }));
 		}, []);
 
-		const updateNestedConfig = useCallback((path: keyof ForumLayoutConfig, updates: any) => {
+		const updateNestedConfig = useCallback(<K extends keyof ForumLayoutConfig>(
+			path: K, 
+			updates: Partial<ForumLayoutConfig[K]>
+		) => {
 			setConfig((prev) => ({
 				...prev,
-				[path]: { ...prev[path], ...updates }
+				[path]: Object.assign({}, prev[path], updates)
 			}));
 		}, []);
 
@@ -445,7 +448,7 @@ const MagicForumBuilder = memo(
 															variant={config.layout === layoutType ? 'default' : 'ghost'}
 															size="sm"
 															className="h-16 flex flex-col gap-1"
-															onClick={() => updateConfig({ layout: layoutType as any })}
+															onClick={() => updateConfig({ layout: layoutType as ForumLayoutConfig['layout'] })}
 														>
 															<Icon className="w-4 h-4" />
 															<span className="text-xs capitalize">{layoutType}</span>
@@ -484,7 +487,7 @@ const MagicForumBuilder = memo(
 												<Label className="text-xs text-zinc-300">Card Variant</Label>
 												<Select
 													value={config.cardVariant}
-													onValueChange={(value) => updateConfig({ cardVariant: value as any })}
+													onValueChange={(value) => updateConfig({ cardVariant: value as ForumLayoutConfig['cardVariant'] })}
 												>
 													<SelectTrigger className="mt-2 bg-zinc-800/50 border-zinc-700/50">
 														<SelectValue />
@@ -526,7 +529,7 @@ const MagicForumBuilder = memo(
 												<Select
 													value={config.theme.backgroundStyle}
 													onValueChange={(value) =>
-														updateNestedConfig('theme', { backgroundStyle: value })
+														updateNestedConfig('theme', { backgroundStyle: value as 'solid' | 'gradient' | 'blur' })
 													}
 												>
 													<SelectTrigger className="mt-2 bg-zinc-800/50 border-zinc-700/50">
@@ -628,7 +631,7 @@ const MagicForumBuilder = memo(
 														<Select
 															value={config.animations.type}
 															onValueChange={(value) =>
-																updateNestedConfig('animations', { type: value })
+																updateNestedConfig('animations', { type: value as 'slide' | 'fade' | 'scale' | 'bounce' })
 															}
 														>
 															<SelectTrigger className="mt-2 bg-zinc-800/50 border-zinc-700/50">

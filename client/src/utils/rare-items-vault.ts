@@ -427,7 +427,7 @@ export const vaultColors: VaultColor[] = [
 		dgtPrice: 700,
 		usdtPrice: 7.0,
 		colorValue: '#9c27b0',
-		colorAnimation: 'glow',
+		colorAnimation: 'pulse' as const,
 		tags: ['premium', 'royal']
 	},
 	{
@@ -691,7 +691,7 @@ export function getItemsByXpRequirement(minXp: number, maxXp: number) {
 
 	return allItems.filter(
 		(item) =>
-			item.xpRequirement !== undefined && item.xpRequirement >= minXp && item.xpRequirement <= maxXp
+			(item as any).xpRequirement !== undefined && (item as any).xpRequirement >= minXp && (item as any).xpRequirement <= maxXp
 	);
 }
 

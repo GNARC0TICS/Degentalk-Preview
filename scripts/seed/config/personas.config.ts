@@ -22,7 +22,7 @@ export interface PersonaCosmetics {
 export interface Persona {
 	username: string;
 	email: string;
-	role: 'admin' | 'mod' | 'user';
+	role: 'admin' | 'moderator' | 'user';
 	personality: string;
 	bio: string;
 	stats: {
@@ -82,7 +82,7 @@ export const personas: Record<string, Persona> = {
 	mod_karen: {
 		username: 'ModKaren',
 		email: 'karen@degentalk.com',
-		role: 'mod',
+		role: 'moderator',
 		personality: 'strict_enforcer',
 		bio: '🚨 Head of Fun Police | Zero tolerance for rule breakers | "I\'d like to speak to your manager"',
 		stats: {
@@ -402,7 +402,7 @@ export const personas: Record<string, Persona> = {
 /**
  * Helper to get personas by category
  */
-export function getPersonasByRole(role: 'admin' | 'mod' | 'user'): Persona[] {
+export function getPersonasByRole(role: 'admin' | 'moderator' | 'user'): Persona[] {
 	return Object.values(personas).filter(p => p.role === role);
 }
 

@@ -3,11 +3,24 @@
 	"compilerOptions": {
 		"composite": true,
 		"declaration": true,
+		"emitDeclarationOnly": true,
+		"allowImportingTsExtensions": true,
 		"outDir": "dist",
-		"rootDir": ".",
 		"module": "NodeNext",
 		"moduleResolution": "NodeNext",
-		"types": ["node"]
+		"types": ["node"],
+		"baseUrl": "./",
+		"paths": {
+			"@schema": ["shims/schema.d.ts"],
+			"@schema/*": ["shims/schema.d.ts"],
+			"@db": ["shims/db.d.ts"],
+			"@db/*": ["shims/db.d.ts"]
+		}
 	},
-	"include": ["lib", "types", "config", "utils", "economy", "enums", "signature", "dto", "validation", "validators", "fixtures", "test-utils", "admin-core", "transformers", "*.ts"]
+	"include": [
+		"**/*.ts",
+		"**/*.tsx",
+		"shims/**/*.d.ts"
+	],
+	"exclude": ["../db/**/*", "dist/**/*"]
 }

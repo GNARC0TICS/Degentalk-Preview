@@ -1,7 +1,7 @@
 {
 	"compilerOptions": {
 		"incremental": true,
-		"tsBuildInfoFile": "./.tscache/.tsbuildinfo",
+		"tsBuildInfoFile": "./.tscache/root.tsbuildinfo",
 		"noEmit": true,
 		"module": "ESNext",
 		"target": "ES2022",

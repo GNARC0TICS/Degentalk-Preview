@@ -8,6 +8,7 @@ import { Router, type Request, type Response } from 'express'
 import type { Router as RouterType } from 'express';
 import { settingsService } from '@core/services/settings.service';
 import { logger } from '@core/logger';
+import { send } from '@server-utils/response';
 import { isAuthenticated } from '@server/domains/auth/middleware/auth.middleware';
 import { getAuthenticatedUser } from '@server/utils/request-user';
 import { hasPermission } from '@lib/auth/permissions';
@@ -48,11 +49,7 @@ router.get('/', isAuthenticated, async (req: Request, res: Response) => {
 
 		const settings = await settingsService.getWalletSettings();
 		const transformedSettings = toAdminWalletSettings(settings);
-
-		res.json({
-			success: true,
-			data: transformedSettings
-		});
+		send(res, transformedSettings);
 	} catch (error) {
 		logger.error('Error getting wallet settings', { error });
 		res.status(error instanceof WalletError ? error.statusCode : 500).json({
@@ -94,9 +91,8 @@ router.patch(
 				newSettings
 			});
 
-			res.json({
-				success: true,
-				data: transformedSettings,
+			send(res, {
+				...transformedSettings,
 				message: 'Wallet settings updated successfully'
 			});
 		} catch (error) {

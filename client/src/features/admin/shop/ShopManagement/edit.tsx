@@ -104,7 +104,7 @@ export default function AdminShopItemEditPage() {
 				// Throwing an error or returning a rejected promise if it somehow gets called.
 				return Promise.reject(new Error('Item ID is required to fetch product details.'));
 			}
-			return apiRequest<Product>({ url: `/api/admin/shop-management/products/${itemId}` });
+			return apiRequest<Product>({ url: `/api/admin/shop-management/products/${itemId}`, method: 'GET' });
 		},
 		enabled: !!itemId // Query will only run if itemId is truthy
 	});
@@ -220,7 +220,7 @@ export default function AdminShopItemEditPage() {
 	return (
 		<div className="p-6">
 			<Link
-				href="/admin/shop"
+				to="/admin/shop"
 				className="inline-flex items-center text-sm text-zinc-400 hover:text-white mb-4"
 			>
 				<ArrowLeft className="mr-2 h-4 w-4" /> Back to Shop Items

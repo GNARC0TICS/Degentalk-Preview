@@ -1,4 +1,4 @@
-import type { UserId, TransactionId } from '@shared/types/ids';
+import type { UserId, TransactionId } from '../ids.js';
 import type {
 	WalletBalance,
 	CryptoBalance,
@@ -183,9 +183,8 @@ export function fromDbCryptoWallet(wallet: any): DepositAddress {
 		address: wallet.address,
 		memo: wallet.memo || undefined,
 		qrCode: wallet.qrCodeUrl || undefined,
-		coin: wallet.coinSymbol,
-		network: wallet.chain,
-		status: 'active' // Assuming all DB entries are active
+		coinSymbol: wallet.coinSymbol,
+		chain: wallet.chain
 	};
 }
 

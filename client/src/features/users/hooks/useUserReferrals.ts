@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { referralsApi } from '../services/referralsApi.ts';
-import type { UserReferralStats } from '../services/referralsApi.ts';
+import { referralsApi } from '../services/referralsApi';
+import type { UserReferralStats } from '../services/referralsApi';
 import { useToast } from '@/hooks/use-toast';
 
 /**

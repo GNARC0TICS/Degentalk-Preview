@@ -71,7 +71,7 @@ export class AdminFlowSimulator {
 	 */
 	async simulateModeratorActions(modId: UserId, dayNumber: number): Promise<void> {
 		const mod = await this.getModUser(modId);
-		if (!mod || !['admin', 'mod'].includes(mod.role)) return;
+		if (!mod || !['admin', 'moderator'].includes(mod.role)) return;
 
 		this.log(`Moderator ${mod.username} on patrol (Day ${dayNumber})`, 'info');
 
@@ -786,7 +786,7 @@ Keep up the great work, degens! 🎉`,
 				role: schema.users.role
 			})
 			.from(schema.users)
-			.where(sql`${schema.users.role} IN ('admin', 'mod')`);
+			.where(sql`${schema.users.role} IN ('admin', 'moderator')`);
 
 		for (let day = 1; day <= days; day++) {
 			this.log(`Simulating staff actions for day ${day}`, 'info');

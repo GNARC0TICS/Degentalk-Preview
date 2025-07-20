@@ -1,6 +1,6 @@
 // STREAM-LOCK: B
-import type { UserId } from '@shared/types/ids';
-import type { UserRole } from '../../../db/schema/core/enums';
+import type { UserId } from '../../types/ids.js';
+import type { UserRole } from '@db/schema/core/enums';
 
 /**
  * User DTOs for API responses

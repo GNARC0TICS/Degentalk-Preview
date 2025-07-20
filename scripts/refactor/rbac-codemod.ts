@@ -12,7 +12,7 @@ const WRITE = process.argv.includes('--write');
 const PERM_MAP: Record<: AdminId, : AdminId> = {
   "user.role === 'admin'": 'canViewAdminPanel',
   "user.role === \"admin\"": 'canViewAdminPanel',
-  "user.role === 'mod'": 'canModerateThreads',
+  "user.role === 'moderator'": 'canModerateThreads',
   "user.role === \"mod\"": 'canModerateThreads',
   isAdminOrModerator: 'canModerateThreads',
   'groupId <= 2': 'canModerateChat',

@@ -12,7 +12,7 @@ import {
 	unique
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
-import { userRoleEnum } from '../../../shared/enums/user';
+import { userRoleEnum } from '../../enums/user';
 import { roles } from './roles';
 import { titles } from '../economy/titles';
 import { badges } from '../economy/badges';

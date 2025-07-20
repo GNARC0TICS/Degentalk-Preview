@@ -7,7 +7,7 @@ export interface NavItemConfig {
 	href: string;
 	icon: React.ReactElement;
 	requiresAuth?: boolean;
-	roles?: Array<'admin' | 'mod' | 'user'>;
+	roles?: Array<'admin' | 'moderator' | 'user'>;
 	mobileOnly?: boolean;
 	prefetch?: boolean;
 	analyticsLabel?: string;
@@ -20,7 +20,7 @@ export interface UserMenuItemConfig {
 	icon: React.ReactElement;
 	onClick?: () => void;
 	requiresAuth?: boolean;
-	roles?: Array<'admin' | 'mod' | 'user'>;
+	roles?: Array<'admin' | 'moderator' | 'user'>;
 	separator?: boolean;
 }
 
@@ -185,7 +185,7 @@ export const createUserMenuItems = (
 						size: 16,
 						className: 'mr-2 h-4 w-4'
 					}),
-					roles: ['mod' as const],
+					roles: ['moderator' as const],
 					requiresAuth: true
 				}
 			]
@@ -212,7 +212,7 @@ export const createUserMenuItems = (
 export const filterNavItems = (
 	items: NavItemConfig[],
 	isAuthenticated: boolean,
-	userRoles: Array<'admin' | 'mod' | 'user'> = ['user']
+	userRoles: Array<'admin' | 'moderator' | 'user'> = ['user']
 ): NavItemConfig[] => {
 	return items.filter((item) => {
 		// Check auth requirement

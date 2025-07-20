@@ -20,6 +20,7 @@ import { walletService } from '@server/domains/wallet/services/wallet.service';
 import { walletConfig } from '@shared/wallet.config';
 import { settingsService } from '@core/services/settings.service';
 import { hasPermission } from '@server/domains/admin/adminRegistry';
+import { send } from '@server-utils/response';
 
 // Import transformers
 import {
@@ -46,11 +47,7 @@ export class WalletController {
 
 			const balance = await walletService.getUserBalance(user.id);
 			const publicBalance = toPublicWalletBalance(balance);
-
-			res.json({
-				success: true,
-				data: publicBalance
-			});
+			send(res, publicBalance);
 		} catch (error) {
 			this.handleError(res, error, 'Failed to get wallet balance');
 		}
@@ -66,11 +63,7 @@ export class WalletController {
 			logger.info('WalletController', 'Initializing wallet', { userId: user.id });
 
 			const result = await walletService.initializeWallet(user.id);
-
-			res.json({
-				success: true,
-				data: result
-			});
+			send(res, result);
 		} catch (error) {
 			this.handleError(res, error, 'Failed to initialize wallet');
 		}
@@ -96,11 +89,7 @@ export class WalletController {
 			const depositAddress = await walletService.createDepositAddress(user.id, coinSymbol, chain);
 
 			const publicAddress = toPublicDepositAddress(depositAddress);
-
-			res.json({
-				success: true,
-				data: publicAddress
-			});
+			send(res, publicAddress);
 		} catch (error) {
 			this.handleError(res, error, 'Failed to create deposit address');
 		}
@@ -117,11 +106,7 @@ export class WalletController {
 
 			const addresses = await walletService.getDepositAddresses(user.id);
 			const publicAddresses = addresses.map(toPublicDepositAddress);
-
-			res.json({
-				success: true,
-				data: publicAddresses
-			});
+			send(res, publicAddresses);
 		} catch (error) {
 			this.handleError(res, error, 'Failed to get deposit addresses');
 		}
@@ -146,11 +131,7 @@ export class WalletController {
 
 			const response = await walletService.requestWithdrawal(user.id, withdrawalRequest);
 			const publicResponse = toPublicWithdrawalResponse(response);
-
-			res.json({
-				success: true,
-				data: publicResponse
-			});
+			send(res, publicResponse);
 		} catch (error) {
 			this.handleError(res, error, 'Failed to process withdrawal');
 		}
@@ -189,11 +170,7 @@ export class WalletController {
 				options.limit || 20,
 				publicTransactions.length // TODO: Get actual total from service
 			);
-
-			res.json({
-				success: true,
-				data: paginatedResponse
-			});
+			send(res, paginatedResponse);
 		} catch (error) {
 			this.handleError(res, error, 'Failed to get transaction history');
 		}
@@ -245,12 +222,9 @@ export class WalletController {
 				});
 			}
 
-			res.json({
-				success: true,
-				data: {
-					recordId: result.recordId,
-					message: 'DGT purchase initiated successfully'
-				}
+			send(res, {
+				recordId: result.recordId,
+				message: 'DGT purchase initiated successfully'
 			});
 		} catch (error) {
 			this.handleError(res, error, 'Failed to purchase DGT');
@@ -285,10 +259,7 @@ export class WalletController {
 			const transaction = await walletService.transferDgt(transfer);
 			const publicTransaction = toAuthenticatedTransaction(transaction);
 
-			res.json({
-				success: true,
-				data: publicTransaction
-			});
+			send(res, publicTransaction);
 		} catch (error) {
 			this.handleError(res, error, 'Failed to transfer DGT');
 		}
@@ -305,10 +276,7 @@ export class WalletController {
 			const config = await walletService.getWalletConfig();
 			const publicConfig = toPublicWalletConfig(config);
 
-			res.json({
-				success: true,
-				data: publicConfig
-			});
+			send(res, publicConfig);
 		} catch (error) {
 			this.handleError(res, error, 'Failed to get wallet config');
 		}
@@ -325,10 +293,7 @@ export class WalletController {
 			const coins = await walletService.getSupportedCoins();
 			const publicCoins = coins.map(toPublicSupportedCoin);
 
-			res.json({
-				success: true,
-				data: publicCoins
-			});
+			send(res, publicCoins);
 		} catch (error) {
 			this.handleError(res, error, 'Failed to get supported coins');
 		}
@@ -346,10 +311,7 @@ export class WalletController {
 			const coin = await walletService.getTokenInfo(coinId);
 			const publicCoin = toPublicSupportedCoin(coin);
 
-			res.json({
-				success: true,
-				data: publicCoin
-			});
+			send(res, publicCoin);
 		} catch (error) {
 			this.handleError(res, error, 'Failed to get token info');
 		}
@@ -366,10 +328,7 @@ export class WalletController {
 
 			const result = await walletService.validateAddress(address, chain);
 
-			res.json({
-				success: true,
-				data: result
-			});
+			send(res, result);
 		} catch (error) {
 			this.handleError(res, error, 'Failed to validate address');
 		}
@@ -387,10 +346,7 @@ export class WalletController {
 			const feeInfo = await walletService.getWithdrawFee(coinId, chain);
 			const publicFeeInfo = toPublicWithdrawFeeInfo(feeInfo);
 
-			res.json({
-				success: true,
-				data: publicFeeInfo
-			});
+			send(res, publicFeeInfo);
 		} catch (error) {
 			this.handleError(res, error, 'Failed to get withdrawal fee');
 		}
@@ -417,10 +373,7 @@ export class WalletController {
 				fromAmount: fromAmount.toString()
 			});
 
-			res.json({
-				success: true,
-				data: result
-			});
+			send(res, result);
 		} catch (error) {
 			this.handleError(res, error, 'Failed to process crypto swap');
 		}
@@ -440,13 +393,11 @@ export class WalletController {
 
 			const result = await walletService.processWebhook(provider, payload, signature);
 
-			res.json({
-				success: result.success,
+			send(res, {
+				transactionId: result.transactionId,
+				processed: result.processed,
 				message: result.message,
-				data: {
-					transactionId: result.transactionId,
-					processed: result.processed
-				}
+				success: result.success
 			});
 		} catch (error) {
 			this.handleError(res, error, 'Failed to process webhook');
@@ -478,10 +429,7 @@ export class WalletController {
 				dgtPriceUsd: walletConfig.DGT.PRICE_USD // Static value from config
 			};
 
-			res.json({
-				success: true,
-				data: config
-			});
+			send(res, config);
 		} catch (error) {
 			this.handleError(res, error, 'Failed to get admin deposit config');
 		}
@@ -538,11 +486,7 @@ export class WalletController {
 				newConfig: responseConfig
 			});
 
-			res.json({
-				success: true,
-				message: 'Deposit configuration updated successfully',
-				data: responseConfig
-			});
+			send(res, responseConfig);
 		} catch (error) {
 			this.handleError(res, error, 'Failed to update admin deposit config');
 		}

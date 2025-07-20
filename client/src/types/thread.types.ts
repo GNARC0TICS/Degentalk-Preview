@@ -6,7 +6,7 @@
  * ALL frontend thread views MUST use ThreadDisplay type
  */
 
-import type { CanonicalThread, CanonicalUser, CanonicalZone } from './canonical.types.ts';
+import type { CanonicalThread, CanonicalUser, CanonicalZone } from './canonical.types';
 import type { UserId } from '@shared/types/ids';
 
 // Canonical zone with optional isPrimary flag for frontend helpers
@@ -20,7 +20,7 @@ export interface ThreadUser {
 	activeAvatarUrl?: string | null;
 	reputation?: number;
 	isVerified?: boolean;
-	role?: 'user' | 'mod' | 'admin' | null;
+	role?: 'user' | 'moderator' | 'admin' | null;
 }
 
 // Zone information for theming and navigation
@@ -62,6 +62,12 @@ export interface ThreadEngagement {
 	reputationScore?: number;
 	qualityScore?: number;
 	hotScore?: number;
+	tipLeaderboard?: Array<{
+		username: string;
+		amount: number;
+		avatarUrl: string;
+	}>;
+	shares?: number;
 }
 
 // Reaction data
@@ -82,11 +88,16 @@ export interface ThreadReaction {
  * ALL frontend thread components MUST use this type
  * Backend provides zone data automatically - DO NOT manually enrich thread data
  */
-export interface ThreadDisplay extends CanonicalThread {
+export interface ThreadDisplay extends Omit<CanonicalThread, 'zone' | 'user'> {
 	// Additional display-specific fields
 	relativeTime?: string; // "2 hours ago", "3 days ago"
 	excerpt?: string; // First 150 chars of content for previews
 	isHot?: boolean; // Thread has high engagement/activity
+	hotScore?: number; // Numeric score for sorting hot threads
+	prefix?: ThreadPrefix; // Thread prefix/category
+	lastPosterUsername?: string; // Username of last poster
+	lastActivityAt?: string; // Last activity timestamp
+	participantCount?: number; // Number of unique participants
 
 	// Enhanced zone data (automatically provided by backend)
 	zone: ResolvedZone;

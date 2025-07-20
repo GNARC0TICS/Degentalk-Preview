@@ -1,8 +1,8 @@
 import { z } from 'zod';
-import type { ForumId } from '@shared/types/ids';
+import type { ForumId } from '../types/ids.js';
 // TODO: Replace with proper shared logger
 // import { logger } from "../../server/src/core/logger";
-import type { UserId } from '@shared/types/ids';
+import type { UserId } from '../types/ids.js';
 
 /*
  * Centralised XP / DGT economy configuration.

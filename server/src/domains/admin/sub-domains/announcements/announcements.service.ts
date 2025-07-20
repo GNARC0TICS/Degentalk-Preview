@@ -53,7 +53,7 @@ export async function getActiveAnnouncements(options: {
 		if (visibleTo.includes(userRole)) return true;
 
 		// If user is logged in, check for specific user group IDs
-		if (userId && visibleTo.some((group) => !['guest', 'user', 'mod', 'admin'].includes(group))) {
+		if (userId && visibleTo.some((group) => !['guest', 'user', 'moderator', 'admin'].includes(group))) {
 			// For now, include any group-specific announcements if user is logged in
 			// In a full implementation, you'd check against the user's actual groups
 			return true;

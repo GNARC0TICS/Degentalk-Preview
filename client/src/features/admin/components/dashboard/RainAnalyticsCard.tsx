@@ -76,6 +76,7 @@ const RainAnalyticsCard: React.FC<RainAnalyticsCardProps> = ({ className }) => {
 		queryFn: async () => {
 			return apiRequest<RainAnalytics>({
 				url: '/admin/analytics/engagement/rain',
+				method: 'GET',
 				params: {
 					days: timeRange,
 					topLimit: '10'

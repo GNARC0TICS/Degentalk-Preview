@@ -11,6 +11,11 @@
 			"@schema/*": ["db/schema/*"],
 			"@shared/*": ["shared/*"],
 			"@admin/*": ["client/src/views/admin/*"]
-		}
+		},
+		"resolveJsonModule": true,
+		"esModuleInterop": true
+		/* "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noUncheckedIndexedAccess": true */
 	}
 }

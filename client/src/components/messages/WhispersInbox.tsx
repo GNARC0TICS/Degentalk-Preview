@@ -51,7 +51,7 @@ export function WhispersInbox({ className }: WhispersInboxProps) {
 		data: messages,
 		isLoading: isLoadingMessages,
 		refetch: refetchMessages
-	} = useConversation(selectedConversation?.userId || 0);
+	} = useConversation(selectedConversation?.userId || '0');
 
 	// Mutations
 	const { mutate: sendMessage, isPending: isSendingMessage } = useSendMessage();
@@ -87,11 +87,13 @@ export function WhispersInbox({ className }: WhispersInboxProps) {
 	// Filtered conversations based on search term
 	const filteredConversations = React.useMemo(() => {
 		if (!conversations) return [];
-		if (!searchTerm.trim()) return conversations;
+		if (!searchTerm.trim()) return conversations as any[];
 
-		return conversations.filter((conv) =>
-			conv.username.toLowerCase().includes(searchTerm.toLowerCase())
-		);
+		return Array.isArray(conversations) 
+			? conversations.filter((conv: any) =>
+				conv.username.toLowerCase().includes(searchTerm.toLowerCase())
+			)
+			: [];
 	}, [conversations, searchTerm]);
 
 	// Send message handler
@@ -189,7 +191,7 @@ export function WhispersInbox({ className }: WhispersInboxProps) {
 						<CardTitle className="text-xl text-white flex items-center justify-between">
 							<span>Your Whispers</span>
 							<span className="text-sm text-purple-400">
-								{conversations?.length || 0} conversations
+								{(conversations as any)?.length || 0} conversations
 							</span>
 						</CardTitle>
 						<CardDescription className="text-gray-400">
@@ -219,7 +221,7 @@ export function WhispersInbox({ className }: WhispersInboxProps) {
 								</div>
 							) : (
 								<div className="space-y-2">
-									{filteredConversations.map((conversation) => (
+									{filteredConversations.map((conversation: any) => (
 										<div
 											key={conversation.userId}
 											className={`

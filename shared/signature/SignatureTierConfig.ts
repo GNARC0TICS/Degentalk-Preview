@@ -91,7 +91,7 @@ export function getSignatureTierForLevel(userLevel: number): SignatureTierLevel 
 	const qualifyingTiers = SignatureTierConfig.filter((tier) => tier.level <= userLevel);
 
 	if (qualifyingTiers.length === 0) {
-		return SignatureTierConfig[0]; // Default to first tier if no qualifying tier found
+		return SignatureTierConfig[0]!; // Default to first tier if no qualifying tier found
 	}
 
 	// Get the highest qualifying tier

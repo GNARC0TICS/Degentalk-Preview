@@ -42,7 +42,7 @@ import { ShoutboxCacheService } from './services/cache.service';
 import { messageQueue, MessageQueueService } from './services/queue.service';
 import { PerformanceService } from './services/performance.service';
 import { createCustomRateLimiter } from '@core/services/rate-limit.service';
-import { isValidId } from '@shared/utils/id';
+import { isValidId } from '@shared/types';
 import { ShoutboxTransformer } from './transformers/shoutbox.transformer';
 import { UserTransformer } from '@server/domains/users/transformers/user.transformer';
 import {

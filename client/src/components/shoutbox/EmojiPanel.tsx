@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { apiRequest } from '@/lib/api';
-import { useAuth } from '@/hooks/useAuth';
+import { apiRequest } from '@/utils/api-request';
+import { useAuth } from '@/hooks/use-auth';
 import { motion, AnimatePresence } from 'framer-motion';
 
 // UI Components
@@ -65,7 +65,10 @@ export function EmojiPanel({ onEmojiSelect, onClose }: EmojiPanelProps) {
   const { data: emojis = [], isLoading } = useQuery({
     queryKey: ['emojis', 'owned', user?.id],
     queryFn: async () => {
-      const response = await apiRequest<CustomEmoji[]>('/api/chat/emojis/available');
+      const response = await apiRequest<CustomEmoji[]>({
+        url: '/api/chat/emojis/available',
+        method: 'GET'
+      });
       return response;
     },
     staleTime: 5 * 60 * 1000, // 5 minutes

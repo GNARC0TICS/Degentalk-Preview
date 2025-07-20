@@ -1,5 +1,5 @@
 import React from 'react';
-import { useDgtAnalytics } from './hooks/useDgtAnalytics.ts';
+import { useDgtAnalytics } from './hooks/useDgtAnalytics';
 import BalanceCard from './components/BalanceCard';
 
 const EconomyDashboard: React.FC = () => {

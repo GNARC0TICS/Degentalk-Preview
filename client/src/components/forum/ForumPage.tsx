@@ -15,7 +15,8 @@ import { SiteFooter } from '@/components/footer';
 import { ForumHeader } from '@/components/forum/ForumHeader';
 import { MyBBThreadList } from '@/components/forum/MyBBThreadList';
 import { asStructureId } from '@shared/types/ids';
-import type { ForumId, StructureId, ZoneId } from '@shared/types/ids';
+import type { ForumId, StructureId, ZoneId, UserId, ThreadId } from '@shared/types/ids';
+import { toUserId, toThreadId, toStructureId, toZoneId, toForumId } from '@shared/types/index';
 import type { ThreadDisplay } from '@/types/thread.types';
 
 export interface ForumPageProps {
@@ -96,15 +97,16 @@ function getDemoThreads(forumSlug: string): ThreadDisplay[] {
 	// Add required properties to make threads conform to ThreadDisplay/CanonicalThread
 	return baseThreads.map(thread => ({
 		...thread,
+		id: toThreadId(thread.id),
 		// Add missing CanonicalThread properties
-		structureId: 'struct_1' as StructureId,
+		structureId: toStructureId('struct_1'),
 		isHidden: false,
 		firstPostLikeCount: 0,
-		userId: thread.user.id as UserId,
+		userId: toUserId(thread.user.id),
 		
 		// Add structure relationship
 		structure: {
-			id: 'struct_1' as StructureId,
+			id: toStructureId('struct_1'),
 			name: forumSlug === 'market-analysis' ? 'Market Analysis' : 
 			      forumSlug === 'live-trade-reacts' ? 'Live-Trade Reacts' : 'Shill Zone',
 			slug: forumSlug,
@@ -113,7 +115,7 @@ function getDemoThreads(forumSlug: string): ThreadDisplay[] {
 		
 		// Add zone relationship (ThreadDisplay requires full zone)
 		zone: {
-			id: 'zone_1' as ZoneId,
+			id: toZoneId('zone_1'),
 			name: 'Trading',
 			slug: 'trading',
 			colorTheme: 'emerald',
@@ -137,6 +139,7 @@ function getDemoThreads(forumSlug: string): ThreadDisplay[] {
 		// Add enhanced user data for ThreadDisplay
 		user: {
 			...thread.user,
+			id: toUserId(thread.user.id),
 			displayName: thread.user.username,
 			activeAvatarUrl: thread.user.avatarUrl,
 			role: 'user' as const,
@@ -159,6 +162,15 @@ function getDemoThreads(forumSlug: string): ThreadDisplay[] {
 		
 		// Add tags array
 		tags: [],
+		
+		// Add permissions
+		permissions: {
+			canEdit: false,
+			canDelete: false,
+			canReply: true,
+			canMarkSolved: false,
+			canModerate: false
+		},
 		
 		// Legacy fields for compatibility
 		zoneName: 'Trading',
@@ -294,7 +306,7 @@ const ForumPage = memo(() => {
 							/>
 						) : forum?.id ? (
 							<ThreadList
-								forumId={forum.id as ForumId}
+								forumId={toForumId(forum.id)}
 								forumSlug={forum.slug}
 								availableTags={[]}
 								filters={filters}

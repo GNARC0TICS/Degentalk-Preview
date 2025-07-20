@@ -1,7 +1,7 @@
 import type { UserId, FrameId, TitleId, BadgeId, ProductId } from '@shared/types/ids';
 
 export interface ProfileData {
-	id: string;
+	id: UserId;
 	username: string;
 	avatarUrl: string | null;
 	role: string;
@@ -48,22 +48,22 @@ export interface ProfileData {
 		rarity: string;
 	} | null;
 	badges: {
-		id: UserId;
+		id: BadgeId;
 		name: string;
 		description: string | null;
 		iconUrl: string;
 		rarity: string;
 	}[];
 	titles: {
-		id: UserId;
+		id: TitleId;
 		name: string;
 		description: string | null;
 		iconUrl: string | null;
 		rarity: string;
 	}[];
 	inventory: {
-		id: UserId;
-		userId: string;
+		id: string; // Inventory item ID
+		userId: UserId;
 		productId: ProductId;
 		isEquipped: boolean;
 		productName: string;

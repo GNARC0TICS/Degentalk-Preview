@@ -88,11 +88,11 @@ class MentionList {
 				const roleBadge = document.createElement('span');
 				roleBadge.className = 'px-1.5 py-0 text-xs rounded border';
 				roleBadge.textContent =
-					item.role === 'admin' ? 'Admin' : item.role === 'mod' ? 'Mod' : item.role;
+					item.role === 'admin' ? 'Admin' : item.role === 'moderator' ? 'Moderator' : item.role;
 
 				if (item.role === 'admin') {
 					roleBadge.className += ' bg-red-900/60 text-red-300 border-red-700/30';
-				} else if (item.role === 'mod') {
+				} else if (item.role === 'moderator') {
 					roleBadge.className += ' bg-blue-900/60 text-blue-300 border-blue-700/30';
 				} else {
 					roleBadge.className += ' bg-zinc-700/60 text-zinc-300 border-zinc-600/30';

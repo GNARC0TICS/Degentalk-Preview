@@ -114,7 +114,7 @@ export function MentionAutocomplete({
 		switch (role) {
 			case 'admin':
 				return 'bg-red-900/60 text-red-300 border-red-700/30';
-			case 'mod':
+			case 'moderator':
 				return 'bg-blue-900/60 text-blue-300 border-blue-700/30';
 			default:
 				return 'bg-zinc-700/60 text-zinc-300 border-zinc-600/30';
@@ -125,8 +125,8 @@ export function MentionAutocomplete({
 		switch (role) {
 			case 'admin':
 				return 'Admin';
-			case 'mod':
-				return 'Mod';
+			case 'moderator':
+				return 'Moderator';
 			default:
 				return 'User';
 		}

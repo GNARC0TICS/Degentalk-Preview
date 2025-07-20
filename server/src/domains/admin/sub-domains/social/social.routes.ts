@@ -12,7 +12,7 @@ const updateSocialConfigSchema = z.object({
 		.object({
 			enabled: z.boolean(),
 			minLevel: z.number().min(1).max(100),
-			allowedRoles: z.array(z.enum(['user', 'mod', 'admin'])),
+			allowedRoles: z.array(z.enum(['user', 'moderator', 'admin'])),
 			settings: z.object({
 				mentionTrigger: z.string().min(1).max(1),
 				maxMentionsPerPost: z.number().min(1).max(50),
@@ -34,7 +34,7 @@ const updateSocialConfigSchema = z.object({
 		.object({
 			enabled: z.boolean(),
 			minLevel: z.number().min(1).max(100),
-			allowedRoles: z.array(z.enum(['user', 'mod', 'admin'])),
+			allowedRoles: z.array(z.enum(['user', 'moderator', 'admin'])),
 			settings: z.object({
 				maxFollowsPerUser: z.number().min(1).max(10000),
 				maxFollowsPerHour: z.number().min(1).max(500),
@@ -59,7 +59,7 @@ const updateSocialConfigSchema = z.object({
 		.object({
 			enabled: z.boolean(),
 			minLevel: z.number().min(1).max(100),
-			allowedRoles: z.array(z.enum(['user', 'mod', 'admin'])),
+			allowedRoles: z.array(z.enum(['user', 'moderator', 'admin'])),
 			settings: z.object({
 				maxFriendsPerUser: z.number().min(1).max(5000),
 				maxRequestsPerDay: z.number().min(1).max(100),

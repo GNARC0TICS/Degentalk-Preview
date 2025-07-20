@@ -47,7 +47,7 @@ export default function AdminShopItemsPage() {
 	} = useQuery<Product[], Error>({
 		queryKey: ['adminShopItems'],
 		queryFn: async () => {
-			return apiRequest<Product[]>({ url: '/api/admin/shop-management/items' });
+			return apiRequest<Product[]>({ url: '/api/admin/shop-management/items', method: 'GET' });
 		}
 	});
 

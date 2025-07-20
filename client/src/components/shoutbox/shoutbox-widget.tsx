@@ -52,6 +52,7 @@ import {
 	Lock as LockIcon
 } from 'lucide-react';
 import type { GroupId, MessageId, UserId } from '@shared/types/ids';
+import { toUserId } from '@shared/types/ids';
 
 // Types for shoutbox messages
 interface ShoutboxUser {
@@ -132,16 +133,16 @@ export default function ShoutboxWidget({ instanceId }: ShoutboxWidgetProps) {
 	const userLoggedIn = true;
 	// Mock user data for testing
 	const currentUser = {
-		id: crypto.randomUUID(),
+		id: toUserId(crypto.randomUUID()),
 		username: 'TestUser',
 		avatarUrl: null,
 		activeAvatarUrl: null,
 		level: 5,
-		groupId: crypto.randomUUID() // Regular user
+		groupId: '3' as GroupId // Regular user
 	};
 
 	// Check if current user is admin or moderator
-	const isModOrAdmin = currentUser?.groupId === 1 || currentUser?.groupId === 2;
+	const isModOrAdmin = currentUser?.groupId === ('1' as GroupId) || currentUser?.groupId === ('2' as GroupId);
 
 	// Fetch custom emojis
 	const {
@@ -296,7 +297,7 @@ export default function ShoutboxWidget({ instanceId }: ShoutboxWidgetProps) {
 
 	const MessageItem: React.FC<{ msg: ShoutboxMessage }> = ({ msg }) => {
 		const identity = useIdentityDisplay({
-			id: String(msg.user.id),
+			id: msg.user.id,
 			username: msg.user.username,
 			level: msg.user.level
 		});

@@ -87,9 +87,16 @@ export function ReactionsBar({
 	const likeMutation = useMutation({
 		mutationFn: async (next: boolean) => {
 			if (next) {
-				await apiRequest('POST', `/api/posts/${postId}/reactions`, { reaction: 'like' });
+				await apiRequest({
+					url: `/api/posts/${postId}/reactions`,
+					method: 'POST',
+					data: { reaction: 'like' }
+				});
 			} else {
-				await apiRequest('DELETE', `/api/posts/${postId}/reactions/like`);
+				await apiRequest({
+					url: `/api/posts/${postId}/reactions/like`,
+					method: 'DELETE'
+				});
 			}
 		},
 		onMutate: async (next) => {
@@ -143,7 +150,10 @@ export function ReactionsBar({
 
 			if (currentReactions[reactionIndex].active) {
 				// Remove reaction
-				await apiRequest('DELETE', `/api/posts/${postId}/reactions/${reactionType}`);
+				await apiRequest({
+					url: `/api/posts/${postId}/reactions/${reactionType}`,
+					method: 'DELETE'
+				});
 
 				currentReactions[reactionIndex].active = false;
 				currentReactions[reactionIndex].count = Math.max(
@@ -155,10 +165,10 @@ export function ReactionsBar({
 				const activeIndex = currentReactions.findIndex((r) => r.active);
 				if (activeIndex !== -1) {
 					// Remove previous reaction
-					await apiRequest(
-						'DELETE',
-						`/api/posts/${postId}/reactions/${currentReactions[activeIndex].type}`
-					);
+					await apiRequest({
+						url: `/api/posts/${postId}/reactions/${currentReactions[activeIndex].type}`,
+						method: 'DELETE'
+					});
 
 					currentReactions[activeIndex].active = false;
 					currentReactions[activeIndex].count = Math.max(
@@ -168,7 +178,11 @@ export function ReactionsBar({
 				}
 
 				// Add new reaction
-				await apiRequest('POST', `/api/posts/${postId}/reactions`, { reaction: reactionType });
+				await apiRequest({
+					url: `/api/posts/${postId}/reactions`,
+					method: 'POST',
+					data: { reaction: reactionType }
+				});
 
 				currentReactions[reactionIndex].active = true;
 				currentReactions[reactionIndex].count += 1;
@@ -234,7 +248,7 @@ export function ReactionsBar({
 								: 'text-zinc-400 hover:text-cyan-400',
 							loading === 'like' && 'scale-105'
 						)}
-						disabled={disabled || likeMutation.isLoading}
+						disabled={disabled || likeMutation.isPending}
 						onClick={handleLike}
 					>
 						<reaction.icon

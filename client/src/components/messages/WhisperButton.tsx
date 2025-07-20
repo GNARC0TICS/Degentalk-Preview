@@ -34,7 +34,7 @@ export function WhisperButton({
 		queryKey: ['/api/users/me']
 	});
 
-	const hasUnread = unreadCountData?.total > 0;
+	const hasUnread = (unreadCountData as any)?.total > 0;
 
 	// This will open the modal with a specific user preselected if userId is provided
 	const handleClick = () => {
@@ -53,7 +53,7 @@ export function WhisperButton({
 						variant="outline"
 						className="absolute -top-2 -right-2 h-5 w-5 p-0 flex items-center justify-center bg-purple-600 text-white border-none"
 					>
-						{unreadCountData.total > 99 ? '99+' : unreadCountData.total}
+						{(unreadCountData as any).total > 99 ? '99+' : (unreadCountData as any).total}
 					</Badge>
 				)}
 			</Button>

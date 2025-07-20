@@ -6,6 +6,9 @@ import type {
 	EventLogPagination
 } from '@/features/activity/types/activity.types';
 
+// Re-export types for components
+export type { EventLog, EventLogFilters, EventLogPagination };
+
 /**
  * API service for event logs
  */

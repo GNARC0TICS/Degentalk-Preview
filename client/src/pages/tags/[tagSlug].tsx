@@ -30,7 +30,7 @@ export default function TagPage() {
 		queryKey: [`/api/forum/threads?tags=${tagSlug}&page=${page}&limit=${limit}&sortBy=newest`],
 		queryFn: async ({ queryKey }) => {
 			const url = queryKey[0] as string;
-			const response = await apiRequest<ThreadsApiResponse>({ url });
+			const response = await apiRequest<ThreadsApiResponse>({ url, method: 'GET' });
 
 			// Handle different response formats (same as ForumPage used to do)
 			if (Array.isArray(response))
@@ -38,7 +38,6 @@ export default function TagPage() {
 					threads: response as ThreadDisplay[],
 					pagination: { page, limit, totalThreads: response.length, totalPages: 1 }
 				};
-			if (response?.data?.threads) return response.data;
 			if (response?.threads) return response;
 			return { threads: [], pagination: { page, limit, totalThreads: 0, totalPages: 0 } };
 		},

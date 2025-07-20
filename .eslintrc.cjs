@@ -153,6 +153,7 @@ module.exports = {
 		'no-prototype-builtins': 'warn',
 		// 'degen/no-undeclared-branded-id': 'off',
 		'prefer-const': 'warn',
-		'no-constant-condition': 'warn'
+		'no-constant-condition': 'warn',
+		'degen/enforce-path-aliases': 'off'
 	}
 };

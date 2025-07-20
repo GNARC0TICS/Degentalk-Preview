@@ -133,7 +133,7 @@ const typeOptions = [
 const visibilityOptions = [
 	{ value: 'all', label: 'Everyone' },
 	{ value: 'user', label: 'Registered Users' },
-	{ value: 'mod', label: 'Moderators' },
+	{ value: 'moderator', label: 'Moderators' },
 	{ value: 'admin', label: 'Administrators' },
 	{ value: 'guest', label: 'Guests (Not Logged In)' }
 ];

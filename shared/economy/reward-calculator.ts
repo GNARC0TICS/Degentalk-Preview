@@ -1,5 +1,5 @@
-import { economyConfig, getXpForLevel } from './economy.config';
-import { rainTipConfig } from './rain-tip-config';
+import { economyConfig, getXpForLevel } from './economy.config.js';
+import { rainTipConfig } from './rain-tip-config.js';
 
 // Re-export for convenience
 export { getXpForLevel };

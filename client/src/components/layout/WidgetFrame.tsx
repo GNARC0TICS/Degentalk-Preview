@@ -239,7 +239,7 @@ export const WidgetFrame = ({ instanceId, className }: WidgetFrameProps) => {
 				)}
 			>
 				<Suspense fallback={<LoadingSkeleton />}>
-					<ErrorBoundary FallbackComponent={WidgetError}>
+					<ErrorBoundary fallback={<WidgetError error={new Error('Widget failed to load')} />}>
 						<WidgetComponent
 							instanceId={instanceId}
 							slotId={currentSlot}

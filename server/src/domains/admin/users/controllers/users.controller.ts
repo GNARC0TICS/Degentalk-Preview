@@ -11,7 +11,7 @@ import { db } from '@db';
 import { users } from '@schema';
 import { ilike } from 'drizzle-orm';
 import type { UserId, AdminId } from '@shared/types/ids';
-import { toId, isValidId } from '@shared/utils/id';
+import { toId, isValidId } from '@shared/types';
 import { logger } from '@core/logger';
 import { UserTransformer } from '@server/domains/users/transformers/user.transformer';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
@@ -214,7 +214,7 @@ export class AdminUsersController {
 
 			const userId = toId<'User'>(userIdParam);
 			const { role } = req.body;
-			if (!role || !['user', 'mod', 'admin'].includes(role)) {
+			if (!role || !['user', 'moderator', 'admin'].includes(role)) {
 				return sendErrorResponse(res, 'Invalid role. Must be one of: user, mod, admin', 400);
 			}
 
