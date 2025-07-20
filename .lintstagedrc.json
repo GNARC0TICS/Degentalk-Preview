@@ -1,6 +1,9 @@
 {
 	"*.{ts,tsx}": ["eslint --fix --max-warnings 0", "prettier --write"],
-	"*.{js,jsx}": ["bash -c '[[ $0 == db/schema/index.js ]] && exit 0 || eslint --fix --max-warnings 0'", "prettier --write"],
+	"*.{js,jsx}": [
+		"bash -c '[[ $0 == db/schema/index.js ]] && exit 0 || eslint --fix --quiet --max-warnings 0'",
+		"prettier --write"
+	],
 	"*.{json,md,yml,yaml}": ["prettier --write"],
 	"server/**/*.ts": [
 		"bash -c 'if grep -l \"console\\.\" \"$0\" | grep -v \".test.ts\" | grep -v \"logger.ts\"; then echo \"❌ Console usage detected in $0\"; exit 1; fi'",

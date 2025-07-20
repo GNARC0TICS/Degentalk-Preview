@@ -32,6 +32,15 @@ export interface UserXP {
 		};
 		dgt?: number;
 	};
+	
+	// Additional properties expected by components
+	level: number; // Alias for currentLevel
+	currentLevelXP: number; // XP at current level
+	nextLevelXP: number | null; // XP needed for next level
+	progressToNextLevel: number; // Progress percentage to next level
+	badges?: UserBadge[]; // User badges
+	titles?: UserTitle[]; // Available titles
+	equippedTitle?: string; // Currently equipped title
 }
 
 export interface UserTitle {
