@@ -51,7 +51,7 @@ export function BreadcrumbNav({ items, className = '' }: BreadcrumbNavProps) {
 								</span>
 							) : (
 								<Link
-									href={item.href}
+									to={item.href}
 									className="flex items-center gap-1.5 text-zinc-400 hover:text-zinc-200 transition-colors"
 								>
 									{item.icon || <FolderOpen className="h-4 w-4 text-zinc-500" />}

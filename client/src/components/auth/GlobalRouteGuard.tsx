@@ -28,7 +28,7 @@ export function GlobalRouteGuard({
 		// Skip during loading
 		if (isLoading) return;
 
-		const protection = getRouteProtection(location);
+		const protection = getRouteProtection(location.pathname);
 
 		// Check if route has protection requirements
 		if (!protection.requireAuth && !protection.minRole && !protection.exactRole) {

@@ -38,6 +38,10 @@ export interface User {
 	activeFrameId?: FrameId | null;
 	avatarFrameId?: FrameId | null;
 	isBanned: boolean;
+	
+	// Computed role helpers
+	isAdmin: boolean;
+	isModerator: boolean;
 }
 
 // Possible roles for mock user switching
