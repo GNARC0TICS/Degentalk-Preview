@@ -113,7 +113,7 @@ export function ActivityFeedWidget({
 
 	const footerContent = (
 		<Link
-			href="/activity"
+			to="/activity"
 			className="flex items-center justify-between text-sm text-zinc-400 hover:text-emerald-400 transition-colors group"
 		>
 			<span>See full feed</span>

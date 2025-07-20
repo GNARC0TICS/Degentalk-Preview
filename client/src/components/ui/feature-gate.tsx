@@ -2,7 +2,7 @@ import React from 'react';
 import { useFeatureAccess } from '@/hooks/useFeatureGates';
 import { Lock, AlertCircle, BadgeInfo, ArrowUpCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useEffect } from 'react';
 
@@ -27,7 +27,7 @@ export const FeatureGate: React.FC<FeatureGateProps> = ({
 	showGradientBorder = false,
 	redirectLoginTo
 }) => {
-	const [, navigate] = useLocation();
+	const navigate = useNavigate();
 	const { hasAccess, isLoading, reason, unlocksAtLevel, missingBadge } =
 		useFeatureAccess(featureId);
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Check, Home, ChevronLeft, Wallet, ShoppingCart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
@@ -8,7 +8,7 @@ import { Wide } from '@/layout/primitives';
 import useSearchParams from '@/hooks/useSearchParams';
 
 export default function PurchaseSuccessPage() {
-	const [, setLocation] = useLocation();
+	const navigate = useNavigate();
 	const searchParams = useSearchParams();
 	const [purchaseDetails, setPurchaseDetails] = useState<{
 		amount?: number;

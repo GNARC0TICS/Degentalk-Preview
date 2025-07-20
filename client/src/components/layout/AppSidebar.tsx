@@ -51,7 +51,7 @@ type SidebarProps = {
 };
 
 export function Sidebar({ activeCategoryId, forumId }: SidebarProps) {
-	const [location] = useLocation();
+	const location = useLocation();
 	const { isAuthenticated } = useAuth();
 
 	const navItems = [
@@ -82,10 +82,10 @@ export function Sidebar({ activeCategoryId, forumId }: SidebarProps) {
 						{navItems.map((item) => (
 							<Link
 								key={item.href}
-								href={item.href}
+								to={item.href}
 								className={cn(
 									'flex items-center px-3 py-2 text-sm font-medium rounded-md transition-all duration-200',
-									location === item.href
+									location.pathname === item.href
 										? 'text-emerald-400 bg-emerald-900/20 border border-emerald-800/30 shadow-inner'
 										: 'text-zinc-300 hover:bg-zinc-800/70 hover:text-emerald-400 focus:text-emerald-400 focus:bg-zinc-800'
 								)}

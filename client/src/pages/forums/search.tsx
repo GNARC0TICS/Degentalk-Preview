@@ -1,5 +1,5 @@
 import React from 'react';
-import { useLocation, Link } from 'react-router-dom';
+import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { SiteFooter } from '@/components/footer';
 import {
 	Breadcrumb,
@@ -24,8 +24,9 @@ type SearchResult = {
 };
 
 const ForumSearchPage = () => {
-	const [location, setLocation] = useLocation();
-	const queryParams = new URLSearchParams(location.split('?')[1] || '');
+	const location = useLocation();
+	const navigate = useNavigate();
+	const queryParams = new URLSearchParams(location.search);
 	const searchQuery = queryParams.get('q') || '';
 
 	const [currentSearch, setCurrentSearch] = React.useState(searchQuery);

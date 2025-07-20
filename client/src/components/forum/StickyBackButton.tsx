@@ -24,7 +24,7 @@ export default function StickyBackButton({
 	hideOnRoutes = ['/'],
 	className
 }: StickyBackButtonProps) {
-	const [location] = useLocation();
+	const location = useLocation();
 	const breakpoint = useBreakpoint();
 
 	// Only show on mobile and tablet
@@ -33,7 +33,7 @@ export default function StickyBackButton({
 	}
 
 	// Hide on specified routes
-	if (hideOnRoutes.includes(location)) {
+	if (hideOnRoutes.includes(location.pathname)) {
 		return null;
 	}
 

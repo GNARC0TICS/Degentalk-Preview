@@ -15,7 +15,7 @@ interface MobileNavProps {
 }
 
 export function MobileNav({ isOpen, onClose, onLogout }: MobileNavProps) {
-	const [location] = useLocation();
+	const location = useLocation();
 	const { authStatus, user, toggleWallet } = useHeader();
 
 	const isAuthenticated = authStatus !== 'guest' && authStatus !== 'loading';
@@ -42,7 +42,7 @@ export function MobileNav({ isOpen, onClose, onLogout }: MobileNavProps) {
 					<NavLink key={item.label} href={item.href} analyticsLabel={item.analyticsLabel}>
 						<div
 							className={`block px-3 py-2 rounded-md text-base font-medium cursor-pointer ${
-								item.href === location
+								item.href === location.pathname
 									? 'bg-zinc-800 text-white'
 									: 'text-zinc-300 hover:bg-zinc-800 hover:text-white'
 							} transition-colors`}

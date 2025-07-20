@@ -11,10 +11,10 @@ interface SimpleMenuProps {
 type NavItem = (typeof adminLinks)[number] & { depth?: number };
 
 export default function SimpleMenu({ onItemClick }: SimpleMenuProps) {
-	const [location] = useLocation();
+	const location = useLocation();
 
 	const renderLink = (item: NavItem) => {
-		const isActive = location === item.href || (item.href && location.startsWith(item.href));
+		const isActive = location.pathname === item.href || (item.href && location.pathname.startsWith(item.href));
 
 		return (
 			<Link

@@ -21,12 +21,12 @@ interface ModLayoutProps {
 }
 
 export function ModLayout({ children, title = 'Dashboard' }: ModLayoutProps) {
-	const [location] = useLocation();
+	const location = useLocation();
 	const [isSearchActive, setIsSearchActive] = useState(false);
 
 	// Generate breadcrumbs based on the current location
 	const generateBreadcrumbs = () => {
-		const pathSegments = location.split('/').filter(Boolean);
+		const pathSegments = location.pathname.split('/').filter(Boolean);
 
 		// Create breadcrumb items
 		return (

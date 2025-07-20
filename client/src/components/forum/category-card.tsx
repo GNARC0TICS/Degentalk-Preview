@@ -1,4 +1,4 @@
-import { useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -40,7 +40,7 @@ export function CategoryCard({
 	isVip,
 	minXp
 }: CategoryCardProps) {
-	const [, setLocation] = useLocation();
+	const navigate = useNavigate();
 
 	const handleViewCategory = () => {
 		navigate(`/forums/${slug}`);

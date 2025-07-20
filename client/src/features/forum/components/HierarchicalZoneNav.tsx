@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { Link, useLocation, useRoute } from 'react-router-dom';
+import { Link, useLocation, useParams } from 'react-router-dom';
 import {
 	ChevronRight,
 	ChevronDown,
@@ -382,15 +382,17 @@ const ExpandableForumItem = ({
 };
 
 function HierarchicalZoneNav({ className = '', isCollapsed = false }: HierarchicalZoneNavProps) {
-	const [location] = useLocation();
-	const [, zonePageParams] = useRoute<{
+	const location = useLocation();
+	const params = useParams<{
 		zone_slug?: string;
 		forum_slug?: string;
 		thread_slug?: string;
-	}>(
-		'/zones/:zone_slug/:forum_slug?/:thread_slug?' // Matches /zones/zone-slug or /zones/zone-slug/forum-slug
-	);
-	const [, forumPageParams] = useRoute<{ slug?: string }>('/forums/:slug'); // Matches /forums/forum-slug
+		slug?: string;
+	}>();
+
+	// Determine current parameters based on the current path
+	const zonePageParams = location.pathname.startsWith('/zones') ? params : null;
+	const forumPageParams = location.pathname.startsWith('/forums') ? params : null;
 
 	const currentZoneSlug = zonePageParams?.zone_slug;
 	const currentForumSlug = zonePageParams?.forum_slug || forumPageParams?.slug;
@@ -481,7 +483,7 @@ function HierarchicalZoneNav({ className = '', isCollapsed = false }: Hierarchic
 							<NavItem
 								key={node.id}
 								node={node}
-								isActive={location === node.href && !currentZoneSlug && !currentForumSlug}
+								isActive={location.pathname === node.href && !currentZoneSlug && !currentForumSlug}
 								isCollapsed={isCollapsed}
 							/>
 						))}

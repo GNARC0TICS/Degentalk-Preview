@@ -163,7 +163,7 @@ export default function ModularAdminSidebar({
 	showStatusIndicators = true,
 	className
 }: ModularAdminSidebarProps) {
-	const [location] = useLocation();
+	const location = useLocation();
 	const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>({});
 	const scrollContainerRef = useRef<HTMLDivElement>(null);
 	const { user } = useAuth();
@@ -204,11 +204,11 @@ export default function ModularAdminSidebar({
 	const isModuleActive = useCallback(
 		(module: AdminModule): boolean => {
 			// Check main route
-			if (location === module.route) return true;
+			if (location.pathname === module.route) return true;
 
 			// Check submodules
 			if (module.subModules) {
-				return module.subModules.some((sub) => location === sub.route);
+				return module.subModules.some((sub) => location.pathname === sub.route);
 			}
 
 			return false;

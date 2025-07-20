@@ -42,7 +42,7 @@ interface NavItem {
 }
 
 const MobileForumNav = memo(({ className }: MobileForumNavProps) => {
-	const [location] = useLocation();
+	const location = useLocation();
 	const [isOpen, setIsOpen] = useState(false);
 	const [searchQuery, setSearchQuery] = useState('');
 	const [expandedSection, setExpandedSection] = useState<string | null>(null);
@@ -125,7 +125,7 @@ const MobileForumNav = memo(({ className }: MobileForumNavProps) => {
 	};
 
 	const isCurrentPath = (href: string) => {
-		return location === href || (href !== '/' && location.startsWith(href));
+		return location.pathname === href || (href !== '/' && location.pathname.startsWith(href));
 	};
 
 	const handleSearchSubmit = (e: React.FormEvent) => {

@@ -5,7 +5,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiRequest } from '@/utils/queryClient';
 import { useToast } from '@/hooks/use-toast';
@@ -96,7 +96,7 @@ export function CreateThreadForm({
 	onSuccess
 }: CreateThreadFormProps) {
 	const { toast } = useToast();
-	const [, navigate] = useLocation();
+	const navigate = useNavigate();
 	const { user } = useAuth();
 	const [editorContent, setEditorContent] = useState('');
 	const [editorState, setEditorState] = useState<Record<string, unknown> | null>(null);

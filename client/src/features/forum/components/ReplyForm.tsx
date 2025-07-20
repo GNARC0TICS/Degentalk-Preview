@@ -5,7 +5,7 @@ import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
 import { RichTextEditor } from '@/components/editor/rich-text-editor';
 import { LoadingSpinner } from '@/components/ui/loader';
 import { useAuth } from '@/hooks/use-auth';
-import { useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { X, CornerDownRight } from 'lucide-react';
 import { cn } from '@/utils/utils';
 import { useBreakpoint } from '@/hooks/useMediaQuery';
@@ -37,7 +37,7 @@ export function ReplyForm({
 	includeQuote = false
 }: ReplyFormProps) {
 	const { user, isAuthenticated } = useAuth();
-	const [, setLocation] = useLocation();
+	const navigate = useNavigate();
 	const [content, setContent] = useState('');
 	const [editorContent, setEditorContent] = useState<Record<string, unknown> | null>(null);
 	const [isSubmitting, setIsSubmitting] = useState(false);

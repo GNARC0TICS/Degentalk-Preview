@@ -91,7 +91,7 @@ const MobileForumNavigation = memo(({ className }: MobileForumNavigationProps) =
 	const [isOpen, setIsOpen] = useState(false);
 	const [searchQuery, setSearchQuery] = useState('');
 	const [activeSection, setActiveSection] = useState<'zones' | 'forums' | 'bookmarks'>('zones');
-	const [location] = useLocation();
+	const location = useLocation();
 	const { zones, isLoading } = useForumStructure();
 
 	const dragConstraintsRef = useRef<HTMLDivElement>(null);

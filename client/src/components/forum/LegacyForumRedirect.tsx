@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useParams, useLocation } from 'react-router-dom';
+import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { useForumStructure } from '@/contexts/ForumStructureContext';
 
 /**
@@ -18,14 +18,15 @@ const LegacyForumNavigate: React.FC = () => {
 		forumSlug?: string;
 		subforumSlug?: string;
 	}>();
-	const [location, setLocation] = useLocation();
+	const location = useLocation();
+	const navigate = useNavigate();
 	const { getForum } = useForumStructure();
 
 	useEffect(() => {
 		let targetUrl = '/forums';
 
 		// Handle different legacy URL patterns
-		if (location.startsWith('/zones/')) {
+		if (location.pathname.startsWith('/zones/')) {
 			if (params.subforumSlug && params.forumSlug) {
 				// /zones/{zoneSlug}/{forumSlug}/{subforumSlug} → /forums/{forumSlug}/{subforumSlug}
 				targetUrl = `/forums/${params.forumSlug}/${params.subforumSlug}`;
@@ -43,7 +44,7 @@ const LegacyForumNavigate: React.FC = () => {
 				}
 			}
 			// /zones → /forums (handled by default targetUrl)
-		} else if (location.startsWith('/forum/')) {
+		} else if (location.pathname.startsWith('/forum/')) {
 			// Handle singular /forum/ pattern
 			if (params.slug) {
 				const forum = getForum(params.slug);
@@ -58,10 +59,10 @@ const LegacyForumNavigate: React.FC = () => {
 		}
 
 		// Only redirect if we're not already at the target
-		if (location !== targetUrl) {
+		if (location.pathname !== targetUrl) {
 			navigate(targetUrl);
 		}
-	}, [location, params, getForum, setLocation]);
+	}, [location.pathname, params, getForum, navigate]);
 
 	return (
 		<div className="min-h-screen bg-black flex items-center justify-center">

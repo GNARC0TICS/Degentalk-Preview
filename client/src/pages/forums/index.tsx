@@ -1,6 +1,6 @@
 import React, { useState, useRef, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { LoadingSpinner } from '@/components/ui/loader';
 import { ErrorDisplay } from '@/components/ui/error-display';
@@ -31,7 +31,7 @@ import { MyBBStats, MyBBLegend } from '@/components/forum/MyBBStats';
 import '@/styles/mybb-classic.css';
 
 export default function ForumsIndexPage() {
-	const [, setLocation] = useLocation();
+	const navigate = useNavigate();
 	const {
 		zones: allZones,
 		primaryZones,

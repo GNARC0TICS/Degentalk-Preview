@@ -23,7 +23,7 @@ export interface MobileNavBarProps {
 }
 
 export function MobileNavBar({ items, className }: MobileNavBarProps) {
-	const [location] = useLocation();
+	const location = useLocation();
 	const { isAuthenticated, user } = useAuth();
 
 	// Default navigation items if none provided
@@ -32,34 +32,34 @@ export function MobileNavBar({ items, className }: MobileNavBarProps) {
 			icon: <Home className="h-5 w-5" />,
 			label: 'Home',
 			href: '/',
-			isActive: location === '/'
+			isActive: location.pathname === '/'
 		},
 		{
 			icon: <MessageSquare className="h-5 w-5" />,
 			label: 'Forum',
 			href: '/forums',
 			isActive:
-				location.startsWith('/forums') ||
-				location.startsWith('/threads') ||
-				location.startsWith('/tags')
+				location.pathname.startsWith('/forums') ||
+				location.pathname.startsWith('/threads') ||
+				location.pathname.startsWith('/tags')
 		},
 		{
 			icon: <ShoppingBag className="h-5 w-5" />,
 			label: 'Shop',
 			href: '/shop',
-			isActive: location.startsWith('/shop')
+			isActive: location.pathname.startsWith('/shop')
 		},
 		{
 			icon: <Target className="h-5 w-5" />,
 			label: 'Missions',
 			href: '/missions',
-			isActive: location.startsWith('/missions')
+			isActive: location.pathname.startsWith('/missions')
 		},
 		{
 			icon: <Trophy className="h-5 w-5" />,
 			label: 'Progress',
 			href: '/progress',
-			isActive: location.startsWith('/progress')
+			isActive: location.pathname.startsWith('/progress')
 		}
 	];
 
@@ -69,13 +69,13 @@ export function MobileNavBar({ items, className }: MobileNavBarProps) {
 				icon: <Wallet className="h-5 w-5" />,
 				label: 'Wallet',
 				href: '/wallet',
-				isActive: location.startsWith('/wallet')
+				isActive: location.pathname.startsWith('/wallet')
 			},
 			{
 				icon: <Users className="h-5 w-5" />,
 				label: 'Profile',
 				href: user ? `/profile/${user.username}` : '/login?redirect=/profile',
-				isActive: location.startsWith('/profile')
+				isActive: location.pathname.startsWith('/profile')
 			}
 		);
 	}

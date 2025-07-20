@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { useLocation, Navigate } from 'react-router-dom';
+import { useNavigate, Navigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/use-auth';
 import { Button } from '@/components/ui/button';
 import {
@@ -57,7 +57,7 @@ const registerSchema = z
 
 export default function AuthPage() {
 	const [activeTab, setActiveTab] = useState<string>('login');
-	const [location, navigate] = useLocation();
+	const navigate = useNavigate();
 	const { user, isLoading, loginMutation, registerMutation } = useAuth();
 	const searchParams = useSearchParams();
 

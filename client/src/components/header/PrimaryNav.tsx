@@ -40,7 +40,7 @@ interface PrimaryNavProps {
 }
 
 export function PrimaryNav({ className }: PrimaryNavProps) {
-	const [location] = useLocation();
+	const location = useLocation();
 	const [navPaths, setNavPaths] = useState<string[]>([]);
 	const navRefs = useRef<(SVGPathElement | null)[]>([]);
 	const { authStatus, user } = useHeader();
@@ -67,7 +67,7 @@ export function PrimaryNav({ className }: PrimaryNavProps) {
 			navRefs.current.forEach((path, index) => {
 				if (path) {
 					const pathLength = path.getTotalLength();
-					const isActive = visibleNavigation[index].href === location;
+					const isActive = visibleNavigation[index].href === location.pathname;
 					gsap.set(path, {
 						strokeDasharray: pathLength,
 						strokeDashoffset: isActive ? 0 : pathLength,
@@ -76,7 +76,7 @@ export function PrimaryNav({ className }: PrimaryNavProps) {
 				}
 			});
 		}, 100);
-	}, [visibleNavigation.length, location]);
+	}, [visibleNavigation.length, location.pathname]);
 
 	const handleLocationChange = (currentLocation: string, isInitialSetup = false) => {
 		navRefs.current.forEach((path, index) => {
@@ -106,12 +106,12 @@ export function PrimaryNav({ className }: PrimaryNavProps) {
 	};
 
 	useEffect(() => {
-		handleLocationChange(location);
+		handleLocationChange(location.pathname);
 	}, [location]);
 
 	const handleMouseEnter = (index: number) => {
 		const path = navRefs.current[index];
-		if (path && visibleNavigation[index].href !== location) {
+		if (path && visibleNavigation[index].href !== location.pathname) {
 			gsap.killTweensOf(path);
 			gsap.to(path, {
 				strokeDashoffset: 0,
@@ -124,7 +124,7 @@ export function PrimaryNav({ className }: PrimaryNavProps) {
 
 	const handleMouseLeave = (index: number) => {
 		const path = navRefs.current[index];
-		if (path && visibleNavigation[index].href !== location) {
+		if (path && visibleNavigation[index].href !== location.pathname) {
 			const pathLength = path.getTotalLength();
 			gsap.killTweensOf(path);
 			gsap.to(path, {
@@ -139,7 +139,7 @@ export function PrimaryNav({ className }: PrimaryNavProps) {
 	return (
 		<nav className={`hidden md:flex items-center space-x-1 ${className || ''}`}>
 			{visibleNavigation.map((item, index) => {
-				const isActive = item.href === location;
+				const isActive = item.href === location.pathname;
 				const isLeaderboard = item.label === 'Leaderboard';
 				const viewBoxWidth = isLeaderboard ? 100 : 70;
 				const defaultPath = isLeaderboard ? 'M5 10Q50 12 95 10' : 'M5 10Q35 12 65 10';

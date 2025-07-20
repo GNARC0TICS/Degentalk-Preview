@@ -62,7 +62,7 @@ export function HotTopicsWidget({
 							{/* Thread meta */}
 							<div className="flex items-center justify-between mt-1">
 								<Link
-									href={`/forums/${thread.forumSlug}`}
+									to={`/forums/${thread.forumSlug}`}
 									className="text-xs text-zinc-500 hover:text-emerald-400 transition-colors"
 								>
 									{thread.forumName}
@@ -91,7 +91,7 @@ export function HotTopicsWidget({
 
 	const footerContent = (
 		<Link
-			href="/forums/trending"
+			to="/forums/trending"
 			className="flex items-center justify-between text-sm text-zinc-400 hover:text-emerald-400 transition-colors group"
 		>
 			<span>View all trending</span>

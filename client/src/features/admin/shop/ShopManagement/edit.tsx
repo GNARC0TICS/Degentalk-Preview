@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/select';
 import { apiRequest } from '@/utils/queryClient';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useParams, Link, useLocation } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import type { Id } from '@shared/types/ids';
@@ -78,7 +78,7 @@ export default function AdminShopItemEditPage() {
 	const params = useParams<{ id: string }>();
 	const itemId = params.id === 'new' ? null : params.id;
 	const queryClient = useQueryClient();
-	const [, navigate] = useLocation();
+	const navigate = useNavigate();
 	const { toast } = useToast();
 
 	const [name, setName] = useState('');

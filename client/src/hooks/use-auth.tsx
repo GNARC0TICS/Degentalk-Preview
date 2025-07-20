@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import { createContext, useContext, useState, useEffect, useMemo } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiRequest } from '@/utils/api-request';
-import { useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { getUserPermissions } from '@/utils/roles';
 import type { Role } from '@/utils/roles';
 import type { UserId, FrameId } from '@shared/types/ids';
@@ -225,7 +225,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
 	const isDevelopment =
 		import.meta.env.MODE === 'development' && import.meta.env.VITE_FORCE_AUTH !== 'true';
-	const [, navigate] = useLocation();
+	const navigate = useNavigate();
 
 	// USER AUTHENTICATION QUERY: This is the core auth validation
 	// Uses the RootProvider's QueryClient which has on401: 'returnNull' configured

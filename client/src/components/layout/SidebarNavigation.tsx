@@ -217,7 +217,7 @@ export function SidebarNavigation({
 	isCollapsed = false
 	// userPinnedItems = [] // Commenting out for now
 }: SidebarNavigationProps) {
-	const [location] = useLocation();
+	const location = useLocation();
 	const { zones, isLoading, error: forumStructureError } = useForumStructure();
 
 	const navigationTree = useMemo(() => {
@@ -233,7 +233,7 @@ export function SidebarNavigation({
 	// Auto-expand category of active child forum or if category itself is active
 	useEffect(() => {
 		const activeNode = navigationTree.find(
-			(node) => location === node.href || location.startsWith(`${node.href}/`)
+			(node) => location.pathname === node.href || location.pathname.startsWith(`${node.href}/`)
 		);
 
 		if (activeNode) {
@@ -253,7 +253,7 @@ export function SidebarNavigation({
 				setExpandedCategories((prev) => ({ ...prev, [parentCategory.id]: true }));
 			}
 		}
-	}, [location, navigationTree, expandedCategories, setExpandedCategories]);
+	}, [location.pathname, navigationTree, expandedCategories, setExpandedCategories]);
 
 	const toggleCategoryExpansion = useCallback(
 		(categoryId: string) => {
@@ -295,7 +295,7 @@ export function SidebarNavigation({
 							<SidebarNavItem
 								key={node.id}
 								node={node}
-								isActive={location === node.href}
+								isActive={location.pathname === node.href}
 								isCollapsed={isCollapsed}
 							/>
 						))}
@@ -317,7 +317,7 @@ export function SidebarNavigation({
 							<SidebarNavItem
 								key={node.id}
 								node={node}
-								isActive={location === node.href || location.startsWith(`${node.href}/`)}
+								isActive={location.pathname === node.href || location.pathname.startsWith(`${node.href}/`)}
 								isCollapsed={isCollapsed}
 							/>
 						))}
@@ -347,7 +347,7 @@ export function SidebarNavigation({
 								categoryNode={categoryNode}
 								isExpanded={!!expandedCategories[categoryNode.id]}
 								onToggle={() => toggleCategoryExpansion(categoryNode.id)}
-								currentPath={location}
+								currentPath={location.pathname}
 								isCollapsed={isCollapsed}
 							/>
 						))}

@@ -21,10 +21,10 @@ import {
 import { cn } from '@/utils/utils';
 
 export function ModSidebar() {
-	const [location] = useLocation();
+	const location = useLocation();
 
 	const isActive = (path: string) => {
-		return location === path || location.startsWith(path + '/');
+		return location.pathname === path || location.pathname.startsWith(path + '/');
 	};
 
 	return (

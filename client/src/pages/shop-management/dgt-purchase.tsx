@@ -3,7 +3,7 @@ import { useDgtPurchase } from '@/hooks/useDgtPurchase';
 import { StripeElementsWrapper } from '@/components/payment/StripeElementsWrapper';
 import { PaymentForm } from '@/components/payment/PaymentForm';
 import { useToast } from '@/hooks/use-toast';
-import { useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Coins, ChevronLeft, Loader2, Info, CheckCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -27,7 +27,7 @@ interface Package {
 
 export default function DgtPurchasePage() {
 	const { toast } = useToast();
-	const [, setLocation] = useLocation();
+	const navigate = useNavigate();
 	const [packages, setPackages] = useState<Package[]>([]);
 	const [selectedPackage, setSelectedPackage] = useState<Package | null>(null);
 	const [isLoadingPackages, setIsLoadingPackages] = useState(true);

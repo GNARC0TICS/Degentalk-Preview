@@ -14,7 +14,7 @@ import { cn } from '@/utils/utils';
 import { useMutation } from '@tanstack/react-query';
 import { apiRequest } from '@/utils/queryClient';
 import { useToast } from '@/hooks/use-toast';
-import { useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import type { MergedRules } from '@/contexts/ForumStructureContext';
 import DOMPurify from 'dompurify';
 
@@ -44,7 +44,7 @@ export function ThreadForm({
 	onSuccess,
 	className
 }: ThreadFormProps) {
-	const [, setLocation] = useLocation();
+	const navigate = useNavigate();
 	const { toast } = useToast();
 	const [activeTab, setActiveTab] = useState<'write' | 'preview'>('write');
 
