@@ -12,9 +12,9 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
-import { NavLink } from './NavLink.tsx';
+import { NavLink } from './NavLink';
 import { createUserMenuItems } from '@/config/navigation';
-import { useHeader } from './HeaderContext.tsx';
+import { useHeader } from './HeaderContext';
 import { useAuth } from '@/hooks/use-auth';
 
 // Helper to calculate next level XP requirement

@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import UserSearchForm from './components/UserSearchForm.tsx';
+import UserSearchForm from './components/UserSearchForm';
 import { useUserFinancialProfile } from './hooks/useUserFinancialProfile.ts';
-import BalanceCard from './components/BalanceCard.tsx';
-import ManualCreditForm from './components/ManualCreditForm.tsx';
-import ManualDebitForm from './components/ManualDebitForm.tsx';
+import BalanceCard from './components/BalanceCard';
+import ManualCreditForm from './components/ManualCreditForm';
+import ManualDebitForm from './components/ManualDebitForm';
 import type { UserId } from '@shared/types/ids';
 
 const UserWalletManager: React.FC = () => {

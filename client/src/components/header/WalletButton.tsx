@@ -1,7 +1,7 @@
 import React from 'react';
 import { IconRenderer } from '@/components/icons/iconRenderer';
 import { Button } from '@/components/ui/button';
-import { useHeader } from './HeaderContext.tsx';
+import { useHeader } from './HeaderContext';
 
 interface WalletButtonProps {
 	className?: string;

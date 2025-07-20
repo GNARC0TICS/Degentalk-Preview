@@ -9,10 +9,10 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { AlertCircle, Check, X } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { PreferencesCard } from './PreferencesCard.tsx';
-import { PreferencesGroup } from './PreferencesGroup.tsx';
-import { PreferencesInput } from './PreferencesInput.tsx';
-import { PreferencesSelect } from './PreferencesSelect.tsx';
+import { PreferencesCard } from './PreferencesCard';
+import { PreferencesGroup } from './PreferencesGroup';
+import { PreferencesInput } from './PreferencesInput';
+import { PreferencesSelect } from './PreferencesSelect';
 import { useUserSettings } from '@/hooks/preferences/useUserSettings';
 import {
 	useUpdateUserSettings,

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { cn } from '@/utils/utils';
-import { ControlsDrawer } from './ControlsDrawer.tsx';
+import { ControlsDrawer } from './ControlsDrawer';
 import { usePlaygroundControls } from '@/stores/usePlaygroundControls';
 
 interface DevPlaygroundLayoutProps {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Skeleton } from './skeleton.tsx';
+import { Skeleton } from './skeleton';
 
 export const WidgetSkeleton = () => (
 	<div className="p-4">

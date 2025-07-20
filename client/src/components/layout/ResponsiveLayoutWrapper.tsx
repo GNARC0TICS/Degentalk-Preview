@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useLayoutStore, type SlotId } from '@/stores/useLayoutStore';
-import { SlotRenderer } from './SlotRenderer.tsx';
-import { WidgetGallery } from './WidgetGallery.tsx';
+import { SlotRenderer } from './SlotRenderer';
+import { WidgetGallery } from './WidgetGallery';
 import { Button } from '@/components/ui/button';
 import { Settings2, Sidebar, SidebarClose, PanelLeft, PanelRight } from 'lucide-react';
 import {

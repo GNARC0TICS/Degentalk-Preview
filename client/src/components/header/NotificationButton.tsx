@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { NotificationPanel } from '@/components/notifications/NotificationPanel';
-import { useHeader } from './HeaderContext.tsx';
+import { useHeader } from './HeaderContext';
 import { IconRenderer } from '@/components/icons/iconRenderer';
 
 // Framer Motion variants

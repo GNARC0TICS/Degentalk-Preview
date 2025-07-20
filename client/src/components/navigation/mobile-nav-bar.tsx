@@ -10,8 +10,8 @@ import {
 	Target,
 	Trophy
 } from 'lucide-react';
-import { NavItem } from './nav-item.tsx';
-import type { NavItemProps } from './nav-item.tsx';
+import { NavItem } from './nav-item';
+import type { NavItemProps } from './nav-item';
 import { cn } from '@/utils/utils';
 import { useAuth } from '@/hooks/use-auth';
 

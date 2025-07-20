@@ -24,7 +24,7 @@ import { useUIConfig, buildResponsiveClasses } from '@/contexts/UIConfigContext'
 import { SafeImage } from '@/components/ui/safe-image';
 import { animationConfig } from '@/config/animation.config';
 import { getZoneTheme } from '@shared/config/zoneThemes.config';
-import XpBoostBadge from './XpBoostBadge.tsx';
+import XpBoostBadge from './XpBoostBadge';
 
 export interface ConfigurableZoneCardProps {
 	zone: {

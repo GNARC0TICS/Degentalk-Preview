@@ -9,8 +9,8 @@ import {
 	SocialStatsCard,
 	MilestoneCard
 } from './widgets';
-import { QuickActionsCard } from './widgets/QuickActionsCard.tsx';
-import { ProfileInsightsCard } from './widgets/ProfileInsightsCard.tsx';
+import { QuickActionsCard } from './widgets/QuickActionsCard';
+import { ProfileInsightsCard } from './widgets/ProfileInsightsCard';
 import type { ProfileData } from '@/types/profile';
 
 interface ProfileDashboardProps {

@@ -1,6 +1,6 @@
-export { Wide } from './Wide.tsx';
-export { Prose } from './Prose.tsx';
-export { FullBleedSection } from './FullBleedSection.tsx';
-export { ClampPadding } from './ClampPadding.tsx';
-export { StickyRegion } from './StickyRegion.tsx';
-export { PageBackdrop } from './PageBackdrop.tsx';
+export { Wide } from './Wide';
+export { Prose } from './Prose';
+export { FullBleedSection } from './FullBleedSection';
+export { ClampPadding } from './ClampPadding';
+export { StickyRegion } from './StickyRegion';
+export { PageBackdrop } from './PageBackdrop';

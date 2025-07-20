@@ -1,6 +1,6 @@
 import React from 'react';
 import { useDgtAnalytics } from './hooks/useDgtAnalytics.ts';
-import BalanceCard from './components/BalanceCard.tsx';
+import BalanceCard from './components/BalanceCard';
 
 const EconomyDashboard: React.FC = () => {
   const { data, error, isLoading } = useDgtAnalytics();

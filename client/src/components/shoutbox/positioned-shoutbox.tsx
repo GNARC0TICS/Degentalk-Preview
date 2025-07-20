@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useShoutbox } from '@/contexts/shoutbox-context';
 import type { ShoutboxEffectivePosition } from '@/contexts/shoutbox-context';
-import ShoutboxWidget from './shoutbox-widget.tsx';
+import ShoutboxWidget from './shoutbox-widget';
 import { createPortal } from 'react-dom';
 import { MessageSquare } from 'lucide-react';
 

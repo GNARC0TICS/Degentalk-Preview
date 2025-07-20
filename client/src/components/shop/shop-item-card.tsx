@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import type { ShopItem } from '@/hooks/use-shop-items';
 import { useShopItemOwnership } from '@/hooks/use-shop-ownership';
-import { useAuth } from '@/hooks/use-auth.tsx';
+import { useAuth } from '@/hooks/use-auth';
 import {
 	BadgeCheck,
 	Lock,

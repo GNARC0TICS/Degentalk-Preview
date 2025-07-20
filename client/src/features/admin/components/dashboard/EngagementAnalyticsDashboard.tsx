@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import RainAnalyticsCard from './RainAnalyticsCard.tsx';
-import TippingAnalyticsCard from './TippingAnalyticsCard.tsx';
+import RainAnalyticsCard from './RainAnalyticsCard';
+import TippingAnalyticsCard from './TippingAnalyticsCard';
 
 interface EngagementAnalyticsDashboardProps {
 	className?: string;

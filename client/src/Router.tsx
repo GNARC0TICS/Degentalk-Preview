@@ -1,47 +1,47 @@
 import { createBrowserRouter } from 'react-router-dom';
-import RootLayout from './layouts/RootLayout.tsx';
-import AdminLayout from './layouts/AdminLayout.tsx';
-import ModLayout from './layouts/ModLayout.tsx';
-import ProtectedRoute from './components/auth/ProtectedRoute.tsx';
+import RootLayout from './layouts/RootLayout';
+import AdminLayout from './layouts/AdminLayout';
+import ModLayout from './layouts/ModLayout';
+import ProtectedRoute from './components/auth/ProtectedRoute';
 
 // Import pages
-import HomePage from './pages/home.tsx';
-import AuthPage from './pages/auth.tsx';
+import HomePage from './pages/home';
+import AuthPage from './pages/auth';
 import ForumsPage from './pages/forums';
-import ForumBySlugPage from './pages/forums/[forumSlug].tsx';
-import ForumSearchPage from './pages/forums/search.tsx';
+import ForumBySlugPage from './pages/forums/[forumSlug]';
+import ForumSearchPage from './pages/forums/search';
 import ThreadPage from './pages/threads/BBCodeThreadPage';
-import CreateThreadPage from './pages/threads/create.tsx';
-import ShopPage from './pages/shop.tsx';
-import LeaderboardPage from './pages/leaderboard.tsx';
-import DegenIndexPage from './pages/degen-index.tsx';
+import CreateThreadPage from './pages/threads/create';
+import ShopPage from './pages/shop';
+import LeaderboardPage from './pages/leaderboard';
+import DegenIndexPage from './pages/degen-index';
 import MissionsPage from './pages/missions';
 import AnnouncementsPage from './pages/announcements';
 import SearchPage from './pages/search';
-import ProfilePage from './pages/profile.tsx';
-import WhispersPage from './pages/whispers.tsx';
-import WalletPage from './pages/wallet.tsx';
-import NotFoundPage from './pages/not-found.tsx';
+import ProfilePage from './pages/profile';
+import WhispersPage from './pages/whispers';
+import WalletPage from './pages/wallet';
+import NotFoundPage from './pages/not-found';
 
 // Shop Pages
-import DgtPurchasePage from './pages/shop-management/dgt-purchase.tsx';
-import PurchaseSuccessPage from './pages/shop-management/purchase-success.tsx';
+import DgtPurchasePage from './pages/shop-management/dgt-purchase';
+import PurchaseSuccessPage from './pages/shop-management/purchase-success';
 
 // Mod Pages
-import ModDashboardPage from './pages/mod/index.tsx';
-import ModShoutboxPage from './pages/mod/shoutbox.tsx';
-import ModUsersPage from './pages/mod/users.tsx';
-import ModReportsPage from './pages/mod/reports.tsx';
+import ModDashboardPage from './pages/mod/index';
+import ModShoutboxPage from './pages/mod/shoutbox';
+import ModUsersPage from './pages/mod/users';
+import ModReportsPage from './pages/mod/reports';
 
 // Dictionary Pages
-import DictionaryIndexPage from './pages/dictionary/index.tsx';
-import DictionarySlugPage from './pages/dictionary/[slug].tsx';
+import DictionaryIndexPage from './pages/dictionary/index';
+import DictionarySlugPage from './pages/dictionary/[slug]';
 
 // Other Pages
-import ReferralsPage from './pages/referrals/index.tsx';
-import InvitePage from './pages/invite/[code].tsx';
-import PreferencesPage from './pages/preferences/index.tsx';
-import UIPlaygroundPage from './pages/ui-playground.tsx';
+import ReferralsPage from './pages/referrals/index';
+import InvitePage from './pages/invite/[code]';
+import PreferencesPage from './pages/preferences/index';
+import UIPlaygroundPage from './pages/ui-playground';
 
 // Legacy Navigate Component
 import LegacyForumNavigate from '@/components/forum/LegacyForumNavigate';

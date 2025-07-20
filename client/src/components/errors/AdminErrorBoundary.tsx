@@ -2,7 +2,7 @@ import React from 'react';
 import { AlertTriangle, Settings, RefreshCw, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ErrorBoundary } from './ErrorBoundary.tsx';
+import { ErrorBoundary } from './ErrorBoundary';
 
 /**
  * Specialized Error Boundary for Admin operations

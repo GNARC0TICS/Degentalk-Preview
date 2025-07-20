@@ -17,7 +17,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Separator } from '@/components/ui/separator';
 import { AlertCircle, AlertTriangle, Check, Info } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { useAuth } from '@/hooks/use-auth.tsx';
+import { useAuth } from '@/hooks/use-auth';
 import { apiRequest } from '@/utils/queryClient';
 import { LoadingSpinner as Spinner } from '@/components/ui/loader';
 import type { RuleId, UserId, EntityId } from '@shared/types/ids';

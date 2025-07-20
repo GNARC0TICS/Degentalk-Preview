@@ -17,8 +17,8 @@ import Mention from '@tiptap/extension-mention';
 // import suggestion from './suggestion.ts';
 const lowlight = createLowlight(common);
 import { Button } from '@/components/ui/button';
-import { GifPicker } from './gif-picker.tsx';
-import { EnhancedGifPicker } from './enhanced-gif-picker.tsx';
+import { GifPicker } from './gif-picker';
+import { EnhancedGifPicker } from './enhanced-gif-picker';
 import {
 	Bold,
 	Italic,

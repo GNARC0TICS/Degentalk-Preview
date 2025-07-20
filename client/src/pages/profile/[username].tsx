@@ -18,7 +18,7 @@ import { SeoHead } from '@/components/ui/seo-head';
 import { ErrorDisplay } from '@/components/ui/error-display';
 import { LoadingSpinner } from '@/components/ui/loader';
 import BackToHomeButton from '@/components/common/BackToHomeButton';
-import { useAuth } from '@/hooks/use-auth.tsx';
+import { useAuth } from '@/hooks/use-auth';
 import { useUserInventory } from '@/hooks/useUserInventory';
 import { useProfileEngagement } from '@/hooks/useProfileEngagement';
 import type { ProfileData } from '@/types/profile';

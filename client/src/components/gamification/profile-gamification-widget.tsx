@@ -15,7 +15,7 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { LevelDisplay } from './level-display.tsx';
+import { LevelDisplay } from './level-display';
 import { formatNumber } from '@/utils/utils';
 import { Trophy, Target, Flame, TrendingUp, ChevronRight, Sparkles, Award } from 'lucide-react';
 import { useLocation } from 'react-router-dom';

@@ -1,5 +1,5 @@
 import React from 'react';
-import ChartMenu from './candlestick-menu.tsx';
+import ChartMenu from './candlestick-menu';
 
 interface HamburgerProps {
 	isActive?: boolean;

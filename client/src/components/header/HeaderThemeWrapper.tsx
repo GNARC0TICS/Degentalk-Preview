@@ -1,5 +1,5 @@
 import React from 'react';
-import { useHeader } from './HeaderContext.tsx';
+import { useHeader } from './HeaderContext';
 
 interface HeaderThemeWrapperProps {
 	children: React.ReactNode;

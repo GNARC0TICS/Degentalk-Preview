@@ -41,8 +41,8 @@ import {
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/utils/api-request';
-import { RoleForm } from './RoleForm.tsx';
-import { PermissionsEditor } from '../permissions/PermissionsEditor.tsx';
+import { RoleForm } from './RoleForm';
+import { PermissionsEditor } from '../permissions/PermissionsEditor';
 import type { Role, Title, Permission } from '@/features/admin/views/roles-titles';
 
 interface RolesSectionProps {

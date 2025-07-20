@@ -1,7 +1,7 @@
 import React from 'react';
 import { IconRenderer } from '@/components/icons/iconRenderer';
 import { Button } from '@/components/ui/button';
-import { NavLink } from './NavLink.tsx';
+import { NavLink } from './NavLink';
 import { useAuth } from '@/hooks/use-auth';
 import { hasRoleAtLeast } from '@/utils/roles';
 import type { Role } from '@/utils/roles';

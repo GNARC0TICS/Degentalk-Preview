@@ -5,9 +5,9 @@
 
 import React, { useEffect } from 'react';
 import { ShoutboxWidget, StyledShoutboxMessage, detectMessageType } from './';
-import { RainNotifications } from './shoutbox-rain-notification.tsx';
+import { RainNotifications } from './shoutbox-rain-notification';
 import { useRainNotifications } from '@/hooks/use-rain-notifications';
-import { processHelpCommand } from './shoutbox-help-command.tsx';
+import { processHelpCommand } from './shoutbox-help-command';
 
 // Example component showing integration
 export function ShoutboxWithRainSupport() {

@@ -9,10 +9,10 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { UploadCloud } from 'lucide-react';
-import { PreferencesCard } from './PreferencesCard.tsx';
-import { PreferencesGroup } from './PreferencesGroup.tsx';
-import { PreferencesInput } from './PreferencesInput.tsx';
-import { PreferencesTextarea } from './PreferencesTextarea.tsx';
+import { PreferencesCard } from './PreferencesCard';
+import { PreferencesGroup } from './PreferencesGroup';
+import { PreferencesInput } from './PreferencesInput';
+import { PreferencesTextarea } from './PreferencesTextarea';
 import { useUserSettings } from '@/hooks/preferences/useUserSettings';
 import { useUpdateUserSettings } from '@/hooks/preferences/useUpdateUserSettings';
 

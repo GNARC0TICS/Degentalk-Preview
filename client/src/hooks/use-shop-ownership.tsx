@@ -1,7 +1,7 @@
 import React from 'react';
 import { apiRequest } from '@/utils/api-request';
 import { useQuery } from '@tanstack/react-query';
-import { useAuth } from './use-auth.tsx';
+import { useAuth } from './use-auth';
 
 /**
  * Hook to check if the current user owns a specific shop item

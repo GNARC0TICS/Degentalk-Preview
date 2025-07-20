@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Flame, MessageSquare, Eye, ChevronRight } from 'lucide-react';
-import { SidebarWidgetCard } from './SidebarWidgetCard.tsx';
-import { WidgetSkeleton } from './WidgetSkeleton.tsx';
+import { SidebarWidgetCard } from './SidebarWidgetCard';
+import { WidgetSkeleton } from './WidgetSkeleton';
 import { useHotThreads } from '@/features/forum/hooks/useForumStats';
 import { formatDistanceToNow } from 'date-fns';
 import { cn } from '@/utils/utils';

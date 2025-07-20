@@ -6,7 +6,7 @@ import { Wide } from '@/layout/primitives/Wide';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { useAuth } from '@/hooks/use-auth.tsx';
+import { useAuth } from '@/hooks/use-auth';
 import { CheckCircle, UserPlus, AlertCircle, Gift } from 'lucide-react';
 import { toast } from 'sonner';
 

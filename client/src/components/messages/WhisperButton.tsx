@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import type { ButtonProps } from '@/components/ui/button';
 import { MessageSquareWave } from '@/components/messages/icons/MessageSquareWave';
-import { WhisperModal } from './WhisperModal.tsx';
+import { WhisperModal } from './WhisperModal';
 import { Badge } from '@/components/ui/badge';
 import { useMessages } from '@/hooks/use-messages';
 import { useQuery } from '@tanstack/react-query';

@@ -19,7 +19,7 @@ import {
 import { cn, formatNumber, formatCurrency, formatRelativeTime } from '@/utils/utils';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/utils/queryClient';
-import { useAuth } from '@/hooks/use-auth.tsx';
+import { useAuth } from '@/hooks/use-auth';
 import type { ProfileData } from '@/types/profile';
 import { useIdentityDisplay } from '@/hooks/useIdentityDisplay';
 import { AvatarFrame } from '@/components/identity/AvatarFrame';

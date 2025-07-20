@@ -1,6 +1,6 @@
 import { useLayoutStore, type SlotId } from '@/stores/useLayoutStore';
 import { pageSlotMap } from '@/config/pageSlotMap';
-import { SlotRenderer } from './SlotRenderer.tsx';
+import { SlotRenderer } from './SlotRenderer';
 
 export const LayoutRenderer = ({ page }: { page: 'home' | 'forum' | 'profile' }) => {
 	const sidebars = useLayoutStore((s) => s.sidebars);

@@ -1,5 +1,5 @@
 import { useLayoutStore, type SlotId } from '@/stores/useLayoutStore';
-import { WidgetFrame } from './WidgetFrame.tsx';
+import { WidgetFrame } from './WidgetFrame';
 
 interface SlotRendererProps {
 	slotId: SlotId;

@@ -1,5 +1,5 @@
 import React from 'react';
-import { UnifiedProfileCard } from './UnifiedProfileCard.tsx';
+import { UnifiedProfileCard } from './UnifiedProfileCard';
 import { cn } from '@/utils/utils';
 import type { User } from '@/types/compat/user';
 

@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useRef, useState, useCallback } from 'react';
-import { useAuth } from './use-auth.tsx';
+import { useAuth } from './use-auth';
 import { toast } from 'sonner';
 
 interface WebSocketContextType {

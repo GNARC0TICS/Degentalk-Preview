@@ -9,7 +9,7 @@ import { cn } from '@/utils/utils';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { LevelDisplay } from './level-display.tsx';
+import { LevelDisplay } from './level-display';
 import { formatNumber } from '@/utils/utils';
 import { Sparkles, Trophy, Gift, ArrowRight, Zap, Star } from 'lucide-react';
 import { motion } from 'framer-motion';

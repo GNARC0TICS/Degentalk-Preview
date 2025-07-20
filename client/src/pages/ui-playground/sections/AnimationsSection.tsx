@@ -1,8 +1,8 @@
 import React from 'react';
 import { PlaygroundSection } from '@/pages/dev';
-import ButtonPulseDemo from '../animations/ButtonPulseDemo.tsx';
-import CardFlipDemo from '../animations/CardFlipDemo.tsx';
-import FadeInListDemo from '../animations/FadeInListDemo.tsx';
+import ButtonPulseDemo from '../animations/ButtonPulseDemo';
+import CardFlipDemo from '../animations/CardFlipDemo';
+import FadeInListDemo from '../animations/FadeInListDemo';
 
 export const AnimationsSection: React.FC = () => (
 	<PlaygroundSection id="animations" title="Animations">

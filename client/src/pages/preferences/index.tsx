@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import useSearchParams from '@/hooks/useSearchParams';
 import { SiteHeader } from '@/components/header';
 import { SiteFooter } from '@/components/footer';
-import { useAuth } from '@/hooks/use-auth.tsx';
+import { useAuth } from '@/hooks/use-auth';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { ProfilePreferences } from '@/components/preferences/profile-preferences';

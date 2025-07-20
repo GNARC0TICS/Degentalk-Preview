@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { useAuth } from '@/hooks/use-auth.tsx';
+import { useAuth } from '@/hooks/use-auth';
 import type { MergedForum } from '@/contexts/ForumStructureContext';
 
 export interface PermissionResult {

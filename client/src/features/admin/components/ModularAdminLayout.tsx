@@ -9,8 +9,8 @@ import { useState, useEffect } from 'react';
 import type { ReactNode } from 'react';
 import { Sheet, SheetContent } from '@/components/ui/sheet';
 import { useMediaQuery } from '@/hooks/use-media-query';
-import ModularAdminSidebar from './ModularAdminSidebar.tsx';
-import AdminThemeProvider from './AdminThemeProvider.tsx';
+import ModularAdminSidebar from './ModularAdminSidebar';
+import AdminThemeProvider from './AdminThemeProvider';
 import { cn } from '@/utils/utils';
 
 interface ModularAdminLayoutProps {

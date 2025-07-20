@@ -6,9 +6,9 @@ import { Card } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Trophy, Target, Clock, Flame, Crown, Calendar, Star } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
-import { useMissions } from '../hooks/useMissions.ts';
-import { MissionCard } from './MissionCard.tsx';
-import { StreakBanner } from './StreakBanner.tsx';
+import { useMissions } from '../hooks/useMissions';
+import { MissionCard } from './MissionCard';
+import { StreakBanner } from './StreakBanner';
 import { MissionStats } from './MissionStats';
 import { formatDistanceToNow } from 'date-fns';
 

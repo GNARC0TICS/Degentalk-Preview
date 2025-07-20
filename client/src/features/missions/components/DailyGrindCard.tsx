@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { Check, Tag, AlertCircle, Trophy } from 'lucide-react';
-import { useMissionActions } from '../hooks/useMissionActions.tsx';
-import type { Mission } from '../types.ts';
+import { useMissionActions } from '../hooks/useMissionActions';
+import type { Mission } from '../types';
 
 interface DailyGrindCardProps {
   missions: Mission[];

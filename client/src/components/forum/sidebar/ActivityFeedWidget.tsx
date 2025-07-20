@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Activity, ChevronRight, Clock } from 'lucide-react';
-import { SidebarWidgetCard } from './SidebarWidgetCard.tsx';
-import { WidgetSkeleton } from './WidgetSkeleton.tsx';
+import { SidebarWidgetCard } from './SidebarWidgetCard';
+import { WidgetSkeleton } from './WidgetSkeleton';
 import { useActivityFeed } from '@/features/activity/hooks/useActivityFeed';
 import { formatDistanceToNow } from 'date-fns';
 import type { EventLog } from '@/features/activity/services/activityApi';

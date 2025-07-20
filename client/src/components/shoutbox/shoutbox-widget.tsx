@@ -28,7 +28,7 @@ import {
 } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
 import { useShoutbox } from '@/contexts/shoutbox-context';
-import { ShoutboxPositionSelector } from './shoutbox-position-selector.tsx';
+import { ShoutboxPositionSelector } from './shoutbox-position-selector';
 import { useIdentityDisplay } from '@/hooks/useIdentityDisplay';
 
 // Import icons
