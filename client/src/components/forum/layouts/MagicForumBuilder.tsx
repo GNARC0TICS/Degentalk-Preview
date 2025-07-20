@@ -187,7 +187,11 @@ const MagicForumBuilder = memo(
 						totalTips: 250
 					},
 					isOnline: true,
-					joinedAt: new Date().toISOString()
+					joinedAt: new Date().toISOString(),
+					isAdmin: false,
+					isModerator: false,
+					isVerified: false,
+					isBanned: false
 				},
 				zone: {
 					id: 'zone_1' as ZoneId,
@@ -262,7 +266,11 @@ const MagicForumBuilder = memo(
 						totalTips: 780
 					},
 					isOnline: false,
-					joinedAt: new Date().toISOString()
+					joinedAt: new Date().toISOString(),
+					isAdmin: false,
+					isModerator: false,
+					isVerified: true,
+					isBanned: false
 				},
 				zone: {
 					id: 'zone_2' as ZoneId,

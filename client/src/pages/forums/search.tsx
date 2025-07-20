@@ -1,5 +1,5 @@
 import React from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
 import { SiteFooter } from '@/components/footer';
 import {
 	Breadcrumb,
@@ -88,7 +88,9 @@ const ForumSearchPage = () => {
 										) : index === breadcrumbItems.length - 1 && searchQuery ? ( // Last item if there is a search query
 											<BreadcrumbPage>{item.label}</BreadcrumbPage>
 										) : (
-											<BreadcrumbLink href={item.href}>{item.label}</BreadcrumbLink>
+											<BreadcrumbLink asChild>
+												<Link to={item.href}>{item.label}</Link>
+											</BreadcrumbLink>
 										)}
 									</BreadcrumbItem>
 									{index < breadcrumbItems.length - 1 && <BreadcrumbSeparator />}

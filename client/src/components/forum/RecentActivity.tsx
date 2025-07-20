@@ -82,7 +82,7 @@ export function RecentActivity({
 					<span>
 						created thread{' '}
 						<Link
-							href={`/threads/${activity.threadSlug}`}
+							to={`/threads/${activity.threadSlug}`}
 							className="text-emerald-400 hover:underline"
 						>
 							{activity.title}
@@ -92,7 +92,7 @@ export function RecentActivity({
 								{' '}
 								in{' '}
 								<Link
-									href={`/forums/${activity.forumSlug}`}
+									to={`/forums/${activity.forumSlug}`}
 									className="text-cyan-400 hover:underline"
 								>
 									{activity.forumName}
@@ -106,7 +106,7 @@ export function RecentActivity({
 					<span>
 						replied to{' '}
 						<Link
-							href={`/threads/${activity.threadSlug}`}
+							to={`/threads/${activity.threadSlug}`}
 							className="text-emerald-400 hover:underline"
 						>
 							{activity.title}
@@ -152,7 +152,7 @@ export function RecentActivity({
 								<div className="flex items-center space-x-2 mb-1">
 									{getActivityIcon(activity.type)}
 									<Link
-										href={`/profile/${activity.user.username}`}
+										to={`/profile/${activity.user.username}`}
 										className="font-medium text-white hover:text-emerald-400 transition-colors text-sm"
 									>
 										{activity.user.username}

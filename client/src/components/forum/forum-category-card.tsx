@@ -65,7 +65,7 @@ export function ForumCategoryCard({ category, href }: ForumCategoryProps) {
 								<span className="text-xs text-zinc-500">{category.lastThread.time}</span>
 							</div>
 							<Link
-								href={`/threads/${category.lastThread.id}`}
+								to={`/threads/${category.lastThread.id}`}
 								className="text-sm font-medium hover:text-emerald-400 transition-colors line-clamp-1"
 							>
 								{category.lastThread.title}
@@ -77,7 +77,7 @@ export function ForumCategoryCard({ category, href }: ForumCategoryProps) {
 					{/* View All Link */}
 					<div className="mt-3 text-right">
 						<Link
-							href={categoryLink}
+							to={categoryLink}
 							className="inline-flex items-center text-xs text-emerald-400 hover:text-emerald-300"
 						>
 							View All Threads
