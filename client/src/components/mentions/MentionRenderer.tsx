@@ -49,7 +49,7 @@ interface MentionLinkProps {
 function MentionLink({ username, onClick }: MentionLinkProps) {
 	return (
 		<Link
-			href={`/profile/${username}`}
+			to={`/profile/${username}`}
 			className={cn(
 				'inline-flex items-center px-1 py-0.5 rounded',
 				'bg-emerald-900/30 text-emerald-300 border border-emerald-700/30',

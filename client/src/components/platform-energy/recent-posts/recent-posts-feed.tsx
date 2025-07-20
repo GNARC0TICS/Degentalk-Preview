@@ -170,7 +170,7 @@ export function RecentPostsFeed({
 							<div className="flex-1">
 								<div className="flex flex-col gap-1">
 									<Link
-										href={`/threads/${post.slug}`}
+										to={`/threads/${post.slug}`}
 										className="text-base font-medium hover:underline line-clamp-1"
 									>
 										{post.title}

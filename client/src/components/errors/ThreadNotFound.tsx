@@ -103,7 +103,7 @@ export function ThreadNotFound({ threadId, forumSlug, onBack }: ThreadNotFoundPr
 							</h3>
 							<div className="space-y-3">
 								{relatedThreads.map((thread) => (
-									<Link key={thread.id} href={`/threads/${thread.slug}`} className="block">
+									<Link key={thread.id} to={`/threads/${thread.slug}`} className="block">
 										<div className="p-4 bg-zinc-800/50 hover:bg-zinc-800/70 rounded-lg border border-zinc-700/50 hover:border-zinc-600 transition-all cursor-pointer">
 											<div className="flex items-start justify-between gap-4">
 												<div className="flex-1 min-w-0">

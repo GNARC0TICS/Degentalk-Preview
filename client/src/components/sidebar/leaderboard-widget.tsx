@@ -157,7 +157,7 @@ export default function LeaderboardWidget({
 
 												<div className="flex flex-col">
 													<Link
-														href={`/profile/${user.username}`}
+														to={`/profile/${user.username}`}
 														className="text-sm font-medium hover:text-emerald-400 transition-colors truncate max-w-[40vw]"
 													>
 														{user.username}

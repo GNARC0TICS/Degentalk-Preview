@@ -97,7 +97,7 @@ export function ZoneGroup({ zone, className = '' }: ZoneGroupProps) {
 			<div className="space-y-3">
 				{zone.forums && zone.forums.length > 0 ? (
 					zone.forums.map((forum) => (
-						<Link key={forum.id} href={`/forums/${forum.slug}`} className="block">
+						<Link key={forum.id} to={`/forums/${forum.slug}`} className="block">
 							<div
 								className={`rounded-xl bg-zinc-900 border border-zinc-800 p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between ${theme.hover} transition-all`}
 							>

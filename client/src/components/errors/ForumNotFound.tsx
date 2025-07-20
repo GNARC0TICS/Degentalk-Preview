@@ -80,7 +80,7 @@ export function ForumNotFound({ forumSlug, onBack }: ForumNotFoundProps) {
 							</h3>
 							<div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
 								{popularZones.map((zone) => (
-									<Link key={zone.slug} href={`/zones/${zone.slug}`} className="block">
+									<Link key={zone.slug} to={`/zones/${zone.slug}`} className="block">
 										<div className="p-4 bg-zinc-800/50 hover:bg-zinc-800/70 rounded-lg border border-zinc-700/50 hover:border-zinc-600 transition-all cursor-pointer">
 											<div className="flex items-start gap-3">
 												{zone.icon && <div className="text-2xl flex-shrink-0">{zone.icon}</div>}

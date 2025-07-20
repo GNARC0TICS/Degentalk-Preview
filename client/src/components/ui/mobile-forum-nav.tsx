@@ -251,7 +251,7 @@ const MobileForumNav = memo(({ className }: MobileForumNavProps) => {
 												animate="visible"
 											>
 												<Link
-													href={item.href}
+													to={item.href}
 													className={cn(
 														'flex items-center justify-between p-3 rounded-xl transition-all duration-200',
 														isCurrentPath(item.href)
@@ -334,7 +334,7 @@ const MobileForumNav = memo(({ className }: MobileForumNavProps) => {
 																	{zone.forums.map((forum) => (
 																		<Link
 																			key={forum.slug}
-																			href={`/forums/${forum.slug}`}
+																			to={`/forums/${forum.slug}`}
 																			className={cn(
 																				'flex items-center justify-between p-2 rounded-lg transition-all duration-200',
 																				isCurrentPath(`/forums/${forum.slug}`)

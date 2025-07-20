@@ -100,7 +100,7 @@ export function UserNotFound({ username, userId, onBack }: UserNotFoundProps) {
 							</h3>
 							<div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
 								{activeUsers.map((user) => (
-									<Link key={user.id} href={`/profile/${user.username}`} className="block">
+									<Link key={user.id} to={`/profile/${user.username}`} className="block">
 										<div className="p-4 bg-zinc-800/50 hover:bg-zinc-800/70 rounded-lg border border-zinc-700/50 hover:border-zinc-600 transition-all cursor-pointer">
 											<div className="flex items-center gap-3">
 												<div className="w-10 h-10 rounded-full bg-zinc-700 flex items-center justify-center overflow-hidden">

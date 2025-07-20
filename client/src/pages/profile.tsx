@@ -162,7 +162,7 @@ export default function ProfilePage() {
               <h2 className="text-lg font-semibold text-white mb-4">Recent Threads</h2>
               <div className="space-y-3">
                 {demoUser.recentThreads.map((thread, i) => (
-                  <Link key={i} href={`/threads/${thread.slug}`}>
+                  <Link key={i} to={`/threads/${thread.slug}`}>
                     <div className="p-3 rounded-lg hover:bg-zinc-800/50 transition-colors cursor-pointer">
                       <h3 className="text-white font-medium mb-1">{thread.title}</h3>
                       <div className="flex items-center gap-4 text-sm text-zinc-400">

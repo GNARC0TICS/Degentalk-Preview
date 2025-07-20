@@ -139,7 +139,7 @@ export function FeaturedThreadsSlider({
 			<CardContent>
 				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
 					{featuredThreads.map((thread) => (
-						<Link key={thread.thread_id} href={`/threads/${thread.slug}`}>
+						<Link key={thread.thread_id} to={`/threads/${thread.slug}`}>
 							<Card className="border shadow-sm hover:shadow-md transition-shadow cursor-pointer h-full flex flex-col">
 								<CardHeader className="p-4 pb-2 space-y-1">
 									<Badge variant="secondary" className="w-fit mb-2">
@@ -160,7 +160,7 @@ export function FeaturedThreadsSlider({
 										</Avatar>
 										<div className="text-sm">
 											<Link
-												href={`/user/${thread.user_id}`}
+												to={`/user/${thread.user_id}`}
 												className="hover:underline font-medium"
 											>
 												{thread.username}

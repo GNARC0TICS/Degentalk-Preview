@@ -214,7 +214,7 @@ export function WeeklyLeaderboard({ showHeader = true, className = '' }: WeeklyL
 						{leaderboard.slice(0, 10).map((user, index) => (
 							<Link
 								key={user.id}
-								href={`/user/${user.id}`}
+								to={`/user/${user.id}`}
 								className="flex items-center p-2 rounded-md hover:bg-accent transition-colors border"
 							>
 								<div className="w-8 mr-2 text-center">{getRankBadge(index)}</div>
