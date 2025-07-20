@@ -158,4 +158,4 @@ export function ProtectedRoute({ path, component: Component, children }: Protect
 }
 
 // Re-export GlobalRouteGuard for monitoring
-export { GlobalRouteGuard } from './GlobalRouteGuard.tsx';
+export { GlobalRouteGuard } from './GlobalRouteGuard';

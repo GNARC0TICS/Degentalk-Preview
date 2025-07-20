@@ -7,7 +7,7 @@ import { hasRoleAtLeast } from '@/utils/roles';
 import type { Role } from '@/utils/roles';
 
 interface GlobalRouteGuardProps {
-	children: ReactNode;
+	children?: ReactNode;
 	onUnauthorizedAccess?: (path: string, reason: string) => void;
 	enableLogging?: boolean;
 }
@@ -21,7 +21,7 @@ export function GlobalRouteGuard({
 	onUnauthorizedAccess,
 	enableLogging = process.env.NODE_ENV === 'development'
 }: GlobalRouteGuardProps) {
-	const [location] = useLocation();
+	const location = useLocation();
 	const { user, isAuthenticated, isLoading } = useAuth();
 
 	useEffect(() => {
@@ -33,7 +33,7 @@ export function GlobalRouteGuard({
 		// Check if route has protection requirements
 		if (!protection.requireAuth && !protection.minRole && !protection.exactRole) {
 			if (enableLogging) {
-				// console.log(`[ROUTE] ✅ Public route accessed: ${location}`);
+				// console.log(`[ROUTE] ✅ Public route accessed: ${location.pathname}`);
 			}
 			return;
 		}
@@ -41,9 +41,9 @@ export function GlobalRouteGuard({
 		// Authentication check
 		if (protection.requireAuth && !isAuthenticated) {
 			if (enableLogging) {
-				// console.warn(`[ROUTE] ❌ Unauthenticated access attempt: ${location}`);
+				// console.warn(`[ROUTE] ❌ Unauthenticated access attempt: ${location.pathname}`);
 			}
-			onUnauthorizedAccess?.(location, 'Authentication required');
+			onUnauthorizedAccess?.(location.pathname, 'Authentication required');
 			return;
 		}
 
@@ -56,7 +56,7 @@ export function GlobalRouteGuard({
 				if (enableLogging) {
 					// console.warn - insufficient role for route
 				}
-				onUnauthorizedAccess?.(location, `Requires exactly ${protection.exactRole} role`);
+				onUnauthorizedAccess?.(location.pathname, `Requires exactly ${protection.exactRole} role`);
 				return;
 			}
 
@@ -65,12 +65,12 @@ export function GlobalRouteGuard({
 				if (enableLogging) {
 					// console.warn - insufficient minimum role for route
 				}
-				onUnauthorizedAccess?.(location, `Requires minimum ${protection.minRole} role`);
+				onUnauthorizedAccess?.(location.pathname, `Requires minimum ${protection.minRole} role`);
 				return;
 			}
 
 			if (enableLogging) {
-				// console.log(`[ROUTE] ✅ Authorized access: ${location} (${userRole})`);
+				// console.log(`[ROUTE] ✅ Authorized access: ${location.pathname} (${userRole})`);
 			}
 		}
 	}, [location, user, isAuthenticated, isLoading, onUnauthorizedAccess, enableLogging]);
@@ -80,7 +80,7 @@ export function GlobalRouteGuard({
 
 // Analytics hook for tracking route access patterns
 export function useRouteAnalytics() {
-	const [location] = useLocation();
+	const location = useLocation();
 	const { user } = useAuth();
 
 	useEffect(() => {

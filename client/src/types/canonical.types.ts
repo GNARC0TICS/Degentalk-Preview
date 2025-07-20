@@ -275,6 +275,12 @@ export interface CanonicalUser {
 	isOnline: boolean;
 	lastSeenAt?: string;
 	joinedAt: string;
+
+	// Computed role helpers
+	isAdmin: boolean;
+	isModerator: boolean;
+	isVerified?: boolean;
+	isBanned?: boolean;
 }
 
 /**
