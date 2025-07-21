@@ -107,7 +107,9 @@ const mockUsers: Record<MockRole, User> = {
 		dgtBalance: 1000,
 		activeFrameId: toId<'FrameId'>('550e8400-e29b-41d4-a716-446655440002'),
 		avatarFrameId: toId<'FrameId'>('550e8400-e29b-41d4-a716-446655440002'),
-		isBanned: false
+		isBanned: false,
+		isAdmin: false,
+		isModerator: false
 	},
 	moderator: {
 		id: toId<'UserId'>('550e8400-e29b-41d4-a716-446655440003'),
@@ -136,7 +138,9 @@ const mockUsers: Record<MockRole, User> = {
 		dgtBalance: 5000,
 		activeFrameId: null,
 		avatarFrameId: null,
-		isBanned: false
+		isBanned: false,
+		isAdmin: false,
+		isModerator: true
 	},
 	admin: {
 		id: toId<'UserId'>('550e8400-e29b-41d4-a716-446655440004'),
@@ -165,7 +169,9 @@ const mockUsers: Record<MockRole, User> = {
 		dgtBalance: 100000,
 		activeFrameId: toId<'FrameId'>('550e8400-e29b-41d4-a716-446655440005'),
 		avatarFrameId: toId<'FrameId'>('550e8400-e29b-41d4-a716-446655440005'),
-		isBanned: false
+		isBanned: false,
+		isAdmin: true,
+		isModerator: false
 	},
 	super_admin: {
 		id: toId<'UserId'>('550e8400-e29b-41d4-a716-446655440006'),
@@ -194,7 +200,9 @@ const mockUsers: Record<MockRole, User> = {
 		dgtBalance: 1000000,
 		activeFrameId: toId<'FrameId'>('550e8400-e29b-41d4-a716-446655440007'),
 		avatarFrameId: toId<'FrameId'>('550e8400-e29b-41d4-a716-446655440007'),
-		isBanned: false
+		isBanned: false,
+		isAdmin: true,
+		isModerator: true
 	}
 };
 
@@ -222,7 +230,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 	// we start with a clean slate each time the provider mounts
 	useEffect(() => {
 		queryClient.removeQueries({ queryKey: ['/api/auth/user'] });
-	}, []);
+	}, [queryClient]);
 
 	const isDevelopment =
 		import.meta.env.MODE === 'development' && import.meta.env.VITE_FORCE_AUTH !== 'true';
@@ -233,8 +241,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 	// This means 401 responses return null instead of throwing errors
 	const {
 		data: fetchedUser,
-		isLoading: userLoading,
-		error: userError
+		isLoading: userLoading
 	} = useQuery<User | null, Error>({
 		queryKey: ['/api/auth/user'], // URL-based key matches backend endpoint
 		enabled: true, // Always fetch user data on mount
@@ -344,10 +351,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 			// Client-side navigation keeps React tree mounted (no auto-login reset)
 			navigate('/auth');
 		},
-		onError: (error) => {
-			// Handle logout error, maybe just log it?
-			// console.error('Logout failed:', error.message);
-			// Still clear state locally even if server logout fails?
+		onError: () => {
+			// Handle logout error
+			// Still clear state locally even if server logout fails
 			removeAuthToken(); // Clear token even on error
 			
 			setUserState(null);
@@ -439,7 +445,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 		loginMutation,
 		registerMutation,
 		logoutMutation,
-		userLoading
+		currentMockRoleState,
+		isDevelopment,
+		setMockRole
 	]);
 
 	// Development-only check for duplicate providers

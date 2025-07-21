@@ -36,19 +36,12 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/utils/utils';
+import type { WalletBalance } from '../services/wallet-api.service';
 
 // [REFAC-DGT]
 interface WalletSheetProps {
 	isOpen: boolean;
 	onOpenChange: (isOpen: boolean) => void;
-}
-
-// Define interface to match expected balance structure
-interface WalletBalanceData {
-	walletBalanceUSDT?: number;
-	dgtPoints?: number;
-	walletPendingWithdrawals?: any[];
-	walletAddress?: string;
 }
 
 export function WalletSheet({ isOpen, onOpenChange }: WalletSheetProps) {
@@ -78,8 +71,8 @@ export function WalletSheet({ isOpen, onOpenChange }: WalletSheetProps) {
 
 	// Handle wallet address copy
 	const handleCopyAddress = () => {
-		if (walletDataWithDefaults.walletAddress) {
-			navigator.clipboard.writeText(walletDataWithDefaults.walletAddress);
+		if (walletAddress) {
+			navigator.clipboard.writeText(walletAddress);
 			setCopiedAddress(true);
 			setTimeout(() => setCopiedAddress(false), 2000);
 		}
@@ -96,12 +89,16 @@ export function WalletSheet({ isOpen, onOpenChange }: WalletSheetProps) {
 	};
 
 	// Prepare data for wallet display
-	const walletDataWithDefaults: WalletBalanceData = {
-		walletBalanceUSDT: balance?.walletBalanceUSDT ?? 0,
-		dgtPoints: balance?.dgtPoints ?? 0,
-		pendingWithdrawals: balance?.walletPendingWithdrawals ?? [],
-		walletAddress: balance?.walletAddress ?? ''
+	const walletDataWithDefaults: WalletBalance = {
+		dgt: balance?.dgtPoints ?? 0,
+		usdt: balance?.walletBalanceUSDT ?? 0,
+		btc: 0, // Not provided by current balance API
+		eth: 0, // Not provided by current balance API
+		pendingDgt: 0 // TODO: Map from balance?.walletPendingWithdrawals
 	};
+
+	// Wallet address is separate from balance
+	const walletAddress = balance?.walletAddress ?? '';
 
 	// Calculate responsive values
 	const isMobile = typeof window !== 'undefined' ? window.innerWidth < 768 : false;
@@ -163,9 +160,9 @@ export function WalletSheet({ isOpen, onOpenChange }: WalletSheetProps) {
 							/>
 
 							{/* Wallet Address Display - Desktop gets more prominence */}
-							{walletDataWithDefaults.walletAddress && (
+							{walletAddress && (
 								<WalletAddressDisplay
-									walletAddress={walletDataWithDefaults.walletAddress}
+									walletAddress={walletAddress}
 									copiedAddress={copiedAddress}
 									onCopy={handleCopyAddress}
 									className="w-full"
@@ -286,7 +283,7 @@ export function WalletSheet({ isOpen, onOpenChange }: WalletSheetProps) {
 														<div className="flex items-center justify-between mb-3">
 															<span className="text-sm text-zinc-400">Available Balance</span>
 															<span className="text-lg font-medium text-white">
-																${walletDataWithDefaults.walletBalanceUSDT.toFixed(2)}
+																${walletDataWithDefaults.usdt.toFixed(2)}
 															</span>
 														</div>
 														<div className="text-xs text-zinc-500">
@@ -332,7 +329,7 @@ export function WalletSheet({ isOpen, onOpenChange }: WalletSheetProps) {
 														<div className="bg-black/30 rounded-lg p-3 border border-zinc-800">
 															<div className="text-xs text-zinc-500 mb-1">Your DGT Balance</div>
 															<div className="text-sm font-medium text-white">
-																{walletDataWithDefaults.dgtPoints.toLocaleString()}
+																{walletDataWithDefaults.dgt.toLocaleString()}
 															</div>
 														</div>
 													</div>

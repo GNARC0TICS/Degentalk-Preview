@@ -265,7 +265,7 @@ export const forumApi = {
 			limit?: number;
 		}
 	): Promise<{
-		posts: PostWithUser[];
+		posts: CanonicalPost[];
 		pagination: {
 			page: number;
 			limit: number;
@@ -274,7 +274,7 @@ export const forumApi = {
 		};
 	}> => {
 		const response = await apiRequest<{
-			posts: PostWithUser[];
+			posts: CanonicalPost[];
 			pagination: {
 				page: number;
 				limit: number;
@@ -294,8 +294,8 @@ export const forumApi = {
 
 		// Backend returns { success: true, data: { posts: ..., pagination: ... } }
 		// Frontend expects { posts: ..., pagination: ... }
-		if (response && typeof response === 'object' && 'data' in response && response.success) {
-			return response.data;
+		if (response && typeof response === 'object' && 'data' in response && 'success' in response) {
+			return (response as any).data;
 		}
 
 		// Fallback for direct data response
