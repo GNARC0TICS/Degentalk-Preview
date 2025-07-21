@@ -93,13 +93,11 @@ export async function register(req: Request, res: Response, next: NextFunction) 
 
 		// Create default settings for the new user
 		try {
-			// TODO: Implement or verify createDefaultSettings functionality
-			// Import the settings service
-			// const { createDefaultSettings } = await import('../../admin/sub-domains/settings/settings.service');
-			// await createDefaultSettings(user.id);
+			const { createDefaultPreferences } = await import('../../preferences/preferences.service');
+			await createDefaultPreferences(user.id);
 			logger.info(
 				'AuthController',
-				'Skipping default settings creation for new user - to be implemented/verified.',
+				'Created default preferences for new user',
 				{ userId: user.id }
 			);
 		} catch (settingsError) {

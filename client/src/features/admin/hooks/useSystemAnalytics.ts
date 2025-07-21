@@ -34,7 +34,7 @@ export const systemAnalyticsKeys = {
 // ============ SYSTEM METRICS HOOKS ============
 
 export const useSystemMetrics = (params?: SystemMetricsParams) => {
-	return useQuery<unknown>({
+	return useQuery({
 		queryKey: systemAnalyticsKeys.metrics(params),
 		queryFn: () => systemAnalyticsApi.getSystemMetrics(params),
 		staleTime: 5 * 60 * 1000, // 5 minutes
@@ -45,7 +45,7 @@ export const useSystemMetrics = (params?: SystemMetricsParams) => {
 };
 
 export const useSystemOverview = () => {
-	return useQuery<unknown>({
+	return useQuery({
 		queryKey: systemAnalyticsKeys.overview(),
 		queryFn: () => systemAnalyticsApi.getSystemOverview(),
 		staleTime: 2 * 60 * 1000, // 2 minutes
@@ -58,7 +58,7 @@ export const useSystemOverview = () => {
 // ============ PERFORMANCE VISUALIZATION HOOKS ============
 
 export const usePerformanceHeatmap = (params?: PerformanceHeatmapParams) => {
-	return useQuery<unknown>({
+	return useQuery({
 		queryKey: systemAnalyticsKeys.heatmap(params),
 		queryFn: () => systemAnalyticsApi.getPerformanceHeatmap(params),
 		staleTime: 10 * 60 * 1000, // 10 minutes
@@ -71,7 +71,7 @@ export const usePerformanceHeatmap = (params?: PerformanceHeatmapParams) => {
 // ============ SYSTEM HEALTH HOOKS ============
 
 export const useSystemHealth = (params?: SystemHealthParams) => {
-	return useQuery<unknown>({
+	return useQuery({
 		queryKey: systemAnalyticsKeys.health(params),
 		queryFn: () => systemAnalyticsApi.getSystemHealth(params),
 		staleTime: 1 * 60 * 1000, // 1 minute
@@ -84,7 +84,7 @@ export const useSystemHealth = (params?: SystemHealthParams) => {
 // ============ REAL-TIME ANALYTICS HOOKS ============
 
 export const useRealtimeAnalytics = (params?: RealtimeAnalyticsParams) => {
-	return useQuery<unknown>({
+	return useQuery({
 		queryKey: systemAnalyticsKeys.realtime(params),
 		queryFn: () => systemAnalyticsApi.getRealtimeAnalytics(params),
 		staleTime: 30 * 1000, // 30 seconds
@@ -97,7 +97,7 @@ export const useRealtimeAnalytics = (params?: RealtimeAnalyticsParams) => {
 // ============ CACHE ANALYTICS HOOKS ============
 
 export const useCacheStats = () => {
-	return useQuery<unknown>({
+	return useQuery({
 		queryKey: systemAnalyticsKeys.cache(),
 		queryFn: () => systemAnalyticsApi.getCacheStats(),
 		staleTime: 1 * 60 * 1000, // 1 minute
@@ -137,7 +137,7 @@ export const useCacheOperation = () => {
 // ============ DATABASE ANALYTICS HOOKS ============
 
 export const useDatabaseStats = () => {
-	return useQuery<unknown>({
+	return useQuery({
 		queryKey: systemAnalyticsKeys.database(),
 		queryFn: () => systemAnalyticsApi.getDatabaseStats(),
 		staleTime: 5 * 60 * 1000, // 5 minutes

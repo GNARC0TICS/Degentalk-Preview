@@ -35,7 +35,7 @@ export function CooldownSettings() {
 		isLoading,
 		isError,
 		error
-	} = useQuery<unknown>({
+	} = useQuery({
 		queryKey: ['/api/admin/settings/cooldowns'],
 		queryFn: async () => {
 			return apiRequest<CooldownSettings>({ url: '/api/admin/settings/cooldowns', method: 'GET' });

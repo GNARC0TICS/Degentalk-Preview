@@ -150,7 +150,7 @@ export default function ShoutboxWidget({ instanceId }: ShoutboxWidgetProps) {
 		isLoading: isLoadingEmojis,
 		isError: isErrorEmojis,
 		refetch: refetchEmojis
-	} = useQuery<unknown>({
+	} = useQuery({
 		queryKey: ['/api/chat/emojis'],
 		queryFn: async () => {
 			const response = await axios.get('/api/chat/emojis');
@@ -166,7 +166,7 @@ export default function ShoutboxWidget({ instanceId }: ShoutboxWidgetProps) {
 		isLoading,
 		isError,
 		refetch
-	} = useQuery<unknown>({
+	} = useQuery({
 		queryKey: ['/api/shoutbox/messages'],
 		queryFn: async () => {
 			const response = await axios.get('/api/shoutbox/messages');

@@ -93,7 +93,7 @@ export async function handleXCallback(req: Request, res: Response, next: NextFun
 		// Try to find existing user with this xAccountId
 		const existing = await db.query.users.findFirst({ where: eq(users.xAccountId, xAccountId) });
 		if (existing) {
-			// TODO: establish session for existing user
+			// Establish session for existing user
 			req.login(existing as any, (err) => {
 				if (err) return next(err);
 				return res.redirect('/');

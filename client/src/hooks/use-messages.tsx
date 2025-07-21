@@ -29,7 +29,7 @@ export function useMessages() {
 
 	// Get all conversations for the current user
 	const useConversations = () => {
-		return useQuery<unknown>({
+		return useQuery({
 			queryKey: ['/api/messages/conversations'],
 			staleTime: 1000 * 60 // 1 minute
 		});
@@ -37,7 +37,7 @@ export function useMessages() {
 
 	// Get messages for a specific conversation
 	const useConversation = (userId: string) => {
-		return useQuery<unknown>({
+		return useQuery({
 			queryKey: ['/api/messages/conversation', userId],
 			queryFn: async () => {
 				if (!userId) return [];

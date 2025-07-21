@@ -19,7 +19,7 @@ export function useGamification() {
 	const queryClient = useQueryClient();
 
 	// User progression data
-	const { data: progression, isLoading: progressionLoading } = useQuery<unknown>({
+	const { data: progression, isLoading: progressionLoading } = useQuery({
 		queryKey: ['/api/gamification/progression/me'],
 		queryFn: () => gamificationApi.getUserProgression(),
 		enabled: !!user,
@@ -28,7 +28,7 @@ export function useGamification() {
 	});
 
 	// User achievements
-	const { data: achievementProgress, isLoading: achievementsLoading } = useQuery<unknown>({
+	const { data: achievementProgress, isLoading: achievementsLoading } = useQuery({
 		queryKey: ['/api/gamification/achievements/my-progress'],
 		queryFn: () => gamificationApi.getUserAchievementProgress(),
 		enabled: !!user,
@@ -36,7 +36,7 @@ export function useGamification() {
 	});
 
 	// User achievement stats
-	const { data: achievementStats } = useQuery<unknown>({
+	const { data: achievementStats } = useQuery({
 		queryKey: ['/api/gamification/achievements/my-stats'],
 		queryFn: () => gamificationApi.getUserAchievementStats(),
 		enabled: !!user,
@@ -44,7 +44,7 @@ export function useGamification() {
 	});
 
 	// User missions
-	const { data: missionProgress, isLoading: missionsLoading } = useQuery<unknown>({
+	const { data: missionProgress, isLoading: missionsLoading } = useQuery({
 		queryKey: ['/api/gamification/missions/my-progress'],
 		queryFn: () => gamificationApi.getUserMissionProgress(),
 		enabled: !!user,
@@ -53,7 +53,7 @@ export function useGamification() {
 	});
 
 	// Leaderboard data
-	const { data: leaderboard, isLoading: leaderboardLoading } = useQuery<unknown>({
+	const { data: leaderboard, isLoading: leaderboardLoading } = useQuery({
 		queryKey: ['/api/gamification/leaderboard', 'xp', 50, 0],
 		queryFn: () => gamificationApi.getLeaderboard('xp', 50, 0),
 		staleTime: 1000 * 60 * 10 // 10 minutes

@@ -122,7 +122,7 @@ export default function AdminCategoriesPage() {
 		data: categories,
 		isLoading,
 		isError
-	} = useQuery<unknown>({
+	} = useQuery({
 		queryKey: ['/admin/forum/categories'],
 		queryFn: async () => {
 			return apiRequest<any>({ url: '/admin/forum/categories', method: 'GET' });

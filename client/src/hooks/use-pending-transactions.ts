@@ -29,7 +29,7 @@ export function usePendingTransactions() {
 	const { refreshWalletData } = useWalletOperations();
 
 	// Query pending transactions
-	const pendingTransactionsQuery = useQuery<unknown>({
+	const pendingTransactionsQuery = useQuery({
 		queryKey: ['/api/wallet/transactions/pending'],
 		queryFn: async () => {
 			try {

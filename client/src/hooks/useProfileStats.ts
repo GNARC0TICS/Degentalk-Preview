@@ -90,7 +90,7 @@ export function useProfileStats(username: string) {
 
 // Hook for basic profile data (existing functionality)
 export function useProfile(username: string) {
-	return useQuery<unknown>({
+	return useQuery({
 		queryKey: ['profile', username],
 		queryFn: async () => {
 			if (!username) throw new Error('Username required');

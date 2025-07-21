@@ -168,7 +168,7 @@ export class WalletController {
 				publicTransactions,
 				options.page || 1,
 				options.limit || 20,
-				publicTransactions.length // TODO: Get actual total from service
+				publicTransactions.length // NOTE: Total count requires service refactor to return PaginatedResult
 			);
 			send(res, paginatedResponse);
 		} catch (error) {

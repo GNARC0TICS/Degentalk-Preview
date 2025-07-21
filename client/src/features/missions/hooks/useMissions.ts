@@ -4,47 +4,7 @@ import { useAuth } from '@/hooks/use-auth';
 import { useWebSocket } from '@/hooks/useWebSocket';
 import { useEffect } from 'react';
 import { toast } from 'sonner';
-
-interface MissionProgress {
-  [key: string]: {
-    current: number;
-    target: number;
-    percentage: number;
-  };
-}
-
-interface Mission {
-  id: string;
-  template: {
-    id: string;
-    key: string;
-    name: string;
-    description: string;
-    category: string;
-    type: string;
-    requirements: Record<string, any>;
-    rewards: {
-      xp?: number;
-      dgt?: number;
-      clout?: number;
-      badge?: string;
-      title?: string;
-      avatar_frame?: string;
-      items?: string[];
-    };
-    metadata?: {
-      icon?: string;
-      color?: string;
-      priority?: 'low' | 'medium' | 'high';
-    };
-  };
-  progress: MissionProgress & {
-    isComplete?: boolean;
-    isClaimed?: boolean;
-  };
-  periodType: 'daily' | 'weekly' | 'special' | 'vip';
-  periodEnd: string;
-}
+import type { Mission, MissionProgress } from '../types';
 
 interface MissionStreak {
   type: 'daily' | 'weekly';
@@ -74,7 +34,7 @@ export function useMissions() {
   const { subscribe } = useWebSocket();
   
   // Fetch user's active missions
-  const { data, isLoading, error } = useQuery<unknown>({
+  const { data, isLoading, error } = useQuery({
     queryKey: ['missions', user?.id],
     queryFn: async () => {
       const response = await apiRequest<{ missions: MissionsResponse }>('/api/missions/active');
@@ -85,7 +45,7 @@ export function useMissions() {
   });
   
   // Fetch streaks
-  const { data: streaks } = useQuery<unknown>({
+  const { data: streaks } = useQuery({
     queryKey: ['mission-streaks', user?.id],
     queryFn: async () => {
       const response = await apiRequest<{ streaks: MissionStreak[] }>('/api/missions/streaks');
@@ -95,7 +55,7 @@ export function useMissions() {
   });
   
   // Fetch stats
-  const { data: stats } = useQuery<unknown>({
+  const { data: stats } = useQuery({
     queryKey: ['mission-stats', user?.id],
     queryFn: async () => {
       const response = await apiRequest<{ stats: MissionStats }>('/api/missions/stats');

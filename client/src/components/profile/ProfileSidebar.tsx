@@ -43,7 +43,7 @@ const ProfileSidebar: React.FC<Props> = ({ profile, isOwnProfile }) => {
 	const identity = useIdentityDisplay(profile);
 
 	// Fetch follow counts for Whale Watch
-	const { data: followCounts } = useQuery<unknown>({
+	const { data: followCounts } = useQuery({
 		queryKey: [`/api/users/${profile.id}/follow-counts`],
 		queryFn: async () => {
 			return await apiRequest<{ following: number; followers: number }>({
@@ -54,7 +54,7 @@ const ProfileSidebar: React.FC<Props> = ({ profile, isOwnProfile }) => {
 	});
 
 	// Fetch whale status
-	const { data: whaleStatus } = useQuery<unknown>({
+	const { data: whaleStatus } = useQuery({
 		queryKey: [`/api/whale-status/${profile.id}`],
 		queryFn: async () => {
 			return await apiRequest<{ isWhale: boolean; followerCount: number; threshold: number }>({

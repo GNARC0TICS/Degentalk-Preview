@@ -489,15 +489,15 @@ export class WalletService {
 				logger.info('WalletService', 'Supported coins retrieved from local database', {
 					count: localTokens.length
 				});
-				// TODO: Create a transformer for local tokens to SupportedCoin[]
-				// For now, we just log and proceed to the adapter.
+				// NOTE: Could create a transformer for local tokens to SupportedCoin[] format
+				// Currently we just log and proceed to the adapter.
 			}
 
 			// 2. Fallback to the primary adapter (e.g., CCPayment)
 			logger.info('WalletService', 'Falling back to primary adapter for supported coins');
 			const adapterTokens = await this.primaryAdapter.getSupportedCoins();
 
-			// TODO: Here we could cache the adapter response into our local DB
+			// NOTE: Could cache the adapter response into our local DB for performance
 
 			logger.info('WalletService', 'Supported coins retrieved successfully from adapter', {
 				count: adapterTokens.length
@@ -582,7 +582,11 @@ export class WalletService {
 			const wallet = await this.getOrCreateDgtWallet(tx, userId);
 			const newBalance = wallet.balance + amount;
 
-			// TODO: Re-integrate max balance check from a unified config service.
+			// Check max balance limit
+			const MAX_WALLET_BALANCE = 1000000000; // 1 billion DGT
+			if (newBalance > MAX_WALLET_BALANCE) {
+				throw new Error(`Wallet balance would exceed maximum allowed balance of ${MAX_WALLET_BALANCE} DGT`);
+			}
 
 			await tx
 				.update(wallets)
@@ -657,7 +661,7 @@ export class WalletService {
 				source: metadata.source
 			});
 
-			// TODO: Re-integrate vanity sink analyzer for specific sources like 'xp_boost'
+			// NOTE: Vanity sink analyzer can be integrated here for tracking specific sources like 'xp_boost'
 
 			return this.transformDbTransaction(transaction, newBalance);
 		});

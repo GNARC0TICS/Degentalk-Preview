@@ -189,7 +189,7 @@ export function EnhancedShoutbox() {
   const isAdmin = user?.role === 'admin';
 
   // Fetch messages
-  const { data: messagesData, isLoading } = useQuery<unknown>({
+  const { data: messagesData, isLoading } = useQuery({
     queryKey: ['shoutbox', 'messages', currentRoom],
     queryFn: async () => {
       const response = await apiRequest<{ 

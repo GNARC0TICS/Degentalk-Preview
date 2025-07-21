@@ -60,7 +60,7 @@ export function MentionsNotifications({
 		data: mentionsData,
 		isLoading,
 		refetch
-	} = useQuery<unknown>({
+	} = useQuery({
 		queryKey: ['/api/social/mentions', { showUnreadOnly, limit }],
 		queryFn: async () => {
 			const params = new URLSearchParams({

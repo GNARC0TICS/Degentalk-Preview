@@ -47,7 +47,7 @@ export type ThreadSearchParams = OriginalThreadSearchParams & {
  * Threads
  */
 export const useThreads = (params?: ThreadSearchParams, enabled: boolean = true) => {
-	return useQuery<unknown>({
+	return useQuery({
 		queryKey: ['/api/forum/threads', params],
 		queryFn: async () => {
 			if (!enabled && !params?.forumSlug && !params?.structureId) {
@@ -84,7 +84,7 @@ export const useThreads = (params?: ThreadSearchParams, enabled: boolean = true)
 };
 
 export const useThread = (slugOrId: string | number | undefined) => {
-	return useQuery<unknown>({
+	return useQuery({
 		queryKey: [`/api/forum/threads/${slugOrId}`],
 		queryFn: async () => {
 			if (!slugOrId) throw new Error('Thread ID or slug is required');
@@ -209,7 +209,7 @@ export const usePosts = (
 	threadId: ThreadId | undefined,
 	params?: { page?: number; limit?: number }
 ) => {
-	return useQuery<unknown>({
+	return useQuery({
 		queryKey: [`/api/forum/threads/${threadId}/posts`, params],
 		queryFn: () =>
 			threadId ? forumApi.getPosts(threadId, params) : Promise.reject('Thread ID is required'),
@@ -340,7 +340,7 @@ export const useRemoveBookmark = () => {
 };
 
 export const useUserBookmarks = () => {
-	return useQuery<unknown>({
+	return useQuery({
 		queryKey: ['/api/forum/bookmarks'],
 		queryFn: forumApi.getUserBookmarks
 	});

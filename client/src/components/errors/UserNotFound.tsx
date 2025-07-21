@@ -23,7 +23,7 @@ interface ActiveUser {
 
 export function UserNotFound({ username, userId, onBack }: UserNotFoundProps) {
 	// Fetch some active users to suggest
-	const { data: activeUsers = [] } = useQuery<unknown>({
+	const { data: activeUsers = [] } = useQuery({
 		queryKey: ['/api/users/active'],
 		queryFn: async () => {
 			const response = await apiRequest<{ users: ActiveUser[] }>({

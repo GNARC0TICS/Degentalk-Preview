@@ -91,7 +91,7 @@ export function AnnouncementTicker() {
 		data: announcements,
 		isLoading,
 		error
-	} = useQuery<unknown>({
+	} = useQuery({
 		queryKey: ['/api/announcements'],
 		queryFn: async () => {
 			const { data } = await axios.get<Announcement[]>('/api/announcements', {

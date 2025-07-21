@@ -12,7 +12,7 @@ export const useActivityFeed = (filters?: EventLogFilters) => {
 
 	const userId = user?.id;
 
-	const { data, isLoading, isError, error, refetch } = useQuery<unknown>({
+	const { data, isLoading, isError, error, refetch } = useQuery({
 		queryKey: ['activityFeed', userId, filters],
 		queryFn: () => {
 			if (!userId) {
@@ -38,7 +38,7 @@ export const useActivityFeed = (filters?: EventLogFilters) => {
  * Hook for fetching and managing admin activity feed for all users
  */
 export const useAdminActivityFeed = (filters?: EventLogFilters) => {
-	const { data, isLoading, isError, error, refetch } = useQuery<unknown>({
+	const { data, isLoading, isError, error, refetch } = useQuery({
 		queryKey: ['adminActivityFeed', filters],
 		queryFn: () => activityApi.getAllEventLogs(filters),
 		placeholderData: (previousData) => previousData
@@ -57,7 +57,7 @@ export const useAdminActivityFeed = (filters?: EventLogFilters) => {
  * Hook for fetching and managing admin activity feed for a specific user
  */
 export const useUserActivityFeed = (userId: string, filters?: EventLogFilters) => {
-	const { data, isLoading, isError, error, refetch } = useQuery<unknown>({
+	const { data, isLoading, isError, error, refetch } = useQuery({
 		queryKey: ['userActivityFeed', userId, filters],
 		queryFn: () => {
 			if (!userId) {

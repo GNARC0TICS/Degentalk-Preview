@@ -99,7 +99,7 @@ export function useXP(userId?: string): {
 		data: xpData,
 		isLoading,
 		error
-	} = useQuery<unknown>({
+	} = useQuery({
 		queryKey: ['xp', userId],
 		queryFn: async (): Promise<UserXP> => {
 			const endpoint = userId ? `/api/xp/users/${userId}/info` : '/api/xp/me/info';
@@ -109,7 +109,7 @@ export function useXP(userId?: string): {
 	});
 
 	// Fetch user titles
-	const { data: titles = [] } = useQuery<unknown>({
+	const { data: titles = [] } = useQuery({
 		queryKey: ['xp-titles', userId],
 		queryFn: async (): Promise<UserTitle[]> => {
 			const endpoint = userId ? `/api/xp/users/${userId}/titles` : '/api/xp/me/titles';
@@ -120,7 +120,7 @@ export function useXP(userId?: string): {
 	});
 
 	// Fetch user badges
-	const { data: badges = [] } = useQuery<unknown>({
+	const { data: badges = [] } = useQuery({
 		queryKey: ['xp-badges', userId],
 		queryFn: async (): Promise<UserBadge[]> => {
 			const endpoint = userId ? `/api/xp/users/${userId}/badges` : '/api/xp/me/badges';
@@ -131,7 +131,7 @@ export function useXP(userId?: string): {
 	});
 
 	// Fetch XP history (for admins or viewing own history)
-	const { data: xpHistory = [], isLoading: isHistoryLoading } = useQuery<unknown>({
+	const { data: xpHistory = [], isLoading: isHistoryLoading } = useQuery({
 		queryKey: ['xp-history', userId],
 		queryFn: async (): Promise<XpAdjustmentEntry[]> => {
 			const endpoint = userId

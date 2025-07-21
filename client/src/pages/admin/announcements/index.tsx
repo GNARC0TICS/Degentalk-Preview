@@ -193,7 +193,7 @@ export default function AnnouncementsPage() {
 	});
 
 	// Fetch announcements
-	const { data: announcements = [], isLoading } = useQuery<unknown>({
+	const { data: announcements = [], isLoading } = useQuery({
 		queryKey: ['/api/admin/announcements'],
 		queryFn: async () => {
 			const data = await apiRequest<Announcement[]>({

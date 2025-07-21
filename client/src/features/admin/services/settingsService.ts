@@ -7,7 +7,7 @@ const SETTINGS_KEY = ['admin', 'settings'];
 const FEATURE_FLAGS_KEY = ['admin', 'feature-flags'];
 
 export function useSiteSettings(category?: string) {
-	return useQuery<unknown>({
+	return useQuery({
 		queryKey: [...SETTINGS_KEY, category ?? 'all'],
 		queryFn: () => adminApi.get(`/settings${category ? `?group=${category}` : ''}`)
 	});
@@ -25,7 +25,7 @@ export function useUpdateSetting() {
 }
 
 export function useFeatureFlags() {
-	return useQuery<unknown>({
+	return useQuery({
 		queryKey: FEATURE_FLAGS_KEY,
 		queryFn: () => adminApi.get('/settings/feature-flags')
 	});

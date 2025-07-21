@@ -78,7 +78,7 @@ export function useTip() {
 	});
 
 	// Get tip history query
-	const tipHistoryQuery = useQuery<unknown>({
+	const tipHistoryQuery = useQuery({
 		queryKey: ['/api/engagement/tip/history'],
 		queryFn: async () => {
 			try {

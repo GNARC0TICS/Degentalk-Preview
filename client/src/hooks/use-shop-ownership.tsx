@@ -11,7 +11,7 @@ export function useShopItemOwnership(itemId: string | null) {
 	const { user } = useAuth();
 	const isAuthenticated = !!user;
 
-	const { data, isLoading, error, refetch } = useQuery<unknown>({
+	const { data, isLoading, error, refetch } = useQuery({
 		queryKey: ['/api/shop/check-ownership', itemId],
 		queryFn: async () => {
 			if (!itemId) return { owned: false };
@@ -44,7 +44,7 @@ export function useUserInventory() {
 	const { user } = useAuth();
 	const isAuthenticated = !!user;
 
-	const { data, isLoading, error, refetch } = useQuery<unknown>({
+	const { data, isLoading, error, refetch } = useQuery({
 		queryKey: ['/api/shop/my-inventory'],
 		queryFn: async () => {
 			if (!isAuthenticated) return { items: [], groupedItems: {} };

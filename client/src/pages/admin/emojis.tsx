@@ -90,7 +90,7 @@ export default function AdminEmojisPage() {
 	const queryClient = useQueryClient();
 
 	// Fetch emojis
-	const { data: emojis, isLoading } = useQuery<unknown>({
+	const { data: emojis, isLoading } = useQuery({
 		queryKey: ['/api/admin/emojis'],
 		select: (data: any) =>
 			data.map((emoji: any) => ({

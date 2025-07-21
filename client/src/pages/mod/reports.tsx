@@ -183,7 +183,7 @@ export default function ReportsManagementPage() {
 		data: reportsData,
 		isLoading,
 		error
-	} = useQuery<unknown>({
+	} = useQuery({
 		queryKey: ['mod-reports', filters],
 		queryFn: () => reportsApi.getReports(filters),
 		staleTime: 30 * 1000, // 30 seconds

@@ -62,7 +62,7 @@ export function EmojiPanel({ onEmojiSelect, onClose }: EmojiPanelProps) {
   const [selectedCategory, setSelectedCategory] = useState('all');
 
   // Fetch custom emojis with ownership data
-  const { data: emojis = [], isLoading } = useQuery<unknown>({
+  const { data: emojis = [], isLoading } = useQuery({
     queryKey: ['emojis', 'owned', user?.id],
     queryFn: async () => {
       const response = await apiRequest<CustomEmoji[]>({

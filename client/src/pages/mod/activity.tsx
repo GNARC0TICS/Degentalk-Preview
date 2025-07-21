@@ -173,7 +173,7 @@ export default function ActivityLogPage() {
 		data: activityData,
 		isLoading,
 		error
-	} = useQuery<unknown>({
+	} = useQuery({
 		queryKey: ['mod-activity', filters],
 		queryFn: () => activityApi.getActivityLog(filters),
 		staleTime: 30 * 1000,

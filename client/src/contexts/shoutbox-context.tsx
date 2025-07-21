@@ -63,7 +63,7 @@ export function ShoutboxProvider({ children }: ShoutboxProviderProps) {
 	const queryClient = useQueryClient();
 
 	// Get user settings from API
-	const { data, isLoading } = useQuery<unknown>({
+	const { data, isLoading } = useQuery({
 		queryKey: [SETTINGS_QUERY_KEY],
 		queryFn: async () => {
 			try {

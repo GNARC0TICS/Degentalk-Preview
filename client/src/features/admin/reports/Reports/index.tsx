@@ -155,7 +155,7 @@ export default function ReportsPage() {
 		isLoading,
 		isError,
 		refetch
-	} = useQuery<unknown>({
+	} = useQuery({
 		queryKey: ['admin-reports', page, status, contentType, search],
 		queryFn: async (): Promise<ReportsResponse> => {
 			const params = new URLSearchParams({

@@ -220,7 +220,7 @@ export default function UserManagementPage() {
 		data: usersData,
 		isLoading,
 		error
-	} = useQuery<unknown>({
+	} = useQuery({
 		queryKey: ['mod-users', filters],
 		queryFn: () => usersApi.getUsers(filters),
 		staleTime: 30 * 1000

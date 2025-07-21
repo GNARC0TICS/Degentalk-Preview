@@ -30,7 +30,7 @@ export function WhisperButton({
 	const { data: unreadCountData } = useUnreadCount();
 
 	// Fetch current user data (if not already available)
-	const { data: currentUser } = useQuery<unknown>({
+	const { data: currentUser } = useQuery({
 		queryKey: ['/api/users/me']
 	});
 

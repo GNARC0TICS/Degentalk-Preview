@@ -28,7 +28,7 @@ router.post('/dgt/debit', validateDGTTransaction, adminWalletController.debitDgt
 router.post('/crypto/credit', adminWalletController.creditCrypto);
 router.post('/crypto/debit', adminWalletController.debitCrypto);
 
-// TODO: Implement these methods in controller
+// NOTE: Additional admin endpoints for future implementation:
 // router.get('/dgt/user/:userId', validateUserId, adminWalletController.getUserDGTInfo);
 // router.get('/system/status', adminWalletController.getWalletSystemStatus);
 
