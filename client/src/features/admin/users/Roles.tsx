@@ -16,6 +16,7 @@ import type { RoleFormValues } from '@/features/admin/components/forms/roles/Rol
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'; // Keep Card for now
 import type { Role } from '@shared/types/entities';
+import type { RoleId } from '@shared/types/ids';
 
 function RolesAdminPage() {
 	// const queryClient = useQueryClient(); // Handled by useCrudMutation for invalidation
@@ -71,7 +72,7 @@ function RolesAdminPage() {
 	const deleteRoleMutation = useCrudMutation<
 		unknown, // Assuming delete might not return significant data
 		Error,
-		number // ID of the role to delete
+		RoleId // ID of the role to delete
 	>({
 		mutationFn: async (id) => apiRequest({ url: `/api/admin/roles/${id}`, method: 'DELETE' }),
 		queryKeyToInvalidate: ['/api/admin/roles'],

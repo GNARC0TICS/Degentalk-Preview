@@ -16,7 +16,7 @@ import type { CreateThreadParams } from '@/features/forum/hooks/useForumQueries'
 import { PrefixBadge } from '@/components/forum/prefix-badge';
 import { useDraft } from '@/hooks/use-draft';
 import { Clock, Save } from 'lucide-react';
-import { toPrefixId } from '@shared/types/ids';
+import type { PrefixId } from '@shared/types/ids';
 import {
 	Dialog,
 	DialogContent,

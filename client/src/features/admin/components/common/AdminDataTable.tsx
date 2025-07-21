@@ -1,4 +1,3 @@
-import type { UserId } from '@shared/types/ids';
 import React from 'react';
 import { EntityTable } from '@/features/admin/layout/layout/EntityTable';
 
@@ -7,7 +6,7 @@ import { EntityTable } from '@/features/admin/layout/layout/EntityTable';
  * progressively migrate all pages without rewriting logic immediately.
  * Provides the same API surface but lives in a central location to stop duplication.
  */
-export interface AdminDataTableProps<T extends { id: UserId }> {
+export interface AdminDataTableProps<T extends { id: string }> {
 	columns: Parameters<typeof EntityTable<T>>[0]['columns'];
 	data: T[];
 	isLoading: boolean;
@@ -30,7 +29,7 @@ export interface AdminDataTableProps<T extends { id: UserId }> {
 	onPageSizeChange?: ((pageSize: number) => void) | undefined;
 }
 
-export function AdminDataTable<T extends { id: UserId }>(props: AdminDataTableProps<T>) {
+export function AdminDataTable<T extends { id: string }>(props: AdminDataTableProps<T>) {
 	// Map AdminDataTable props to EntityTable props
 	const { loading, pagination, onPageChange, onPageSizeChange, ...entityTableProps } = props;
 

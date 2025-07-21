@@ -1,4 +1,3 @@
-import type { UserId } from '@shared/types/ids';
 import React from 'react';
 import {
 	Table,
@@ -21,7 +20,7 @@ export interface ColumnDef<T> {
 	sortable?: boolean | undefined;
 }
 
-interface EntityTableProps<T extends { id: UserId }> {
+interface EntityTableProps<T extends { id: string }> {
 	columns: ColumnDef<T>[];
 	data: T[];
 	isLoading: boolean;
@@ -46,7 +45,7 @@ interface EntityTableProps<T extends { id: UserId }> {
 	compact?: boolean | undefined;
 }
 
-export function EntityTable<T extends { id: UserId }>({
+export function EntityTable<T extends { id: string }>({
 	columns,
 	data,
 	isLoading,

@@ -32,7 +32,7 @@ import { useLocalStorage } from '@/hooks/use-local-storage';
 import { cn } from '@/utils/utils';
 import type { Tag } from '@/types/forum';
 import type { TagId, PrefixId, ThreadId } from '@shared/types/ids';
-import { createTagId, createPrefixId } from '@shared/utils/ids';
+import { createTagId, createPrefixId } from '@shared/src/utils/ids';
 
 export type ThreadSortOption =
 	| 'latest'

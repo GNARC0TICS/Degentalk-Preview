@@ -28,7 +28,7 @@ import {
 } from '@/features/admin/components/forms/xp/LevelFormDialogs';
 import type { Level, LevelFormData } from '@/features/admin/components/forms/xp/LevelFormDialogs';
 import ProtectedAdminRoute from '@/features/admin/components/protected-admin-route';
-import { useAdminModule } from '@/hooks/use-admin-modules';
+import { useAdminModuleV2 } from '@/hooks/use-admin-modules';
 import { useXpActions, useUpdateXpAction } from '@/features/admin/services/xpActionsService';
 import {
 	useXpCloutSettings,

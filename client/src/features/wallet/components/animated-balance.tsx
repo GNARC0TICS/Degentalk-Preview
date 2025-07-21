@@ -62,3 +62,5 @@ export function AnimatedBalance({
 		</span>
 	);
 }
+
+export default AnimatedBalance;

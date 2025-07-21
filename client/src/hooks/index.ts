@@ -8,6 +8,7 @@ export { useToast } from './use-toast';
 export { useMessages } from './use-messages';
 export { useInfiniteScroll } from './use-infinite-scroll';
 export { useWebSocketStatus } from './use-websocket-status';
+export { useUserByUsername } from './use-user-by-username';
 
 // Feature-specific hooks
 export { useRainNotifications } from './use-rain-notifications';
