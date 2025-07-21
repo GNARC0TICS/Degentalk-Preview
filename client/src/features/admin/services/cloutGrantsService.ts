@@ -16,7 +16,7 @@ export function useGrantClout() {
 }
 
 export function useCloutLogs(userId?: string, limit = 50) {
-	return useQuery({
+	return useQuery<unknown>({
 		queryKey: [...CLOUT_LOGS_KEY, userId, limit],
 		queryFn: () =>
 			adminApi.get(`/clout/logs${userId ? `?userId=${userId}&limit=${limit}` : `?limit=${limit}`}`)

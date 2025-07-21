@@ -26,7 +26,7 @@ export default function TagPage() {
 		isLoading: isLoadingThreads,
 		isError: isThreadsError,
 		error: threadsError
-	} = useQuery({
+	} = useQuery<unknown>({
 		queryKey: [`/api/forum/threads?tags=${tagSlug}&page=${page}&limit=${limit}&sortBy=newest`],
 		queryFn: async ({ queryKey }) => {
 			const url = queryKey[0] as string;

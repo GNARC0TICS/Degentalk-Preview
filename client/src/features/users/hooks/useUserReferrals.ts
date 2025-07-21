@@ -17,7 +17,7 @@ export function useUserReferrals() {
 		isLoading: isLoadingStats,
 		error: statsError,
 		refetch: refetchStats
-	} = useQuery({
+	} = useQuery<unknown>({
 		queryKey: ['userReferrals'],
 		queryFn: () => referralsApi.getUserReferrals(),
 		retry: 1
@@ -28,7 +28,7 @@ export function useUserReferrals() {
 		data: referralLink,
 		isLoading: isLoadingLink,
 		error: linkError
-	} = useQuery({
+	} = useQuery<unknown>({
 		queryKey: ['userReferralLink'],
 		queryFn: () => referralsApi.getReferralLink(),
 		retry: 1

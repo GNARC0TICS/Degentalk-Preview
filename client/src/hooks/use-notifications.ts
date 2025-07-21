@@ -11,7 +11,7 @@ export function useNotifications() {
 	const { toast } = useToast();
 
 	// Query notifications
-	const notificationsQuery = useQuery({
+	const notificationsQuery = useQuery<unknown>({
 		queryKey: ['/api/notifications/getPaginatedNotifications'],
 		queryFn: async () => {
 			try {

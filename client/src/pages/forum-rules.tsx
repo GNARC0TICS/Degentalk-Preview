@@ -70,7 +70,7 @@ const ForumRules: React.FC = () => {
 		data: rules,
 		isLoading,
 		error
-	} = useQuery({
+	} = useQuery<unknown>({
 		queryKey: ['/api/forum/rules'],
 		queryFn: async () => {
 			return await apiRequest<ForumRulesResponse>({
@@ -81,7 +81,7 @@ const ForumRules: React.FC = () => {
 	});
 
 	// Get user agreements if authenticated
-	const { data: agreementData, isLoading: agreementsLoading } = useQuery({
+	const { data: agreementData, isLoading: agreementsLoading } = useQuery<unknown>({
 		queryKey: ['/api/forum/rules/user-agreements'],
 		queryFn: async () => {
 			if (!isAuthenticated) return null;

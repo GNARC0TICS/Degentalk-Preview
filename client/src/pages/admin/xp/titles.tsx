@@ -131,7 +131,7 @@ export default function TitleManagementPage() {
 		isLoading,
 		isError,
 		error
-	} = useQuery({
+	} = useQuery<unknown>({
 		queryKey: [
 			'/api/admin/titles',
 			{ search: debouncedSearchTerm, sort: sortField, direction: sortDirection, page, pageSize }

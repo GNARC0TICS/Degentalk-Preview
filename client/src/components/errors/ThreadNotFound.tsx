@@ -31,7 +31,7 @@ interface RelatedThread {
 
 export function ThreadNotFound({ threadId, forumSlug, onBack }: ThreadNotFoundProps) {
 	// Fetch related threads from the same forum
-	const { data: relatedThreads = [] } = useQuery({
+	const { data: relatedThreads = [] } = useQuery<unknown>({
 		queryKey: ['/api/forum/threads', 'related', forumSlug],
 		queryFn: async () => {
 			if (!forumSlug) return [];

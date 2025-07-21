@@ -66,7 +66,7 @@ export function WhaleWatchDisplay({
 	});
 
 	// Fetch following list
-	const { data: followingData, isLoading: followingLoading } = useQuery({
+	const { data: followingData, isLoading: followingLoading } = useQuery<unknown>({
 		queryKey: [`/api/users/${userId}/following`],
 		queryFn: async () => {
 			return await apiRequest<{
@@ -80,7 +80,7 @@ export function WhaleWatchDisplay({
 	});
 
 	// Fetch followers list
-	const { data: followersData, isLoading: followersLoading } = useQuery({
+	const { data: followersData, isLoading: followersLoading } = useQuery<unknown>({
 		queryKey: [`/api/users/${userId}/followers`],
 		queryFn: async () => {
 			return await apiRequest<{
@@ -95,7 +95,7 @@ export function WhaleWatchDisplay({
 	});
 
 	// Fetch whale status
-	const { data: whaleStatus } = useQuery({
+	const { data: whaleStatus } = useQuery<unknown>({
 		queryKey: [`/api/whale-status/${userId}`],
 		queryFn: async () => {
 			return await apiRequest<{ isWhale: boolean; followerCount: number; threshold: number }>({

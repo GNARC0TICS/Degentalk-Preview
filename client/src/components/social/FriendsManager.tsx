@@ -95,7 +95,7 @@ export function FriendsManager() {
 	});
 
 	// Fetch friends list
-	const { data: friendsData, isLoading: friendsLoading } = useQuery({
+	const { data: friendsData, isLoading: friendsLoading } = useQuery<unknown>({
 		queryKey: ['/api/social/friends'],
 		queryFn: async () => {
 			return await apiRequest<{
@@ -109,7 +109,7 @@ export function FriendsManager() {
 	});
 
 	// Fetch incoming requests
-	const { data: incomingRequestsData, isLoading: incomingLoading } = useQuery({
+	const { data: incomingRequestsData, isLoading: incomingLoading } = useQuery<unknown>({
 		queryKey: ['/api/social/friends/requests/incoming'],
 		queryFn: async () => {
 			return await apiRequest<{ requests: FriendRequest[] }>({
@@ -120,7 +120,7 @@ export function FriendsManager() {
 	});
 
 	// Fetch outgoing requests
-	const { data: outgoingRequestsData, isLoading: outgoingLoading } = useQuery({
+	const { data: outgoingRequestsData, isLoading: outgoingLoading } = useQuery<unknown>({
 		queryKey: ['/api/social/friends/requests/outgoing'],
 		queryFn: async () => {
 			return await apiRequest<{ requests: FriendRequest[] }>({
@@ -131,7 +131,7 @@ export function FriendsManager() {
 	});
 
 	// Search users
-	const { data: searchData, isLoading: searchLoading } = useQuery({
+	const { data: searchData, isLoading: searchLoading } = useQuery<unknown>({
 		queryKey: ['/api/social/friends/search', searchQuery],
 		queryFn: async () => {
 			if (!searchQuery || searchQuery.length < 1) return { users: [] };

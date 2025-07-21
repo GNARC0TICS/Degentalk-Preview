@@ -42,7 +42,7 @@ export function useShopItems(category?: ItemCategory) {
 		isError,
 		error,
 		refetch
-	} = useQuery({
+	} = useQuery<unknown>({
 		queryKey: ['shopItems', category],
 		queryFn: async () => {
 			return await apiRequest<ShopItem[]>({
@@ -74,7 +74,7 @@ export function useShopItem(itemId: string) {
 		isLoading,
 		isError,
 		error
-	} = useQuery({
+	} = useQuery<unknown>({
 		queryKey: ['shopItem', itemId],
 		queryFn: async () => {
 			return await apiRequest<ShopItem>({

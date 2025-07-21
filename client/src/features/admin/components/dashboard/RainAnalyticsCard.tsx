@@ -71,7 +71,7 @@ const RainAnalyticsCard: React.FC<RainAnalyticsCardProps> = ({ className }) => {
 	const [timeRange, setTimeRange] = useState<string>('30');
 
 	// Fetch rain analytics data
-	const { data, isLoading, error } = useQuery({
+	const { data, isLoading, error } = useQuery<unknown>({
 		queryKey: ['admin', 'analytics', 'rain', timeRange],
 		queryFn: async () => {
 			return apiRequest<RainAnalytics>({

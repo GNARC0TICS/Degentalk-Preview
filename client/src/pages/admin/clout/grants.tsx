@@ -100,7 +100,7 @@ export default function CloutGrantsAdminPage() {
 		isLoading,
 		isError,
 		error
-	} = useQuery({
+	} = useQuery<unknown>({
 		queryKey: ['/api/admin/users/search', debouncedSearchTerm],
 		queryFn: async () => {
 			if (!debouncedSearchTerm || debouncedSearchTerm.length < 3) {
@@ -700,7 +700,7 @@ function RecentCloutAdjustmentsTable() {
 		isLoading,
 		isError,
 		error
-	} = useQuery({
+	} = useQuery<unknown>({
 		queryKey: ['/api/admin/clout/adjustment-logs'],
 		queryFn: async () => {
 			const response = await fetch('/api/admin/clout/adjustment-logs');
@@ -796,7 +796,7 @@ function CloutHistoryTable({ userId }: { userId?: string }) {
 		isLoading,
 		isError,
 		error
-	} = useQuery({
+	} = useQuery<unknown>({
 		queryKey: ['/api/admin/clout/adjustment-logs', userId],
 		queryFn: async () => {
 			if (!userId) return [];

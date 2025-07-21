@@ -26,7 +26,7 @@ export function useAdminModuleV2s(): UseAdminModuleV2sReturn {
 		isLoading,
 		error,
 		refetch
-	} = useQuery({
+	} = useQuery<unknown>({
 		queryKey: ['admin-modules-config'],
 		queryFn: async () => {
 			try {

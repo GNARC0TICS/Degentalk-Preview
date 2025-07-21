@@ -10,7 +10,8 @@ import { useUserXP } from '@/hooks/useUserXP';
 
 const ProfileXpPage: React.FC = () => {
 	const { username } = useParams<{ username: string }>();
-	const { data: xpInfo, isLoading } = useUserXP(username);
+	// TODO: Convert username to UserId - for now just show current user's XP
+	const { data: xpInfo, isLoading } = useUserXP(undefined);
 
 	return (
 		<div className="container max-w-5xl mx-auto py-6 px-4">

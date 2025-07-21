@@ -17,7 +17,7 @@ import type { AchievementId } from '@shared/types/ids';
 export function useUserAchievements(filters?: AchievementFilters) {
 	const { user } = useAuth();
 
-	return useQuery({
+	return useQuery<unknown>({
 		queryKey: ['achievements', 'user', user?.id, filters],
 		queryFn: () => (user ? achievementApi.getUserAchievements(user.id, filters) : null),
 		enabled: !!user,
@@ -30,7 +30,7 @@ export function useUserAchievements(filters?: AchievementFilters) {
  * Get all available achievements
  */
 export function useAchievements(filters?: AchievementFilters & { page?: number; limit?: number }) {
-	return useQuery({
+	return useQuery<unknown>({
 		queryKey: ['achievements', 'all', filters],
 		queryFn: () => achievementApi.getAchievements(filters),
 		staleTime: 10 * 60 * 1000, // 10 minutes
@@ -42,7 +42,7 @@ export function useAchievements(filters?: AchievementFilters & { page?: number; 
  * Get achievement statistics
  */
 export function useAchievementStats() {
-	return useQuery({
+	return useQuery<unknown>({
 		queryKey: ['achievements', 'stats'],
 		queryFn: () => achievementApi.getAchievementStats(),
 		staleTime: 15 * 60 * 1000, // 15 minutes
@@ -54,7 +54,7 @@ export function useAchievementStats() {
  * Get specific achievement details
  */
 export function useAchievement(id: AchievementId) {
-	return useQuery({
+	return useQuery<unknown>({
 		queryKey: ['achievements', 'detail', id],
 		queryFn: () => achievementApi.getAchievementById(id),
 		enabled: !!id,
@@ -67,7 +67,7 @@ export function useAchievement(id: AchievementId) {
  * Get achievement completions (admin)
  */
 export function useAchievementCompletions(id: AchievementId, page = 1, limit = 50) {
-	return useQuery({
+	return useQuery<unknown>({
 		queryKey: ['achievements', 'completions', id, page, limit],
 		queryFn: () => achievementApi.getAchievementCompletions(id, page, limit),
 		enabled: !!id,
@@ -79,7 +79,7 @@ export function useAchievementCompletions(id: AchievementId, page = 1, limit = 5
  * Get achievement templates
  */
 export function useAchievementTemplates(filters?: { category?: string; tags?: string }) {
-	return useQuery({
+	return useQuery<unknown>({
 		queryKey: ['achievements', 'templates', filters],
 		queryFn: () => achievementApi.getAchievementTemplates(filters),
 		staleTime: 30 * 60 * 1000, // 30 minutes - templates don't change often

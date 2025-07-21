@@ -11,7 +11,7 @@ const throwIfResNotOk = async (res: Response) => {
         		});
 
 		const errorBody = await res.text();
-		logger.error('QueryClient', '[API ERROR] Response body:', errorBody.substring(0, 500));
+		logger.error('QueryClient', '[API ERROR] Response body: ' + errorBody.substring(0, 500));
 
 		let json;
 		try {
@@ -65,7 +65,7 @@ export const getQueryFn: <T>(options: { on401: UnauthorizedBehavior }) => QueryF
 		if (!contentType || !contentType.includes('application/json')) {
 			logger.error('QueryClient', '[API ERROR] Non-JSON response detected');
 			const text = await res.text();
-			logger.error('QueryClient', '[API ERROR] Response preview:', text.substring(0, 200));
+			logger.error('QueryClient', '[API ERROR] Response preview: ' + text.substring(0, 200));
 			throw new Error(
 				`Expected JSON response but got ${contentType}. Response: ${text.substring(0, 200)}`
 			);

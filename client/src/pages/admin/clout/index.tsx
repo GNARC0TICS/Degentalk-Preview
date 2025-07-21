@@ -146,7 +146,7 @@ export default function CloutSystemPage() {
 		data: achievementsData,
 		isLoading: achievementsLoading,
 		isError: achievementsError
-	} = useQuery({
+	} = useQuery<unknown>({
 		queryKey: ['admin-clout-achievements'],
 		queryFn: async () => {
 			return apiRequest({ url: '/api/admin/clout/achievements', method: 'GET' });
@@ -158,7 +158,7 @@ export default function CloutSystemPage() {
 		data: logsData,
 		isLoading: logsLoading,
 		isError: logsError
-	} = useQuery({
+	} = useQuery<unknown>({
 		queryKey: ['admin-clout-logs'],
 		queryFn: async () => {
 			return apiRequest({ url: '/api/admin/clout/logs?limit=100', method: 'GET' });

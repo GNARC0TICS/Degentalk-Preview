@@ -67,7 +67,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
 	}, []);
 
 	// Query wallet balance
-	const balanceQuery = useQuery({
+	const balanceQuery = useQuery<unknown>({
 		queryKey: ['/api/wallet/balance'],
 		queryFn: async () => {
 			try {
@@ -84,7 +84,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
 	});
 
 	// Query transaction history
-	const transactionHistoryQuery = useQuery({
+	const transactionHistoryQuery = useQuery<unknown>({
 		queryKey: ['/api/wallet/transactions'],
 		queryFn: async () => {
 			try {

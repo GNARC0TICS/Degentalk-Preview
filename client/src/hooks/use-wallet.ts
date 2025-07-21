@@ -21,7 +21,7 @@ export function useWallet() {
 	const [isDepositing, setIsDepositing] = useState(false);
 
 	// Query wallet balance
-	const balanceQuery = useQuery({
+	const balanceQuery = useQuery<unknown>({
 		queryKey: ['/api/wallet/balances'],
 		queryFn: () => walletApiService.getBalance(),
 		staleTime: 30 * 1000 // 30 seconds before refetching
@@ -43,21 +43,21 @@ export function useWallet() {
 	}, [balanceQuery.data]);
 
 	// Query transaction history
-	const transactionHistoryQuery = useQuery({
+	const transactionHistoryQuery = useQuery<unknown>({
 		queryKey: ['/api/wallet/transactions'],
 		queryFn: () => walletApiService.getTransactionHistory(),
 		staleTime: 30 * 1000 // 30 seconds before refetching
 	});
 
 	// Query deposit addresses
-	const depositAddressesQuery = useQuery({
+	const depositAddressesQuery = useQuery<unknown>({
 		queryKey: ['/api/wallet/deposit-addresses'],
 		queryFn: () => walletApiService.getDepositAddresses(),
 		staleTime: 5 * 60 * 1000 // 5 minutes before refetching
 	});
 
 	// Query wallet configuration
-	const walletConfigQuery = useQuery({
+	const walletConfigQuery = useQuery<unknown>({
 		queryKey: ['/api/wallet/config'],
 		queryFn: () => walletApiService.getWalletConfig(),
 		staleTime: 60 * 1000 // 1 minute before refetching

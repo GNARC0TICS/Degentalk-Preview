@@ -74,7 +74,7 @@ export function useMissions() {
   const { subscribe } = useWebSocket();
   
   // Fetch user's active missions
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, error } = useQuery<unknown>({
     queryKey: ['missions', user?.id],
     queryFn: async () => {
       const response = await apiRequest<{ missions: MissionsResponse }>('/api/missions/active');
@@ -85,7 +85,7 @@ export function useMissions() {
   });
   
   // Fetch streaks
-  const { data: streaks } = useQuery({
+  const { data: streaks } = useQuery<unknown>({
     queryKey: ['mission-streaks', user?.id],
     queryFn: async () => {
       const response = await apiRequest<{ streaks: MissionStreak[] }>('/api/missions/streaks');
@@ -95,7 +95,7 @@ export function useMissions() {
   });
   
   // Fetch stats
-  const { data: stats } = useQuery({
+  const { data: stats } = useQuery<unknown>({
     queryKey: ['mission-stats', user?.id],
     queryFn: async () => {
       const response = await apiRequest<{ stats: MissionStats }>('/api/missions/stats');

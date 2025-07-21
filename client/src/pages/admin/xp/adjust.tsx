@@ -102,7 +102,7 @@ export default function UserXpAdjustmentPage() {
 		isError,
 		error
 		// refetchUsers was unused
-	} = useQuery({
+	} = useQuery<unknown>({
 		queryKey: ['/api/admin/users/search', debouncedSearchTerm],
 		queryFn: async () => {
 			if (!debouncedSearchTerm || debouncedSearchTerm.length < 3) {
@@ -705,7 +705,7 @@ function RecentAdjustmentsTable() {
 		isLoading,
 		isError,
 		error
-	} = useQuery({
+	} = useQuery<unknown>({
 		queryKey: ['/api/admin/xp/adjustment-logs'],
 		queryFn: async () => {
 			const response = await fetch('/api/admin/xp/adjustment-logs');
@@ -801,7 +801,7 @@ function XpHistoryTable({ userId }: { userId?: string }) {
 		isLoading,
 		isError,
 		error
-	} = useQuery({
+	} = useQuery<unknown>({
 		queryKey: ['/api/admin/xp/adjustment-logs', userId],
 		queryFn: async () => {
 			if (!userId) return [];

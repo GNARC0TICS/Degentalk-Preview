@@ -35,7 +35,7 @@ export function MentionAutocomplete({
 	const containerRef = useRef<HTMLDivElement>(null);
 
 	// Fetch users for mention autocomplete
-	const { data: usersData, isLoading } = useQuery({
+	const { data: usersData, isLoading } = useQuery<unknown>({
 		queryKey: ['/api/social/mentions/search-users', query],
 		queryFn: async () => {
 			if (!query || query.length < 1) return { users: [] };

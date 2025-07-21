@@ -52,7 +52,7 @@ export function WhisperModal({ isOpen, onClose, initialUser }: WhisperModalProps
 	}, [isOpen, initialUser]);
 
 	// Get the users list for the search
-	const { data: users, isLoading: isLoadingUsers } = useQuery({
+	const { data: users, isLoading: isLoadingUsers } = useQuery<unknown>({
 		queryKey: ['/api/users/search', searchTerm],
 		queryFn: async () => {
 			if (!searchTerm || searchTerm.length < 2) return [];

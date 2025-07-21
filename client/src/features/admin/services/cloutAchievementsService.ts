@@ -6,7 +6,7 @@ import type { AchievementData } from '@/types/admin.types';
 export const ACHIEVEMENTS_KEY = ['admin', 'clout', 'achievements'];
 
 export function useCloutAchievements() {
-	return useQuery({
+	return useQuery<unknown>({
 		queryKey: ACHIEVEMENTS_KEY,
 		queryFn: () => adminApi.get('/clout/achievements')
 	});

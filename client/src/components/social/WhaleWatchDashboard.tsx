@@ -76,7 +76,7 @@ export function WhaleWatchDashboard() {
 	});
 
 	// Fetch following list
-	const { data: followingData, isLoading: followingLoading } = useQuery({
+	const { data: followingData, isLoading: followingLoading } = useQuery<unknown>({
 		queryKey: ['/api/social/follows/following'],
 		queryFn: async () => {
 			return await apiRequest<{
@@ -90,7 +90,7 @@ export function WhaleWatchDashboard() {
 	});
 
 	// Fetch followers list
-	const { data: followersData, isLoading: followersLoading } = useQuery({
+	const { data: followersData, isLoading: followersLoading } = useQuery<unknown>({
 		queryKey: ['/api/social/follows/followers'],
 		queryFn: async () => {
 			return await apiRequest<{
@@ -104,7 +104,7 @@ export function WhaleWatchDashboard() {
 	});
 
 	// Fetch whale candidates
-	const { data: whalesData, isLoading: whalesLoading } = useQuery({
+	const { data: whalesData, isLoading: whalesLoading } = useQuery<unknown>({
 		queryKey: ['/api/social/follows/whales'],
 		queryFn: async () => {
 			return await apiRequest<{ whales: FollowUser[] }>({
@@ -115,7 +115,7 @@ export function WhaleWatchDashboard() {
 	});
 
 	// Search users
-	const { data: searchData, isLoading: searchLoading } = useQuery({
+	const { data: searchData, isLoading: searchLoading } = useQuery<unknown>({
 		queryKey: ['/api/social/follows/search', searchQuery],
 		queryFn: async () => {
 			if (!searchQuery || searchQuery.length < 1) return { users: [] };

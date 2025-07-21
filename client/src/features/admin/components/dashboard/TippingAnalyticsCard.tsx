@@ -83,7 +83,7 @@ const TippingAnalyticsCard: React.FC<TippingAnalyticsCardProps> = ({ className }
 	const [timeRange, setTimeRange] = useState<string>('30');
 
 	// Fetch tipping analytics data
-	const { data, isLoading, error } = useQuery({
+	const { data, isLoading, error } = useQuery<unknown>({
 		queryKey: ['admin', 'analytics', 'tipping', timeRange],
 		queryFn: () =>
 			apiRequest<TippingAnalytics>({

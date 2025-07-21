@@ -64,9 +64,9 @@ export class ErrorBoundary extends Component<Props, State> {
 
 		// Log to console in development
 		console.group('🚨 Error Boundary Report');
-		logger.error('ErrorBoundary', 'Error caught', { error: error.toString() });
-		logger.error('ErrorBoundary', 'Component stack trace', { componentStack: errorInfo.componentStack });
-		logger.error('ErrorBoundary', 'Error context', { context: this.props.context || 'Unknown' });
+		logger.error('ErrorBoundary', 'Error: ' + error.toString());
+		logger.error('ErrorBoundary', 'Component Stack: ' + errorInfo.componentStack);
+		logger.error('ErrorBoundary', 'Context: ' + (this.props.context || 'Unknown'));
 		console.groupEnd();
 	};
 

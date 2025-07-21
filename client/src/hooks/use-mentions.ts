@@ -37,7 +37,7 @@ export function useMentions(options: UseMentionsOptions = {}) {
 	const editorRef = useRef<HTMLTextAreaElement | null>(null);
 
 	// Get user's unread mention count
-	const { data: unreadCount = 0 } = useQuery({
+	const { data: unreadCount = 0 } = useQuery<unknown>({
 		queryKey: ['/api/social/mentions/unread-count'],
 		queryFn: async () => {
 			const response = await apiRequest<{ unreadCount: number }>({
@@ -50,7 +50,7 @@ export function useMentions(options: UseMentionsOptions = {}) {
 	});
 
 	// Get user's mentions
-	const { data: mentionsData, refetch: refetchMentions } = useQuery({
+	const { data: mentionsData, refetch: refetchMentions } = useQuery<unknown>({
 		queryKey: ['/api/social/mentions'],
 		queryFn: async () => {
 			return await apiRequest<{

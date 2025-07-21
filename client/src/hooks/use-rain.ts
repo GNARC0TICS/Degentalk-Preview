@@ -84,7 +84,7 @@ export function useRain() {
 	});
 
 	// Get recent rain events query
-	const recentRainQuery = useQuery({
+	const recentRainQuery = useQuery<unknown>({
 		queryKey: ['/api/engagement/rain/recent'],
 		queryFn: async () => {
 			try {

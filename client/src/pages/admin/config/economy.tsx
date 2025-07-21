@@ -25,7 +25,7 @@ export default function EconomyConfigPage() {
 		data: economyData,
 		isLoading,
 		isError
-	} = useQuery({
+	} = useQuery<unknown>({
 		queryKey: ['admin-economy-config'],
 		queryFn: async (): Promise<EconomyConfigResponse> => {
 			return apiRequest({ url: '/api/admin/economy/config', method: 'GET' });

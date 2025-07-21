@@ -16,7 +16,7 @@ export function PlatformStatsWidget({
 		data: stats,
 		isLoading,
 		error
-	} = useQuery({
+	} = useQuery<unknown>({
 		queryKey: ['/api/platform-stats'],
 		queryFn: async () => {
 			const response = await fetch('/api/platform-stats');

@@ -131,7 +131,7 @@ export default function LiveDatabasePage() {
 	const queryClient = useQueryClient();
 
 	// Fetch available tables
-	const { data: tablesData, isLoading: tablesLoading } = useQuery({
+	const { data: tablesData, isLoading: tablesLoading } = useQuery<unknown>({
 		queryKey: ['/api/admin/database/tables'],
 		queryFn: async () => {
 			const response = await apiRequest<{ success: boolean; data: TableInfo[] }>({
@@ -147,7 +147,7 @@ export default function LiveDatabasePage() {
 		data: tableData,
 		isLoading: tableDataLoading,
 		refetch: refetchTableData
-	} = useQuery({
+	} = useQuery<unknown>({
 		queryKey: [
 			'/api/admin/database/table-data',
 			selectedTable,
@@ -179,7 +179,7 @@ export default function LiveDatabasePage() {
 	});
 
 	// Fetch table schema
-	const { data: schemaData } = useQuery({
+	const { data: schemaData } = useQuery<unknown>({
 		queryKey: ['/api/admin/database/table-schema', selectedTable],
 		queryFn: async () => {
 			if (!selectedTable) return null;

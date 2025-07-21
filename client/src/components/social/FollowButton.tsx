@@ -35,7 +35,7 @@ export function FollowButton({
 	}
 
 	// Check if currently following
-	const { data: followStatus, isLoading: statusLoading } = useQuery({
+	const { data: followStatus, isLoading: statusLoading } = useQuery<unknown>({
 		queryKey: [`/api/follow-status/${userId}`],
 		queryFn: async () => {
 			return await apiRequest<{ isFollowing: boolean }>({

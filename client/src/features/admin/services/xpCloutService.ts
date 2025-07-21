@@ -5,7 +5,7 @@ import type { InsertXpCloutSettings } from '@/types/compat/economy';
 const XP_CLOUT_KEY = ['admin', 'xp-clout-settings'];
 
 export function useXpCloutSettings() {
-	return useQuery({
+	return useQuery<unknown>({
 		queryKey: XP_CLOUT_KEY,
 		queryFn: () => adminApi.get('/xp/clout-settings')
 	});
