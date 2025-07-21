@@ -1,6 +1,15 @@
 {
-	"extends": "../tsconfig.json",
-	"include": ["src/**/*.ts", "utils/**/*.ts", "domains/**/*.ts", "routes/**/*.ts", "**/*.ts"],
+	"extends": "./tsconfig.json",
+	"include": [
+		"src/**/*.ts",
+		"config/**/*.ts",
+		"utils/**/*.ts",
+		"domains/**/*.ts",
+		"routes/**/*.ts",
+		"index.ts",
+		"**/*.ts"
+	],
+	"exclude": ["node_modules", "dist", "build"],
 	"compilerOptions": {
 		"noEmit": true
 	}

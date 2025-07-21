@@ -1,9 +1,6 @@
 {
 	"extends": "../tsconfig.base.json",
-	"include": [
-		"src/**/*",
-		"../shared/**/*"
-	],
+	"include": ["src/**/*", "../shared/**/*"],
 	"exclude": [
 		"../node_modules",
 		"build",
@@ -32,8 +29,9 @@
 		"src/domains/_new-wallet/**"
 	],
 	"compilerOptions": {
-		"rootDir": "./src",
 		"baseUrl": ".",
+		"module": "NodeNext",
+		"moduleResolution": "NodeNext",
 		"allowImportingTsExtensions": true,
 		"experimentalDecorators": true,
 		"emitDecoratorMetadata": true,
