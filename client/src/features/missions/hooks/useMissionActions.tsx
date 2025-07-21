@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiRequest } from '@/lib/api';
-import { useAuth } from '@/hooks/useAuth';
+import { apiRequest } from '@/utils/api-request';
+import { useAuth } from '@/hooks/use-auth';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
 

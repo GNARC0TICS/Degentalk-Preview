@@ -205,12 +205,12 @@ export function PerformanceHeatmapCard({ heatmap, timeRange }: PerformanceHeatma
 										{hourData.slice(0, 24).map((value, minuteIndex) => (
 											<div
 												key={minuteIndex}
-												className={`flex-1 h-6 m-0.5 rounded-sm cursor-pointer transition-all hover:scale-110 ${getColorForValue(value, currentMetric)}`}
+												className={`flex-1 h-6 m-0.5 rounded-sm cursor-pointer transition-all hover:scale-110 ${getColorForValue(Number(value), currentMetric)}`}
 												style={{
 													minWidth: '32px',
-													opacity: getIntensity(value, currentMetric)
+													opacity: getIntensity(Number(value), currentMetric)
 												}}
-												title={`${formatTimeSlot(heatmap.timeSlots[hourIndex])}: ${formatValue(value, currentMetric.type)}`}
+												title={`${formatTimeSlot(heatmap.timeSlots[hourIndex])}: ${formatValue(Number(value), currentMetric.type)}`}
 											/>
 										))}
 									</div>

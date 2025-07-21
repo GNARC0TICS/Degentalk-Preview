@@ -91,7 +91,7 @@ export const achievementApi = {
 		apiRequest<{ data: UserAchievement[] }>({
 			url: `/api/achievements/user/${userId}`,
 			method: 'GET',
-			params: filters
+			params: filters as Record<string, string | number | boolean | undefined>
 		}),
 
 	/**
@@ -101,7 +101,7 @@ export const achievementApi = {
 		apiRequest<PaginatedResponse<Achievement>>({
 			url: '/api/achievements',
 			method: 'GET',
-			params: filters
+			params: filters as Record<string, string | number | boolean | undefined>
 		}),
 
 	/**

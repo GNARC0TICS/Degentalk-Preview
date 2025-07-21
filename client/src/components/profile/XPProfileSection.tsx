@@ -19,10 +19,8 @@ type XPProfileSectionProps = {
 export function XPProfileSection({ userId, className }: XPProfileSectionProps) {
 	const { xpData, xpHistory, isLoading, equipTitle: originalEquipTitle } = useXP(userId);
 	
-	// Wrapper to handle UserTitle object
-	const equipTitle = (title: UserTitle) => {
-		originalEquipTitle(title.id);
-	};
+	// Pass equipTitle directly - it already expects TitleId
+	const equipTitle = originalEquipTitle;
 
 	// Level-up notification (controlled via XP hooks in future)
 	const [showLevelUp, setShowLevelUp] = useState(false);

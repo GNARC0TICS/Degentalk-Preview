@@ -135,14 +135,14 @@ function logTokenSummary() {
 		const content = readFileSync(CACHE_FILE, 'utf-8');
 		const cache: TokenCacheEntry[] = JSON.parse(content);
 
-		console.log(chalk.cyan('\n┌─────────────────────────────────────────────────────────┐'));
-		console.log(chalk.cyan('│') + chalk.bold.white('  Dev Auth Tokens Available                              ') + chalk.cyan('│'));
-		console.log(chalk.cyan('├─────────────────────────────────────────────────────────┤'));
+		logger.info('DEV_AUTH', chalk.cyan('\n┌─────────────────────────────────────────────────────────┐'));
+		logger.info('DEV_AUTH', chalk.cyan('│') + chalk.bold.white('  Dev Auth Tokens Available                              ') + chalk.cyan('│'));
+		logger.info('DEV_AUTH', chalk.cyan('├─────────────────────────────────────────────────────────┤'));
 
 		for (const entry of cache) {
 			const role = entry.role.padEnd(7);
 			const username = entry.username.padEnd(12);
-			console.log(chalk.cyan('│ ') + 
+			logger.info('DEV_AUTH', chalk.cyan('│ ') + 
 				chalk.yellow(`${role}`) + ' ' +
 				chalk.white(username) + ' ' +
 				chalk.gray(`Token: ${entry.token.substring(0, 20)}...`) + 
@@ -150,10 +150,10 @@ function logTokenSummary() {
 			);
 		}
 
-		console.log(chalk.cyan('├─────────────────────────────────────────────────────────┤'));
-		console.log(chalk.cyan('│ ') + chalk.gray('Use: pnpm dev:login <username> <password>             ') + chalk.cyan('│'));
-		console.log(chalk.cyan('│ ') + chalk.gray('Cache: .cache/dev-tokens.json                          ') + chalk.cyan('│'));
-		console.log(chalk.cyan('└─────────────────────────────────────────────────────────┘\n'));
+		logger.info('DEV_AUTH', chalk.cyan('├─────────────────────────────────────────────────────────┤'));
+		logger.info('DEV_AUTH', chalk.cyan('│ ') + chalk.gray('Use: pnpm dev:login <username> <password>             ') + chalk.cyan('│'));
+		logger.info('DEV_AUTH', chalk.cyan('│ ') + chalk.gray('Cache: .cache/dev-tokens.json                          ') + chalk.cyan('│'));
+		logger.info('DEV_AUTH', chalk.cyan('└─────────────────────────────────────────────────────────┘\n'));
 	} catch {
 		// Silent fail if can't read cache
 	}

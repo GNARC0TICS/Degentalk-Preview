@@ -3,10 +3,7 @@ import type {
 	VaultFrame,
 	VaultTitle,
 	VaultColor,
-	VaultBoost
-} from './rare-items-vault';
-import { vaultItems } from './rare-items-vault';
-import type {
+	VaultBoost,
 	ItemCategory,
 	ItemRarity,
 	UnlockMethod,
@@ -21,13 +18,7 @@ import type {
 
 // Mock implementation for demo purposes
 export class MockVaultAdminService implements VaultAdminService {
-	private items: import('@/types/vault.types').BaseVaultItem[] = [
-		...(vaultItems.frames as any[]),
-		...(vaultItems.titles as any[]),
-		...(vaultItems.colors as any[]),
-		...(vaultItems.boosts as any[]),
-		...(vaultItems.exclusives as any[])
-	];
+	private items: BaseVaultItem[] = [];
 
 	private events: VaultEvent[] = [];
 	private actionLog: AdminActionLog[] = [];
@@ -132,7 +123,7 @@ export class MockVaultAdminService implements VaultAdminService {
 
 	async updateItem(
 		id: string,
-		updates: Partial<import('@/types/vault.types').BaseVaultItem>
+		updates: Partial<AdminVaultItem>
 	): Promise<import('@/types/vault.types').BaseVaultItem> {
 		const index = this.items.findIndex((item) => item.id === id);
 		if (index === -1) throw new Error(`Item with ID ${id} not found`);
@@ -240,7 +231,7 @@ export class MockVaultAdminService implements VaultAdminService {
 		// If changing to seasonal, update rarity
 		// Season should be stored in metadata
 		const metadata = { ...item.metadata, season };
-		const updates: Partial<import('@/types/vault.types').BaseVaultItem> = { metadata };
+		const updates: Partial<AdminVaultItem> = { metadata };
 		if (item.rarity !== 'seasonal') {
 			updates.rarity = 'seasonal';
 		}

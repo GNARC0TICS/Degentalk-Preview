@@ -268,8 +268,6 @@ export function ShoutboxProvider({ children }: ShoutboxProviderProps) {
 			case 'sidebar-bottom':
 			case 'main-bottom':
 				return 'mobile-bottom';
-			case 'sticky':
-				return 'mobile-bottom';
 			default:
 				return position;
 		}

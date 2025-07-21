@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { activityApi } from '@/features/activity/services/activityApi';
 import { useAuth } from '@/hooks/use-auth';
 import type { EventLogFilters } from '@/features/activity/types/activity.types';
-import { toUserId } from '@shared/types/ids';
+import { toUserId } from '@shared/utils/id';
 
 /**
  * Hook for fetching and managing user activity feed

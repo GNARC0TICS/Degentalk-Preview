@@ -15,7 +15,7 @@ export const CardFlipDemo: React.FC = () => {
 				<motion.div
 					className="w-48 h-32 cursor-pointer perspective"
 					whileHover={{ rotateY: 180 }}
-					transition={{ duration: parseFloat(duration) || 0.6 }}
+					transition={{ duration: duration || 0.6 }}
 				>
 					<motion.div
 						className="w-full h-full bg-zinc-800 rounded-lg flex items-center justify-center text-white backface-hidden"

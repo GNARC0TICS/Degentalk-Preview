@@ -93,7 +93,7 @@ function ZonesPage() {
 												}
 											: undefined,
 										forums: zone.forums?.map((f) => ({
-											id: String(f.id),
+											id: f.id,
 											name: f.name,
 											threadCount: f.threadCount,
 											isPopular: f.isPopular ?? false,

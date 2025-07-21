@@ -119,7 +119,7 @@ export const SleepyLoader: React.FC<SleepyLoaderProps> = ({
         </p>
       </div>
       
-      <style jsx>{`
+      <style>{`
         @keyframes float-away {
           0% {
             transform: translate(0, 0) scale(0.5);

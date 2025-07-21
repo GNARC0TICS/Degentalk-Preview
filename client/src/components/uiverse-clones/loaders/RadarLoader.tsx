@@ -79,7 +79,7 @@ export const RadarLoader: React.FC<RadarLoaderProps> = ({
         </span>
       </div>
       
-      <style jsx>{`
+      <style>{`
         @keyframes pulse-ring {
           0% {
             transform: scale(0.8);

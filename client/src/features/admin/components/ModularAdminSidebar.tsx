@@ -2,7 +2,7 @@
  * Modular Admin Sidebar Component
  *
  * A fully permission-aware, collapsible sidebar that integrates with the
- * AdminModuleRegistry for dynamic navigation generation.
+ * AdminModuleV2Registry for dynamic navigation generation.
  */
 
 import { useState, useRef, useCallback, useMemo } from 'react';
@@ -26,7 +26,7 @@ import { Badge } from '@/components/ui/badge';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useAdminNavigation } from '@/hooks/use-admin-modules';
 import { useAuth } from '@/hooks/use-auth';
-import type { AdminModule } from '@shared/config/admin.config';
+import type { AdminModuleV2 } from '@/config/admin.config';
 
 // Icon mapping for module icons
 const iconMap: Record<string, any> = {
@@ -111,7 +111,7 @@ const getIconComponent = (iconName: string): React.ComponentType<{ className?: s
 };
 
 // Module status badge configurations
-const getModuleStatus = (module: AdminModule) => {
+const getModuleStatus = (module: AdminModuleV2) => {
 	if (!module.enabled) {
 		return {
 			icon: AlertCircle,
@@ -181,7 +181,7 @@ export default function ModularAdminSidebar({
 				acc[section].push(module);
 				return acc;
 			},
-			{} as Record<number, AdminModule[]>
+			{} as Record<number, AdminModuleV2[]>
 		);
 
 		// Sort within each section
@@ -202,13 +202,13 @@ export default function ModularAdminSidebar({
 
 	// Check if a module/route is active
 	const isModuleActive = useCallback(
-		(module: AdminModule): boolean => {
+		(module: AdminModuleV2): boolean => {
 			// Check main route
 			if (location.pathname === module.route) return true;
 
 			// Check submodules
-			if (module.subModules) {
-				return module.subModules.some((sub) => location.pathname === sub.route);
+			if (module.children) {
+				return module.children.some((sub) => location.pathname === sub.route);
 			}
 
 			return false;
@@ -218,8 +218,8 @@ export default function ModularAdminSidebar({
 
 	// Handle link clicks
 	const handleLinkClick = useCallback(
-		(module: AdminModule, event: React.MouseEvent) => {
-			const hasSubModules = module.subModules && module.subModules.length > 0;
+		(module: AdminModuleV2, event: React.MouseEvent) => {
+			const hasSubModules = module.children && module.children.length > 0;
 
 			if (hasSubModules) {
 				event.preventDefault();
@@ -232,14 +232,14 @@ export default function ModularAdminSidebar({
 	);
 
 	// Render module icon
-	const renderModuleIcon = useCallback((module: AdminModule) => {
+	const renderModuleIcon = useCallback((module: AdminModuleV2) => {
 		const IconComponent = getIconComponent(module.icon);
 		return <IconComponent className="w-4 h-4 flex-shrink-0" />;
 	}, []);
 
 	// Render status indicator
 	const renderStatusIndicator = useCallback(
-		(module: AdminModule) => {
+		(module: AdminModuleV2) => {
 			if (!showStatusIndicators) return null;
 
 			const status = getModuleStatus(module);
@@ -263,9 +263,9 @@ export default function ModularAdminSidebar({
 
 	// Render navigation module
 	const renderModule = useCallback(
-		(module: AdminModule, isSubModule = false) => {
+		(module: AdminModuleV2, isSubModule = false) => {
 			const isActive = isModuleActive(module);
-			const hasSubModules = module.subModules && module.subModules.length > 0;
+			const hasSubModules = module.children && module.children.length > 0;
 			const isExpanded = expandedCategories[module.id];
 
 			return (
@@ -319,9 +319,9 @@ export default function ModularAdminSidebar({
 					</Link>
 
 					{/* Submodules */}
-					{!collapsed && hasSubModules && isExpanded && module.subModules && (
+					{!collapsed && hasSubModules && isExpanded && module.children && (
 						<div className="ml-6 space-y-1 border-l border-admin-border pl-3">
-							{module.subModules.map((subModule) => renderModule(subModule, true))}
+							{module.children.map((subModule) => renderModule(subModule, true))}
 						</div>
 					)}
 				</div>
@@ -393,7 +393,7 @@ export default function ModularAdminSidebar({
 				{Object.entries(navigationStructure).map(([sectionKey, modules]) => (
 					<div key={sectionKey} className="space-y-2">
 						{/* Section header (optional, based on grouping) */}
-						{!collapsed && modules.length > 1 && (
+						{!collapsed && (modules as AdminModuleV2[]).length > 1 && (
 							<div className="text-xs font-medium text-admin-text-secondary uppercase tracking-wider px-3">
 								{Number(sectionKey) === 0
 									? 'Core'
@@ -406,7 +406,7 @@ export default function ModularAdminSidebar({
 						)}
 
 						{/* Section modules */}
-						<nav className="space-y-1">{modules.map((module) => renderModule(module))}</nav>
+						<nav className="space-y-1">{(modules as AdminModuleV2[]).map((module) => renderModule(module))}</nav>
 					</div>
 				))}
 
@@ -456,3 +456,5 @@ export default function ModularAdminSidebar({
 		</aside>
 	);
 }
+
+export { ModularAdminSidebar };

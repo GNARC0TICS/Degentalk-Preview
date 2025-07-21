@@ -80,9 +80,10 @@ export function ButtonTooltip({
 	// Make sure the child has necessary a11y attributes for buttons
 	const childProps = (children as React.ReactElement).props || {};
 	const enhancedChild = React.cloneElement(children, {
+		...childProps,
 		role: childProps.role || 'button',
 		tabIndex: childProps.tabIndex ?? 0
-	});
+	} as any);
 
 	return (
 		<TooltipProvider>

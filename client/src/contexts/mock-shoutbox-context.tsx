@@ -54,7 +54,7 @@ export function MockShoutboxProvider({ children }: MockShoutboxProviderProps) {
 	const { toast } = useToast();
 
 	// Check if we're on mobile
-	const isMobile = useMobileDetector();
+	const isMobile = useMobileDetector('(max-width: 768px)');
 
 	// Helper function to get readable position name
 	const getPositionLabel = (pos: ShoutboxPosition): string => {

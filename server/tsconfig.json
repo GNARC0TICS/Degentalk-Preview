@@ -2,7 +2,6 @@
 	"extends": "../tsconfig.base.json",
 	"include": [
 		"src/**/*",
-		"../db/**/*",
 		"../shared/**/*"
 	],
 	"exclude": [
@@ -33,12 +32,14 @@
 		"src/domains/_new-wallet/**"
 	],
 	"compilerOptions": {
+		"rootDir": "./src",
 		"baseUrl": ".",
 		"allowImportingTsExtensions": true,
 		"experimentalDecorators": true,
 		"emitDecoratorMetadata": true,
 		"composite": true,
 		"outDir": "./dist",
+		"types": ["node"],
 		"paths": {
 			"@config/*": ["../config/*"],
 			"@shared/types": ["../shared/types/index.ts"],

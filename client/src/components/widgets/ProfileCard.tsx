@@ -74,7 +74,7 @@ export function ProfileCard({
 	const RoleIcon = config.icon;
 
 	// DGT Balance
-	const dgtBalance = balance?.dgt?.balance || 0;
+	const dgtBalance = balance || 0;
 
 	if (variant === 'mini') {
 		return (

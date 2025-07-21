@@ -1,5 +1,5 @@
 import React from 'react';
-import { getProgressWithinLevel } from '@/shared/economy/reward-calculator';
+import { getProgressWithinLevel } from '@shared/economy/reward-calculator';
 import type { XPTrack } from './tracks';
 
 export type XPBarTrackProps = {
@@ -15,9 +15,9 @@ const XPBarTrack: React.FC<XPBarTrackProps> = ({ track, xp }) => {
 			className="xp-bar-track flex flex-col gap-1 p-4 rounded-xl shadow-lg bg-card/70 backdrop-blur-md border border-border/50"
 			aria-label={`${track.label} Progress Bar`}
 			role="progressbar"
-			aria-valuenow={xp}
-			aria-valuemin={track.minXP}
-			aria-valuemax={track.maxXP}
+			aria-valuenow={progress}
+			aria-valuemin={0}
+			aria-valuemax={100}
 			tabIndex={0}
 		>
 			<div className="flex items-center justify-between mb-1">

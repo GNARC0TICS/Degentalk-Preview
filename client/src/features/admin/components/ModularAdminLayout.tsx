@@ -113,3 +113,5 @@ export default function ModularAdminLayout({ children, className }: ModularAdmin
 		</AdminThemeProvider>
 	);
 }
+
+export { ModularAdminLayout };

@@ -95,6 +95,22 @@ function checkForXpGain(data: any) {
 // Re-export the canonical QueryClient instance to avoid duplicate caches
 export { queryClient } from '@/core/queryClient';
 
+// XP gain event listener setup
+export function setupXpGainListener(
+	callback: (xpData: any) => void
+) {
+	const handleXpGain = (event: CustomEvent) => {
+		callback(event.detail);
+	};
+
+	window.addEventListener('xp-gained', handleXpGain as EventListener);
+
+	// Return cleanup function
+	return () => {
+		window.removeEventListener('xp-gained', handleXpGain as EventListener);
+	};
+}
+
 // Level up event listener setup
 export function setupLevelUpListener(
 	callback: (level: number, title?: string, rewards?: any[]) => void

@@ -64,6 +64,19 @@ export interface AdminModuleV2 {
 	path: string; // URL path for React-Router (absolute)
 	children?: AdminModuleV2[];
 	disabled?: boolean; // Optional: to temporarily disable a module
+	
+	// Additional properties for backward compatibility
+	id?: string; // Can be same as slug
+	name?: string; // Can be same as label
+	enabled?: boolean; // Inverse of disabled
+	settings?: {
+		status?: string;
+		maintenance?: boolean;
+		beta?: boolean;
+	};
+	order?: number; // Display order
+	route?: string; // Can be same as path
+	description?: string; // Module description
 }
 
 // Core admin modules. This is the source of truth for admin navigation and permissions.

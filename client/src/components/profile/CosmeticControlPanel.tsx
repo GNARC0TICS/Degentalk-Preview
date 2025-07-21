@@ -11,7 +11,7 @@ import { apiRequest } from '@/utils/queryClient';
 import { FramedAvatar } from '@/components/users/framed-avatar';
 import { ShoppingBag, Sparkles, Palette, Frame, Crown, Edit } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { applyPluginRewards } from '@/lib/utils/applyPluginRewards';
+import { applyPluginRewards } from '@/utils/utils/applyPluginRewards';
 import type { UserInventoryWithProduct } from '@/types/inventory';
 import type { InventoryId, EntityId } from '@shared/types/ids';
 

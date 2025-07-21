@@ -126,22 +126,22 @@ const SmartThreadFilters = memo(
 			{
 				name: 'My Content',
 				icon: User,
-				filters: { ...filters, mine: true, replied: false, bookmarked: false }
+				filters: { ...filters, mine: true, replied: false, bookmarked: false } as ThreadFiltersState
 			},
 			{
 				name: 'Bookmarked',
 				icon: Bookmark,
-				filters: { ...filters, bookmarked: true, mine: false, replied: false }
+				filters: { ...filters, bookmarked: true, mine: false, replied: false } as ThreadFiltersState
 			},
 			{
 				name: 'Hot Today',
 				icon: TrendingUp,
-				filters: { ...filters, sortBy: 'hot', timeRange: '24h' }
+				filters: { ...filters, sortBy: 'hot', timeRange: '24h' as const } as ThreadFiltersState
 			},
 			{
 				name: 'Unsolved',
 				icon: Crown,
-				filters: { ...filters, solved: 'unsolved', sortBy: 'latest' }
+				filters: { ...filters, solved: 'unsolved' as const, sortBy: 'latest' } as ThreadFiltersState
 			}
 		];
 

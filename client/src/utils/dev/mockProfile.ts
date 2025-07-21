@@ -1,6 +1,6 @@
 import type { ProfileData } from '@/types/profile';
 import type { BadgeId, FrameId, TitleId } from '@shared/types/ids';
-import { toUserId } from '@shared/types/ids';
+import { toUserId } from '@shared/utils/id';
 
 /**
  * Generates mock `ProfileData` for local development.

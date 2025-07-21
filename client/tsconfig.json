@@ -4,13 +4,14 @@
 		"composite": true,
 		"outDir": "dist",
 		"skipLibCheck": true,
-		"rootDir": "src",
+		"rootDir": ".",
 		"module": "ESNext",
 		"moduleResolution": "bundler",
 		"jsx": "react-jsx",
 		"baseUrl": ".",
 		"paths": {
 			"@/*": ["src/*"],
+			"@config/*": ["../config/*"],
 			"@shared/*": ["../shared/*"],
 			"@assets/*": ["../attached_assets/*"],
 			"@db": ["../db/index.ts"],
@@ -20,6 +21,6 @@
 		},
 		"allowImportingTsExtensions": true
 	},
-	"include": ["src"],
+	"include": ["src", "../config/uiverse-components.config.ts"],
 	"references": [{ "path": "../shared" }]
 }

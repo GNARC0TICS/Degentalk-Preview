@@ -9,6 +9,7 @@ export interface AvatarFrame {
 	imageUrl: string;
 	rarity?: string;
 	animated?: boolean;
+	createdAt?: string;
 }
 
 // Until a canonical type is defined, alias to local interface

@@ -205,7 +205,7 @@ export const systemAnalyticsApi = {
 		return apiRequest<{ metrics: Partial<SystemMetrics>; timeRange: string; timestamp: string }>({
 			url: '/api/admin/analytics/system/metrics',
 			method: 'GET',
-			params
+			params: params as Record<string, string | number | boolean | undefined>
 		});
 	},
 
@@ -230,7 +230,7 @@ export const systemAnalyticsApi = {
 		}>({
 			url: '/api/admin/analytics/system/heatmap',
 			method: 'GET',
-			params
+			params: params as Record<string, string | number | boolean | undefined>
 		});
 	},
 
@@ -241,7 +241,7 @@ export const systemAnalyticsApi = {
 		return apiRequest<{ health: Partial<SystemHealth>; timestamp: string }>({
 			url: '/api/admin/analytics/system/health',
 			method: 'GET',
-			params
+			params: params as Record<string, string | number | boolean | undefined>
 		});
 	},
 
@@ -256,7 +256,7 @@ export const systemAnalyticsApi = {
 		}>({
 			url: '/api/admin/analytics/system/realtime',
 			method: 'GET',
-			params
+			params: params as Record<string, string | number | boolean | undefined>
 		});
 	},
 

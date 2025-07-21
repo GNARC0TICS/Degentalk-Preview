@@ -207,7 +207,7 @@ export const toPostId = (id: string): PostId => id as PostId;
 export const toForumId = (id: string): ForumId => id as ForumId;
 export const toStructureId = (id: string): StructureId => id as StructureId;
 export const toZoneId = (id: string): ZoneId => id as ZoneId;
-export const toParentZoneId = (id: string): ParentZoneId => id as ParentZoneId;
+// Removed duplicate - toParentZoneId function already defined above
 export const toTransactionId = (id: string): TransactionId => id as TransactionId;
 export const toWalletId = (id: string): WalletId => id as WalletId;
 export const toItemId = (id: string): ItemId => id as ItemId;

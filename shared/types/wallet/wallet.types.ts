@@ -360,6 +360,13 @@ export interface CCPaymentWithdrawFee {
 	chain: string;
 }
 
+export interface PaginationOptions {
+	page: number;
+	limit: number;
+	sortBy: 'createdAt' | 'amount' | 'type' | 'status';
+	sortOrder: 'asc' | 'desc';
+}
+
 export interface EconomyPaginationMeta {
 	page: number;
 	limit: number;
@@ -386,11 +393,51 @@ export interface DgtTransaction {
 }
 
 export interface DgtTransfer {
-	fromUserId: UserId;
-	toUserId: UserId;
+	from: UserId;
+	to: UserId;
 	amount: number;
 	reason?: string;
 	metadata?: Record<string, unknown>;
+}
+
+export interface DgtTransactionMetadata {
+	source: 
+		| 'crypto_deposit'
+		| 'shop_purchase'
+		| 'tip_send'
+		| 'tip_receive'
+		| 'rain_send'
+		| 'rain_receive'
+		| 'admin_credit'
+		| 'admin_debit'
+		| 'internal_transfer_send'
+		| 'internal_transfer_receive'
+		| 'xp_boost'
+		| 'manual_credit'
+		| 'transfer_out'
+		| 'transfer_in';
+	
+	// For crypto deposits
+	originalToken?: string;
+	usdtAmount?: string;
+	
+	// For shop purchases
+	shopItemId?: string;
+	
+	// For tips and transfers
+	reason?: string;
+	
+	// For admin actions
+	adminId?: string;
+	
+	// For various contexts
+	fromUserId?: UserId;
+	toUserId?: UserId;
+	threadId?: string;
+	postId?: string;
+	
+	// Any additional metadata
+	[key: string]: any;
 }
 
 export interface WalletBalance {

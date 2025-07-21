@@ -15,7 +15,7 @@ export interface ApiRequestConfig {
 	url: string;
 	method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 	data?: any | undefined;
-	params?: Record<string, string> | undefined;
+	params?: Record<string, string | number | boolean | undefined> | undefined;
 	headers?: Record<string, string> | undefined;
 }
 
@@ -45,7 +45,13 @@ export async function apiRequest<T = unknown>(
 	// Build URL with query parameters
 	let url = config.url;
 	if (config.params) {
-		const searchParams = new URLSearchParams(config.params);
+		// Convert all params to strings, filtering out undefined values
+		const stringified = Object.fromEntries(
+			Object.entries(config.params)
+				.filter(([, v]) => v !== undefined && v !== null)
+				.map(([k, v]) => [k, String(v)])
+		);
+		const searchParams = new URLSearchParams(stringified);
 		url += url.includes('?') ? '&' + searchParams.toString() : '?' + searchParams.toString();
 	}
 

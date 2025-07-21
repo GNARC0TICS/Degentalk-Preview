@@ -71,11 +71,6 @@ const PluginDataSchema = z
 				})
 			)
 			.optional(),
-		prefixGrantRules: z.record(z.unknown()).optional(),
-		allowPosting: z.boolean().optional(),
-		xpEnabled: z.boolean().optional(),
-		allowPolls: z.boolean().optional(),
-		allowTags: z.boolean().optional(),
 		isPopular: z.boolean().optional(),
 		lastActivityAt: z.union([z.string(), z.date()]).optional().nullable()
 	})
@@ -254,9 +249,9 @@ function buildRules(entity: ApiEntity): MergedRules {
 		prefixGrantRules: p.prefixGrantRules as Record<string, unknown> | undefined,
 		allowPolls: rules.allowPolls ?? p.allowPolls ?? false,
 		allowTags: rules.allowTags ?? p.allowTags ?? false,
-		accessLevel: rules.accessLevel || 'public',
+		accessLevel: (rules.accessLevel || 'public') as 'public' | 'registered' | 'level_10+' | 'vip' | 'moderator' | 'admin',
 		minXpRequired: rules.minXpRequired || entity.minXp || 0,
-		availablePrefixes: rules.availablePrefixes || p.availablePrefixes || [],
+		availablePrefixes: (rules.availablePrefixes || p.availablePrefixes || []) as string[],
 		requiredPrefix: rules.requiredPrefix ?? p.requiredPrefix ?? false
 	};
 }

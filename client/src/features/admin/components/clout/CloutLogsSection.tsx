@@ -30,7 +30,7 @@ import {
 	ArrowUp,
 	ArrowDown
 } from 'lucide-react';
-import type { CloutLog, CloutAchievement } from '@/features/admin/views/clout';
+import type { CloutLog, CloutAchievement } from '@/pages/admin/clout';
 import type { UserId } from '@shared/types/ids';
 
 interface CloutLogsSectionProps {

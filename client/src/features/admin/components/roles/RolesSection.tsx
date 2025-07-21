@@ -43,7 +43,8 @@ import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/utils/api-request';
 import { RoleForm } from './RoleForm';
 import { PermissionsEditor } from '../permissions/PermissionsEditor';
-import type { Role, Title, Permission } from '@/features/admin/views/roles-titles';
+import type { Role, Permission } from '@/types/admin.types';
+import type { AdminTitle as Title } from '@/types/admin-title.types';
 
 interface RolesSectionProps {
 	roles: Role[];

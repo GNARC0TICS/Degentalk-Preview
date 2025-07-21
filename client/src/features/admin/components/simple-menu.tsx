@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { generateSidebarLinks } from '@shared/config/admin.config';
+import { generateSidebarLinks } from '@/config/admin.config';
 
 const adminLinks = generateSidebarLinks();
 

@@ -6,6 +6,7 @@ import { MediaAsset } from '@/components/media/MediaAsset';
 import { Button } from '@/components/ui/button';
 import { MediaLibraryModal } from '@/features/admin/media/media/MediaLibraryModal';
 import { useToast } from '@/hooks/use-toast';
+import type { EntityId } from '@shared/types/ids';
 import {
 	Dialog,
 	DialogContent,
@@ -26,7 +27,7 @@ export default function AdminAnimationsPage() {
 	});
 
 	const deleteMutation = useMutation({
-		mutationFn: (id: string) => mediaApiService.deleteMedia(id),
+		mutationFn: (id: string) => mediaApiService.deleteMedia(id as EntityId),
 		onSuccess: () => {
 			toast({ title: 'Animation deleted' });
 			queryClient.invalidateQueries({ queryKey: ['admin-animations'] });
@@ -91,9 +92,9 @@ export default function AdminAnimationsPage() {
 							<Button
 								variant="destructive"
 								onClick={() => deleteMutation.mutate(selected.id)}
-								disabled={deleteMutation.isLoading}
+								disabled={deleteMutation.isPending}
 							>
-								{deleteMutation.isLoading ? 'Deleting…' : 'Delete'}
+								{deleteMutation.isPending ? 'Deleting…' : 'Delete'}
 							</Button>
 						</DialogFooter>
 					</DialogContent>

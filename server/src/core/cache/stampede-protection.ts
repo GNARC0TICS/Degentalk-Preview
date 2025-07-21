@@ -37,7 +37,7 @@ class StampedeProtection {
         existing.requestCount++;
         
         if (process.env.NODE_ENV === 'development') {
-          console.log(`[STAMPEDE PROTECTION] Request ${key} deduplicated (${existing.requestCount} total)`);
+          logger.debug('STAMPEDE_PROTECTION', `Request ${key} deduplicated (${existing.requestCount} total)`);
         }
         
         try {

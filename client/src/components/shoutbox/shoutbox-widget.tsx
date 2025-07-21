@@ -52,7 +52,7 @@ import {
 	Lock as LockIcon
 } from 'lucide-react';
 import type { GroupId, MessageId, UserId } from '@shared/types/ids';
-import { toUserId } from '@shared/types/ids';
+import { toUserId } from '@shared/utils/id';
 
 // Types for shoutbox messages
 interface ShoutboxUser {

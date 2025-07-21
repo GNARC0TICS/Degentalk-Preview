@@ -3,11 +3,16 @@
  * Comprehensive types for admin components and operations
  */
 
-import type { UserId } from '@shared/types/ids';
+import type { UserId, RoleId } from '@shared/types/ids';
 
-// Base User Interface
-export interface User {
-	id: string;
+// Re-export canonical types
+export type { Role, RoleFormData, RoleWithUsers } from '@shared/types/entities';
+export type { User, PublicUser, AuthenticatedUser, UserRole } from '@shared/types/entities';
+export type { Title, TitleFormData, TitleWithStats, AdminTitle } from '@shared/types/entities';
+
+// Admin-specific user interface (extends canonical User)
+export interface AdminUser {
+	id: UserId;
 	username: string;
 	email: string;
 	role: string;
@@ -23,6 +28,9 @@ export interface User {
 				activeAvatarUrl?: string;
 		  }
 		| undefined;
+	// Additional fields for admin view
+	posts?: number;
+	threads?: number;
 }
 
 // User Form Data Interface
@@ -39,17 +47,6 @@ export interface UserFormData {
 				avatarUrl?: string;
 		  }
 		| undefined;
-}
-
-// Role Management
-export interface Role {
-	id: string;
-	name: string;
-	description?: string;
-	permissions: string[];
-	isSystemRole: boolean;
-	createdAt: string;
-	updatedAt: string;
 }
 
 // Permission Definition

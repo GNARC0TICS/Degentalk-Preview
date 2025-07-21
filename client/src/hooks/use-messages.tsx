@@ -141,7 +141,7 @@ export function useMessages() {
 
 	// Get unread message count
 	const useUnreadCount = () => {
-		return useQuery({
+		return useQuery<{ total: number }>({
 			queryKey: ['/api/messages/unread-count'],
 			staleTime: 1000 * 30 // 30 seconds
 		});

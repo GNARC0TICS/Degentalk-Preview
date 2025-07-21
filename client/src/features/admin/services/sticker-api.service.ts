@@ -5,6 +5,7 @@
  */
 
 import { adminApi } from '@/features/admin/lib/adminApi';
+import { apiRequest } from '@/utils/api-request';
 import type { PackId, StickerId } from '@shared/types/ids';
 
 // Types

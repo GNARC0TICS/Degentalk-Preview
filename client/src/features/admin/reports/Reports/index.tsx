@@ -316,14 +316,19 @@ export default function ReportsPage() {
 
 	const onBanSubmit = (data: BanUserForm) => {
 		if (selectedReport) {
-			banUserMutation.mutate({
-				userId:
-					selectedReport.contentType === 'user'
-						? selectedReport.contentId
-						: selectedReport.contentId, // Adjust based on actual user ID
-				reason: data.reason,
-				duration: data.duration
-			});
+			// TODO: Need to fetch user ID from content when contentType is not 'user'
+			if (selectedReport.contentType === 'user') {
+				// For user reports, contentId is the user ID but we need proper type conversion
+				// This should be handled by backend API to accept contentId
+				banUserMutation.mutate({
+					userId: selectedReport.contentId as unknown as UserId,
+					reason: data.reason,
+					duration: data.duration
+				});
+			} else {
+				// For other content types, we need to fetch the author's user ID
+				console.error('Cannot ban user: Need to implement fetching user ID from content');
+			}
 		}
 	};
 

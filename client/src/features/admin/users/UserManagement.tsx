@@ -41,20 +41,7 @@ import {
 } from '@/features/admin/components/forms/users/UserActionDialogs';
 import { ROUTES } from '@/constants/routes';
 
-// Define user type for type safety
-// Ensure this matches the actual structure from your API and EntityTable needs
-export interface AdminUser {
-	id: string; // Changed to string to align with typical DB IDs, adjust if number
-	username: string;
-	email: string;
-	role: string;
-	status: string;
-	posts: number;
-	threads: number;
-	createdAt: string; // Consider Date object if you do transformations
-	updatedAt: string;
-	// Add any other fields that might be returned or needed
-}
+import type { AdminUser } from '@/types/admin.types';
 
 // Form data for user creation/updates
 export interface UserFormData {

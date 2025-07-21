@@ -47,7 +47,7 @@ function logCacheOperation(operation: CacheOperation): void {
     
     const cleaned = beforeLength - cacheOperations.length;
     if (cleaned > 0 && process.env.NODE_ENV === 'development') {
-      console.log(`[CACHE CLEANUP] Cleaned ${cleaned} old cache operations`);
+      logger.debug('CACHE_CLEANUP', `Cleaned ${cleaned} old cache operations`);
     }
   }
   

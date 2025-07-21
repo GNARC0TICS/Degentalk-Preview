@@ -88,7 +88,7 @@ function logInvalidation(key: string, reason: string, success: boolean, pattern?
       if (process.env.NODE_ENV === 'development') {
         const cleaned = oldLength - invalidationLog.length;
         if (cleaned > 0) {
-          console.log(`[CACHE CLEANUP] Removed ${cleaned} old invalidation events`);
+          logger.debug('CACHE_CLEANUP', `Removed ${cleaned} old invalidation events`);
         }
       }
     }
@@ -97,7 +97,7 @@ function logInvalidation(key: string, reason: string, success: boolean, pattern?
   if (process.env.NODE_ENV === 'development') {
     const operation = pattern ? 'PATTERN' : 'KEY';
     const status = success ? '✅' : '❌';
-    console.log(`[CACHE INVALIDATE ${operation}] ${status} ${key} (${reason})`);
+    logger.debug('CACHE_INVALIDATE', `${operation} ${status} ${key} (${reason})`);
   }
 }
 

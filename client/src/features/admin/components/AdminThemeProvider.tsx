@@ -26,3 +26,5 @@ export default function AdminThemeProvider({ children, className }: AdminThemePr
 		</div>
 	);
 }
+
+export { AdminThemeProvider };

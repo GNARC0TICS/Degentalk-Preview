@@ -7,9 +7,10 @@ import type { Role } from '@/utils/roles';
 interface RouteGuardProps {
 	children: ReactNode;
 	redirectTo?: string;
+	fallback?: ReactNode;
 }
 
-export function RequireAuth({ children, redirectTo = '/auth' }: RouteGuardProps) {
+export function RequireAuth({ children, redirectTo = '/auth', fallback }: RouteGuardProps) {
 	const { isAuthenticated, isLoading } = useAuth();
 
 	if (isLoading) {
@@ -17,7 +18,7 @@ export function RequireAuth({ children, redirectTo = '/auth' }: RouteGuardProps)
 	}
 
 	if (!isAuthenticated) {
-		return <Navigate to={redirectTo} />;
+		return fallback ? <>{fallback}</> : <Navigate to={redirectTo} />;
 	}
 
 	return <>{children}</>;
@@ -28,7 +29,7 @@ interface RequireRoleProps extends RouteGuardProps {
 	exactRole?: Role;
 }
 
-export function RequireRole({ children, minRole, exactRole, redirectTo = '/' }: RequireRoleProps) {
+export function RequireRole({ children, minRole, exactRole, redirectTo = '/', fallback }: RequireRoleProps) {
 	const { user, isAuthenticated, isLoading } = useAuth();
 
 	if (isLoading) {
@@ -36,87 +37,87 @@ export function RequireRole({ children, minRole, exactRole, redirectTo = '/' }: 
 	}
 
 	if (!isAuthenticated || !user) {
-		return <Navigate to="/auth" />;
+		return fallback ? <>{fallback}</> : <Navigate to="/auth" />;
 	}
 
 	const userRole = user.role as Role;
 
 	if (exactRole && userRole !== exactRole) {
-		return <Navigate to={redirectTo} />;
+		return fallback ? <>{fallback}</> : <Navigate to={redirectTo} />;
 	}
 
 	if (minRole && !hasRoleAtLeast(userRole, minRole)) {
-		return <Navigate to={redirectTo} />;
+		return fallback ? <>{fallback}</> : <Navigate to={redirectTo} />;
 	}
 
 	return <>{children}</>;
 }
 
-export function RequireAdmin({ children, redirectTo = '/' }: RouteGuardProps) {
+export function RequireAdmin({ children, redirectTo = '/', fallback }: RouteGuardProps) {
 	return (
-		<RequireRole minRole="admin" redirectTo={redirectTo}>
+		<RequireRole minRole="admin" redirectTo={redirectTo} fallback={fallback}>
 			{children}
 		</RequireRole>
 	);
 }
 
-export function RequireSuperAdmin({ children, redirectTo = '/' }: RouteGuardProps) {
+export function RequireSuperAdmin({ children, redirectTo = '/', fallback }: RouteGuardProps) {
 	return (
-		<RequireRole exactRole="super_admin" redirectTo={redirectTo}>
+		<RequireRole exactRole="super_admin" redirectTo={redirectTo} fallback={fallback}>
 			{children}
 		</RequireRole>
 	);
 }
 
-export function RequireModerator({ children, redirectTo = '/' }: RouteGuardProps) {
+export function RequireModerator({ children, redirectTo = '/', fallback }: RouteGuardProps) {
 	return (
-		<RequireRole minRole="moderator" redirectTo={redirectTo}>
+		<RequireRole minRole="moderator" redirectTo={redirectTo} fallback={fallback}>
 			{children}
 		</RequireRole>
 	);
 }
 
-export function RequireDev({ children, redirectTo = '/' }: RouteGuardProps) {
+export function RequireDev({ children, redirectTo = '/', fallback }: RouteGuardProps) {
 	return (
-		<RequireRole exactRole="dev" redirectTo={redirectTo}>
+		<RequireRole exactRole="dev" redirectTo={redirectTo} fallback={fallback}>
 			{children}
 		</RequireRole>
 	);
 }
 
-export function RequireShoutboxMod({ children, redirectTo = '/' }: RouteGuardProps) {
+export function RequireShoutboxMod({ children, redirectTo = '/', fallback }: RouteGuardProps) {
 	return (
-		<RequireRole minRole="shoutbox_mod" redirectTo={redirectTo}>
+		<RequireRole minRole="shoutbox_mod" redirectTo={redirectTo} fallback={fallback}>
 			{children}
 		</RequireRole>
 	);
 }
 
-export function RequireContentMod({ children, redirectTo = '/' }: RouteGuardProps) {
+export function RequireContentMod({ children, redirectTo = '/', fallback }: RouteGuardProps) {
 	return (
-		<RequireRole minRole="content_mod" redirectTo={redirectTo}>
+		<RequireRole minRole="content_mod" redirectTo={redirectTo} fallback={fallback}>
 			{children}
 		</RequireRole>
 	);
 }
 
-export function RequireMarketMod({ children, redirectTo = '/' }: RouteGuardProps) {
+export function RequireMarketMod({ children, redirectTo = '/', fallback }: RouteGuardProps) {
 	return (
-		<RequireRole minRole="market_mod" redirectTo={redirectTo}>
+		<RequireRole minRole="market_mod" redirectTo={redirectTo} fallback={fallback}>
 			{children}
 		</RequireRole>
 	);
 }
 
-export function RequireTeamAccess({ children, redirectTo = '/' }: RouteGuardProps) {
+export function RequireTeamAccess({ children, redirectTo = '/', fallback }: RouteGuardProps) {
 	return (
-		<RequireRole minRole="moderator" redirectTo={redirectTo}>
+		<RequireRole minRole="moderator" redirectTo={redirectTo} fallback={fallback}>
 			{children}
 		</RequireRole>
 	);
 }
 
-export function PublicOnlyRoute({ children, redirectTo = '/' }: RouteGuardProps) {
+export function PublicOnlyRoute({ children, redirectTo = '/', fallback }: RouteGuardProps) {
 	const { isAuthenticated, isLoading } = useAuth();
 
 	if (isLoading) {
@@ -124,7 +125,7 @@ export function PublicOnlyRoute({ children, redirectTo = '/' }: RouteGuardProps)
 	}
 
 	if (isAuthenticated) {
-		return <Navigate to={redirectTo} />;
+		return fallback ? <>{fallback}</> : <Navigate to={redirectTo} />;
 	}
 
 	return <>{children}</>;

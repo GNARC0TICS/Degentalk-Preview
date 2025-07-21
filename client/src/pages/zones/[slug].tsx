@@ -183,7 +183,6 @@ const ZonePage: React.FC = () => {
 												forum={forum}
 												href={`/forums/${forum.slug}`}
 												parentZoneColor={theme?.color ?? undefined}
-												zoneSlug={zone.slug}
 											/>
 										</div>
 									))}

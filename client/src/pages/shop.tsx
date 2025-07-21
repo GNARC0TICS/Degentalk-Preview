@@ -80,7 +80,7 @@ export default function ShopPage() {
 	};
 
 	// Handle item purchase
-	const handlePurchase = (item: ShopItem) => {
+	const handlePurchase = async (item: ShopItem) => {
 		// Sign in required: Please sign in to purchase shop items (was console.log)
 	};
 

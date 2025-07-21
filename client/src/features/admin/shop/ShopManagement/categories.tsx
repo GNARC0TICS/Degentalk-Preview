@@ -23,7 +23,7 @@ import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AdminPageShell } from '@/features/admin/layout/layout/AdminPageShell';
-import { AdminAccessSelector } from '@/features/admin/components/inputs/AdminAccessSelector';
+import { NumericAccessSelector } from '@/features/admin/components/inputs/NumericAccessSelector';
 import { cn } from '@/utils/utils';
 
 interface Rarity {
@@ -261,9 +261,9 @@ export default function AdminShopCategoriesPage() {
 						<Input placeholder="Icon URL" {...form.register('iconUrl')} />
 
 						{/* Allowed rarities selector */}
-						<AdminAccessSelector
+						<NumericAccessSelector
 							label="Allowed Rarities"
-							selectedIds={form.watch('allowedRarities') as string[]}
+							selectedIds={form.watch('allowedRarities') || []}
 							onChange={(ids) => form.setValue('allowedRarities', ids)}
 							className="mt-2"
 						/>

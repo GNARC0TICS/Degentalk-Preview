@@ -52,7 +52,7 @@ export default function SystemAnalyticsDashboard() {
 	const { data: realtime, isLoading: realtimeLoading } = useRealtimeAnalytics();
 	const { data: cache, isLoading: cacheLoading } = useCacheStats();
 	const { data: heatmap, isLoading: heatmapLoading } = usePerformanceHeatmap({
-		timeRange,
+		timeRange: timeRange === '1h' ? '24h' : timeRange,
 		granularity: timeRange === '1h' ? 'hour' : 'day'
 	});
 	const { data: metrics, isLoading: metricsLoading } = useSystemMetrics({ timeRange });
@@ -263,7 +263,7 @@ export default function SystemAnalyticsDashboard() {
 									</CardContent>
 								</Card>
 							) : heatmap?.heatmap ? (
-								<PerformanceHeatmapCard heatmap={heatmap.heatmap} timeRange={timeRange} />
+								<PerformanceHeatmapCard heatmap={heatmap.heatmap} timeRange={timeRange === '1h' ? '24h' : timeRange} />
 							) : (
 								<Card>
 									<CardHeader>

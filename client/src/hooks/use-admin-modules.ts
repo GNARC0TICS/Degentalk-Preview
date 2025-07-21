@@ -2,21 +2,21 @@ import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { adminModuleRegistry } from '@/lib/admin-module-registry';
 import { useAuth } from '@/hooks/use-auth';
-import type { AdminModule } from '@shared/config/admin.config';
+import type { AdminModuleV2 } from '@/config/admin.config';
 
-export interface UseAdminModulesReturn {
-	modules: AdminModule[];
-	enabledModules: AdminModule[];
-	navigationStructure: AdminModule[];
+export interface UseAdminModuleV2sReturn {
+	modules: AdminModuleV2[];
+	enabledModules: AdminModuleV2[];
+	navigationStructure: AdminModuleV2[];
 	hasModule: (moduleId: string) => boolean;
 	hasPermission: (moduleId: string) => boolean;
-	getModule: (moduleId: string) => AdminModule | undefined;
+	getModule: (moduleId: string) => AdminModuleV2 | undefined;
 	isLoading: boolean;
 	error: Error | null;
 	refetch: () => void;
 }
 
-export function useAdminModules(): UseAdminModulesReturn {
+export function useAdminModuleV2s(): UseAdminModuleV2sReturn {
 	const { user } = useAuth();
 
 	// Query for dynamic module configuration from server
@@ -105,7 +105,7 @@ export function useAdminPermission(moduleId: string): {
 	hasPermission: boolean;
 	isLoading: boolean;
 } {
-	const { hasPermission, isLoading } = useAdminModules();
+	const { hasPermission, isLoading } = useAdminModuleV2s();
 
 	return {
 		hasPermission: hasPermission(moduleId),
@@ -114,13 +114,13 @@ export function useAdminPermission(moduleId: string): {
 }
 
 // Hook for getting a specific module
-export function useAdminModule(moduleId: string): {
-	module: AdminModule | undefined;
+export function useAdminModuleV2(moduleId: string): {
+	module: AdminModuleV2 | undefined;
 	hasPermission: boolean;
 	isEnabled: boolean;
 	isLoading: boolean;
 } {
-	const { getModule, hasPermission, isLoading } = useAdminModules();
+	const { getModule, hasPermission, isLoading } = useAdminModuleV2s();
 
 	const module = getModule(moduleId);
 
@@ -134,10 +134,10 @@ export function useAdminModule(moduleId: string): {
 
 // Hook for admin navigation
 export function useAdminNavigation(): {
-	navigationItems: AdminModule[];
+	navigationItems: AdminModuleV2[];
 	isLoading: boolean;
 } {
-	const { navigationStructure, isLoading } = useAdminModules();
+	const { navigationStructure, isLoading } = useAdminModuleV2s();
 
 	return {
 		navigationItems: navigationStructure,

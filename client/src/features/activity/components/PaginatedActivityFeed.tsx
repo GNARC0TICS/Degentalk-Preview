@@ -80,7 +80,9 @@ export const PaginatedActivityFeed: React.FC<PaginatedActivityFeedProps> = ({
 		);
 	}
 
-	if (!activityFeed || activityFeed.items.length === 0) {
+	const items = activityFeed?.data || activityFeed?.items || [];
+	
+	if (!activityFeed || items.length === 0) {
 		return (
 			<div className={`rounded-lg border border-gray-200 ${className}`}>
 				<div className="bg-gray-50 px-4 py-3 border-b border-gray-200 flex justify-between items-center">
@@ -121,11 +123,11 @@ export const PaginatedActivityFeed: React.FC<PaginatedActivityFeedProps> = ({
 				</select>
 			</div>
 			<div className="divide-y divide-gray-200">
-				{activityFeed.items.map((event) => (
-					<ActivityItem key={event.id} event={event} />
+				{items.map((event) => (
+					<ActivityItem key={event.id} activity={event} />
 				))}
 			</div>
-			{activityFeed.totalPages > 1 && (
+			{(activityFeed?.pagination?.totalPages || activityFeed?.pagination?.pages || 1) > 1 && (
 				<div className="bg-gray-50 px-4 py-3 border-t border-gray-200 flex justify-between items-center">
 					<button
 						onClick={() => handlePageChange(Math.max(1, (filters.page || 1) - 1))}
@@ -135,13 +137,13 @@ export const PaginatedActivityFeed: React.FC<PaginatedActivityFeedProps> = ({
 						Previous
 					</button>
 					<span className="text-sm text-gray-700">
-						Page {filters.page || 1} of {activityFeed.totalPages}
+						Page {filters.page || 1} of {activityFeed?.pagination?.totalPages || activityFeed?.pagination?.pages || 1}
 					</span>
 					<button
 						onClick={() =>
-							handlePageChange(Math.min(activityFeed.totalPages, (filters.page || 1) + 1))
+							handlePageChange(Math.min(activityFeed?.pagination?.totalPages || activityFeed?.pagination?.pages || 1, (filters.page || 1) + 1))
 						}
-						disabled={(filters.page || 1) >= activityFeed.totalPages}
+						disabled={(filters.page || 1) >= (activityFeed?.pagination?.totalPages || activityFeed?.pagination?.pages || 1)}
 						className="px-3 py-1 border border-gray-300 rounded text-sm disabled:opacity-50"
 					>
 						Next

@@ -61,7 +61,7 @@ export interface QuoteAnalyticsData {
 }
 
 // Helper function to build query string
-const buildQueryString = (params: Record<string, unknown>): string => {
+const buildQueryString = <T extends Record<string, any>>(params: T): string => {
 	const searchParams = new URLSearchParams();
 	Object.entries(params).forEach(([key, value]) => {
 		if (value !== undefined && value !== null) {
@@ -82,11 +82,11 @@ export const uiConfigApi = {
 		const queryParams = { ...filters, ...pagination };
 		const queryString = buildQueryString(queryParams);
 		const url = `/api/admin/ui-config/quotes${queryString ? `?${queryString}` : ''}`;
-		return apiRequest(url);
+		return apiRequest({ url, method: 'GET' });
 	},
 
 	// Get single quote by ID
-	getQuote: (id: string) => apiRequest(`/api/admin/ui-config/quotes/${id}`),
+	getQuote: (id: string) => apiRequest({ url: `/api/admin/ui-config/quotes/${id}`, method: 'GET' }),
 
 	// Create new quote
 	createQuote: (data: CreateQuoteData) => apiPost('/api/admin/ui-config/quotes', data),
@@ -105,7 +105,7 @@ export const uiConfigApi = {
 		apiPost('/api/admin/ui-config/quotes/bulk', operation),
 
 	// Collections Management
-	getCollections: () => apiRequest('/api/admin/ui-config/collections'),
+	getCollections: () => apiRequest({ url: '/api/admin/ui-config/collections', method: 'GET' }),
 
 	createCollection: (data: {
 		name: string;
@@ -135,7 +135,7 @@ export const uiConfigApi = {
 	getQuoteAnalytics: (params: QuoteAnalyticsData) => {
 		const queryString = buildQueryString(params);
 		const url = `/api/admin/ui-config/analytics/quotes/${params.quoteId}${queryString ? `?${queryString}` : ''}`;
-		return apiRequest(url);
+		return apiRequest({ url, method: 'GET' });
 	},
 
 	// Import/Export

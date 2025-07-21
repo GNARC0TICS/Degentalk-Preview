@@ -37,7 +37,9 @@ export const ActivityFeed: React.FC<ActivityFeedProps> = ({
 		);
 	}
 
-	if (!activityFeed || activityFeed.items.length === 0) {
+	const items = activityFeed?.data || activityFeed?.items || [];
+	
+	if (!activityFeed || items.length === 0) {
 		return (
 			<div className={`rounded-lg border border-gray-200 ${className}`}>
 				<div className="p-4 text-center text-gray-500">No activity found</div>
@@ -51,13 +53,13 @@ export const ActivityFeed: React.FC<ActivityFeedProps> = ({
 				<h3 className="text-lg font-medium text-gray-900">Activity Feed</h3>
 			</div>
 			<div className="divide-y divide-gray-200">
-				{activityFeed.items.map((event) => (
-					<ActivityItem key={event.id} event={event} />
+				{items.map((event) => (
+					<ActivityItem key={event.id} activity={event} />
 				))}
 			</div>
-			{activityFeed.totalPages > 1 && (
+			{(activityFeed?.pagination?.totalPages || activityFeed?.pagination?.pages || 1) > 1 && (
 				<div className="bg-gray-50 px-4 py-3 border-t border-gray-200 text-sm text-center text-gray-500">
-					Showing {activityFeed.items.length} of {activityFeed.totalItems} activities
+					Showing {items.length} of {activityFeed?.pagination?.totalItems || activityFeed?.pagination?.total || items.length} activities
 				</div>
 			)}
 		</div>

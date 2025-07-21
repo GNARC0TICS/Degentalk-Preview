@@ -119,6 +119,7 @@
 		"eslint": "^8.57.0",
 		"eslint-plugin-degen": "file:./eslint-plugins/degen",
 		"eslint-plugin-drizzle": "^0.2.3",
+		"fast-glob": "^3.3.3",
 		"gel": "^2.1.1",
 		"glob": "^10.3.10",
 		"lint-staged": "^15.2.10",

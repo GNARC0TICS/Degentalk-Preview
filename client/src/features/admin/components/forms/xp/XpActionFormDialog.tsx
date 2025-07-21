@@ -12,7 +12,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
-import type { XpAction } from './services/xpActionsService';
+import type { XpAction } from '@/features/admin/services/xpActionsService';
 
 export type XpActionFormData = Omit<XpAction, 'action'> & { action?: string };
 

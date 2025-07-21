@@ -4,7 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Crown, Sparkles, Zap, Star } from 'lucide-react';
-import type { CloutTier } from '@/features/admin/views/clout';
+import type { CloutTier } from '@/pages/admin/clout';
 
 interface CloutTiersSectionProps {
 	tiers: CloutTier[];

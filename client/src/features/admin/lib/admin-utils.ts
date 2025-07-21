@@ -4,7 +4,7 @@
  * Shared utilities for admin components
  */
 
-import type { AdminModule } from '@shared/config/admin.config';
+import type { AdminModuleV2 } from '@/config/admin.config';
 
 // Status types
 export type AdminStatusType = 'active' | 'disabled' | 'maintenance' | 'beta' | 'error';
@@ -69,9 +69,9 @@ export function getStatusPalette(status: AdminStatusType): StatusPalette {
 }
 
 /**
- * Determine module status from AdminModule
+ * Determine module status from AdminModuleV2
  */
-export function getModuleStatus(module: AdminModule): AdminStatusType {
+export function getModuleStatus(module: AdminModuleV2): AdminStatusType {
 	if (!module.enabled) return 'disabled';
 	if (module.settings?.maintenance) return 'maintenance';
 	if (module.settings?.beta) return 'beta';
@@ -81,7 +81,7 @@ export function getModuleStatus(module: AdminModule): AdminStatusType {
 /**
  * Get module status info with palette
  */
-export function getModuleStatusInfo(module: AdminModule) {
+export function getModuleStatusInfo(module: AdminModuleV2) {
 	const status = getModuleStatus(module);
 	const palette = getStatusPalette(status);
 

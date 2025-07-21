@@ -8,7 +8,7 @@ import { Loader2, AlertCircle, Lock } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { ErrorBoundary } from '@/components/errors/ErrorBoundary';
-import { permissionToModuleMap } from '@shared/config/admin.config';
+import { permissionToModuleMap } from '@/config/admin.config';
 
 interface ProtectedAdminRouteProps {
 	children: React.ReactNode;

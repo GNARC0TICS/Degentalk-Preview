@@ -1,4 +1,5 @@
 import { adminModulesV2, ADMIN_PERMISSIONS, AdminModuleV2 } from '../config/admin.config.js';
+import { enrichAdminModules } from './admin-module-transformer';
 
 // Simple User interface for admin module registry
 interface User {
@@ -12,7 +13,7 @@ export interface ModuleRegistryOptions {
 	devMode?: boolean;
 }
 
-export class AdminModuleRegistry {
+export class AdminModuleV2Registry {
 	private modules: Map<string, AdminModuleV2> = new Map();
 	private options: ModuleRegistryOptions;
 	private initialized = false;
@@ -31,12 +32,13 @@ export class AdminModuleRegistry {
 	initialize(): void {
 		if (this.initialized) return;
 
-		// Register all modules from adminModulesV2
-		this.registerModules(adminModulesV2);
+		// Register all modules from adminModulesV2 with enrichment
+		const enrichedModules = enrichAdminModules(adminModulesV2);
+		this.registerModules(enrichedModules);
 		this.initialized = true;
 
 		if (this.options.devMode) {
-			console.log('AdminModuleRegistry', `Initialized with ${this.modules.size} modules from adminModulesV2`);
+			console.log('AdminModuleV2Registry', `Initialized with ${this.modules.size} modules from adminModulesV2`);
 		}
 	}
 
@@ -46,7 +48,7 @@ export class AdminModuleRegistry {
 	register(module: AdminModuleV2): void {
 		if (this.modules.has(module.slug)) {
 			if (this.options.devMode) {
-				console.warn(`[AdminModuleRegistry] Module ${module.slug} already registered, overwriting`);
+				console.warn(`[AdminModuleV2Registry] Module ${module.slug} already registered, overwriting`);
 			}
 		}
 
@@ -59,7 +61,7 @@ export class AdminModuleRegistry {
 		}
 
 		if (this.options.devMode) {
-			console.log('AdminModuleRegistry', `Registered module: ${module.slug}`);
+			console.log('AdminModuleV2Registry', `Registered module: ${module.slug}`);
 		}
 	}
 
@@ -77,7 +79,7 @@ export class AdminModuleRegistry {
 		const existed = this.modules.delete(moduleSlug);
 
 		if (existed && this.options.devMode) {
-			console.log('AdminModuleRegistry', `Unregistered module: ${moduleSlug}`);
+			console.log('AdminModuleV2Registry', `Unregistered module: ${moduleSlug}`);
 		}
 
 		return existed;
@@ -234,7 +236,7 @@ export class AdminModuleRegistry {
 }
 
 // Global registry instance
-export const adminModuleRegistry = new AdminModuleRegistry();
+export const adminModuleRegistry = new AdminModuleV2Registry();
 
 // Initialize on module load
 adminModuleRegistry.initialize();

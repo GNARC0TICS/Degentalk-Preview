@@ -24,10 +24,10 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { useAdminModules } from '@/hooks/use-admin-modules';
+import { useAdminModuleV2s } from '@/hooks/use-admin-modules';
 import { useAuth } from '@/hooks/use-auth';
 import { getModuleStatusInfo } from '../lib/admin-utils';
-import type { AdminModule } from '@shared/config/admin.config';
+import type { AdminModuleV2 } from '@/config/admin.config';
 
 // Quick stats interface
 interface QuickStat {
@@ -49,7 +49,7 @@ const statusIcons = {
 
 export default function AdminDashboard() {
 	const { user } = useAuth();
-	const { modules, enabledModules, isLoading } = useAdminModules();
+	const { modules, enabledModules, isLoading } = useAdminModuleV2s();
 
 	// Calculate dashboard statistics
 	const stats: QuickStat[] = useMemo(
@@ -92,7 +92,7 @@ export default function AdminDashboard() {
 				acc[status].push(module);
 				return acc;
 			},
-			{} as Record<string, AdminModule[]>
+			{} as Record<string, AdminModuleV2[]>
 		);
 
 		return grouped;

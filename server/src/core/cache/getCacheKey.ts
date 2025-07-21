@@ -6,6 +6,7 @@
  */
 
 import type { UserId, ForumId, ThreadId, PostId } from '@shared/types/ids';
+import { debug } from '@core/logger';
 
 /**
  * Cache key namespacing and patterns
@@ -123,6 +124,6 @@ export function versionedKey(baseKey: string, timestamp?: Date): string {
  */
 export function debugCacheKey(key: string, operation: 'GET' | 'SET' | 'DEL'): void {
   if (process.env.NODE_ENV === 'development' && process.env.DEBUG_CACHE === 'true') {
-    console.log(`[CACHE ${operation}] ${key} [domain: ${extractDomain(key)}]`);
+    debug('CACHE', `${operation} ${key} [domain: ${extractDomain(key)}]`);
   }
 }

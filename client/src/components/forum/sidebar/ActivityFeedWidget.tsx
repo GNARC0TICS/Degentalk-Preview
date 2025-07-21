@@ -94,7 +94,7 @@ export function ActivityFeedWidget({
 		structureId
 	});
 
-	const events = activityFeed || [];
+	const events = activityFeed?.data || activityFeed?.items || [];
 
 	const bodyContent = isLoading ? (
 		<WidgetSkeleton rows={limit} />
@@ -105,7 +105,7 @@ export function ActivityFeedWidget({
 		</div>
 	) : (
 		<div className="space-y-1 divide-y divide-zinc-800/30">
-			{events.slice(0, limit).map((event) => (
+			{events.slice(0, limit).map((event: EventLog) => (
 				<ActivityItem key={event.id} event={event} isCompact />
 			))}
 		</div>

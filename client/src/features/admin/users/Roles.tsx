@@ -15,14 +15,7 @@ import { RoleFormDialog, roleSchema } from '@/features/admin/components/forms/ro
 import type { RoleFormValues } from '@/features/admin/components/forms/roles/RoleFormDialog';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'; // Keep Card for now
-import type { RoleId } from '@shared/types/ids';
-
-// Type for Role data, extending form values with ID and timestamps
-type Role = RoleFormValues & {
-	id: RoleId;
-	createdAt: string;
-	updatedAt: string;
-};
+import type { Role } from '@shared/types/entities';
 
 function RolesAdminPage() {
 	// const queryClient = useQueryClient(); // Handled by useCrudMutation for invalidation
