@@ -4,6 +4,29 @@
  */
 
 import { toast } from 'sonner';
+import { captureException, trackEvent } from '@/lib/sentry';
+
+/**
+ * Unified error reporter that logs locally and sends to Sentry
+ */
+export function reportError(error: unknown, context?: Record<string, any>) {
+	// Always log locally
+	const errorMessage = error instanceof Error ? error.message : String(error);
+	const errorName = error instanceof Error ? error.name : 'UnknownError';
+	
+	console.error('[ErrorService]', errorMessage, context);
+	
+	// Send to Sentry in production
+	if (process.env.NODE_ENV === 'production') {
+		captureException(error as Error, { 
+			extra: context,
+			tags: {
+				errorType: errorName,
+				service: context?.service || 'unknown'
+			}
+		});
+	}
+}
 
 export type ErrorSeverity = 'low' | 'medium' | 'high' | 'critical';
 export type ErrorCategory =
@@ -177,26 +200,29 @@ class ErrorService implements ErrorHandler {
 			category: error.category,
 			severity: error.severity,
 			context: error.context,
-			timestamp: error.timestamp
+			timestamp: error.timestamp,
+			details: error.details,
+			userId: error.userId
 		};
 
-		switch (error.severity) {
-			case 'critical':
-				// TODO: integrate logger.error once UI logging layer is ready
-				break;
-			case 'high':
-				// TODO: integrate logger.error
-				break;
-			case 'medium':
-				// TODO: integrate logger.warn
-				break;
-			case 'low':
-				// TODO: integrate logger.info
-				break;
+		// Use reportError for all error logging
+		const errorWithMetadata = new Error(error.message);
+		errorWithMetadata.name = `${error.severity.toUpperCase()}_${error.category}`;
+		if (error.stackTrace) {
+			errorWithMetadata.stack = error.stackTrace;
 		}
 
-		if (error.stackTrace) {
-			// TODO: send stack trace to monitoring service
+		reportError(errorWithMetadata, {
+			service: 'ErrorService',
+			severity: error.severity,
+			category: error.category,
+			errorId: error.id,
+			...logData
+		});
+
+		// Additional development logging
+		if (process.env.NODE_ENV === 'development' && error.stackTrace) {
+			console.debug('Stack trace:', error.stackTrace);
 		}
 	}
 
@@ -255,10 +281,33 @@ class ErrorService implements ErrorHandler {
 	 * Report error to external monitoring service
 	 */
 	report(error: AppError): void {
-		// In production, send to error tracking service
+		// Create proper error object
+		const reportableError = new Error(error.message);
+		reportableError.name = `AppError:${error.category}`;
+		if (error.stackTrace) {
+			reportableError.stack = error.stackTrace;
+		}
+
+		// Use unified reporter
+		reportError(reportableError, {
+			service: 'ErrorReport',
+			errorId: error.id,
+			category: error.category,
+			severity: error.severity,
+			code: error.code || 'unknown',
+			details: error.details,
+			context: error.context,
+			timestamp: error.timestamp,
+			userId: error.userId
+		});
+
+		// Track error occurrence for analytics
 		if (process.env.NODE_ENV === 'production') {
-			// Example: Sentry.captureException(error);
-			// Example: LogRocket.captureException(error);
+			trackEvent('error_occurred', {
+				category: error.category,
+				severity: error.severity,
+				context: error.context
+			});
 		}
 
 		// For admin errors, also notify admin channels
@@ -270,14 +319,16 @@ class ErrorService implements ErrorHandler {
 	/**
 	 * Notify admin channel of critical errors
 	 */
-	private notifyAdminChannel(error: AppError): void {
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	private notifyAdminChannel(_error: AppError): void {
 		// TODO: send notification via Slack webhook
 	}
 
 	/**
 	 * Open error report dialog/modal
 	 */
-	private openErrorReport(error: AppError): void {
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	private openErrorReport(_error: AppError): void {
 		// TODO: open error reporting UI
 	}
 

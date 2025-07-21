@@ -10,12 +10,12 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import type { User, UserFormData } from '@/types/admin.types';
+import type { AdminUser, UserFormData } from '@/types/admin.types';
 
 interface UserFormDialogProps {
 	isOpen: boolean;
 	onClose: () => void;
-	user?: User;
+	user?: AdminUser;
 	onSubmit: (data: UserFormData) => void;
 }
 

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { isValidId } from '@shared/utils/id-validation';
+// import { isValidId } from '@shared/utils/id-validation';
 import {
 	Plus,
 	Pencil,
@@ -29,10 +29,10 @@ import {
 import type { Level, LevelFormData } from '@/features/admin/components/forms/xp/LevelFormDialogs';
 import ProtectedAdminRoute from '@/features/admin/components/protected-admin-route';
 import { useAdminModuleV2 } from '@/hooks/use-admin-modules';
-import { useXpActions, useUpdateXpAction } from '@/features/admin/services/xpActionsService';
+import { useXpActions, useUpdateXpAction, type XpAction } from '@/features/admin/services/xpActionsService';
 import {
-	useXpCloutSettings,
-	useUpdateXpCloutSettings
+	useXpCloutSettings
+	// useUpdateXpCloutSettings
 } from '@/features/admin/services/xpCloutService';
 
 // API response structure
@@ -46,7 +46,7 @@ interface LevelsApiResponse {
 
 // XP System Module Component (Protected)
 function XPSystemModuleContent() {
-	const { module, isEnabled } = useAdminModule('xp-system');
+	const { module, isEnabled } = useAdminModuleV2('xp-system');
 	const { toast } = useToast();
 	const queryClient = useQueryClient();
 
@@ -506,7 +506,7 @@ function XPSystemModuleContent() {
 				{actionsLoading && <p>Loading XP actions...</p>}
 				{xpActions && (
 					<div className="space-y-4">
-						{xpActions.map((action: any) => (
+						{xpActions.actions.map((action: XpAction) => (
 							<div
 								key={action.action}
 								className="flex items-center justify-between p-4 border rounded-lg"
@@ -551,7 +551,7 @@ function XPSystemModuleContent() {
 
 	// XP/Clout Settings Tab Content
 	const { data: xpCloutSettings, isLoading: settingsLoading } = useXpCloutSettings();
-	const updateCloutSettings = useUpdateXpCloutSettings();
+	// const updateCloutSettings = useUpdateXpCloutSettings();
 
 	const settingsTabContent = (
 		<div className="space-y-6">

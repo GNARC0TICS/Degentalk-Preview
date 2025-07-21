@@ -86,6 +86,7 @@ export type EmojiPackId = Id<'EmojiPackId'>;
 export type CosmeticId = Id<'CosmeticId'>;
 export type StickerId = Id<'StickerId'>;
 export type PackId = Id<'PackId'>;
+export type MediaId = Id<'MediaId'>;
 
 // Moderation
 export type ReportId = Id<'ReportId'>;

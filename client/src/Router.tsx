@@ -42,6 +42,9 @@ import InvitePage from './pages/invite/[code]';
 import PreferencesPage from './pages/preferences/index';
 import UIPlaygroundPage from './pages/ui-playground';
 
+// Test Components (Development Only)
+import { ErrorBoundaryTest } from './components/test/ErrorBoundaryTest';
+
 /**
  * Main Router Configuration
  * Uses react-router-dom v6 with createBrowserRouter for optimal performance
@@ -192,4 +195,17 @@ export const router = createBrowserRouter([
       { path: 'reports', element: <ModReportsPage /> },
     ],
   },
+
+  // Test Route for Error Boundary (Development Only)
+  ...(process.env.NODE_ENV === 'development' ? [{
+    path: '/test/error-boundary',
+    element: (
+      <RootLayout>
+        <div className="container mx-auto py-8">
+          <h1 className="text-2xl font-bold mb-4">Error Boundary Test Page</h1>
+          <ErrorBoundaryTest />
+        </div>
+      </RootLayout>
+    ),
+  }] : []),
 ]);

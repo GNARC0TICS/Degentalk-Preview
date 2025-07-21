@@ -1,6 +1,9 @@
 import type { ThreadPrefix, ForumTag as ThreadTag } from '@/types/compat/forum';
 import type { GroupId, UserId, ThreadId, ForumId, PostId } from '@shared/types/ids';
 
+// Re-export ThreadPrefix for external use
+export type { ThreadPrefix };
+
 // Local fallback interfaces to avoid cross-boundary imports
 // These are intentionally minimal and should be replaced with canonical types once the backend API stabilises.
 export interface ForumUserLite {

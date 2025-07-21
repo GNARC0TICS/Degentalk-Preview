@@ -1,6 +1,7 @@
 import type {
 	AdminVaultItem,
-	AdminItemRarity
+	AdminItemRarity,
+	AdminUnlockMethod
 } from '@/types/admin-vault.types';
 import type {
 	BaseVaultItem,
@@ -243,7 +244,7 @@ export class MockVaultAdminService implements VaultAdminService {
 		// Season should be stored in metadata
 		const metadata = { ...item.metadata, season };
 		const updates: Partial<AdminVaultItem> = { metadata };
-		if (item.rarity !== 'seasonal') {
+		if ((item.rarity as AdminItemRarity) !== 'seasonal') {
 			updates.rarity = 'seasonal';
 		}
 
@@ -341,11 +342,13 @@ export class MockVaultAdminService implements VaultAdminService {
 	// Already implemented this above, removing duplicate
 	// removeItemUnlockMethod is already implemented as async above
 
-	async updateEvent(id: string, updates: Partial<VaultEvent>): Promise<VaultEvent> {
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	async updateEvent(_id: string, _updates: Partial<VaultEvent>): Promise<VaultEvent> {
 		throw new Error('Method not implemented.');
 	}
 
-	async endEvent(id: string): Promise<VaultEvent> {
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	async endEvent(_id: string): Promise<VaultEvent> {
 		throw new Error('Method not implemented.');
 	}
 
@@ -353,23 +356,28 @@ export class MockVaultAdminService implements VaultAdminService {
 		throw new Error('Method not implemented.');
 	}
 
-	async grantItemToUser(userId: string, itemId: string, method: UnlockMethod): Promise<any> {
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	async grantItemToUser(_userId: string, _itemId: string, _method: UnlockMethod): Promise<any> {
 		throw new Error('Method not implemented.');
 	}
 
-	async revokeItemFromUser(userId: string, itemId: string): Promise<boolean> {
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	async revokeItemFromUser(_userId: string, _itemId: string): Promise<boolean> {
 		throw new Error('Method not implemented.');
 	}
 
-	async getUserItems(userId: string): Promise<any[]> {
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	async getUserItems(_userId: string): Promise<any[]> {
 		throw new Error('Method not implemented.');
 	}
 
-	async getItemStatistics(itemId: string): Promise<any> {
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	async getItemStatistics(_itemId: string): Promise<any> {
 		throw new Error('Method not implemented.');
 	}
 
-	async getAdminActionLogs(filters?: any): Promise<AdminActionLog[]> {
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	async getAdminActionLogs(_filters?: any): Promise<AdminActionLog[]> {
 		return Promise.resolve([...this.actionLog]);
 	}
 }

@@ -25,13 +25,20 @@ import './styles/animations.css';
 import './features/admin/styles/admin-theme.css'; // Import admin theme
 import { RootProvider } from './providers/root-provider';
 import { router } from './Router';
+import { GlobalErrorBoundary } from './components/errors/GlobalErrorBoundary';
+import { initializeApp } from './lib/app-init';
+
+// Initialize app services (Sentry, error handlers, etc.)
+initializeApp();
 
 // IMPORTANT: All providers are now managed by RootProvider.
 // Routing is now handled by react-router-dom RouterProvider.
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-	<RootProvider>
-		<App />
-		<RouterProvider router={router} />
-	</RootProvider>
+	<GlobalErrorBoundary>
+		<RootProvider>
+			<App />
+			<RouterProvider router={router} />
+		</RootProvider>
+	</GlobalErrorBoundary>
 );

@@ -18,9 +18,12 @@ interface ForumHeaderProps {
 export function ForumHeader({ forum, isPrimaryZone = false, className = '' }: ForumHeaderProps) {
 	// Select icon based on theme or use default
 	const renderIcon = () => {
+		// Get icon from either MergedZone.icon or MergedForum.theme.icon
+		const icon = 'icon' in forum ? forum.icon : forum.theme?.icon;
+		
 		// If forum has an emoji icon, render it directly
-		if (forum.icon && /^[\p{Emoji_Presentation}\p{Extended_Pictographic}]/u.test(forum.icon)) {
-			return <span className="text-4xl mr-4">{forum.icon}</span>;
+		if (icon && /^[\p{Emoji_Presentation}\p{Extended_Pictographic}]/u.test(icon)) {
+			return <span className="text-4xl mr-4">{icon}</span>;
 		}
 
 		// Default icon
@@ -29,7 +32,8 @@ export function ForumHeader({ forum, isPrimaryZone = false, className = '' }: Fo
 
 	// For Primary Zones, render a more distinct, themed header
 	if (isPrimaryZone) {
-		const dynamicThemeClass = `theme-header-${forum.colorTheme || 'zinc'}`;
+		const colorTheme = 'theme' in forum ? forum.theme?.colorTheme : undefined;
+		const dynamicThemeClass = `theme-header-${colorTheme || 'zinc'}`;
 		return (
 			<div className={`forum-header primary-zone-header ${dynamicThemeClass} mb-6 ${className}`}>
 				<div
@@ -81,7 +85,7 @@ export function ForumHeader({ forum, isPrimaryZone = false, className = '' }: Fo
 					<MessageSquare className="h-6 w-6 mr-3 text-emerald-500" />
 					<div>
 						<h1 className="text-xl font-bold text-white">{forum.name}</h1>
-						{forum.minXp && forum.minXp > 0 && (
+						{'minXp' in forum && forum.minXp && forum.minXp > 0 && (
 							<Badge className="mt-1 bg-amber-600 hover:bg-amber-500">
 								{forum.minXp} XP Required
 							</Badge>

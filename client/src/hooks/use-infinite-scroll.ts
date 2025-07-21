@@ -23,6 +23,7 @@ export function useInfiniteScroll(options: UseInfiniteScrollOptions = {}): UseIn
 
   const observerRef = useRef<IntersectionObserver | null>(null);
   const isLoadingRef = useRef(false);
+  const isAtBottomRef = useRef(false);
 
   const observe = useCallback((element: HTMLElement | null) => {
     if (observerRef.current) {
@@ -34,6 +35,8 @@ export function useInfiniteScroll(options: UseInfiniteScrollOptions = {}): UseIn
     observerRef.current = new IntersectionObserver(
       async (entries) => {
         const target = entries[0];
+        isAtBottomRef.current = target.isIntersecting;
+        
         if (target.isIntersecting && !isLoadingRef.current && onLoadMore) {
           isLoadingRef.current = true;
           try {

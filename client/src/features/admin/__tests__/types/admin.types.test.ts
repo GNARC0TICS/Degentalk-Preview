@@ -7,7 +7,7 @@ import type {
 	BulkOperationRequest,
 	Achievement
 } from '@/types/admin.types';
-import { createUserId } from '@shared';
+import { createUserId } from '@shared/src/utils';
 
 describe('Admin Types', () => {
 	describe('User interface', () => {

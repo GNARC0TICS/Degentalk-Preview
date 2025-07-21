@@ -28,8 +28,8 @@ export function EditPostDialog({ post, isOpen, onClose }: EditPostDialogProps) {
 	useEffect(() => {
 		if (post) {
 			setContent(post.content || '');
-			// If post has editor state, restore it, otherwise leave null for fresh editor
-			setEditorState(post.editorState || null);
+			// TODO: Add editor state support if needed
+			setEditorState(null);
 		}
 	}, [post]);
 
@@ -58,7 +58,7 @@ export function EditPostDialog({ post, isOpen, onClose }: EditPostDialogProps) {
 		// Reset to original content
 		if (post) {
 			setContent(post.content || '');
-			setEditorState(post.editorState || null);
+			setEditorState(null);
 		}
 	};
 

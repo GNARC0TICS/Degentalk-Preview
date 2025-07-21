@@ -33,6 +33,12 @@ import preferencesRoutes from './src/domains/preferences/preferences.routes';
 import { adRoutes } from './src/domains/advertising/ad.routes';
 import { globalErrorHandler } from './src/core/errors';
 import { registerPathRoutes } from './src/domains/paths/paths.routes';
+import { 
+  initSentry, 
+  sentryRequestHandler, 
+  sentryTracingHandler, 
+  sentryErrorHandler 
+} from './src/lib/sentry-server';
 import userInventoryRoutes from './src/routes/api/user/inventory';
 import notificationStubRoutes from './src/routes/api/notifications';
 import { awardPathXp } from './utils/path-utils';
@@ -72,6 +78,13 @@ import { getAuthenticatedUser } from '@core/utils/auth.helpers';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
 export async function registerRoutes(app: Express): Promise<Server> {
+	// Initialize Sentry before any other middleware
+	initSentry(app);
+	
+	// Sentry request handler must be the first middleware
+	app.use(sentryRequestHandler);
+	app.use(sentryTracingHandler);
+	
 	app.use(securityHeaders);
 	app.use(corsMiddleware);
 	app.use(originValidation);
@@ -349,6 +362,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
 		}
 	});
 
+	// Sentry error handler must go before other error handlers
+	app.use(sentryErrorHandler);
+	
+	// Global error handler comes last
 	app.use(globalErrorHandler);
 
 	return server;

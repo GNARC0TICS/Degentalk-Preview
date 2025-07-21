@@ -3,6 +3,8 @@
  * Provides structured logging with different levels and environments
  */
 
+import { reportError } from '@/services/error.service';
+
 type LogLevel = 'debug' | 'info' | 'warn' | 'error';
 
 interface LogContext {
@@ -45,15 +47,15 @@ class ClientLogger {
 	}
 
 	error(component: string, message: string, context?: LogContext): void {
-		if (this.shouldLog('error')) {
-			console.error(this.formatMessage('error', component, message, context));
-		}
-
-		// In production, you might want to send errors to a monitoring service
-		if (!this.isDevelopment && typeof window !== 'undefined') {
-			// Example: Send to error tracking service
-			// window.errorTracker?.captureException(new Error(message), { extra: context });
-		}
+		const error = new Error(message);
+		error.name = component;
+		
+		// Use unified error reporter
+		reportError(error, {
+			service: component,
+			level: 'error',
+			...context
+		});
 	}
 
 	// Utility method for logging API errors

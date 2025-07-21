@@ -3,6 +3,7 @@ import { AlertTriangle, RefreshCw, Home, Bug } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { logger } from "@/lib/logger";
+import { captureException } from '@/lib/sentry';
 
 interface Props {
 	children: ReactNode;
@@ -57,9 +58,23 @@ export class ErrorBoundary extends Component<Props, State> {
 	}
 
 	private logErrorToService = (error: Error, errorInfo: ErrorInfo) => {
-		// In production, send to error tracking service (Sentry, LogRocket, etc.)
+		// Send to Sentry in production
 		if (process.env.NODE_ENV === 'production') {
-			// Example: Sentry.captureException(error, { contexts: { react: errorInfo } });
+			captureException(error, {
+				level: this.props.level === 'critical' ? 'fatal' : 'error',
+				tags: {
+					errorBoundary: 'true',
+					errorLevel: this.props.level || 'component',
+					context: this.props.context || 'unknown'
+				},
+				extra: {
+					componentStack: errorInfo.componentStack,
+					errorBoundaryProps: {
+						level: this.props.level,
+						context: this.props.context
+					}
+				}
+			});
 		}
 
 		// Log to console in development
@@ -71,6 +86,10 @@ export class ErrorBoundary extends Component<Props, State> {
 	};
 
 	private generateEventId = (): string => {
+		// In production, use Sentry's event ID
+		if (process.env.NODE_ENV === 'production' && window.Sentry) {
+			return window.Sentry.lastEventId() || `error_${Date.now()}`;
+		}
 		return `error_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 	};
 
@@ -223,7 +242,8 @@ export function withErrorBoundary<P extends object>(
  * Hook for imperatively triggering error boundaries
  */
 export function useErrorHandler() {
-	return React.useCallback((error: Error, errorInfo?: Partial<ErrorInfo>) => {
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	return React.useCallback((error: Error, _errorInfo?: Partial<ErrorInfo>) => {
 		// Throw error to be caught by nearest error boundary
 		throw error;
 	}, []);
