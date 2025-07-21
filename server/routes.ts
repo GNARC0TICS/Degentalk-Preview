@@ -323,6 +323,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
 	if (process.env.NODE_ENV === 'development') {
 		app.use('/dev', devRoutes);
+		
+		// Test error routes for Sentry integration
+		const testErrorRoutes = require('./src/routes/test-error.route').default;
+		app.use('/api', testErrorRoutes);
 	}
 
 	app.post('/api/path-xp', isAuthenticated, async (req, res) => {

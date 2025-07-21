@@ -9,6 +9,10 @@ import { isDevMode } from '@server-utils/environment';
 import { logger } from '@server-core/logger';
 import { v4 as uuidv4 } from 'uuid';
 import bcrypt from 'bcrypt';
+import { createServiceReporter } from '../../../lib/report-error';
+
+// Create service-specific error reporter
+const reportError = createServiceReporter('AuthService');
 
 type User = typeof users.$inferSelect;
 
@@ -89,8 +93,11 @@ export async function storeTempDevMetadata(password: string): Promise<string | n
 		// Simple encoding - not for security, just for obfuscation
 		return Buffer.from(password).toString('base64');
 	} catch (error) {
-		logger.error('AuthService', 'Error in storeTempDevMetadata', { err: error });
-		return null;
+		// Report error but don't throw - this is a non-critical beta feature
+		await reportError(error, 'storeTempDevMetadata', {
+			data: { hasPassword: !!password }
+		});
+		return null; // Graceful fallback - feature disabled on error
 	}
 }
 
@@ -109,8 +116,11 @@ export async function verifyEmailToken(token: string): Promise<{ userId: UserId 
 		// In production, you would query the actual token from the database
 		return { userId: '1' as UserId }; // Return userId if token is valid
 	} catch (error) {
-		logger.error('AuthService', 'Error verifying token', { err: error, token });
-		return false;
+		// Report error but don't throw - invalid token is expected behavior
+		await reportError(error, 'verifyEmailToken', {
+			data: { tokenLength: token?.length }
+		});
+		return false; // Token verification failed - deny access
 	}
 }
 

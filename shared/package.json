@@ -6,14 +6,19 @@
 	"exports": {
 		".": "./index.ts",
 		"./types": "./types/index.ts",
+		"./types/ids": "./types/ids.ts",
+		"./types/index": "./types/index.ts",
+		"./types/entities": "./types/entities/index.ts",
 		"./config": "./config/index.ts",
+		"./config/zoneThemes.config": "./config/zoneThemes.config.ts",
 		"./validators": "./validators/index.ts",
 		"./economy": "./economy/index.ts",
 		"./constants": "./constants.ts",
 		"./enums": "./enums/index.ts",
 		"./lib": "./lib/index.ts",
 		"./paths": "./paths.config.ts",
-		"./wallet": "./wallet.config.ts"
+		"./wallet": "./wallet.config.ts",
+		"./utils/id": "./utils/id.ts"
 	},
 	"scripts": {
 		"build": "tsc -b",

@@ -5,7 +5,7 @@
 
 import React from 'react';
 import { ErrorBoundary } from './ErrorBoundary';
-import { SentryErrorBoundary } from '@/lib/sentry';
+import * as Sentry from '@sentry/react';
 import { AlertTriangle, RefreshCw, Home } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -92,16 +92,12 @@ export function GlobalErrorBoundary({ children }: GlobalErrorBoundaryProps) {
   // In production, use Sentry's error boundary for automatic reporting
   if (process.env.NODE_ENV === 'production') {
     return (
-      <SentryErrorBoundary
+      <Sentry.ErrorBoundary
         fallback={GlobalErrorFallback}
         showDialog={false}
-        beforeCapture={(scope) => {
-          scope.setTag('errorBoundary', 'global');
-          scope.setLevel('fatal');
-        }}
       >
         {children}
-      </SentryErrorBoundary>
+      </Sentry.ErrorBoundary>
     );
   }
   

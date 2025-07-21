@@ -30,6 +30,11 @@ export default defineConfig(async () => {
 			resolve: {
 				alias: [
 					{ find: '@', replacement: path.resolve(projectRoot, 'client/src') },
+					{ find: '@shared/types/ids', replacement: path.resolve(projectRoot, 'shared/types/ids.ts') },
+					{ find: '@shared/types/index', replacement: path.resolve(projectRoot, 'shared/types/index.ts') },
+					{ find: '@shared/types/entities', replacement: path.resolve(projectRoot, 'shared/types/entities/index.ts') },
+					{ find: '@shared/config/zoneThemes.config', replacement: path.resolve(projectRoot, 'shared/config/zoneThemes.config.ts') },
+					{ find: '@shared/utils/id', replacement: path.resolve(projectRoot, 'shared/utils/id.ts') },
 					{ find: '@shared', replacement: path.resolve(projectRoot, 'shared') },
 					{ find: '@assets', replacement: path.resolve(projectRoot, 'attached_assets') },
 					{ find: '@db', replacement: path.resolve(projectRoot, 'db/index.ts') },

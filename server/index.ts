@@ -47,6 +47,9 @@ import { logger } from './src/core/logger';
 import { sendErrorResponse } from './src/core/utils/transformer.helpers';
 import { wsService } from './src/core/websocket/websocket.service';
 import { sentinelBot } from './src/domains/shoutbox/services/sentinel-bot.service';
+import { initSentry, sentryRequestHandler, sentryTracingHandler, sentryErrorHandler } from './src/lib/sentry-server';
+import { reportErrorServer } from './src/lib/report-error';
+import { centralizedErrorHandler, notFoundHandler } from './src/middleware/centralized-error-handler.middleware';
 
 // Startup logging helper
 const startupLog = (message: string, type: 'info' | 'success' | 'error' | 'warning' = 'info') => {
@@ -60,6 +63,16 @@ const startupLog = (message: string, type: 'info' | 'success' | 'error' | 'warni
 };
 
 const app = express();
+
+// Initialize Sentry before any other middleware
+initSentry(app);
+
+// Sentry request handler must be the first middleware on the app
+app.use(sentryRequestHandler);
+
+// Sentry tracing handler creates a transaction for every incoming request
+app.use(sentryTracingHandler);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
@@ -135,19 +148,16 @@ app.use(traceMiddleware);
 		const routeEndTime = Date.now();
 		startupLog(`API routes registered in ${routeEndTime - routeStartTime}ms.`, 'success');
 
+		// Add 404 handler for undefined routes
+		app.use(notFoundHandler);
+
 		const server = createServer(app);
 
-		app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
-			const status = err.status || err.statusCode || 500;
-			const message = err.message || 'Internal Server Error';
+		// Sentry error handler must come before custom error handlers
+		app.use(sentryErrorHandler);
 
-			startupLog(`Express error handler caught: ${err.message}`, 'error');
-			if (err.stack) {
-				logger.error('ExpressErrorHandler', err.stack);
-			}
-
-			sendErrorResponse(res, message, status);
-		});
+		// Centralized error handler
+		app.use(centralizedErrorHandler);
 
 		// Pure API server - no client serving
 		startupLog('API server configured (client served separately)', 'success');
