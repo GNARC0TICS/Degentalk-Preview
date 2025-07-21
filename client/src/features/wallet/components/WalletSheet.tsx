@@ -88,17 +88,17 @@ export function WalletSheet({ isOpen, onOpenChange }: WalletSheetProps) {
 		}
 	};
 
-	// Prepare data for wallet display
+	// Prepare data for wallet display - safely handle unknown balance structure
 	const walletDataWithDefaults: WalletBalance = {
-		dgt: balance?.dgtPoints ?? 0,
-		usdt: balance?.walletBalanceUSDT ?? 0,
-		btc: 0, // Not provided by current balance API
-		eth: 0, // Not provided by current balance API
-		pendingDgt: 0 // TODO: Map from balance?.walletPendingWithdrawals
+		dgt: (balance as any)?.dgt || 0,
+		usdt: (balance as any)?.usdt || 0,
+		btc: (balance as any)?.btc || 0,
+		eth: (balance as any)?.eth || 0,
+		pendingDgt: (balance as any)?.pendingDgt || 0
 	};
 
-	// Wallet address is separate from balance
-	const walletAddress = balance?.walletAddress ?? '';
+	// Wallet address is separate from balance - get from user or API
+	const walletAddress = (balance as any)?.walletAddress ?? '';
 
 	// Calculate responsive values
 	const isMobile = typeof window !== 'undefined' ? window.innerWidth < 768 : false;

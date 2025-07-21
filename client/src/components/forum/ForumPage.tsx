@@ -14,7 +14,7 @@ import { DynamicSidebar } from '@/components/forum/sidebar';
 import { SiteFooter } from '@/components/footer';
 import { ForumHeader } from '@/components/forum/ForumHeader';
 import { MyBBThreadList } from '@/components/forum/MyBBThreadList';
-import { asStructureId } from '@shared/types/ids';
+import { createStructureId } from '@shared/utils/ids';
 import type { ForumId, StructureId, ZoneId, UserId, ThreadId } from '@shared/types/ids';
 import { toUserId, toThreadId, toStructureId, toZoneId, toForumId } from '@shared/types/index';
 import type { ThreadDisplay } from '@/types/thread.types';
@@ -322,7 +322,7 @@ const ForumPage = memo(() => {
 					{/* Right Sidebar */}
 					<aside className="space-y-6">
 						{parentZone && forum?.id && (
-							<DynamicSidebar structureId={asStructureId(forum.id)} zoneSlug={parentZone.slug} />
+							<DynamicSidebar structureId={createStructureId(forum.id)} zoneSlug={parentZone.slug} />
 						)}
 					</aside>
 				</div>

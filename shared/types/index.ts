@@ -364,17 +364,7 @@ export {
 	isItemId,
 	isFrameId,
 	isBadgeId,
-	isTitleId,
-	asUserId,
-	asThreadId,
-	asPostId,
-	asWalletId,
-	asTransactionId,
-	asForumId,
-	asItemId,
-	asFrameId,
-	asBadgeId,
-	asTitleId
+	isTitleId
 } from './ids.js';
 
 // Common utility types

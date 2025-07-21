@@ -30,6 +30,7 @@ import type {
   WalletId,
   EmojiId,
   TagId,
+  StructureId,
   ActionId,
   OrderId,
   GroupId,
@@ -142,6 +143,10 @@ export function createEmojiId(id: string): EmojiId {
 
 export function createTagId(id: string): TagId {
   return createBrandedId<TagId>(id);
+}
+
+export function createStructureId(id: string): StructureId {
+  return createBrandedId<StructureId>(id);
 }
 
 export function createActionId(id: string): ActionId {
