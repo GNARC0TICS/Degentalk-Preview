@@ -24,8 +24,9 @@ import type {
 } from '@shared/types/wallet/wallet.types';
 import { fromDbCryptoWallet } from '@shared/types/wallet/wallet.transformer';
 
-import { logger } from '@core/logger';
+import { logger, LogAction } from '@core/logger';
 import { WalletError, ErrorCodes } from '@core/errors';
+import { reportErrorServer } from '../../../lib/report-error';
 
 // Import adapters
 import { ccpaymentAdapter } from '../adapters/ccpayment.adapter';
@@ -88,9 +89,11 @@ export class WalletService {
 
 			return balance;
 		} catch (error) {
-			logger.error('WalletService', 'Error fetching user balance', {
-				userId,
-				error
+			await reportErrorServer(error, {
+				service: 'WalletService',
+				operation: 'getUserBalance',
+				action: LogAction.FAILURE,
+				data: { userId }
 			});
 			throw this.handleError(error, 'Failed to fetch user balance');
 		}
@@ -127,11 +130,11 @@ export class WalletService {
 
 			return depositAddress;
 		} catch (error) {
-			logger.error('WalletService', 'Error creating deposit address', {
-				userId,
-				coinSymbol,
-				chain,
-				error
+			await reportErrorServer(error, {
+				service: 'WalletService',
+				operation: 'createDepositAddress',
+				action: LogAction.FAILURE,
+				data: { userId, coinSymbol, chain }
 			});
 			throw this.handleError(error, 'Failed to create deposit address');
 		}
@@ -158,7 +161,12 @@ export class WalletService {
 
 			return depositAddresses;
 		} catch (error) {
-			logger.error('WalletService', 'Error fetching deposit addresses', { userId, error });
+			await reportErrorServer(error, {
+				service: 'WalletService',
+				operation: 'getDepositAddresses',
+				action: LogAction.FAILURE,
+				data: { userId }
+			});
 			throw this.handleError(error, 'Failed to fetch deposit addresses');
 		}
 	}
@@ -311,9 +319,11 @@ export class WalletService {
 				};
 			});
 		} catch (error) {
-			logger.error('WalletService', 'Critical error during wallet initialization', {
-				userId,
-				error
+			await reportErrorServer(error, {
+				service: 'WalletService',
+				operation: 'initializeWallet',
+				action: LogAction.FAILURE,
+				data: { userId }
 			});
 			// Even on complete failure, return success to not break registration
 			return {
@@ -342,9 +352,11 @@ export class WalletService {
 
 			return ccpaymentUserId;
 		} catch (error) {
-			logger.error('WalletService', 'Failed to ensure CCPayment wallet', {
-				userId,
-				error
+			await reportErrorServer(error, {
+				service: 'WalletService',
+				operation: 'ensureCcPaymentWallet',
+				action: LogAction.FAILURE,
+				data: { userId }
 			});
 			// Return null on failure rather than throwing - circuit breaker
 			return null;
@@ -393,7 +405,12 @@ export class WalletService {
 
 			return { recordId };
 		} catch (error) {
-			logger.error('WalletService', 'Error processing crypto swap', { userId, params, error });
+			await reportErrorServer(error, {
+				service: 'WalletService',
+				operation: 'swapCrypto',
+				action: LogAction.FAILURE,
+				data: { userId, params }
+			});
 			throw this.handleError(error, 'Failed to process crypto swap');
 		}
 	}
@@ -421,10 +438,11 @@ export class WalletService {
 
 			return response;
 		} catch (error) {
-			logger.error('WalletService', 'Error processing withdrawal', {
-				userId,
-				request,
-				error
+			await reportErrorServer(error, {
+				service: 'WalletService',
+				operation: 'requestWithdrawal',
+				action: LogAction.FAILURE,
+				data: { userId, request }
 			});
 			throw this.handleError(error, 'Failed to process withdrawal');
 		}
@@ -463,10 +481,11 @@ export class WalletService {
 
 			return transactions;
 		} catch (error) {
-			logger.error('WalletService', 'Error fetching transaction history', {
-				userId,
-				options,
-				error
+			await reportErrorServer(error, {
+				service: 'WalletService',
+				operation: 'getTransactionHistory',
+				action: LogAction.FAILURE,
+				data: { userId, options }
 			});
 			throw this.handleError(error, 'Failed to fetch transaction history');
 		}
@@ -505,7 +524,12 @@ export class WalletService {
 
 			return adapterTokens;
 		} catch (error) {
-			logger.error('WalletService', 'Error fetching supported coins', { error });
+			await reportErrorServer(error, {
+				service: 'WalletService',
+				operation: 'getSupportedCoins',
+				action: LogAction.FAILURE,
+				data: {}
+			});
 			throw this.handleError(error, 'Failed to fetch supported coins');
 		}
 	}
@@ -523,7 +547,12 @@ export class WalletService {
 			});
 			return tokenInfo;
 		} catch (error) {
-			logger.error('WalletService', 'Error fetching token info', { coinId, error });
+			await reportErrorServer(error, {
+				service: 'WalletService',
+				operation: 'getTokenInfo',
+				action: LogAction.FAILURE,
+				data: { coinId }
+			});
 			throw this.handleError(error, 'Failed to fetch token info');
 		}
 	}
@@ -542,7 +571,12 @@ export class WalletService {
 			});
 			return result;
 		} catch (error) {
-			logger.error('WalletService', 'Error validating address', { address, chain, error });
+			await reportErrorServer(error, {
+				service: 'WalletService',
+				operation: 'validateAddress',
+				action: LogAction.FAILURE,
+				data: { address, chain }
+			});
 			throw this.handleError(error, 'Failed to validate address');
 		}
 	}
@@ -561,7 +595,12 @@ export class WalletService {
 			});
 			return feeInfo;
 		} catch (error) {
-			logger.error('WalletService', 'Error fetching withdrawal fee', { coinId, chain, error });
+			await reportErrorServer(error, {
+				service: 'WalletService',
+				operation: 'getWithdrawFee',
+				action: LogAction.FAILURE,
+				data: { coinId, chain }
+			});
 			throw this.handleError(error, 'Failed to fetch withdrawal fee');
 		}
 	}
@@ -818,9 +857,11 @@ export class WalletService {
 
 			return result;
 		} catch (error) {
-			logger.error('WalletService', 'Error processing webhook', {
-				provider,
-				error
+			await reportErrorServer(error, {
+				service: 'WalletService',
+				operation: 'processWebhook',
+				action: LogAction.FAILURE,
+				data: { provider }
 			});
 			throw this.handleError(error, 'Failed to process webhook');
 		}

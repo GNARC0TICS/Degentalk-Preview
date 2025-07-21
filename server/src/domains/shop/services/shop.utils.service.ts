@@ -7,8 +7,9 @@
 
 import { db } from '@db';
 import { products } from '@db/schema';
-import { logger } from '@core/logger';
+import { logger, LogAction } from '@core/logger';
 import slugify from 'slugify';
+import { reportErrorServer } from '../../../lib/report-error';
 
 // Mock shop items for when database items can't be fetched
 export const mockShopItems = [
@@ -104,7 +105,12 @@ export class ShopUtilsService {
 
 			return newItem.id;
 		} catch (error) {
-			logger.error('SHOP', 'Error adding shop item', { error, item });
+			await reportErrorServer(error, {
+				service: 'ShopUtilsService',
+				operation: 'addShopItem',
+				action: LogAction.FAILURE,
+				data: { item }
+			});
 			throw error;
 		}
 	}
@@ -188,7 +194,12 @@ export class ShopUtilsService {
 
 			logger.info('SHOP', `Seeded shop with ${itemsToSeed.length} items.`);
 		} catch (error) {
-			logger.error('SHOP', 'Error seeding shop items', { error });
+			await reportErrorServer(error, {
+				service: 'ShopUtilsService',
+				operation: 'seedShopItems',
+				action: LogAction.FAILURE,
+				data: {}
+			});
 			throw error;
 		}
 	}

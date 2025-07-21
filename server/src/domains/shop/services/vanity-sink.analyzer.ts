@@ -6,10 +6,11 @@
  * Essential for understanding user spending behavior and economic health
  */
 
-import { logger } from '@core/logger';
+import { logger, LogAction } from '@core/logger';
 import { db } from '@db';
 import { transactions, userInventory, products } from '@schema';
 import { eq, and, gte, lte, desc, sql, inArray } from 'drizzle-orm';
+import { reportErrorServer } from '../../../lib/report-error';
 import type {
 	VanitySinkMetrics,
 	VanitySinkEvent,
@@ -88,9 +89,11 @@ export class VanitySinkAnalyzer {
 				source: burnEvent.source
 			});
 		} catch (error) {
-			logger.error('VanitySinkAnalyzer', 'Failed to track burn event', {
-				event: burnEvent,
-				error: error.message
+			await reportErrorServer(error, {
+				service: 'VanitySinkAnalyzer',
+				operation: 'trackBurn',
+				action: LogAction.FAILURE,
+				data: { event: burnEvent }
 			});
 		}
 	}
@@ -224,10 +227,15 @@ export class VanitySinkAnalyzer {
 
 			return metrics;
 		} catch (error) {
-			logger.error('VanitySinkAnalyzer', 'Error generating sink report', {
-				error: error.message,
-				startDate: params.startDate,
-				endDate: params.endDate
+			await reportErrorServer(error, {
+				service: 'VanitySinkAnalyzer',
+				operation: 'generateSinkReport',
+				action: LogAction.FAILURE,
+				data: {
+					startDate: params.startDate.toISOString(),
+					endDate: params.endDate.toISOString(),
+					includeProjections: params.includeProjections
+				}
 			});
 			throw error;
 		}
@@ -324,7 +332,16 @@ export class VanitySinkAnalyzer {
 
 			return enhancedSpenders;
 		} catch (error) {
-			logger.error('VanitySinkAnalyzer', 'Error getting top spenders', { error });
+			await reportErrorServer(error, {
+				service: 'VanitySinkAnalyzer',
+				operation: 'getTopSpenders',
+				action: LogAction.FAILURE,
+				data: {
+					startDate: startDate.toISOString(),
+					endDate: endDate.toISOString(),
+					limit
+				}
+			});
 			return [];
 		}
 	}
@@ -522,6 +539,12 @@ export class VanitySinkAnalyzer {
 
 			return (result[0]?.total || 0) as DgtAmount;
 		} catch (error) {
+			await reportErrorServer(error, {
+				service: 'VanitySinkAnalyzer',
+				operation: 'getUserLifetimeSpent',
+				action: LogAction.FAILURE,
+				data: { userId }
+			});
 			return 0 as DgtAmount;
 		}
 	}
@@ -560,6 +583,12 @@ export class VanitySinkAnalyzer {
 
 			return result[0]?.total || 0;
 		} catch (error) {
+			await reportErrorServer(error, {
+				service: 'VanitySinkAnalyzer',
+				operation: 'getUserDailySpending',
+				action: LogAction.FAILURE,
+				data: { userId }
+			});
 			return 0;
 		}
 	}
@@ -583,6 +612,12 @@ export class VanitySinkAnalyzer {
 
 			return result[0]?.total || 0;
 		} catch (error) {
+			await reportErrorServer(error, {
+				service: 'VanitySinkAnalyzer',
+				operation: 'getDailyBurnTotal',
+				action: LogAction.FAILURE,
+				data: {}
+			});
 			return 0;
 		}
 	}

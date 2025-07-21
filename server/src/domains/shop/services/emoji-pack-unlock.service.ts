@@ -1,8 +1,9 @@
 import { db } from '@db';
 import { userEmojiPacks } from '@schema';
 import { eq, and } from 'drizzle-orm';
-import { logger } from '@core/logger';
+import { logger, LogAction } from '@core/logger';
 import type { EmojiPackId, UserId } from '@shared/types/ids';
+import { reportErrorServer } from '../../../lib/report-error';
 
 interface UnlockEmojiPackParams {
 	userId: UserId;
@@ -68,11 +69,11 @@ export class EmojiPackUnlockService {
 
 			return { success: true };
 		} catch (error) {
-			logger.error('EMOJI_PACK_UNLOCK', 'Error unlocking emoji pack', {
-				error,
-				userId,
-				emojiPackId,
-				unlockType
+			await reportErrorServer(error, {
+				service: 'EmojiPackUnlockService',
+				operation: 'unlockEmojiPackForUser',
+				action: LogAction.FAILURE,
+				data: { userId, emojiPackId, unlockType }
 			});
 			return { success: false };
 		}
@@ -91,10 +92,11 @@ export class EmojiPackUnlockService {
 
 			return existing.length > 0;
 		} catch (error) {
-			logger.error('EMOJI_PACK_UNLOCK', 'Error checking emoji pack ownership', {
-				error,
-				userId,
-				emojiPackId
+			await reportErrorServer(error, {
+				service: 'EmojiPackUnlockService',
+				operation: 'checkUserOwnsEmojiPack',
+				action: LogAction.FAILURE,
+				data: { userId, emojiPackId }
 			});
 			return false;
 		}
@@ -118,9 +120,11 @@ export class EmojiPackUnlockService {
 
 			return ownedPacks;
 		} catch (error) {
-			logger.error('EMOJI_PACK_UNLOCK', 'Error getting user emoji packs', {
-				error,
-				userId
+			await reportErrorServer(error, {
+				service: 'EmojiPackUnlockService',
+				operation: 'getUserEmojiPacks',
+				action: LogAction.FAILURE,
+				data: { userId }
 			});
 			return [];
 		}

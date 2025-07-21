@@ -20,9 +20,10 @@ import {
 	threads,
 	xpAdjustmentLogs
 } from '@schema';
-import { logger } from '@core/logger';
+import { logger, LogAction } from '@core/logger';
 import { XpService } from '../../xp/xp.service';
 import type { UserId, AchievementId } from '@shared/types/ids';
+import { reportErrorServer } from '../../../lib/report-error';
 
 export interface AchievementDefinition {
 	id: AchievementId;
@@ -108,7 +109,12 @@ export class AchievementService {
 				category: this.categorizeAchievement(a.requirement as AchievementRequirement)
 			}));
 		} catch (error) {
-			logger.error('ACHIEVEMENT_SERVICE', 'Error getting all achievements:', error);
+			await reportErrorServer(error, {
+				service: 'AchievementService',
+				operation: 'getAllAchievements',
+				action: LogAction.FAILURE,
+				data: { activeOnly }
+			});
 			throw error;
 		}
 	}
@@ -198,7 +204,12 @@ export class AchievementService {
 				categories
 			};
 		} catch (error) {
-			logger.error('ACHIEVEMENT_SERVICE', 'Error getting user achievement stats:', error);
+			await reportErrorServer(error, {
+				service: 'AchievementService',
+				operation: 'getUserAchievementStats',
+				action: LogAction.FAILURE,
+				data: { userId }
+			});
 			throw error;
 		}
 	}
@@ -268,7 +279,12 @@ export class AchievementService {
 
 			return progress.sort((a, b) => b.progressPercentage - a.progressPercentage);
 		} catch (error) {
-			logger.error('ACHIEVEMENT_SERVICE', 'Error getting user achievement progress:', error);
+			await reportErrorServer(error, {
+				service: 'AchievementService',
+				operation: 'getUserAchievementProgress',
+				action: LogAction.FAILURE,
+				data: { userId, achievementIds }
+			});
 			throw error;
 		}
 	}
@@ -346,7 +362,12 @@ export class AchievementService {
 
 			return awardedAchievements;
 		} catch (error) {
-			logger.error('ACHIEVEMENT_SERVICE', 'Error checking and awarding achievements:', error);
+			await reportErrorServer(error, {
+				service: 'AchievementService',
+				operation: 'checkAndAwardAchievements',
+				action: LogAction.FAILURE,
+				data: { userId, actionType, metadata }
+			});
 			throw error;
 		}
 	}
@@ -409,7 +430,12 @@ export class AchievementService {
 				rewardPoints: achievementData.rewardPoints
 			});
 		} catch (error) {
-			logger.error('ACHIEVEMENT_SERVICE', 'Error awarding achievement:', error);
+			await reportErrorServer(error, {
+				service: 'AchievementService',
+				operation: 'awardAchievement',
+				action: LogAction.FAILURE,
+				data: { userId, achievementId }
+			});
 			throw error;
 		}
 	}
@@ -455,7 +481,12 @@ export class AchievementService {
 				category: this.categorizeAchievement(achievement.requirement as AchievementRequirement)
 			};
 		} catch (error) {
-			logger.error('ACHIEVEMENT_SERVICE', 'Error creating achievement:', error);
+			await reportErrorServer(error, {
+				service: 'AchievementService',
+				operation: 'createAchievement',
+				action: LogAction.FAILURE,
+				data: { name: data.name, rewardXp: data.rewardXp, rewardPoints: data.rewardPoints }
+			});
 			throw error;
 		}
 	}
@@ -522,7 +553,12 @@ export class AchievementService {
 					return 0;
 			}
 		} catch (error) {
-			logger.error('ACHIEVEMENT_SERVICE', 'Error calculating achievement progress:', error);
+			await reportErrorServer(error, {
+				service: 'AchievementService',
+				operation: 'calculateAchievementProgress',
+				action: LogAction.FAILURE,
+				data: { userId, requirement }
+			});
 			return 0;
 		}
 	}
@@ -669,7 +705,12 @@ export class AchievementService {
 				rank: index + 1
 			}));
 		} catch (error) {
-			logger.error('ACHIEVEMENT_SERVICE', 'Error getting achievement leaderboard:', error);
+			await reportErrorServer(error, {
+				service: 'AchievementService',
+				operation: 'getAchievementLeaderboard',
+				action: LogAction.FAILURE,
+				data: { limit }
+			});
 			throw error;
 		}
 	}
@@ -752,11 +793,13 @@ export class AchievementService {
 				await this.createAchievement(achievementData);
 				logger.info('ACHIEVEMENT_SERVICE', `Created default achievement: ${achievementData.name}`);
 			} catch (error) {
-				logger.warn(
-					'ACHIEVEMENT_SERVICE',
-					`Failed to create achievement ${achievementData.name}:`,
-					error
-				);
+				await reportErrorServer(error, {
+					service: 'AchievementService',
+					operation: 'createDefaultAchievements',
+					action: LogAction.FAILURE,
+					data: { achievementName: achievementData.name }
+				});
+				// Continue to next achievement - don't break the loop
 			}
 		}
 	}

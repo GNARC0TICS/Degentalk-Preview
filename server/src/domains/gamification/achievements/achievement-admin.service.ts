@@ -15,9 +15,10 @@ import type {
 	AchievementTier,
 	AchievementTriggerType
 } from '@schema';
-import { logger } from '@core/logger';
+import { logger, LogAction } from '@core/logger';
 import { DegenAchievementEvaluators } from './evaluators/degen-evaluators';
 import type { AchievementId, UserId } from '@shared/types/ids';
+import { reportErrorServer } from '../../../lib/report-error';
 
 export interface AchievementFilters {
 	category?: AchievementCategory;
@@ -131,11 +132,11 @@ export class AchievementAdminService {
 				total: totalResult[0]?.count || 0
 			};
 		} catch (error) {
-			logger.error('ACHIEVEMENT_ADMIN', 'Failed to get achievements', {
-				filters,
-				page,
-				limit,
-				error: error instanceof Error ? error.message : String(error)
+			await reportErrorServer(error, {
+				service: 'AchievementAdminService',
+				operation: 'getAchievements',
+				action: LogAction.FAILURE,
+				data: { filters, page, limit }
 			});
 			throw error;
 		}
@@ -216,8 +217,10 @@ export class AchievementAdminService {
 				tierBreakdown
 			};
 		} catch (error) {
-			logger.error('ACHIEVEMENT_ADMIN', 'Failed to get achievement stats', {
-				error: error instanceof Error ? error.message : String(error)
+			await reportErrorServer(error, {
+				service: 'AchievementAdminService',
+				operation: 'getAchievementStats',
+				action: LogAction.FAILURE
 			});
 			throw error;
 		}
@@ -256,9 +259,11 @@ export class AchievementAdminService {
 
 			return result[0];
 		} catch (error) {
-			logger.error('ACHIEVEMENT_ADMIN', 'Failed to create achievement', {
-				data,
-				error: error instanceof Error ? error.message : String(error)
+			await reportErrorServer(error, {
+				service: 'AchievementAdminService',
+				operation: 'createAchievement',
+				action: LogAction.FAILURE,
+				data: { achievementData: data }
 			});
 			throw error;
 		}
@@ -297,10 +302,11 @@ export class AchievementAdminService {
 
 			return result[0];
 		} catch (error) {
-			logger.error('ACHIEVEMENT_ADMIN', 'Failed to update achievement', {
-				id,
-				data,
-				error: error instanceof Error ? error.message : String(error)
+			await reportErrorServer(error, {
+				service: 'AchievementAdminService',
+				operation: 'updateAchievement',
+				action: LogAction.FAILURE,
+				data: { id, updateData: data }
 			});
 			throw error;
 		}
@@ -329,9 +335,11 @@ export class AchievementAdminService {
 				name: result[0].name
 			});
 		} catch (error) {
-			logger.error('ACHIEVEMENT_ADMIN', 'Failed to delete achievement', {
-				id,
-				error: error instanceof Error ? error.message : String(error)
+			await reportErrorServer(error, {
+				service: 'AchievementAdminService',
+				operation: 'deleteAchievement',
+				action: LogAction.FAILURE,
+				data: { id }
 			});
 			throw error;
 		}
@@ -362,10 +370,11 @@ export class AchievementAdminService {
 
 			return result;
 		} catch (error) {
-			logger.error('ACHIEVEMENT_ADMIN', 'Failed to bulk update achievements', {
-				ids,
-				updates,
-				error: error instanceof Error ? error.message : String(error)
+			await reportErrorServer(error, {
+				service: 'AchievementAdminService',
+				operation: 'bulkUpdateAchievements',
+				action: LogAction.FAILURE,
+				data: { ids, updates }
 			});
 			throw error;
 		}
@@ -428,9 +437,11 @@ export class AchievementAdminService {
 				averageProgress: achievement.avgProgress
 			};
 		} catch (error) {
-			logger.error('ACHIEVEMENT_ADMIN', 'Failed to get achievement by ID', {
-				id,
-				error: error instanceof Error ? error.message : String(error)
+			await reportErrorServer(error, {
+				service: 'AchievementAdminService',
+				operation: 'getAchievementById',
+				action: LogAction.FAILURE,
+				data: { id }
 			});
 			throw error;
 		}
@@ -482,11 +493,11 @@ export class AchievementAdminService {
 				total: totalResult[0]?.count || 0
 			};
 		} catch (error) {
-			logger.error('ACHIEVEMENT_ADMIN', 'Failed to get achievement completions', {
-				achievementId,
-				page,
-				limit,
-				error: error instanceof Error ? error.message : String(error)
+			await reportErrorServer(error, {
+				service: 'AchievementAdminService',
+				operation: 'getAchievementCompletions',
+				action: LogAction.FAILURE,
+				data: { achievementId, page, limit }
 			});
 			throw error;
 		}
@@ -551,11 +562,11 @@ export class AchievementAdminService {
 				userCount: userIds.length
 			});
 		} catch (error) {
-			logger.error('ACHIEVEMENT_ADMIN', 'Failed to manually award achievement', {
-				achievementId,
-				userIds,
-				reason,
-				error: error instanceof Error ? error.message : String(error)
+			await reportErrorServer(error, {
+				service: 'AchievementAdminService',
+				operation: 'manuallyAwardAchievement',
+				action: LogAction.FAILURE,
+				data: { achievementId, userIds, reason }
 			});
 			throw error;
 		}

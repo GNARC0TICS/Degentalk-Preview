@@ -11,10 +11,11 @@ import { achievements, userAchievements, achievementEvents } from '@schema';
 import type { Achievement, UserAchievement } from '@schema';
 import type { AchievementEventType } from '@schema';
 import { users } from '@schema';
-import { logger } from '@core/logger';
+import { logger, LogAction } from '@core/logger';
 import { XpService } from '../../xp/xp.service';
 import { DegenAchievementEvaluators } from './evaluators/degen-evaluators';
 import type { UserId, AchievementId } from '@shared/types/ids';
+import { reportErrorServer } from '../../../lib/report-error';
 
 export interface AchievementProgress {
 	current: number;
@@ -53,11 +54,13 @@ export class AchievementProcessorService {
 				achievementCount: triggeredAchievements.length
 			});
 		} catch (error) {
-			logger.error('ACHIEVEMENT_PROCESSOR', `Failed to process ${eventType} event`, {
-				eventType,
-				userId,
-				error: error instanceof Error ? error.message : String(error)
+			await reportErrorServer(error, {
+				service: 'AchievementProcessorService',
+				operation: 'processEvent',
+				action: LogAction.FAILURE,
+				data: { eventType, userId, eventData }
 			});
+			// Don't rethrow - continue processing other events
 		}
 	}
 
@@ -154,12 +157,13 @@ export class AchievementProcessorService {
 				await this.updateProgress(userId, achievement, progress);
 			}
 		} catch (error) {
-			logger.error('ACHIEVEMENT_PROCESSOR', 'Failed to update user progress', {
-				userId,
-				achievementId: achievement.id,
-				achievementKey: achievement.key,
-				error: error instanceof Error ? error.message : String(error)
+			await reportErrorServer(error, {
+				service: 'AchievementProcessorService',
+				operation: 'updateUserProgress',
+				action: LogAction.FAILURE,
+				data: { userId, achievementId: achievement.id, achievementKey: achievement.key }
 			});
+			// Don't rethrow - continue processing other achievements
 		}
 	}
 
@@ -389,11 +393,13 @@ export class AchievementProcessorService {
 				}
 			);
 		} catch (error) {
-			logger.error('ACHIEVEMENT_PROCESSOR', 'Failed to complete achievement', {
-				userId,
-				achievementId: achievement.id,
-				error: error instanceof Error ? error.message : String(error)
+			await reportErrorServer(error, {
+				service: 'AchievementProcessorService',
+				operation: 'completeAchievement',
+				action: LogAction.FAILURE,
+				data: { userId, achievementId: achievement.id, achievementKey: achievement.key }
 			});
+			// Don't rethrow - partial failure shouldn't stop other operations
 		}
 	}
 
@@ -447,11 +453,13 @@ export class AchievementProcessorService {
 						`Awarded ${achievement.rewardDgt} DGT to user ${userId} for achievement ${achievement.name}`
 					);
 				} catch (error) {
-					logger.error(
-						'ACHIEVEMENT_REWARD',
-						`Failed to award DGT to user ${userId} for achievement ${achievement.name}`,
-						{ error: error instanceof Error ? error.message : String(error) }
-					);
+					await reportErrorServer(error, {
+						service: 'AchievementProcessorService',
+						operation: 'distributeRewards.awardDGT',
+						action: LogAction.FAILURE,
+						data: { userId, achievementId: achievement.id, achievementName: achievement.name, rewardDgt: achievement.rewardDgt }
+					});
+					// Continue to award other rewards
 				}
 			}
 
@@ -466,11 +474,13 @@ export class AchievementProcessorService {
 
 			// TODO: Handle title and badge rewards when those systems are integrated
 		} catch (error) {
-			logger.error('ACHIEVEMENT_PROCESSOR', 'Failed to distribute rewards', {
-				userId,
-				achievementId: achievement.id,
-				error: error instanceof Error ? error.message : String(error)
+			await reportErrorServer(error, {
+				service: 'AchievementProcessorService',
+				operation: 'distributeRewards',
+				action: LogAction.FAILURE,
+				data: { userId, achievementId: achievement.id, achievementName: achievement.name }
 			});
+			// Don't rethrow - reward distribution failure shouldn't break achievement completion
 		}
 	}
 

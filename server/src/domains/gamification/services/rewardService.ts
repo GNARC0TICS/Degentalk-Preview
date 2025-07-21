@@ -3,7 +3,8 @@ import type { UserId } from '@shared/types/ids';
 import { economySettings } from '@schema';
 import { eq } from 'drizzle-orm';
 import { dgtService } from '@server/domains/wallet/services/dgtService';
-import { logger } from '@core/logger';
+import { logger, LogAction } from '@core/logger';
+import { reportErrorServer } from '../../../lib/report-error';
 
 async function getSettingInt(key: string, defaultVal: number = 0): Promise<number> {
 	try {
@@ -14,7 +15,12 @@ async function getSettingInt(key: string, defaultVal: number = 0): Promise<numbe
 			.limit(1);
 		return row.length ? Number(row[0].value) : defaultVal;
 	} catch (error) {
-		logger.warn('Failed to get economy setting:', { key, error });
+		await reportErrorServer(error, {
+			service: 'RewardService',
+			operation: 'getSettingInt',
+			action: LogAction.FAILURE,
+			data: { key, defaultVal }
+		});
 		return defaultVal;
 	}
 }
@@ -30,7 +36,12 @@ export async function awardXShareReward(userId: UserId) {
 
 		logger.info('RewardService', 'Issued X share reward', { userId, xpReward, dgtReward });
 	} catch (error) {
-		logger.error('Failed to award X share reward:', { userId, error });
+		await reportErrorServer(error, {
+			service: 'RewardService',
+			operation: 'awardXShareReward',
+			action: LogAction.FAILURE,
+			data: { userId }
+		});
 	}
 }
 
@@ -45,6 +56,11 @@ export async function awardXReferralReward(userId: UserId) {
 
 		logger.info('RewardService', 'Issued X referral reward', { userId, xpReward, dgtReward });
 	} catch (error) {
-		logger.error('Failed to award X referral reward:', { userId, error });
+		await reportErrorServer(error, {
+			service: 'RewardService',
+			operation: 'awardXReferralReward',
+			action: LogAction.FAILURE,
+			data: { userId }
+		});
 	}
 }
