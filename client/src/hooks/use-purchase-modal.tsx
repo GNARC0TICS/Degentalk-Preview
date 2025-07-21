@@ -3,6 +3,7 @@ import { createContext, useContext, useState } from 'react';
 import type { ShopItem } from './use-shop-items';
 import { apiRequest } from '@/utils/api-request';
 import { useAuth } from '@/hooks/use-auth';
+import { logger } from "@/lib/logger";
 
 interface PurchaseModalContextType {
 	isOpen: boolean;
@@ -84,11 +85,11 @@ export function PurchaseModalProvider({ children }: PurchaseModalProviderProps) 
 				// Purchase successful: (was console.log)
 				return true;
 			} else {
-				console.error('Purchase failed:', result.message || 'Failed to purchase item');
+				logger.error('usePurchaseModal', 'Purchase failed:', result.message || 'Failed to purchase item');
 				return false;
 			}
 		} catch (error) {
-			console.error('Purchase error:', error);
+			logger.error('usePurchaseModal', 'Purchase error:', error);
 
 			// Falling back to mock purchase behavior (was console.log)
 
@@ -103,9 +104,7 @@ export function PurchaseModalProvider({ children }: PurchaseModalProviderProps) 
 					if (success) {
 						// Purchase successful (Mock): (was console.log)
 					} else {
-						console.error(
-							'Purchase failed (Mock): Transaction failed (API unavailable, using demo data)'
-						);
+						logger.error('usePurchaseModal', 'Purchase failed (Mock): Transaction failed (API unavailable, using demo data)');
 					}
 
 					resolve(success);

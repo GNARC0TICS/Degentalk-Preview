@@ -3,6 +3,7 @@ import { AlertTriangle, Settings, RefreshCw, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ErrorBoundary } from './ErrorBoundary';
+import { logger } from "@/lib/logger";
 
 /**
  * Specialized Error Boundary for Admin operations
@@ -106,9 +107,8 @@ export function AdminErrorBoundary({ children, context }: AdminErrorBoundaryProp
 			onError={(error, errorInfo) => {
 				// Enhanced logging for admin errors
 				console.group('🔴 Admin Error');
-				console.error('Error:', error);
-				console.error('Context:', context);
-				console.error('Component Stack:', errorInfo.componentStack);
+				logger.error('AdminErrorBoundary', 'Error caught', { error: error.toString(), context });
+				logger.error('AdminErrorBoundary', 'Component stack trace', { componentStack: errorInfo.componentStack });
 				console.groupEnd();
 
 				// In production, send to admin error monitoring

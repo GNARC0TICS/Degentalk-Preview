@@ -20,6 +20,7 @@ import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useToast } from '@/hooks/use-toast';
 import { LoadingSpinner } from '@/components/ui/loader';
+import { logger } from "@/lib/logger";
 
 interface ShopItemCardProps {
 	item: ShopItem;
@@ -74,7 +75,7 @@ export function ShopItemCard({ item, onPurchaseClick }: ShopItemCardProps) {
 			// Success toast or state update would likely happen in the parent component's mutation handler
 		} catch (error) {
 			// Error toast is likely handled by the mutation hook in the parent
-			console.error('Purchase failed:', error);
+			logger.error('ShopItemCard', 'Purchase failed:', error);
 		} finally {
 			setIsPurchasing(false);
 		}

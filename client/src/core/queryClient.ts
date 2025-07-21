@@ -1,16 +1,17 @@
 import { QueryClient, type QueryFunction } from '@tanstack/react-query';
+import { logger } from "@/lib/logger";
 
 const throwIfResNotOk = async (res: Response) => {
 	if (!res.ok) {
-		console.error('[API ERROR] Response not OK:', {
-			status: res.status,
-			statusText: res.statusText,
-			url: res.url,
-			headers: Object.fromEntries(res.headers.entries())
-		});
+		logger.error('QueryClient', '[API ERROR] Response not OK:', {
+        			status: res.status,
+        			statusText: res.statusText,
+        			url: res.url,
+        			headers: Object.fromEntries(res.headers.entries())
+        		});
 
 		const errorBody = await res.text();
-		console.error('[API ERROR] Response body:', errorBody.substring(0, 500));
+		logger.error('QueryClient', '[API ERROR] Response body:', errorBody.substring(0, 500));
 
 		let json;
 		try {
@@ -62,9 +63,9 @@ export const getQueryFn: <T>(options: { on401: UnauthorizedBehavior }) => QueryF
 
 		// Check if response is JSON
 		if (!contentType || !contentType.includes('application/json')) {
-			console.error('[API ERROR] Non-JSON response detected');
+			logger.error('QueryClient', '[API ERROR] Non-JSON response detected');
 			const text = await res.text();
-			console.error('[API ERROR] Response preview:', text.substring(0, 200));
+			logger.error('QueryClient', '[API ERROR] Response preview:', text.substring(0, 200));
 			throw new Error(
 				`Expected JSON response but got ${contentType}. Response: ${text.substring(0, 200)}`
 			);

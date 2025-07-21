@@ -2,7 +2,7 @@ import React from 'react';
 import { cn } from '@/utils/utils';
 import { Badge } from '@/components/ui/badge';
 import { useUserCosmetics } from '@/hooks/useUserCosmetics';
-import { SYSTEM_ROLE_COLORS } from '@/utils/utils/applyPluginRewards';
+import { SYSTEM_ROLE_COLORS } from '@/utils/applyPluginRewards';
 import { useProfileCard } from '@/contexts/ProfileCardContext';
 
 interface UsernameProps {

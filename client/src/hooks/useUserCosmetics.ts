@@ -2,8 +2,9 @@ import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import type { UserInventoryWithProduct, AppliedCosmetics } from '@/types/inventory';
 import { apiRequest } from '@/utils/api-request';
-import { applyPluginRewards } from '@/utils/utils/applyPluginRewards';
+import { applyPluginRewards } from '@/utils/applyPluginRewards';
 import type { UserId } from '@shared/types/ids';
+import { logger } from "@/lib/logger";
 
 // TODO: Replace with actual useUser hook from your application
 // This is a placeholder/mock for demonstration if the real hook doesn't exist yet.
@@ -62,7 +63,7 @@ export function useUserCosmetics(targetUserId?: string | number): {
 			} catch (error: any) {
 				// If rate limited, return empty array to avoid breaking the UI
 				if (error?.status === 429) {
-					console.warn('Rate limited on inventory fetch, using empty inventory');
+					logger.warn('UseUserCosmetics', 'Rate limited on inventory fetch, using empty inventory');
 					return [];
 				}
 				throw error;

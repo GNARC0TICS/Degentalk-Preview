@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiRequest } from '@/utils/api-request';
 import { useToast } from '@/hooks/use-toast';
 import type { RoomId, ActionId, UserId } from '@shared/types/ids';
+import { logger } from "@/lib/logger";
 
 export interface RainParams {
 	amount: number;
@@ -55,7 +56,7 @@ export function useRain() {
 					}
 				});
 			} catch (error) {
-				console.error('Error sending rain:', error);
+				logger.error('useRain', 'Error sending rain:', error);
 				throw error;
 			}
 		},
@@ -93,7 +94,7 @@ export function useRain() {
 					params: { limit: '10' }
 				});
 			} catch (error) {
-				console.error('Error fetching recent rain events:', error);
+				logger.error('useRain', 'Error fetching recent rain events:', error);
 				throw error;
 			}
 		},

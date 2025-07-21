@@ -8,6 +8,7 @@ import type {
 	WalletBalances
 } from '@/types/wallet';
 import type { RoomId, TipId, VaultId, ActionId, UserId } from '@shared/types/ids';
+import { logger } from "@/lib/logger";
 
 // API endpoint base URL
 const API_BASE_URL = '/api';
@@ -36,7 +37,7 @@ async function fetchJSON<T>(url: string, options?: RequestInit): Promise<T> {
 		const data = await response.json();
 		return data as T;
 	} catch (error) {
-		console.error('API Error:', error);
+		logger.error('Api', 'API Error:', error);
 		throw error;
 	}
 }

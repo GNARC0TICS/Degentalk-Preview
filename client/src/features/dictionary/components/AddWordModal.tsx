@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { dictionaryApi } from '../services/dictionaryApi';
 import { z } from 'zod';
-import { generateSlug } from '@/utils/utils/generateSlug';
+import { generateSlug } from '@/utils/generateSlug';
 import { useToast } from '@/hooks/use-toast';
 import { Label } from '@/components/ui/label';
 

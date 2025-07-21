@@ -10,6 +10,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiRequest } from '@/utils/queryClient';
 import { Save, X, User, Image, Globe, MessageSquare } from 'lucide-react'; // Removed Upload icon
 import { FileDropZone } from '@/components/ui/file-drop-zone';
+import { logger } from "@/lib/logger";
 
 interface ProfileEditorProps {
 	profile: {
@@ -247,7 +248,7 @@ export function ProfileEditor({ profile, onClose }: ProfileEditorProps) {
 			// }, 2000); // This reset is now handled by FileDropZone
 		} catch (error: unknown) {
 			// Changed type from any to unknown
-			console.error('Upload failed:', error);
+			logger.error('ProfileEditor', 'Upload failed:', error);
 
 			// Reset progress on error
 			setUploadProgress((prev) => ({ ...prev, [uploadType]: 0 }));

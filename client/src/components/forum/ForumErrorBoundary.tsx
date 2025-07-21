@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Wide } from '@/layout/primitives';
 import { Button } from '@/components/ui/button';
 import { ErrorBoundary } from '@/components/errors/ErrorBoundary';
+import { logger } from "@/lib/logger";
 
 interface FallbackProps {
 	error: Error;
@@ -39,7 +40,7 @@ export default function ForumErrorBoundary({ children }: { children: React.React
 			onError={(error, errorInfo) => {
 				// Log error details for debugging
 				if (error.message) {
-					console.debug('Forum error details:', { error: error.message, errorInfo });
+					logger.debug('ForumErrorBoundary', 'Forum error details:', { data: [{ error: error.message, errorInfo }] });
 				}
 			}}
 			context="forum"

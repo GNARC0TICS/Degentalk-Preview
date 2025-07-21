@@ -8,6 +8,7 @@ import type { Role } from '@/utils/roles';
 import type { UserId, FrameId } from '@shared/types/ids';
 import { toId } from '@shared/types/index';
 import { setAuthToken, removeAuthToken } from '@/utils/auth-token';
+import { logger } from "@/lib/logger";
 
 // Define user type
 export interface User {
@@ -273,7 +274,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 				
 				// Log token expiration for debugging
 				if (expiresAt && import.meta.env.MODE === 'development') {
-					console.log('[Auth] Token expires at:', expiresAt);
+					logger.info('useAuth', '[Auth] Token expires at:', { data: [expiresAt] });
 				}
 			}
 			

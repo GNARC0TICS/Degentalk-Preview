@@ -10,6 +10,7 @@ import { AdminDataTable } from '@/features/admin/components/common/AdminDataTabl
 import type { ColumnDef } from '@/features/admin/layout/layout/EntityTable';
 import { Badge } from '@/components/ui/badge';
 import type { UserId } from '@shared/types/ids';
+import { logger } from "@/lib/logger";
 
 // Local Product shape (minimal) – avoids server schema coupling
 interface Product {
@@ -59,7 +60,7 @@ export default function AdminShopItemsPage() {
 			queryClient.invalidateQueries({ queryKey: ['adminShopItems'] });
 		},
 		onError: (error) => {
-			console.error('Error deleting product:', error);
+			logger.error('Index', 'Error deleting product:', error);
 		}
 	});
 

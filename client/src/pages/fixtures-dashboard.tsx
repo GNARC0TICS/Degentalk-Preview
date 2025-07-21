@@ -27,6 +27,7 @@ import {
 	Activity
 } from 'lucide-react';
 import { toast } from 'sonner';
+import { logger } from "@/lib/logger";
 
 interface FixtureSession {
 	id: string;
@@ -62,7 +63,7 @@ export default function FixturesDashboard() {
 			try {
 				setSessions(JSON.parse(savedSessions));
 			} catch (error) {
-				console.error('Failed to load fixture sessions:', error);
+				logger.error('FixturesDashboard', 'Failed to load fixture sessions:', error);
 			}
 		}
 	}, []);

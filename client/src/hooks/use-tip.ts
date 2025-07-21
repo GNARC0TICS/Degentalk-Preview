@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiRequest } from '@/utils/api-request';
 import { useToast } from '@/hooks/use-toast';
 import type { TipId, UserId } from '@shared/types/ids';
+import { logger } from "@/lib/logger";
 
 export interface TipParams {
 	toUserId: UserId;
@@ -51,7 +52,7 @@ export function useTip() {
 					}
 				});
 			} catch (error) {
-				console.error('Error sending tip:', error);
+				logger.error('useTip', 'Error sending tip:', error);
 				throw error;
 			}
 		},
@@ -86,7 +87,7 @@ export function useTip() {
 					method: 'GET'
 				});
 			} catch (error) {
-				console.error('Error fetching tip history:', error);
+				logger.error('useTip', 'Error fetching tip history:', error);
 				throw error;
 			}
 		},

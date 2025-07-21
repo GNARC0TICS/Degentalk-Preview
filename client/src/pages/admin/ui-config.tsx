@@ -64,6 +64,7 @@ import { useAdminModule } from '@/hooks/use-admin-modules';
 import { VisualJsonTabs } from '@/features/admin/components/VisualJsonTabs';
 import { useJsonConfig } from '@/hooks/useJsonConfig';
 import { uiQuotesSchema, type UIQuotes } from '@/schemas/uiQuotes.schema';
+import { logger } from "@/lib/logger";
 
 // Types
 interface Quote {
@@ -174,7 +175,7 @@ const UiConfigPage: React.FC = () => {
 			setQuotes(data.quotes);
 			setTotal(data.total);
 		} catch (error) {
-			console.error('Error loading quotes:', error);
+			logger.error('UiConfig', 'Error loading quotes:', error);
 			toast({
 				title: 'Error',
 				description: 'Failed to load quotes',
@@ -219,7 +220,7 @@ const UiConfigPage: React.FC = () => {
 
 			loadQuotes();
 		} catch (error) {
-			console.error('Error creating quote:', error);
+			logger.error('UiConfig', 'Error creating quote:', error);
 			toast({
 				title: 'Error',
 				description: 'Failed to create quote',
@@ -247,7 +248,7 @@ const UiConfigPage: React.FC = () => {
 
 			loadQuotes();
 		} catch (error) {
-			console.error('Error updating quote:', error);
+			logger.error('UiConfig', 'Error updating quote:', error);
 			toast({
 				title: 'Error',
 				description: 'Failed to update quote',
@@ -267,7 +268,7 @@ const UiConfigPage: React.FC = () => {
 
 			loadQuotes();
 		} catch (error) {
-			console.error('Error deleting quote:', error);
+			logger.error('UiConfig', 'Error deleting quote:', error);
 			toast({
 				title: 'Error',
 				description: 'Failed to delete quote',
@@ -285,7 +286,7 @@ const UiConfigPage: React.FC = () => {
 
 			loadQuotes();
 		} catch (error) {
-			console.error('Error toggling quote:', error);
+			logger.error('UiConfig', 'Error toggling quote:', error);
 			toast({
 				title: 'Error',
 				description: 'Failed to update quote status',
@@ -331,7 +332,7 @@ const UiConfigPage: React.FC = () => {
 				description: 'Quotes exported successfully'
 			});
 		} catch (error) {
-			console.error('Error exporting quotes:', error);
+			logger.error('UiConfig', 'Error exporting quotes:', error);
 			toast({
 				title: 'Error',
 				description: 'Failed to export quotes',

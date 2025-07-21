@@ -3,6 +3,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiRequest } from '@/utils/queryClient';
 import type { Transaction } from '@/types/wallet';
 import type { WalletBalances } from '@/types/wallet';
+import { logger } from "@/lib/logger";
 
 // Define the wallet context state type
 interface WalletContextType {
@@ -75,7 +76,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
 					method: 'GET'
 				});
 			} catch (error) {
-				console.error('Error fetching wallet balance:', error);
+				logger.error('WalletContext', 'Error fetching wallet balance:', error);
 				throw error;
 			}
 		},
@@ -92,7 +93,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
 					method: 'GET'
 				});
 			} catch (error) {
-				console.error('Error fetching transaction history:', error);
+				logger.error('WalletContext', 'Error fetching transaction history:', error);
 				throw error;
 			}
 		},

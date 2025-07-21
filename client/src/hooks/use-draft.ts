@@ -16,6 +16,7 @@ const debounce = <T extends (...args: any[]) => any>(
 	};
 };
 import type { CategoryId, PrefixId, DraftId, TagId } from '@shared/types/ids';
+import { logger } from "@/lib/logger";
 
 interface DraftData {
 	id?: DraftId;
@@ -69,7 +70,7 @@ export function useDraft({
 			setIsDirty(false);
 		},
 		onError: (error) => {
-			console.error('Failed to save draft to cloud:', error);
+			logger.error('useDraft', 'Failed to save draft to cloud:', error);
 			// Still mark as saved locally
 			lastSavedRef.current = new Date();
 			setIsDirty(false);
@@ -155,7 +156,7 @@ export function useDraft({
 			try {
 				await apiRequest({ url: `/api/forum/drafts/${localDraft.id}`, method: 'DELETE' });
 			} catch (error) {
-				console.error('Failed to delete cloud draft:', error);
+				logger.error('useDraft', 'Failed to delete cloud draft:', error);
 			}
 		}
 	}, [localDraft.id, enableCloudSync, user, setLocalDraft]);

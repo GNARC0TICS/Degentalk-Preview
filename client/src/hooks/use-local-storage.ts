@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { logger } from "@/lib/logger";
 
 /**
  * A hook that manages state with localStorage persistence
@@ -25,7 +26,7 @@ export function useLocalStorage<T>(
 			return item ? JSON.parse(item) : initialValue;
 		} catch (error) {
 			// If error (e.g. permission issues or corruption) also return initialValue
-			console.error('Error reading from localStorage:', error);
+			logger.error('useLocalStorage', 'Error reading from localStorage:', error);
 			return initialValue;
 		}
 	});
@@ -46,7 +47,7 @@ export function useLocalStorage<T>(
 			}
 		} catch (error) {
 			// Handle errors
-			console.error('Error writing to localStorage:', error);
+			logger.error('useLocalStorage', 'Error writing to localStorage:', error);
 		}
 	};
 
@@ -57,7 +58,7 @@ export function useLocalStorage<T>(
 				try {
 					setStoredValue(JSON.parse(e.newValue));
 				} catch (error) {
-					console.error('Error parsing localStorage change:', error);
+					logger.error('useLocalStorage', 'Error parsing localStorage change:', error);
 				}
 			}
 		};

@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { RainNotification } from '@/components/shoutbox/shoutbox-rain-notification';
-import { useAuth } from '@/hooks/use-auth'; // Changed from auth store to useAuth hook
+import { useAuth } from '@/hooks/use-auth';
+import { logger } from "@/lib/logger";
 
 export function useRainNotifications() {
 	const [notifications, setNotifications] = useState<RainNotification[]>([]);
@@ -74,12 +75,12 @@ export function useRainNotifications() {
 						});
 					}
 				} catch (error) {
-					console.error('Error parsing WebSocket message:', error);
+					logger.error('useRainNotifications', 'Error parsing WebSocket message:', error);
 				}
 			};
 
 			ws.onerror = (error) => {
-				console.error('WebSocket error:', error);
+				logger.error('useRainNotifications', 'WebSocket error:', error);
 			};
 
 			ws.onclose = () => {

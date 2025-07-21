@@ -11,19 +11,19 @@ import { apiRequest } from '@/utils/queryClient';
 import { FramedAvatar } from '@/components/users/framed-avatar';
 import { ShoppingBag, Sparkles, Palette, Frame, Crown, Edit } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { applyPluginRewards } from '@/utils/utils/applyPluginRewards';
+import { applyPluginRewards } from '@/utils/applyPluginRewards';
 import type { UserInventoryWithProduct } from '@/types/inventory';
-import type { InventoryId, EntityId } from '@shared/types/ids';
+import type { InventoryId, FrameId, TitleId, BadgeId } from '@shared/types/ids';
 
 interface CosmeticControlPanelProps {
 	userId: string; // Changed to string
 	username: string;
 	avatarUrl: string | null;
 	inventory: UserInventoryWithProduct[];
-	activeFrame?: { id: EntityId; name: string; imageUrl: string; rarity: string } | null; // IDs brnd
-	activeTitle?: { id: EntityId; name: string; description: string | null; rarity: string } | null; // IDs brnd
+	activeFrame?: { id: FrameId; name: string; imageUrl: string; rarity: string } | null;
+	activeTitle?: { id: TitleId; name: string; description: string | null; rarity: string } | null;
 	activeBadge?: {
-		id: EntityId; // IDs branded
+		id: BadgeId;
 		name: string;
 		description: string | null;
 		iconUrl: string;

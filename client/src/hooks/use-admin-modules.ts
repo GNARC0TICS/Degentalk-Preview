@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { adminModuleRegistry } from '@/lib/admin-module-registry';
 import { useAuth } from '@/hooks/use-auth';
 import type { AdminModuleV2 } from '@/config/admin.config';
+import { logger } from "@/lib/logger";
 
 export interface UseAdminModuleV2sReturn {
 	modules: AdminModuleV2[];
@@ -36,7 +37,7 @@ export function useAdminModuleV2s(): UseAdminModuleV2sReturn {
 				return await response.json();
 			} catch (err) {
 				// Fallback to local config if server request fails
-				console.warn('Using local admin config, server config unavailable:', err);
+				logger.warn('useAdminModules', 'Using local admin config, server config unavailable:', err);
 				return null;
 			}
 		},

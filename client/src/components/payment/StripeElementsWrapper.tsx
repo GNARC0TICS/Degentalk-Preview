@@ -1,6 +1,7 @@
 import React from 'react';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
+import { logger } from "@/lib/logger";
 
 // Load the Stripe publishable key from environment variables
 const stripePublicKey = import.meta.env.VITE_STRIPE_PUBLIC_KEY;
@@ -34,15 +35,13 @@ export const StripeElementsWrapper: React.FC<StripeElementsWrapperProps> = ({
 }) => {
 	// Don't render without a client secret
 	if (!clientSecret) {
-		console.error('StripeElementsWrapper: No client secret provided');
+		logger.error('StripeElementsWrapper', 'StripeElementsWrapper: No client secret provided');
 		return null;
 	}
 
 	// Check if we have a Stripe public key
 	if (!stripePublicKey) {
-		console.error(
-			'Missing Stripe public key. Please make sure VITE_STRIPE_PUBLIC_KEY is set in your environment variables.'
-		);
+		logger.error('StripeElementsWrapper', 'Missing Stripe public key. Please make sure VITE_STRIPE_PUBLIC_KEY is set in your environment variables.');
 		return (
 			<div className="p-4 bg-red-900/20 border border-red-900/30 rounded-md text-red-100">
 				<h3 className="text-lg font-medium mb-2">Payment System Error</h3>

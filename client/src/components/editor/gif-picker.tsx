@@ -11,6 +11,7 @@ import {
 	DialogTitle,
 	DialogTrigger
 } from '@/components/ui/dialog';
+import { logger } from "@/lib/logger";
 
 interface GifPickerProps {
 	onSelect?: (gifUrl: string) => void;
@@ -71,7 +72,7 @@ export function GifPicker({
 				const data = await response.json();
 				setGiphyEnabled(data.enabled);
 			} catch (err) {
-				console.error('Failed to check Giphy status:', err);
+				logger.error('GifPicker', 'Failed to check Giphy status:', err);
 				setGiphyEnabled(false);
 			}
 		};
@@ -94,7 +95,7 @@ export function GifPicker({
 			const result = await response.json();
 			setTrendingGifs(result.data || []);
 		} catch (err) {
-			console.error('Error fetching trending GIFs:', err);
+			logger.error('GifPicker', 'Error fetching trending GIFs:', err);
 			setError('Failed to load trending GIFs. Please try again later.');
 		} finally {
 			setLoading(false);
@@ -121,7 +122,7 @@ export function GifPicker({
 			const result = await response.json();
 			setGifs(result.data || []);
 		} catch (err) {
-			console.error('Error searching GIFs:', err);
+			logger.error('GifPicker', 'Error searching GIFs:', err);
 			setError('Failed to search for GIFs. Please try again later.');
 		} finally {
 			setLoading(false);

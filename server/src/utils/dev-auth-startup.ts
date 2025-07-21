@@ -109,7 +109,9 @@ async function loginDefaultUsers(): Promise<TokenCacheEntry[]> {
 			if (payload.exp) {
 				expiresAt = new Date(payload.exp * 1000).toISOString();
 			}
-		} catch {}
+		} catch {
+			// Ignore JWT parsing errors
+		}
 
 		tokens.push({
 			username: user.username,

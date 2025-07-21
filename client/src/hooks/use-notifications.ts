@@ -4,6 +4,7 @@ import { apiRequest } from '@/utils/api-request';
 import { useToast } from '@/hooks/use-toast';
 import type { Notification } from '@/types/notifications';
 import api from '@/core/api';
+import { logger } from "@/lib/logger";
 
 export function useNotifications() {
 	const queryClient = useQueryClient();
@@ -16,7 +17,7 @@ export function useNotifications() {
 			try {
 				return await api.notifications.getNotifications({ pageOffset: 0 });
 			} catch (error) {
-				console.error('Error fetching notifications:', error);
+				logger.error('useNotifications', 'Error fetching notifications:', error);
 				throw error;
 			}
 		},

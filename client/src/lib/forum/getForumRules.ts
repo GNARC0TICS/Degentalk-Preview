@@ -6,12 +6,11 @@ import type { AdminId } from '@shared/types/ids';
  */
 
 import type { MergedRules } from '@/contexts/ForumStructureContext';
+import { logger } from "@/lib/logger";
 
 // This function is deprecated - use ForumStructureContext instead
 export function getForumRules(forumSlug: AdminId): MergedRules | undefined {
-	console.warn(
-		'getForumRules() is deprecated. Use useForumStructure().getForum(slug)?.rules instead'
-	);
+	logger.warn('GetForumRules', 'getForumRules() is deprecated. Use useForumStructure().getForum(slug)?.rules instead');
 	// Return undefined to force migration to context-based approach
 	return undefined;
 }

@@ -2,6 +2,7 @@ import React, { ReactNode, useState, useEffect } from 'react';
 import { ShoutboxProvider } from './shoutbox-context';
 import { MockShoutboxProvider } from './mock-shoutbox-context';
 import { IS_PRODUCTION } from '@/constants/env';
+import { logger } from "@/lib/logger";
 
 interface SafeShoutboxProviderProps {
 	children: ReactNode;
@@ -27,7 +28,7 @@ export function SafeShoutboxProvider({ children }: SafeShoutboxProviderProps) {
 
 		// Error handler for runtime errors
 		const handleError = (error: Error) => {
-			console.error('Error in ShoutboxProvider:', error);
+			logger.error('SafeShoutboxProvider', 'Error in ShoutboxProvider:', error);
 			setHasError(true);
 		};
 
@@ -38,7 +39,7 @@ export function SafeShoutboxProvider({ children }: SafeShoutboxProviderProps) {
 			</ErrorCatcher>
 		);
 	} catch (error) {
-		console.error('Error initializing ShoutboxProvider:', error);
+		logger.error('SafeShoutboxProvider', 'Error initializing ShoutboxProvider:', error);
 		return <MockShoutboxProvider>{children}</MockShoutboxProvider>;
 	}
 }

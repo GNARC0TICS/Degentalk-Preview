@@ -2,6 +2,7 @@ import React, { Component, type ErrorInfo, type ReactNode } from 'react';
 import { AlertTriangle, RefreshCw, Home, Bug } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { logger } from "@/lib/logger";
 
 interface Props {
 	children: ReactNode;
@@ -40,7 +41,7 @@ export class ErrorBoundary extends Component<Props, State> {
 	}
 
 	componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-		console.error('ErrorBoundary caught an error:', error, errorInfo);
+		logger.error('ErrorBoundary', 'ErrorBoundary caught an error:', { data: [error, errorInfo] });
 
 		// Log to external service in production
 		this.logErrorToService(error, errorInfo);
@@ -63,9 +64,9 @@ export class ErrorBoundary extends Component<Props, State> {
 
 		// Log to console in development
 		console.group('🚨 Error Boundary Report');
-		console.error('Error:', error);
-		console.error('Component Stack:', errorInfo.componentStack);
-		console.error('Context:', this.props.context || 'Unknown');
+		logger.error('ErrorBoundary', 'Error caught', { error: error.toString() });
+		logger.error('ErrorBoundary', 'Component stack trace', { componentStack: errorInfo.componentStack });
+		logger.error('ErrorBoundary', 'Error context', { context: this.props.context || 'Unknown' });
 		console.groupEnd();
 	};
 

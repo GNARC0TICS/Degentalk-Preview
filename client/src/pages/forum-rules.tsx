@@ -21,6 +21,7 @@ import { useAuth } from '@/hooks/use-auth';
 import { apiRequest } from '@/utils/queryClient';
 import { LoadingSpinner as Spinner } from '@/components/ui/loader';
 import type { RuleId, UserId, EntityId } from '@shared/types/ids';
+import { logger } from "@/lib/logger";
 
 // Type definitions
 interface ForumRule {
@@ -185,7 +186,7 @@ const ForumRules: React.FC = () => {
 			});
 			setUserAgreements(response.agreements);
 		} catch (error) {
-			console.error('Error submitting rule agreements:', error);
+			logger.error('ForumRules', 'Error submitting rule agreements:', error);
 			toast({
 				title: 'Error',
 				description: 'There was an error submitting your agreements. Please try again.',

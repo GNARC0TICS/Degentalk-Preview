@@ -5,6 +5,7 @@ import { forumMap } from '@/config/forumMap.config';
 import type { Zone } from '@/config/forumMap.config';
 import type { CategoryId, ForumId, GroupId, ParentZoneId, ZoneId } from '@shared/types/ids';
 import { toId, parseId, toParentZoneId } from '@shared/types/index';
+import { logger } from "@/lib/logger";
 
 // ===========================================================
 // ForumStructureContext v2.0  🛠️  (2025-06-16)
@@ -507,15 +508,15 @@ export const ForumStructureProvider = ({ children }: { children: ReactNode }) =>
 			try {
 				const resp = await fetch(FORUM_STRUCTURE_API_PATH);
 				if (!resp.ok) {
-					console.warn('[ForumStructureContext] HTTP error:', resp.status, resp.statusText);
-					console.info('[ForumStructureContext] Using fallback forum structure for development');
+					logger.warn('ForumStructureContext', '[ForumStructureContext] HTTP error:', { data: [resp.status, resp.statusText] });
+					logger.info('ForumStructureContext', '[ForumStructureContext] Using fallback forum structure for development');
 					// Don't throw - let fallback handle it
 					return;
 				}
 				const data = await resp.json();
 				setRaw(data);
 			} catch (e: unknown) {
-				console.info('[ForumStructureContext] API unavailable - using fallback forum structure');
+				logger.info('ForumStructureContext', '[ForumStructureContext] API unavailable - using fallback forum structure');
 				// Don't set network error when we have fallback data
 			} finally {
 				setLoading(false);
@@ -531,11 +532,11 @@ export const ForumStructureProvider = ({ children }: { children: ReactNode }) =>
 				const processed = processApiData(parsed);
 				return { ...processed, isUsingFallback: false, parseError: null };
 			} catch (e) {
-				console.error('[ForumStructureContext] ❌ Structure parsing FAILED:', {
-					error: e,
-					rawData: raw,
-					errorDetails: e instanceof Error ? e.message : 'Unknown error'
-				});
+				logger.error('ForumStructureContext', '[ForumStructureContext] ❌ Structure parsing FAILED:', {
+                					error: e,
+                					rawData: raw,
+                					errorDetails: e instanceof Error ? e.message : 'Unknown error'
+                				});
 
 				// Fallback: some environments may still send an *array* of structures
 				// (mixing zones & forums).  We coerce that into the expected object.
@@ -548,7 +549,7 @@ export const ForumStructureProvider = ({ children }: { children: ReactNode }) =>
 						const processed = processApiData(parsed);
 						return { ...processed, isUsingFallback: false, parseError: null };
 					} catch (inner) {
-						console.error('[ForumStructureContext] ❌ Array coercion FAILED:', inner);
+						logger.error('ForumStructureContext', '[ForumStructureContext] ❌ Array coercion FAILED:', inner);
 					}
 				} else {
 					// Fallback structure conversion failed; will use config fallback below
@@ -556,7 +557,7 @@ export const ForumStructureProvider = ({ children }: { children: ReactNode }) =>
 			}
 		}
 
-		console.info('[ForumStructureContext] Using fallback forum structure');
+		logger.info('ForumStructureContext', '[ForumStructureContext] Using fallback forum structure');
 		const fb = fallbackStructure(forumMap.zones);
 		return {
 			...fb,
@@ -633,11 +634,11 @@ export const useForums = () => {
 // ---------------- Legacy Shim --------------
 export const legacy = {
 	get categories() {
-		console.warn('[DEPRECATION] Use generalZones instead of categories');
+		logger.warn('ForumStructureContext', '[DEPRECATION] Use generalZones instead of categories');
 		return {} as Record<string, unknown>;
 	},
 	getCategory: (slug: string) => {
-		console.warn(`[DEPRECATION] getCategory(${slug}) removed – use getForum()`);
+		logger.warn('ForumStructureContext', `[DEPRECATION] getCategory(${slug}) removed – use getForum()`);
 		return undefined;
 	}
 };

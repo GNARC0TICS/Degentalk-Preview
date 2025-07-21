@@ -42,6 +42,7 @@ import {
 import { ROUTES } from '@/constants/routes';
 
 import type { AdminUser } from '@/types/admin.types';
+import { logger } from "@/lib/logger";
 
 // Form data for user creation/updates
 export interface UserFormData {
@@ -331,7 +332,7 @@ export default function AdminUsersPage() {
 			setEditingUser(null);
 		} catch (error) {
 			// Error handling is done by useCrudMutation
-			console.error('User form submission failed:', error);
+			logger.error('UserManagement', 'User form submission failed:', error);
 		}
 	};
 
@@ -389,7 +390,7 @@ export default function AdminUsersPage() {
 			await banUserMutation.mutateAsync(userId);
 			setUserToBan(null);
 		} catch (error) {
-			console.error('Ban user failed:', error);
+			logger.error('UserManagement', 'Ban user failed:', error);
 		}
 	};
 
@@ -398,7 +399,7 @@ export default function AdminUsersPage() {
 			await unbanUserMutation.mutateAsync(userId);
 			setUserToUnban(null);
 		} catch (error) {
-			console.error('Unban user failed:', error);
+			logger.error('UserManagement', 'Unban user failed:', error);
 		}
 	};
 
@@ -407,7 +408,7 @@ export default function AdminUsersPage() {
 			await deleteUserMutation.mutateAsync(userId);
 			setUserToDelete(null);
 		} catch (error) {
-			console.error('Delete user failed:', error);
+			logger.error('UserManagement', 'Delete user failed:', error);
 		}
 	};
 
@@ -416,7 +417,7 @@ export default function AdminUsersPage() {
 			await changeRoleMutation.mutateAsync({ userId, newRole });
 			setUserToChangeRole(null);
 		} catch (error) {
-			console.error('Change user role failed:', error);
+			logger.error('UserManagement', 'Change user role failed:', error);
 		}
 	};
 

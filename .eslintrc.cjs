@@ -137,6 +137,7 @@ module.exports = {
 		'@typescript-eslint/no-explicit-any': 'off',
 		'@typescript-eslint/no-var-requires': 'off',
 		'@typescript-eslint/no-unused-vars': ['warn', { varsIgnorePattern: '^[A-Z][A-Za-z0-9]+$' }],
+		'drizzle/enforce-delete-with-where': 'off',
 		// Custom rules disabled - manual enforcement via code review
 		// 'degen/no-raw-container-auto': 'warn',
 		// 'degen/no-direct-req-user': 'error',

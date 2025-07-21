@@ -2,6 +2,7 @@ import React from 'react';
 import { apiRequest } from '@/utils/api-request';
 import { useQuery } from '@tanstack/react-query';
 import { useAuth } from './use-auth';
+import { logger } from "@/lib/logger";
 
 /**
  * Hook to check if the current user owns a specific shop item
@@ -20,7 +21,7 @@ export function useShopItemOwnership(itemId: string | null) {
 				const response = await apiRequest('GET', `/api/shop/check-ownership/${itemId}`);
 				return response.json();
 			} catch (err) {
-				console.error('Error checking item ownership:', err);
+				logger.error('useShopOwnership', 'Error checking item ownership:', err);
 				return { owned: false };
 			}
 		},
@@ -52,7 +53,7 @@ export function useUserInventory() {
 				const response = await apiRequest('GET', '/api/shop/my-inventory');
 				return response.json();
 			} catch (err) {
-				console.error('Error fetching user inventory:', err);
+				logger.error('useShopOwnership', 'Error fetching user inventory:', err);
 				return { items: [], groupedItems: {} };
 			}
 		},

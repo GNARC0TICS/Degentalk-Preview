@@ -13,6 +13,7 @@ import type {
 	DepositAddress
 } from '@/features/wallet/services/wallet-api.service';
 import type { UserId } from '@shared/types/ids';
+import { logger } from "@/lib/logger";
 
 export function useWallet() {
 	const queryClient = useQueryClient();
@@ -103,7 +104,7 @@ export function useWallet() {
 					}
 				});
 			} catch (error) {
-				console.error('Error purchasing DGT:', error);
+				logger.error('useWallet', 'Error purchasing DGT:', error);
 				throw error;
 			}
 		},

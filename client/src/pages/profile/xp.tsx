@@ -1,5 +1,5 @@
 import React from 'react';
-import { useRouter } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Activity as XPIcon, TrendingUp, Award, Timer } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -9,12 +9,8 @@ import XpLogView from '@/components/profile/XpLogView';
 import { useUserXP } from '@/hooks/useUserXP';
 
 const ProfileXpPage: React.FC = () => {
-	const [, params] = useRouter();
-	const username = params.username;
-
-	// Fetch user XP info using the new hook
-	// Reverting to destructuring xpData and aliasing to xpInfo
-	const { xpData: xpInfo, isLoading } = useUserXP(username ? username : undefined);
+	const { username } = useParams<{ username: string }>();
+	const { data: xpInfo, isLoading } = useUserXP(username);
 
 	return (
 		<div className="container max-w-5xl mx-auto py-6 px-4">

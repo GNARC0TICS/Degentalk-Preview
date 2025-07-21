@@ -1,5 +1,6 @@
 import { adminModulesV2, ADMIN_PERMISSIONS, AdminModuleV2 } from '../config/admin.config.js';
 import { enrichAdminModules } from './admin-module-transformer';
+import { logger } from "@/lib/logger";
 
 // Simple User interface for admin module registry
 interface User {
@@ -38,7 +39,7 @@ export class AdminModuleV2Registry {
 		this.initialized = true;
 
 		if (this.options.devMode) {
-			console.log('AdminModuleV2Registry', `Initialized with ${this.modules.size} modules from adminModulesV2`);
+			logger.info('AdminModuleRegistry', 'AdminModuleV2Registry', { data: [`Initialized with ${this.modules.size} modules from adminModulesV2`] });
 		}
 	}
 
@@ -48,7 +49,7 @@ export class AdminModuleV2Registry {
 	register(module: AdminModuleV2): void {
 		if (this.modules.has(module.slug)) {
 			if (this.options.devMode) {
-				console.warn(`[AdminModuleV2Registry] Module ${module.slug} already registered, overwriting`);
+				logger.warn('AdminModuleRegistry', `[AdminModuleV2Registry] Module ${module.slug} already registered, overwriting`);
 			}
 		}
 
@@ -61,7 +62,7 @@ export class AdminModuleV2Registry {
 		}
 
 		if (this.options.devMode) {
-			console.log('AdminModuleV2Registry', `Registered module: ${module.slug}`);
+			logger.info('AdminModuleRegistry', 'AdminModuleV2Registry', { data: [`Registered module: ${module.slug}`] });
 		}
 	}
 
@@ -79,7 +80,7 @@ export class AdminModuleV2Registry {
 		const existed = this.modules.delete(moduleSlug);
 
 		if (existed && this.options.devMode) {
-			console.log('AdminModuleV2Registry', `Unregistered module: ${moduleSlug}`);
+			logger.info('AdminModuleRegistry', 'AdminModuleV2Registry', { data: [`Unregistered module: ${moduleSlug}`] });
 		}
 
 		return existed;

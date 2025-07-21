@@ -1,6 +1,7 @@
 import { ReactRenderer } from '@tiptap/react';
 import tippy, { type Instance as TippyInstance } from 'tippy.js';
 import { apiRequest } from '@/utils/queryClient';
+import { logger } from "@/lib/logger";
 
 // User mention item interface
 interface MentionItem {
@@ -197,7 +198,7 @@ const fetchUsers = async (query: string) => {
 			})) || []
 		);
 	} catch (error) {
-		console.error('Error fetching users for mention:', error);
+		logger.error('Suggestion', 'Error fetching users for mention:', error);
 		return []; // Return empty array on error
 	}
 };

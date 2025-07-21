@@ -11,6 +11,7 @@ import {
 	DialogTitle,
 	DialogTrigger
 } from '@/components/ui/dialog';
+import { logger } from "@/lib/logger";
 
 interface GifPickerProps {
 	onSelect?: (gifUrl: string) => void;
@@ -74,7 +75,7 @@ export function EnhancedGifPicker({
 				const data = await response.json();
 				setGiphyEnabled(data.enabled);
 			} catch (err) {
-				console.error('Failed to check Giphy status:', err);
+				logger.error('EnhancedGifPicker', 'Failed to check Giphy status:', err);
 				setGiphyEnabled(false);
 				setError('Failed to check GIF service status. You can still enter a direct GIF URL.');
 			}
@@ -101,7 +102,7 @@ export function EnhancedGifPicker({
 			const result = await response.json();
 			setTrendingGifs(result.data || []);
 		} catch (err) {
-			console.error('Error fetching trending GIFs:', err);
+			logger.error('EnhancedGifPicker', 'Error fetching trending GIFs:', err);
 			setError('Failed to load trending GIFs. You can still enter a direct GIF URL.');
 		} finally {
 			setLoading(false);
@@ -133,7 +134,7 @@ export function EnhancedGifPicker({
 			const result = await response.json();
 			setGifs(result.data || []);
 		} catch (err) {
-			console.error('Error searching GIFs:', err);
+			logger.error('EnhancedGifPicker', 'Error searching GIFs:', err);
 			setSearchError(
 				'Failed to search for GIFs. Please try again later or enter a direct GIF URL.'
 			);

@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/hooks/use-auth';
+import { logger } from "@/lib/logger";
 
 interface EngagementEvent {
 	type: 'view' | 'tab_switch' | 'action' | 'scroll' | 'time_spent';
@@ -244,6 +245,6 @@ async function sendEngagementAnalytics(
 			timestamp: Date.now()
 		};
 	} catch (error) {
-		console.error('Failed to send engagement analytics:', error);
+		logger.error('UseProfileEngagement', 'Failed to send engagement analytics:', error);
 	}
 }

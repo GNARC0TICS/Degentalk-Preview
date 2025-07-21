@@ -68,6 +68,7 @@ import { Badge } from '@/components/ui/badge';
 import { useLocation } from 'react-router-dom'; // Fixed import for useLocation
 import { AdminPageShell } from '@/features/admin/layout/layout/AdminPageShell';
 import { apiRequest } from '@/utils/api-request';
+import { logger } from "@/lib/logger";
 
 const categorySchema = z.object({
 	name: z
@@ -139,7 +140,7 @@ export default function AdminCategoriesPage() {
 			form.reset();
 		},
 		onError: (error) => {
-			console.error(`Error: Failed to create category: ${error.message}`);
+			logger.error('ShopCategories', `Error: Failed to create category: ${error.message}`);
 		}
 	});
 
@@ -154,7 +155,7 @@ export default function AdminCategoriesPage() {
 			setSelectedCategory(null);
 		},
 		onError: (error) => {
-			console.error(`Error: Failed to update category: ${error.message}`);
+			logger.error('ShopCategories', `Error: Failed to update category: ${error.message}`);
 		}
 	});
 
@@ -168,7 +169,7 @@ export default function AdminCategoriesPage() {
 			setSelectedCategory(null);
 		},
 		onError: (error) => {
-			console.error(`Error: Failed to delete category: ${error.message}`);
+			logger.error('ShopCategories', `Error: Failed to delete category: ${error.message}`);
 		}
 	});
 
@@ -184,7 +185,7 @@ export default function AdminCategoriesPage() {
 			queryClient.invalidateQueries({ queryKey: ['/admin/forum/categories'] });
 		},
 		onError: (error) => {
-			console.error(`Error: Failed to reorder categories: ${error.message}`);
+			logger.error('ShopCategories', `Error: Failed to reorder categories: ${error.message}`);
 		}
 	});
 

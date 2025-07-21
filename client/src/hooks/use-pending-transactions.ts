@@ -3,6 +3,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiRequest } from '@/utils/api-request';
 import { useWalletOperations } from '@/contexts/wallet-context';
 import type { Transaction } from '@/types/wallet';
+import { logger } from "@/lib/logger";
 
 // Extend the Transaction interface with pending-specific properties
 export interface PendingTransaction extends Omit<Transaction, 'status'> {
@@ -37,7 +38,7 @@ export function usePendingTransactions() {
 					method: 'GET'
 				});
 			} catch (error) {
-				console.error('Error fetching pending transactions:', error);
+				logger.error('usePendingTransactions', 'Error fetching pending transactions:', error);
 				throw error;
 			}
 		},
@@ -78,7 +79,7 @@ export function usePendingTransactions() {
 
 				return result;
 			} catch (error) {
-				console.error(`Error checking transaction status for ${transactionId}:`, error);
+				logger.error('usePendingTransactions', `Error checking transaction status for ${transactionId}:`, error);
 				throw error;
 			}
 		},

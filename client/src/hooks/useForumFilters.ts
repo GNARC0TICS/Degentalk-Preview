@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import type { ThreadFiltersState, ThreadSortOption } from '@/components/forum/ThreadFilters';
 import type { TagId } from '@shared/types/ids';
 import type { PrefixId } from '@/types/ids';
+import { logger } from "@/lib/logger";
 
 interface UseForumFiltersOptions {
 	defaultSort?: ThreadSortOption;
@@ -68,7 +69,7 @@ export function useForumFilters({
 					return filters;
 				}
 			} catch (error) {
-				console.error('Failed to parse saved filters:', error);
+				logger.error('UseForumFilters', 'Failed to parse saved filters:', error);
 			}
 		}
 

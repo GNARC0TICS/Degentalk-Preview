@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useRef, useState, useCallback } from 'react';
 import { useAuth } from './use-auth';
 import { toast } from 'sonner';
+import { logger } from "@/lib/logger";
 
 interface WebSocketContextType {
   isConnected: boolean;
@@ -41,7 +42,7 @@ export function WebSocketProvider({ children }: WebSocketProviderProps) {
       wsRef.current = ws;
 
       ws.onopen = () => {
-        console.log('WebSocket connected');
+        logger.info('UseWebSocket', 'WebSocket connected');
         setIsConnected(true);
         reconnectAttemptsRef.current = 0;
         
@@ -61,16 +62,16 @@ export function WebSocketProvider({ children }: WebSocketProviderProps) {
             handlers.forEach(handler => handler(data));
           }
         } catch (error) {
-          console.error('WebSocket message parsing error:', error);
+          logger.error('UseWebSocket', 'WebSocket message parsing error:', error);
         }
       };
 
       ws.onerror = (error) => {
-        console.error('WebSocket error:', error);
+        logger.error('UseWebSocket', 'WebSocket error:', error);
       };
 
       ws.onclose = (event) => {
-        console.log('WebSocket disconnected', event.code, event.reason);
+        logger.info('UseWebSocket', 'WebSocket disconnected', { data: [event.code, event.reason] });
         setIsConnected(false);
         wsRef.current = null;
 
@@ -101,7 +102,7 @@ export function WebSocketProvider({ children }: WebSocketProviderProps) {
       });
 
     } catch (error) {
-      console.error('WebSocket connection error:', error);
+      logger.error('UseWebSocket', 'WebSocket connection error:', error);
     }
   }, [user, token]);
 
@@ -157,7 +158,7 @@ export function WebSocketProvider({ children }: WebSocketProviderProps) {
         timestamp: new Date().toISOString(),
       }));
     } else {
-      console.warn('WebSocket not connected, cannot send message');
+      logger.warn('UseWebSocket', 'WebSocket not connected, cannot send message');
     }
   }, []);
 

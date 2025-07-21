@@ -28,6 +28,7 @@ import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, ResponsiveContainer }
 import { useCacheOperation } from '@/features/admin/hooks/useSystemAnalytics';
 import type { CacheStats } from '@/features/admin/api/system-analytics.api';
 import { toast } from 'sonner';
+import { logger } from "@/lib/logger";
 
 interface CacheAnalyticsCardProps {
 	cache: CacheStats;
@@ -87,7 +88,7 @@ export function CacheAnalyticsCard({ cache }: CacheAnalyticsCardProps) {
 				...(category && { category })
 			});
 		} catch (error) {
-			console.error('Cache operation failed:', error);
+			logger.error('CacheAnalyticsCard', 'Cache operation failed:', error);
 		} finally {
 			setSelectedOperation(null);
 		}

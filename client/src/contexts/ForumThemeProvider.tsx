@@ -39,6 +39,7 @@ const UI_THEMES_ENDPOINT = '/api/ui/themes';
 
 // Use centralized CSS variable utilities
 import { setZoneAccentVariables } from '@/styles/cssVariables';
+import { logger } from "@/lib/logger";
 
 // Local alias for icon component type
 type LucideIcon = ComponentType<LucideProps>;
@@ -189,7 +190,7 @@ export const ForumThemeProvider: React.FC<{
 					}));
 				}
 			} catch (error) {
-				console.error('Failed to fetch remote theme configurations:', error);
+				logger.error('ForumThemeProvider', 'Failed to fetch remote theme configurations:', error);
 			}
 		};
 

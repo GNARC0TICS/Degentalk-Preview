@@ -1,5 +1,6 @@
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
+import { logger } from "@/lib/logger";
 
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
@@ -118,7 +119,7 @@ export function formatDate(dateString: string): string {
 			day: 'numeric'
 		}).format(date);
 	} catch (e) {
-		console.error('Error formatting date:', dateString, e);
+		logger.error('Utils', 'Error formatting date:', { data: [dateString, e] });
 		return 'Invalid Date';
 	}
 }

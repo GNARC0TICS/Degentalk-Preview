@@ -1,5 +1,6 @@
 import { IS_PRODUCTION } from '@/constants/env';
 import { WEBSOCKET_DISABLED } from '@/constants/websocket-disabled';
+import { logger } from "@/lib/logger";
 
 /**
  * A type for WebSocket messages
@@ -128,7 +129,7 @@ export function safeSendMessage(socket: WebSocket | null, message: WebSocketMess
 		socket.send(JSON.stringify(message));
 		return true;
 	} catch (error) {
-		console.error('Error sending WebSocket message:', error);
+		logger.error('SafeWebSocket', 'Error sending WebSocket message:', error);
 		return false;
 	}
 }
@@ -150,6 +151,6 @@ export function safeCloseWebSocket(socket: WebSocket | null, code?: number, reas
 			socket.close(code, reason);
 		}
 	} catch (error) {
-		console.error('Error closing WebSocket:', error);
+		logger.error('SafeWebSocket', 'Error closing WebSocket:', error);
 	}
 }

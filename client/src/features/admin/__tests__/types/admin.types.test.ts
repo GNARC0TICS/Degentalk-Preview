@@ -1,18 +1,19 @@
 import { describe, it, expect } from 'vitest';
 import type {
-	User,
+	AdminUser,
 	UserFormData,
 	EconomyConfig,
 	AdminApiResponse,
 	BulkOperationRequest,
 	Achievement
 } from '@/types/admin.types';
+import { createUserId } from '@shared';
 
 describe('Admin Types', () => {
 	describe('User interface', () => {
 		it('should enforce required fields', () => {
-			const validUser: User = {
-				id: 'user123',
+			const validUser: AdminUser = {
+				id: createUserId('user123'),
 				username: 'testuser',
 				email: 'test@example.com',
 				role: 'user',
@@ -21,13 +22,13 @@ describe('Admin Types', () => {
 				updatedAt: '2024-01-01T00:00:00Z'
 			};
 
-			expect(validUser.id).toBe('user123');
+			expect(validUser.id).toBe(createUserId('user123'));
 			expect(validUser.status).toBe('active');
 		});
 
 		it('should allow optional fields', () => {
-			const userWithOptionals: User = {
-				id: 'user123',
+			const userWithOptionals: AdminUser = {
+				id: createUserId('user123'),
 				username: 'testuser',
 				email: 'test@example.com',
 				role: 'admin',
@@ -97,11 +98,11 @@ describe('Admin Types', () => {
 
 	describe('AdminApiResponse wrapper', () => {
 		it('should wrap successful responses correctly', () => {
-			const response: AdminApiResponse<User[]> = {
+			const response: AdminApiResponse<AdminUser[]> = {
 				success: true,
 				data: [
 					{
-						id: 'user1',
+						id: createUserId('user1'),
 						username: 'test1',
 						email: 'test1@example.com',
 						role: 'user',

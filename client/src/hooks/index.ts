@@ -11,7 +11,7 @@ export { useWebSocketStatus } from './use-websocket-status';
 
 // Feature-specific hooks
 export { useRainNotifications } from './use-rain-notifications';
-export { useDgtPurchase } from './use-dgt-purchase';
+export { useDgtPurchase } from './useDgtPurchase'; // Fixed casing
 
 // Media hooks
 export { useImageUpload } from './use-image-upload';

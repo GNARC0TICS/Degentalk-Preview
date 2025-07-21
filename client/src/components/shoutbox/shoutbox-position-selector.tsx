@@ -9,6 +9,7 @@ import type { ShoutboxPosition } from '@/contexts/shoutbox-context';
 import { useToast } from '@/hooks/use-toast';
 import { useMobileDetector } from '@/hooks/use-media-query';
 import { useLayoutStore, type SlotId } from '@/stores/useLayoutStore';
+import { logger } from "@/lib/logger";
 
 // Desktop position options
 const desktopPositionOptions: { value: ShoutboxPosition; label: string; description: string }[] = [
@@ -96,7 +97,7 @@ export function ShoutboxPositionSelector({ instanceId }: ShoutboxPositionSelecto
 			});
 			setOpen(false);
 		} catch (error) {
-			console.error('Error updating position:', error);
+			logger.error('ShoutboxPositionSelector', 'Error updating position:', error);
 			toast({
 				title: 'Error',
 				description: 'Failed to update shoutbox position',

@@ -1,6 +1,6 @@
 import { ReactNode, useState, useEffect } from 'react';
 import type { LucideProps } from 'lucide-react';
-import { useAnimatedNumber } from '@/utils/utils/animateNumber';
+import { useAnimatedNumber } from '@/utils/animateNumber';
 import type { ComponentType } from 'react';
 
 // Local alias to avoid value import
@@ -41,7 +41,7 @@ export function StatChip({
 
 	const [prevValue, setPrevValue] = useState(value);
 
-	const animatedValue = useAnimatedNumber(value, { immediate: prevValue === 0 });
+	const animatedValue = useAnimatedNumber(value, { duration: prevValue === 0 ? 0 : 1000 });
 	const displayValue = animate ? animatedValue : value;
 
 	useEffect(() => {

@@ -67,6 +67,7 @@ import { AdminPageShell } from '@/features/admin/layout/layout/AdminPageShell';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { apiRequest } from '@/utils/queryClient';
 import type { ContentId, UserId } from '@shared/types/ids';
+import { logger } from "@/lib/logger";
 
 // Types for reports
 interface ReportedContent {
@@ -327,7 +328,7 @@ export default function ReportsPage() {
 				});
 			} else {
 				// For other content types, we need to fetch the author's user ID
-				console.error('Cannot ban user: Need to implement fetching user ID from content');
+				logger.error('Index', 'Cannot ban user: Need to implement fetching user ID from content');
 			}
 		}
 	};

@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiRequest } from '@/utils/queryClient';
 import { useMobileDetector } from '@/hooks/use-media-query';
+import { logger } from "@/lib/logger";
 
 // Define ShoutboxPosition type here to avoid import issues
 export type ShoutboxPosition =
@@ -76,9 +77,7 @@ export function ShoutboxProvider({ children }: ShoutboxProviderProps) {
 
 				// If we get a 401, just use local storage + default
 				if (response.status === 401) {
-					console.warn(
-						'ShoutboxContext: Authentication required (401), falling back to local storage.'
-					);
+					logger.warn('ShoutboxContext', 'ShoutboxContext: Authentication required (401), falling back to local storage.');
 					const savedPosition = localStorage.getItem('shoutboxPosition');
 					return {
 						shoutboxPosition:
@@ -89,19 +88,14 @@ export function ShoutboxProvider({ children }: ShoutboxProviderProps) {
 
 				if (!response.ok) {
 					const errorText = await response.text();
-					console.error(
-						'ShoutboxContext: Response not OK. Status:',
-						response.status,
-						'Body:',
-						errorText
-					);
+					logger.error('ShoutboxContext', 'ShoutboxContext: Response not OK. Status:', { data: [response.status, 'Body:', errorText] });
 					throw new Error(`Failed to fetch settings: ${response.status} ${response.statusText}`);
 				}
 
 				const responseData = await response.json();
 				return { ...responseData, isAuthenticated: true };
 			} catch (error) {
-				console.error('ShoutboxContext: Error during settings fetch:', error);
+				logger.error('ShoutboxContext', 'ShoutboxContext: Error during settings fetch:', error);
 				// Fall back to default position if fetch fails
 				const savedPosition = localStorage.getItem('shoutboxPosition');
 				return {
@@ -174,13 +168,13 @@ export function ShoutboxProvider({ children }: ShoutboxProviderProps) {
 			// Send update to server only if authenticated
 			await updatePositionMutation.mutateAsync(newPosition);
 		} catch (error) {
-			console.error('Error updating shoutbox position:', error);
+			logger.error('ShoutboxContext', 'Error updating shoutbox position:', error);
 
 			// Revert to original position if update fails
 			setPosition(prevPosition);
 
 			// Log error
-			console.error('Failed to save position preference');
+			logger.error('ShoutboxContext', 'Failed to save position preference');
 		}
 	};
 

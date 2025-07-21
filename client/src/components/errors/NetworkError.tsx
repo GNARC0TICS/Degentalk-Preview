@@ -3,6 +3,7 @@ import { WifiOff, RefreshCw, AlertCircle, Wifi } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { logger } from "@/lib/logger";
 
 interface NetworkErrorProps {
 	onRetry: () => void;
@@ -74,7 +75,7 @@ export function NetworkError({
 		try {
 			await onRetry();
 		} catch (err) {
-			console.error('Retry failed:', err);
+			logger.error('NetworkError', 'Retry failed:', err);
 		} finally {
 			setIsRetrying(false);
 		}

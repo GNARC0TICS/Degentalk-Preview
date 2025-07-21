@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiRequest } from '@/utils/api-request';
 import { useToast } from '@/hooks/use-toast';
 import type { PreferenceSection } from '@/types/preferences.types';
+import { logger } from "@/lib/logger";
 
 /**
  * Hook to update user preferences
@@ -35,7 +36,7 @@ export function useUpdateUserSettings(section: PreferenceSection) {
 			});
 		},
 		onError: (error: any) => {
-			console.error(`Failed to update ${section} preferences:`, error);
+			logger.error('UseUpdateUserSettings', `Failed to update ${section} preferences:`, error);
 			// Show error toast
 			toast({
 				title: `Failed to update ${section} preferences`,
@@ -71,7 +72,7 @@ export function useUpdatePassword() {
 			});
 		},
 		onError: (error: any) => {
-			console.error('Failed to update password:', error);
+			logger.error('UseUpdateUserSettings', 'Failed to update password:', error);
 			// Show error toast
 			toast({
 				title: 'Failed to update password',

@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useReducer, useEffect, ReactNode } from 'react';
 import { z } from 'zod';
+import { logger } from "@/lib/logger";
 
 // Schema definitions
 const ResponsiveSpacingSchema = z.object({
@@ -214,7 +215,7 @@ export const UIConfigProvider: React.FC<{ children: ReactNode }> = ({ children }
 					dispatch({ type: 'LOAD_CONFIG', payload: validated });
 				}
 			} catch (error) {
-				console.error('Failed to load UI config:', error);
+				logger.error('UIConfigContext', 'Failed to load UI config:', error);
 				dispatch({ type: 'SET_ERROR', payload: error as Error });
 			}
 		};

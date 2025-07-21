@@ -3,6 +3,7 @@ import type { LucideIcon } from 'lucide-react';
 import Player from 'react-lottie-player';
 import { iconMap, type IconKey } from './iconMap.config';
 import type { Theme } from './types';
+import { logger } from "@/lib/logger";
 
 export interface IconRendererProps extends React.SVGProps<SVGSVGElement> {
 	icon: IconKey;
@@ -49,7 +50,7 @@ export const IconRenderer: React.FC<IconRendererProps> = ({
 	const config = iconMap[icon];
 
 	if (!config) {
-		console.warn(`IconRenderer: icon "${icon}" not found in iconMap`);
+		logger.warn('IconRenderer', `IconRenderer: icon "${icon}" not found in iconMap`);
 		return null;
 	}
 

@@ -4,6 +4,7 @@ import { apiRequest } from '@/utils/api-request';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import { toast } from 'sonner';
+import { logger } from "@/lib/logger";
 
 interface Package {
 	id: string;
@@ -49,7 +50,7 @@ export function useDgtPurchase() {
 
 			return data;
 		} catch (error) {
-			console.error('Error fetching DGT packages:', error);
+			logger.error('UseDgtPurchase', 'Error fetching DGT packages:', error);
 			toast({
 				variant: 'destructive',
 				title: 'Error',
@@ -97,7 +98,7 @@ export function useDgtPurchase() {
 			});
 		},
 		onError: (error, variables) => {
-			console.error('Failed to create payment intent:', error);
+			logger.error('UseDgtPurchase', 'Failed to create payment intent:', error);
 
 			toast({
 				variant: 'destructive',
@@ -133,7 +134,7 @@ export function useDgtPurchase() {
 			}
 		},
 		onError: (error) => {
-			console.error('Failed to process dev purchase:', error);
+			logger.error('UseDgtPurchase', 'Failed to process dev purchase:', error);
 
 			toast({
 				variant: 'destructive',
@@ -162,7 +163,7 @@ export function useDgtPurchase() {
 
 			return { success: true };
 		} catch (error) {
-			console.error('Payment confirmation error:', error);
+			logger.error('UseDgtPurchase', 'Payment confirmation error:', error);
 
 			toast({
 				variant: 'destructive',

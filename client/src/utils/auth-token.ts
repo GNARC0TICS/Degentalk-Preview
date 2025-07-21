@@ -1,3 +1,5 @@
+import { logger } from "@/lib/logger";
+
 /**
  * JWT Token Management Utilities
  * Handles storage and retrieval of authentication tokens
@@ -67,7 +69,7 @@ export function decodeToken(token?: string): any | null {
 		);
 		return JSON.parse(jsonPayload);
 	} catch (error) {
-		console.error('Failed to decode token:', error);
+		logger.error('AuthToken', 'Failed to decode token:', error);
 		return null;
 	}
 }
