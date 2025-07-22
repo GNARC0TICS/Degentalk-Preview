@@ -4,8 +4,8 @@
  */
 
 import React from 'react';
-import * as Sentry from '@sentry/react';
-import { BrowserTracing } from '@sentry/tracing';
+// import * as Sentry from '@sentry/react';
+// import { BrowserTracing } from '@sentry/tracing';
 import type { User } from '@shared/types/entities';
 
 // Environment configuration
@@ -22,6 +22,8 @@ export function initSentry() {
     return;
   }
 
+  // Temporarily disabled - Sentry packages not installed
+  /*
   Sentry.init({
     dsn: SENTRY_DSN,
     environment: ENVIRONMENT,
@@ -133,6 +135,7 @@ export function initSentry() {
       return breadcrumb;
     },
   });
+  */
 }
 
 /**
@@ -157,39 +160,24 @@ function isThirdPartyError(exception: any): boolean {
  * Set user context for error tracking
  */
 export function setSentryUser(user: User | null) {
-  if (!user) {
-    Sentry.setUser(null);
-    return;
-  }
-  
-  Sentry.setUser({
-    id: user.id,
-    username: user.username,
-    email: user.email,
-    // Add custom user properties
-    role: user.role,
-    level: user.level,
-    verified: user.isEmailVerified,
-  });
+  // Temporarily disabled - Sentry packages not installed
+  console.log('[Sentry] setSentryUser called for:', user?.username || 'null');
 }
 
 /**
  * Add custom context to errors
  */
 export function setSentryContext(key: string, context: Record<string, any>) {
-  Sentry.setContext(key, context);
+  // Temporarily disabled - Sentry packages not installed
+  console.log('[Sentry] setSentryContext called for:', key, context);
 }
 
 /**
  * Track custom events
  */
 export function trackEvent(name: string, data?: Record<string, any>) {
-  Sentry.addBreadcrumb({
-    message: name,
-    category: 'custom',
-    level: 'info',
-    data,
-  });
+  // Temporarily disabled - Sentry packages not installed
+  console.log('[Sentry] trackEvent called for:', name, data);
 }
 
 /**
@@ -198,21 +186,14 @@ export function trackEvent(name: string, data?: Record<string, any>) {
 export function captureException(
   error: Error,
   context?: {
-    level?: Sentry.SeverityLevel;
+    level?: string;
     tags?: Record<string, string>;
     extra?: Record<string, any>;
     user?: User;
   }
 ) {
-  if (context?.user) {
-    setSentryUser(context.user);
-  }
-  
-  Sentry.captureException(error, {
-    level: context?.level || 'error',
-    tags: context?.tags,
-    extra: context?.extra,
-  });
+  // Temporarily disabled - Sentry packages not installed
+  console.error('[Sentry] captureException called for:', error.message, context);
 }
 
 /**
@@ -220,20 +201,23 @@ export function captureException(
  */
 export function captureMessage(
   message: string,
-  level: Sentry.SeverityLevel = 'info',
+  level: string = 'info',
   context?: Record<string, any>
 ) {
-  Sentry.captureMessage(message, {
-    level,
-    extra: context,
-  });
+  // Temporarily disabled - Sentry packages not installed
+  console.log('[Sentry] captureMessage called:', message, level, context);
 }
 
 /**
  * Performance monitoring transaction
  */
 export function startTransaction(name: string, op: string = 'navigation') {
-  return Sentry.startTransaction({ name, op });
+  // Temporarily disabled - Sentry packages not installed
+  console.log('[Sentry] startTransaction called:', name, op);
+  return {
+    setStatus: (status: string) => console.log('[Sentry] Transaction status:', status),
+    finish: () => console.log('[Sentry] Transaction finished')
+  };
 }
 
 /**
@@ -260,7 +244,10 @@ export async function profileFunction<T>(
 /**
  * Create error boundary fallback component with Sentry
  */
-export const SentryErrorBoundary = Sentry.ErrorBoundary;
+export const SentryErrorBoundary = ({ children }: { children: React.ReactNode }) => {
+  // Temporarily disabled - Sentry packages not installed
+  return React.createElement(React.Fragment, null, children);
+};
 
 /**
  * HOC for route-based error boundaries
@@ -298,8 +285,6 @@ export function withSentryRouting<P extends object>(
     );
   };
 
-  return Sentry.withErrorBoundary(Component, {
-    fallback: ErrorFallback,
-    showDialog: ENVIRONMENT !== 'production',
-  });
+  // Temporarily disabled - Sentry packages not installed
+  return Component;
 }

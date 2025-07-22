@@ -9,6 +9,7 @@
 		"./types/ids": "./types/ids.ts",
 		"./types/index": "./types/index.ts",
 		"./types/entities": "./types/entities/index.ts",
+		"./types/user": "./types/user.types.ts",
 		"./config": "./config/index.ts",
 		"./config/zoneThemes.config": "./config/zoneThemes.config.ts",
 		"./validators": "./validators/index.ts",
@@ -18,7 +19,8 @@
 		"./lib": "./lib/index.ts",
 		"./paths": "./paths.config.ts",
 		"./wallet": "./wallet.config.ts",
-		"./utils/id": "./utils/id.ts"
+		"./utils/id": "./utils/id.ts",
+		"./utils/id-conversions": "./utils/id-conversions.ts"
 	},
 	"scripts": {
 		"build": "tsc -b",

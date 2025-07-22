@@ -10,7 +10,7 @@
  */
 
 import { apiRequest } from '@/utils/api-request';
-import type { UserId, AchievementId, MissionId } from '@shared/types/ids';
+import type { UserId, AchievementId, MissionId, TitleId, BadgeId } from '@shared/types/ids';
 
 // Types for API responses
 export interface LevelInfo {
@@ -27,8 +27,8 @@ export interface LevelInfo {
 	rewards?:
 		| {
 				dgt?: number | undefined;
-				titleId?: AchievementId | undefined;
-				badgeId?: AchievementId | undefined;
+				titleId?: TitleId | undefined;
+				badgeId?: BadgeId | undefined;
 		  }
 		| undefined;
 }

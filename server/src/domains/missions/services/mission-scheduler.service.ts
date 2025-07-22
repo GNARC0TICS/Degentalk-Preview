@@ -8,6 +8,7 @@
 import { CronJob } from 'cron';
 import { db } from '@core/db';
 import { logger } from '@core/logger';
+import { createServiceReporter } from '@server-lib/report-error';
 import type { UserId, MissionId } from '@shared/types/ids';
 import {
   missionTemplates,
@@ -31,6 +32,8 @@ import {
 } from '../config/mission-templates.config';
 import { Redis } from '@core/redis';
 import { WebSocketService } from '@core/websocket.service';
+
+const reportError = createServiceReporter('MissionSchedulerService');
 
 interface UserMissionPreferences {
   favoriteCategories: MissionCategory[];

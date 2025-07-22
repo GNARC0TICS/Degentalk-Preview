@@ -1,7 +1,7 @@
 import React from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { useForumStructure } from '@/contexts/ForumStructureContext';
-import type { MergedForum } from '@/contexts/ForumStructureContext';
+import { useForumStructure } from '@/features/forum/contexts/ForumStructureContext';
+import type { MergedForum } from '@/features/forum/contexts/ForumStructureContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';

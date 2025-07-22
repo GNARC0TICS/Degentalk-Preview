@@ -2,6 +2,9 @@ node_modules
 .tscache/
 build/
 dist/
+
+# Tutorial files (generated documentation)
+CLAUDE_USAGE_MONITOR_TUTORIAL.md
 # Environment files (NEVER commit secrets)
 .env
 .env.local

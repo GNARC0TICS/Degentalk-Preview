@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { forumApi } from '@/features/forum/services/forumApi';
-import { useForumStructure } from '@/contexts/ForumStructureContext';
-import type { MergedZone } from '@/contexts/ForumStructureContext'; // Use MergedZone as type-only import
+import { useForumStructure } from '@/features/forum/contexts/ForumStructureContext';
+import type { MergedZone } from '@/features/forum/contexts/ForumStructureContext'; // Use MergedZone as type-only import
 import type { CanonicalThread, CanonicalPost } from '@/types/canonical.types';
 
 interface UseThreadZoneParams {

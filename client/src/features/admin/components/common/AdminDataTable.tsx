@@ -2,12 +2,18 @@ import React from 'react';
 import { EntityTable } from '@/features/admin/layout/layout/EntityTable';
 
 /**
+ * Column definitions type for AdminDataTable
+ * Extracts the columns type from EntityTable for cleaner usage
+ */
+export type ColumnDefs<T extends { id: string }> = Parameters<typeof EntityTable<T>>[0]['columns'];
+
+/**
  * Unified AdminDataTable – thin wrapper around existing EntityTable so we can
  * progressively migrate all pages without rewriting logic immediately.
  * Provides the same API surface but lives in a central location to stop duplication.
  */
 export interface AdminDataTableProps<T extends { id: string }> {
-	columns: Parameters<typeof EntityTable<T>>[0]['columns'];
+	columns: ColumnDefs<T>;
 	data: T[];
 	isLoading: boolean;
 	isError?: boolean | undefined;

@@ -12,6 +12,8 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { gamificationApi } from '@/features/gamification/services/gamification-api.service';
 import { useAuth } from '@/hooks/use-auth';
 import { useToast } from '@/hooks/use-toast';
+import type { MissionId } from '@shared/types/ids';
+import { toId } from '@shared/types/index';
 
 export function useGamification() {
 	const { user } = useAuth();
@@ -61,7 +63,7 @@ export function useGamification() {
 
 	// Claim mission reward mutation
 	const claimMissionReward = useMutation({
-		mutationFn: (missionId: string) => gamificationApi.claimMissionReward(missionId),
+		mutationFn: (missionId: string) => gamificationApi.claimMissionReward(toId<'MissionId'>(missionId)),
 		onSuccess: (data) => {
 			// Invalidate relevant queries
 			queryClient.invalidateQueries({ queryKey: ['/api/gamification/missions'] });
@@ -107,13 +109,7 @@ export function useGamification() {
 			data.data.awarded.forEach((achievement) => {
 				toast({
 					title: '🏆 Achievement Unlocked!',
-					description: (
-						<div className="flex flex-col gap-1">
-							<span className="font-semibold">{achievement.name}</span>
-							<span className="text-sm opacity-80">{achievement.description}</span>
-							<span className="text-xs text-amber-400">+{achievement.rewardXp} XP</span>
-						</div>
-					),
+					description: `${achievement.name} - ${achievement.description} (+${achievement.rewardXp} XP)`,
 					duration: 7000
 				});
 			});

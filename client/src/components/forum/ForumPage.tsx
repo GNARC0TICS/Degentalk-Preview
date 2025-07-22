@@ -3,8 +3,8 @@ import { useParams } from 'react-router-dom';
 import { Filter } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
-import { getCreateThreadUrl } from '@/utils/forum-urls';
-import { useForumStructure } from '@/contexts/ForumStructureContext';
+import { getCreateThreadUrl } from '@/utils/forum';
+import { useForumStructure } from '@/features/forum/contexts/ForumStructureContext';
 import { useForumFilters } from '@/hooks/useForumFilters';
 import { Wide } from '@/layout/primitives';
 import { ThreadFilters } from '@/components/forum/ThreadFilters';
@@ -12,7 +12,7 @@ import { ForumBreadcrumbs, createForumBreadcrumbs } from '@/components/navigatio
 import ThreadList from '@/features/forum/components/ThreadList';
 import { DynamicSidebar } from '@/components/forum/sidebar';
 import { SiteFooter } from '@/components/footer';
-import { ForumHeader } from '@/components/forum/ForumHeader';
+import { ForumHeader } from '@/features/forum/components/ForumHeader';
 import { MyBBThreadList } from '@/components/forum/MyBBThreadList';
 import type { ForumId, StructureId, ZoneId, UserId, ThreadId } from '@shared/types/ids';
 import { toUserId, toThreadId, toStructureId, toZoneId, toForumId } from '@shared/utils/id';

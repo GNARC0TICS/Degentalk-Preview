@@ -10,12 +10,12 @@ import {
 	ChevronDown as DefaultChevronDown,
 	MessageCircle
 } from 'lucide-react';
-import { useForumStructure } from '@/contexts/ForumStructureContext';
+import { useForumStructure } from '@/features/forum/contexts/ForumStructureContext';
 import { Badge } from '@/components/ui/badge';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/utils/utils';
 import { buildNavigationTree, type NavNode } from '@/navigation/forumNav';
-import { useForumTheme } from '@/contexts/ForumThemeProvider'; // Import the theme hook
+import { useForumTheme } from '@/features/forum/contexts/ForumThemeProvider'; // Import the theme hook
 
 interface HierarchicalZoneNavProps {
 	className?: string;

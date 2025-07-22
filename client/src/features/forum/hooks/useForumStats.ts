@@ -52,7 +52,7 @@ export const useHotThreads = (params?: { limit?: number; structureId?: Structure
 				params: {
 					sort: 'hot',
 					limit,
-					structureId: params?.structureId
+					structureId: params?.structureId ? String(params.structureId) : undefined
 				}
 			});
 			return response.threads || [];

@@ -30,7 +30,7 @@ export function DgtTransfer({ className = '' }: DgtTransferProps) {
 	const { balance, walletConfig, transferDgt, isTransferringDgt } = useWallet();
 
 	// Get DGT balance and feature gates
-	const dgtBalance = balance?.dgt?.balance || 0;
+	const dgtBalance = balance?.dgt || 0;
 	const canTransfer = walletConfig?.features?.allowInternalTransfers ?? false;
 	const maxTransfer = walletConfig?.limits?.maxDGTTransfer || 10000;
 

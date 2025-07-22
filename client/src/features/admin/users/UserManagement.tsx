@@ -28,8 +28,7 @@ import {
 } from 'lucide-react';
 
 import { AdminPageShell } from '@/features/admin/layout/layout/AdminPageShell';
-import { AdminDataTable } from '@/features/admin/components/common/AdminDataTable';
-import type { AdminDataTableProps } from '@/features/admin/components/common/AdminDataTable';
+import { AdminDataTable, type ColumnDefs } from '@/features/admin/components/common/AdminDataTable';
 import { EntityFilters } from '@/features/admin/layout/layout/EntityFilters';
 import type { FilterConfig, FilterValue } from '@/features/admin/layout/layout/EntityFilters'; // Type-only imports
 import UserFormDialog from '@/features/admin/components/forms/users/UserFormDialog';
@@ -196,7 +195,7 @@ export default function AdminUsersPage() {
 	};
 
 	// Define columns for AdminDataTable
-	const columns: AdminDataTableProps['columns'] = [
+	const columns: ColumnDefs<AdminUser> = [
 		{
 			key: 'username',
 			header: 'Username',

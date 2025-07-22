@@ -32,14 +32,24 @@ export const DailyGrindCard: React.FC<DailyGrindCardProps> = ({
     // Optimistic update
     setLocalMissions(prev => prev.map(m => 
       m.id === missionId 
-        ? { ...m, progress: { ...m.progress!, isComplete: !m.progress?.isComplete } }
+        ? { 
+            ...m, 
+            progress: { 
+              ...m.progress,
+              isComplete: !m.progress?.isComplete,
+              isClaimed: m.progress?.isClaimed 
+            } as Mission['progress']
+          }
         : m
     ));
     
     // Actual update
     if (!mission.progress?.isComplete) {
       // Mark as complete
-      await updateProgress(missionId, { completed: true });
+      await updateProgress({ 
+        missionId, 
+        progress: { completed: true } 
+      });
     }
   };
   

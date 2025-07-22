@@ -10,16 +10,7 @@ import {
 	DialogHeader,
 	DialogTitle
 } from '@/components/ui/dialog';
-
-interface Role {
-	id?: string;
-	name: string;
-	slug: string;
-	rank: number;
-	description?: string;
-	color?: string;
-	permissions?: string[];
-}
+import type { Role } from '@shared/types/entities/role.types';
 
 interface RoleFormProps {
 	role?: Role | undefined;
@@ -34,8 +25,9 @@ export function RoleForm({ role, onSubmit, onCancel, isLoading }: RoleFormProps)
 		slug: role?.slug || '',
 		rank: role?.rank || 0,
 		description: role?.description || '',
-		color: role?.color || '#64748b',
-		permissions: role?.permissions || []
+		textColor: role?.textColor || '#64748b',
+		backgroundColor: role?.backgroundColor || undefined,
+		permissions: Array.isArray(role?.permissions) ? role.permissions : []
 	});
 
 	const handleSubmit = (e: React.FormEvent) => {
@@ -106,12 +98,12 @@ export function RoleForm({ role, onSubmit, onCancel, isLoading }: RoleFormProps)
 				</div>
 
 				<div className="space-y-2">
-					<Label htmlFor="color">Color</Label>
+					<Label htmlFor="textColor">Text Color</Label>
 					<Input
-						id="color"
+						id="textColor"
 						type="color"
-						value={formData.color}
-						onChange={(e) => handleInputChange('color', e.target.value)}
+						value={formData.textColor || '#64748b'}
+						onChange={(e) => handleInputChange('textColor', e.target.value)}
 					/>
 				</div>
 

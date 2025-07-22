@@ -76,11 +76,9 @@ export function EditPostDialog({ post, isOpen, onClose }: EditPostDialogProps) {
 						<label className="block text-sm font-medium text-zinc-200 mb-2">Content</label>
 						<RichTextEditor
 							content={content}
-							onChange={setContent}
-							onEditorStateChange={setEditorState}
-							editorState={editorState}
+							onChange={(html) => setContent(html)}
 							placeholder="Edit your post content..."
-							className="min-h-[300px]"
+							editorClass="min-h-[300px]"
 						/>
 					</div>
 				</div>

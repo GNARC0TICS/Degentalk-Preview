@@ -50,6 +50,7 @@ export default defineConfig(async () => {
 			},
 			root: path.resolve(projectRoot, 'client'),
 			server: {
+				host: true, // listen on 0.0.0.0
 				port: 5173,
 				proxy: {
 					'/api': {

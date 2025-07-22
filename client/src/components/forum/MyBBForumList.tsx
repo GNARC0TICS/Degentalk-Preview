@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { MessageSquare, Lock, Users, Calendar } from 'lucide-react';
-import type { MergedForum } from '@/contexts/ForumStructureContext';
+import type { MergedForum } from '@/features/forum/contexts/ForumStructureContext';
 import { usePermission } from '@/hooks/usePermission';
 import { formatDistanceToNow } from 'date-fns';
 

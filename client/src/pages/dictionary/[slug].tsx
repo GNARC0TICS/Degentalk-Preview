@@ -5,9 +5,10 @@ import { apiRequest } from '@/utils/queryClient';
 import { LoadingSpinner } from '@/components/ui/loader';
 import { ErrorDisplay } from '@/components/ui/error-display';
 import { Button } from '@/components/ui/button';
-import { Tooltip } from '@/components/ui/tooltip';
+import { SafeTooltip } from '@/components/ui/tooltip-utils';
 import { dictionaryApi } from '@/features/dictionary/services/dictionaryApi';
 import type { DictionaryEntryId } from '@shared/types/ids';
+import { dictionaryEntryIdToEntryId } from '@shared/utils/id-conversions';
 
 interface DictionaryEntry {
 	id: DictionaryEntryId;
@@ -32,7 +33,7 @@ export default function DictionaryDetailPage() {
 		}
 	});
 
-	const upvoteMutation = useMutation((id: DictionaryEntryId) => dictionaryApi.upvote(id), {
+	const upvoteMutation = useMutation((id: DictionaryEntryId) => dictionaryApi.upvote(dictionaryEntryIdToEntryId(id)), {
 		onMutate: async () => {
 			if (!data) return;
 			queryClient.setQueryData(['dictionary', slug], (old: any) => {
@@ -61,14 +62,14 @@ export default function DictionaryDetailPage() {
 			)}
 
 			<div className="flex items-center gap-4 mb-10">
-				<Tooltip content={data.hasUpvoted ? 'You already upvoted this word.' : 'Upvote this word'}>
+				<SafeTooltip content={data.hasUpvoted ? 'You already upvoted this word.' : 'Upvote this word'}>
 					<Button
 						onClick={() => upvoteMutation.mutate(data.id)}
 						disabled={upvoteMutation.isLoading || data.hasUpvoted}
 					>
 						👍 {data.upvoteCount}
 					</Button>
-				</Tooltip>
+				</SafeTooltip>
 				{data.status === 'pending' && <span className="text-amber-400">Awaiting approval</span>}
 			</div>
 

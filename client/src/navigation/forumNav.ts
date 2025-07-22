@@ -1,7 +1,7 @@
 import type { LucideProps } from 'lucide-react';
 import { LayoutGrid } from 'lucide-react'; // For "All Content"
-import type { MergedZone, MergedForum, MergedTheme } from '@/contexts/ForumStructureContext';
-import { getSmartForumUrl } from '@/utils/forum-urls';
+import type { MergedZone, MergedForum, MergedTheme } from '@/features/forum/contexts/ForumStructureContext';
+import { getForumUrl } from '@/utils/forum/urls';
 import type { ComponentType } from 'react';
 
 type LucideIcon = ComponentType<LucideProps>;
@@ -49,11 +49,7 @@ export function buildNavigationTree(zones: MergedZone[]): NavNode[] {
 			id: forum.slug, // Use slug as ID for NavNode
 			name: forum.name,
 			slug: forum.slug,
-			href: getSmartForumUrl({
-				slug: forum.slug,
-				name: forum.name,
-				type: 'forum'
-			}),
+			href: getForumUrl(forum.slug), /* TODO: Update to use smart URL logic when available */
 			type: 'forum', // Type remains 'forum' for both parent forums and subforums
 			iconEmoji: forum.theme?.icon || parentTheme?.icon, // Prioritize forum's own theme icon
 			iconComponent: undefined, // Resolved at render time by NavItem using theme context
@@ -64,8 +60,8 @@ export function buildNavigationTree(zones: MergedZone[]): NavNode[] {
 			counts: { threads: forum.threadCount, posts: forum.postCount }
 		};
 
-		if (forum.forums && forum.forums.length > 0) {
-			forum.forums.forEach((subForum) => {
+		if (forum.subforums && forum.subforums.length > 0) {
+			forum.subforums.forEach((subForum) => {
 				const currentForumEffectiveTheme = forum.theme || parentTheme;
 				const currentForumEffectiveSemanticKey = forum.theme?.colorTheme || parentSemanticThemeKey;
 				forumNode.children.push(

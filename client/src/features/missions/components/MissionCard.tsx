@@ -22,8 +22,8 @@ export const MissionCard: React.FC<MissionCardProps> = ({
   const [isHovered, setIsHovered] = useState(false);
   const { claimReward, loading } = useMissionActions();
   
-  const isComplete = mission.progress?.isComplete || false;
-  const isClaimed = mission.progress?.isClaimed || false;
+  const isComplete = mission.isComplete || mission.progress?.isComplete || false;
+  const isClaimed = mission.isClaimed || mission.progress?.isClaimed || false;
   
   const priorityColors = {
     high: 'bg-red-500/20 text-red-500 border-red-500/30',
@@ -52,11 +52,11 @@ export const MissionCard: React.FC<MissionCardProps> = ({
   };
   
   const getProgress = () => {
-    if (!mission.progress) return 0;
+    if (!mission.progress?.metrics) return 0;
     
-    const requirements = Object.entries(mission.progress);
+    const requirements = Object.entries(mission.progress.metrics);
     const completed = requirements.filter(([_, p]) => p.current >= p.target).length;
-    return (completed / requirements.length) * 100;
+    return requirements.length > 0 ? (completed / requirements.length) * 100 : 0;
   };
 
   return (
@@ -155,11 +155,11 @@ export const MissionCard: React.FC<MissionCardProps> = ({
             </p>
             
             {/* Progress */}
-            {!isComplete && mission.progress && (
+            {!isComplete && mission.progress?.metrics && (
               <div className="space-y-1.5">
                 <Progress value={getProgress()} className="h-1.5" />
                 <div className="flex gap-3 text-[10px] text-muted-foreground">
-                  {Object.entries(mission.progress).map(([key, progress]) => (
+                  {Object.entries(mission.progress.metrics).map(([key, progress]) => (
                     <span key={key}>
                       {key.replace(/_/g, ' ')}: {progress.current}/{progress.target}
                     </span>

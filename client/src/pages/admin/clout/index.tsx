@@ -12,20 +12,10 @@ import { AchievementsSection } from '@/features/admin/clout/AchievementsSection'
 import { CloutGrantsSection } from '@/features/admin/clout/CloutGrantsSection';
 import { CloutLogsSection } from '@/features/admin/clout/CloutLogsSection';
 import { type AchievementId } from '@shared/types/ids';
+import type { CloutAchievement } from '@shared/types/entities/clout.types';
 
-// Types
-export interface CloutAchievement {
-	id: string;
-	achievementKey: string;
-	name: string;
-	description?: string;
-	cloutReward: number;
-	criteriaType?: string;
-	criteriaValue?: number;
-	enabled: boolean;
-	iconUrl?: string;
-	createdAt: string;
-}
+// Re-export for backward compatibility
+export type { CloutAchievement };
 
 export interface CloutLog {
 	id: string;

@@ -65,11 +65,21 @@ export const MissionHub: React.FC = () => {
             Complete missions to earn XP, DGT, and exclusive rewards
           </p>
         </div>
-        <MissionStats stats={stats} />
+        <MissionStats 
+          totalCompleted={stats.totalCompleted}
+          totalXP={stats.totalXpEarned}
+          totalRewards={stats.totalDgtEarned}
+        />
       </div>
 
       {/* Streak Banner */}
-      <StreakBanner streaks={streaks} />
+      {streaks.length > 0 && (
+        <StreakBanner 
+          currentStreak={streaks[0].currentStreak}
+          longestStreak={streaks[0].bestStreak}
+          lastClaimDate={streaks[0].lastCompleted || undefined}
+        />
+      )}
 
       {/* Mission Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
@@ -78,14 +88,14 @@ export const MissionHub: React.FC = () => {
             <Clock className="w-4 h-4" />
             Daily
             <Badge variant="secondary" className="ml-1">
-              {missions.daily.filter(m => !m.isComplete).length}
+              {missions.daily.filter(m => !m.isComplete && !m.progress?.isComplete).length}
             </Badge>
           </TabsTrigger>
           <TabsTrigger value="weekly" className="flex items-center gap-2">
             <Calendar className="w-4 h-4" />
             Weekly
             <Badge variant="secondary" className="ml-1">
-              {missions.weekly.filter(m => !m.isComplete).length}
+              {missions.weekly.filter(m => !m.isComplete && !m.progress?.isComplete).length}
             </Badge>
           </TabsTrigger>
           <TabsTrigger value="special" className="flex items-center gap-2">

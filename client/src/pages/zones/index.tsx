@@ -3,8 +3,8 @@ import { SiteFooter } from '@/components/footer';
 import { CanonicalZoneGrid } from '@/components/forum/CanonicalZoneGrid';
 import HierarchicalZoneNav from '@/features/forum/components/HierarchicalZoneNav';
 // Corrected import path for useForumStructure and MergedZone type
-import { useForumStructure } from '@/contexts/ForumStructureContext';
-import type { MergedZone } from '@/contexts/ForumStructureContext';
+import { useForumStructure } from '@/features/forum/contexts/ForumStructureContext';
+import type { MergedZone } from '@/features/forum/contexts/ForumStructureContext';
 import { LoadingSpinner } from '@/components/ui/loader';
 import { ErrorDisplay } from '@/components/ui/error-display';
 import { Folder, LayoutGrid } from 'lucide-react';

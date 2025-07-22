@@ -1,7 +1,7 @@
 // Removed Link (no longer needed after zone grid removal)
 // Import context and hook
-import { useForumStructure } from '@/contexts/ForumStructureContext';
-import type { MergedZone } from '@/contexts/ForumStructureContext';
+import { useForumStructure } from '@/features/forum/contexts/ForumStructureContext';
+import type { MergedZone } from '@/features/forum/contexts/ForumStructureContext';
 
 // Import components
 import { HeroSection } from '@/components/layout/hero-section';
@@ -15,7 +15,7 @@ import { ContentFeedProvider } from '@/contexts/content-feed-context';
 import { getForumSpacing } from '@/utils/spacing-constants';
 import { useActiveUsers } from '@/features/users/hooks';
 import { useZoneStatsMap } from '@/hooks/useZoneStats';
-import { getMomentumLabel } from '@/utils/forumStats';
+import { getMomentumLabel } from '@/utils/forum';
 import HomePageSkeleton from '@/components/skeletons/HomePageSkeleton';
 
 // Removed grid-related UI imports (Skeleton, Button, icons)

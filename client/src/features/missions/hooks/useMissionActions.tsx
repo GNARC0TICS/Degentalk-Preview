@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiRequest } from '@/utils/api-request';
-import { useAuth } from '@/hooks/use-auth';
+import { useCanonicalAuth } from '@/features/auth/useCanonicalAuth';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
 
@@ -22,13 +22,14 @@ interface ClaimRewardResponse {
 }
 
 export function useMissionActions() {
-  const { user } = useAuth();
+  const { user } = useCanonicalAuth();
   const queryClient = useQueryClient();
   
   // Claim mission rewards
   const claimRewardMutation = useMutation({
     mutationFn: async (missionId: string) => {
-      return apiRequest<ClaimRewardResponse>(`/api/missions/${missionId}/claim`, {
+      return apiRequest<ClaimRewardResponse>({
+        url: `/api/missions/${missionId}/claim`,
         method: 'POST'
       });
     },
@@ -73,9 +74,10 @@ export function useMissionActions() {
       missionId: string; 
       progress: Record<string, any> 
     }) => {
-      return apiRequest(`/api/missions/${missionId}/progress`, {
+      return apiRequest({
+        url: `/api/missions/${missionId}/progress`,
         method: 'PATCH',
-        body: progress
+        data: progress
       });
     },
     onSuccess: (_, variables) => {
@@ -90,9 +92,10 @@ export function useMissionActions() {
       type: string;
       metadata?: Record<string, any>;
     }) => {
-      return apiRequest('/api/missions/track', {
+      return apiRequest({
+        url: '/api/missions/track',
         method: 'POST',
-        body: action
+        data: action
       });
     }
   });

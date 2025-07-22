@@ -5,9 +5,12 @@
  * based on forum rules, user role, and ownership.
  */
 
-import { useAuth } from '@/hooks/use-auth';
-import { useForumStructure, type MergedForum } from '@/contexts/ForumStructureContext';
-import type { ThreadDisplay } from '@/types/thread.types';
+import { useCanonicalAuth } from '@/features/auth/useCanonicalAuth';
+import { useForumStructure, type MergedForum } from '@/features/forum/contexts/ForumStructureContext';
+import type { ThreadDisplay, ResolvedZone } from '@/types/thread.types';
+import type { CanonicalUser } from '@/types/canonical.types';
+import { toId } from '@shared/utils/id';
+import type { ThreadId, UserId, ZoneId } from '@shared/types/ids';
 
 interface PermissionResult {
 	allowed: boolean;
@@ -26,28 +29,44 @@ interface ThreadPermissions {
 
 // Type-safe mock data matching actual project types
 export const MOCK_THREAD: ThreadDisplay = {
-	id: crypto.randomUUID(),
+	id: toId<'ThreadId'>(crypto.randomUUID()),
 	title: 'Test Thread',
 	slug: 'test-thread',
 	content: 'Test content',
-	userId: 'test-user-123',
+	userId: toId<'UserId'>('test-user-123'),
 	viewCount: 0,
 	postCount: 0,
 	createdAt: new Date().toISOString(),
 	user: {
-		id: 'test-user-123',
-		username: 'testuser'
-	},
+		id: toId<'UserId'>('test-user-123'),
+		username: 'testuser',
+		displayRole: 'Member',
+		badgeColor: '#666'
+	} as CanonicalUser & { displayRole?: string; badgeColor?: string },
 	category: {
 		id: crypto.randomUUID(),
 		name: 'Test Category',
 		slug: 'test-category'
 	},
 	zone: {
+		id: toId<'ZoneId'>(crypto.randomUUID()),
 		name: 'Test Zone',
 		slug: 'test-zone',
-		colorTheme: 'blue'
-	}
+		colorTheme: 'blue',
+		type: 'topic' as const,
+		description: 'Test zone',
+		rules: {
+			allowPosting: true,
+			minLevel: 1,
+			requiresVerification: false
+		},
+		forums: [],
+		icon: null,
+		isSystem: false,
+		createdAt: new Date().toISOString(),
+		updatedAt: new Date().toISOString(),
+		isPrimary: false
+	} as ResolvedZone
 };
 
 export const MOCK_POST = {
@@ -64,12 +83,12 @@ export const useThreadPermissions = (
 	thread: ThreadDisplay | null,
 	forumSlug: string | null
 ): ThreadPermissions => {
-	const { user } = useAuth();
+	const { user } = useCanonicalAuth();
 	const { getForum } = useForumStructure();
 
 	const forum = forumSlug ? getForum(forumSlug) : null;
 	const isAuthenticated = !!user;
-	const userXP = user?.xp || 0;
+	const userXP = user?.forumStats?.xp || 0;
 	const userRole = user?.role || 'user';
 	const userId = user?.id;
 

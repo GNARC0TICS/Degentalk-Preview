@@ -7,6 +7,10 @@ export interface WalletBalance {
 	btc: number;
 	eth: number;
 	pendingDgt: number;
+	// Legacy compatibility properties
+	crypto?: CryptoBalance[];
+	cryptoBalances?: CryptoBalance[];
+	dgtBalance?: number; // Alias for dgt
 }
 
 export type CryptoBalance = WalletBalance;

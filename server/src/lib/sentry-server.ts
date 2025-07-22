@@ -3,8 +3,8 @@
  * Error tracking and APM for Node.js backend
  */
 
-import * as Sentry from '@sentry/node';
-import * as Tracing from '@sentry/tracing';
+// import * as Sentry from '@sentry/node';
+// import * as Tracing from '@sentry/tracing';
 import type { Express } from 'express';
 import { logger } from '../core/logger';
 import type { UserId } from '@shared/types/ids';
@@ -18,6 +18,10 @@ const RELEASE = process.env.APP_VERSION || 'unknown';
  * Initialize Sentry for the Express application
  */
 export function initSentry(app: Express) {
+  logger.info('SENTRY', 'Sentry temporarily disabled - packages not installed');
+  return;
+  
+  /*
   if (!SENTRY_DSN || ENVIRONMENT === 'development') {
     logger.info('SENTRY', 'Skipping Sentry initialization in development');
     return;
@@ -171,6 +175,7 @@ export function initSentry(app: Express) {
     environment: ENVIRONMENT,
     release: RELEASE,
   });
+  */
 }
 
 /**
@@ -181,29 +186,32 @@ export function setSentryUser(userId: UserId | null, userData?: {
   email?: string;
   role?: string;
 }) {
-  if (!userId) {
-    Sentry.setUser(null);
-    return;
-  }
-  
-  Sentry.setUser({
-    id: userId,
-    ...userData,
-  });
+  // Temporarily disabled - Sentry packages not installed
+  logger.debug('SENTRY', 'setSentryUser called', { userId, userData });
 }
 
 /**
  * Add custom context to errors
  */
 export function setSentryContext(key: string, context: Record<string, any>) {
-  Sentry.setContext(key, context);
+  // Temporarily disabled - Sentry packages not installed
+  logger.debug('SENTRY', 'setSentryContext called', { key, context });
 }
 
 /**
  * Create a transaction for performance monitoring
  */
 export function startTransaction(name: string, op: string = 'http.server') {
-  return Sentry.startTransaction({ name, op });
+  // Temporarily disabled - Sentry packages not installed
+  logger.debug('SENTRY', 'startTransaction called', { name, op });
+  return {
+    startChild: (options: any) => ({
+      setStatus: (status: string) => logger.debug('SENTRY', 'Span status', status),
+      finish: () => logger.debug('SENTRY', 'Span finished')
+    }),
+    setStatus: (status: string) => logger.debug('SENTRY', 'Transaction status', status),
+    finish: () => logger.debug('SENTRY', 'Transaction finished')
+  };
 }
 
 /**
@@ -212,25 +220,15 @@ export function startTransaction(name: string, op: string = 'http.server') {
 export function captureException(
   error: Error,
   context?: {
-    level?: Sentry.Severity;
+    level?: string;
     tags?: Record<string, string>;
     extra?: Record<string, any>;
     user?: UserId;
   }
 ) {
-  if (context?.user) {
-    setSentryUser(context.user);
-  }
-  
-  logger.error('SENTRY', `Capturing exception: ${error.message}`, {
+  logger.error('SENTRY', `Exception: ${error.message}`, {
     error: error.stack,
     context,
-  });
-  
-  Sentry.captureException(error, {
-    level: context?.level || 'error',
-    tags: context?.tags,
-    extra: context?.extra,
   });
 }
 
@@ -239,15 +237,10 @@ export function captureException(
  */
 export function captureMessage(
   message: string,
-  level: Sentry.Severity = 'info',
+  level: string = 'info',
   context?: Record<string, any>
 ) {
-  logger.info('SENTRY', `Capturing message: ${message}`, { level, context });
-  
-  Sentry.captureMessage(message, {
-    level,
-    extra: context,
-  });
+  logger.info('SENTRY', `Message: ${message}`, { level, context });
 }
 
 /**
@@ -283,44 +276,34 @@ export async function profileAsync<T>(
 export function addBreadcrumb(
   message: string,
   category: string = 'custom',
-  level: Sentry.Severity = 'info',
+  level: string = 'info',
   data?: Record<string, any>
 ) {
-  Sentry.addBreadcrumb({
-    message,
-    category,
-    level,
-    data,
-    timestamp: Date.now() / 1000,
-  });
+  // Temporarily disabled - Sentry packages not installed
+  logger.debug('SENTRY', 'addBreadcrumb called', { message, category, level, data });
 }
 
 /**
  * Sentry Express error handler middleware
  */
-export const sentryErrorHandler = Sentry.Handlers.errorHandler({
-  shouldHandleError(error) {
-    // Capture all errors in production
-    if (ENVIRONMENT === 'production') {
-      return true;
-    }
-    
-    // In development, only capture 500+ errors
-    return !error.status || error.status >= 500;
-  },
-});
+export const sentryErrorHandler = (error: any, req: any, res: any, next: any) => {
+  // Temporarily disabled - Sentry packages not installed
+  logger.error('SENTRY', 'Error handler called', { error: error.message });
+  next(error);
+};
 
 /**
  * Sentry request handler middleware
  */
-export const sentryRequestHandler = Sentry.Handlers.requestHandler({
-  user: ['id', 'username', 'email'],
-  ip: true,
-  request: ['method', 'url', 'query_string', 'data'],
-  transaction: 'methodPath',
-});
+export const sentryRequestHandler = (req: any, res: any, next: any) => {
+  // Temporarily disabled - Sentry packages not installed
+  next();
+};
 
 /**
  * Sentry tracing handler middleware
  */
-export const sentryTracingHandler = Sentry.Handlers.tracingHandler();
+export const sentryTracingHandler = (req: any, res: any, next: any) => {
+  // Temporarily disabled - Sentry packages not installed
+  next();
+};

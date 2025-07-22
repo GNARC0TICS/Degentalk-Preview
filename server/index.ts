@@ -63,6 +63,8 @@ const startupLog = (message: string, type: 'info' | 'success' | 'error' | 'warni
 };
 
 const app = express();
+let server: any; // Will be initialized later
+const port = process.env.PORT ? parseInt(process.env.PORT) : 5001;
 
 // Initialize Sentry before any other middleware
 initSentry(app);
@@ -79,28 +81,53 @@ app.use(express.urlencoded({ extended: false }));
 // Use the new traceMiddleware for request logging
 app.use(traceMiddleware);
 
-(async () => {
-	try {
-		startupLog(`Starting Degentalk Backend Server...`);
-		startupLog(`Environment: ${process.env.NODE_ENV || 'development'}`);
-		startupLog(
-			`Database: ${process.env.DATABASE_PROVIDER || 'sqlite'} (${
-				process.env.DATABASE_URL || 'db/dev.db'
-			})`
-		);
+// Add basic routes
+app.get('/', (req, res) => {
+	send(res, {
+		message: 'Degentalk API Server Running!',
+		status: 'ok'
+	});
+});
 
-		// Run Drizzle migrations for PostgreSQL
-		if (
-			process.env.DATABASE_PROVIDER === 'postgresql' ||
-			process.env.DATABASE_PROVIDER === 'postgres'
-		) {
-			startupLog('Using PostgreSQL - skipping SQLite table creation script');
-		} else {
-			startupLog('Running database migrations...');
-			const { createMissingTables } = await import('../scripts/db/create-missing-tables');
-			await createMissingTables();
-			startupLog('Database migrations complete.', 'success');
-		}
+app.get('/api/health', (req, res) => {
+	send(res, { status: 'healthy', uptime: process.uptime() });
+});
+
+app.get('/__healthz', (_req, res) => {
+	res.status(200).send('OK');
+});
+
+// Initialize server startup
+function initializeServer() {
+	startupLog(`Starting Degentalk Backend Server...`);
+	startupLog(`Environment: ${process.env.NODE_ENV || 'development'}`);
+	startupLog(
+		`Database: ${process.env.DATABASE_PROVIDER || 'sqlite'} (${
+			process.env.DATABASE_URL || 'db/dev.db'
+		})`
+	);
+
+	// Run Drizzle migrations for PostgreSQL
+	if (
+		process.env.DATABASE_PROVIDER === 'postgresql' ||
+		process.env.DATABASE_PROVIDER === 'postgres'
+	) {
+		startupLog('Using PostgreSQL - skipping SQLite table creation script');
+		setupServer();
+	} else {
+		startupLog('Running database migrations...');
+		import('../scripts/db/create-missing-tables').then(({ createMissingTables }) => {
+			createMissingTables().then(() => {
+				startupLog('Database migrations complete.', 'success');
+				setupServer();
+			});
+		});
+	}
+}
+
+// Main server setup
+async function setupServer() {
+	try {
 
 		// if (process.env.NODE_ENV === 'development' && process.env.QUICK_MODE !== 'true') {
 		// 	// Seed DevUser for development
@@ -129,18 +156,6 @@ app.use(traceMiddleware);
 		// 	startupLog('Quick mode enabled - skipping seed scripts', 'warning');
 		// }
 
-		// TEMP: Simple routes for debugging
-		app.get('/', (req, res) => {
-			send(res, {
-				message: 'Degentalk API Server Running!',
-				status: 'ok'
-			});
-		});
-
-		app.get('/api/health', (req, res) => {
-			send(res, { status: 'healthy', uptime: process.uptime() });
-		});
-
 		// Register API routes
 		startupLog('Registering API routes...');
 		const routeStartTime = Date.now();
@@ -150,8 +165,6 @@ app.use(traceMiddleware);
 
 		// Add 404 handler for undefined routes
 		app.use(notFoundHandler);
-
-		const server = createServer(app);
 
 		// Sentry error handler must come before custom error handlers
 		app.use(sentryErrorHandler);
@@ -172,60 +185,114 @@ app.use(traceMiddleware);
 		if (process.env.NODE_ENV !== 'production' && process.env.DEV_FORCE_AUTH === 'true') {
 			startupLog('Initializing development authentication...');
 			const { initializeDevAuth } = await import('./src/utils/dev-auth-startup');
-			await initializeDevAuth();
+			
+			// Add timeout to prevent hanging
+			const devAuthTimeout = new Promise((_, reject) => 
+				setTimeout(() => reject(new Error('Dev auth initialization timed out')), 5000)
+			);
+			
+			try {
+				await Promise.race([initializeDevAuth(), devAuthTimeout]);
+			} catch (error) {
+				startupLog(`Dev auth initialization failed or timed out: ${error}`, 'warning');
+				// Continue server startup even if dev auth fails
+			}
 		}
 
-		// Start the server
-		const port = process.env.PORT ? parseInt(process.env.PORT) : 5001;
-		startupLog(`Starting server on port ${port}...`);
-
-		server.on('error', (error: any) => {
-			if (error.code === 'EADDRINUSE') {
-				startupLog(
-					`Port ${port} is already in use. Another process might be running on this port.`,
-					'error'
-				);
-			} else {
-				startupLog(`Server error: ${error}`, 'error');
-			}
-			process.exit(1);
-		});
-
-		server.on('listening', () => {
-			startupLog(`Backend API running on http://localhost:${port}`, 'success');
-
-			// Initialize WebSocket service
-			startupLog('Initializing WebSocket service...');
-			wsService.initialize(server);
-			startupLog('WebSocket service initialized.', 'success');
-
-			// Initialize Sentinel bot
-			startupLog('Initializing Sentinel bot...');
-			sentinelBot.initialize();
-			startupLog('Sentinel bot initialized.', 'success');
-
-			// Make WebSocket service available to Express routes
-			(app as any).wss = wsService;
-
-			startupLog('Initializing scheduled tasks...');
-			runScheduledTasks();
-
-			setInterval(
-				() => {
-					runScheduledTasks();
-				},
-				5 * 60 * 1000
-			);
-
-			startupLog('Server initialization complete!', 'success');
-		});
-
-		server.listen({
-			port,
-			host: '0.0.0.0'
-		});
+		// Server setup complete - now start listening
+		startServer();
 	} catch (error) {
 		startupLog(`Failed to start server: ${error}`, 'error');
 		process.exit(1);
 	}
-})();
+}
+
+// Create the server
+server = createServer(app);
+
+// Server event handlers and startup
+server.on('error', (err: any) => {
+	console.error('[DEBUG] Server error event:', err);
+	if (err.code === 'EADDRINUSE') {
+		startupLog(
+			`Port ${port} is already in use. Another process might be running on this port.`,
+			'error'
+		);
+	} else {
+		startupLog(`Server error: ${err}`, 'error');
+	}
+	process.exit(1);
+});
+
+server.on('listening', () => {
+	console.log('[DEBUG] Server emitted "listening" event');
+	startupLog(`Backend API running on http://localhost:${port}`, 'success');
+
+	// Initialize WebSocket service
+	startupLog('Initializing WebSocket service...');
+	wsService.initialize(server);
+	startupLog('WebSocket service initialized.', 'success');
+
+	// Initialize Sentinel bot
+	startupLog('Initializing Sentinel bot...');
+	sentinelBot.initialize();
+	startupLog('Sentinel bot initialized.', 'success');
+
+	// Make WebSocket service available to Express routes
+	(app as any).wss = wsService;
+
+	startupLog('Initializing scheduled tasks...');
+	
+	// Run scheduled tasks asynchronously - don't block server startup
+	runScheduledTasks()
+		.then(() => logger.info('TASK_SCHEDULER', 'Initial scheduled tasks completed'))
+		.catch(err => logger.error('TASK_SCHEDULER', 'Error in initial scheduled tasks', err));
+
+	// Set up recurring tasks
+	setInterval(
+		() => {
+			runScheduledTasks()
+				.catch(err => logger.error('TASK_SCHEDULER', 'Error in recurring scheduled tasks', err));
+		},
+		5 * 60 * 1000
+	);
+
+	startupLog('Server initialization complete!', 'success');
+});
+
+// Handle process termination
+process.on('SIGINT', () => {
+	console.log('[DEBUG] Received SIGINT, shutting down gracefully...');
+	server.close(() => {
+		console.log('[DEBUG] Server closed');
+		process.exit(0);
+	});
+});
+
+// Function to start the server
+function startServer() {
+	startupLog(`Starting server on port ${port}...`);
+	console.log('[DEBUG] ▶ About to call server.listen on port:', port, '(%s)', typeof port);
+	
+	console.log('[DEBUG] About to invoke server.listen()...');
+	server.listen(port, '0.0.0.0', () => {
+		console.log('[startup] 🚀 Server.listen callback fired on port', port);
+		
+		// Verify server is actually listening
+		const address = server.address();
+		console.log('[DEBUG] Server address info:', address);
+	});
+	console.log('[DEBUG] server.listen() method called, waiting for events...');
+}
+
+// Start the server initialization
+initializeServer();
+
+// Debug: Log that we're keeping the process alive
+setInterval(() => {
+	// This interval keeps the process alive and logs periodically
+	logger.debug('SERVER', 'Process heartbeat - server still running', { 
+		uptime: process.uptime(),
+		memory: process.memoryUsage().heapUsed / 1024 / 1024 + ' MB'
+	});
+}, 30000); // Every 30 seconds

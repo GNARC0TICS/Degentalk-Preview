@@ -325,7 +325,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 		app.use('/dev', devRoutes);
 		
 		// Test error routes for Sentry integration
-		const testErrorRoutes = require('./src/routes/test-error.route').default;
+		const { default: testErrorRoutes } = await import('./src/routes/test-error.route');
 		app.use('/api', testErrorRoutes);
 	}
 

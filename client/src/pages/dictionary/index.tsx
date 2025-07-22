@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { LoadingSpinner } from '@/components/ui/loader';
 import { ErrorDisplay } from '@/components/ui/error-display';
 import { AddWordModal } from '@/features/dictionary/components/AddWordModal';
-import { Tooltip } from '@/components/ui/tooltip';
+import { SafeTooltip } from '@/components/ui/tooltip-utils';
 import type { DictionaryEntryId } from '@shared/types/ids';
 
 interface DictionaryEntry {
@@ -51,9 +51,9 @@ export default function DictionaryListPage() {
 						</CardHeader>
 						<CardContent>
 							<p className="line-clamp-2 text-sm text-zinc-300">{entry.definition}</p>
-							<Tooltip content="Upvotes earned by this holy text">
+							<SafeTooltip content="Upvotes earned by this holy text">
 								<div className="text-xs text-zinc-500 mt-2">{entry.upvoteCount} upvotes</div>
-							</Tooltip>
+							</SafeTooltip>
 							{entry.status === 'pending' && (
 								<span className="text-xs text-amber-400">Awaiting approval</span>
 							)}

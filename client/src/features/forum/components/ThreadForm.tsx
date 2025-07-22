@@ -15,7 +15,7 @@ import { useMutation } from '@tanstack/react-query';
 import { apiRequest } from '@/utils/queryClient';
 import { useToast } from '@/hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
-import type { MergedRules } from '@/contexts/ForumStructureContext';
+import type { MergedRules } from '@/features/forum/contexts/ForumStructureContext';
 import DOMPurify from 'dompurify';
 
 // Form validation schema
@@ -40,7 +40,7 @@ interface ThreadFormProps {
 
 export function ThreadForm({
 	forumSlug,
-	/*forumRules*/ _forumRules,
+	forumRules,
 	onSuccess,
 	className
 }: ThreadFormProps) {

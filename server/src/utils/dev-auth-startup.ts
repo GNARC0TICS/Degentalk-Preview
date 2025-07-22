@@ -88,10 +88,12 @@ async function checkTokenCache(): Promise<boolean> {
 
 async function loginDefaultUsers(): Promise<TokenCacheEntry[]> {
 	// Fetch default test users from database
+	console.log('[DevAuth] 🔍 About to query database for users:', DEFAULT_USERS);
 	const testUsers = await db
 		.select()
 		.from(users)
 		.where(inArray(users.username, DEFAULT_USERS));
+	console.log('[DevAuth] ✅ Database query completed, found', testUsers.length, 'users');
 
 	const tokens: TokenCacheEntry[] = [];
 

@@ -21,7 +21,7 @@ import type { PostWithUser } from '@/types/compat/forum';
 import type { PostId } from '@shared/types/ids';
 import { SolveBadge } from '@/components/forum/SolveBadge';
 import { SignatureRenderer } from '@/components/forum/SignatureRenderer';
-import { useAuth } from '@/hooks/use-auth';
+import { useCanonicalAuth } from '@/features/auth/useCanonicalAuth';
 import { ButtonTooltip } from '@/components/ui/tooltip-utils';
 import { ModeratorActions } from '@/components/forum/ModeratorActions';
 import TipButton from '@/features/wallet/components/tip-button';
@@ -66,7 +66,7 @@ export function PostCard({
 	parentForumTheme = null,
 	tippingEnabled = false
 }: PostCardProps) {
-	const { user: currentUser } = useAuth();
+	const { user: currentUser } = useCanonicalAuth();
 	const breakpoint = useBreakpoint();
 
 	// Get adaptive spacing configuration

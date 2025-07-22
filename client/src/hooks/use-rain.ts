@@ -10,6 +10,7 @@ export interface RainParams {
 	eligibleUserCount?: number;
 	roomId?: RoomId;
 	currency?: string;
+	message?: string; // Optional message with rain
 }
 
 interface RainResponse {

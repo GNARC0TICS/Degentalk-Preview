@@ -2,7 +2,6 @@ import React from 'react';
 import { cn } from '@/utils/utils';
 import type { UserTitle } from '@/hooks/useXP';
 import type { TitleId } from '@shared/types/ids';
-import type { UserTitle } from '@/hooks/useXP';
 import { Check, ChevronDown, Crown, Info } from 'lucide-react';
 import {
 	DropdownMenu,

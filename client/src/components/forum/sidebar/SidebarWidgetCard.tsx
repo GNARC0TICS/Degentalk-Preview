@@ -1,6 +1,6 @@
 import React from 'react';
 import { type LucideIcon } from 'lucide-react';
-import { useForumTheme } from '@/contexts/ForumThemeProvider';
+import { useForumTheme } from '@/features/forum/contexts/ForumThemeProvider';
 import { cn } from '@/utils/utils';
 
 interface SidebarWidgetCardProps {

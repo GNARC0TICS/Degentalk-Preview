@@ -1,111 +1,188 @@
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Flame, Users, MessageSquare } from 'lucide-react';
-// import { ForumEntity } from '@/features/forum/hooks/useForumStructure'; // Old import
-import type { MergedForum, MergedZone } from '@/contexts/ForumStructureContext'; // New import
+import { Button } from '@/components/ui/button';
+import { Flame, Users, MessageSquare, Plus } from 'lucide-react';
+import { cn } from '@/utils/utils';
+import type { MergedForum, MergedZone } from '@/features/forum/contexts/ForumStructureContext';
 
 interface ForumHeaderProps {
-	forum: MergedForum | MergedZone; // Allow either type, or a common base if defined
+	forum: MergedForum | MergedZone;
 	isPrimaryZone?: boolean;
 	className?: string;
+	variant?: 'compact' | 'detailed' | 'minimal' | 'themed';
+	slots?: {
+		actions?: React.ReactNode;
+		stats?: React.ReactNode;
+		description?: React.ReactNode;
+	};
+	onNewThread?: () => void;
 }
 
 /**
- * ForumHeader - Displays a themed header for forums
- * Handles both Primary Zones and regular forums with different styling
+ * Unified ForumHeader Component
+ * 
+ * Combines themed styling for primary zones with flexible slots pattern.
+ * Supports multiple variants and customizable content areas.
  */
-export function ForumHeader({ forum, isPrimaryZone = false, className = '' }: ForumHeaderProps) {
-	// Select icon based on theme or use default
-	const renderIcon = () => {
-		// Get icon from either MergedZone.icon or MergedForum.theme.icon
+export function ForumHeader({ 
+	forum, 
+	isPrimaryZone = false, 
+	className = '',
+	variant = 'detailed',
+	slots,
+	onNewThread
+}: ForumHeaderProps) {
+	// Icon rendering logic
+	const renderIcon = (size: 'sm' | 'md' | 'lg' = 'md') => {
 		const icon = 'icon' in forum ? forum.icon : forum.theme?.icon;
+		const sizeClasses = {
+			sm: 'text-xl w-8 h-8',
+			md: 'text-2xl w-10 h-10', 
+			lg: 'text-4xl w-12 h-12'
+		};
 		
-		// If forum has an emoji icon, render it directly
 		if (icon && /^[\p{Emoji_Presentation}\p{Extended_Pictographic}]/u.test(icon)) {
-			return <span className="text-4xl mr-4">{icon}</span>;
+			return <span className={`mr-3 ${sizeClasses[size].split(' ')[0]}`}>{icon}</span>;
 		}
-
-		// Default icon
-		return <Flame className="h-8 w-8 mr-4 text-amber-500" />;
+		
+		const iconSize = sizeClasses[size].split(' ').slice(1).join(' ');
+		return <Flame className={`mr-3 text-amber-500 ${iconSize}`} />;
 	};
 
-	// For Primary Zones, render a more distinct, themed header
-	if (isPrimaryZone) {
+	// Stats rendering logic
+	const renderStats = () => {
+		if (slots?.stats) return slots.stats;
+		
+		return (
+			<div className="flex items-center text-sm text-zinc-400 gap-4">
+				<div className="flex items-center">
+					<MessageSquare className="h-4 w-4 mr-1 opacity-70" />
+					<span>{forum.threadCount || 0} threads</span>
+				</div>
+				<div className="flex items-center">
+					<Users className="h-4 w-4 mr-1 opacity-70" />
+					<span>{forum.postCount || 0} posts</span>
+				</div>
+			</div>
+		);
+	};
+
+	// Actions rendering logic
+	const renderActions = () => {
+		if (slots?.actions) return slots.actions;
+		if (!onNewThread) return null;
+		
+		const buttonSize = variant === 'minimal' ? 'sm' : 'default';
+		return (
+			<Button 
+				size={buttonSize}
+				className="bg-emerald-600 hover:bg-emerald-700" 
+				onClick={onNewThread}
+			>
+				<Plus className="w-4 h-4 mr-2" />
+				{variant !== 'minimal' && 'New Thread'}
+			</Button>
+		);
+	};
+
+	// Themed primary zone variant
+	if ((variant === 'themed' || isPrimaryZone) && isPrimaryZone) {
 		const colorTheme = 'theme' in forum ? forum.theme?.colorTheme : undefined;
 		const dynamicThemeClass = `theme-header-${colorTheme || 'zinc'}`;
+		
 		return (
-			<div className={`forum-header primary-zone-header ${dynamicThemeClass} mb-6 ${className}`}>
-				<div
-					// Apply static Tailwind classes that use CSS variables
-					className="rounded-2xl p-6 bg-gradient-to-r from-forum-header-gradient-from to-forum-header-gradient-to border-2 border-forum-header-border"
-				>
-					<div className="flex items-center mb-4">
-						{renderIcon()}
-						<div>
-							<h1 className="text-2xl font-bold text-white">{forum.name}</h1>
-							<div className="flex items-center mt-1">
-								<Badge
-									// Apply static Tailwind classes that use CSS variables
-									className="mr-2 bg-forum-header-badge-bg hover:bg-forum-header-badge-bg-hover"
-								>
-									Primary Zone
-								</Badge>
-								{(forum as MergedZone).hasXpBoost && ( // Type assertion for MergedZone specific prop
-									<Badge className="bg-emerald-600 hover:bg-emerald-500">
-										{(forum as MergedZone).boostMultiplier || 2}x XP
+			<div className={cn('forum-header primary-zone-header mb-6', dynamicThemeClass, className)}>
+				<div className="rounded-2xl p-6 bg-gradient-to-r from-forum-header-gradient-from to-forum-header-gradient-to border-2 border-forum-header-border">
+					<div className="flex items-center justify-between mb-4">
+						<div className="flex items-center">
+							{renderIcon('lg')}
+							<div>
+								<h1 className="text-2xl font-bold text-white">{forum.name}</h1>
+								<div className="flex items-center mt-1 gap-2">
+									<Badge className="bg-forum-header-badge-bg hover:bg-forum-header-badge-bg-hover">
+										Primary Zone
 									</Badge>
-								)}
+									{(forum as MergedZone).hasXpBoost && (
+										<Badge className="bg-emerald-600 hover:bg-emerald-500">
+											{(forum as MergedZone).boostMultiplier || 2}x XP
+										</Badge>
+									)}
+								</div>
 							</div>
 						</div>
+						{renderActions()}
 					</div>
 
-					{forum.description && <p className="text-zinc-300 mb-4">{forum.description}</p>}
+					{(slots?.description || forum.description) && (
+						<div className="mb-4">
+							{slots?.description || <p className="text-zinc-300">{forum.description}</p>}
+						</div>
+					)}
 
-					<div className="flex items-center text-sm text-zinc-400 gap-4">
-						<div className="flex items-center">
-							<MessageSquare className="h-4 w-4 mr-1 opacity-70" />
-							<span>{forum.threadCount || 0} threads</span>
-						</div>
-						<div className="flex items-center">
-							<Users className="h-4 w-4 mr-1 opacity-70" />
-							<span>{forum.postCount || 0} posts</span>
-						</div>
-					</div>
+					{renderStats()}
 				</div>
 			</div>
 		);
 	}
 
-	// For regular forums, render a simpler header
-	return (
-		<Card className={`forum-header regular-forum-header mb-6 ${className}`}>
-			<CardContent className="p-6">
-				<div className="flex items-center mb-3">
-					<MessageSquare className="h-6 w-6 mr-3 text-emerald-500" />
+	// Compact variant
+	if (variant === 'compact') {
+		return (
+			<div className={cn('flex items-center justify-between', className)}>
+				<div className="flex items-center gap-3">
+					{renderIcon('sm')}
 					<div>
 						<h1 className="text-xl font-bold text-white">{forum.name}</h1>
-						{'minXp' in forum && forum.minXp && forum.minXp > 0 && (
-							<Badge className="mt-1 bg-amber-600 hover:bg-amber-500">
-								{forum.minXp} XP Required
-							</Badge>
-						)}
+						{renderStats()}
 					</div>
 				</div>
+				{renderActions()}
+			</div>
+		);
+	}
 
-				{forum.description && <p className="text-zinc-300 mb-3">{forum.description}</p>}
+	// Minimal variant
+	if (variant === 'minimal') {
+		return (
+			<div className={cn('flex items-center justify-between', className)}>
+				<h1 className="text-xl font-semibold text-white">{forum.name}</h1>
+				{renderActions()}
+			</div>
+		);
+	}
 
-				<div className="flex items-center text-sm text-zinc-400 gap-4">
-					<div className="flex items-center">
-						<MessageSquare className="h-4 w-4 mr-1 opacity-70" />
-						<span>{forum.threadCount || 0} threads</span>
+	// Detailed variant (default) - regular forum header
+	return (
+		<Card className={cn('forum-header regular-forum-header mb-6', className)}>
+			<CardContent className="p-6">
+				<div className="flex items-start justify-between">
+					<div className="space-y-3">
+						<div className="flex items-center">
+							{renderIcon('md')}
+							<div>
+								<h1 className="text-xl font-bold text-white">{forum.name}</h1>
+								{'minXp' in forum && forum.minXp && forum.minXp > 0 && (
+									<Badge className="mt-1 bg-amber-600 hover:bg-amber-500">
+										{forum.minXp} XP Required
+									</Badge>
+								)}
+							</div>
+						</div>
+
+						{(slots?.description || forum.description) && (
+							<div>
+								{slots?.description || <p className="text-zinc-300">{forum.description}</p>}
+							</div>
+						)}
+
+						{renderStats()}
 					</div>
-					<div className="flex items-center">
-						<Users className="h-4 w-4 mr-1 opacity-70" />
-						<span>{forum.postCount || 0} posts</span>
-					</div>
+					{renderActions()}
 				</div>
 			</CardContent>
 		</Card>
 	);
 }
+
+ForumHeader.displayName = 'ForumHeader';

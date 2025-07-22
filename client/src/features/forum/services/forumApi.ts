@@ -24,6 +24,7 @@ import type {
 	ThreadId,
 	PostId
 } from '@shared/types/ids';
+import type { CanonicalPost } from '@/types/canonical.types';
 
 export interface ThreadSearchParams {
 	structureId?: ForumId;
@@ -90,18 +91,21 @@ export const forumApi = {
 			});
 			return directResult;
 		} catch (err: unknown) {
-			const apiError = err as ApiErrorData;
-			if ([401, 403].includes(apiError?.response?.status)) {
-				return {
-					threads: [],
-					pagination: {
-						page: params.page ?? 1,
-						limit: params.limit ?? 10,
-						totalThreads: 0,
-						totalPages: 0
-					},
-					isRestricted: true
-				};
+			// Check if it's an axios error with response status
+			if (err && typeof err === 'object' && 'response' in err) {
+				const axiosError = err as { response?: { status?: number } };
+				if ([401, 403].includes(axiosError?.response?.status)) {
+					return {
+						threads: [],
+						pagination: {
+							page: params.page ?? 1,
+							limit: params.limit ?? 10,
+							totalThreads: 0,
+							totalPages: 0
+						},
+						isRestricted: true
+					};
+				}
 			}
 			throw err;
 		}
@@ -139,9 +143,12 @@ export const forumApi = {
 			// 2) If backend returned the raw thread object, normalise into { thread: obj }
 			return { thread: response } as unknown as ThreadWithPostsAndUser;
 		} catch (err: unknown) {
-			const apiError = err as ApiErrorData;
-			if ([401, 403].includes(apiError?.response?.status)) {
-				return null; // caller handles restricted access
+			// Check if it's an axios error with response status
+			if (err && typeof err === 'object' && 'response' in err) {
+				const axiosError = err as { response?: { status?: number } };
+				if ([401, 403].includes(axiosError?.response?.status)) {
+					return null; // caller handles restricted access
+				}
 			}
 			throw err;
 		}

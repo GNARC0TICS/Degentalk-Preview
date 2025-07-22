@@ -7,7 +7,7 @@ import {
 	ChevronRight,
 	LayoutGrid
 } from 'lucide-react';
-import { useForumStructure } from '@/contexts/ForumStructureContext';
+import { useForumStructure } from '@/features/forum/contexts/ForumStructureContext';
 import { buildNavigationTree, type NavNode } from '@/navigation/forumNav';
 import { useLocalStorage } from '@/hooks/use-local-storage';
 import { cn } from '@/utils/utils';

@@ -39,6 +39,8 @@ export interface User {
 	activeFrameId?: FrameId | null;
 	avatarFrameId?: FrameId | null;
 	isBanned: boolean;
+	isVIP?: boolean; // VIP status for special missions/features
+	isVip?: boolean; // Alias for isVIP (different casing used in some places)
 	
 	// Computed role helpers
 	isAdmin: boolean;
@@ -234,7 +236,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
 	const isDevelopment =
 		import.meta.env.MODE === 'development' && import.meta.env.VITE_FORCE_AUTH !== 'true';
-	const navigate = useNavigate();
+	
+	// Use navigate only if we're in a Router context
+	let navigate: ReturnType<typeof useNavigate> | undefined;
+	try {
+		navigate = useNavigate();
+	} catch (error) {
+		// useNavigate was called outside of Router context
+		// This can happen during initial render
+		navigate = undefined;
+	}
 
 	// USER AUTHENTICATION QUERY: This is the core auth validation
 	// Uses the RootProvider's QueryClient which has on401: 'returnNull' configured
@@ -349,7 +360,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 			queryClient.clear(); // Clear all query cache on logout
 
 			// Client-side navigation keeps React tree mounted (no auto-login reset)
-			navigate('/auth');
+			if (navigate) {
+				navigate('/auth');
+			} else {
+				// Fallback to window.location if Router not available
+				window.location.href = '/auth';
+			}
 		},
 		onError: () => {
 			// Handle logout error
@@ -365,7 +381,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 			queryClient.setQueryData(['/api/auth/user'], null);
 
 			// Navigate even on error
-			navigate('/auth');
+			if (navigate) {
+				navigate('/auth');
+			} else {
+				// Fallback to window.location if Router not available
+				window.location.href = '/auth';
+			}
 		}
 	});
 
@@ -511,4 +532,4 @@ export type RegisterData = {
 };
 
 // Export the auth context
-export type { User, AuthContextType };
+export type { AuthContextType };

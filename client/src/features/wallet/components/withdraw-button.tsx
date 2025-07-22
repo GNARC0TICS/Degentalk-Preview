@@ -32,12 +32,8 @@ export function WithdrawButton({
 	const { balance, walletConfig } = useWallet();
 
 	// Get balances from the wallet hook
-	const dgtBalance = balance?.dgt?.balance || 0;
-	const cryptoBalance = balance?.crypto || [];
-	const totalCryptoValue = cryptoBalance.reduce(
-		(sum: number, crypto: { balance: string }) => sum + parseFloat(crypto.balance),
-		0
-	);
+	const dgtBalance = balance?.dgt || 0;
+	const totalCryptoValue = (balance?.usdt || 0) + (balance?.btc || 0) + (balance?.eth || 0);
 
 	// Feature gates
 	const canWithdrawCrypto = walletConfig?.features?.allowCryptoWithdrawals ?? false;

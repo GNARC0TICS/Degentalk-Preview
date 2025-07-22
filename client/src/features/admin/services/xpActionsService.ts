@@ -39,6 +39,13 @@ export function useCreateXpAction() {
 	});
 }
 
+/**
+ * Hook to update an XP action's configuration
+ * @returns Mutation function that accepts { key: string, data: Partial<XpAction> }
+ * @example
+ * const updateXpAction = useUpdateXpAction();
+ * updateXpAction.mutate({ key: 'post_create', data: { baseValue: 50 } });
+ */
 export function useUpdateXpAction() {
 	const { toast } = useToast();
 	const queryClient = useQueryClient();

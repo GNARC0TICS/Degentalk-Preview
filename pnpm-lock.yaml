@@ -712,9 +712,6 @@ importers:
       tronweb:
         specifier: ^6.0.3
         version: 6.0.3
-      tsconfig-paths:
-        specifier: ^4.2.0
-        version: 4.2.0
       twitter-api-v2:
         specifier: ^1.23.2
         version: 1.24.0
@@ -779,6 +776,12 @@ importers:
       eslint-plugin-degen:
         specifier: file:../eslint-plugins/degen
         version: file:eslint-plugins/degen(eslint@8.57.1)
+      ts-node:
+        specifier: ^10.9.2
+        version: 10.9.2(@types/node@22.7.5)(typescript@5.6.3)
+      tsconfig-paths:
+        specifier: ^4.2.0
+        version: 4.2.0
       vitest:
         specifier: ^3.2.4
         version: 3.2.4(@types/node@22.7.5)(@vitest/ui@3.2.4)(jiti@1.21.7)(jsdom@26.1.0)(tsx@4.20.3)(yaml@2.8.0)
@@ -11352,6 +11355,24 @@ snapshots:
       '@tsconfig/node14': 1.0.3
       '@tsconfig/node16': 1.0.4
       '@types/node': 20.19.7
+      acorn: 8.15.0
+      acorn-walk: 8.3.4
+      arg: 4.1.3
+      create-require: 1.1.1
+      diff: 4.0.2
+      make-error: 1.3.6
+      typescript: 5.6.3
+      v8-compile-cache-lib: 3.0.1
+      yn: 3.1.1
+
+  ts-node@10.9.2(@types/node@22.7.5)(typescript@5.6.3):
+    dependencies:
+      '@cspotcode/source-map-support': 0.8.1
+      '@tsconfig/node10': 1.0.11
+      '@tsconfig/node12': 1.0.11
+      '@tsconfig/node14': 1.0.3
+      '@tsconfig/node16': 1.0.4
+      '@types/node': 22.7.5
       acorn: 8.15.0
       acorn-walk: 8.3.4
       arg: 4.1.3

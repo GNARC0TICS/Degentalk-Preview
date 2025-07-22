@@ -4,7 +4,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { RichTextEditor } from '@/components/editor/rich-text-editor';
 import { LoadingSpinner } from '@/components/ui/loader';
-import { useAuth } from '@/hooks/use-auth';
+import { useCanonicalAuth } from '@/features/auth/useCanonicalAuth';
 import { useNavigate } from 'react-router-dom';
 import { X, CornerDownRight } from 'lucide-react';
 import { cn } from '@/utils/utils';
@@ -36,10 +36,11 @@ export function ReplyForm({
 	onCancel,
 	includeQuote = false
 }: ReplyFormProps) {
-	const { user, isAuthenticated } = useAuth();
+	const { user, isAuthenticated } = useCanonicalAuth();
 	const navigate = useNavigate();
 	const [content, setContent] = useState('');
-	const [editorContent, setEditorContent] = useState<Record<string, unknown> | null>(null);
+	const [editorContent, setEditorContent] = useState<string>('');
+	const [editorState, setEditorState] = useState<Record<string, unknown> | null>(null);
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const breakpoint = useBreakpoint();
 
@@ -95,11 +96,12 @@ ${postContent}
 		setIsSubmitting(true);
 
 		try {
-			await onSubmit(contentToSubmit, useEditorContent ? editorContent : undefined);
+			await onSubmit(contentToSubmit, useEditorContent ? editorState || undefined : undefined);
 
 			// Clear form after successful submission
 			setContent('');
-			setEditorContent(null);
+			setEditorContent('');
+			setEditorState(null);
 
 			// Call onCancel to close the reply form if it's a direct reply
 			if (isReplying && onCancel) {
@@ -114,7 +116,8 @@ ${postContent}
 
 	const handleCancel = () => {
 		setContent('');
-		setEditorContent(null);
+		setEditorContent('');
+		setEditorState(null);
 		onCancel && onCancel();
 	};
 
@@ -180,10 +183,13 @@ ${postContent}
 					{showRichEditor ? (
 						<RichTextEditor
 							content={editorContent}
-							onChange={setEditorContent}
-							disabled={isSubmitting}
+							onChange={(html, json) => {
+								setEditorContent(html);
+								setEditorState(json);
+							}}
+							readOnly={isSubmitting}
 							placeholder={placeholder}
-							className={cn(
+							editorClass={cn(
 								'resize-none',
 								// Adaptive height based on device
 								breakpoint.isMobile ? 'min-h-[100px]' : 'min-h-[120px]'

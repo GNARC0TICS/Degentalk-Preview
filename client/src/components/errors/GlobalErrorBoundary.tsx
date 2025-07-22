@@ -5,7 +5,7 @@
 
 import React from 'react';
 import { ErrorBoundary } from './ErrorBoundary';
-import * as Sentry from '@sentry/react';
+// import * as Sentry from '@sentry/react';
 import { AlertTriangle, RefreshCw, Home } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -89,19 +89,8 @@ function GlobalErrorFallback({ error, resetError }: { error: Error; resetError: 
  * Combines custom ErrorBoundary with Sentry integration
  */
 export function GlobalErrorBoundary({ children }: GlobalErrorBoundaryProps) {
-  // In production, use Sentry's error boundary for automatic reporting
-  if (process.env.NODE_ENV === 'production') {
-    return (
-      <Sentry.ErrorBoundary
-        fallback={GlobalErrorFallback}
-        showDialog={false}
-      >
-        {children}
-      </Sentry.ErrorBoundary>
-    );
-  }
-  
-  // In development, use custom error boundary with enhanced debugging
+  // Temporarily disabled Sentry - packages not installed
+  // Use custom error boundary for all environments for now
   return (
     <ErrorBoundary
       level="critical"

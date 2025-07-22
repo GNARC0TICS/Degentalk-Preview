@@ -25,7 +25,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/utils/utils';
-import { useForumStructure } from '@/contexts/ForumStructureContext';
+import { useForumStructure } from '@/features/forum/contexts/ForumStructureContext';
 import { useAuth } from '@/hooks/use-auth';
 
 export interface MobileForumNavProps {

@@ -263,6 +263,10 @@ export interface CanonicalUser {
 	avatarUrl?: string;
 	activeAvatarUrl?: string;
 	role: BasicRole;
+	
+	// Profile data
+	bio?: string;
+	signature?: string;
 
 	// Forum-specific data
 	forumStats: {

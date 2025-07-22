@@ -10,13 +10,12 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiRequest } from '@/utils/queryClient';
 import { useToast } from '@/hooks/use-toast';
 import RichTextEditor from '@/components/editor/rich-text-editor';
-import { useAuth } from '@/hooks/use-auth';
+import { useCanonicalAuth } from '@/features/auth/useCanonicalAuth';
 import { usePrefixes, useCreateThread } from '@/features/forum/hooks/useForumQueries';
 import type { CreateThreadParams } from '@/features/forum/hooks/useForumQueries';
 import { PrefixBadge } from '@/components/forum/prefix-badge';
 import { useDraft } from '@/hooks/use-draft';
 import { Clock, Save } from 'lucide-react';
-import type { PrefixId } from '@shared/types/ids';
 import {
 	Dialog,
 	DialogContent,
@@ -48,10 +47,11 @@ import { Loader2, AlertTriangle } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { TagInput } from '@/components/forum/tag-input';
 import type { Tag, ThreadPrefix as Prefix } from '@/types/forum';
-import { useForumStructure } from '@/contexts/ForumStructureContext';
-import type { MergedRules } from '@/contexts/ForumStructureContext';
+import { useForumStructure } from '@/features/forum/contexts/ForumStructureContext';
+import type { MergedRules } from '@/features/forum/contexts/ForumStructureContext';
 import { usePermission } from '@/hooks/usePermission';
-import type { DraftId } from '@shared/types/ids';
+import type { DraftId, PrefixId } from '@shared/types/ids';
+import { isValidId, toId } from '@shared/utils/id';
 
 interface DraftData {
 	id: DraftId;
@@ -98,11 +98,11 @@ export function CreateThreadForm({
 }: CreateThreadFormProps) {
 	const { toast } = useToast();
 	const navigate = useNavigate();
-	const { user } = useAuth();
+	const { user } = useCanonicalAuth();
 	const [editorContent, setEditorContent] = useState('');
 	const [editorState, setEditorState] = useState<Record<string, unknown> | null>(null);
 	const [hasActiveDraft, setHasActiveDraft] = useState(false);
-	const [draftId, setDraftId] = useState<number | null>(null);
+	const [draftId, setDraftId] = useState<DraftId | null>(null);
 	const [selectedForumSlugState, setSelectedForumSlugState] = useState<string | undefined>(
 		passedForumSlug
 	);
@@ -120,7 +120,7 @@ export function CreateThreadForm({
 		}
 	});
 
-	const [targetForumConfig, setTargetForumConfig] = useState<Record<string, unknown> | undefined>(
+	const [targetForumConfig, setTargetForumConfig] = useState<import('@/features/forum/contexts/ForumStructureContext').MergedForum | undefined>(
 		undefined
 	); // Merged forum data from context
 	const [formDisabledReason, setFormDisabledReason] = useState<string | null>(null);
@@ -131,7 +131,7 @@ export function CreateThreadForm({
 	const activeForumData = activeForumSlug ? getForum(activeForumSlug) : undefined;
 	const categoryIdForPrefixes = activeForumData ? activeForumData.id : undefined;
 	const { data: prefixes, isLoading: loadingPrefixes } = usePrefixes({
-		categoryId: categoryIdForPrefixes
+		forumId: categoryIdForPrefixes
 	});
 
 	const { canPost, reason: permissionReason } = usePermission(activeForumData);
@@ -233,7 +233,7 @@ export function CreateThreadForm({
 		},
 		onSuccess: (data) => {
 			if (data && data.id && !draftId) {
-				setDraftId(data.id);
+				setDraftId(data.id as DraftId);
 				setHasActiveDraft(true);
 			}
 			toast({
@@ -350,7 +350,7 @@ export function CreateThreadForm({
 			return;
 		}
 
-		if (!activeForumData || activeForumData.id <= 0) {
+		if (!activeForumData || !isValidId(activeForumData.id)) {
 			toast({
 				title: 'Error',
 				description: 'Unable to determine target forum. Please try again.',
@@ -362,11 +362,11 @@ export function CreateThreadForm({
 		const newThreadPayload: CreateThreadParams = {
 			title: values.title,
 			content: values.content,
-			categoryId: activeForumData.id,
+			structureId: activeForumData.id,
 			forumSlug: activeForumData.slug,
 			prefixId:
 				values.prefixId && values.prefixId.trim() !== '' && values.prefixId !== 'none'
-					? toPrefixId(values.prefixId)
+					? toId<'PrefixId'>(values.prefixId)
 					: undefined,
 			tags: values.tags,
 			editorState: values.editorState

@@ -19,6 +19,7 @@ import {
 import { useReportPost } from '@/features/forum/hooks/useForumQueries';
 import { Loader2, AlertTriangle } from 'lucide-react';
 import type { PostWithUser } from '@/types/compat/forum';
+import { postIdToContentId } from '@shared/utils/id-conversions';
 
 interface ReportPostDialogProps {
 	post: PostWithUser | null;
@@ -51,7 +52,7 @@ export function ReportPostDialog({ post, isOpen, onClose }: ReportPostDialogProp
 		try {
 			await reportPost.mutateAsync({
 				contentType: 'post',
-				contentId: post.id,
+				contentId: postIdToContentId(post.id),
 				reason,
 				details: details.trim() || undefined
 			});

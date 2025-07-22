@@ -10,6 +10,7 @@ import type { ThreadDisplay, ThreadsApiResponse } from '@/types/thread.types';
 import { PAGINATION_CONFIG } from '@/config/pagination.config';
 import { ThreadActionsProvider } from '@/features/forum/contexts/ThreadActionsContext';
 import type { ThreadId, ForumId } from '@shared/types/ids';
+import { isValidId } from '@shared/utils/id';
 import ThreadRow from '@/components/forum/ThreadRow';
 
 type DisplayMode = 'card' | 'table';
@@ -57,12 +58,12 @@ const ThreadListComponent: React.FC<ThreadListProps> = ({
 		// Allow null for apiResponse
 		queryKey,
 		queryFn: async () => {
-			if (!forumId || forumId === -1) {
+			if (!forumId || !isValidId(forumId)) {
 				return null; // Return null if forumId is invalid
 			}
 			// Construct the URL for fetching threads with filters
 			const params = new URLSearchParams({
-				structureId: forumId.toString(),
+				structureId: forumId,
 				page: page.toString(),
 				limit: threadsPerPage.toString(),
 				sortBy: filters.sortBy
@@ -83,29 +84,30 @@ const ThreadListComponent: React.FC<ThreadListProps> = ({
 
 			// Use getQueryFn for the API call
 			// getQueryFn returns a function that expects a QueryFunctionContext
-			const fetcher = getQueryFn<ThreadsApiResponse>({ on401: 'returnNull' });
+			const fetcher = getQueryFn<any>({ on401: 'returnNull' });
 			// The queryKey passed to the fetcher should ideally be just the URL or a specific identifier if getQueryFn uses it.
 			// For now, we pass a minimal context.
 			try {
-				const response = await fetcher({ queryKey: [url], meta: undefined } as QueryFunctionContext<ThreadsApiResponse>);
+				const response = await fetcher({ queryKey: [url], meta: undefined } as QueryFunctionContext<any>);
 				// Processing API response
 
 				// Handle wrapped API response
-				if (response && response.success && response.data) {
+				if (response && typeof response === 'object' && 'success' in response && response.success && 'data' in response) {
 					return response.data as ThreadsApiResponse;
 				}
 
-				return response;
+				// Assume direct ThreadsApiResponse if not wrapped
+				return response as ThreadsApiResponse;
 			} catch (e) {
 				// Error will be handled by useQuery's error state
 				throw e;
 			}
 		},
-		enabled: forumId !== -1 && forumId > 0,
+		enabled: forumId && isValidId(forumId),
 		staleTime: 1 * 60 * 1000
 	});
 
-	if (isLoading && forumId > 0) {
+	if (isLoading && forumId && isValidId(forumId)) {
 		return <ThreadListSkeleton count={5} />;
 	}
 
@@ -117,7 +119,7 @@ const ThreadListComponent: React.FC<ThreadListProps> = ({
 		);
 	}
 
-	if (apiResponse === null && forumId > 0) {
+	if (apiResponse === null && forumId && isValidId(forumId)) {
 		return (
 			<div style={{ textAlign: 'center', padding: '20px', color: 'orange' }}>
 				Could not load threads (API issue or unauthorized).
@@ -133,7 +135,7 @@ const ThreadListComponent: React.FC<ThreadListProps> = ({
 		totalPages: 0
 	};
 
-	if (forumId === -1 && !isLoading) {
+	if ((!forumId || !isValidId(forumId)) && !isLoading) {
 		return (
 			<div style={{ textAlign: 'center', padding: '20px' }}>
 				Forum data still loading or not found.
@@ -141,7 +143,7 @@ const ThreadListComponent: React.FC<ThreadListProps> = ({
 		);
 	}
 
-	if (threads.length === 0 && forumId > 0 && !isLoading && !error && apiResponse !== null) {
+	if (threads.length === 0 && forumId && isValidId(forumId) && !isLoading && !error && apiResponse !== null) {
 		return (
 			<div style={{ textAlign: 'center', padding: '20px' }}>
 				No threads found in this forum yet.

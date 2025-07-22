@@ -12,7 +12,7 @@ export const PackagesGrid: React.FC = () => {
 
 	const handleBuy = async (pkgId: string) => {
 		try {
-			const { depositUrl } = await walletApi.createPurchaseOrder(pkgId);
+			const { depositUrl } = await WalletApiService.createPurchaseOrder(pkgId);
 			window.location.href = depositUrl;
 		} catch (err) {
 			// eslint-disable-next-line no-console

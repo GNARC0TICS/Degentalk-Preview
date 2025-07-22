@@ -1,65 +1,73 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiRequest } from '@/utils/api-request';
-import { useAuth } from '@/hooks/use-auth';
+import { useCanonicalAuth } from '@/features/auth/useCanonicalAuth';
 import { useWebSocket } from '@/hooks/useWebSocket';
 import { useEffect } from 'react';
 import { toast } from 'sonner';
 import type { Mission, MissionProgress } from '../types';
-
-interface MissionStreak {
-  type: 'daily' | 'weekly';
-  current: number;
-  best: number;
-  lastCompleted: string | null;
-}
-
-interface MissionStats {
-  totalCompleted: number;
-  totalXpEarned: number;
-  totalDgtEarned: number;
-  completionRate: number;
-  favoriteCategory: string;
-}
-
-interface MissionsResponse {
-  daily: Mission[];
-  weekly: Mission[];
-  special: Mission[];
-  vip?: Mission[];
-}
+import {
+  MissionStreakResponseSchema,
+  MissionStatsResponseSchema,
+  MissionsResponseSchema,
+  type MissionStreak,
+  type MissionStats,
+  type MissionsResponse,
+  validateApiResponse
+} from '@/schemas';
 
 export function useMissions() {
-  const { user } = useAuth();
+  const { user } = useCanonicalAuth();
   const queryClient = useQueryClient();
   const { subscribe } = useWebSocket();
   
   // Fetch user's active missions
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, error } = useQuery<MissionsResponse>({
     queryKey: ['missions', user?.id],
     queryFn: async () => {
-      const response = await apiRequest<{ missions: MissionsResponse }>('/api/missions/active');
-      return response.missions;
+      const response = await apiRequest<{ missions: MissionsResponse }>({
+        url: '/api/missions/active',
+        method: 'GET'
+      });
+      return validateApiResponse(
+        MissionsResponseSchema,
+        response.missions,
+        'useMissions.active'
+      );
     },
     enabled: !!user,
     refetchInterval: 60000, // Refetch every minute
   });
   
   // Fetch streaks
-  const { data: streaks } = useQuery({
+  const { data: streaks } = useQuery<MissionStreak[]>({
     queryKey: ['mission-streaks', user?.id],
     queryFn: async () => {
-      const response = await apiRequest<{ streaks: MissionStreak[] }>('/api/missions/streaks');
-      return response.streaks;
+      const response = await apiRequest<{ streaks: MissionStreak[] }>({
+        url: '/api/missions/streaks',
+        method: 'GET'
+      });
+      return validateApiResponse(
+        MissionStreakResponseSchema,
+        response,
+        'useMissions.streaks'
+      ).streaks;
     },
     enabled: !!user,
   });
   
   // Fetch stats
-  const { data: stats } = useQuery({
+  const { data: stats } = useQuery<MissionStats>({
     queryKey: ['mission-stats', user?.id],
     queryFn: async () => {
-      const response = await apiRequest<{ stats: MissionStats }>('/api/missions/stats');
-      return response.stats;
+      const response = await apiRequest<{ stats: MissionStats }>({
+        url: '/api/missions/stats',
+        method: 'GET'
+      });
+      return validateApiResponse(
+        MissionStatsResponseSchema,
+        response,
+        'useMissions.stats'
+      ).stats;
     },
     enabled: !!user,
   });
@@ -81,14 +89,18 @@ export function useMissions() {
             return {
               ...mission,
               progress: {
-                ...mission.progress,
-                [update.requirementKey]: {
-                  current: update.currentValue,
-                  target: update.targetValue,
-                  percentage: update.percentage
+                metrics: {
+                  ...(mission.progress?.metrics || {}),
+                  [update.requirementKey]: {
+                    current: update.currentValue,
+                    target: update.targetValue,
+                    percentage: update.percentage
+                  }
                 },
-                isComplete: update.isComplete
-              }
+                isComplete: update.isComplete || mission.progress?.isComplete || false,
+                isClaimed: mission.progress?.isClaimed || false
+              },
+              isComplete: update.isComplete || mission.isComplete || false
             };
           });
         

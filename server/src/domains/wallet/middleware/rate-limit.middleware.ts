@@ -8,7 +8,7 @@
 import rateLimit from 'express-rate-limit';
 import { Request, Response } from 'express';
 import { logger } from '@core/logger';
-import { getAuthenticatedUser } from '@core/auth/helpers';
+import { getAuthenticatedUser } from '@core/utils/auth.helpers';
 
 /**
  * Create a rate limiter with custom key generator based on user ID

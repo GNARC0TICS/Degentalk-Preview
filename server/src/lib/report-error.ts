@@ -6,7 +6,7 @@
 import { logger, LogLevel, LogAction } from '../core/logger';
 import { captureException as sentryCaptureException } from './sentry-server';
 import type { Request, Response, NextFunction } from 'express';
-import { getAuthenticatedUser } from '../utils/auth-helpers';
+import { getAuthenticatedUser } from '../core/utils/auth.helpers';
 import type { UserId } from '@shared/types/ids';
 
 export interface ErrorContext {
@@ -49,7 +49,7 @@ export async function reportErrorServer(
   let userId: UserId | null = context?.userId || null;
   if (!userId && context?.request) {
     try {
-      const user = await getAuthenticatedUser(context.request);
+      const user = getAuthenticatedUser(context.request);
       userId = user?.id || null;
     } catch {
       // Ignore auth errors in error reporter
@@ -98,13 +98,28 @@ export async function reportErrorServer(
   };
   
   // Log locally with structured data
-  logger.log({
-    level: logLevel,
-    action: logAction,
-    namespace: 'ERROR_REPORTER',
-    message: `[${errorData.context.service}] ${errorData.context.method} ${errorData.context.route} - ${errorName}: ${errorMessage}`,
-    data: errorData,
-  });
+  try {
+    // Use the logger's API correctly
+    if (typeof logger.error === 'function' && logLevel === LogLevel.ERROR) {
+      logger.error(`[${errorData.context.service}] ${errorData.context.method} ${errorData.context.route} - ${errorName}: ${errorMessage}`, errorData);
+    } else if (typeof logger.warn === 'function' && logLevel === LogLevel.WARN) {
+      logger.warn(`[${errorData.context.service}] ${errorData.context.method} ${errorData.context.route} - ${errorName}: ${errorMessage}`, errorData);
+    } else if (typeof logger.info === 'function' && logLevel === LogLevel.INFO) {
+      logger.info(`[${errorData.context.service}] ${errorData.context.method} ${errorData.context.route} - ${errorName}: ${errorMessage}`, errorData);
+    } else if (typeof logger.log === 'function') {
+      // Fallback if specific methods don't exist
+      logger.log(logLevel, `[${errorData.context.service}] ${errorData.context.method} ${errorData.context.route} - ${errorName}: ${errorMessage}`, errorData);
+    } else {
+      // Last resort
+      console.error('[FALLBACK] Logger methods not available', errorData);
+    }
+  } catch (loggingError) {
+    // Prevent logger failures from crashing the server
+    // Always fall back to console so you don't lose the original error
+    console.error('[LOGGER ERROR] Failed to report server error:', loggingError);
+    console.error('[ORIGINAL ERROR]', error);
+    console.error('[ERROR DATA]', errorData);
+  }
   
   // Send to Sentry (always in production, selectively in other environments)
   if (process.env.NODE_ENV === 'production' || shouldReportError(error, statusCode)) {

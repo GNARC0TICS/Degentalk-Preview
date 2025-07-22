@@ -1,0 +1,109 @@
+{
+  "typescript": {
+    "enabled": true,
+    "strict": true,
+    "checkBrandedIds": true,
+    "configCache": ".claude/hooks/.tscache"
+  },
+  "eslint": {
+    "enabled": true,
+    "autoFix": true,
+    "extensions": [".ts", ".tsx"],
+    "ignorePatterns": ["*.test.ts", "*.spec.ts"]
+  },
+  "rules": {
+    "no-console": {
+      "enabled": true,
+      "severity": "error",
+      "autoFix": true,
+      "replacement": "logger"
+    },
+    "check-branded-ids": {
+      "enabled": true,
+      "severity": "error",
+      "autoFix": true,
+      "importFrom": "@shared/types/ids"
+    },
+    "validate-imports": {
+      "enabled": true,
+      "severity": "error",
+      "autoFix": true,
+      "allowedAliases": ["@/", "@shared/", "@config/"]
+    },
+    "no-any-types": {
+      "enabled": true,
+      "severity": "error",
+      "autoFix": false,
+      "exceptions": {
+        "ccpayment": {
+          "patterns": [
+            "ccpayment.*",
+            "CCPayment.*",
+            "processCCPayment",
+            "ccpaymentApi",
+            "ccpaymentRequest",
+            "ccpaymentResponse"
+          ],
+          "comments": [
+            "CCPayment API",
+            "ccpayment integration",
+            "@ccpayment-api"
+          ]
+        },
+        "eslintDisable": {
+          "patterns": [
+            "eslint-disable.*no-explicit-any",
+            "@ts-ignore"
+          ]
+        }
+      }
+    },
+    "security-checks": {
+      "enabled": true,
+      "severity": "error",
+      "autoFix": false
+    },
+    "production-readiness": {
+      "enabled": true,
+      "severity": "warning",
+      "autoFix": false,
+      "excludeFromProduction": true
+    },
+    "performance-checks": {
+      "enabled": true,
+      "severity": "warning", 
+      "autoFix": false,
+      "reactOnly": true
+    },
+    "check-api-request-signature": {
+      "enabled": true,
+      "severity": "warning",
+      "autoFix": false
+    },
+    "check-tooltip-usage": {
+      "enabled": true,
+      "severity": "error",
+      "autoFix": false
+    },
+    "check-id-conversions": {
+      "enabled": true,
+      "severity": "error",
+      "autoFix": false
+    }
+  },
+  "projectType": "monorepo",
+  "workspaces": {
+    "client": {
+      "type": "react-app",
+      "tsconfig": "./client/tsconfig.json"
+    },
+    "server": {
+      "type": "node-app", 
+      "tsconfig": "./server/tsconfig.json"
+    },
+    "shared": {
+      "type": "library",
+      "tsconfig": "./shared/tsconfig.json"
+    }
+  }
+}

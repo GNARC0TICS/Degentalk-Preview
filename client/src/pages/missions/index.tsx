@@ -72,7 +72,7 @@ export default function MissionsPage() {
 						</h1>
 						<p className="text-zinc-400 mt-1">Complete tasks to earn XP, DGT, and other rewards.</p>
 					</div>
-					<Link to="/progress" passHref>
+					<Link to="/progress">
 						<Button variant="outline">
 							View Full Progress Hub
 							<ChevronRight className="w-4 h-4 ml-2" />
@@ -99,7 +99,7 @@ export default function MissionsPage() {
 								</p>
 							</div>
 						</div>
-						<Link to="/progress?tab=achievements" passHref>
+						<Link to="/progress?tab=achievements">
 							<Button variant="secondary" className="bg-amber-600/20 hover:bg-amber-600/40">
 								View Achievements
 								<ChevronRight className="w-4 h-4 ml-2" />

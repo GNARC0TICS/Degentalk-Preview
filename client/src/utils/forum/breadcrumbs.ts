@@ -1,5 +1,5 @@
 import type { BreadcrumbItem } from '@/components/navigation/ForumBreadcrumbs';
-import { getForumUrl, getSubforumUrl, getThreadUrl } from '@/utils/forum-urls';
+import { getForumUrl, getSubforumUrl, getThreadUrl } from './urls';
 
 export interface ForumContext {
 	id: string;

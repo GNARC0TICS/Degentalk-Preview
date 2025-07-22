@@ -1,13 +1,13 @@
 import { Link } from 'react-router-dom';
 import { MessageSquare, CornerDownRight, Lock, Shield, Star, Crown, Flame } from 'lucide-react';
-import type { MergedForum } from '@/contexts/ForumStructureContext';
+import type { MergedForum } from '@/features/forum/contexts/ForumStructureContext';
 import { useState, useEffect } from 'react';
 import { StatChip } from '@/components/ui/stat-chip';
 import { Badge } from '@/components/ui/badge';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { usePermission } from '@/hooks/usePermission';
 import { CARD_STYLES } from '@/utils/card-constants';
-import { useAuth } from '@/hooks/use-auth';
+import { useCanonicalAuth } from '@/features/auth/useCanonicalAuth';
 
 interface ForumListItemProps {
 	forum: MergedForum;
@@ -28,7 +28,7 @@ export function ForumListItem({
 	const [prevPostCount, setPrevPostCount] = useState(forum.postCount || 0);
 	const [isAnimating, setIsAnimating] = useState(false);
 
-	const { user } = useAuth();
+	const { user } = useCanonicalAuth();
 	const { canPost, reason } = usePermission(forum);
 
 	// Check if counts have changed to trigger animations
@@ -59,10 +59,10 @@ export function ForumListItem({
 				</TooltipProvider>
 			);
 		}
-		if (forum.icon) {
+		if (forum.theme?.icon) {
 			return (
-				<span className="text-xl" style={{ color: forum.color || parentZoneColor || undefined }}>
-					{forum.icon}
+				<span className="text-xl" style={{ color: forum.theme?.color || parentZoneColor || undefined }}>
+					{forum.theme.icon}
 				</span>
 			);
 		}
@@ -70,7 +70,7 @@ export function ForumListItem({
 	};
 
 	// Accent color for borders, hover effects, etc.
-	const accentColor = forum.color || parentZoneColor || '#10b981'; // Emerald default if no color
+	const accentColor = forum.theme?.color || parentZoneColor || '#10b981'; // Emerald default if no color
 	const accentColorWithOpacity = `${accentColor}40`; // 25% opacity
 
 	// Different styling based on depth level
@@ -261,7 +261,7 @@ export function ForumListItem({
 								key={subForum.slug}
 								forum={subForum}
 								href={subforumHref}
-								parentZoneColor={forum.color || parentZoneColor}
+								parentZoneColor={forum.theme?.color || parentZoneColor}
 								depthLevel={depthLevel + 1}
 								parentForumSlug={forum.slug}
 							/>

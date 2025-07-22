@@ -15,7 +15,7 @@ export interface ApiRequestConfig {
 	url: string;
 	method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 	data?: any | undefined;
-	params?: Record<string, string | number | boolean | undefined> | undefined;
+	params?: Record<string, string | number | boolean | undefined | string[]> | undefined;
 	headers?: Record<string, string> | undefined;
 }
 
@@ -45,14 +45,21 @@ export async function apiRequest<T = unknown>(
 	// Build URL with query parameters
 	let url = config.url;
 	if (config.params) {
-		// Convert all params to strings, filtering out undefined values
-		const stringified = Object.fromEntries(
-			Object.entries(config.params)
-				.filter(([, v]) => v !== undefined && v !== null)
-				.map(([k, v]) => [k, String(v)])
-		);
-		const searchParams = new URLSearchParams(stringified);
-		url += url.includes('?') ? '&' + searchParams.toString() : '?' + searchParams.toString();
+		const searchParams = new URLSearchParams();
+		Object.entries(config.params).forEach(([key, value]) => {
+			if (value !== undefined && value !== null) {
+				if (Array.isArray(value)) {
+					// Handle array values (e.g., tags[])
+					value.forEach(v => searchParams.append(key, String(v)));
+				} else {
+					searchParams.append(key, String(value));
+				}
+			}
+		});
+		const queryString = searchParams.toString();
+		if (queryString) {
+			url += url.includes('?') ? '&' + queryString : '?' + queryString;
+		}
 	}
 
 	// Get JWT token for API requests

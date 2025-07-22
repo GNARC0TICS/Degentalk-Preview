@@ -532,8 +532,8 @@ function XPSystemModuleContent() {
 											);
 											if (newValue && !isNaN(Number(newValue))) {
 												updateXpAction.mutate({
-													actionKey: action.action,
-													payload: { baseValue: Number(newValue) }
+													key: action.action,
+													data: { baseValue: Number(newValue) }
 												});
 											}
 										}}

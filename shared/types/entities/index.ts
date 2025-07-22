@@ -6,3 +6,4 @@
 export * from './role.types.js';
 export * from './user.types.js';
 export * from './title.types.js';
+export * from './clout.types.js';

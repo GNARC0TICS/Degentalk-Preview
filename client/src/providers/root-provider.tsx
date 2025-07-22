@@ -3,13 +3,13 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider } from '@/hooks/use-auth';
 import { PurchaseModalProvider } from '@/hooks/use-purchase-modal';
 import { ShoutboxProvider } from '@/contexts/shoutbox-context';
-import { ForumStructureProvider } from '@/contexts/ForumStructureContext';
-import { ForumThemeProvider } from '@/contexts/ForumThemeProvider';
+import { ForumStructureProvider } from '@/features/forum/contexts/ForumStructureContext';
+import { ForumThemeProvider } from '@/features/forum/contexts/ForumThemeProvider';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { ProfileCardProvider } from '@/contexts/ProfileCardContext';
 import { MotionProvider } from '@/contexts/MotionContext';
 import { getQueryFn } from '@/utils/queryClient';
-import { ForumOrderingProvider } from '@/contexts/ForumOrderingContext';
+import { ForumOrderingProvider } from '@/features/forum/contexts/ForumOrderingContext';
 import { WebSocketProvider } from '@/hooks/useWebSocket';
 import { ThemeProvider } from 'next-themes';
 

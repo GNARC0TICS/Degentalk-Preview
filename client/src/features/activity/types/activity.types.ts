@@ -10,6 +10,12 @@ export interface EventLog {
 	metadata?: Record<string, any>;
 	meta?: Record<string, any>;
 	username?: string;
+	// User relation for joined queries
+	user?: {
+		id: UserId;
+		username: string;
+		avatarUrl?: string;
+	};
 }
 
 export interface EventLogFilters {
@@ -31,6 +37,6 @@ export interface EventLogPagination {
 		total: number;
 		totalItems?: number;
 		pages: number;
-		totalPages?: number;
+		totalPages: number; // Make required for consistency
 	};
 }

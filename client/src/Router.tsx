@@ -200,12 +200,10 @@ export const router = createBrowserRouter([
   ...(process.env.NODE_ENV === 'development' ? [{
     path: '/test/error-boundary',
     element: (
-      <RootLayout>
-        <div className="container mx-auto py-8">
-          <h1 className="text-2xl font-bold mb-4">Error Boundary Test Page</h1>
-          <ErrorBoundaryTest />
-        </div>
-      </RootLayout>
+      <div className="container mx-auto py-8">
+        <h1 className="text-2xl font-bold mb-4">Error Boundary Test Page</h1>
+        <ErrorBoundaryTest />
+      </div>
     ),
   }] : []),
 ]);

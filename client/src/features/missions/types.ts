@@ -28,16 +28,23 @@ export interface Mission {
   claimedAt?: string;
   isFeatured: boolean;
   progress?: MissionProgress;
+  // Helper properties derived from progress
+  isComplete?: boolean;
+  isClaimed?: boolean;
+}
+
+export interface ProgressMetric {
+  current: number;
+  target: number;
+  percentage: number;
 }
 
 export interface MissionProgress {
-  [requirementKey: string]: {
-    current: number;
-    target: number;
-    percentage: number;
+  metrics: {
+    [requirementKey: string]: ProgressMetric;
   };
-  isComplete?: boolean;
-  isClaimed?: boolean;
+  isComplete: boolean;
+  isClaimed: boolean;
 }
 
 export type MissionCategory = 
@@ -159,6 +166,10 @@ export interface MissionStreak {
   bestStreak: number;
   lastCompleted: string | null;
   streakBrokenAt?: string;
+  // Aliases used by components (backwards compatibility)
+  type?: 'daily' | 'weekly'; // Alias for streakType
+  current?: number; // Alias for currentStreak
+  best?: number; // Alias for bestStreak
 }
 
 export interface MissionStats {

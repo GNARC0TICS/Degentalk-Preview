@@ -5,7 +5,7 @@ import type { AdminId } from '@shared/types/ids';
  * Prefer using the ForumStructureContext for dynamic forum rules.
  */
 
-import type { MergedRules } from '@/contexts/ForumStructureContext';
+import type { MergedRules } from '@/features/forum/contexts/ForumStructureContext';
 import { logger } from "@/lib/logger";
 
 // This function is deprecated - use ForumStructureContext instead

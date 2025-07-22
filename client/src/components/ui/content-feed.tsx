@@ -234,7 +234,7 @@ function ContentItem({ item, showCategory = true }: { item: ContentItem; showCat
 
 							<div className="flex items-center gap-2">
 								{/* Category tag */}
-								{showCategory && (
+								{showCategory && item.category && (
 									<Link to={`/forums/${item.category.slug}`}>
 										<span
 											className={cn(

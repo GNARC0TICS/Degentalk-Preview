@@ -18,8 +18,8 @@ import {
 	Zap
 } from 'lucide-react';
 import { useAuth } from '@/hooks/use-auth';
-import { useForumStructure } from '@/contexts/ForumStructureContext';
-import type { MergedForum, MergedZone } from '@/contexts/ForumStructureContext';
+import { useForumStructure } from '@/features/forum/contexts/ForumStructureContext';
+import type { MergedForum, MergedZone } from '@/features/forum/contexts/ForumStructureContext';
 import {
 	Breadcrumb,
 	BreadcrumbList,

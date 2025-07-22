@@ -118,7 +118,6 @@ export default function RainButton({
 			{
 				amount: values.amount,
 				eligibleUserCount: values.eligibleUserCount,
-				channel: values.channel,
 				message: values.message
 			},
 			{

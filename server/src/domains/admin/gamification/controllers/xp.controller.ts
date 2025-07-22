@@ -29,17 +29,18 @@ const AdjustUserXpSchema = z.object({
 });
 
 // Import service (this will need to be moved/created)
-let xpAdminService: any;
-try {
-	const service = require('../../sub-domains/xp/xp.service');
-	xpAdminService = service.xpAdminService;
-} catch {
-	// Temporary fallback - will be properly implemented
-	xpAdminService = {
-		getLevels: async () => [],
-		createLevel: async (data: any) => data,
-		updateLevel: async (level: number, data: any) => data
-	};
+async function getXpAdminService() {
+	try {
+		const service = await import('../../sub-domains/xp/xp.service');
+		return service.xpAdminService;
+	} catch {
+		// Temporary fallback - will be properly implemented
+		return {
+			getLevels: async () => [],
+			createLevel: async (data: any) => data,
+			updateLevel: async (level: number, data: any) => data
+		};
+	}
 }
 
 /**
@@ -47,6 +48,7 @@ try {
  */
 export const getLevels = async (req: Request, res: Response) => {
 	try {
+		const xpAdminService = await getXpAdminService();
 		const levels = await xpAdminService.getLevels();
 		return sendSuccessResponse(res, {
 			levels,
@@ -67,6 +69,7 @@ export const getLevels = async (req: Request, res: Response) => {
 export const createLevel = async (req: Request, res: Response) => {
 	try {
 		const data = CreateLevelSchema.parse(req.body);
+		const xpAdminService = await getXpAdminService();
 		const level = await xpAdminService.createLevel(data);
 		return sendSuccessResponse(res, level, 'Level created successfully');
 	} catch (error) {
@@ -89,6 +92,7 @@ export const updateLevel = async (req: Request, res: Response) => {
 		}
 
 		const data = UpdateLevelSchema.parse(req.body);
+		const xpAdminService = await getXpAdminService();
 		const level = await xpAdminService.updateLevel(levelNumber, data);
 		return sendSuccessResponse(res, level, 'Level updated successfully');
 	} catch (error) {

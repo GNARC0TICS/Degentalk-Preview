@@ -37,7 +37,6 @@ initializeApp();
 ReactDOM.createRoot(document.getElementById('root')!).render(
 	<GlobalErrorBoundary>
 		<RootProvider>
-			<App />
 			<RouterProvider router={router} />
 		</RootProvider>
 	</GlobalErrorBoundary>
