@@ -448,6 +448,18 @@ export {
 	ECONOMY_CONSTANTS
 } from './economy.js';
 
+// Auth User types (unified)
+export type {
+	AuthUser,
+	UserRole
+} from './auth-user.types.js';
+
+export {
+	hasRole,
+	isAdminOrHigher,
+	isModeratorOrHigher
+} from './auth-user.types.js';
+
 // Branded ID types
 export * from './ids.js';
 

@@ -5,11 +5,9 @@
 	"type": "module",
 	"main": "index.ts",
 	"scripts": {
-		"dev": "tsx index-clean.ts",
-		"dev:quick": "QUICK_MODE=true tsx --watch index-clean.ts",
-		"start": "tsx index-clean.ts",
-		"dev:original": "tsx index.ts",
+		"dev": "tsx --tsconfig ./tsconfig.json index.ts",
 		"build": "tsc -p tsconfig.build.json",
+		"start": "node dist/index.js",
 		"lint": "eslint . --ext .ts --max-warnings 0",
 		"typecheck": "tsc --noEmit",
 		"test": "vitest -c vitest.config.ts"

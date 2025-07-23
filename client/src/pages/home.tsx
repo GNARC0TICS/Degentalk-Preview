@@ -6,7 +6,6 @@ import type { MergedZone } from '@/features/forum/contexts/ForumStructureContext
 // Import components
 import { HeroSection } from '@/components/layout/hero-section';
 import { AnnouncementTicker } from '@/components/layout/announcement-ticker';
-import { SiteFooter } from '@/components/footer';
 import { ResponsiveLayoutWrapper } from '@/components/layout/ResponsiveLayoutWrapper';
 import { PrimaryZoneCarousel } from '@/components/zone/PrimaryZoneCarousel';
 import { Wide } from '@/layout/primitives/Wide';
@@ -106,7 +105,6 @@ function HomePage() {
 					</Wide>
 				</ResponsiveLayoutWrapper>
 			</ContentFeedProvider>
-			<SiteFooter />
 		</ErrorBoundary>
 	);
 }

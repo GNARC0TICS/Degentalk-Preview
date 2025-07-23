@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { UserIdSchema, MissionIdSchema } from '../shared/branded-ids';
 import type { MissionId, UserId } from '@shared/types/ids';
 
 /**
@@ -66,9 +67,9 @@ export const MissionProgressSchema = z.object({
  * Mission Schema (with progress)
  */
 export const MissionSchema = z.object({
-  id: z.string() as z.ZodType<MissionId>,
+  id: MissionIdSchema,
   template: MissionTemplateSchema,
-  userId: z.string() as z.ZodType<UserId>,
+  userId: UserIdSchema,
   periodType: z.enum(['daily', 'weekly', 'monthly', 'special', 'perpetual']),
   periodStart: z.string(),
   periodEnd: z.string(),
@@ -89,7 +90,7 @@ export type Mission = z.infer<typeof MissionSchema>;
  * Handles both API property names and component aliases
  */
 export const MissionStreakSchema = z.object({
-  userId: z.string() as z.ZodType<UserId>,
+  userId: UserIdSchema,
   streakType: z.enum(['daily', 'weekly']),
   // Primary properties (from API)
   current: z.number().optional(),

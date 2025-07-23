@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import ChartMenu from '@/components/ui/candlestick-menu';
 import { WalletSheet } from '@/features/wallet/components/WalletSheet';
-import { useAuthWrapper } from '@/hooks/wrappers/use-auth-wrapper';
+import { useAuth } from '@/hooks/use-auth';
 import { HeaderThemeWrapper } from './HeaderThemeWrapper';
 import { HeaderPluginSlot } from './HeaderPluginSlot';
 import { Logo } from './Logo';
@@ -19,7 +19,7 @@ import { useHeader } from './HeaderContext';
 
 export function SiteHeader() {
 	const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-	const { logoutMutation } = useAuthWrapper() || {};
+	const { logoutMutation } = useAuth();
 	const { authStatus, user, walletOpen, toggleWallet } = useHeader();
 
 	const isAuthenticated = authStatus !== 'guest' && authStatus !== 'loading';

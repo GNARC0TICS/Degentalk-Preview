@@ -4,7 +4,6 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { formatDistanceToNow } from 'date-fns';
 import { Wide } from '@/layout/primitives';
-import { SiteFooter } from '@/components/footer';
 import { Link } from 'react-router-dom';
 
 // Demo user profile data
@@ -210,8 +209,6 @@ export default function ProfilePage() {
           </div>
         </div>
       </Wide>
-      
-      <SiteFooter />
     </div>
   );
 }

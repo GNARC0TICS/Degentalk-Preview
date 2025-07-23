@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { useAuthWrapper } from '@/hooks/wrappers/use-auth-wrapper';
+import { useAuth } from '@/hooks/use-auth';
 
 export type AuthStatus = 'loading' | 'guest' | 'user' | 'admin';
 
@@ -42,9 +42,9 @@ interface HeaderProviderProps {
 }
 
 export function HeaderProvider({ children, theme }: HeaderProviderProps) {
-	// CRITICAL: Use the auth wrapper to get the SAME auth state as useAuth hook
+	// CRITICAL: Use the auth hook to get the auth state
 	// This ensures the header UI is always in sync with the main auth state
-	const { user, isLoading, isAuthenticated } = useAuthWrapper() || {};
+	const { user, isLoading, isAuthenticated } = useAuth();
 
 	// Local UI state (not auth-related)
 	const [walletOpen, setWalletOpen] = useState(false);

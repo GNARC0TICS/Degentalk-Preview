@@ -2,53 +2,20 @@ import type { ReactNode } from 'react';
 import { createContext, useContext, useState, useEffect, useMemo } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiRequest } from '@/utils/api-request';
-import { useNavigate } from 'react-router-dom';
 import { getUserPermissions } from '@/utils/roles';
 import type { Role } from '@/utils/roles';
+import type { AuthUser, UserRole } from '@shared/types/auth-user.types';
 import type { UserId, FrameId } from '@shared/types/ids';
 import { toId } from '@shared/types/index';
 import { setAuthToken, removeAuthToken } from '@/utils/auth-token';
 import { logger } from "@/lib/logger";
 
 // Define user type
-export interface User {
-	id: UserId;
-	username: string;
-	email: string;
-	avatarUrl: string | null;
-	role: Role;
-	walletId?: string;
-	walletAddress?: string;
-	createdAt: string;
-	level: number;
-	xp: number;
-	isVerified: boolean;
-	bio?: string | null;
-	clout?: number;
-	reputation?: number;
-	website?: string | null;
-	github?: string | null;
-	twitter?: string | null;
-	discord?: string | null;
-	pluginData?: Record<string, any> | null;
-	isActive?: boolean;
-	signature?: string | null;
-	lastActiveAt?: string | null;
-	bannerUrl?: string | null;
-	dgtBalance?: number;
-	activeFrameId?: FrameId | null;
-	avatarFrameId?: FrameId | null;
-	isBanned: boolean;
-	isVIP?: boolean; // VIP status for special missions/features
-	isVip?: boolean; // Alias for isVIP (different casing used in some places)
-	
-	// Computed role helpers
-	isAdmin: boolean;
-	isModerator: boolean;
-}
+// Re-export AuthUser as User for backward compatibility
+export type User = AuthUser;
 
 // Possible roles for mock user switching
-export type MockRole = 'user' | 'moderator' | 'admin' | 'super_admin';
+export type MockRole = UserRole;
 
 // Auth context type
 interface AuthContextType {
@@ -69,6 +36,9 @@ interface AuthContextType {
 	isModerator: boolean;
 	canAccessAdminPanel: boolean;
 	isAdminOrModerator: boolean;
+	// Navigation state
+	shouldRedirectToAuth: boolean;
+	clearAuthRedirect: () => void;
 	// --- Dev Mode Specific --- (Only available in dev)
 	isDevMode: boolean;
 	currentMockRole: MockRole | null;
@@ -110,6 +80,7 @@ const mockUsers: Record<MockRole, User> = {
 		activeFrameId: toId<'FrameId'>('550e8400-e29b-41d4-a716-446655440002'),
 		avatarFrameId: toId<'FrameId'>('550e8400-e29b-41d4-a716-446655440002'),
 		isBanned: false,
+		isVIP: false,
 		isAdmin: false,
 		isModerator: false
 	},
@@ -141,6 +112,7 @@ const mockUsers: Record<MockRole, User> = {
 		activeFrameId: null,
 		avatarFrameId: null,
 		isBanned: false,
+		isVIP: false,
 		isAdmin: false,
 		isModerator: true
 	},
@@ -172,6 +144,7 @@ const mockUsers: Record<MockRole, User> = {
 		activeFrameId: toId<'FrameId'>('550e8400-e29b-41d4-a716-446655440005'),
 		avatarFrameId: toId<'FrameId'>('550e8400-e29b-41d4-a716-446655440005'),
 		isBanned: false,
+		isVIP: true,
 		isAdmin: true,
 		isModerator: false
 	},
@@ -203,6 +176,7 @@ const mockUsers: Record<MockRole, User> = {
 		activeFrameId: toId<'FrameId'>('550e8400-e29b-41d4-a716-446655440007'),
 		avatarFrameId: toId<'FrameId'>('550e8400-e29b-41d4-a716-446655440007'),
 		isBanned: false,
+		isVIP: true,
 		isAdmin: true,
 		isModerator: true
 	}
@@ -219,7 +193,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 	const [userState, setUserState] = useState<User | null>(null);
 	const [authError, setAuthError] = useState<string | null>(null);
 	const [isInitialLoading, setIsInitialLoading] = useState(true);
-	const [currentMockRoleState, setCurrentMockRoleState] = useState<MockRole>('super_admin'); // Default to super_admin for development
+	const [currentMockRoleState, setCurrentMockRoleState] = useState<MockRole>(() => {
+		// Allow configuring default dev role via environment variable
+		const devRole = import.meta.env.VITE_DEV_DEFAULT_ROLE as MockRole;
+		return devRole && ['user', 'moderator', 'admin', 'super_admin'].includes(devRole) 
+			? devRole 
+			: 'user'; // Default to regular user, not super_admin
+	});
 	const [isLoggedOut, setIsLoggedOut] = useState(() => {
 		if (import.meta.env.MODE === 'development') {
 			return sessionStorage.getItem('dev_loggedOut') === '1';
@@ -237,15 +217,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 	const isDevelopment =
 		import.meta.env.MODE === 'development' && import.meta.env.VITE_FORCE_AUTH !== 'true';
 	
-	// Use navigate only if we're in a Router context
-	let navigate: ReturnType<typeof useNavigate> | undefined;
-	try {
-		navigate = useNavigate();
-	} catch (error) {
-		// useNavigate was called outside of Router context
-		// This can happen during initial render
-		navigate = undefined;
-	}
+	// Navigation state - components should handle navigation based on this
+	const [shouldRedirectToAuth, setShouldRedirectToAuth] = useState(false);
 
 	// USER AUTHENTICATION QUERY: This is the core auth validation
 	// Uses the RootProvider's QueryClient which has on401: 'returnNull' configured
@@ -359,13 +332,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 			queryClient.setQueryData(['/api/auth/user'], null); // Clear user query cache
 			queryClient.clear(); // Clear all query cache on logout
 
-			// Client-side navigation keeps React tree mounted (no auto-login reset)
-			if (navigate) {
-				navigate('/auth');
-			} else {
-				// Fallback to window.location if Router not available
-				window.location.href = '/auth';
-			}
+			// Signal that we should redirect to auth
+			// Components inside Router can handle this
+			setShouldRedirectToAuth(true);
 		},
 		onError: () => {
 			// Handle logout error
@@ -381,12 +350,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 			queryClient.setQueryData(['/api/auth/user'], null);
 
 			// Navigate even on error
-			if (navigate) {
-				navigate('/auth');
-			} else {
-				// Fallback to window.location if Router not available
-				window.location.href = '/auth';
-			}
+			setShouldRedirectToAuth(true);
 		}
 	});
 
@@ -454,6 +418,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 			isModerator: permissions.isModerator,
 			canAccessAdminPanel: permissions.canAccessAdminPanel,
 			isAdminOrModerator: permissions.isAdminOrModerator,
+			// Navigation state
+			shouldRedirectToAuth,
+			clearAuthRedirect: () => setShouldRedirectToAuth(false),
 			// --- Dev Mode Specific --- (Disabled for wallet testing)
 			isDevMode: isDevelopment,
 			currentMockRole: isDevelopment ? currentMockRoleState : null,
@@ -468,7 +435,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 		logoutMutation,
 		currentMockRoleState,
 		isDevelopment,
-		setMockRole
+		setMockRole,
+		shouldRedirectToAuth
 	]);
 
 	// Development-only check for duplicate providers

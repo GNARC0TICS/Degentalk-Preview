@@ -3,8 +3,6 @@
  * @description Centralized routing file for the Degentalk backend application.
  */
 import express, { type Express, type Request, type Response } from 'express';
-import { createServer, type Server } from 'http';
-import { WebSocketServer } from 'ws';
 import { db, pool } from './src/core/db';
 import connectPGSink from 'connect-pg-simple';
 const PGStore = connectPGSink(session);
@@ -77,7 +75,7 @@ import { achievementRoutes } from './src/domains/gamification/achievements';
 import { getAuthenticatedUser } from '@core/utils/auth.helpers';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
-export async function registerRoutes(app: Express): Promise<Server> {
+export async function registerRoutes(app: Express): Promise<void> {
 	// Initialize Sentry before any other middleware
 	initSentry(app);
 	
@@ -249,20 +247,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
 		sendSuccessResponse(res, { csrfToken: req.csrfToken() });
 	});
 
-	const server = createServer(app);
-
-	if (process.env.NODE_ENV === 'production') {
-		const wss = new WebSocketServer({ server });
-		wss.on('connection', (ws) => {
-			logger.info('WebSocket client connected');
-			ws.on('message', (message) => {
-				logger.info(`Received WebSocket message: ${message}`);
-			});
-			ws.on('close', () => {
-				logger.info('WebSocket client disconnected');
-			});
-		});
-	}
 
 	const sessionMiddleware = session({
 		store: new PGStore({
@@ -372,5 +356,4 @@ export async function registerRoutes(app: Express): Promise<Server> {
 	// Global error handler comes last
 	app.use(globalErrorHandler);
 
-	return server;
 }

@@ -2,6 +2,7 @@ import React from 'react';
 import { Outlet } from 'react-router-dom';
 import { SiteHeader, HeaderProvider } from '@/components/header';
 import { SiteFooter } from '@/components/footer';
+import { AuthRedirectHandler } from '@/components/auth/AuthRedirectHandler';
 
 /**
  * Root Layout - Main application shell
@@ -10,6 +11,7 @@ import { SiteFooter } from '@/components/footer';
 export default function RootLayout() {
   return (
     <HeaderProvider>
+      <AuthRedirectHandler />
       <div className="min-h-screen bg-black text-white flex flex-col">
         <SiteHeader />
         <main className="flex-1">
