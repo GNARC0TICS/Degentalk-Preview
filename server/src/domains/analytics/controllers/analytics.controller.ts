@@ -9,7 +9,7 @@ import { Request, Response } from 'express';
 import { logger } from '@core/logger';
 import { sessionTrackingService } from '../services/session-tracking.service';
 import { redisCacheService } from '@core/cache/redis.service';
-import { getAuthenticatedUser } from '@utils/request-user';
+import { getUser } from '@utils/request-user';
 import { send } from '@api/utils/response';
 
 export class AnalyticsController {
@@ -104,7 +104,7 @@ export class AnalyticsController {
    */
   async clearCache(req: Request, res: Response): Promise<void> {
     try {
-      const user = getAuthenticatedUser(req);
+      const user = getUser(req);
       
       if (!user || user.role !== 'admin') {
         return res.status(403).json({

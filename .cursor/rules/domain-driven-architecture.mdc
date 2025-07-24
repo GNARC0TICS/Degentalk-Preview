@@ -1,0 +1,269 @@
+---
+description: Domain-Driven Architecture with Repository Pattern and Event-Driven Communication
+globs: ["server/src/domains/**/*.ts", "server/src/core/**/*.ts"]
+alwaysApply: true
+---
+# Domain-Driven Architecture with Repository Pattern
+
+## 🎯 Objective
+Transform DegenTalk backend into a clean, scalable, domain-driven architecture with proper boundaries, repository pattern for data access, and event-driven communication between domains.
+
+## 🏗️ Architecture Rules
+
+### 1. Repository Pattern Enforcement (@repositoryPattern)
+**Trigger:** Creating or modifying any service that needs data access
+
+**Action:** ALL database queries MUST go through repositories
+
+```typescript
+// ❌ FORBIDDEN - Direct DB access in service
+export class ForumService {
+  async getThread(id: ThreadId) {
+    // ❌ Services MUST NOT import db
+    const thread = await db.select().from(threads).where(eq(threads.id, id));
+    return thread;
+  }
+}
+
+// ✅ REQUIRED - Repository pattern
+export class ForumRepository extends BaseRepository<Thread> {
+  protected tableName = 'threads';
+  
+  async getThreadWithStats(id: ThreadId, options?: QueryOptions) {
+    return this.executeQuery(
+      async (db) => db
+        .select({
+          ...threads,
+          postCount: count(posts.id),
+          lastPost: max(posts.createdAt)
+        })
+        .from(threads)
+        .leftJoin(posts, eq(posts.threadId, threads.id))
+        .where(eq(threads.id, id))
+        .groupBy(threads.id),
+      options
+    );
+  }
+}
+
+export class ForumService {
+  constructor(private repository: ForumRepository) {}
+  
+  async getThread(id: ThreadId) {
+    const thread = await this.repository.getThreadWithStats(id);
+    if (!thread) throw new NotFoundError('Thread', id);
+    return thread;
+  }
+}
+```
+
+### 2. Domain Boundaries (@domainBoundaries)
+**Trigger:** Importing from another domain
+
+**Action:** ONLY import from domain's index.ts, NEVER internal files
+
+```typescript
+// ❌ FORBIDDEN - Cross-domain internal imports
+import { walletService } from '../wallet/wallet.service';
+import { WalletRepository } from '../wallet/wallet.repository';
+import { calculateBalance } from '../wallet/utils/calculator';
+
+// ✅ ALLOWED - Import from domain index only
+import { walletService, type WalletBalance } from '@domains/wallet';
+import { EventBus, DomainEvents } from '@core/events';
+
+// Domain index.ts exports ONLY public API
+export { forumService } from './forum.service';
+export { ForumEvents } from './events';
+export type { Thread, Post, Forum } from './types';
+```
+
+### 3. Event-Driven Communication (@eventDriven)
+**Trigger:** Needing to communicate with another domain
+
+**Action:** Use EventBus instead of direct service calls
+
+```typescript
+// ❌ FORBIDDEN - Direct cross-domain service calls
+export class ForumService {
+  async createPost(data: CreatePostData) {
+    const post = await this.repository.create(data);
+    
+    // ❌ Don't call other services directly
+    await xpService.awardXP(data.userId, 10, 'create_post');
+    await walletService.checkBalance(data.userId);
+    
+    return post;
+  }
+}
+
+// ✅ REQUIRED - Event-driven communication
+export class ForumService {
+  async createPost(data: CreatePostData) {
+    const post = await this.repository.create(data);
+    
+    // ✅ Emit event for other domains
+    EventBus.emit({
+      type: ForumEvents.POST_CREATED,
+      payload: {
+        postId: post.id,
+        userId: data.userId,
+        threadId: data.threadId,
+        forumId: data.forumId
+      },
+      metadata: {
+        userId: data.userId,
+        timestamp: new Date(),
+        correlationId: crypto.randomUUID()
+      }
+    });
+    
+    return post;
+  }
+}
+
+// In XP domain handler
+EventBus.on(ForumEvents.POST_CREATED, async (event) => {
+  await xpService.awardXP(event.payload.userId, 10, 'create_post');
+});
+```
+
+### 4. Domain Structure (@domainStructure)
+**Trigger:** Creating a new domain or organizing existing one
+
+**Action:** Follow strict domain folder structure
+
+```typescript
+// ✅ REQUIRED domain structure
+server/src/domains/[domain-name]/
+├── index.ts                    // Public exports ONLY
+├── types.ts                    // Domain types
+├── events.ts                   // Domain events  
+├── [domain].service.ts         // Business logic (NO db)
+├── [domain].repository.ts      // Data access (ALL db)
+├── [domain].controller.ts      // HTTP routes
+├── [domain].validator.ts       // Zod schemas
+├── [domain].transformer.ts     // Response DTOs
+├── handlers/                   // Event handlers
+│   └── index.ts               // Register all handlers
+├── admin/                      // Admin features
+│   ├── [domain].admin.controller.ts
+│   └── [domain].admin.service.ts
+└── __tests__/                  // Domain tests
+```
+
+### 5. Error Handling (@domainErrors)
+**Trigger:** Throwing errors in services
+
+**Action:** Use standard domain errors from @core/errors
+
+```typescript
+// ❌ AVOID - Generic errors
+throw new Error('Thread not found');
+throw new Error('Invalid request');
+
+// ✅ REQUIRED - Domain errors
+import { NotFoundError, ValidationError, ForbiddenError } from '@core/errors';
+
+throw new NotFoundError('Thread', threadId);
+throw new ValidationError({ title: ['Title is required'] });
+throw new ForbiddenError('create posts in locked thread');
+```
+
+### 6. Transaction Support (@transactionSupport)
+**Trigger:** Operations that modify multiple tables
+
+**Action:** Use repository transaction support
+
+```typescript
+// ✅ REQUIRED - Transaction support in repositories
+export class WalletService {
+  async transfer(request: TransferRequest) {
+    // Execute in transaction
+    const result = await db.transaction(async (tx) => {
+      // Pass tx to repository methods
+      return this.repository.executeTransfer(request, { tx });
+    });
+    
+    // Emit events after successful commit
+    EventBus.emit({
+      type: WalletEvents.DGT_TRANSFERRED,
+      payload: result,
+      metadata: { userId: request.fromUserId, timestamp: new Date() }
+    });
+    
+    return result;
+  }
+}
+```
+
+### 7. Core Infrastructure Usage (@coreInfra)
+**Trigger:** Needing config, cache, auth, or events
+
+**Action:** Use centralized core services
+
+```typescript
+// ✅ REQUIRED - Use core infrastructure
+import { config } from '@core/config';
+import { cacheService } from '@core/cache';
+import { auth } from '@core/auth';
+import { EventBus } from '@core/events';
+import { logger } from '@core/logger';
+
+// Config usage
+const maxAmount = config.get('RAIN_MAX_AMOUNT');
+const isEnabled = config.isFeatureEnabled('DAILY_BONUS');
+
+// Cache usage
+const cached = await cacheService.get(cacheService.keys.user(userId));
+await cacheService.set(cacheService.keys.user(userId), userData, { ttl: 300 });
+
+// Auth middleware
+router.post('/admin/ban', auth.requirePermission('user', 'ban'), controller.banUser);
+
+// Structured logging
+logger.info('WALLET', 'Transfer completed', { from, to, amount });
+```
+
+## 🚫 Forbidden Patterns
+
+1. **Direct DB access in services** - Use repositories
+2. **Cross-domain service imports** - Use EventBus
+3. **Importing from internal files** - Import from index.ts only
+4. **Hardcoded config values** - Use ConfigService
+5. **Direct Redis access** - Use CacheService
+6. **console.log** - Use logger
+7. **Untyped IDs** - Use branded IDs from @shared/types/ids
+
+## ✅ Required Patterns
+
+1. **BaseRepository extension** for all repositories
+2. **Domain events** for cross-domain communication
+3. **Standard errors** from @core/errors
+4. **Transaction support** via options.tx
+5. **Cache invalidation** on updates
+6. **Structured logging** with context
+7. **Type-safe configuration** via ConfigService
+
+## 🎯 Success Metrics
+
+- Zero direct DB imports in services
+- Zero cross-domain service dependencies
+- All domains have proper folder structure
+- All repositories extend BaseRepository
+- Event handlers registered for domain events
+- Cache hit rate > 80%
+- All errors use standard types
+
+## 🔧 Migration Checklist
+
+1. Create repository extending BaseRepository
+2. Move all DB queries from service to repository
+3. Inject repository into service constructor
+4. Replace cross-domain calls with events
+5. Create event handlers in handlers/
+6. Update domain index.ts exports
+7. Add repository tests
+8. Add domain isolation tests
+
+This architecture ensures DegenTalk is scalable, maintainable, and ready for microservice extraction! 🚀

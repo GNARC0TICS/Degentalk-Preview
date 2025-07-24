@@ -15,7 +15,7 @@ import type {
 
 import { logger } from '@core/logger';
 import { WalletError, ErrorCodes } from '@core/errors';
-import { getAuthenticatedUser } from '@core/utils/auth.helpers';
+import { getUser } from '@core/utils/auth.helpers';
 import { walletService } from '@api/domains/wallet/services/wallet.service';
 import { walletConfig } from '@shared/wallet.config';
 import { settingsService } from '@core/services/settings.service';
@@ -42,7 +42,7 @@ export class WalletController {
 	 */
 	async getBalance(req: Request, res: Response): Promise<void> {
 		try {
-			const user = getAuthenticatedUser(req);
+			const user = getUser(req);
 			logger.info('WalletController', 'Getting balance', { userId: user.id });
 
 			const balance = await walletService.getUserBalance(user.id);
@@ -59,7 +59,7 @@ export class WalletController {
 	 */
 	async initializeWallet(req: Request, res: Response): Promise<void> {
 		try {
-			const user = getAuthenticatedUser(req);
+			const user = getUser(req);
 			logger.info('WalletController', 'Initializing wallet', { userId: user.id });
 
 			const result = await walletService.initializeWallet(user.id);
@@ -77,7 +77,7 @@ export class WalletController {
 	 */
 	async createDepositAddress(req: Request, res: Response): Promise<void> {
 		try {
-			const user = getAuthenticatedUser(req);
+			const user = getUser(req);
 			const { coinSymbol, chain } = req.body;
 
 			logger.info('WalletController', 'Creating deposit address', {
@@ -101,7 +101,7 @@ export class WalletController {
 	 */
 	async getDepositAddresses(req: Request, res: Response): Promise<void> {
 		try {
-			const user = getAuthenticatedUser(req);
+			const user = getUser(req);
 			logger.info('WalletController', 'Getting deposit addresses', { userId: user.id });
 
 			const addresses = await walletService.getDepositAddresses(user.id);
@@ -120,7 +120,7 @@ export class WalletController {
 	 */
 	async requestWithdrawal(req: Request, res: Response): Promise<void> {
 		try {
-			const user = getAuthenticatedUser(req);
+			const user = getUser(req);
 			const withdrawalRequest: WithdrawalRequest = req.body;
 
 			logger.info('WalletController', 'Processing withdrawal request', {
@@ -145,7 +145,7 @@ export class WalletController {
 	 */
 	async getTransactionHistory(req: Request, res: Response): Promise<void> {
 		try {
-			const user = getAuthenticatedUser(req);
+			const user = getUser(req);
 			const { page, limit, sortBy, sortOrder } = req.query;
 
 			const options: Partial<PaginationOptions> = {
@@ -184,7 +184,7 @@ export class WalletController {
 	 */
 	async purchaseDgt(req: Request, res: Response): Promise<void> {
 		try {
-			const user = getAuthenticatedUser(req);
+			const user = getUser(req);
 			const { fromCoinId, fromAmount, toCoinSymbol } = req.body;
 
 			// Validate that user is purchasing DGT
@@ -239,7 +239,7 @@ export class WalletController {
 	 */
 	async transferDgt(req: Request, res: Response): Promise<void> {
 		try {
-			const user = getAuthenticatedUser(req);
+			const user = getUser(req);
 			const { to, amount, reason, metadata } = req.body;
 
 			const transfer: DgtTransfer = {
@@ -358,7 +358,7 @@ export class WalletController {
 	 */
 	async swapCrypto(req: Request, res: Response): Promise<void> {
 		try {
-			const user = getAuthenticatedUser(req);
+			const user = getUser(req);
 			const { fromCoinId, toCoinId, fromAmount } = req.body;
 
 			logger.info('WalletController', 'Processing crypto swap', {
@@ -410,7 +410,7 @@ export class WalletController {
 	 */
 	async getAdminDepositConfig(req: Request, res: Response): Promise<void> {
 		try {
-			const user = getAuthenticatedUser(req);
+			const user = getUser(req);
 
 			// Check admin permissions using RBAC
 			if (!hasPermission(user.role, 'economy', 'read')) {
@@ -441,7 +441,7 @@ export class WalletController {
 	 */
 	async updateAdminDepositConfig(req: Request, res: Response): Promise<void> {
 		try {
-			const user = getAuthenticatedUser(req);
+			const user = getUser(req);
 
 			// Check admin permissions using RBAC
 			if (!hasPermission(user.role, 'economy', 'write')) {

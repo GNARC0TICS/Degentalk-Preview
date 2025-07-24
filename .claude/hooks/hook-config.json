@@ -96,6 +96,18 @@
       "autoFix": false,
       "description": "Prevents creating duplicate directories in shared workspace",
       "hooks": ["pre-edit", "pre-create"]
+    },
+    "enforce-repository-pattern": {
+      "enabled": true,
+      "severity": "error",
+      "autoFix": false,
+      "description": "Services cannot directly access database - must use repositories"
+    },
+    "enforce-domain-boundaries": {
+      "enabled": true,
+      "severity": "error",
+      "autoFix": false,
+      "description": "Prevents cross-domain internal imports - must use index.ts exports"
     }
   },
   "projectType": "monorepo",

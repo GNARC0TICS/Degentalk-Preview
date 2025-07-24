@@ -5,7 +5,7 @@ import { campaignManagementService } from './campaign-management.service';
 import { adConfigurationService } from './ad-configuration.service';
 import { logger } from '@core/logger';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
-import { getAuthenticatedUser } from '@core/utils/auth.helpers';
+import { getUser } from '@core/utils/auth.helpers';
 
 // Request validation schemas
 const adRequestSchema = z.object({
@@ -155,7 +155,7 @@ export class AdController {
 	 */
 	async createCampaign(req: Request, res: Response): Promise<void> {
 		try {
-			const user = getAuthenticatedUser(req);
+			const user = getUser(req);
 			if (!user) {
 				return sendErrorResponse(res, 'Authentication required', 401);
 			}
@@ -181,7 +181,7 @@ export class AdController {
 	 */
 	async getCampaign(req: Request, res: Response): Promise<void> {
 		try {
-			const user = getAuthenticatedUser(req);
+			const user = getUser(req);
 			if (!user) {
 				return sendErrorResponse(res, 'Authentication required', 401);
 			}
@@ -202,7 +202,7 @@ export class AdController {
 	 */
 	async listCampaigns(req: Request, res: Response): Promise<void> {
 		try {
-			const user = getAuthenticatedUser(req);
+			const user = getUser(req);
 			if (!user) {
 				return sendErrorResponse(res, 'Authentication required', 401);
 			}
@@ -230,7 +230,7 @@ export class AdController {
 	async updateCampaign(req: Request, res: Response): Promise<void> {
 		try {
 			const { campaignId } = req.params;
-			const user = getAuthenticatedUser(req);
+			const user = getUser(req);
 			if (!user) {
 				return sendErrorResponse(res, 'Authentication required', 401);
 			}
@@ -258,7 +258,7 @@ export class AdController {
 	async deleteCampaign(req: Request, res: Response): Promise<void> {
 		try {
 			const { campaignId } = req.params;
-			const user = getAuthenticatedUser(req);
+			const user = getUser(req);
 			if (!user) {
 				return sendErrorResponse(res, 'Authentication required', 401);
 			}
@@ -321,7 +321,7 @@ export class AdController {
 	 */
 	async optimizeCampaign(req: Request, res: Response): Promise<void> {
 		try {
-			const user = getAuthenticatedUser(req);
+			const user = getUser(req);
 			if (!user) {
 				return sendErrorResponse(res, 'Authentication required', 401);
 			}

@@ -72,7 +72,7 @@ import xShareRoutes from './src/domains/share/routes/xShareRoutes';
 import { analyticsEvents } from '@schema/system/analyticsEvents';
 import gamificationRoutes from './src/domains/gamification/gamification.routes';
 import { achievementRoutes } from './src/domains/gamification/achievements';
-import { getAuthenticatedUser } from '@core/utils/auth.helpers';
+import { getUser } from '@core/utils/auth.helpers';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
 export async function registerRoutes(app: Express): Promise<void> {
@@ -111,7 +111,7 @@ export async function registerRoutes(app: Express): Promise<void> {
 			const forumId = req.query.forumId
 				? (parseInt(req.query.forumId as string) as any)
 				: undefined;
-			const userId = getAuthenticatedUser(req)?.id;
+			const userId = getUser(req)?.id;
 
 			const validTabs = ['trending', 'recent', 'following'];
 			if (!validTabs.includes(tab)) {
@@ -201,7 +201,7 @@ export async function registerRoutes(app: Express): Promise<void> {
 		async (req: Request, res: Response) => {
 			try {
 				const { threadId, expiresAt } = req.body;
-				const userId = getAuthenticatedUser(req)?.id;
+				const userId = getUser(req)?.id;
 				if (!userId) {
 					return sendErrorResponse(res, 'Authentication required', 401);
 				}
@@ -316,7 +316,7 @@ export async function registerRoutes(app: Express): Promise<void> {
 	app.post('/api/path-xp', isAuthenticated, async (req, res) => {
 		try {
 			const { path, step } = req.body;
-			const userId = getAuthenticatedUser(req)?.id;
+			const userId = getUser(req)?.id;
 			const xpToAward = xpRewards[path]?.[step] || 0;
 
 			if (xpToAward > 0) {
@@ -336,7 +336,7 @@ export async function registerRoutes(app: Express): Promise<void> {
 	app.post('/api/log/analytic', isAuthenticated, async (req, res) => {
 		try {
 			const { event, data } = req.body;
-			const userId = getAuthenticatedUser(req)?.id;
+			const userId = getUser(req)?.id;
 			await db.insert(analyticsEvents).values({
 				userId,
 				type: event,

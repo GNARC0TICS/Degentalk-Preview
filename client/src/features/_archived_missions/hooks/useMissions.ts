@@ -15,7 +15,15 @@ import {
   validateApiResponse
 } from '@app/schemas';
 
-export function useMissions() {
+interface UseMissionsReturn {
+  missions: MissionsResponse;
+  streaks: MissionStreak[];
+  stats: MissionStats;
+  loading: boolean;
+  error: Error | null;
+}
+
+export function useMissions(): UseMissionsReturn {
   const { user } = useCanonicalAuth();
   const queryClient = useQueryClient();
   const { subscribe } = useWebSocket();

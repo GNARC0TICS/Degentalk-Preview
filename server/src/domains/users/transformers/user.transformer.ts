@@ -6,11 +6,11 @@
  */
 
 // STREAM-LOCK: B
-import type { PublicUser, AuthenticatedUserSelf, AdminUserDetail, UserRole } from '../types';
+import type { PublicUser, UserSelf, AdminUserDetail, UserRole } from '../types';
 import type { DisplaySettings } from '@shared/types/core/user.types';
 import type {
 	PublicUserDTO,
-	AuthenticatedUserSelfDTO,
+	UserSelfDTO,
 	UserProfileDTO
 } from '../../../../../shared/dto/user';
 import type { UserId } from '../../../../../shared/types/ids';
@@ -76,7 +76,7 @@ export class UserTransformer {
 	 * Transform user data for authenticated user viewing their own profile
 	 * Includes personal settings but no admin-only data
 	 */
-	static toAuthenticatedSelf(dbUser: any): AuthenticatedUserSelf {
+	static toAuthenticatedSelf(dbUser: any): UserSelf {
 		const publicData = this.toPublicUser(dbUser);
 
 		return {
@@ -92,7 +92,7 @@ export class UserTransformer {
 	/**
 	 * Transform user data for authenticated user viewing their own profile (DTO)
 	 */
-	static toAuthenticatedSelfDTO(dbUser: any): AuthenticatedUserSelfDTO {
+	static toAuthenticatedSelfDTO(dbUser: any): UserSelfDTO {
 		const publicData = this.toPublicUserDTO(dbUser);
 
 		return {
@@ -186,7 +186,7 @@ export class UserTransformer {
 		dbUser: any,
 		requestingUser: any,
 		isSelf: boolean = false
-	): PublicUser | AuthenticatedUserSelf | AdminUserDetail {
+	): PublicUser | UserSelf | AdminUserDetail {
 		// Self-view: return authenticated self data
 		if (isSelf) {
 			return this.toAuthenticatedSelf(dbUser);

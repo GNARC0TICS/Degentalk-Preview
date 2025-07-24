@@ -1,7 +1,7 @@
 import type { Request } from 'express';
 import { verifyToken, extractTokenFromHeader } from '../domains/auth/utils/jwt.utils';
 import { userService } from '@core/services/user.service';
-import type { AuthenticatedUser } from '../types/auth.types';
+import type { User } from '../types/auth.types';
 import { logger } from '@core/logger';
 
 /**
@@ -12,11 +12,11 @@ import { logger } from '@core/logger';
  * @param req Express request object
  * @returns User object or null if not authenticated
  */
-export async function getUserFromRequest(req: Request): Promise<AuthenticatedUser | null> {
+export async function getUserFromRequest(req: Request): Promise<User | null> {
 	try {
 		// First check if user is already attached (by middleware)
 		if (req.user) {
-			return req.user as AuthenticatedUser;
+			return req.user as User;
 		}
 
 		// Try JWT token

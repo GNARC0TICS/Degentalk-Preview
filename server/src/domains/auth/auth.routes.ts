@@ -32,7 +32,7 @@ import {
 } from './middleware/auth.middleware';
 import { isDevMode } from '../../utils/environment';
 import { logger } from '@core/logger';
-import { getAuthenticatedUser } from '@core/utils/auth.helpers';
+import { getUser } from '@core/utils/auth.helpers';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
 const router: RouterType = Router();

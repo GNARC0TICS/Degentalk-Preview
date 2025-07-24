@@ -2,7 +2,7 @@ import type { Request, Response } from 'express';
 import { z } from 'zod';
 import { logger } from '@core/logger';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
-import { getAuthenticatedUser } from '@core/utils/auth.helpers';
+import { getUser } from '@core/utils/auth.helpers';
 import { threadService } from '@api/domains/forum/services/thread.service';
 import { ThreadTransformer } from '@api/domains/forum/transformers/thread.transformer';
 import type { StructureId, ThreadId, UserId, TagId } from '@shared/types/ids';
@@ -23,7 +23,7 @@ class ThreadController {
 			search
 		});
 
-		const user = getAuthenticatedUser(req);
+		const user = getUser(req);
 		const transformedThreads = result.threads.map((thread) =>
 			user ? ThreadTransformer.toSlim(thread) : ThreadTransformer.toPublic(thread)
 		);
@@ -47,7 +47,7 @@ class ThreadController {
 			return sendErrorResponse(res, 'Thread not found', 404);
 		}
 
-		const user = getAuthenticatedUser(req);
+		const user = getUser(req);
 		const transformedThread = user
 			? ThreadTransformer.toAuthenticated(thread, user)
 			: ThreadTransformer.toPublic(thread);
@@ -65,7 +65,7 @@ class ThreadController {
 
 		await threadService.incrementViewCount(thread.id);
 
-		const user = getAuthenticatedUser(req);
+		const user = getUser(req);
 		const transformedThread = user
 			? ThreadTransformer.toAuthenticated(thread, user)
 			: ThreadTransformer.toPublic(thread);
@@ -74,13 +74,13 @@ class ThreadController {
 	}
 
 	async createThread(req: Request, res: Response) {
-		const userId = getAuthenticatedUser(req)?.id as UserId;
+		const userId = getUser(req)?.id as UserId;
 		const newThread = await threadService.createThread({
 			...req.body,
 			userId
 		});
 
-		const user = getAuthenticatedUser(req);
+		const user = getUser(req);
 		const transformedThread = user
 			? ForumTransformer.toAuthenticatedThread(newThread, user)
 			: ForumTransformer.toPublicThread(newThread);
@@ -101,7 +101,7 @@ class ThreadController {
 			return sendErrorResponse(res, 'Thread not found', 404);
 		}
 
-		const user = getAuthenticatedUser(req);
+		const user = getUser(req);
 		const transformedThread = user
 			? ForumTransformer.toAuthenticatedThread(updatedThread, user)
 			: ForumTransformer.toPublicThread(updatedThread);
@@ -112,7 +112,7 @@ class ThreadController {
 	async addTagsToThread(req: Request, res: Response) {
 		const { threadId } = req.params as { threadId: ThreadId };
 		const { tags } = req.body;
-		const userId = getAuthenticatedUser(req)?.id as UserId;
+		const userId = getUser(req)?.id as UserId;
 
 		const updatedThread = await threadService.addTagsToThread(threadId, tags, userId);
 		return sendSuccessResponse(res, updatedThread);
@@ -120,7 +120,7 @@ class ThreadController {
 
 	async removeTagFromThread(req: Request, res: Response) {
 		const { threadId, tagId } = req.params as { threadId: ThreadId; tagId: TagId };
-		const userId = getAuthenticatedUser(req)?.id as UserId;
+		const userId = getUser(req)?.id as UserId;
 
 		const updatedThread = await threadService.removeTagFromThread(threadId, tagId, userId);
 		return sendSuccessResponse(res, updatedThread);

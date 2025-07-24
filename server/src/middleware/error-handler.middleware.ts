@@ -6,7 +6,7 @@
 import type { Request, Response, NextFunction } from 'express';
 import { logger, LogLevel, LogAction } from '../core/logger';
 import { captureException } from '../lib/sentry-server';
-import { getAuthenticatedUser } from '../utils/auth-helpers';
+import { getUser } from '../utils/auth-helpers';
 import type { UserId } from '@shared/types/ids';
 
 // Error types
@@ -184,7 +184,7 @@ export async function errorHandler(
   // Get user info if available
   let userId: UserId | null = null;
   try {
-    const user = await getAuthenticatedUser(req);
+    const user = await getUser(req);
     userId = user?.id || null;
   } catch {
     // Ignore auth errors in error handler

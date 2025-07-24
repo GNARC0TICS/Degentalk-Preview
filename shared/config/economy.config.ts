@@ -24,6 +24,7 @@ export const EconomyConfigSchema = z
 		FAUCET_REWARD_XP: z.number().int().positive(),
 		FAUCET_REWARD_DGT: z.number().positive(),
 		MIN_WITHDRAWAL_DGT: z.number().positive(),
+		DAILY_LOGIN_BONUS_XP: z.number().int().positive(),
 		levelXPMap: z.record(z.string(), z.number().int().positive()),
 		referralRewards: z.object({
 			referee: z.object({ dgt: z.number().positive(), xp: z.number().int().positive() }),
@@ -58,6 +59,7 @@ export const economyConfig = {
 	FAUCET_REWARD_XP: 50,
 	FAUCET_REWARD_DGT: 0.5,
 	MIN_WITHDRAWAL_DGT: 3,
+	DAILY_LOGIN_BONUS_XP: 50,
 	levelXPMap: {
 		2: 250,
 		3: 750,

@@ -9,7 +9,7 @@ import type { Request, Response, NextFunction } from 'express';
 import { UserTransformer } from '../transformers/user.transformer';
 import type { UserId } from '@shared/types/ids';
 import { logger } from '@core/logger';
-import { getAuthenticatedUser } from '@core/utils/auth.helpers';
+import { getUser } from '@core/utils/auth.helpers';
 import { sendErrorResponse } from '@core/utils/transformer.helpers';
 
 export interface PrivacyRequest extends Request {
@@ -35,7 +35,7 @@ export const userPrivacyMiddleware = (req: PrivacyRequest, res: Response, next: 
 		if (data && data.success && data.data) {
 			const transformedData = transformUserData(
 				data.data,
-				getAuthenticatedUser(req),
+				getUser(req),
 				req.targetUser
 			);
 
@@ -209,7 +209,7 @@ function anonymizeIP(ip: string): string {
 export const gdprConsentMiddleware = (req: PrivacyRequest, res: Response, next: NextFunction) => {
 	// For data export or sensitive operations, check consent
 	if (req.path.includes('/export') || req.path.includes('/analytics')) {
-		if (!getAuthenticatedUser(req)) {
+		if (!getUser(req)) {
 			return sendErrorResponse(res, 'Authentication required for data processing operations', 401);
 		}
 
@@ -232,9 +232,9 @@ export const dataAccessAuditMiddleware = (
 
 	res.json = function (data: any) {
 		// Log data access for audit trail
-		if (getAuthenticatedUser(req) && data && data.success) {
+		if (getUser(req) && data && data.success) {
 			logDataAccess({
-				userId: getAuthenticatedUser(req).id,
+				userId: getUser(req).id,
 				action: `${req.method} ${req.path}`,
 				timestamp: new Date(),
 				ip: req.ip,

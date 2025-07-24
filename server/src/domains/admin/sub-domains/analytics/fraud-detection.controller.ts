@@ -8,7 +8,7 @@ import type { Request, Response } from 'express';
 import { fraudDetectionService } from './fraud-detection.service';
 import { formatAdminResponse, AdminOperationBoundary } from '../../shared';
 import { AdminError, AdminErrorCodes } from '../../admin.errors';
-import { getAuthenticatedUser } from '../../../../core/utils/auth.helpers';
+import { getUser } from '../../../../core/utils/auth.helpers';
 import { z } from 'zod';
 
 // Validation schemas
@@ -141,7 +141,7 @@ export class FraudDetectionController {
 		});
 
 		return boundary.execute(async () => {
-			const user = getAuthenticatedUser(req);
+			const user = getUser(req);
 			if (!user) {
 				throw new AdminError('Authentication required', 401, AdminErrorCodes.UNAUTHORIZED);
 			}
@@ -179,7 +179,7 @@ export class FraudDetectionController {
 		});
 
 		return boundary.execute(async () => {
-			const user = getAuthenticatedUser(req);
+			const user = getUser(req);
 			if (!user) {
 				throw new AdminError('Authentication required', 401, AdminErrorCodes.UNAUTHORIZED);
 			}
@@ -233,7 +233,7 @@ export class FraudDetectionController {
 		});
 
 		return boundary.execute(async () => {
-			const user = getAuthenticatedUser(req);
+			const user = getUser(req);
 			if (!user) {
 				throw new AdminError('Authentication required', 401, AdminErrorCodes.UNAUTHORIZED);
 			}

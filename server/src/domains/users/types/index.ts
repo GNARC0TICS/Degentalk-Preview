@@ -26,7 +26,7 @@ export interface PublicUser {
 }
 
 // Additional data for authenticated user viewing their own profile
-export interface AuthenticatedUserSelf extends PublicUser {
+export interface UserSelf extends PublicUser {
 	email: string;
 	emailVerified: boolean;
 	preferences: UserPreferences;
@@ -36,7 +36,7 @@ export interface AuthenticatedUserSelf extends PublicUser {
 }
 
 // Admin-only user details (GDPR-sensitive)
-export interface AdminUserDetail extends AuthenticatedUserSelf {
+export interface AdminUserDetail extends UserSelf {
 	// GDPR-sensitive fields - admin only
 	ipAddressHash?: string; // Never store raw IPs
 	registrationIp?: string; // Anonymized after 30 days
@@ -135,7 +135,7 @@ export interface UserSuspension {
 
 // GDPR compliance types
 export interface GDPRDataExport {
-	user: AuthenticatedUserSelf;
+	user: UserSelf;
 	posts: any[]; // Domain-specific data
 	transactions: any[]; // Domain-specific data
 	loginHistory: LoginRecord[];

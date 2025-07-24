@@ -8,14 +8,18 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 2. **Scripts workspace exists at root** - Don't assume it's deleted if imports fail.
 3. **Use migration workflow** for all database schema changes.
 4. **TypeScript Hooks are ACTIVE** - Code quality checks run automatically. Use `SKIP_HOOKS=1 git commit` for emergencies.
+5. **Repository Pattern is MANDATORY** - All DB queries MUST go through repositories, services MUST NOT contain direct DB calls.
+6. **Event-Driven Architecture** - Cross-domain communication ONLY via EventBus, NO direct service imports between domains.
+7. **Missions System DEPRECATED** - Being removed completely, do not add new mission features.
 
 ## Workspace Details
 
 - Uses **pnpm workspace architecture** with strict boundaries: `client/`, `server/`, `db/`, `shared/`, `scripts/`
 - **PostgreSQL only** with Drizzle ORM (SQLite support completely removed)
 - **TypeScript strict mode** enabled across all workspaces
-- **Domain-driven backend** architecture with composable components
-- **Configuration-first** approach - everything configurable via `*.config.ts` files
+- **Domain-driven backend** architecture with event-driven communication
+- **Repository pattern** for all data access (services → repositories → database)
+- **Configuration-first** approach - centralized ConfigService for all settings
 
 ## User Model Architecture
 
@@ -99,6 +103,77 @@ SKIP_HOOKS=1 git commit -m "Emergency fix"
 - Config: `.claude/hooks/hook-config.json`
 - Hooks: `.claude/hooks/{react-app,shared,server}/`
 - Patterns: `.claude/hooks/branded-id-patterns.json`
+
+## Domain-Driven Architecture Rules 🏗️
+
+### Domain Structure
+```
+server/src/domains/[domain-name]/
+├── index.ts                    // Public API exports ONLY
+├── types.ts                    // Domain-specific types  
+├── events.ts                   // Domain event definitions
+├── [domain].service.ts         // Business logic (NO db calls)
+├── [domain].repository.ts      // Data access (ALL db calls)
+├── [domain].controller.ts      // HTTP endpoints
+├── [domain].validator.ts       // Zod schemas
+├── [domain].transformer.ts     // DTOs & response shaping
+├── handlers/                   // Event handlers
+│   └── index.ts
+├── admin/                      // Admin-specific features
+└── __tests__/                  // Domain tests
+```
+
+### Architecture Enforcement Rules
+1. **Repository Pattern**:
+   - ALL database queries MUST be in `*.repository.ts` files
+   - Services MUST inject repositories, NO direct DB imports
+   - Repositories MUST extend `BaseRepository<T>`
+   - Use transactions via `options.tx` parameter
+
+2. **Domain Boundaries**:
+   - Domains can ONLY import from their own files or `index.ts` of other domains
+   - Cross-domain imports of services/repositories are FORBIDDEN
+   - Use EventBus for cross-domain communication
+   - Each domain MUST export only through `index.ts`
+
+3. **Event-Driven Communication**:
+   - Emit domain events instead of calling other services
+   - Listen to events in `handlers/index.ts`
+   - Events MUST include metadata (userId, timestamp, correlationId)
+   - Use typed events from domain's `events.ts`
+
+4. **Core Infrastructure**:
+   - `@core/config` - ConfigService for all env vars & settings
+   - `@core/cache` - Unified CacheService with domain-specific keys
+   - `@core/auth` - Centralized AuthorizationService
+   - `@core/errors` - Standard domain errors (NotFoundError, ValidationError, etc.)
+   - `@core/events` - EventBus for domain communication
+
+### Import Rules
+```typescript
+// ✅ ALLOWED
+import { something } from './internal-file';
+import { types } from '@shared/types';
+import { logger } from '@core/logger';
+import { OtherDomainService } from '@domains/other/index';
+
+// ❌ FORBIDDEN
+import { service } from '../other-domain/other.service';
+import { repo } from '../other-domain/other.repository';
+import { db } from '@db';  // Only in repositories!
+```
+
+### Error Handling
+- Use standard errors from `@core/errors`
+- Throw domain errors in services
+- Let error middleware handle responses
+- Include context in error messages
+
+### Testing Requirements
+- Unit tests for services (mock repositories)
+- Integration tests for repositories
+- Domain isolation tests must pass
+- Event flow tests for handlers
 
 ## Development Fixes
 

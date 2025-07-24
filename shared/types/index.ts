@@ -48,39 +48,6 @@ export type {
 
 // Core domain types
 export type {
-	// User types - Security-Enhanced
-	User,
-	PublicUser,
-	AuthenticatedUserSelf,
-	AdminUserDetail,
-	UserRole,
-	Permission,
-	PermissionScope,
-	SessionToken,
-	SecureUserPreferences as UserPreferences,
-	NotificationSettings,
-	PrivacySettings,
-	UserSettings,
-	DisplaySettings,
-	UserStats,
-	UserProfile,
-	UserBadge,
-	UserTitle,
-	UserFrame,
-	UserWallet,
-	UserAchievement,
-	UserInventory,
-	LevelConfig,
-	CreateUserRequest,
-	UpdateUserRequest,
-	AdminUpdateUserRequest,
-	UserSearchParams,
-	UserWithWallet,
-	UserWithStats,
-	UserSummary,
-	UserWarning,
-	UserSuspension,
-	GDPRDataExport,
 
 	// Forum types
 	Forum,
@@ -163,8 +130,6 @@ export type {
 
 // Type guards
 export {
-	isUser,
-	isUserProfile,
 	isForum,
 	isThread,
 	isPost,
@@ -448,23 +413,13 @@ export {
 	ECONOMY_CONSTANTS
 } from './economy.js';
 
-// Auth User types (unified)
-export type {
-	AuthUser,
-	UserRole as LegacyUserRole
-} from './auth-user.types.js';
-
-export {
-	hasRole,
-	isAdminOrHigher,
-	isModeratorOrHigher
-} from './auth-user.types.js';
+// User type now in shared/types/user.types.ts
+export type { User, UserSummary, PublicUser } from './user.types.js';
 
 // Branded ID types
 export * from './ids.js';
 
-// Auth types (new consolidated types)
-export * from './auth.types.js';
+// Auth types removed - use User from user.types.ts
 
 // ID creation helpers from utils
 export {

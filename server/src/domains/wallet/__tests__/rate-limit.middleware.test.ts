@@ -18,7 +18,7 @@ import {
 
 // Mock the auth helper
 vi.mock('@core/auth/helpers', () => ({
-  getAuthenticatedUser: vi.fn()
+  getUser: vi.fn()
 }));
 
 // Mock the logger
@@ -30,13 +30,13 @@ vi.mock('@core/logger', () => ({
   }
 }));
 
-import { getAuthenticatedUser } from '@core/auth/helpers';
+import { getUser } from '@core/auth/helpers';
 
 describe('Wallet Rate Limiting Middleware', () => {
   let mockReq: Partial<Request>;
   let mockRes: Partial<Response>;
   let mockNext: ReturnType<typeof vi.fn>;
-  const mockedGetAuthenticatedUser = vi.mocked(getAuthenticatedUser);
+  const mockedGetUser = vi.mocked(getUser);
 
   beforeEach(() => {
     // Reset all mocks
@@ -60,7 +60,7 @@ describe('Wallet Rate Limiting Middleware', () => {
     mockNext = vi.fn();
 
     // Default authenticated user
-    mockedGetAuthenticatedUser.mockReturnValue({
+    mockedGetUser.mockReturnValue({
       id: 'user_123' as UserId,
       role: 'user',
       username: 'testuser'
@@ -111,7 +111,7 @@ describe('Wallet Rate Limiting Middleware', () => {
 
     it('should use user ID as rate limit key', async () => {
       // Test with different user IDs
-      mockedGetAuthenticatedUser.mockReturnValueOnce({
+      mockedGetUser.mockReturnValueOnce({
         id: 'user_123' as UserId,
         role: 'user',
         username: 'user1'
@@ -125,7 +125,7 @@ describe('Wallet Rate Limiting Middleware', () => {
       });
 
       // Different user should have separate limit
-      mockedGetAuthenticatedUser.mockReturnValueOnce({
+      mockedGetUser.mockReturnValueOnce({
         id: 'user_456' as UserId,
         role: 'user',
         username: 'user2'
@@ -243,7 +243,7 @@ describe('Wallet Rate Limiting Middleware', () => {
   describe('globalWalletRateLimit', () => {
     it('should skip rate limiting for admin users', async () => {
       // Set user as admin
-      mockedGetAuthenticatedUser.mockReturnValue({
+      mockedGetUser.mockReturnValue({
         id: 'admin_123' as UserId,
         role: 'admin',
         username: 'admin'
@@ -266,7 +266,7 @@ describe('Wallet Rate Limiting Middleware', () => {
 
     it('should skip rate limiting for super-admin users', async () => {
       // Set user as super-admin
-      mockedGetAuthenticatedUser.mockReturnValue({
+      mockedGetUser.mockReturnValue({
         id: 'superadmin_123' as UserId,
         role: 'super-admin',
         username: 'superadmin'
@@ -289,7 +289,7 @@ describe('Wallet Rate Limiting Middleware', () => {
 
     it('should apply rate limiting to regular users', async () => {
       // Regular user (not admin)
-      mockedGetAuthenticatedUser.mockReturnValue({
+      mockedGetUser.mockReturnValue({
         id: 'user_123' as UserId,
         role: 'user',
         username: 'regularuser'
@@ -311,7 +311,7 @@ describe('Wallet Rate Limiting Middleware', () => {
 
     it('should use IP as fallback when user is not authenticated', async () => {
       // Mock unauthenticated request
-      mockedGetAuthenticatedUser.mockImplementation(() => {
+      mockedGetUser.mockImplementation(() => {
         throw new Error('Unauthenticated');
       });
 
@@ -330,7 +330,7 @@ describe('Wallet Rate Limiting Middleware', () => {
   describe('Rate limit key generation', () => {
     it('should fall back to IP when user authentication fails', async () => {
       // Mock auth failure
-      mockedGetAuthenticatedUser.mockImplementation(() => {
+      mockedGetUser.mockImplementation(() => {
         throw new Error('Auth failed');
       });
 
@@ -360,7 +360,7 @@ describe('Wallet Rate Limiting Middleware', () => {
 
     it('should handle missing IP gracefully', async () => {
       // Mock auth failure and no IP
-      mockedGetAuthenticatedUser.mockImplementation(() => {
+      mockedGetUser.mockImplementation(() => {
         throw new Error('Auth failed');
       });
       mockReq.ip = undefined;

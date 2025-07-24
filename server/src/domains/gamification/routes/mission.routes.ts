@@ -4,7 +4,7 @@ import { authenticate } from '@api/middleware/auth';
 import { validateRequest } from '@api/middleware/validate-request';
 import { requireAdmin } from '../../forum/services/permissions.service';
 import { missionService } from '../services/mission.service';
-import { getAuthenticatedUser } from '@core/utils/auth.helpers';
+import { getUser } from '@core/utils/auth.helpers';
 import { logger } from '@core/logger';
 import { 
 	ProgressUpdateSchema, 
@@ -19,7 +19,7 @@ const router: RouterType = Router();
 // Get all active missions with user progress
 router.get('/', authenticate, async (req, res) => {
 	try {
-		const user = getAuthenticatedUser(req);
+		const user = getUser(req);
 		if (!user) return res.status(401).json({ error: 'Unauthorized' });
 
 		const missions = await missionService.getActiveMissions();
@@ -40,7 +40,7 @@ router.get('/', authenticate, async (req, res) => {
 // Get daily missions (with lazy assignment)
 router.get('/daily', authenticate, async (req, res) => {
 	try {
-		const user = getAuthenticatedUser(req);
+		const user = getUser(req);
 		if (!user) return res.status(401).json({ error: 'Unauthorized' });
 
 		// Ensure user has daily missions assigned
@@ -59,7 +59,7 @@ router.get('/daily', authenticate, async (req, res) => {
 // Get weekly missions
 router.get('/weekly', authenticate, async (req, res) => {
 	try {
-		const user = getAuthenticatedUser(req);
+		const user = getUser(req);
 		if (!user) return res.status(401).json({ error: 'Unauthorized' });
 
 		const missions = await missionService.getWeeklyMissions(user.id);
@@ -75,7 +75,7 @@ router.get('/weekly', authenticate, async (req, res) => {
 // Update mission progress (for manual progress tracking)
 router.post('/:missionId/progress', authenticate, validateRequest(ProgressUpdateSchema), async (req, res) => {
 	try {
-		const user = getAuthenticatedUser(req);
+		const user = getUser(req);
 		if (!user) return res.status(401).json({ error: 'Unauthorized' });
 
 		const { missionId } = req.params;
@@ -97,7 +97,7 @@ router.post('/:missionId/progress', authenticate, validateRequest(ProgressUpdate
 // Claim mission reward
 router.post('/:missionId/claim', authenticate, async (req, res) => {
 	try {
-		const user = getAuthenticatedUser(req);
+		const user = getUser(req);
 		if (!user) return res.status(401).json({ error: 'Unauthorized' });
 
 		const { missionId } = req.params;
@@ -171,7 +171,7 @@ router.post('/reset/:type', authenticate, requireAdmin, async (req, res) => {
 // Get user mission summary
 router.get('/summary', authenticate, async (req, res) => {
 	try {
-		const user = getAuthenticatedUser(req);
+		const user = getUser(req);
 		if (!user) return res.status(401).json({ error: 'Unauthorized' });
 
 		const summary = await missionService.getUserMissionSummary(user.id);

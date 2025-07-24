@@ -23,7 +23,7 @@ export interface PublicUserDTO {
 	};
 }
 
-export interface AuthenticatedUserSelfDTO extends PublicUserDTO {
+export interface UserSelfDTO extends PublicUserDTO {
 	email: string;
 	emailVerified: boolean;
 	totalXp: number;
@@ -99,7 +99,7 @@ export interface UserProfileDTO {
 	} | null;
 }
 
-export interface AdminUserDetailDTO extends AuthenticatedUserSelfDTO {
+export interface AdminUserDetailDTO extends UserSelfDTO {
 	// GDPR-sensitive fields - admin only
 	ipAddressHash?: string;
 	registrationIp?: string;

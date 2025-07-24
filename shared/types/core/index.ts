@@ -5,60 +5,9 @@
  * Tree-shakable and maintains clean public API.
  */
 
-// Legacy user domain types (maintained for backward compatibility)
-export type {
-	User,
-	UserSettings,
-	NotificationSettings,
-	PrivacySettings,
-	DisplaySettings,
-	UserStats,
-	UserProfile,
-	UserBadge,
-	UserTitle,
-	UserFrame,
-	UserWallet,
-	UserAchievement,
-	UserInventory,
-	InventoryItem,
-	LevelConfig,
-	CreateUserRequest,
-	UpdateUserRequest,
-	UserSearchParams,
-	UserWithWallet,
-	UserWithStats,
-	PublicUser,
-	UserSummary
-} from './user.types.js';
-
-// Security-enhanced user types (preferred for new development)
-export type {
-	PublicUser as SecurePublicUser,
-	AuthenticatedUserSelf,
-	AdminUserDetail,
-	UserRole,
-	Permission,
-	PermissionScope,
-	SessionToken,
-	UserPreferences as SecureUserPreferences,
-	UserWarning,
-	UserSuspension,
-	GDPRDataExport,
-	LoginRecord,
-	DataProcessingRecord,
-	AdminUpdateUserRequest,
-	// SecureUserResponse, // Temporarily disabled due to circular imports
-	UserContext
-} from './user-secure.types.js';
-
-// User type guards
-export {
-	isUser,
-	isUserProfile,
-	isUserAchievement,
-	isInventoryItem,
-	isUserInventory
-} from './user.types.js';
+// User types have been consolidated to shared/types/user.types.ts
+// Import from there instead:
+// import { User, UserSummary, PublicUser } from '@shared/types/user.types';
 
 // Forum domain types
 export type {
@@ -157,7 +106,7 @@ export type {
 	TitleEffects,
 	UserCosmetics,
 	CosmeticInventory,
-	InventoryItem as CosmeticInventoryItem,
+	InventoryItem,
 	EquippedItems,
 	ItemBundle,
 	BundleItem,

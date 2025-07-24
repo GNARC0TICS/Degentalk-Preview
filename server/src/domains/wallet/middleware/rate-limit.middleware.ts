@@ -8,7 +8,7 @@
 import rateLimit from 'express-rate-limit';
 import { Request, Response } from 'express';
 import { logger } from '@core/logger';
-import { getAuthenticatedUser } from '@core/utils/auth.helpers';
+import { getUser } from '@core/utils/auth.helpers';
 
 /**
  * Create a rate limiter with custom key generator based on user ID
@@ -28,7 +28,7 @@ const createUserRateLimiter = (options: {
     legacyHeaders: false,
     keyGenerator: (req: Request) => {
       try {
-        const user = getAuthenticatedUser(req);
+        const user = getUser(req);
         return `wallet:${user.id}`;
       } catch {
         // Fall back to IP if user not authenticated
@@ -36,7 +36,7 @@ const createUserRateLimiter = (options: {
       }
     },
     handler: (req: Request, res: Response) => {
-      const user = getAuthenticatedUser(req);
+      const user = getUser(req);
       logger.warn('RATE_LIMIT', 'Wallet operation rate limit exceeded', {
         userId: user?.id,
         ip: req.ip,
@@ -109,7 +109,7 @@ export const globalWalletRateLimit = rateLimit({
   skip: (req: Request) => {
     // Skip rate limiting for admin users
     try {
-      const user = getAuthenticatedUser(req);
+      const user = getUser(req);
       return user.role === 'admin' || user.role === 'super-admin';
     } catch {
       return false;

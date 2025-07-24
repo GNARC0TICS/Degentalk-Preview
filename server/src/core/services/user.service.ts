@@ -10,7 +10,7 @@ import { users } from '@schema';
 import { eq, and } from 'drizzle-orm';
 import { logger } from '../logger';
 import type { UserId } from '@shared/types/ids';
-import { getAuthenticatedUser } from '@core/utils/auth.helpers';
+import { getUser } from '@core/utils/auth.helpers';
 
 export interface User {
 	id: UserId;
@@ -34,7 +34,7 @@ export interface UserProfile extends User {
 	lastActiveAt?: Date;
 }
 
-export interface AuthenticatedUser extends User {
+export interface User extends User {
 	sessionId?: string;
 	permissions?: string[];
 	lastLoginAt?: Date;
@@ -44,8 +44,8 @@ class UserService {
 	/**
 	 * Get user from Express request object with type safety
 	 */
-	getUserFromRequest(req: any): AuthenticatedUser | null {
-		const user = getAuthenticatedUser(req);
+	getUserFromRequest(req: any): User | null {
+		const user = getUser(req);
 		if (!user || !user.id) {
 			return null;
 		}
@@ -218,7 +218,7 @@ class UserService {
 	/**
 	 * Check if user has specific role
 	 */
-	hasRole(user: User | AuthenticatedUser, role: 'admin' | 'moderator' | 'user'): boolean {
+	hasRole(user: User | User, role: 'admin' | 'moderator' | 'user'): boolean {
 		if (role === 'admin') {
 			return user.role === 'admin';
 		}
@@ -231,21 +231,21 @@ class UserService {
 	/**
 	 * Check if user is admin
 	 */
-	isAdmin(user: User | AuthenticatedUser): boolean {
+	isAdmin(user: User | User): boolean {
 		return user.role === 'admin';
 	}
 
 	/**
 	 * Check if user is moderator or admin
 	 */
-	isModerator(user: User | AuthenticatedUser): boolean {
+	isModerator(user: User | User): boolean {
 		return user.role === 'moderator' || user.role === 'admin';
 	}
 
 	/**
 	 * Validate user session and return user data
 	 */
-	async validateUserSession(req: any): Promise<AuthenticatedUser | null> {
+	async validateUserSession(req: any): Promise<User | null> {
 		const user = this.getUserFromRequest(req);
 		if (!user) return null;
 
@@ -306,6 +306,6 @@ export function injectUserService(req: any, res: any, next: any) {
 /**
  * Helper function for backward compatibility
  */
-export function getUserFromRequest(req: any): AuthenticatedUser | null {
+export function getUserFromRequest(req: any): User | null {
 	return userService.getUserFromRequest(req);
 }

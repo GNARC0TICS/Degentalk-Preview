@@ -6,7 +6,7 @@
 import type { Request } from 'express';
 import type { UserId } from '@shared/types/ids';
 
-export interface AuthenticatedUser {
+export interface User {
 	id: UserId;
 	username: string;
 	email: string;
@@ -23,7 +23,7 @@ export interface AuthenticatedUser {
  * @param req Express request object
  * @returns Authenticated user or null if not authenticated
  */
-export function getAuthenticatedUser(req: Request): AuthenticatedUser | null {
+export function getUser(req: Request): User | null {
 	return (req as any).user || null;
 }
 
@@ -35,8 +35,8 @@ export function getAuthenticatedUser(req: Request): AuthenticatedUser | null {
  * @returns Authenticated user (guaranteed non-null)
  * @throws Error if user is not authenticated
  */
-export function requireAuthenticatedUser(req: Request): AuthenticatedUser {
-	const user = getAuthenticatedUser(req);
+export function requireUser(req: Request): User {
+	const user = getUser(req);
 	if (!user) {
 		throw new Error('User not authenticated');
 	}
@@ -46,27 +46,27 @@ export function requireAuthenticatedUser(req: Request): AuthenticatedUser {
 /**
  * Check if user has admin privileges
  */
-export function isAdmin(user: AuthenticatedUser | null): boolean {
+export function isAdmin(user: User | null): boolean {
 	return user?.role === 'admin' || user?.role === 'owner';
 }
 
 /**
  * Check if user has moderator or higher privileges
  */
-export function isModerator(user: AuthenticatedUser | null): boolean {
+export function isModerator(user: User | null): boolean {
 	return user?.role === 'moderator' || isAdmin(user);
 }
 
 /**
  * Check if user owns the resource (user ID matches)
  */
-export function isOwner(user: AuthenticatedUser | null, resourceUserId: UserId): boolean {
+export function isOwner(user: User | null, resourceUserId: UserId): boolean {
 	return user?.id === resourceUserId;
 }
 
 /**
  * Check if user can access resource (admin, moderator, or owner)
  */
-export function canAccessResource(user: AuthenticatedUser | null, resourceUserId: UserId): boolean {
+export function canAccessResource(user: User | null, resourceUserId: UserId): boolean {
 	return isModerator(user) || isOwner(user, resourceUserId);
 }

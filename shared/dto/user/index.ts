@@ -1,7 +1,7 @@
 // STREAM-LOCK: B
 export type {
 	PublicUserDTO,
-	AuthenticatedUserSelfDTO,
+	UserSelfDTO,
 	UserProfileDTO,
 	AdminUserDetailDTO
 } from './UserDTO.js';

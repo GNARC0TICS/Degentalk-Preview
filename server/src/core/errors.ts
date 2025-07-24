@@ -7,7 +7,7 @@
 
 import type { Request, Response, NextFunction } from 'express';
 import { logger } from './logger';
-import { getAuthenticatedUser } from '@core/utils/auth.helpers';
+import { getUser } from '@core/utils/auth.helpers';
 
 // Error severity for monitoring and alerting
 export enum ErrorSeverity {
@@ -252,7 +252,7 @@ export class InsufficientFundsError extends WalletError {
 // Error utilities
 export function createErrorContext(req: Request): ErrorContext {
 	return {
-		userId: (getAuthenticatedUser(req) as any)?.id,
+		userId: (getUser(req) as any)?.id,
 		requestId: req.headers['x-request-id'] as string,
 		userAgent: req.headers['user-agent'],
 		ip: req.ip || req.connection.remoteAddress,

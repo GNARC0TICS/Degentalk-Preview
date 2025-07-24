@@ -6,7 +6,7 @@ import { adConfigurationService } from './ad-configuration.service';
 import { userPromotionRoutes } from './user-promotion.routes';
 import { logger } from '@core/logger';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
-import { getAuthenticatedUser } from '@core/utils/auth.helpers';
+import { getUser } from '@core/utils/auth.helpers';
 import { authenticate, requireAdmin } from '@api/middleware/auth';
 import { rateLimiters } from '@core/services/rate-limit.service';
 
@@ -128,7 +128,7 @@ router.post('/governance/proposals/:proposalId/vote', authenticate, async (req, 
 	try {
 		const { proposalId } = req.params;
 		const { vote, reason } = req.body;
-		const user = getAuthenticatedUser(req);
+		const user = getUser(req);
 		if (!user) {
 			return sendErrorResponse(res, 'Authentication required', 401);
 		}

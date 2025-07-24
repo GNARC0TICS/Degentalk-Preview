@@ -6,7 +6,7 @@
 import { logger, LogLevel, LogAction } from '../core/logger';
 import { captureException as sentryCaptureException } from './sentry-server';
 import type { Request, Response, NextFunction } from 'express';
-import { getAuthenticatedUser } from '../core/utils/auth.helpers';
+import { getUser } from '../core/utils/auth.helpers';
 import type { UserId } from '@shared/types/ids';
 
 export interface ErrorContext {
@@ -49,7 +49,7 @@ export async function reportErrorServer(
   let userId: UserId | null = context?.userId || null;
   if (!userId && context?.request) {
     try {
-      const user = getAuthenticatedUser(context.request);
+      const user = getUser(context.request);
       userId = user?.id || null;
     } catch {
       // Ignore auth errors in error reporter

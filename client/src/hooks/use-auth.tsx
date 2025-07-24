@@ -4,15 +4,14 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiRequest } from '@app/utils/api-request';
 import { getUserPermissions } from '@app/utils/roles';
 import type { Role } from '@app/utils/roles';
-import type { AuthUser, UserRole } from '@shared/types/auth-user.types';
+import type { User } from '@shared/types/user.types';
 import type { UserId, FrameId } from '@shared/types/ids';
 import { toId } from '@shared/types/index';
 import { setAuthToken, removeAuthToken } from '@app/utils/auth-token';
 import { logger } from '@app/lib/logger';
 
-// Define user type
-// Re-export AuthUser as User for backward compatibility
-export type User = AuthUser;
+// Define user role type from User
+export type UserRole = User['role'];
 
 // Possible roles for mock user switching
 export type MockRole = UserRole;

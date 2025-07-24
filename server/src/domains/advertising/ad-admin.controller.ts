@@ -4,7 +4,7 @@ import { adConfigurationService } from './ad-configuration.service';
 import { campaignManagementService } from './campaign-management.service';
 import { logger } from '@core/logger';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
-import { getAuthenticatedUser, isAdmin } from '@core/utils/auth.helpers';
+import { getUser, isAdmin } from '@core/utils/auth.helpers';
 
 // Admin validation schemas
 const placementConfigSchema = z.object({
@@ -134,7 +134,7 @@ export class AdAdminController {
 	 */
 	async getSystemConfiguration(req: Request, res: Response): Promise<void> {
 		try {
-			const user = getAuthenticatedUser(req);
+			const user = getUser(req);
 			if (!user) {
 				return sendErrorResponse(res, 'Authentication required', 401);
 			}
@@ -157,7 +157,7 @@ export class AdAdminController {
 	 */
 	async updateSystemConfiguration(req: Request, res: Response): Promise<void> {
 		try {
-			const user = getAuthenticatedUser(req);
+			const user = getUser(req);
 			if (!user) {
 				return sendErrorResponse(res, 'Authentication required', 401);
 			}
@@ -186,7 +186,7 @@ export class AdAdminController {
 	 */
 	async createPlacement(req: Request, res: Response): Promise<void> {
 		try {
-			const user = getAuthenticatedUser(req);
+			const user = getUser(req);
 			if (!user) {
 				return sendErrorResponse(res, 'Authentication required', 401);
 			}
@@ -211,7 +211,7 @@ export class AdAdminController {
 	 */
 	async updatePlacement(req: Request, res: Response): Promise<void> {
 		try {
-			const user = getAuthenticatedUser(req);
+			const user = getUser(req);
 			if (!user) {
 				return sendErrorResponse(res, 'Authentication required', 401);
 			}
@@ -238,7 +238,7 @@ export class AdAdminController {
 	 */
 	async deletePlacement(req: Request, res: Response): Promise<void> {
 		try {
-			const user = getAuthenticatedUser(req);
+			const user = getUser(req);
 			if (!user) {
 				return sendErrorResponse(res, 'Authentication required', 401);
 			}
@@ -263,7 +263,7 @@ export class AdAdminController {
 	 */
 	async listAllPlacements(req: Request, res: Response): Promise<void> {
 		try {
-			const user = getAuthenticatedUser(req);
+			const user = getUser(req);
 			if (!user) {
 				return sendErrorResponse(res, 'Authentication required', 401);
 			}
@@ -302,7 +302,7 @@ export class AdAdminController {
 	 */
 	async createGlobalRule(req: Request, res: Response): Promise<void> {
 		try {
-			const user = getAuthenticatedUser(req);
+			const user = getUser(req);
 			if (!user) {
 				return sendErrorResponse(res, 'Authentication required', 401);
 			}
@@ -332,7 +332,7 @@ export class AdAdminController {
 	 */
 	async updateGlobalRule(req: Request, res: Response): Promise<void> {
 		try {
-			const user = getAuthenticatedUser(req);
+			const user = getUser(req);
 			if (!user) {
 				return sendErrorResponse(res, 'Authentication required', 401);
 			}
@@ -359,7 +359,7 @@ export class AdAdminController {
 	 */
 	async listGlobalRules(req: Request, res: Response): Promise<void> {
 		try {
-			const user = getAuthenticatedUser(req);
+			const user = getUser(req);
 			if (!user) {
 				return sendErrorResponse(res, 'Authentication required', 401);
 			}
@@ -388,7 +388,7 @@ export class AdAdminController {
 	 */
 	async getPlatformAnalytics(req: Request, res: Response): Promise<void> {
 		try {
-			const user = getAuthenticatedUser(req);
+			const user = getUser(req);
 			if (!user) {
 				return sendErrorResponse(res, 'Authentication required', 401);
 			}
@@ -437,7 +437,7 @@ export class AdAdminController {
 	 */
 	async getAllCampaigns(req: Request, res: Response): Promise<void> {
 		try {
-			const user = getAuthenticatedUser(req);
+			const user = getUser(req);
 			if (!user) {
 				return sendErrorResponse(res, 'Authentication required', 401);
 			}
@@ -475,7 +475,7 @@ export class AdAdminController {
 	 */
 	async reviewCampaign(req: Request, res: Response): Promise<void> {
 		try {
-			const user = getAuthenticatedUser(req);
+			const user = getUser(req);
 			if (!user) {
 				return sendErrorResponse(res, 'Authentication required', 401);
 			}
@@ -517,7 +517,7 @@ export class AdAdminController {
 	 */
 	async createGovernanceProposal(req: Request, res: Response): Promise<void> {
 		try {
-			const user = getAuthenticatedUser(req);
+			const user = getUser(req);
 			if (!user) {
 				return sendErrorResponse(res, 'Authentication required', 401);
 			}
@@ -542,7 +542,7 @@ export class AdAdminController {
 	 */
 	async executeGovernanceProposal(req: Request, res: Response): Promise<void> {
 		try {
-			const user = getAuthenticatedUser(req);
+			const user = getUser(req);
 			if (!user) {
 				return sendErrorResponse(res, 'Authentication required', 401);
 			}
@@ -568,7 +568,7 @@ export class AdAdminController {
 	 */
 	async getFraudAlerts(req: Request, res: Response): Promise<void> {
 		try {
-			const user = getAuthenticatedUser(req);
+			const user = getUser(req);
 			if (!user) {
 				return sendErrorResponse(res, 'Authentication required', 401);
 			}
@@ -603,7 +603,7 @@ export class AdAdminController {
 	 */
 	async getRevenueReport(req: Request, res: Response): Promise<void> {
 		try {
-			const user = getAuthenticatedUser(req);
+			const user = getUser(req);
 			if (!user) {
 				return sendErrorResponse(res, 'Authentication required', 401);
 			}
@@ -645,7 +645,7 @@ export class AdAdminController {
 	 */
 	async exportAnalytics(req: Request, res: Response): Promise<void> {
 		try {
-			const user = getAuthenticatedUser(req);
+			const user = getUser(req);
 			if (!user) {
 				return sendErrorResponse(res, 'Authentication required', 401);
 			}

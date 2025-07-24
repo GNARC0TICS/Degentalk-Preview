@@ -49,6 +49,7 @@ export const useHotThreads = (params?: { limit?: number; structureId?: Structure
 		queryFn: async () => {
 			const response = await apiRequest<{ threads: HotThread[] }>({
 				url: '/api/forum/threads',
+				method: 'GET',
 				params: {
 					sort: 'hot',
 					limit,

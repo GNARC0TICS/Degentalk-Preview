@@ -9,7 +9,7 @@ import { Request, Response, NextFunction } from 'express';
 import { nanoid } from 'nanoid';
 import { logger } from '@core/logger';
 import { sessionTrackingService } from '../services/session-tracking.service';
-import { getAuthenticatedUser } from '@utils/request-user';
+import { getUser } from '@utils/request-user';
 
 declare module 'express-session' {
   interface SessionData {
@@ -46,7 +46,7 @@ export const sessionTrackingMiddleware = async (
     req.trackingId = trackingId;
     
     // Get user info if authenticated
-    const user = getAuthenticatedUser(req);
+    const user = getUser(req);
     
     // Extract session data
     const sessionData = {

@@ -9,6 +9,7 @@ import { Router } from 'express'
 import type { Router as RouterType } from 'express';
 import { authenticateJWT } from '@api/middleware/authenticate-jwt';
 import * as xpController from './xp.controller';
+import dailyBonusRoutes from './routes/daily-bonus.routes';
 
 const router: RouterType = Router();
 
@@ -23,5 +24,8 @@ router.get('/actions', authenticateJWT, xpController.getXpActions);
 
 // Route to get user XP action logs with filtering
 router.get('/logs/:userId?', authenticateJWT, xpController.getUserXpLogs);
+
+// Daily bonus routes (MVP engagement feature)
+router.use('/daily-bonus', dailyBonusRoutes);
 
 export default router;

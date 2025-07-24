@@ -34,7 +34,7 @@ export async function exampleServiceMethod(userId: string, data: any) {
 // Example 2: Route handler with error reporting
 export async function exampleRouteHandler(req: Request, res: Response, next: NextFunction) {
   try {
-    const userId = getAuthenticatedUser(req)?.id;
+    const userId = getUser(req)?.id;
     const { param1, param2 } = req.body;
     
     // ... your route logic here ...

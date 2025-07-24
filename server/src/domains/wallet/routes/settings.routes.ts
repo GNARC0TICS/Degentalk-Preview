@@ -10,7 +10,7 @@ import { settingsService } from '@core/services/settings.service';
 import { logger } from '@core/logger';
 import { send } from '@api/utils/response';
 import { isAuthenticated } from '@api/domains/auth/middleware/auth.middleware';
-import { getAuthenticatedUser } from '@api/utils/request-user';
+import { getUser } from '@api/utils/request-user';
 import { hasPermission } from '@shared/lib/auth/permissions';
 import { WalletError, ErrorCodes } from '@core/errors';
 import { validateRequest } from '@api/middleware/validate-request';
@@ -36,7 +36,7 @@ const walletSettingsUpdateSchema = z.object({
 // GET /api/wallet/settings - Get current wallet settings
 router.get('/', isAuthenticated, async (req: Request, res: Response) => {
 	try {
-		const user = getAuthenticatedUser(req);
+		const user = getUser(req);
 
 		// Check read permissions
 		if (!hasPermission(user.role, 'economy', 'read')) {
@@ -66,7 +66,7 @@ router.patch(
 	validateRequest(walletSettingsUpdateSchema),
 	async (req: Request, res: Response) => {
 		try {
-			const user = getAuthenticatedUser(req);
+			const user = getUser(req);
 
 			// Check write permissions
 			if (!hasPermission(user.role, 'economy', 'write')) {
@@ -108,7 +108,7 @@ router.patch(
 // GET /api/wallet/settings/events - Server-sent events for real-time updates
 router.get('/events', isAuthenticated, (req: Request, res: Response) => {
 	try {
-		const user = getAuthenticatedUser(req);
+		const user = getUser(req);
 
 		// Check read permissions
 		if (!hasPermission(user.role, 'economy', 'read')) {

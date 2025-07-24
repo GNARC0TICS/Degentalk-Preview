@@ -20,14 +20,14 @@ export interface PublicUser {
         reputation: number;
     };
 }
-export interface AuthenticatedUserSelf extends PublicUser {
+export interface UserSelf extends PublicUser {
     email: string;
     emailVerified: boolean;
     preferences: UserPreferences;
     notifications: NotificationSettings;
     privacy: PrivacySettings;
 }
-export interface AdminUserDetail extends AuthenticatedUserSelf {
+export interface AdminUserDetail extends UserSelf {
     ipAddressHash?: string;
     registrationIp?: string;
     lastLoginIp?: string;
@@ -96,7 +96,7 @@ export interface UserSuspension {
     appealable: boolean;
 }
 export interface GDPRDataExport {
-    user: AuthenticatedUserSelf;
+    user: UserSelf;
     posts: any[];
     transactions: any[];
     loginHistory: LoginRecord[];

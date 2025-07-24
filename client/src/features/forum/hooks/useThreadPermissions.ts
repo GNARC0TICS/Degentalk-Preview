@@ -5,10 +5,10 @@
  * based on forum rules, user role, and ownership.
  */
 
-import { useCanonicalAuth } from '@app/features/auth/useCanonicalAuth';
+import { useAuth } from '@app/hooks/use-auth';
 import { useForumStructure, type MergedForum } from '@app/features/forum/contexts/ForumStructureContext';
 import type { ThreadDisplay, ResolvedZone } from '@app/types/thread.types';
-import type { CanonicalUser } from '@app/types/canonical.types';
+import type { User } from '@shared/types/user.types';
 import { toId } from '@shared/utils/id';
 import type { ThreadId, UserId, ZoneId } from '@shared/types/ids';
 
@@ -42,7 +42,7 @@ export const MOCK_THREAD: ThreadDisplay = {
 		username: 'testuser',
 		displayRole: 'Member',
 		badgeColor: '#666'
-	} as CanonicalUser & { displayRole?: string; badgeColor?: string },
+	} as User & { displayRole?: string; badgeColor?: string },
 	category: {
 		id: crypto.randomUUID(),
 		name: 'Test Category',
@@ -83,7 +83,7 @@ export const useThreadPermissions = (
 	thread: ThreadDisplay | null,
 	forumSlug: string | null
 ): ThreadPermissions => {
-	const { user } = useCanonicalAuth();
+	const { user } = useAuth();
 	const { getForum } = useForumStructure();
 
 	const forum = forumSlug ? getForum(forumSlug) : null;

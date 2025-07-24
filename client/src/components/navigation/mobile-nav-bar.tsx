@@ -50,10 +50,10 @@ export function MobileNavBar({ items, className }: MobileNavBarProps) {
 			isActive: location.pathname.startsWith('/shop')
 		},
 		{
-			icon: <Target className="h-5 w-5" />,
-			label: 'Missions',
-			href: '/missions',
-			isActive: location.pathname.startsWith('/missions')
+			icon: <BarChart2 className="h-5 w-5" />,
+			label: 'About',
+			href: '/about',
+			isActive: location.pathname.startsWith('/about')
 		},
 		{
 			icon: <Trophy className="h-5 w-5" />,

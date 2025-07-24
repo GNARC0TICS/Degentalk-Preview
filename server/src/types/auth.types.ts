@@ -4,7 +4,7 @@ import type { UserId, GroupId } from '@shared/types/ids';
  * Unified user type for both JWT and session authentication
  * This interface represents the user object attached to Express requests
  */
-export interface AuthenticatedUser {
+export interface User {
 	id: UserId;
 	username: string;
 	email: string;
@@ -23,7 +23,7 @@ export interface AuthenticatedUser {
  * Express Request extension for authenticated requests
  */
 export interface AuthenticatedRequest extends Express.Request {
-	user?: AuthenticatedUser;
+	user?: User;
 }
 
 /**
@@ -38,10 +38,10 @@ export interface JWTPayload {
 // Extend Express types globally
 declare global {
 	namespace Express {
-		interface User extends AuthenticatedUser {}
+		interface User extends User {}
 		
 		interface Request {
-			user?: AuthenticatedUser;
+			user?: User;
 		}
 	}
 }

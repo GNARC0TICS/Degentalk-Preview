@@ -1,13 +1,13 @@
 import type { Request, Response } from 'express';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
-import { getAuthenticatedUser } from '@core/utils/auth.helpers';
+import { getUser } from '@core/utils/auth.helpers';
 import { postService } from '@api/domains/forum/services/post.service';
 import { PostTransformer } from '@api/domains/forum/transformers/post.transformer';
 import type { PostId, UserId } from '@shared/types/ids';
 
 class PostController {
 	async createPost(req: Request, res: Response) {
-		const user = getAuthenticatedUser(req);
+		const user = getUser(req);
 		const newPost = await postService.createPost({
 			...req.body,
 			userId: user?.id as UserId
@@ -19,7 +19,7 @@ class PostController {
 
 	async updatePost(req: Request, res: Response) {
 		const { id } = req.params as { id: PostId };
-		const user = getAuthenticatedUser(req);
+		const user = getUser(req);
 		const updatedPost = await postService.updatePost(id, req.body);
 
 		const transformedPost = PostTransformer.toAuthenticated(updatedPost, user);
@@ -35,7 +35,7 @@ class PostController {
 	async handleReaction(req: Request, res: Response) {
 		const { postId } = req.params as { postId: PostId };
 		const { reactionType } = req.body;
-		const user = getAuthenticatedUser(req);
+		const user = getUser(req);
 		const userId = user?.id as UserId;
 
 		if (reactionType === 'like') {
@@ -50,7 +50,7 @@ class PostController {
 	async tipPost(req: Request, res: Response) {
 		const { postId } = req.params as { postId: PostId };
 		const { amount } = req.body;
-		const user = getAuthenticatedUser(req);
+		const user = getUser(req);
 		const userId = user?.id as UserId;
 
 		try {
@@ -70,7 +70,7 @@ class PostController {
 	async getPostReplies(req: Request, res: Response) {
 		const { postId } = req.params as { postId: PostId };
 		const replies = await postService.getPostReplies(postId);
-		const user = getAuthenticatedUser(req);
+		const user = getUser(req);
 		const transformedReplies = replies.map((reply) =>
 			user
 				? PostTransformer.toAuthenticated(reply, user)

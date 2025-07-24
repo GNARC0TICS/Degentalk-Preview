@@ -9,7 +9,7 @@ import { ValidationError, NotFoundError } from '../../middleware/centralized-err
 import { isAuthenticated } from '../../middleware/auth.middleware';
 import { validateRequest } from '../../middleware/validate-request.middleware';
 import { z } from 'zod';
-import { getAuthenticatedUser } from '../../utils/auth-helpers';
+import { getUser } from '../../utils/auth-helpers';
 import { LogAction } from '../../core/logger';
 
 const router = Router();
@@ -30,7 +30,7 @@ router.post(
   validateRequest({ body: createItemSchema }),
   asyncHandlerWithReporting(
     async (req, res) => {
-      const user = await getAuthenticatedUser(req);
+      const user = await getUser(req);
       const { name, description, value } = req.body;
       
       // Example validation that throws custom error
@@ -95,7 +95,7 @@ router.put(
   validateRequest({ body: createItemSchema.partial() }),
   asyncHandlerWithReporting(
     async (req, res) => {
-      const user = await getAuthenticatedUser(req);
+      const user = await getUser(req);
       const { id } = req.params;
       const updates = req.body;
       

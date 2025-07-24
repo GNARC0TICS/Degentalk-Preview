@@ -1,109 +1,49 @@
-/**
- * Enhanced Authentication Hook with CanonicalUser
- * 
- * This is the enterprise-grade auth solution that returns fully-formed user profiles
- * with all forum stats, online status, and other canonical fields
- */
-
 import { useAuth } from '@app/hooks/use-auth';
-import { useQuery } from '@tanstack/react-query';
-import { apiRequest } from '@app/utils/api-request';
 import type { CanonicalUser } from '@app/types/canonical.types';
-import type { User } from '@app/types/user';
-import { toCanonicalUser } from '@app/utils/user-transformer';
-
-interface UserProfileResponse {
-  user: CanonicalUser;
-  stats: {
-    totalPosts: number;
-    totalThreads: number;
-    totalLikes: number;
-    totalTips: number;
-  };
-  activity: {
-    lastSeenAt: string;
-    isOnline: boolean;
-  };
-}
+import type { User } from '@shared/types/user.types';
 
 /**
- * Fetch enhanced user profile with all canonical fields
+ * Maps a regular User to a CanonicalUser for forum contexts
  */
-async function fetchUserProfile(userId: string): Promise<CanonicalUser> {
-  try {
-    // First try the enhanced endpoint (when it exists)
-    const response = await apiRequest<UserProfileResponse>({
-      url: `/api/users/${userId}/profile`,
-      method: 'GET',
-    });
-    
-    return response.user;
-  } catch (error) {
-    // Fallback: use basic auth data and transform
-    // This allows gradual migration
-    console.warn('Enhanced profile endpoint not available, using transformer', error);
-    
-    // Fetch basic user data
-    const basicUser = await apiRequest<User>({
-      url: '/api/auth/user',
-      method: 'GET',
-    });
-    
-    if (!basicUser) throw new Error('User not found');
-    
-    // Transform to canonical format
-    return toCanonicalUser(basicUser);
-  }
+function toCanonicalUser(user: User | null): CanonicalUser | null {
+  if (!user) return null;
+
+  return {
+    id: user.id,
+    username: user.username,
+    displayName: user.username, // Use username as displayName fallback
+    avatarUrl: user.avatarUrl || undefined,
+    activeAvatarUrl: user.avatarUrl || undefined,
+    role: user.role,
+    forumStats: {
+      level: user.level || 0,
+      xp: user.xp || 0,
+      reputation: user.reputation || 0,
+      totalPosts: 0, // These would come from forum-specific API
+      totalThreads: 0,
+      totalLikes: 0,
+      totalTips: 0,
+    },
+    isOnline: true, // User is online if authenticated
+    lastSeenAt: user.lastActiveAt || undefined,
+    joinedAt: user.createdAt,
+    isAdmin: user.isAdmin || false,
+    isModerator: user.isModerator || false,
+    isVerified: user.isVerified || false,
+    isBanned: user.isBanned || false,
+    reputation: user.reputation || 0,
+  };
 }
 
 /**
- * Enhanced auth hook that returns CanonicalUser
- * Drop-in replacement for useAuth() that provides full user profiles
+ * Hook that provides CanonicalUser interface for forum components
+ * This is a compatibility layer while transitioning to the new user model
  */
 export function useCanonicalAuth() {
-  const basicAuth = useAuth();
+  const authContext = useAuth();
   
-  // Fetch enhanced profile when we have a user
-  const { data: canonicalUser, isLoading: profileLoading } = useQuery({
-    queryKey: ['canonicalUser', basicAuth.user?.id],
-    queryFn: () => fetchUserProfile(basicAuth.user!.id),
-    enabled: !!basicAuth.user?.id,
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 30 * 60 * 1000, // 30 minutes (was cacheTime in v4)
-  });
-  
-  // Return enhanced auth object
   return {
-    ...basicAuth,
-    user: canonicalUser || (basicAuth.user ? toCanonicalUser(basicAuth.user) : null),
-    isLoading: basicAuth.isLoading || profileLoading,
-    isCanonical: !!canonicalUser, // Flag to indicate if we have full profile
+    ...authContext,
+    user: toCanonicalUser(authContext.user),
   };
-}
-
-/**
- * Hook to get current user as CanonicalUser
- * Convenience wrapper for components that only need the user
- */
-export function useCurrentUser(): CanonicalUser | null {
-  const { user } = useCanonicalAuth();
-  return user;
-}
-
-/**
- * Type-safe permission check with canonical user
- */
-export function useCanonicalPermission(permission: string): boolean {
-  const { user } = useCanonicalAuth();
-  
-  if (!user) return false;
-  
-  // Admin/mod shortcuts
-  if (user.isAdmin) return true;
-  if (user.isModerator && permission.startsWith('forum.')) return true;
-  
-  // Check specific permissions (when implemented)
-  // return user.permissions?.includes(permission) ?? false;
-  
-  return false;
 }
