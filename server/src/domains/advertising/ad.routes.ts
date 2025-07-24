@@ -7,7 +7,7 @@ import { userPromotionRoutes } from './user-promotion.routes';
 import { logger } from '@core/logger';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 import { getAuthenticatedUser } from '@core/utils/auth.helpers';
-import { authenticate, requireAdmin } from '@server/middleware/auth';
+import { authenticate, requireAdmin } from '@api/middleware/auth';
 import { rateLimiters } from '@core/services/rate-limit.service';
 
 const router: RouterType = Router();

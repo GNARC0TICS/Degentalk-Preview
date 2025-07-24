@@ -16,11 +16,11 @@ import type {
 import { logger } from '@core/logger';
 import { WalletError, ErrorCodes } from '@core/errors';
 import { getAuthenticatedUser } from '@core/utils/auth.helpers';
-import { walletService } from '@server/domains/wallet/services/wallet.service';
+import { walletService } from '@api/domains/wallet/services/wallet.service';
 import { walletConfig } from '@shared/wallet.config';
 import { settingsService } from '@core/services/settings.service';
-import { hasPermission } from '@server/domains/admin/adminRegistry';
-import { send } from '@server-utils/response';
+import { hasPermission } from '@api/domains/admin/adminRegistry';
+import { send } from '@api/utils/response';
 
 // Import transformers
 import {

@@ -6,7 +6,7 @@ import { db } from '@db';
 import { moderatorNotes, moderatorNoteTypeEnum } from '@schema';
 import { eq, and, desc } from 'drizzle-orm';
 import { isAdminOrModerator } from '../../../auth/middleware/auth.middleware';
-import { getUserIdFromRequest } from '@server-utils/auth';
+import { getUserIdFromRequest } from '@api/utils/auth';
 import { logger } from '@core/logger';
 import type { EntityId } from '@shared/types/ids';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';

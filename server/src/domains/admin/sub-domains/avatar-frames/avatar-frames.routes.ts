@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import type { Router as RouterType } from 'express';
 import { avatarFrameController } from './avatar-frames.controller';
-import { isAdmin } from '@server/domains/auth/middleware/auth.middleware';
+import { isAdmin } from '@api/domains/auth/middleware/auth.middleware';
 
 const router: RouterType = Router();
 

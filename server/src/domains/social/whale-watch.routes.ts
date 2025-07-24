@@ -3,9 +3,9 @@ import { Router } from 'express'
 import type { Router as RouterType } from 'express';
 import { z } from 'zod';
 import { WhaleWatchService } from './whale-watch.service';
-import { isAuthenticated } from '@server/domains/auth/middleware/auth.middleware';
+import { isAuthenticated } from '@api/domains/auth/middleware/auth.middleware';
 import { logger } from '@core/logger';
-import { UserTransformer } from '@server/domains/users/transformers/user.transformer';
+import { UserTransformer } from '@api/domains/users/transformers/user.transformer';
 import {
 	toPublicList,
 	sendSuccessResponse,

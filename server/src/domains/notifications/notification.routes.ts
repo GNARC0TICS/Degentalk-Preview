@@ -6,7 +6,7 @@ import { userService } from '@core/services/user.service';
  */
 
 import express from 'express';
-import { isAuthenticated } from '@server/domains/auth/middleware/auth.middleware';
+import { isAuthenticated } from '@api/domains/auth/middleware/auth.middleware';
 import { Router } from 'express'
 import type { Router as RouterType } from 'express';
 import type { Request, Response } from 'express';

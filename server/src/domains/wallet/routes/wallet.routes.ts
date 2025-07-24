@@ -9,8 +9,8 @@ import { Router } from 'express'
 import type { Router as RouterType } from 'express';
 import { walletController } from '../controllers/wallet.controller';
 import { walletValidation } from '../validation/wallet.validation';
-import { validateRequest } from '@server/middleware/validate-request';
-import { authenticateJWT as requireAuth } from '@server/middleware/authenticate-jwt';
+import { validateRequest } from '@api/middleware/validate-request';
+import { authenticateJWT as requireAuth } from '@api/middleware/authenticate-jwt';
 import { createCustomRateLimiter as rateLimit } from '@core/services/rate-limit.service';
 import webhookRoutes from '../webhooks/ccpayment-webhook.routes';
 import {

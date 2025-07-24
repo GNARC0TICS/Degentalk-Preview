@@ -1,8 +1,8 @@
 import { Router } from 'express'
 import type { Router as RouterType } from 'express';
 import { ProfileStatsController } from './profile-stats.controller';
-import { rateLimitMiddleware } from '@server/middleware/validate-request';
-import { optionalAuthMiddleware } from '@server/middleware/validate-request';
+import { rateLimitMiddleware } from '@api/middleware/validate-request';
+import { optionalAuthMiddleware } from '@api/middleware/validate-request';
 
 const router: RouterType = Router();
 

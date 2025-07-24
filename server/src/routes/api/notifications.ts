@@ -1,5 +1,5 @@
 import { Router, Request, Response } from 'express';
-import { sendSuccessResponse } from '@server/core/utils/transformer.helpers';
+import { sendSuccessResponse } from '@api/core/utils/transformer.helpers';
 
 const router = Router();
 

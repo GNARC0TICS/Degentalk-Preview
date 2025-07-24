@@ -7,7 +7,7 @@
 
 import { Router } from 'express'
 import type { Router as RouterType } from 'express';
-import { authenticateJWT } from '@server/middleware/authenticate-jwt';
+import { authenticateJWT } from '@api/middleware/authenticate-jwt';
 import * as xpController from './xp.controller';
 
 const router: RouterType = Router();

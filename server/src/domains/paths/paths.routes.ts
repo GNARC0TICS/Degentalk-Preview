@@ -7,7 +7,7 @@ import type { UserId } from '@shared/types/ids';
 import { Router } from 'express';
 import type { Request, Response } from 'express';
 import { PathService } from '../../../services/path-service';
-// import { XpProcessor } from '@server-utils/xpProcessor';  // File doesn't exist - commenting out
+// import { XpProcessor } from '@api/utils/xpProcessor';  // File doesn't exist - commenting out
 import { db } from '@db';
 import { sql } from 'drizzle-orm';
 
@@ -15,7 +15,7 @@ import {
 	isAuthenticated,
 	isAdminOrModerator,
 	isAdmin
-} from '@server/domains/auth/middleware/auth.middleware';
+} from '@api/domains/auth/middleware/auth.middleware';
 import { getUserId } from '../auth/services/auth.service';
 import { isValidId } from '@shared/types';
 import { logger } from '@core/logger';

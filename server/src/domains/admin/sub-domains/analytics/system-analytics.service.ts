@@ -7,7 +7,7 @@
 
 import { eq, desc, count, avg, sum, sql, and, gte, lte } from 'drizzle-orm';
 import { db } from '@db';
-import { adminCacheService } from '@server/domains/admin/shared/admin-cache.service';
+import { adminCacheService } from '@api/domains/admin/shared/admin-cache.service';
 import { CacheStandard, CacheExtended } from '@core/cache/decorators';
 import { invalidateCache } from '@core/cache/invalidateCache';
 import {

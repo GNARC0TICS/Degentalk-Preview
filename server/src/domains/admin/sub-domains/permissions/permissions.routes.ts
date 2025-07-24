@@ -2,7 +2,7 @@ import { Router } from 'express'
 import type { Router as RouterType } from 'express';
 import { userService } from '@core/services/user.service';
 import { AdminPermissionsController } from './permissions.controller';
-import { canUser } from '@lib/auth/canUser';
+import { canUser } from '@shared/lib/auth/canUser';
 import { sendErrorResponse } from '@core/utils/transformer.helpers';
 
 const controller = new AdminPermissionsController();

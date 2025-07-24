@@ -22,8 +22,8 @@ import {
 	type CreateStickerPackInput,
 	type UpdateStickerPackInput
 } from './stickers.validators';
-import { formatAdminResponse, AdminOperationBoundary } from '@server/domains/admin/shared';
-import { AdminError, AdminErrorCodes } from '@server/domains/admin/admin.errors';
+import { formatAdminResponse, AdminOperationBoundary } from '@api/domains/admin/shared';
+import { AdminError, AdminErrorCodes } from '@api/domains/admin/admin.errors';
 import type { StickerId, PackId } from '@shared/types/ids';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 

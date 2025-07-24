@@ -12,16 +12,16 @@ import { z } from 'zod';
 import { db } from '@db';
 import { eq } from 'drizzle-orm';
 import { users } from '@schema';
-import { getUserIdFromRequest } from '@server-utils/auth';
+import { getUserIdFromRequest } from '@api/utils/auth';
 import {
 	isAuthenticated,
 	isAdminOrModerator,
 	isAdmin
-} from '@server/domains/auth/middleware/auth.middleware';
+} from '@api/domains/auth/middleware/auth.middleware';
 import { MessageTransformer } from './transformers/message.transformer';
 import { MessageService } from './message.service';
 import { logger } from '@core/logger';
-import { UserTransformer } from '@server/domains/users/transformers/user.transformer';
+import { UserTransformer } from '@api/domains/users/transformers/user.transformer';
 import {
 	sendSuccessResponse,
 	sendErrorResponse,

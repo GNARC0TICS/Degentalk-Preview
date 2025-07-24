@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import type { Router as RouterType } from 'express';
-import { isAuthenticated, isAdmin } from '@server/domains/auth/middleware/auth.middleware';
+import { isAuthenticated, isAdmin } from '@api/domains/auth/middleware/auth.middleware';
 import * as featureGatesController from './feature-gates.controller';
 
 const router: RouterType = Router();

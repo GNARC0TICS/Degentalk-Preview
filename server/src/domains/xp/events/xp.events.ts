@@ -18,7 +18,7 @@ import {
 } from '@schema';
 import { eq, desc } from 'drizzle-orm';
 import { logger } from '@core/logger';
-import { dgtService } from '@server/domains/wallet/services/dgtService';
+import { dgtService } from '@api/domains/wallet/services/dgtService';
 import { PgTransaction } from 'drizzle-orm/pg-core';
 import type { UserId } from '@shared/types/ids';
 

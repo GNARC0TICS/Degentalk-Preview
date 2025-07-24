@@ -1,13 +1,13 @@
 import { Router } from 'express';
-import forumRoutes from '@server/domains/forum/forum.routes';
-import shopRoutes from '@server/domains/shop/shop.routes';
-import activityRoutes from '@server/domains/activity/routes';
-import uploadRoutes from '@server/domains/uploads/upload.routes';
-import subscriptionRoutes from '@server/domains/subscriptions/subscription.routes';
+import forumRoutes from '@api/domains/forum/forum.routes';
+import shopRoutes from '@api/domains/shop/shop.routes';
+import activityRoutes from '@api/domains/activity/routes';
+import uploadRoutes from '@api/domains/uploads/upload.routes';
+import subscriptionRoutes from '@api/domains/subscriptions/subscription.routes';
 import uiRoutes from './ui.routes';
 import storeAvatarFrameRoutes from './store/avatar-frames';
 import userFramesRoutes from './user/frames';
-import shoutboxRoutes from '@server/domains/shoutbox/shoutbox.routes';
+import shoutboxRoutes from '@api/domains/shoutbox/shoutbox.routes';
 import userInventoryRoutes from './user/inventory';
 import notificationRoutes from './notifications';
 

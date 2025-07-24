@@ -9,7 +9,7 @@ import { Router } from 'express'
 import type { Router as RouterType } from 'express';
 import type { Request, Response, NextFunction } from 'express';
 import * as missionsController from './missions.controller';
-import { isAuthenticated, isAdmin } from '@server/domains/auth/middleware/auth.middleware';
+import { isAuthenticated, isAdmin } from '@api/domains/auth/middleware/auth.middleware';
 
 const router: RouterType = Router();
 

@@ -11,9 +11,9 @@
 import express from 'express'
 import type { Router as RouterType } from 'express';
 import { rainController } from './rain.controller';
-import { authenticateJWT as requireAuth } from '@server/middleware/authenticate-jwt';
-import { isAdmin as requireAdmin } from '@server/domains/auth/middleware/auth.middleware';
-import { validateRequest } from '@server/middleware/validate-request';
+import { authenticateJWT as requireAuth } from '@api/middleware/authenticate-jwt';
+import { isAdmin as requireAdmin } from '@api/domains/auth/middleware/auth.middleware';
+import { validateRequest } from '@api/middleware/validate-request';
 import { z } from 'zod';
 
 // Create the router

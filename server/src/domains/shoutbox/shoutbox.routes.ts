@@ -32,7 +32,7 @@ import {
 	isAuthenticatedOptional,
 	isAdminOrModerator,
 	isAdmin
-} from '@server/domains/auth/middleware/auth.middleware';
+} from '@api/domains/auth/middleware/auth.middleware';
 import { getUserId } from '../auth/services/auth.service';
 import { logger } from '@core/logger';
 import { ShoutboxService } from './services/shoutbox.service';
@@ -44,7 +44,7 @@ import { PerformanceService } from './services/performance.service';
 import { createCustomRateLimiter } from '@core/services/rate-limit.service';
 import { isValidId } from '@shared/types';
 import { ShoutboxTransformer } from './transformers/shoutbox.transformer';
-import { UserTransformer } from '@server/domains/users/transformers/user.transformer';
+import { UserTransformer } from '@api/domains/users/transformers/user.transformer';
 import {
 	toPublicList,
 	sendSuccessResponse,

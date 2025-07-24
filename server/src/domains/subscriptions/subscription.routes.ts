@@ -7,7 +7,7 @@
 import { Router } from 'express'
 import type { Router as RouterType } from 'express';
 import { subscriptionController } from './subscription.controller';
-import { isAuthenticated } from '@server/domains/auth/middleware/auth.middleware';
+import { isAuthenticated } from '@api/domains/auth/middleware/auth.middleware';
 
 const router: RouterType = Router();
 

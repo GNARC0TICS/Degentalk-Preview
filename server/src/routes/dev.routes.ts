@@ -9,8 +9,8 @@ import { Router } from 'express'
 import type { Router as RouterType } from 'express';
 import { legacyCacheService } from '@core/cache.service';
 import { logger } from '@core/logger';
-import { isDevMode } from '@server-utils/environment';
-import { devSecurity } from '@server/middleware/dev-security.middleware';
+import { isDevMode } from '@api/utils/environment';
+import { devSecurity } from '@api/middleware/dev-security.middleware';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
 const router: RouterType = Router();

@@ -7,7 +7,7 @@
 import { Router } from 'express'
 import type { Router as RouterType } from 'express';
 import { levelingController } from './leveling.controller';
-import { isAuthenticated, isAdmin } from '@server/domains/auth/middleware/auth.middleware';
+import { isAuthenticated, isAdmin } from '@api/domains/auth/middleware/auth.middleware';
 import rateLimit from 'express-rate-limit';
 
 const router: RouterType = Router();

@@ -2,7 +2,7 @@ import { WebSocketServer, WebSocket } from 'ws';
 import { Server } from 'http';
 import { logger } from '@core/logger';
 import type { UserId, RoomId } from '@shared/types/ids';
-import { verifyToken } from '@server/domains/auth/utils/jwt.utils';
+import { verifyToken } from '@api/domains/auth/utils/jwt.utils';
 import { IncomingMessage } from 'http';
 
 interface AuthenticatedWebSocket extends WebSocket {

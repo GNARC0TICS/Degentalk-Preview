@@ -23,7 +23,7 @@ import { z } from 'zod';
 import { isAuthenticated } from '../../auth/middleware/auth.middleware';
 import { db } from '@core/db';
 import { asyncHandler } from '@core/errors'; // Assuming asyncHandler is in core errors
-import { getUserIdFromRequest } from '@server-utils/auth';
+import { getUserIdFromRequest } from '@api/utils/auth';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 import { logger } from '@core/logger';
 

@@ -9,7 +9,7 @@ import type { UserId } from '@shared/types/ids';
 import { Router } from 'express'
 import type { Router as RouterType } from 'express';
 import { userService } from '@core/services/user.service';
-import { isAuthenticated } from '@server/domains/auth/middleware/auth.middleware';
+import { isAuthenticated } from '@api/domains/auth/middleware/auth.middleware';
 import { logger } from '@core/logger';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 import { db } from '@db';
@@ -17,7 +17,7 @@ import { userInventory, transactions } from '@schema';
 import { eq, and, inArray } from 'drizzle-orm';
 import { CosmeticsTransformer } from './transformers/cosmetics.transformer';
 import { vanitySinkAnalyzer } from './services/vanity-sink.analyzer';
-import { validateRequest } from '@server/middleware/validate-request';
+import { validateRequest } from '@api/middleware/validate-request';
 import { shopValidation } from './validation/shop.validation';
 import type { UserId, ItemId } from '@shared/types/ids';
 

@@ -20,7 +20,7 @@ import {
 	users as usersTable
 } from '@schema';
 import { eq, ilike, asc, gt, inArray, lt, desc, and, sql } from 'drizzle-orm';
-import { isAuthenticated as requireAuth } from '@server/domains/auth/middleware/auth.middleware';
+import { isAuthenticated as requireAuth } from '@api/domains/auth/middleware/auth.middleware';
 import { logger } from '@core/logger';
 import { forumStructureService } from './services/structure.service';
 import { threadService } from './services/thread.service';

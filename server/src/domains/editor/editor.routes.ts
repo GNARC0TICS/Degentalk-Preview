@@ -9,7 +9,7 @@ import type { Router as RouterType } from 'express';
 import type { Request, Response } from 'express';
 import axios from 'axios';
 import { z } from 'zod';
-import { isAuthenticated } from '@server/domains/auth/middleware/auth.middleware';
+import { isAuthenticated } from '@api/domains/auth/middleware/auth.middleware';
 import { db } from '@core/db';
 import { logger } from '@core/logger';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';

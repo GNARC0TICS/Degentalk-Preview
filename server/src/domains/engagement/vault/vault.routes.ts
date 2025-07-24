@@ -19,7 +19,7 @@ import {
 	isAdminOrModerator,
 	isAdmin
 } from '../../auth/middleware/auth.middleware';
-import { getUserIdFromRequest } from '@server-utils/auth';
+import { getUserIdFromRequest } from '@api/utils/auth';
 import { isValidId } from '@shared/types';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 

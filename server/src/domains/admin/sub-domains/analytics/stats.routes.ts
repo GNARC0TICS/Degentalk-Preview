@@ -9,7 +9,7 @@ import { db } from '@db';
 import { platformStatistics } from '@schema';
 import { eq } from 'drizzle-orm';
 import { platformStatsService } from './platformStats.service';
-import { isAdmin } from '@server/domains/auth/middleware/auth.middleware';
+import { isAdmin } from '@api/domains/auth/middleware/auth.middleware';
 import { logger } from '@core/logger';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 

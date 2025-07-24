@@ -2,12 +2,12 @@ import type { UserId } from '@shared/types/ids';
 import { userService } from '@core/services/user.service';
 import { Router } from 'express'
 import type { Router as RouterType } from 'express';
-import { shopItems } from '@server-utils/shop-utils';
+import { shopItems } from '@api/utils/shop-utils';
 import { db } from '@db';
 import { products, userInventory, transactions } from '@schema';
 import { eq, isNull, or, and, gte, lte } from 'drizzle-orm';
-import { dgtService } from '@server/domains/wallet/services/dgtService';
-import { isAuthenticated } from '@server/domains/auth/middleware/auth.middleware';
+import { dgtService } from '@api/domains/wallet/services/dgtService';
+import { isAuthenticated } from '@api/domains/auth/middleware/auth.middleware';
 import { walletConfig } from '@shared/wallet.config';
 import { logger } from '@core/logger';
 import { z } from 'zod';
@@ -17,7 +17,7 @@ import { vanitySinkAnalyzer } from './services/vanity-sink.analyzer';
 import type { DgtAmount, UserId, ItemId, OrderId } from '@shared/types/ids';
 import type { EntityId } from '@shared/types/ids';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
-import { validateRequest } from '@server/middleware/validate-request';
+import { validateRequest } from '@api/middleware/validate-request';
 import { shopValidation } from './validation/shop.validation';
 
 const router: RouterType = Router();

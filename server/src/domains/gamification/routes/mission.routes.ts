@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import type { Router as RouterType } from 'express';
-import { authenticate } from '@server/middleware/auth';
-import { validateRequest } from '@server/middleware/validate-request';
+import { authenticate } from '@api/middleware/auth';
+import { validateRequest } from '@api/middleware/validate-request';
 import { requireAdmin } from '../../forum/services/permissions.service';
 import { missionService } from '../services/mission.service';
 import { getAuthenticatedUser } from '@core/utils/auth.helpers';
@@ -12,7 +12,7 @@ import {
 	CreateFromTemplatesSchema 
 } from '../schemas/mission.schemas';
 import { toPublicMission, toAuthenticatedMission } from '../transformers/mission.transformer';
-import { send } from '@server-utils/response';
+import { send } from '@api/utils/response';
 
 const router: RouterType = Router();
 

@@ -7,8 +7,8 @@ import { userService } from '@core/services/user.service';
  */
 
 import express from 'express';
-import { authenticate } from '@server/middleware/authenticate';
-import { validateRequest } from '@server/middleware/validate-request';
+import { authenticate } from '@api/middleware/authenticate';
+import { validateRequest } from '@api/middleware/validate-request';
 import { preferencesValidation } from './validation/preferences.validation';
 import {
 	getAllPreferences,
@@ -30,10 +30,10 @@ import { WebSocket } from 'ws';
 import {
 	isAuthenticated,
 	isAuthenticatedOptional
-} from '@server/domains/auth/middleware/auth.middleware';
+} from '@api/domains/auth/middleware/auth.middleware';
 import { logger, LogLevel, LogAction } from '@core/logger';
 import { displayPreferencesSchema } from './preferences.validators';
-import { getUserIdFromRequest } from '@server-utils/auth';
+import { getUserIdFromRequest } from '@api/utils/auth';
 import { UserPreferencesService } from '../user/user-preferences.service';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 

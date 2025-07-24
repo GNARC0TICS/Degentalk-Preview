@@ -8,7 +8,7 @@
 import { CronJob } from 'cron';
 import { db } from '@core/db';
 import { logger } from '@core/logger';
-import { createServiceReporter } from '@server-lib/report-error';
+import { createServiceReporter } from '@shared/lib/report-error';
 import type { UserId, MissionId } from '@shared/types/ids';
 import {
   missionTemplates,

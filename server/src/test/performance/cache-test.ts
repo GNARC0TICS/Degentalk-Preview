@@ -7,10 +7,10 @@
 
 import { performance } from 'perf_hooks';
 import { redisCacheService } from '@core/cache/redis.service';
-import { adServingService } from '@domains/advertising/ad-serving.service';
-import { threadService } from '@domains/forum/services/thread.service';
-import { gamificationAnalyticsService } from '@domains/gamification/services/analytics.service';
-import { sessionTrackingService } from '@domains/analytics/services/session-tracking.service';
+import { adServingService } from '@api/domains/advertising/ad-serving.service';
+import { threadService } from '@api/domains/forum/services/thread.service';
+import { gamificationAnalyticsService } from '@api/domains/gamification/services/analytics.service';
+import { sessionTrackingService } from '@api/domains/analytics/services/session-tracking.service';
 import { logger } from '@core/logger';
 
 interface TestResult {

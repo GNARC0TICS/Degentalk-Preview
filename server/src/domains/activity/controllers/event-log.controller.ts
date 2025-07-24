@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express';
-import { eventLogService } from '@server/domains/activity/services/event-log.service';
+import { eventLogService } from '@api/domains/activity/services/event-log.service';
 import { z } from 'zod';
 import { eventTypeEnum } from '@schema/system/event_logs';
 import { logger } from '@core/logger';

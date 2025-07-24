@@ -3,7 +3,7 @@ import type { Request, Response, NextFunction } from 'express';
 import { env, isDevelopment, isProduction } from '@core/config/environment';
 import { createMockUser } from '../services/auth.service';
 import { logger } from '@core/logger';
-import { shouldBypassAuth } from '@server-utils/environment';
+import { shouldBypassAuth } from '@api/utils/environment';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
 /**

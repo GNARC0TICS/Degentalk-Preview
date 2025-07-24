@@ -1,8 +1,8 @@
 import type { Request, Response } from 'express';
 import { logger } from '@core/logger';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
-import { taxonomyService } from '@server/domains/forum/services/taxonomy.service';
-import { ForumTransformer } from '@server/domains/forum/transformers/forum.transformer';
+import { taxonomyService } from '@api/domains/forum/services/taxonomy.service';
+import { ForumTransformer } from '@api/domains/forum/transformers/forum.transformer';
 
 class TagsController {
 	async getTags(req: Request, res: Response) {

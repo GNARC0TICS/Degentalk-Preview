@@ -12,11 +12,11 @@ import {
 	hashPassword,
 	storeTempDevMetadata,
 	verifyEmailToken
-} from '@server/domains/auth/services/auth.service';
-import { isDevMode } from '@server/utils/environment';
-import { walletService } from '@server/domains/wallet';
+} from '@api/domains/auth/services/auth.service';
+import { isDevMode } from '@api/utils/environment';
+import { walletService } from '@api/domains/wallet';
 import { walletConfig } from '@shared/wallet.config';
-import { UserTransformer } from '@server/domains/users/transformers/user.transformer';
+import { UserTransformer } from '@api/domains/users/transformers/user.transformer';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 import { generateToken } from '../utils/jwt.utils';
 

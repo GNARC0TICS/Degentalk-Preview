@@ -8,8 +8,8 @@
 import { Router } from 'express'
 import type { Router as RouterType } from 'express';
 import { analyticsController } from '../controllers/analytics.controller';
-import { authenticate } from '@middleware/auth.middleware';
-import { validateRequest } from '@middleware/validate-request';
+import { authenticate } from '@api/middleware/auth.middleware';
+import { validateRequest } from '@api/middleware/validate-request';
 import { z } from 'zod';
 
 const router: RouterType = Router();

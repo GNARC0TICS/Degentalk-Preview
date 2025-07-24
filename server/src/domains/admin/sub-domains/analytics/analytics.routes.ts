@@ -5,7 +5,7 @@
  */
 
 import express from 'express';
-import { isAuthenticated, isAdmin } from '@server/domains/auth/middleware/auth.middleware';
+import { isAuthenticated, isAdmin } from '@api/domains/auth/middleware/auth.middleware';
 import rainAnalyticsRoutes from './rain-analytics.routes';
 import tippingAnalyticsRoutes from './tipping-analytics.routes';
 import platformStatsRoutes from './stats.routes';
@@ -14,7 +14,7 @@ import fraudDetectionRoutes from './fraud-detection.routes';
 import { Router } from 'express'
 import type { Router as RouterType } from 'express';
 import { AdminAnalyticsController } from './analytics.controller';
-import { validateQuery } from '@server/middleware/validate';
+import { validateQuery } from '@api/middleware/validate';
 import { AnalyticsQuerySchema } from './analytics.validators';
 
 const router: RouterType = express.Router();

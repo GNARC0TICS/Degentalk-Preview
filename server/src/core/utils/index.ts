@@ -3,7 +3,7 @@
  * This prevents confusion about which file exports what
  * 
  * Usage:
- * import { sendSuccessResponse, sendErrorResponse } from '@server/core/utils';
+ * import { sendSuccessResponse, sendErrorResponse } from '@api/core/utils';
  */
 
 // Response/API utilities

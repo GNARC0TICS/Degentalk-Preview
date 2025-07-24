@@ -12,7 +12,7 @@ import {
 	isAuthenticated,
 	isAdmin,
 	isAdminOrModerator
-} from '@server/domains/auth/middleware/auth.middleware';
+} from '@api/domains/auth/middleware/auth.middleware';
 
 const router: RouterType = Router();
 const controller = new AchievementController();

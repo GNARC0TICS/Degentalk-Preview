@@ -7,7 +7,7 @@
 import express from 'express'
 import type { Router as RouterType } from 'express';
 import { rainAnalyticsController } from './rain-analytics.controller';
-import { isAdmin } from '@server/domains/auth/middleware/auth.middleware';
+import { isAdmin } from '@api/domains/auth/middleware/auth.middleware';
 
 const router: RouterType = express.Router();
 

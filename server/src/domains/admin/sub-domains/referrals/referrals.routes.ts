@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import type { Router as RouterType } from 'express';
 import { referralsController } from './referrals.controller';
-import { validateRequest } from '@server/middleware/validate-request';
+import { validateRequest } from '@api/middleware/validate-request';
 import { createReferralSourceSchema } from './referrals.validators';
 import { adminMiddleware } from '../../admin.middleware';
 

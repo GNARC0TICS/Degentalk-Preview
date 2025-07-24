@@ -1,6 +1,6 @@
 import { Router, Request, Response } from 'express';
-import { logger } from '@server/core/logger';
-import { sendSuccessResponse, sendErrorResponse } from '@server/core/utils/transformer.helpers';
+import { logger } from '@api/core/logger';
+import { sendSuccessResponse, sendErrorResponse } from '@api/core/utils/transformer.helpers';
 
 const router = Router();
 
