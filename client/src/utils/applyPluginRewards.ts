@@ -1,5 +1,5 @@
-import type { UserInventoryWithProduct } from '@/types/inventory';
-import { logger } from "@/lib/logger";
+import type { UserInventoryWithProduct } from '@app/types/inventory';
+import { logger } from '@app/lib/logger";
 
 export const SYSTEM_ROLE_COLORS: Record<string, string> = {
   admin: '#ef4444', // red-500

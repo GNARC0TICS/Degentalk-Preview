@@ -27,5 +27,5 @@ export {
 	createUserMenuItems,
 	filterNavItems,
 	trackNavigation
-} from '@/config/navigation';
-export type { NavItemConfig, UserMenuItemConfig } from '@/config/navigation';
+} from '@app/config/navigation';
+export type { NavItemConfig, UserMenuItemConfig } from '@app/config/navigation';

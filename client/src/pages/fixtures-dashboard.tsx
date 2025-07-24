@@ -5,13 +5,13 @@
 
 import React from 'react';
 import { useState, useEffect, useCallback } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { FixtureBuilder } from '@/components/fixtures/fixture-builder';
-import { FixturePreview } from '@/components/fixtures/fixture-preview';
+import { Card, CardContent, CardHeader, CardTitle } from '@app/components/ui/card';
+import { Button } from '@app/components/ui/button';
+import { Input } from '@app/components/ui/input';
+import { Badge } from '@app/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@app/components/ui/tabs';
+import { FixtureBuilder } from '@app/components/fixtures/fixture-builder';
+import { FixturePreview } from '@app/components/fixtures/fixture-preview';
 import {
 	Database,
 	Settings,
@@ -27,7 +27,7 @@ import {
 	Activity
 } from 'lucide-react';
 import { toast } from 'sonner';
-import { logger } from "@/lib/logger";
+import { logger } from '@app/lib/logger";
 
 interface FixtureSession {
 	id: string;

@@ -5,8 +5,8 @@
  * This provides a migration path from basic auth to full user profiles
  */
 
-import type { User } from '@/hooks/use-auth';
-import type { CanonicalUser } from '@/types/canonical.types';
+import type { User } from '@app/hooks/use-auth';
+import type { CanonicalUser } from '@app/types/canonical.types';
 import type { BasicRole } from '@shared/types/index';
 
 /**

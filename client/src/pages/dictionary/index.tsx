@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
-import { apiRequest } from '@/utils/queryClient';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { LoadingSpinner } from '@/components/ui/loader';
-import { ErrorDisplay } from '@/components/ui/error-display';
-import { AddWordModal } from '@/features/dictionary/components/AddWordModal';
-import { SafeTooltip } from '@/components/ui/tooltip-utils';
+import { apiRequest } from '@app/utils/queryClient';
+import { Button } from '@app/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@app/components/ui/card';
+import { LoadingSpinner } from '@app/components/ui/loader';
+import { ErrorDisplay } from '@app/components/ui/error-display';
+import { AddWordModal } from '@app/features/dictionary/components/AddWordModal';
+import { SafeTooltip } from '@app/components/ui/tooltip-utils';
 import type { DictionaryEntryId } from '@shared/types/ids';
 
 interface DictionaryEntry {

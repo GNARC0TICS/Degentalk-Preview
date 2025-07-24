@@ -1,10 +1,10 @@
 import React from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { useForumStructure } from '@/features/forum/contexts/ForumStructureContext';
-import type { MergedForum } from '@/features/forum/contexts/ForumStructureContext';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Skeleton } from '@/components/ui/skeleton';
+import { useForumStructure } from '@app/features/forum/contexts/ForumStructureContext';
+import type { MergedForum } from '@app/features/forum/contexts/ForumStructureContext';
+import { Card, CardContent, CardHeader, CardTitle } from '@app/components/ui/card';
+import { Button } from '@app/components/ui/button';
+import { Skeleton } from '@app/components/ui/skeleton';
 import {
 	MessageSquare,
 	FileText,
@@ -15,10 +15,10 @@ import {
 	Users,
 	Map
 } from 'lucide-react';
-import { ForumListItem } from '@/features/forum/components/ForumListItem';
-import { Wide } from '@/layout/primitives/Wide';
-import { ForumBreadcrumbs, type BreadcrumbItem } from '@/components/navigation/ForumBreadcrumbs';
-import { getForumSpacing, getForumLayout } from '@/utils/spacing-constants';
+import { ForumListItem } from '@app/features/forum/components/ForumListItem';
+import { Wide } from '@app/layout/primitives/Wide';
+import { ForumBreadcrumbs, type BreadcrumbItem } from '@app/components/navigation/ForumBreadcrumbs';
+import { getForumSpacing, getForumLayout } from '@app/utils/spacing-constants';
 
 const ZonePage: React.FC = () => {
 	const params = useParams<{ slug: string }>();

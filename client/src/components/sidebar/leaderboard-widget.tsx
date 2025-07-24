@@ -1,14 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Award, ArrowRight, Sparkles } from 'lucide-react';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Badge } from '@/components/ui/badge';
-import { useContentFeedState } from '@/contexts/content-feed-context';
-import { cn } from '@/utils/utils';
-import type { User } from '@/types/compat/user';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@app/components/ui/card';
+import { Avatar, AvatarFallback } from '@app/components/ui/avatar';
+import { Button } from '@app/components/ui/button';
+import { Skeleton } from '@app/components/ui/skeleton';
+import { Badge } from '@app/components/ui/badge';
+import { useContentFeedState } from '@app/contexts/content-feed-context';
+import { cn } from '@app/utils/utils';
+import type { User } from '@app/types/compat/user';
 
 // Define structure needed by the component
 type FormattedUser = {

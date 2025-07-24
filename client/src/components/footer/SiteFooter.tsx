@@ -4,7 +4,7 @@ import { LiveStats } from './LiveStats';
 import { FooterBrand } from './FooterBrand';
 import { FooterSection } from './FooterSection';
 import { RandomTagline } from './RandomTagline';
-import { footerNavigation } from '@/config/footer-navigation';
+import { footerNavigation } from '@app/config/footer-navigation';
 
 export function SiteFooter() {
 	return (

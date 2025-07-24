@@ -1,8 +1,8 @@
 import React, { useState, useCallback, memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import type { ThreadDisplay } from '@/types/thread.types';
+import type { ThreadDisplay } from '@app/types/thread.types';
 import type { ThreadId, UserId, ZoneId, StructureId, ForumId } from '@shared/types/ids';
-import type { CanonicalForum } from '@/types/canonical.types';
+import type { CanonicalForum } from '@app/types/canonical.types';
 import {
 	Wand2,
 	Sparkles,
@@ -22,26 +22,26 @@ import {
 	MonitorSpeaker
 } from 'lucide-react';
 
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Slider } from '@/components/ui/slider';
+import { Button } from '@app/components/ui/button';
+import { Badge } from '@app/components/ui/badge';
+import { Slider } from '@app/components/ui/slider';
 import {
 	Select,
 	SelectContent,
 	SelectItem,
 	SelectTrigger,
 	SelectValue
-} from '@/components/ui/select';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { cn } from '@/utils/utils';
+} from '@app/components/ui/select';
+import { Input } from '@app/components/ui/input';
+import { Label } from '@app/components/ui/label';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@app/components/ui/tabs';
+import { Card, CardContent, CardHeader, CardTitle } from '@app/components/ui/card';
+import { cn } from '@app/utils/utils';
 
-import ThreadCard from '@/components/forum/ThreadCard';
-import ZoneCard from '@/components/forum/ZoneCard';
-import CryptoEngagementBar from '@/components/forum/enhanced/CryptoEngagementBar';
-import QuickReactions from '@/components/forum/enhanced/QuickReactions';
+import ThreadCard from '@app/components/forum/ThreadCard';
+import ZoneCard from '@app/components/forum/ZoneCard';
+import CryptoEngagementBar from '@app/components/forum/enhanced/CryptoEngagementBar';
+import QuickReactions from '@app/components/forum/enhanced/QuickReactions';
 
 export interface MagicForumBuilderProps {
 	onSave?: (config: ForumLayoutConfig) => void;

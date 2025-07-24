@@ -19,9 +19,9 @@ import {
 	Switch,
 	Separator,
 	Badge
-} from '@/components/ui';
-import { useUIConfig } from '@/contexts/UIConfigContext';
-import { useToast } from '@/hooks/use-toast';
+} from '@app/components/ui';
+import { useUIConfig } from '@app/contexts/UIConfigContext';
+import { useToast } from '@app/hooks/use-toast';
 import {
 	Settings,
 	Palette,
@@ -33,8 +33,8 @@ import {
 	Upload,
 	Eye
 } from 'lucide-react';
-import LoadingIndicator from '@/components/ui/LoadingIndicator';
-import { ZoneCard } from '@/components/forum/ZoneCard';
+import LoadingIndicator from '@app/components/ui/LoadingIndicator';
+import { ZoneCard } from '@app/components/forum/ZoneCard';
 
 // Sample data for previews
 const sampleZone = {

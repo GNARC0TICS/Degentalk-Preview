@@ -1,5 +1,5 @@
 import React from 'react';
-import { formatNumber, formatCurrency } from '@/utils/utils';
+import { formatNumber, formatCurrency } from '@app/utils/utils';
 
 interface Props {
 	label: string;

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@app/components/ui/card';
+import { Button } from '@app/components/ui/button';
+import { Input } from '@app/components/ui/input';
+import { Badge } from '@app/components/ui/badge';
 import {
 	Table,
 	TableBody,
@@ -10,14 +10,14 @@ import {
 	TableHead,
 	TableHeader,
 	TableRow
-} from '@/components/ui/table';
+} from '@app/components/ui/table';
 import {
 	Select,
 	SelectContent,
 	SelectItem,
 	SelectTrigger,
 	SelectValue
-} from '@/components/ui/select';
+} from '@app/components/ui/select';
 import {
 	TrendingUp,
 	Search,
@@ -30,7 +30,7 @@ import {
 	ArrowUp,
 	ArrowDown
 } from 'lucide-react';
-import type { CloutLog, CloutAchievement } from '@/pages/admin/clout';
+import type { CloutLog, CloutAchievement } from '@app/pages/admin/clout';
 import type { UserId } from '@shared/types/ids';
 
 interface CloutLogsSectionProps {

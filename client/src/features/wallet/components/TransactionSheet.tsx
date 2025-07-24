@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetClose } from '@/components/ui/sheet';
-import { Button } from '@/components/ui/button';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetClose } from '@app/components/ui/sheet';
+import { Button } from '@app/components/ui/button';
 import { ChevronLeft, ArrowDown, ArrowUp, ArrowUpRight, Clock, Filter } from 'lucide-react';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
-import { useWallet } from '@/hooks/use-wallet';
+import { ScrollArea } from '@app/components/ui/scroll-area';
+import { Badge } from '@app/components/ui/badge';
+import { Separator } from '@app/components/ui/separator';
+import { useWallet } from '@app/hooks/use-wallet';
 
 // Types based on existing transaction history component
 interface TransactionSheetProps {

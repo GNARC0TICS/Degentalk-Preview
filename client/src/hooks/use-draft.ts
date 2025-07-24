@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useLocalStorage } from './use-local-storage';
 import { useMutation } from '@tanstack/react-query';
-import { apiRequest } from '@/utils/api-request';
+import { apiRequest } from '@app/utils/api-request';
 import { useToast } from './use-toast';
 import { useAuth } from './use-auth';
 // Simple debounce utility function
@@ -16,7 +16,7 @@ const debounce = <T extends (...args: any[]) => any>(
 	};
 };
 import type { CategoryId, PrefixId, DraftId, TagId } from '@shared/types/ids';
-import { logger } from "@/lib/logger";
+import { logger } from '@app/lib/logger";
 
 interface DraftData {
 	id?: DraftId;

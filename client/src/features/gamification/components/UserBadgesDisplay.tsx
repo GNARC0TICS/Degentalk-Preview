@@ -1,9 +1,9 @@
 import React from 'react';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { cn } from '@/utils/utils';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@app/components/ui/tooltip';
+import { cn } from '@app/utils/utils';
 import { Trophy } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
-import { rarityBorderMap, rarityColorMap } from '@/config/rarity.config';
+import { Badge } from '@app/components/ui/badge';
+import { rarityBorderMap, rarityColorMap } from '@app/config/rarity.config';
 import type { BadgeId } from '@shared/types/ids';
 
 export type UserBadge = {

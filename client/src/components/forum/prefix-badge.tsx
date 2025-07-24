@@ -1,4 +1,4 @@
-import { cn } from '@/utils/utils'; // Assuming you have a cn utility for class names
+import { cn } from '@app/utils/utils'; // Assuming you have a cn utility for class names
 
 interface PrefixBadgeProps {
 	prefix?: {

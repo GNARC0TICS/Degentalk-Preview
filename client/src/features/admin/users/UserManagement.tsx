@@ -2,10 +2,10 @@ import type { UserId } from '@shared/types/ids';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { apiRequest } from '@/utils/queryClient';
-import { useCrudMutation } from '@/hooks/useCrudMutation';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { apiRequest } from '@app/utils/queryClient';
+import { useCrudMutation } from '@app/hooks/useCrudMutation';
+import { Button } from '@app/components/ui/button';
+import { Badge } from '@app/components/ui/badge';
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -13,7 +13,7 @@ import {
 	DropdownMenuLabel,
 	DropdownMenuSeparator,
 	DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu';
+} from '@app/components/ui/dropdown-menu';
 import {
 	User,
 	MoreHorizontal,
@@ -27,21 +27,21 @@ import {
 	Package
 } from 'lucide-react';
 
-import { AdminPageShell } from '@/features/admin/layout/layout/AdminPageShell';
-import { AdminDataTable, type ColumnDefs } from '@/features/admin/components/common/AdminDataTable';
-import { EntityFilters } from '@/features/admin/layout/layout/EntityFilters';
-import type { FilterConfig, FilterValue } from '@/features/admin/layout/layout/EntityFilters'; // Type-only imports
-import UserFormDialog from '@/features/admin/components/forms/users/UserFormDialog';
+import { AdminPageShell } from '@app/features/admin/layout/layout/AdminPageShell';
+import { AdminDataTable, type ColumnDefs } from '@app/features/admin/components/common/AdminDataTable';
+import { EntityFilters } from '@app/features/admin/layout/layout/EntityFilters';
+import type { FilterConfig, FilterValue } from '@app/features/admin/layout/layout/EntityFilters'; // Type-only imports
+import UserFormDialog from '@app/features/admin/components/forms/users/UserFormDialog';
 import {
 	BanUserDialog,
 	UnbanUserDialog,
 	DeleteUserDialog,
 	ChangeUserRoleDialog
-} from '@/features/admin/components/forms/users/UserActionDialogs';
-import { ROUTES } from '@/constants/routes';
+} from '@app/features/admin/components/forms/users/UserActionDialogs';
+import { ROUTES } from '@app/constants/routes';
 
-import type { AdminUser } from '@/types/admin.types';
-import { logger } from "@/lib/logger";
+import type { AdminUser } from '@app/types/admin.types';
+import { logger } from '@app/lib/logger";
 
 // Form data for user creation/updates
 export interface UserFormData {

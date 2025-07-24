@@ -1,20 +1,20 @@
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query'; // Removed useMutation and useQueryClient
-import { RequireSuperAdmin } from '@/components/auth';
+import { RequireSuperAdmin } from '@app/components/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 // useToast is now handled by useCrudMutation, but keep if used elsewhere directly
-// import { useToast } from '@/hooks/use-toast';
-import { apiRequest } from '@/utils/queryClient';
-import { useCrudMutation } from '@/hooks/useCrudMutation'; // Import the new hook
+// import { useToast } from '@app/hooks/use-toast';
+import { apiRequest } from '@app/utils/queryClient';
+import { useCrudMutation } from '@app/hooks/useCrudMutation'; // Import the new hook
 import { Plus, Pencil, Trash2 } from 'lucide-react';
 
-import { AdminPageShell } from '@/features/admin/layout/layout/AdminPageShell';
-import { AdminDataTable } from '@/features/admin/components/common/AdminDataTable';
-import { RoleFormDialog, roleSchema } from '@/features/admin/components/forms/roles/RoleFormDialog';
-import type { RoleFormValues } from '@/features/admin/components/forms/roles/RoleFormDialog';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'; // Keep Card for now
+import { AdminPageShell } from '@app/features/admin/layout/layout/AdminPageShell';
+import { AdminDataTable } from '@app/features/admin/components/common/AdminDataTable';
+import { RoleFormDialog, roleSchema } from '@app/features/admin/components/forms/roles/RoleFormDialog';
+import type { RoleFormValues } from '@app/features/admin/components/forms/roles/RoleFormDialog';
+import { Button } from '@app/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@app/components/ui/card'; // Keep Card for now
 import type { Role } from '@shared/types/entities';
 import type { RoleId } from '@shared/types/ids';
 

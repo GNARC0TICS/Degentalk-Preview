@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowDownToLine, Copy, CheckCircle2, RefreshCw, Lock } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { PumpButton } from '@/components/uiverse-clones/buttons';
-import { Input } from '@/components/ui/input';
+import { Button } from '@app/components/ui/button';
+import { PumpButton } from '@app/components/uiverse-clones/buttons';
+import { Input } from '@app/components/ui/input';
 import {
 	Select,
 	SelectContent,
 	SelectItem,
 	SelectTrigger,
 	SelectValue
-} from '@/components/ui/select';
-import { useToast } from '@/hooks/use-toast';
-import { useWallet } from '@/hooks/use-wallet';
+} from '@app/components/ui/select';
+import { useToast } from '@app/hooks/use-toast';
+import { useWallet } from '@app/hooks/use-wallet';
 
 export interface DepositButtonProps {
 	variant?: 'default' | 'small';

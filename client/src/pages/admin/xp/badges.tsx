@@ -1,22 +1,22 @@
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Plus, Pencil, Trash2, Search } from 'lucide-react'; // Removed ArrowUpDown
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Badge as UiBadge } from '@/components/ui/badge'; // Renamed to avoid conflict
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { useDebounce } from '@/hooks/use-debounce';
-import { apiRequest } from '@/utils/queryClient';
-import { useCrudMutation } from '@/hooks/useCrudMutation';
+import { Input } from '@app/components/ui/input';
+import { Button } from '@app/components/ui/button';
+import { Badge as UiBadge } from '@app/components/ui/badge'; // Renamed to avoid conflict
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@app/components/ui/card';
+import { useDebounce } from '@app/hooks/use-debounce';
+import { apiRequest } from '@app/utils/queryClient';
+import { useCrudMutation } from '@app/hooks/useCrudMutation';
 
-import { AdminPageShell } from '@/features/admin/layout/layout/AdminPageShell';
-import { AdminDataTable } from '@/features/admin/components/common/AdminDataTable';
+import { AdminPageShell } from '@app/features/admin/layout/layout/AdminPageShell';
+import { AdminDataTable } from '@app/features/admin/components/common/AdminDataTable';
 import {
 	BadgeFormDialogComponent,
 	DeleteBadgeConfirmationDialog,
 	getBadgeRarityDisplay
-} from '@/features/admin/components/forms/xp/BadgeFormDialogs';
-import type { Badge, BadgeFormData } from '@/features/admin/components/forms/xp/BadgeFormDialogs';
+} from '@app/features/admin/components/forms/xp/BadgeFormDialogs';
+import type { Badge, BadgeFormData } from '@app/features/admin/components/forms/xp/BadgeFormDialogs';
 
 interface PageBadge extends Badge {
 	createdAt: string;

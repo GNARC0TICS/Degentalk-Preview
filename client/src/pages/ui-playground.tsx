@@ -1,13 +1,13 @@
 import React from 'react';
-import { DevPlaygroundLayout, PlaygroundSection } from '@/pages/dev';
-import NotFoundPage from '@/pages/not-found';
-import * as Primitives from '@/layout/primitives';
-import { ButtonsSection } from '@/pages/ui-playground/sections/ButtonsSection';
-import { CardsSection } from '@/pages/ui-playground/sections/CardsSection';
-import { ColorsSection } from '@/pages/ui-playground/sections/ColorsSection';
-import { AvatarBadgesSection } from '@/pages/ui-playground/sections/AvatarBadgesSection';
-import { AnimationsSection } from '@/pages/ui-playground/sections/AnimationsSection';
-import { FontsSection } from '@/pages/ui-playground/sections/FontsSection';
+import { DevPlaygroundLayout, PlaygroundSection } from '@app/pages/dev';
+import NotFoundPage from '@app/pages/not-found';
+import * as Primitives from '@app/layout/primitives';
+import { ButtonsSection } from '@app/pages/ui-playground/sections/ButtonsSection';
+import { CardsSection } from '@app/pages/ui-playground/sections/CardsSection';
+import { ColorsSection } from '@app/pages/ui-playground/sections/ColorsSection';
+import { AvatarBadgesSection } from '@app/pages/ui-playground/sections/AvatarBadgesSection';
+import { AnimationsSection } from '@app/pages/ui-playground/sections/AnimationsSection';
+import { FontsSection } from '@app/pages/ui-playground/sections/FontsSection';
 
 // Auto-import UI components in client/src/components/ui
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment

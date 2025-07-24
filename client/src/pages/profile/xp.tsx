@@ -2,12 +2,12 @@ import React from 'react';
 import { useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Activity as XPIcon, TrendingUp, Award, Timer } from 'lucide-react';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Progress } from '@/components/ui/progress';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import XpLogView from '@/components/profile/XpLogView';
-import { useUserXP } from '@/hooks/useUserXP';
-import { useUserByUsername } from '@/hooks/use-user-by-username';
+import { Skeleton } from '@app/components/ui/skeleton';
+import { Progress } from '@app/components/ui/progress';
+import { Card, CardContent, CardHeader, CardTitle } from '@app/components/ui/card';
+import XpLogView from '@app/components/profile/XpLogView';
+import { useUserXP } from '@app/hooks/useUserXP';
+import { useUserByUsername } from '@app/hooks/use-user-by-username';
 
 const ProfileXpPage: React.FC = () => {
 	const { username } = useParams<{ username: string }>();

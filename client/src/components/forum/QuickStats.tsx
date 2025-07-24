@@ -1,7 +1,7 @@
 import React from 'react';
 import { MessageSquare, Users, Eye, TrendingUp } from 'lucide-react';
-import { FrostCard } from '@/components/ui/frost-card';
-import { CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { FrostCard } from '@app/components/ui/frost-card';
+import { CardContent, CardHeader, CardTitle } from '@app/components/ui/card';
 
 interface QuickStatsProps {
 	totalThreads?: number;

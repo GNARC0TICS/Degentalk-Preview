@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
-import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
-import { RichTextEditor } from '@/components/editor/rich-text-editor';
-import { LoadingSpinner } from '@/components/ui/loader';
-import { useCanonicalAuth } from '@/features/auth/useCanonicalAuth';
+import { Button } from '@app/components/ui/button';
+import { Textarea } from '@app/components/ui/textarea';
+import { Card, CardContent, CardFooter, CardHeader } from '@app/components/ui/card';
+import { RichTextEditor } from '@app/components/editor/rich-text-editor';
+import { LoadingSpinner } from '@app/components/ui/loader';
+import { useCanonicalAuth } from '@app/features/auth/useCanonicalAuth';
 import { useNavigate } from 'react-router-dom';
 import { X, CornerDownRight } from 'lucide-react';
-import { cn } from '@/utils/utils';
-import { useBreakpoint } from '@/hooks/useMediaQuery';
-import { getAdaptiveConfig } from '@/utils/adaptiveSpacing';
-import type { PostWithUser } from '@/types/compat/forum';
+import { cn } from '@app/utils/utils';
+import { useBreakpoint } from '@app/hooks/useMediaQuery';
+import { getAdaptiveConfig } from '@app/utils/adaptiveSpacing';
+import type { PostWithUser } from '@app/types/compat/forum';
 import type { ThreadId, PostId } from '@shared/types/ids';
 
 interface ReplyFormProps {

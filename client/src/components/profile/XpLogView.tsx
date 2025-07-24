@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { apiRequest } from '@/utils/queryClient';
+import { apiRequest } from '@app/utils/queryClient';
 import { format, formatDistanceToNow } from 'date-fns';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -17,16 +17,16 @@ import {
 	MessageCircleReply as Reply,
 	UserCheck
 } from 'lucide-react';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Skeleton } from '@/components/ui/skeleton';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@app/components/ui/tabs';
+import { Badge } from '@app/components/ui/badge';
+import { Button } from '@app/components/ui/button';
+import { Skeleton } from '@app/components/ui/skeleton';
 import {
 	DropdownMenu,
 	DropdownMenuTrigger,
 	DropdownMenuContent,
 	DropdownMenuCheckboxItem
-} from '@/components/ui/dropdown-menu';
+} from '@app/components/ui/dropdown-menu';
 import type { OrderId, PostId, ThreadId, EntityId, UserId } from '@shared/types/ids';
 
 // Types

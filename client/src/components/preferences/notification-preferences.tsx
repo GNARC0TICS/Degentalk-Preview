@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import type { User } from '@/types/compat/user';
-import { Button } from '@/components/ui/button';
+import type { User } from '@app/types/compat/user';
+import { Button } from '@app/components/ui/button';
 import {
 	Bell,
 	Mail,
@@ -16,8 +16,8 @@ import {
 import { PreferencesCard } from './PreferencesCard';
 import { PreferencesGroup } from './PreferencesGroup';
 import { PreferencesToggle } from './PreferencesToggle';
-import { useUserSettings } from '@/hooks/preferences/useUserSettings';
-import { useUpdateUserSettings } from '@/hooks/preferences/useUpdateUserSettings';
+import { useUserSettings } from '@app/hooks/preferences/useUserSettings';
+import { useUpdateUserSettings } from '@app/hooks/preferences/useUpdateUserSettings';
 
 interface NotificationPreferencesProps {
 	user: User;

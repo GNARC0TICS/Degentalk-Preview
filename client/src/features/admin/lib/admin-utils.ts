@@ -4,7 +4,7 @@
  * Shared utilities for admin components
  */
 
-import type { AdminModuleV2 } from '@/config/admin.config';
+import type { AdminModuleV2 } from '@app/config/admin.config';
 
 // Status types
 export type AdminStatusType = 'active' | 'disabled' | 'maintenance' | 'beta' | 'error';

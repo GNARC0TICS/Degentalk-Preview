@@ -1,12 +1,12 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
 import { Link } from 'react-router-dom';
-import { useAuth } from '@/hooks/use-auth';
-import { useGamification } from '@/hooks/use-gamification';
-import { MissionDashboard } from '@/components/gamification';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import { useAuth } from '@app/hooks/use-auth';
+import { useGamification } from '@app/hooks/use-gamification';
+import { MissionDashboard } from '@app/components/gamification';
+import { Button } from '@app/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@app/components/ui/card';
+import { Alert, AlertDescription } from '@app/components/ui/alert';
 import { Trophy, Target, ChevronRight, AlertCircle, RefreshCw } from 'lucide-react';
 
 /**

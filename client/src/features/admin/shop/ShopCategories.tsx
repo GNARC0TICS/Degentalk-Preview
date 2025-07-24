@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import type { CategoryId } from '@shared/types/ids';
-import { formatTimestamp } from '@/utils/format-date';
+import { formatTimestamp } from '@app/utils/format-date';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
 	Card,
@@ -9,7 +9,7 @@ import {
 	CardFooter,
 	CardHeader,
 	CardTitle
-} from '@/components/ui/card';
+} from '@app/components/ui/card';
 import {
 	Table,
 	TableBody,
@@ -17,7 +17,7 @@ import {
 	TableHead,
 	TableHeader,
 	TableRow
-} from '@/components/ui/table';
+} from '@app/components/ui/table';
 import {
 	Dialog,
 	DialogContent,
@@ -25,7 +25,7 @@ import {
 	DialogFooter,
 	DialogHeader,
 	DialogTitle
-} from '@/components/ui/dialog';
+} from '@app/components/ui/dialog';
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -33,7 +33,7 @@ import {
 	DropdownMenuLabel,
 	DropdownMenuSeparator,
 	DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu';
+} from '@app/components/ui/dropdown-menu';
 import {
 	Form,
 	FormControl,
@@ -42,11 +42,11 @@ import {
 	FormItem,
 	FormLabel,
 	FormMessage
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Switch } from '@/components/ui/switch';
-import { Label } from '@/components/ui/label';
+} from '@app/components/ui/form';
+import { Input } from '@app/components/ui/input';
+import { Button } from '@app/components/ui/button';
+import { Switch } from '@app/components/ui/switch';
+import { Label } from '@app/components/ui/label';
 import {
 	MoreHorizontal,
 	Plus,
@@ -60,15 +60,15 @@ import {
 	Search,
 	Tag
 } from 'lucide-react';
-import { Textarea } from '@/components/ui/textarea';
+import { Textarea } from '@app/components/ui/textarea';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Badge } from '@/components/ui/badge';
+import { Badge } from '@app/components/ui/badge';
 import { useLocation } from 'react-router-dom'; // Fixed import for useLocation
-import { AdminPageShell } from '@/features/admin/layout/layout/AdminPageShell';
-import { apiRequest } from '@/utils/api-request';
-import { logger } from "@/lib/logger";
+import { AdminPageShell } from '@app/features/admin/layout/layout/AdminPageShell';
+import { apiRequest } from '@app/utils/api-request';
+import { logger } from '@app/lib/logger";
 
 const categorySchema = z.object({
 	name: z

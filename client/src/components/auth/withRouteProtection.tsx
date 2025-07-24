@@ -6,7 +6,7 @@ import {
 	RequireSuperAdmin,
 	RequireRole
 } from './RouteGuards';
-import type { Role } from '@/utils/roles';
+import type { Role } from '@app/utils/roles';
 
 export function withRouteProtection<P extends object>(
 	Component: ComponentType<P>,

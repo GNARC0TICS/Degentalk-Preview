@@ -1,12 +1,12 @@
 import React from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@app/components/ui/dialog';
 import { useQuery } from '@tanstack/react-query';
 import {
 	mediaApiService,
 	type MediaItem,
 	type MediaType
-} from '@/features/admin/services/media-api.service';
-import { MediaAsset } from '@/components/media/MediaAsset';
+} from '@app/features/admin/services/media-api.service';
+import { MediaAsset } from '@app/components/media/MediaAsset';
 
 interface Props {
 	type: MediaType;

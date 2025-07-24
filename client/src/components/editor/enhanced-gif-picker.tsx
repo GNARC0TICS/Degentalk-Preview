@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { apiRequest } from '@/utils/queryClient';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { apiRequest } from '@app/utils/queryClient';
+import { Button } from '@app/components/ui/button';
+import { Input } from '@app/components/ui/input';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@app/components/ui/tabs';
 import { Loader2, AlertCircle } from 'lucide-react';
 import {
 	Dialog,
@@ -10,8 +10,8 @@ import {
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger
-} from '@/components/ui/dialog';
-import { logger } from "@/lib/logger";
+} from '@app/components/ui/dialog';
+import { logger } from '@app/lib/logger";
 
 interface GifPickerProps {
 	onSelect?: (gifUrl: string) => void;

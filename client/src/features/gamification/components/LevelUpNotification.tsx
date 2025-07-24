@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { cn } from '@/utils/utils';
+import { cn } from '@app/utils/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ChevronUp, Sparkles, Trophy } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@app/components/ui/button';
 
 type LevelUpNotificationProps = {
 	level: number;

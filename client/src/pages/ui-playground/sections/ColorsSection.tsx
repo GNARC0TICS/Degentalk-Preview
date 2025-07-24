@@ -1,5 +1,5 @@
 import React from 'react';
-import { PlaygroundSection } from '@/pages/dev';
+import { PlaygroundSection } from '@app/pages/dev';
 
 export const ColorsSection: React.FC = () => (
 	<PlaygroundSection id="colors" title="Brand Colors">

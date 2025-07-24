@@ -1,4 +1,4 @@
-import type { SlotId } from '@/stores/useLayoutStore';
+import type { SlotId } from '@app/stores/useLayoutStore';
 
 /**
  * Defines the available layout slots for different pages in the application.

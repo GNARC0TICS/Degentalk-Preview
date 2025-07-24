@@ -5,14 +5,14 @@
  */
 
 import React, { useState } from 'react';
-import { useUserAchievements } from '@/hooks/use-achievements';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
-import { LoadingSpinner } from '@/components/ui/loader';
+import { useUserAchievements } from '@app/hooks/use-achievements';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@app/components/ui/card';
+import { Badge } from '@app/components/ui/badge';
+import { Button } from '@app/components/ui/button';
+import { Progress } from '@app/components/ui/progress';
+import { LoadingSpinner } from '@app/components/ui/loader';
 import { Trophy, Star, Lock, Gift, Target, Crown, Sparkles } from 'lucide-react';
-import type { ProfileData } from '@/types/profile';
+import type { ProfileData } from '@app/types/profile';
 
 interface AchievementsTabProps {
 	profile: ProfileData;

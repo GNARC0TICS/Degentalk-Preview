@@ -1,9 +1,9 @@
 import React from 'react';
 import { ArrowLeft, MessageSquare, Calendar, Award, Zap } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
+import { Button } from '@app/components/ui/button';
+import { Card } from '@app/components/ui/card';
 import { formatDistanceToNow } from 'date-fns';
-import { Wide } from '@/layout/primitives';
+import { Wide } from '@app/layout/primitives';
 import { Link } from 'react-router-dom';
 
 // Demo user profile data

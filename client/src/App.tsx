@@ -1,15 +1,15 @@
 import React from 'react';
-import { Toaster } from '@/components/ui/toaster';
-import { GlobalRouteGuard } from '@/components/auth/GlobalRouteGuard';
+import { Toaster } from '@app/components/ui/toaster';
+import { GlobalRouteGuard } from '@app/components/auth/GlobalRouteGuard';
 
 // Import Dev Role Switcher
-import { DevRoleSwitcher } from '@/components/dev/dev-role-switcher';
+import { DevRoleSwitcher } from '@app/components/dev/dev-role-switcher';
 
 // Import the new XP events hook
-import { useXpEvents } from '@/hooks/useXpEvents';
+import { useXpEvents } from '@app/hooks/useXpEvents';
 
 // Import UIPlayground shortcut component
-import { DevPlaygroundShortcut } from '@/components/dev/dev-playground-shortcut';
+import { DevPlaygroundShortcut } from '@app/components/dev/dev-playground-shortcut';
 
 /**
  * App Component - Simplified for react-router-dom

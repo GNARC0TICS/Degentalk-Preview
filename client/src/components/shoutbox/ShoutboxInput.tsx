@@ -1,9 +1,9 @@
 import React, { useState, useRef, useCallback } from 'react';
 import { Send } from 'lucide-react';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { useMentions } from '@/hooks/use-mentions';
-import { MentionAutocomplete } from '@/components/mentions/MentionAutocomplete';
+import { Input } from '@app/components/ui/input';
+import { Button } from '@app/components/ui/button';
+import { useMentions } from '@app/hooks/use-mentions';
+import { MentionAutocomplete } from '@app/components/mentions/MentionAutocomplete';
 
 interface ShoutboxInputProps {
 	onSendMessage: (message: string) => void;

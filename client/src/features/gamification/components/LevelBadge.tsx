@@ -1,7 +1,7 @@
 import React from 'react';
-import { cn } from '@/utils/utils';
+import { cn } from '@app/utils/utils';
 import { Sparkles } from 'lucide-react';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@app/components/ui/tooltip';
 
 export interface LevelVisualConfig {
 	level: number;

@@ -1,6 +1,6 @@
 import React from 'react';
-import { IconRenderer } from '@/components/icons/iconRenderer';
-import { Input } from '@/components/ui/input';
+import { IconRenderer } from '@app/components/icons/iconRenderer';
+import { Input } from '@app/components/ui/input';
 
 interface SearchBoxProps {
 	className?: string;

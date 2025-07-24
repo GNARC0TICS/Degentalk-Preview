@@ -1,5 +1,5 @@
 import React from 'react';
-import { EntityTable } from '@/features/admin/layout/layout/EntityTable';
+import { EntityTable } from '@app/features/admin/layout/layout/EntityTable';
 
 /**
  * Column definitions type for AdminDataTable

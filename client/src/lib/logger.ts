@@ -3,7 +3,7 @@
  * Provides structured logging with different levels and environments
  */
 
-import { reportError } from '@/services/error.service';
+import { reportError } from '@app/services/error.service';
 
 type LogLevel = 'debug' | 'info' | 'warn' | 'error';
 

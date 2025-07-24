@@ -7,11 +7,11 @@ import {
 	ChevronRight,
 	LayoutGrid
 } from 'lucide-react';
-import { useForumStructure } from '@/features/forum/contexts/ForumStructureContext';
-import { buildNavigationTree, type NavNode } from '@/navigation/forumNav';
-import { useLocalStorage } from '@/hooks/use-local-storage';
-import { cn } from '@/utils/utils';
-import { Badge } from '@/components/ui/badge'; // For potential count display
+import { useForumStructure } from '@app/features/forum/contexts/ForumStructureContext';
+import { buildNavigationTree, type NavNode } from '@app/navigation/forumNav';
+import { useLocalStorage } from '@app/hooks/use-local-storage';
+import { cn } from '@app/utils/utils';
+import { Badge } from '@app/components/ui/badge'; // For potential count display
 import { motion, AnimatePresence } from 'framer-motion';
 
 // interface PinnedItem extends ForumEntityBase { // Commenting out PinnedItem for now

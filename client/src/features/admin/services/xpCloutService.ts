@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { adminApi } from '@/features/admin/lib/adminApi';
-import type { InsertXpCloutSettings } from '@/types/compat/economy';
+import { adminApi } from '@app/features/admin/lib/adminApi';
+import type { InsertXpCloutSettings } from '@app/types/compat/economy';
 
 const XP_CLOUT_KEY = ['admin', 'xp-clout-settings'];
 

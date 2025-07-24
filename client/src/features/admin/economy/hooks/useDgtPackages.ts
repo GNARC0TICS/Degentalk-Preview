@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { apiRequest } from '@/utils/queryClient';
+import { apiRequest } from '@app/utils/queryClient';
 
 interface DgtPackage {
   id: string;

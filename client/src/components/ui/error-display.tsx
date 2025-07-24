@@ -1,7 +1,7 @@
 import { AlertCircle, RefreshCw } from 'lucide-react';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Button } from '@/components/ui/button';
-import { cn } from '@/utils/utils';
+import { Alert, AlertDescription, AlertTitle } from '@app/components/ui/alert';
+import { Button } from '@app/components/ui/button';
+import { cn } from '@app/utils/utils';
 
 interface ErrorDisplayProps {
 	title?: string;

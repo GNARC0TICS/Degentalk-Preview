@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { useAuth } from '@/hooks/use-auth';
+import { useAuth } from '@app/hooks/use-auth';
 
 export type AuthStatus = 'loading' | 'guest' | 'user' | 'admin';
 

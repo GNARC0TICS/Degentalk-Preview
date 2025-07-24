@@ -1,19 +1,19 @@
 import React from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ThreadCard } from '@/components/forum/ThreadCard';
-import { useTags } from '@/features/forum/hooks/useForumQueries';
+import { ThreadCard } from '@app/components/forum/ThreadCard';
+import { useTags } from '@app/features/forum/hooks/useForumQueries';
 import { useQuery } from '@tanstack/react-query';
-import { apiRequest } from '@/utils/queryClient';
-import { SiteHeader } from '@/components/header';
-import { SiteFooter } from '@/components/footer';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
-import { Badge } from '@/components/ui/badge';
+import { apiRequest } from '@app/utils/queryClient';
+import { SiteHeader } from '@app/components/header';
+import { SiteFooter } from '@app/components/footer';
+import { Button } from '@app/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@app/components/ui/card';
+import { Separator } from '@app/components/ui/separator';
+import { Badge } from '@app/components/ui/badge';
 import { ArrowLeft, Hash, AlertTriangle } from 'lucide-react';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Pagination } from '@/components/ui/pagination';
-import type { ThreadDisplay, ThreadsApiResponse } from '@/types/thread.types';
+import { Skeleton } from '@app/components/ui/skeleton';
+import { Pagination } from '@app/components/ui/pagination';
+import type { ThreadDisplay, ThreadsApiResponse } from '@app/types/thread.types';
 
 export default function TagPage() {
 	const { tagSlug } = useParams<{ tagSlug: string }>();

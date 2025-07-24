@@ -4,14 +4,14 @@
  * Main dashboard for displaying and managing user missions
  */
 
-import { cn } from '@/utils/utils';
+import { cn } from '@app/utils/utils';
 import { MissionCard } from './mission-card';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Progress } from '@/components/ui/progress';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@app/components/ui/card';
+import { Button } from '@app/components/ui/button';
+import { Badge } from '@app/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@app/components/ui/tabs';
+import { Progress } from '@app/components/ui/progress';
+import { Alert, AlertDescription } from '@app/components/ui/alert';
 import {
 	Target,
 	Calendar,
@@ -27,7 +27,7 @@ import { motion } from 'framer-motion';
 import type {
 	MissionProgress,
 	Mission
-} from '@/features/gamification/services/gamification-api.service';
+} from '@app/features/gamification/services/gamification-api.service';
 import type { MissionId } from '@shared/types/ids';
 
 interface MissionDashboardProps {

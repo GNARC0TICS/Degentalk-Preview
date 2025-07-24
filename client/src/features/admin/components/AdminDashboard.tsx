@@ -21,13 +21,13 @@ import {
 	ExternalLink,
 	type LucideIcon
 } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { useAdminModuleV2s } from '@/hooks/use-admin-modules';
-import { useAuth } from '@/hooks/use-auth';
+import { Card, CardContent, CardHeader, CardTitle } from '@app/components/ui/card';
+import { Badge } from '@app/components/ui/badge';
+import { Button } from '@app/components/ui/button';
+import { useAdminModuleV2s } from '@app/hooks/use-admin-modules';
+import { useAuth } from '@app/hooks/use-auth';
 import { getModuleStatusInfo } from '../lib/admin-utils';
-import type { AdminModuleV2 } from '@/config/admin.config';
+import type { AdminModuleV2 } from '@app/config/admin.config';
 
 // Quick stats interface
 interface QuickStat {

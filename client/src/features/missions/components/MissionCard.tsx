@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { cn } from '@/utils/utils';
+import { cn } from '@app/utils/utils';
 import { Check, Clock, Coins, Trophy, Flame, Lock } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
+import { Button } from '@app/components/ui/button';
+import { Badge } from '@app/components/ui/badge';
+import { Progress } from '@app/components/ui/progress';
 import { useMissionActions } from '../hooks/useMissionActions';
 import type { Mission } from '../types';
 

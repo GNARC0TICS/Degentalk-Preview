@@ -1,9 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Flame, MessageSquare, Clock } from 'lucide-react';
-import { FrostCard } from '@/components/ui/frost-card';
-import { CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { FrostCard } from '@app/components/ui/frost-card';
+import { CardContent, CardHeader, CardTitle } from '@app/components/ui/card';
+import { Badge } from '@app/components/ui/badge';
 import type { ThreadId } from '@shared/types/ids';
 
 interface HotThread {

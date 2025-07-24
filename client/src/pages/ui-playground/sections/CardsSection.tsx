@@ -1,9 +1,9 @@
 import React from 'react';
-import { PlaygroundSection } from '@/pages/dev';
-import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
+import { PlaygroundSection } from '@app/pages/dev';
+import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@app/components/ui/card';
 import { TrendingUp } from 'lucide-react';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Badge } from '@/components/ui/badge';
+import { Skeleton } from '@app/components/ui/skeleton';
+import { Badge } from '@app/components/ui/badge';
 
 export const CardsSection: React.FC = () => (
 	<PlaygroundSection id="cards" title="Cards">

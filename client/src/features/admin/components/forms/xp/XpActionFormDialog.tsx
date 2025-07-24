@@ -6,13 +6,13 @@ import {
 	DialogFooter,
 	DialogHeader,
 	DialogTitle
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
-import { Textarea } from '@/components/ui/textarea';
-import type { XpAction } from '@/features/admin/services/xpActionsService';
+} from '@app/components/ui/dialog';
+import { Button } from '@app/components/ui/button';
+import { Input } from '@app/components/ui/input';
+import { Label } from '@app/components/ui/label';
+import { Switch } from '@app/components/ui/switch';
+import { Textarea } from '@app/components/ui/textarea';
+import type { XpAction } from '@app/features/admin/services/xpActionsService';
 
 export type XpActionFormData = Omit<XpAction, 'action'> & { action?: string };
 

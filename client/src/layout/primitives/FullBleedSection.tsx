@@ -1,5 +1,5 @@
 import React from 'react';
-import { cn } from '@/utils/utils';
+import { cn } from '@app/utils/utils';
 
 interface FullBleedSectionProps extends React.HTMLAttributes<HTMLDivElement> {
 	/** optional class applied to the background container */

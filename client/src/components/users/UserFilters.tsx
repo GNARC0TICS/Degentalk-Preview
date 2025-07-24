@@ -5,10 +5,10 @@ import {
 	SelectItem,
 	SelectTrigger,
 	SelectValue
-} from '@/components/ui/select';
-import { Switch } from '@/components/ui/switch';
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
+} from '@app/components/ui/select';
+import { Switch } from '@app/components/ui/switch';
+import { Label } from '@app/components/ui/label';
+import { Input } from '@app/components/ui/input';
 import { SortAsc, SortDesc, Zap, Users } from 'lucide-react';
 
 interface UserFiltersProps {

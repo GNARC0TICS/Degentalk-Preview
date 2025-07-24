@@ -1,6 +1,6 @@
 import React from 'react';
-import { Badge } from '@/components/ui/badge';
-import { cn } from '@/utils/utils';
+import { Badge } from '@app/components/ui/badge';
+import { cn } from '@app/utils/utils';
 
 export interface Role {
 	name: string;

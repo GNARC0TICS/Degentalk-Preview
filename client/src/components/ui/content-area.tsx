@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { cn } from '@/utils/utils';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { TabSwitcher } from '@/components/ui/tab-switcher';
-import { ContentFeed } from '@/components/ui/content-feed';
-import { useAuth } from '@/hooks/use-auth';
-import { useContentFeed } from '@/contexts/content-feed-context';
+import { cn } from '@app/utils/utils';
+import { Card, CardContent, CardHeader } from '@app/components/ui/card';
+import { TabSwitcher } from '@app/components/ui/tab-switcher';
+import { ContentFeed } from '@app/components/ui/content-feed';
+import { useAuth } from '@app/hooks/use-auth';
+import { useContentFeed } from '@app/contexts/content-feed-context';
 import { RefreshCw, Wifi, WifiOff, AlertCircle, RotateCcw } from 'lucide-react';
-import type { ContentTab, UseContentParams } from '@/hooks/use-content';
-import { useContent, useHomeContent, useForumContent } from '@/hooks/use-content';
+import type { ContentTab, UseContentParams } from '@app/hooks/use-content';
+import { useContent, useHomeContent, useForumContent } from '@app/hooks/use-content';
 import type { ForumId } from '@shared/types/ids';
 
 export interface ContentAreaProps {

@@ -1,14 +1,14 @@
 import React, { Suspense } from 'react';
 import { useLocation, Navigate } from 'react-router-dom';
-import { useAuth } from '@/hooks/use-auth';
-import { useAdminPermission } from '@/hooks/use-admin-modules';
-import { hasRoleAtLeast } from '@/utils/roles';
-import type { Role } from '@/utils/roles';
+import { useAuth } from '@app/hooks/use-auth';
+import { useAdminPermission } from '@app/hooks/use-admin-modules';
+import { hasRoleAtLeast } from '@app/utils/roles';
+import type { Role } from '@app/utils/roles';
 import { Loader2, AlertCircle, Lock } from 'lucide-react';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Button } from '@/components/ui/button';
-import { ErrorBoundary } from '@/components/errors/ErrorBoundary';
-import { permissionToModuleMap } from '@/config/admin.config';
+import { Alert, AlertDescription } from '@app/components/ui/alert';
+import { Button } from '@app/components/ui/button';
+import { ErrorBoundary } from '@app/components/errors/ErrorBoundary';
+import { permissionToModuleMap } from '@app/config/admin.config';
 
 interface ProtectedAdminRouteProps {
 	children: React.ReactNode;

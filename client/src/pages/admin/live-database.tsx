@@ -1,17 +1,17 @@
 import { useState, useMemo } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiRequest } from '@/utils/queryClient';
-import { AdminPageShell } from '@/features/admin/layout/layout/AdminPageShell';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
+import { apiRequest } from '@app/utils/queryClient';
+import { AdminPageShell } from '@app/features/admin/layout/layout/AdminPageShell';
+import { Button } from '@app/components/ui/button';
+import { Badge } from '@app/components/ui/badge';
+import { Input } from '@app/components/ui/input';
 import {
 	Select,
 	SelectContent,
 	SelectItem,
 	SelectTrigger,
 	SelectValue
-} from '@/components/ui/select';
+} from '@app/components/ui/select';
 import {
 	Table,
 	TableBody,
@@ -19,14 +19,14 @@ import {
 	TableHead,
 	TableHeader,
 	TableRow
-} from '@/components/ui/table';
+} from '@app/components/ui/table';
 import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
 	DropdownMenuSeparator,
 	DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu';
+} from '@app/components/ui/dropdown-menu';
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -36,7 +36,7 @@ import {
 	AlertDialogFooter,
 	AlertDialogHeader,
 	AlertDialogTitle
-} from '@/components/ui/alert-dialog';
+} from '@app/components/ui/alert-dialog';
 import {
 	Dialog,
 	DialogContent,
@@ -44,7 +44,7 @@ import {
 	DialogFooter,
 	DialogHeader,
 	DialogTitle
-} from '@/components/ui/dialog';
+} from '@app/components/ui/dialog';
 import {
 	Database,
 	MoreHorizontal,
@@ -63,7 +63,7 @@ import {
 	ExternalLink
 } from 'lucide-react';
 import { toast } from 'sonner';
-import { cn } from '@/utils/utils';
+import { cn } from '@app/utils/utils';
 
 // Types
 interface TableInfo {

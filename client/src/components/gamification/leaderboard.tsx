@@ -5,12 +5,12 @@
  */
 
 import { useState } from 'react';
-import { cn } from '@/utils/utils';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { cn } from '@app/utils/utils';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@app/components/ui/card';
+import { Button } from '@app/components/ui/button';
+import { Badge } from '@app/components/ui/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '@app/components/ui/avatar';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@app/components/ui/tabs';
 import {
 	Table,
 	TableBody,
@@ -18,9 +18,9 @@ import {
 	TableHead,
 	TableHeader,
 	TableRow
-} from '@/components/ui/table';
+} from '@app/components/ui/table';
 import { LevelDisplay, LevelBadge } from './level-display';
-import { formatNumber } from '@/utils/utils';
+import { formatNumber } from '@app/utils/utils';
 import {
 	Trophy,
 	TrendingUp,
@@ -35,7 +35,7 @@ import {
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import type { LeaderboardEntry } from '@/features/gamification/services/gamification-api.service';
+import type { LeaderboardEntry } from '@app/features/gamification/services/gamification-api.service';
 import type { UserId } from '@shared/types/ids';
 
 interface LeaderboardProps {

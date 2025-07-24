@@ -2,7 +2,7 @@ import type {
 	AdminVaultItem,
 	AdminItemRarity,
 	AdminUnlockMethod
-} from '@/types/admin-vault.types';
+} from '@app/types/admin-vault.types';
 import type {
 	BaseVaultItem,
 	VaultFrame,
@@ -19,7 +19,7 @@ import type {
 	VaultAdminService,
 	VaultAdminAction,
 	VaultActionDetails
-} from '@/types/vault.types';
+} from '@app/types/vault.types';
 
 // Mock implementation for demo purposes
 export class MockVaultAdminService implements VaultAdminService {

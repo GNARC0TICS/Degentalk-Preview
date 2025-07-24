@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Skull } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { XP_EASTER_EGGS, type BankruptcyMessage } from '@/config/easter-eggs.config';
+import { Button } from '@app/components/ui/button';
+import { XP_EASTER_EGGS, type BankruptcyMessage } from '@app/config/easter-eggs.config';
 
 interface BankruptcyEffectProps {
 	isOpen: boolean;

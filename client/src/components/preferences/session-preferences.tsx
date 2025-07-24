@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import type { User } from '@/types/compat/user';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
+import type { User } from '@app/types/compat/user';
+import { Button } from '@app/components/ui/button';
+import { Card, CardContent } from '@app/components/ui/card';
+import { Badge } from '@app/components/ui/badge';
+import { Separator } from '@app/components/ui/separator';
 import {
 	AlertTriangle,
 	Clock,
@@ -23,7 +23,7 @@ import {
 	DialogTitle,
 	DialogTrigger,
 	DialogClose
-} from '@/components/ui/dialog';
+} from '@app/components/ui/dialog';
 import { formatDistanceToNow } from 'date-fns';
 
 interface SessionPreferencesProps {

@@ -5,12 +5,12 @@
  */
 
 import React, { useState, useCallback } from 'react';
-import { AdminPageShell } from '@/features/admin/layout/layout/AdminPageShell';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { AdminPageShell } from '@app/features/admin/layout/layout/AdminPageShell';
+import { Button } from '@app/components/ui/button';
+import { Input } from '@app/components/ui/input';
+import { Badge } from '@app/components/ui/badge';
+import { Card, CardContent, CardHeader, CardTitle } from '@app/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@app/components/ui/tabs';
 import {
 	Plus,
 	Upload,
@@ -39,24 +39,24 @@ import {
 	TableHead,
 	TableHeader,
 	TableRow
-} from '@/components/ui/table';
+} from '@app/components/ui/table';
 import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuTrigger,
 	DropdownMenuItem,
 	DropdownMenuSeparator
-} from '@/components/ui/dropdown-menu';
+} from '@app/components/ui/dropdown-menu';
 import {
 	Select,
 	SelectContent,
 	SelectItem,
 	SelectTrigger,
 	SelectValue
-} from '@/components/ui/select';
-import { useToast } from '@/hooks/use-toast';
-import { stickerApiService } from '@/features/admin/services/sticker-api.service';
-import { rarityColorMap } from '@/config/rarity.config';
+} from '@app/components/ui/select';
+import { useToast } from '@app/hooks/use-toast';
+import { stickerApiService } from '@app/features/admin/services/sticker-api.service';
+import { rarityColorMap } from '@app/config/rarity.config';
 
 // Mock data for development (replace with actual API calls)
 const mockStickers = [

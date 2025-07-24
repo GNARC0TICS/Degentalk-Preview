@@ -10,15 +10,15 @@ import {
 	PanelsTopLeft,
 	LayoutGrid
 } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
-import { cn } from '@/utils/utils';
+import { Card, CardContent, CardHeader, CardTitle } from '@app/components/ui/card';
+import { Avatar, AvatarFallback } from '@app/components/ui/avatar';
+import { Badge } from '@app/components/ui/badge';
+import { cn } from '@app/utils/utils';
 import { useLocation } from 'react-router-dom';
-import HierarchicalZoneNav from '@/features/forum/components/HierarchicalZoneNav';
-import { ROUTES } from '@/constants/routes';
-import { ProfileCard } from '@/components/widgets/ProfileCard';
-import { useAuth } from '@/hooks/use-auth';
+import HierarchicalZoneNav from '@app/features/forum/components/HierarchicalZoneNav';
+import { ROUTES } from '@app/constants/routes';
+import { ProfileCard } from '@app/components/widgets/ProfileCard';
+import { useAuth } from '@app/hooks/use-auth';
 import type { CategoryId, ForumId } from '@shared/types/ids';
 
 // Helper function to determine icon for a category

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiRequest } from '@/utils/queryClient';
+import { apiRequest } from '@app/utils/queryClient';
 import {
 	Card,
 	CardContent,
@@ -8,14 +8,14 @@ import {
 	CardFooter,
 	CardHeader,
 	CardTitle
-} from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Slider } from '@/components/ui/slider';
-import { useToast } from '@/hooks/use-toast';
+} from '@app/components/ui/card';
+import { Label } from '@app/components/ui/label';
+import { Input } from '@app/components/ui/input';
+import { Button } from '@app/components/ui/button';
+import { Separator } from '@app/components/ui/separator';
+import { Alert, AlertDescription } from '@app/components/ui/alert';
+import { Slider } from '@app/components/ui/slider';
+import { useToast } from '@app/hooks/use-toast';
 import { Loader2, AlertCircle, Save, CloudRain, Gift } from 'lucide-react';
 
 interface CooldownSettings {

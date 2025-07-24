@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { NotificationPanel } from '@/components/notifications/NotificationPanel';
+import { Button } from '@app/components/ui/button';
+import { Badge } from '@app/components/ui/badge';
+import { Popover, PopoverContent, PopoverTrigger } from '@app/components/ui/popover';
+import { NotificationPanel } from '@app/components/notifications/NotificationPanel';
 import { useHeader } from './HeaderContext';
-import { IconRenderer } from '@/components/icons/iconRenderer';
+import { IconRenderer } from '@app/components/icons/iconRenderer';
 
 // Framer Motion variants
 const notificationButtonVariants = {

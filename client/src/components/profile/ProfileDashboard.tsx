@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useAuth } from '@/hooks/use-auth';
-import { useProfileStats } from '@/hooks/useProfileStats';
+import { useAuth } from '@app/hooks/use-auth';
+import { useProfileStats } from '@app/hooks/useProfileStats';
 import {
 	ReputationCard,
 	ActivityStatsCard,
@@ -11,7 +11,7 @@ import {
 } from './widgets';
 import { QuickActionsCard } from './widgets/QuickActionsCard';
 import { ProfileInsightsCard } from './widgets/ProfileInsightsCard';
-import type { ProfileData } from '@/types/profile';
+import type { ProfileData } from '@app/types/profile';
 
 interface ProfileDashboardProps {
 	profile: ProfileData;

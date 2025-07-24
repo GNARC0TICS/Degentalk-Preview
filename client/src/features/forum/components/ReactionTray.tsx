@@ -1,6 +1,6 @@
 import React from 'react';
-import { cn } from '@/utils/utils';
-import { Button } from '@/components/ui/button'; // Using Button for consistency, can be styled
+import { cn } from '@app/utils/utils';
+import { Button } from '@app/components/ui/button'; // Using Button for consistency, can be styled
 import type { PostId } from '@shared/types/ids';
 
 interface ReactionTrayProps {

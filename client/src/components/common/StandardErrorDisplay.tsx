@@ -1,6 +1,6 @@
 import React from 'react';
-import { ErrorDisplay } from '@/components/ui/error-display';
-import { brandConfig } from '@/config/brand.config';
+import { ErrorDisplay } from '@app/components/ui/error-display';
+import { brandConfig } from '@app/config/brand.config';
 
 interface StandardErrorDisplayProps {
 	title?: string;

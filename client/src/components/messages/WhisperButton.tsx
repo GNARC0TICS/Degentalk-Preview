@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import type { ButtonProps } from '@/components/ui/button';
-import { MessageSquareWave } from '@/components/messages/icons/MessageSquareWave';
+import { Button } from '@app/components/ui/button';
+import type { ButtonProps } from '@app/components/ui/button';
+import { MessageSquareWave } from '@app/components/messages/icons/MessageSquareWave';
 import { WhisperModal } from './WhisperModal';
-import { Badge } from '@/components/ui/badge';
-import { useMessages } from '@/hooks/use-messages';
+import { Badge } from '@app/components/ui/badge';
+import { useMessages } from '@app/hooks/use-messages';
 import { useQuery } from '@tanstack/react-query';
 import { type UserId } from '@shared/types/ids';
 

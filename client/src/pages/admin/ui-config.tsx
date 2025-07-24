@@ -32,7 +32,7 @@ import {
 	AlertDialogFooter,
 	AlertDialogHeader,
 	AlertDialogTitle
-} from '@/components/ui';
+} from '@app/components/ui';
 import {
 	Table,
 	TableBody,
@@ -40,7 +40,7 @@ import {
 	TableHead,
 	TableHeader,
 	TableRow
-} from '@/components/ui/table';
+} from '@app/components/ui/table';
 import {
 	Search,
 	Plus,
@@ -52,19 +52,19 @@ import {
 	Upload,
 	MoreHorizontal
 } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
+import { useToast } from '@app/hooks/use-toast';
 import {
 	uiConfigApi,
 	type CreateQuoteData,
 	type QuoteFilters,
 	type PaginationOptions
-} from '@/features/admin/services/uiConfigApi';
-import ProtectedAdminRoute from '@/features/admin/components/protected-admin-route';
-import { useAdminModuleV2 } from '@/hooks/use-admin-modules';
-import { VisualJsonTabs } from '@/features/admin/components/VisualJsonTabs';
-import { useJsonConfig } from '@/hooks/useJsonConfig';
-import { uiQuotesSchema, type UIQuotes } from '@/schemas/uiQuotes.schema';
-import { logger } from "@/lib/logger";
+} from '@app/features/admin/services/uiConfigApi';
+import ProtectedAdminRoute from '@app/features/admin/components/protected-admin-route';
+import { useAdminModuleV2 } from '@app/hooks/use-admin-modules';
+import { VisualJsonTabs } from '@app/features/admin/components/VisualJsonTabs';
+import { useJsonConfig } from '@app/hooks/useJsonConfig';
+import { uiQuotesSchema, type UIQuotes } from '@app/schemas/uiQuotes.schema';
+import { logger } from '@app/lib/logger";
 
 // Types
 interface Quote {

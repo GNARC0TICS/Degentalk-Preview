@@ -1,8 +1,8 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
-import { SiteHeader, HeaderProvider } from '@/components/header';
-import { SiteFooter } from '@/components/footer';
-import { AuthRedirectHandler } from '@/components/auth/AuthRedirectHandler';
+import { SiteHeader, HeaderProvider } from '@app/components/header';
+import { SiteFooter } from '@app/components/footer';
+import { AuthRedirectHandler } from '@app/components/auth/AuthRedirectHandler';
 
 /**
  * Root Layout - Main application shell

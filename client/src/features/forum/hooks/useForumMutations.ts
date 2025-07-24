@@ -8,8 +8,8 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { forumApi } from '../services/forumApi';
-import { apiPost } from '@/utils/api-request';
-import type { PostWithUser } from '@/types/compat/forum';
+import { apiPost } from '@app/utils/api-request';
+import type { PostWithUser } from '@app/types/compat/forum';
 import type { EntityId, ContentId, ThreadId, PostId, UserId } from '@shared/types/ids';
 
 // Utility for standardized error handling

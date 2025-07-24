@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { formatDistanceToNow } from 'date-fns';
-import type { ThreadDisplay } from '@/types/thread.types';
+import type { ThreadDisplay } from '@app/types/thread.types';
 
 interface ThreadRowProps {
 	thread: ThreadDisplay;

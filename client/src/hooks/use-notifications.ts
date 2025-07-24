@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiRequest } from '@/utils/api-request';
-import { useToast } from '@/hooks/use-toast';
-import type { Notification } from '@/types/notifications';
-import api from '@/core/api';
-import { logger } from "@/lib/logger";
+import { apiRequest } from '@app/utils/api-request';
+import { useToast } from '@app/hooks/use-toast';
+import type { Notification } from '@app/types/notifications';
+import api from '@app/core/api';
+import { logger } from '@app/lib/logger";
 
 export function useNotifications() {
 	const queryClient = useQueryClient();

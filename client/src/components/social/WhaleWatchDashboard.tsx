@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import type { EntityId, FollowId } from '@shared/types/ids';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiRequest } from '@/utils/queryClient';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Skeleton } from '@/components/ui/skeleton';
+import { apiRequest } from '@app/utils/queryClient';
+import { Card, CardContent, CardHeader, CardTitle } from '@app/components/ui/card';
+import { Button } from '@app/components/ui/button';
+import { Input } from '@app/components/ui/input';
+import { Badge } from '@app/components/ui/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '@app/components/ui/avatar';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@app/components/ui/tabs';
+import { ScrollArea } from '@app/components/ui/scroll-area';
+import { Skeleton } from '@app/components/ui/skeleton';
 import {
 	Users,
 	UserPlus,
@@ -26,8 +26,8 @@ import {
 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { Link } from 'react-router-dom';
-import { cn } from '@/utils/utils';
-import { useToast } from '@/hooks/use-toast';
+import { cn } from '@app/utils/utils';
+import { useToast } from '@app/hooks/use-toast';
 
 interface FollowUser {
 	id: string;

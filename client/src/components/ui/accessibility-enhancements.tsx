@@ -14,12 +14,12 @@ import {
 	Focus,
 	Settings
 } from 'lucide-react';
-import { cn } from '@/utils/utils';
-import { useLocalStorage } from '@/hooks/use-local-storage';
-import { Button } from '@/components/ui/button';
-import { Switch } from '@/components/ui/switch';
-import { Slider } from '@/components/ui/slider';
-import { Label } from '@/components/ui/label';
+import { cn } from '@app/utils/utils';
+import { useLocalStorage } from '@app/hooks/use-local-storage';
+import { Button } from '@app/components/ui/button';
+import { Switch } from '@app/components/ui/switch';
+import { Slider } from '@app/components/ui/slider';
+import { Label } from '@app/components/ui/label';
 
 // Accessibility preferences context
 interface AccessibilityPreferences {

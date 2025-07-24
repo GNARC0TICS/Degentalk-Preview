@@ -1,7 +1,7 @@
 import React from 'react';
-import { UnifiedProfileCard } from '@/components/profile/UnifiedProfileCard';
-import { cn } from '@/utils/utils';
-import type { User } from '@/types/compat/user';
+import { UnifiedProfileCard } from '@app/components/profile/UnifiedProfileCard';
+import { cn } from '@app/utils/utils';
+import type { User } from '@app/types/compat/user';
 
 interface ProfileCardProps {
 	user: User;

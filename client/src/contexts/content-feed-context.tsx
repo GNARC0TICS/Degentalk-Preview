@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useCallback } from 'react';
-import type { ContentTab } from '@/hooks/use-content';
+import type { ContentTab } from '@app/hooks/use-content';
 
 interface ContentFeedContextValue {
 	activeTab: ContentTab;

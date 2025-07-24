@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { cn } from '@/utils/utils';
-import { useToast } from '@/hooks/use-toast';
+import { Card, CardContent, CardHeader, CardTitle } from '@app/components/ui/card';
+import { Button } from '@app/components/ui/button';
+import { Badge } from '@app/components/ui/badge';
+import { Separator } from '@app/components/ui/separator';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@app/components/ui/tabs';
+import { cn } from '@app/utils/utils';
+import { useToast } from '@app/hooks/use-toast';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiRequest } from '@/utils/queryClient';
-import { FramedAvatar } from '@/components/users/framed-avatar';
+import { apiRequest } from '@app/utils/queryClient';
+import { FramedAvatar } from '@app/components/users/framed-avatar';
 import { ShoppingBag, Sparkles, Palette, Frame, Crown, Edit } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { applyPluginRewards } from '@/utils/applyPluginRewards';
-import type { UserInventoryWithProduct } from '@/types/inventory';
+import { applyPluginRewards } from '@app/utils/applyPluginRewards';
+import type { UserInventoryWithProduct } from '@app/types/inventory';
 import type { InventoryId, FrameId, TitleId, BadgeId } from '@shared/types/ids';
 
 interface CosmeticControlPanelProps {

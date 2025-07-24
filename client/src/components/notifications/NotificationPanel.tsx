@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@app/components/ui/button';
 import {
 	Wallet,
 	Bell,
@@ -14,10 +14,10 @@ import {
 	CheckCircle,
 	Award
 } from 'lucide-react';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { cn } from '@/utils/utils';
+import { ScrollArea } from '@app/components/ui/scroll-area';
+import { cn } from '@app/utils/utils';
 import { formatDistance } from 'date-fns';
-import { useNotifications } from '@/hooks/use-notifications';
+import { useNotifications } from '@app/hooks/use-notifications';
 
 interface NotificationPanelProps {}
 

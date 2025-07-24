@@ -1,8 +1,8 @@
 import React from 'react';
 import { TrendingUp, Zap, Star, Target, AlertCircle, Crown, Gift } from 'lucide-react';
-import { cn } from '@/utils/utils';
-import type { ProfileData } from '@/types/profile';
-import type { ExtendedProfileStats } from '@/hooks/useProfileStats';
+import { cn } from '@app/utils/utils';
+import type { ProfileData } from '@app/types/profile';
+import type { ExtendedProfileStats } from '@app/hooks/useProfileStats';
 
 interface ProfileInsightsCardProps {
 	profile: ProfileData;

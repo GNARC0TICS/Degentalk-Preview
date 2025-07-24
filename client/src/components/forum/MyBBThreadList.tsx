@@ -1,9 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { MessageSquare, Pin, Lock, CheckCircle, Eye, Calendar } from 'lucide-react';
-import type { ThreadDisplay } from '@/types/thread.types';
+import type { ThreadDisplay } from '@app/types/thread.types';
 import { formatDistanceToNow } from 'date-fns';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@app/components/ui/tooltip';
 
 interface MyBBThreadListProps {
 	threads: ThreadDisplay[];

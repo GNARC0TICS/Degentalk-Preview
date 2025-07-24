@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { Loader2 } from 'lucide-react';
-import { Textarea } from '@/components/ui/textarea';
-import { Button } from '@/components/ui/button';
-import { useToast } from '@/hooks/use-toast';
-import { apiRequest, queryClient } from '@/utils/queryClient';
+import { Textarea } from '@app/components/ui/textarea';
+import { Button } from '@app/components/ui/button';
+import { useToast } from '@app/hooks/use-toast';
+import { apiRequest, queryClient } from '@app/utils/queryClient';
 
 export default function XpConfigPage() {
 	const { toast } = useToast();

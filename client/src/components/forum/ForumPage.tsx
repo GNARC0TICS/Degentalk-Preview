@@ -2,21 +2,21 @@ import React, { useState, memo, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import { Filter } from 'lucide-react';
 
-import { Button } from '@/components/ui/button';
-import { getCreateThreadUrl } from '@/utils/forum';
-import { useForumStructure } from '@/features/forum/contexts/ForumStructureContext';
-import { useForumFilters } from '@/hooks/useForumFilters';
-import { Wide } from '@/layout/primitives';
-import { ThreadFilters } from '@/components/forum/ThreadFilters';
-import { ForumBreadcrumbs, createForumBreadcrumbs } from '@/components/navigation/ForumBreadcrumbs';
-import ThreadList from '@/features/forum/components/ThreadList';
-import { DynamicSidebar } from '@/components/forum/sidebar';
-import { SiteFooter } from '@/components/footer';
-import { ForumHeader } from '@/features/forum/components/ForumHeader';
-import { MyBBThreadList } from '@/components/forum/MyBBThreadList';
+import { Button } from '@app/components/ui/button';
+import { getCreateThreadUrl } from '@app/utils/forum';
+import { useForumStructure } from '@app/features/forum/contexts/ForumStructureContext';
+import { useForumFilters } from '@app/hooks/useForumFilters';
+import { Wide } from '@app/layout/primitives';
+import { ThreadFilters } from '@app/components/forum/ThreadFilters';
+import { ForumBreadcrumbs, createForumBreadcrumbs } from '@app/components/navigation/ForumBreadcrumbs';
+import ThreadList from '@app/features/forum/components/ThreadList';
+import { DynamicSidebar } from '@app/components/forum/sidebar';
+import { SiteFooter } from '@app/components/footer';
+import { ForumHeader } from '@app/features/forum/components/ForumHeader';
+import { MyBBThreadList } from '@app/components/forum/MyBBThreadList';
 import type { ForumId, StructureId, ZoneId, UserId, ThreadId } from '@shared/types/ids';
 import { toUserId, toThreadId, toStructureId, toZoneId, toForumId } from '@shared/utils/id';
-import type { ThreadDisplay } from '@/types/thread.types';
+import type { ThreadDisplay } from '@app/types/thread.types';
 
 export interface ForumPageProps {
 	className?: string;

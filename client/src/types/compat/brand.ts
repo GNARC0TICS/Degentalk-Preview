@@ -1,4 +1,4 @@
-import type { BrandConfig } from '@/config/brand.config';
+import type { BrandConfig } from '@app/config/brand.config';
 
 export type RuntimeBrandConfig = BrandConfig & {
 	id?: string;

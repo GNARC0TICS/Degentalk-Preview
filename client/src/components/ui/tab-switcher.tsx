@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { cn } from '@/utils/utils';
+import { cn } from '@app/utils/utils';
 import { TrendingUp, Clock, Users, Sparkles } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
-import type { ContentTab } from '@/hooks/use-content';
+import type { ContentTab } from '@app/hooks/use-content';
 
 export interface TabConfig {
 	id: ContentTab;

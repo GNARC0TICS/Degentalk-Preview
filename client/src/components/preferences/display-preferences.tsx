@@ -1,20 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import type { User } from '@/types/compat/user';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import type { User } from '@app/types/compat/user';
+import { Button } from '@app/components/ui/button';
+import { Card, CardContent } from '@app/components/ui/card';
+import { Label } from '@app/components/ui/label';
+import { RadioGroup, RadioGroupItem } from '@app/components/ui/radio-group';
 import {
 	Select,
 	SelectContent,
 	SelectItem,
 	SelectTrigger,
 	SelectValue
-} from '@/components/ui/select';
-import { Switch } from '@/components/ui/switch';
+} from '@app/components/ui/select';
+import { Switch } from '@app/components/ui/switch';
 import { Sun, Moon, Monitor, LayoutGrid, LayoutList, Eye } from 'lucide-react';
-import { useUserSettings } from '@/hooks/preferences/useUserSettings';
-import { useUpdateUserSettings } from '@/hooks/preferences/useUpdateUserSettings';
+import { useUserSettings } from '@app/hooks/preferences/useUserSettings';
+import { useUpdateUserSettings } from '@app/hooks/preferences/useUpdateUserSettings';
 
 interface DisplayPreferencesProps {
 	user: User;

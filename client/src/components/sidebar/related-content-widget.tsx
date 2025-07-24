@@ -1,9 +1,9 @@
 import React, { useMemo } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { useContentFeedState } from '@/contexts/content-feed-context';
+import { Card, CardContent, CardHeader, CardTitle } from '@app/components/ui/card';
+import { Button } from '@app/components/ui/button';
+import { Badge } from '@app/components/ui/badge';
+import { Avatar, AvatarFallback } from '@app/components/ui/avatar';
+import { useContentFeedState } from '@app/contexts/content-feed-context';
 import {
 	Sparkles,
 	TrendingUp,
@@ -14,7 +14,7 @@ import {
 	ArrowRight,
 	Users
 } from 'lucide-react';
-import { cn } from '@/utils/utils';
+import { cn } from '@app/utils/utils';
 
 interface RelatedItem {
 	id: string;

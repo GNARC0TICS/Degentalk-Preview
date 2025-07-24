@@ -1,9 +1,9 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { LoadingSpinner } from '@/components/ui/loader';
-import { ErrorDisplay } from '@/components/ui/error-display';
-import { cn } from '@/utils/utils';
-// import { useToast } from '@/hooks/use-toast'; // Unused toast
+import { LoadingSpinner } from '@app/components/ui/loader';
+import { ErrorDisplay } from '@app/components/ui/error-display';
+import { cn } from '@app/utils/utils';
+// import { useToast } from '@app/hooks/use-toast'; // Unused toast
 import {
 	Table,
 	TableBody,
@@ -11,14 +11,14 @@ import {
 	TableHead,
 	TableHeader,
 	TableRow
-} from '@/components/ui/table';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+} from '@app/components/ui/table';
+import { Card, CardHeader, CardTitle, CardContent } from '@app/components/ui/card';
 import type { UserId } from '@shared/types/ids';
 import { toId } from '@shared/types/index';
 import { Trophy } from 'lucide-react'; // Removed TrendingUp, CircleDollarSign, Diamond
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@app/components/ui/avatar';
 import { motion } from 'framer-motion';
-import BackToHomeButton from '@/components/common/BackToHomeButton';
+import BackToHomeButton from '@app/components/common/BackToHomeButton';
 
 // Mock data structure - replace with actual API response type
 interface LeaderboardUser {

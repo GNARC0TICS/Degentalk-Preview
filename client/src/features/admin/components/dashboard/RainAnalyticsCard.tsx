@@ -20,8 +20,8 @@ import {
 	CardFooter,
 	CardHeader,
 	CardTitle
-} from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+} from '@app/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@app/components/ui/tabs';
 import type { UserId } from '@shared/types/ids';
 import {
 	Select,
@@ -29,10 +29,10 @@ import {
 	SelectItem,
 	SelectTrigger,
 	SelectValue
-} from '@/components/ui/select';
-import { Skeleton } from '@/components/ui/skeleton';
+} from '@app/components/ui/select';
+import { Skeleton } from '@app/components/ui/skeleton';
 import { format } from 'date-fns';
-import { apiRequest } from '@/utils/queryClient';
+import { apiRequest } from '@app/utils/queryClient';
 
 // Chart colors
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d'];

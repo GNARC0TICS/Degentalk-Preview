@@ -6,25 +6,25 @@
 
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import type { ApiErrorData } from '@/types/core.types';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@app/components/ui/card';
+import type { ApiErrorData } from '@app/types/core.types';
 import type { BasicRole } from '@shared/types/index';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { Button } from '@app/components/ui/button';
+import { Badge } from '@app/components/ui/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '@app/components/ui/avatar';
+import { Input } from '@app/components/ui/input';
+import { Label } from '@app/components/ui/label';
 import {
 	Select,
 	SelectContent,
 	SelectItem,
 	SelectTrigger,
 	SelectValue
-} from '@/components/ui/select';
-import { Textarea } from '@/components/ui/textarea';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Separator } from '@/components/ui/separator';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+} from '@app/components/ui/select';
+import { Textarea } from '@app/components/ui/textarea';
+import { Checkbox } from '@app/components/ui/checkbox';
+import { Separator } from '@app/components/ui/separator';
+import { Alert, AlertDescription } from '@app/components/ui/alert';
 import {
 	Dialog,
 	DialogContent,
@@ -33,8 +33,8 @@ import {
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger
-} from '@/components/ui/dialog';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+} from '@app/components/ui/dialog';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@app/components/ui/tabs';
 import {
 	Users,
 	Search,
@@ -61,9 +61,9 @@ import {
 	DropdownMenuContent,
 	DropdownMenuItem,
 	DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu';
+} from '@app/components/ui/dropdown-menu';
 import { toast } from 'sonner';
-import { apiRequest } from '@/utils/queryClient';
+import { apiRequest } from '@app/utils/queryClient';
 import type { BanId, WarningId } from '@shared/types/ids';
 
 // Types

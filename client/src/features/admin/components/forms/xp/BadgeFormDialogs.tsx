@@ -6,11 +6,11 @@ import {
 	DialogFooter,
 	DialogHeader,
 	DialogTitle
-} from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
+} from '@app/components/ui/dialog';
+import { Input } from '@app/components/ui/input';
+import { Button } from '@app/components/ui/button';
+import { Label } from '@app/components/ui/label';
+import { Textarea } from '@app/components/ui/textarea';
 import {
 	Select,
 	SelectContent,
@@ -19,10 +19,10 @@ import {
 	SelectLabel,
 	SelectTrigger,
 	SelectValue
-} from '@/components/ui/select';
+} from '@app/components/ui/select';
 import { Upload } from 'lucide-react';
-import { MediaPickerModal } from '@/features/admin/media/media/MediaPickerModal';
-import { MediaAsset } from '@/components/media/MediaAsset';
+import { MediaPickerModal } from '@app/features/admin/media/media/MediaPickerModal';
+import { MediaAsset } from '@app/components/media/MediaAsset';
 import type { BadgeId, EntityId } from '@shared/types/ids';
 
 // Badge types (can be shared from a types file if available)

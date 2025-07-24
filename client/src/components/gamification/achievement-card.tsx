@@ -5,14 +5,14 @@
  * visual effects based on rarity, and completion status
  */
 
-import { cn } from '@/utils/utils';
-import { Card, CardContent } from '@/components/ui/card';
-import { Progress } from '@/components/ui/progress';
-import { Badge } from '@/components/ui/badge';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { cn } from '@app/utils/utils';
+import { Card, CardContent } from '@app/components/ui/card';
+import { Progress } from '@app/components/ui/progress';
+import { Badge } from '@app/components/ui/badge';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@app/components/ui/tooltip';
 import { Lock, Trophy, CheckCircle2, Star, Zap } from 'lucide-react';
 import { motion } from 'framer-motion';
-import type { UserAchievement } from '@/features/gamification/services/gamification-api.service';
+import type { UserAchievement } from '@app/features/gamification/services/gamification-api.service';
 
 interface AchievementCardProps {
 	achievement: UserAchievement;

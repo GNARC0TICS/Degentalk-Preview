@@ -1,16 +1,16 @@
 import React from 'react';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
+import { Input } from '@app/components/ui/input';
+import { Button } from '@app/components/ui/button';
 import {
 	Select,
 	SelectContent,
 	SelectItem,
 	SelectTrigger,
 	SelectValue
-} from '@/components/ui/select';
-// import { DatePickerWithRange } from '@/components/ui/date-range-picker'; // Assuming this exists or will be created
+} from '@app/components/ui/select';
+// import { DatePickerWithRange } from '@app/components/ui/date-range-picker'; // Assuming this exists or will be created
 import type { DateRange } from 'react-day-picker'; // Keep type for FilterValue
-import { cn } from '@/utils/utils';
+import { cn } from '@app/utils/utils';
 import { Search, XCircle } from 'lucide-react';
 
 export type FilterValue = string | number | boolean | DateRange | undefined | null;

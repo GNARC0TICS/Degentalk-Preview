@@ -4,20 +4,20 @@ import axios from 'axios';
 import { format, formatDistanceToNow } from 'date-fns';
 
 // Import UI components
-import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { AvatarFrame } from '@/components/identity/AvatarFrame';
-import { UserName } from '@/components/users/Username';
-import { LevelBadge } from '@/features/gamification/components/LevelBadge';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@app/components/ui/card';
+import { Input } from '@app/components/ui/input';
+import { Button } from '@app/components/ui/button';
+import { AvatarFrame } from '@app/components/identity/AvatarFrame';
+import { UserName } from '@app/components/users/Username';
+import { LevelBadge } from '@app/features/gamification/components/LevelBadge';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@app/components/ui/tooltip';
 import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
 	DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+} from '@app/components/ui/dropdown-menu';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@app/components/ui/tabs';
 import {
 	Dialog,
 	DialogContent,
@@ -25,11 +25,11 @@ import {
 	DialogFooter,
 	DialogHeader,
 	DialogTitle
-} from '@/components/ui/dialog';
-import { useToast } from '@/hooks/use-toast';
-import { useShoutbox } from '@/contexts/shoutbox-context';
+} from '@app/components/ui/dialog';
+import { useToast } from '@app/hooks/use-toast';
+import { useShoutbox } from '@app/contexts/shoutbox-context';
 import { ShoutboxPositionSelector } from './shoutbox-position-selector';
-import { useIdentityDisplay } from '@/hooks/useIdentityDisplay';
+import { useIdentityDisplay } from '@app/hooks/useIdentityDisplay';
 
 // Import icons
 import {

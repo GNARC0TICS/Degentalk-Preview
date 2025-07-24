@@ -15,14 +15,14 @@ import {
 	Target
 } from 'lucide-react';
 
-import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { cn } from '@/utils/utils';
-import { useUIConfig, buildResponsiveClasses } from '@/contexts/UIConfigContext';
-import { SafeImage } from '@/components/ui/safe-image';
-import { animationConfig } from '@/config/animation.config';
+import { Card, CardContent, CardFooter, CardHeader } from '@app/components/ui/card';
+import { Badge } from '@app/components/ui/badge';
+import { Button } from '@app/components/ui/button';
+import { Avatar, AvatarFallback, AvatarImage } from '@app/components/ui/avatar';
+import { cn } from '@app/utils/utils';
+import { useUIConfig, buildResponsiveClasses } from '@app/contexts/UIConfigContext';
+import { SafeImage } from '@app/components/ui/safe-image';
+import { animationConfig } from '@app/config/animation.config';
 import { getZoneTheme } from '@shared/config/zoneThemes.config';
 import XpBoostBadge from './XpBoostBadge';
 

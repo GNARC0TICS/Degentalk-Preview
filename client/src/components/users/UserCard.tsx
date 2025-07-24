@@ -1,11 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Card, CardContent } from '@/components/ui/card';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
+import { Card, CardContent } from '@app/components/ui/card';
+import { Avatar, AvatarFallback, AvatarImage } from '@app/components/ui/avatar';
+import { Badge } from '@app/components/ui/badge';
 import { Users, MessageSquare, Calendar, Activity } from 'lucide-react';
 import { motion } from 'framer-motion';
-import type { DegenUser } from '@/pages/degen-index';
+import type { DegenUser } from '@app/pages/degen-index';
 
 interface UserCardProps {
 	user: DegenUser;

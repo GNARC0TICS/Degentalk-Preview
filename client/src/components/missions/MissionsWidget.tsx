@@ -1,6 +1,6 @@
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useMissions } from '@/hooks/useMissions';
+import { useMissions } from '@app/hooks/useMissions';
 import {
 	Card,
 	CardContent,
@@ -8,13 +8,13 @@ import {
 	CardFooter,
 	CardHeader,
 	CardTitle
-} from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
+} from '@app/components/ui/card';
+import { Button } from '@app/components/ui/button';
+import { Badge } from '@app/components/ui/badge';
+import { Progress } from '@app/components/ui/progress';
 import { Trophy, ChevronRight, Gift, Clock } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { cn } from '@/utils/utils';
+import { cn } from '@app/utils/utils';
 
 /**
  * Small widget showing active missions with rewards ready to claim

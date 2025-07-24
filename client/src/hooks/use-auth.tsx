@@ -1,14 +1,14 @@
 import type { ReactNode } from 'react';
 import { createContext, useContext, useState, useEffect, useMemo } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { apiRequest } from '@/utils/api-request';
-import { getUserPermissions } from '@/utils/roles';
-import type { Role } from '@/utils/roles';
+import { apiRequest } from '@app/utils/api-request';
+import { getUserPermissions } from '@app/utils/roles';
+import type { Role } from '@app/utils/roles';
 import type { AuthUser, UserRole } from '@shared/types/auth-user.types';
 import type { UserId, FrameId } from '@shared/types/ids';
 import { toId } from '@shared/types/index';
-import { setAuthToken, removeAuthToken } from '@/utils/auth-token';
-import { logger } from "@/lib/logger";
+import { setAuthToken, removeAuthToken } from '@app/utils/auth-token';
+import { logger } from '@app/lib/logger";
 
 // Define user type
 // Re-export AuthUser as User for backward compatibility

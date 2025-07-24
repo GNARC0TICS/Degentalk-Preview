@@ -1,6 +1,6 @@
 import React from 'react';
 import { CalendarClock } from 'lucide-react';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@app/components/ui/card';
 
 interface UpcomingEventsWidgetProps {
 	className?: string;

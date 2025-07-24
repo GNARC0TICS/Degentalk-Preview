@@ -1,9 +1,9 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { IconRenderer } from '@/components/icons/iconRenderer';
-import { Button } from '@/components/ui/button';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Progress } from '@/components/ui/progress';
+import { IconRenderer } from '@app/components/icons/iconRenderer';
+import { Button } from '@app/components/ui/button';
+import { Avatar, AvatarFallback } from '@app/components/ui/avatar';
+import { Progress } from '@app/components/ui/progress';
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -11,11 +11,11 @@ import {
 	DropdownMenuLabel,
 	DropdownMenuSeparator,
 	DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu';
+} from '@app/components/ui/dropdown-menu';
 import { NavLink } from './NavLink';
-import { createUserMenuItems } from '@/config/navigation';
+import { createUserMenuItems } from '@app/config/navigation';
 import { useHeader } from './HeaderContext';
-import { useAuth } from '@/hooks/use-auth';
+import { useAuth } from '@app/hooks/use-auth';
 
 // Helper to calculate next level XP requirement
 const calculateNextLevelXp = (level: number): number => {

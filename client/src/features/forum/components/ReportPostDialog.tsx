@@ -5,20 +5,20 @@ import {
 	DialogHeader,
 	DialogTitle,
 	DialogFooter
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
+} from '@app/components/ui/dialog';
+import { Button } from '@app/components/ui/button';
+import { Label } from '@app/components/ui/label';
+import { Textarea } from '@app/components/ui/textarea';
 import {
 	Select,
 	SelectContent,
 	SelectItem,
 	SelectTrigger,
 	SelectValue
-} from '@/components/ui/select';
-import { useReportPost } from '@/features/forum/hooks/useForumQueries';
+} from '@app/components/ui/select';
+import { useReportPost } from '@app/features/forum/hooks/useForumQueries';
 import { Loader2, AlertTriangle } from 'lucide-react';
-import type { PostWithUser } from '@/types/compat/forum';
+import type { PostWithUser } from '@app/types/compat/forum';
 import { postIdToContentId } from '@shared/utils/id-conversions';
 
 interface ReportPostDialogProps {

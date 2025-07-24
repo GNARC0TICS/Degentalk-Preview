@@ -1,10 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { AlertTriangle, Home, Users, Search, ArrowLeft, UserX } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@app/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@app/components/ui/card';
 import { useQuery } from '@tanstack/react-query';
-import { apiRequest } from '@/utils/queryClient';
+import { apiRequest } from '@app/utils/queryClient';
 
 interface UserNotFoundProps {
 	username?: string;

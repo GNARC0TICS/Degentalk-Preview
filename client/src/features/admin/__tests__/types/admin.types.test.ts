@@ -6,7 +6,7 @@ import type {
 	AdminApiResponse,
 	BulkOperationRequest,
 	Achievement
-} from '@/types/admin.types';
+} from '@app/types/admin.types';
 import { createUserId } from '@shared/src/utils';
 
 describe('Admin Types', () => {

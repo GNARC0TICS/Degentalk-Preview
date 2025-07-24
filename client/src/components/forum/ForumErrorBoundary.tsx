@@ -1,9 +1,9 @@
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Wide } from '@/layout/primitives';
-import { Button } from '@/components/ui/button';
-import { ErrorBoundary } from '@/components/errors/ErrorBoundary';
-import { logger } from "@/lib/logger";
+import { Card, CardContent, CardHeader, CardTitle } from '@app/components/ui/card';
+import { Wide } from '@app/layout/primitives';
+import { Button } from '@app/components/ui/button';
+import { ErrorBoundary } from '@app/components/errors/ErrorBoundary';
+import { logger } from '@app/lib/logger";
 
 interface FallbackProps {
 	error: Error;

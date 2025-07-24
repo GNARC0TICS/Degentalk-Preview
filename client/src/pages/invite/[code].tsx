@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
-import { apiRequest } from '@/utils/queryClient';
-import { Wide } from '@/layout/primitives/Wide';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { useAuth } from '@/hooks/use-auth';
+import { apiRequest } from '@app/utils/queryClient';
+import { Wide } from '@app/layout/primitives/Wide';
+import { Card, CardContent, CardHeader, CardTitle } from '@app/components/ui/card';
+import { Button } from '@app/components/ui/button';
+import { Alert, AlertDescription } from '@app/components/ui/alert';
+import { useAuth } from '@app/hooks/use-auth';
 import { CheckCircle, UserPlus, AlertCircle, Gift } from 'lucide-react';
 import { toast } from 'sonner';
 

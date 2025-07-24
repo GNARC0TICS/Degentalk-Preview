@@ -1,7 +1,7 @@
 import React from 'react';
 import { useMemo } from 'react';
-import { Button } from '@/components/ui/button';
-import { DemoCard } from '@/pages/dev/DemoCard';
+import { Button } from '@app/components/ui/button';
+import { DemoCard } from '@app/pages/dev/DemoCard';
 
 export const ButtonPulseDemo: React.FC = () => {
 	const initial = useMemo(() => ({ label: 'Pulse', variant: 'default', disabled: false }), []);

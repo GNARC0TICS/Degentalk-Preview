@@ -1,8 +1,8 @@
 import React from 'react';
-import { cn } from '@/utils/utils';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { Badge } from '@/components/ui/badge';
-import { rarityBorderMap, rarityColorMap } from '@/config/rarity.config';
+import { cn } from '@app/utils/utils';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@app/components/ui/tooltip';
+import { Badge } from '@app/components/ui/badge';
+import { rarityBorderMap, rarityColorMap } from '@app/config/rarity.config';
 import type { TitleId } from '@shared/types/ids';
 
 type UserTitlesProps = {

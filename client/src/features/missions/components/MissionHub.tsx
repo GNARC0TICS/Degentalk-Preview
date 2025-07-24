@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Badge } from '@/components/ui/badge';
-import { Card } from '@/components/ui/card';
-import { Progress } from '@/components/ui/progress';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@app/components/ui/tabs';
+import { Badge } from '@app/components/ui/badge';
+import { Card } from '@app/components/ui/card';
+import { Progress } from '@app/components/ui/progress';
 import { Trophy, Target, Clock, Flame, Crown, Calendar, Star } from 'lucide-react';
-import { useAuth } from '@/hooks/use-auth';
+import { useAuth } from '@app/hooks/use-auth';
 import { useMissions } from '../hooks/useMissions';
 import { MissionCard } from './MissionCard';
 import { StreakBanner } from './StreakBanner';

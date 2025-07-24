@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useToast } from '@/hooks/use-toast';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@app/components/ui/card';
+import { Button } from '@app/components/ui/button';
+import { Input } from '@app/components/ui/input';
+import { Textarea } from '@app/components/ui/textarea';
+import { Label } from '@app/components/ui/label';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@app/components/ui/tabs';
+import { useToast } from '@app/hooks/use-toast';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiRequest } from '@/utils/queryClient';
+import { apiRequest } from '@app/utils/queryClient';
 import { Save, X, User, Image, Globe, MessageSquare } from 'lucide-react'; // Removed Upload icon
-import { FileDropZone } from '@/components/ui/file-drop-zone';
-import { logger } from "@/lib/logger";
+import { FileDropZone } from '@app/components/ui/file-drop-zone';
+import { logger } from '@app/lib/logger";
 
 interface ProfileEditorProps {
 	profile: {

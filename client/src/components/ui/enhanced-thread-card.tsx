@@ -18,13 +18,13 @@ import {
 	Pin
 } from 'lucide-react';
 
-import { Card } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { cn } from '@/utils/utils';
-import { useBreakpoint } from '@/hooks/useMediaQuery';
-import type { ThreadDisplay } from '@/types/thread.types';
+import { Card } from '@app/components/ui/card';
+import { Badge } from '@app/components/ui/badge';
+import { Button } from '@app/components/ui/button';
+import { Avatar, AvatarFallback, AvatarImage } from '@app/components/ui/avatar';
+import { cn } from '@app/utils/utils';
+import { useBreakpoint } from '@app/hooks/useMediaQuery';
+import type { ThreadDisplay } from '@app/types/thread.types';
 
 export interface EnhancedThreadCardProps {
 	thread: ThreadDisplay;

@@ -16,7 +16,7 @@ import Mention from '@tiptap/extension-mention';
 // Temporarily disabled for build test
 // import suggestion from './suggestion';
 const lowlight = createLowlight(common);
-import { Button } from '@/components/ui/button';
+import { Button } from '@app/components/ui/button';
 import { GifPicker } from './gif-picker';
 import { EnhancedGifPicker } from './enhanced-gif-picker';
 import {
@@ -42,15 +42,15 @@ import {
 	Sticker,
 	AtSign
 } from 'lucide-react';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@app/components/ui/tooltip';
 import {
 	Select,
 	SelectContent,
 	SelectItem,
 	SelectTrigger,
 	SelectValue
-} from '@/components/ui/select';
-import { cn } from '@/utils/utils';
+} from '@app/components/ui/select';
+import { cn } from '@app/utils/utils';
 
 export interface RichTextEditorProps {
 	content?: string;

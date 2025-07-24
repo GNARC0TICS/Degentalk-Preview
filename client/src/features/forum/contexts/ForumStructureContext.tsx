@@ -1,11 +1,11 @@
 import { createContext, useContext, useMemo, useState, useEffect } from 'react';
 import type { ReactNode } from 'react';
 import { z } from 'zod';
-import { forumMap } from '@/config/forumMap.config';
-import type { Zone } from '@/config/forumMap.config';
+import { forumMap } from '@app/config/forumMap.config';
+import type { Zone } from '@app/config/forumMap.config';
 import type { CategoryId, ForumId, GroupId, ParentZoneId, ZoneId } from '@shared/types/ids';
 import { toId, parseId, toParentZoneId } from '@shared/types/index';
-import { logger } from "@/lib/logger";
+import { logger } from '@app/lib/logger";
 
 // ===========================================================
 // ForumStructureContext v2.0  🛠️  (2025-06-16)

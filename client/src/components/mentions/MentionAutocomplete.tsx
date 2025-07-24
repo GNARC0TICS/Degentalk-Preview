@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { apiRequest } from '@/utils/queryClient';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
-import { cn } from '@/utils/utils';
+import { apiRequest } from '@app/utils/queryClient';
+import { Avatar, AvatarFallback, AvatarImage } from '@app/components/ui/avatar';
+import { Badge } from '@app/components/ui/badge';
+import { cn } from '@app/utils/utils';
 
 interface MentionUser {
 	id: string;

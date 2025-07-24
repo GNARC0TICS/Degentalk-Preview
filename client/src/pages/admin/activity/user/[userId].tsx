@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { useUserActivityFeed } from '@/features/activity/hooks/useActivityFeed';
-import { EventLogFilters } from '@/features/activity/services/activityApi';
+import { useUserActivityFeed } from '@app/features/activity/hooks/useActivityFeed';
+import { EventLogFilters } from '@app/features/activity/services/activityApi';
 import { format } from 'date-fns';
-import { useAuth } from '@/hooks/use-auth';
+import { useAuth } from '@app/hooks/use-auth';
 import { Link } from 'react-router-dom';
-import { AdminPageShell } from '@/features/admin/layout/layout/AdminPageShell';
-import { Wide } from '@/layout/primitives';
+import { AdminPageShell } from '@app/features/admin/layout/layout/AdminPageShell';
+import { Wide } from '@app/layout/primitives';
 
 /**
  * Admin page for viewing a specific user's activities

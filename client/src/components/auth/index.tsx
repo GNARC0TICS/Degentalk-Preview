@@ -38,4 +38,4 @@ export {
 	useRequireSuperAdmin,
 	useRequireModerator,
 	useRequireRole
-} from '@/hooks/useRouteProtection';
+} from '@app/hooks/useRouteProtection';

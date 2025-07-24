@@ -5,13 +5,13 @@
  */
 
 import React from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Progress } from '@/components/ui/progress';
-import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@app/components/ui/card';
+import { Progress } from '@app/components/ui/progress';
+import { Badge } from '@app/components/ui/badge';
 import { Globe, TrendingUp, Clock, AlertTriangle, CheckCircle, Activity } from 'lucide-react';
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@app/components/ui/chart';
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, ResponsiveContainer } from 'recharts';
-import type { SystemMetrics } from '@/features/admin/api/system-analytics.api';
+import type { SystemMetrics } from '@app/features/admin/api/system-analytics.api';
 
 interface APIMetricsCardProps {
 	api: SystemMetrics['api'];

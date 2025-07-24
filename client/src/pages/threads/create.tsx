@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, Link } from 'react-router-dom';
-import { ThreadForm } from '@/features/forum/components/ThreadForm';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import { ThreadForm } from '@app/features/forum/components/ThreadForm';
+import { Button } from '@app/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@app/components/ui/card';
+import { Alert, AlertDescription } from '@app/components/ui/alert';
 import {
 	ArrowLeft,
 	Users,
@@ -17,9 +17,9 @@ import {
 	Hash,
 	Zap
 } from 'lucide-react';
-import { useAuth } from '@/hooks/use-auth';
-import { useForumStructure } from '@/features/forum/contexts/ForumStructureContext';
-import type { MergedForum, MergedZone } from '@/features/forum/contexts/ForumStructureContext';
+import { useAuth } from '@app/hooks/use-auth';
+import { useForumStructure } from '@app/features/forum/contexts/ForumStructureContext';
+import type { MergedForum, MergedZone } from '@app/features/forum/contexts/ForumStructureContext';
 import {
 	Breadcrumb,
 	BreadcrumbList,
@@ -27,10 +27,10 @@ import {
 	BreadcrumbLink,
 	BreadcrumbPage,
 	BreadcrumbSeparator
-} from '@/components/ui/breadcrumb';
-import { cn } from '@/utils/utils';
-import { SiteFooter } from '@/components/footer/SiteFooter';
-import { Container } from '@/components/ui/Container';
+} from '@app/components/ui/breadcrumb';
+import { cn } from '@app/utils/utils';
+import { SiteFooter } from '@app/components/footer/SiteFooter';
+import { Container } from '@app/components/ui/Container';
 
 export default function CreateThreadPage() {
 	const { user } = useAuth();

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { cn } from '@/utils/utils';
+import { cn } from '@app/utils/utils';
 import {
 	MessageSquare,
 	Eye,
@@ -13,10 +13,10 @@ import {
 	Flame
 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
-import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Skeleton } from '@/components/ui/skeleton';
-import type { ContentItem } from '@/hooks/use-content';
+import { Badge } from '@app/components/ui/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '@app/components/ui/avatar';
+import { Skeleton } from '@app/components/ui/skeleton';
+import type { ContentItem } from '@app/hooks/use-content';
 
 export interface ContentFeedProps {
 	items: ContentItem[];

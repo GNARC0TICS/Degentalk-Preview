@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiRequest } from '@/utils/api-request';
-import { useCanonicalAuth } from '@/features/auth/useCanonicalAuth';
-import { useWebSocket } from '@/hooks/useWebSocket';
+import { apiRequest } from '@app/utils/api-request';
+import { useCanonicalAuth } from '@app/features/auth/useCanonicalAuth';
+import { useWebSocket } from '@app/hooks/useWebSocket';
 import { useEffect } from 'react';
 import { toast } from 'sonner';
 import type { Mission, MissionProgress } from '../types';
@@ -13,7 +13,7 @@ import {
   type MissionStats,
   type MissionsResponse,
   validateApiResponse
-} from '@/schemas';
+} from '@app/schemas';
 
 export function useMissions() {
   const { user } = useCanonicalAuth();

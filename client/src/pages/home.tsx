@@ -1,26 +1,26 @@
 // Removed Link (no longer needed after zone grid removal)
 // Import context and hook
-import { useForumStructure } from '@/features/forum/contexts/ForumStructureContext';
-import type { MergedZone } from '@/features/forum/contexts/ForumStructureContext';
+import { useForumStructure } from '@app/features/forum/contexts/ForumStructureContext';
+import type { MergedZone } from '@app/features/forum/contexts/ForumStructureContext';
 
 // Import components
-import { HeroSection } from '@/components/layout/hero-section';
-import { AnnouncementTicker } from '@/components/layout/announcement-ticker';
-import { ResponsiveLayoutWrapper } from '@/components/layout/ResponsiveLayoutWrapper';
-import { PrimaryZoneCarousel } from '@/components/zone/PrimaryZoneCarousel';
-import { Wide } from '@/layout/primitives/Wide';
-import { HomeContentArea } from '@/components/ui/content-area';
-import { ContentFeedProvider } from '@/contexts/content-feed-context';
-import { getForumSpacing } from '@/utils/spacing-constants';
-import { useActiveUsers } from '@/features/users/hooks';
-import { useZoneStatsMap } from '@/hooks/useZoneStats';
-import { getMomentumLabel } from '@/utils/forum';
-import HomePageSkeleton from '@/components/skeletons/HomePageSkeleton';
+import { HeroSection } from '@app/components/layout/hero-section';
+import { AnnouncementTicker } from '@app/components/layout/announcement-ticker';
+import { ResponsiveLayoutWrapper } from '@app/components/layout/ResponsiveLayoutWrapper';
+import { PrimaryZoneCarousel } from '@app/components/zone/PrimaryZoneCarousel';
+import { Wide } from '@app/layout/primitives/Wide';
+import { HomeContentArea } from '@app/components/ui/content-area';
+import { ContentFeedProvider } from '@app/contexts/content-feed-context';
+import { getForumSpacing } from '@app/utils/spacing-constants';
+import { useActiveUsers } from '@app/features/users/hooks';
+import { useZoneStatsMap } from '@app/hooks/useZoneStats';
+import { getMomentumLabel } from '@app/utils/forum';
+import HomePageSkeleton from '@app/components/skeletons/HomePageSkeleton';
 
 // Removed grid-related UI imports (Skeleton, Button, icons)
 
-import type { ZoneCardProps } from '@/components/forum/ZoneCard';
-import { ErrorBoundary } from '@/components/errors/ErrorBoundary';
+import type { ZoneCardProps } from '@app/components/forum/ZoneCard';
+import { ErrorBoundary } from '@app/components/errors/ErrorBoundary';
 
 function HomePage() {
 	// Get forum structure from context

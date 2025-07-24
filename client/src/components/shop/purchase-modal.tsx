@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { usePurchaseModal } from '@/hooks/use-purchase-modal';
-import { useToast } from '@/hooks/use-toast';
+import { usePurchaseModal } from '@app/hooks/use-purchase-modal';
+import { useToast } from '@app/hooks/use-toast';
 import { ShoppingCart, X, CheckCircle, Coins, DollarSign, AlertTriangle } from 'lucide-react';
 import {
 	Dialog,
@@ -9,11 +9,11 @@ import {
 	DialogTitle,
 	DialogFooter,
 	DialogDescription
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
+} from '@app/components/ui/dialog';
+import { Button } from '@app/components/ui/button';
+import { Badge } from '@app/components/ui/badge';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@app/components/ui/tabs';
+import { Alert, AlertTitle, AlertDescription } from '@app/components/ui/alert';
 import confetti from 'canvas-confetti';
 
 export function PurchaseModal() {

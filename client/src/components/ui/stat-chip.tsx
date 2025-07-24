@@ -1,6 +1,6 @@
 import { ReactNode, useState, useEffect } from 'react';
 import type { LucideProps } from 'lucide-react';
-import { useAnimatedNumber } from '@/utils/animateNumber';
+import { useAnimatedNumber } from '@app/utils/animateNumber';
 import type { ComponentType } from 'react';
 
 // Local alias to avoid value import

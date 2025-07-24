@@ -1,4 +1,4 @@
-import type { BreadcrumbItem } from '@/components/navigation/ForumBreadcrumbs';
+import type { BreadcrumbItem } from '@app/components/navigation/ForumBreadcrumbs';
 import { getForumUrl, getSubforumUrl, getThreadUrl } from './urls';
 
 export interface ForumContext {

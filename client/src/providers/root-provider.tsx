@@ -1,16 +1,16 @@
 import React from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { AuthProvider } from '@/hooks/use-auth';
-import { PurchaseModalProvider } from '@/hooks/use-purchase-modal';
-import { ShoutboxProvider } from '@/contexts/shoutbox-context';
-import { ForumStructureProvider } from '@/features/forum/contexts/ForumStructureContext';
-import { ForumThemeProvider } from '@/features/forum/contexts/ForumThemeProvider';
-import { TooltipProvider } from '@/components/ui/tooltip';
-import { ProfileCardProvider } from '@/contexts/ProfileCardContext';
-import { MotionProvider } from '@/contexts/MotionContext';
-import { getQueryFn } from '@/utils/queryClient';
-import { ForumOrderingProvider } from '@/features/forum/contexts/ForumOrderingContext';
-import { WebSocketProvider } from '@/hooks/useWebSocket';
+import { AuthProvider } from '@app/hooks/use-auth';
+import { PurchaseModalProvider } from '@app/hooks/use-purchase-modal';
+import { ShoutboxProvider } from '@app/contexts/shoutbox-context';
+import { ForumStructureProvider } from '@app/features/forum/contexts/ForumStructureContext';
+import { ForumThemeProvider } from '@app/features/forum/contexts/ForumThemeProvider';
+import { TooltipProvider } from '@app/components/ui/tooltip';
+import { ProfileCardProvider } from '@app/contexts/ProfileCardContext';
+import { MotionProvider } from '@app/contexts/MotionContext';
+import { getQueryFn } from '@app/utils/queryClient';
+import { ForumOrderingProvider } from '@app/features/forum/contexts/ForumOrderingContext';
+import { WebSocketProvider } from '@app/hooks/useWebSocket';
 import { ThemeProvider } from 'next-themes';
 
 // Initialize React Query client - MAIN APPLICATION QUERY CLIENT

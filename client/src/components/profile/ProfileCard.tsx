@@ -1,6 +1,6 @@
 import React from 'react';
 import { UnifiedProfileCard } from './UnifiedProfileCard';
-import { cn } from '@/utils/utils';
+import { cn } from '@app/utils/utils';
 
 interface ProfileCardProps {
 	username: string;

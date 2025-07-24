@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useMemo, useState, useCallback, useEffect } from 'react';
 import type { ReactNode, ComponentType } from 'react';
 import type { LucideProps } from 'lucide-react';
-import { apiRequest } from '@/utils/queryClient'; // Fetch utility
+import { apiRequest } from '@app/utils/queryClient'; // Fetch utility
 import {
 	Flame,
 	Target,
@@ -38,8 +38,8 @@ const ICON_MAP: Record<string, LucideIcon> = {
 const UI_THEMES_ENDPOINT = '/api/ui/themes';
 
 // Use centralized CSS variable utilities
-import { setZoneAccentVariables } from '@/styles/cssVariables';
-import { logger } from "@/lib/logger";
+import { setZoneAccentVariables } from '@app/styles/cssVariables';
+import { logger } from '@app/lib/logger";
 
 // Local alias for icon component type
 type LucideIcon = ComponentType<LucideProps>;

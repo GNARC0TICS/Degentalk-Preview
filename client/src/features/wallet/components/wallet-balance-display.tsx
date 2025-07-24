@@ -9,10 +9,10 @@ import {
 	RefreshCw
 } from 'lucide-react';
 import { AnimatedBalance } from './animated-balance';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { cn } from '@/utils/utils';
-import type { WalletBalance } from '@/features/wallet/services/wallet-api.service';
+import { Badge } from '@app/components/ui/badge';
+import { Button } from '@app/components/ui/button';
+import { cn } from '@app/utils/utils';
+import type { WalletBalance } from '@app/features/wallet/services/wallet-api.service';
 
 export interface WalletBalanceDisplayProps {
 	balance?: WalletBalance;

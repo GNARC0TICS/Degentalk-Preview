@@ -2,8 +2,8 @@ import React from 'react';
 import { MessageSquare, Users, Eye, TrendingUp, type LucideIcon } from 'lucide-react';
 import { SidebarWidgetCard } from './SidebarWidgetCard';
 import { WidgetSkeleton } from './WidgetSkeleton';
-import { useForumMetrics } from '@/features/forum/hooks/useForumStats';
-import { cn } from '@/utils/utils';
+import { useForumMetrics } from '@app/features/forum/hooks/useForumStats';
+import { cn } from '@app/utils/utils';
 import { type StructureId } from '@shared/types/ids';
 
 interface Stat {

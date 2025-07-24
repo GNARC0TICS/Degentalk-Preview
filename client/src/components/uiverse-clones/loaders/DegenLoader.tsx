@@ -1,6 +1,6 @@
 import React from 'react';
-import { cn } from '@/utils/utils';
-// import { useUiverseConfig } from '@/contexts/UiverseConfigContext';
+import { cn } from '@app/utils/utils';
+// import { useUiverseConfig } from '@app/contexts/UiverseConfigContext';
 
 interface DegenLoaderProps {
   size?: 'sm' | 'md' | 'lg';

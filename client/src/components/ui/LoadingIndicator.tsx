@@ -1,7 +1,7 @@
 import React from 'react';
 import { Loader2, MoreHorizontal } from 'lucide-react';
-import { cn } from '@/utils/utils';
-import { useUIConfig } from '@/contexts/UIConfigContext';
+import { cn } from '@app/utils/utils';
+import { useUIConfig } from '@app/contexts/UIConfigContext';
 
 interface LoadingIndicatorProps {
 	/** Loading message to display */

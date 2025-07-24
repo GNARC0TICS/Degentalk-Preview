@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@app/components/ui/card';
+import { Button } from '@app/components/ui/button';
+import { Input } from '@app/components/ui/input';
+import { Textarea } from '@app/components/ui/textarea';
+import { Badge } from '@app/components/ui/badge';
 import {
 	Form,
 	FormControl,
@@ -13,20 +13,20 @@ import {
 	FormItem,
 	FormLabel,
 	FormMessage
-} from '@/components/ui/form';
+} from '@app/components/ui/form';
 import {
 	Select,
 	SelectContent,
 	SelectItem,
 	SelectTrigger,
 	SelectValue
-} from '@/components/ui/select';
+} from '@app/components/ui/select';
 import { Zap, User, DollarSign, Gift, AlertTriangle } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { useToast } from '@/hooks/use-toast';
-import { apiRequest } from '@/utils/api-request';
+import { useToast } from '@app/hooks/use-toast';
+import { apiRequest } from '@app/utils/api-request';
 
 interface CloutGrantsSectionProps {
 	isLoading: boolean;

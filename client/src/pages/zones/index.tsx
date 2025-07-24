@@ -1,15 +1,15 @@
 import React from 'react';
-import { SiteFooter } from '@/components/footer';
-import { CanonicalZoneGrid } from '@/components/forum/CanonicalZoneGrid';
-import HierarchicalZoneNav from '@/features/forum/components/HierarchicalZoneNav';
+import { SiteFooter } from '@app/components/footer';
+import { CanonicalZoneGrid } from '@app/components/forum/CanonicalZoneGrid';
+import HierarchicalZoneNav from '@app/features/forum/components/HierarchicalZoneNav';
 // Corrected import path for useForumStructure and MergedZone type
-import { useForumStructure } from '@/features/forum/contexts/ForumStructureContext';
-import type { MergedZone } from '@/features/forum/contexts/ForumStructureContext';
-import { LoadingSpinner } from '@/components/ui/loader';
-import { ErrorDisplay } from '@/components/ui/error-display';
+import { useForumStructure } from '@app/features/forum/contexts/ForumStructureContext';
+import type { MergedZone } from '@app/features/forum/contexts/ForumStructureContext';
+import { LoadingSpinner } from '@app/components/ui/loader';
+import { ErrorDisplay } from '@app/components/ui/error-display';
 import { Folder, LayoutGrid } from 'lucide-react';
-import type { ZoneCardProps } from '@/components/forum/ZoneCard';
-import { ErrorBoundary } from '@/components/errors/ErrorBoundary';
+import type { ZoneCardProps } from '@app/components/forum/ZoneCard';
+import { ErrorBoundary } from '@app/components/errors/ErrorBoundary';
 
 function ZonesPage() {
 	// Changed to regular function for clarity with provider

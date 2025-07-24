@@ -1,7 +1,7 @@
 import type { LucideProps } from 'lucide-react';
 import { LayoutGrid } from 'lucide-react'; // For "All Content"
-import type { MergedZone, MergedForum, MergedTheme } from '@/features/forum/contexts/ForumStructureContext';
-import { getForumUrl } from '@/utils/forum/urls';
+import type { MergedZone, MergedForum, MergedTheme } from '@app/features/forum/contexts/ForumStructureContext';
+import { getForumUrl } from '@app/utils/forum/urls';
 import type { ComponentType } from 'react';
 
 type LucideIcon = ComponentType<LucideProps>;

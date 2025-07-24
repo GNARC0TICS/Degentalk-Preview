@@ -4,11 +4,11 @@
  * Displays individual mission with progress, rewards, and claim functionality
  */
 
-import { cn } from '@/utils/utils';
-import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
+import { cn } from '@app/utils/utils';
+import { Card, CardContent } from '@app/components/ui/card';
+import { Button } from '@app/components/ui/button';
+import { Badge } from '@app/components/ui/badge';
+import { Progress } from '@app/components/ui/progress';
 import {
 	Target,
 	Clock,
@@ -21,7 +21,7 @@ import {
 	Loader2
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import type { MissionProgress } from '@/features/gamification/services/gamification-api.service';
+import type { MissionProgress } from '@app/features/gamification/services/gamification-api.service';
 
 interface MissionCardProps {
 	mission: MissionProgress;

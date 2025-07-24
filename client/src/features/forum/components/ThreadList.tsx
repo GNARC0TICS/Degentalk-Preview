@@ -1,17 +1,17 @@
 import React, { useState, memo, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import type { QueryFunctionContext } from '@tanstack/react-query';
-import ThreadCard from '@/components/forum/ThreadCard';
-import { getQueryFn } from '@/utils/queryClient';
-import { Pagination } from '@/components/ui/pagination';
-import { ThreadListSkeleton } from '@/components/ui/thread-skeleton';
-import type { ThreadFiltersState } from '@/components/forum/ThreadFilters';
-import type { ThreadDisplay, ThreadsApiResponse } from '@/types/thread.types';
-import { PAGINATION_CONFIG } from '@/config/pagination.config';
-import { ThreadActionsProvider } from '@/features/forum/contexts/ThreadActionsContext';
+import ThreadCard from '@app/components/forum/ThreadCard';
+import { getQueryFn } from '@app/utils/queryClient';
+import { Pagination } from '@app/components/ui/pagination';
+import { ThreadListSkeleton } from '@app/components/ui/thread-skeleton';
+import type { ThreadFiltersState } from '@app/components/forum/ThreadFilters';
+import type { ThreadDisplay, ThreadsApiResponse } from '@app/types/thread.types';
+import { PAGINATION_CONFIG } from '@app/config/pagination.config';
+import { ThreadActionsProvider } from '@app/features/forum/contexts/ThreadActionsContext';
 import type { ThreadId, ForumId } from '@shared/types/ids';
 import { isValidId } from '@shared/utils/id';
-import ThreadRow from '@/components/forum/ThreadRow';
+import ThreadRow from '@app/components/forum/ThreadRow';
 
 type DisplayMode = 'card' | 'table';
 

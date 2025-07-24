@@ -15,8 +15,8 @@ import {
 	Gift,
 	Star
 } from 'lucide-react';
-import { cn } from '@/utils/utils';
-import { useBreakpoint } from '@/hooks/useMediaQuery';
+import { cn } from '@app/utils/utils';
+import { useBreakpoint } from '@app/hooks/useMediaQuery';
 
 export type NotificationType = 'success' | 'error' | 'warning' | 'info' | 'achievement' | 'social';
 

@@ -1,7 +1,7 @@
 import React from 'react';
-import { LoadingSpinner } from '@/components/ui/loader';
-import { brandConfig } from '@/config/brand.config';
-import { cn } from '@/utils/utils';
+import { LoadingSpinner } from '@app/components/ui/loader';
+import { brandConfig } from '@app/config/brand.config';
+import { cn } from '@app/utils/utils';
 
 interface LoadingCardProps {
 	title: string;

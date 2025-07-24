@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import type { UserInventoryWithProduct, AppliedCosmetics } from '@/types/inventory';
-import { apiRequest } from '@/utils/api-request';
-import { applyPluginRewards } from '@/utils/applyPluginRewards';
+import type { UserInventoryWithProduct, AppliedCosmetics } from '@app/types/inventory';
+import { apiRequest } from '@app/utils/api-request';
+import { applyPluginRewards } from '@app/utils/applyPluginRewards';
 import type { UserId } from '@shared/types/ids';
-import { logger } from "@/lib/logger";
+import { logger } from '@app/lib/logger";
 
 // TODO: Replace with actual useUser hook from your application
 // This is a placeholder/mock for demonstration if the real hook doesn't exist yet.

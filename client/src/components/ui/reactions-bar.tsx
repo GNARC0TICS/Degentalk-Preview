@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { ThumbsUp, Heart, Laugh, Frown, Flame, Smile, Coins } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { cn } from '@/utils/utils';
-import { apiRequest, queryClient } from '@/utils/queryClient';
-import { useAuth } from '@/hooks/use-auth';
-import { useToast } from '@/hooks/use-toast';
+import { Button } from '@app/components/ui/button';
+import { cn } from '@app/utils/utils';
+import { apiRequest, queryClient } from '@app/utils/queryClient';
+import { useAuth } from '@app/hooks/use-auth';
+import { useToast } from '@app/hooks/use-toast';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Dialog } from '@/components/ui/dialog';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { Dialog } from '@app/components/ui/dialog';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@app/components/ui/tooltip';
 import type { PostId } from '@shared/types/ids';
 
 type Reaction = {

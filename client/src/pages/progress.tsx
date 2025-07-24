@@ -10,11 +10,11 @@
 
 import { useState } from 'react';
 import { Helmet } from 'react-helmet';
-import { cn } from '@/utils/utils';
-import { Button } from '@/components/ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { useGamification } from '@/hooks/use-gamification';
+import { cn } from '@app/utils/utils';
+import { Button } from '@app/components/ui/button';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@app/components/ui/tabs';
+import { Alert, AlertDescription } from '@app/components/ui/alert';
+import { useGamification } from '@app/hooks/use-gamification';
 import {
 	ProgressionCard,
 	AchievementGrid,
@@ -22,11 +22,11 @@ import {
 	Leaderboard,
 	LevelUpModal,
 	AchievementUnlockModal
-} from '@/components/gamification';
+} from '@app/components/gamification';
 import { Trophy, Target, TrendingUp, Sparkles, AlertCircle, RefreshCw } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { useAuth } from '@/hooks/use-auth';
-import { gamificationApi } from '@/features/gamification/services/gamification-api.service';
+import { useAuth } from '@app/hooks/use-auth';
+import { gamificationApi } from '@app/features/gamification/services/gamification-api.service';
 import { type UserId } from '@shared/types/ids';
 
 export default function GamificationPage() {

@@ -6,12 +6,12 @@ import {
 	DialogFooter,
 	DialogHeader,
 	DialogTitle
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+} from '@app/components/ui/dialog';
+import { Button } from '@app/components/ui/button';
+import { Input } from '@app/components/ui/input';
+import { Label } from '@app/components/ui/label';
 import { Coins, AlertCircle } from 'lucide-react';
-import { cn } from '@/utils/utils';
+import { cn } from '@app/utils/utils';
 
 interface TipPostModalProps {
 	isOpen: boolean;

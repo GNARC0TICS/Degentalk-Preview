@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import ChartMenu from '@/components/ui/candlestick-menu';
-import { WalletSheet } from '@/features/wallet/components/WalletSheet';
-import { useAuth } from '@/hooks/use-auth';
+import ChartMenu from '@app/components/ui/candlestick-menu';
+import { WalletSheet } from '@app/features/wallet/components/WalletSheet';
+import { useAuth } from '@app/hooks/use-auth';
 import { HeaderThemeWrapper } from './HeaderThemeWrapper';
 import { HeaderPluginSlot } from './HeaderPluginSlot';
 import { Logo } from './Logo';

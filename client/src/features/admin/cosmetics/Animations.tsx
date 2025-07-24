@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { mediaApiService, type MediaItem } from '@/features/admin/services/media-api.service';
-import { AdminPageShell } from '@/features/admin/layout/layout/AdminPageShell';
-import { MediaAsset } from '@/components/media/MediaAsset';
-import { Button } from '@/components/ui/button';
-import { MediaLibraryModal } from '@/features/admin/media/media/MediaLibraryModal';
-import { useToast } from '@/hooks/use-toast';
+import { mediaApiService, type MediaItem } from '@app/features/admin/services/media-api.service';
+import { AdminPageShell } from '@app/features/admin/layout/layout/AdminPageShell';
+import { MediaAsset } from '@app/components/media/MediaAsset';
+import { Button } from '@app/components/ui/button';
+import { MediaLibraryModal } from '@app/features/admin/media/media/MediaLibraryModal';
+import { useToast } from '@app/hooks/use-toast';
 import type { EntityId } from '@shared/types/ids';
 import {
 	Dialog,
@@ -13,7 +13,7 @@ import {
 	DialogHeader,
 	DialogTitle,
 	DialogFooter
-} from '@/components/ui/dialog';
+} from '@app/components/ui/dialog';
 
 export default function AdminAnimationsPage() {
 	const queryClient = useQueryClient();

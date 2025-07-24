@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { cn } from '@/utils/utils';
+import { cn } from '@app/utils/utils';
 
 export function Card({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
 	return (

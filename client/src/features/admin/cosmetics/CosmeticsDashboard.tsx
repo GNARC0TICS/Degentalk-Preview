@@ -1,19 +1,19 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiRequest } from '@/utils/queryClient';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { rarityColorMap } from '@/config/rarity.config';
+import { apiRequest } from '@app/utils/queryClient';
+import { Button } from '@app/components/ui/button';
+import { Input } from '@app/components/ui/input';
+import { Label } from '@app/components/ui/label';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@app/components/ui/card';
+import { Badge } from '@app/components/ui/badge';
+import { rarityColorMap } from '@app/config/rarity.config';
 import {
 	Select,
 	SelectContent,
 	SelectItem,
 	SelectTrigger,
 	SelectValue
-} from '@/components/ui/select';
+} from '@app/components/ui/select';
 import {
 	Dialog,
 	DialogContent,
@@ -22,7 +22,7 @@ import {
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger
-} from '@/components/ui/dialog';
+} from '@app/components/ui/dialog';
 import {
 	Table,
 	TableBody,
@@ -30,12 +30,12 @@ import {
 	TableHead,
 	TableHeader,
 	TableRow
-} from '@/components/ui/table';
-import { useToast } from '@/hooks/use-toast';
+} from '@app/components/ui/table';
+import { useToast } from '@app/hooks/use-toast';
 import { Trash2, Edit, Plus, Eye, Users as UsersIcon } from 'lucide-react';
-import { FramedAvatar } from '@/components/users/framed-avatar';
-import { GrantFrameModal } from '@/features/admin/components/GrantFrameModal';
-import type { AvatarFrame } from '@/types/compat/avatar';
+import { FramedAvatar } from '@app/components/users/framed-avatar';
+import { GrantFrameModal } from '@app/features/admin/components/GrantFrameModal';
+import type { AvatarFrame } from '@app/types/compat/avatar';
 import type { FrameId } from '@shared/types/ids';
 
 interface CreateFrameData {

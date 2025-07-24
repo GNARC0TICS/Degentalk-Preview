@@ -5,11 +5,11 @@
  */
 
 import React from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Progress } from '@/components/ui/progress';
-import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@app/components/ui/card';
+import { Progress } from '@app/components/ui/progress';
+import { Badge } from '@app/components/ui/badge';
 import { Database, Activity, HardDrive, Hash, Clock } from 'lucide-react';
-import type { SystemMetrics } from '@/features/admin/api/system-analytics.api';
+import type { SystemMetrics } from '@app/features/admin/api/system-analytics.api';
 
 interface DatabaseStatsCardProps {
 	database: SystemMetrics['database'];

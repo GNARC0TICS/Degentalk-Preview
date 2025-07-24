@@ -1,6 +1,6 @@
 import React from 'react';
 import { MessageSquare, Hash, Heart, DollarSign, TrendingUp } from 'lucide-react';
-import { cn } from '@/utils/utils';
+import { cn } from '@app/utils/utils';
 
 interface ActivityStatsCardProps {
 	totalPosts: number;

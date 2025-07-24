@@ -1,7 +1,7 @@
 import React from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
-import { useAuth } from '@/hooks/use-auth';
-import type { Role } from '@/utils/roles';
+import { useAuth } from '@app/hooks/use-auth';
+import type { Role } from '@app/utils/roles';
 
 interface ProtectedRouteProps {
   children?: React.ReactNode;

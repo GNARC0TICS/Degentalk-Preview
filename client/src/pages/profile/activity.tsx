@@ -1,6 +1,6 @@
 import React from 'react';
-import { PaginatedActivityFeed } from '@/features/activity/components/PaginatedActivityFeed';
-import { useAuth } from '@/hooks/use-auth';
+import { PaginatedActivityFeed } from '@app/features/activity/components/PaginatedActivityFeed';
+import { useAuth } from '@app/hooks/use-auth';
 
 /**
  * User profile activity page

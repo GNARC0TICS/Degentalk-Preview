@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Users, ArrowRight } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@app/components/ui/button';
 import { motion, AnimatePresence } from 'framer-motion';
-import { uiConfig } from '@/config/ui.config';
-import type { HeroQuote } from '@/config/ui.config';
+import { uiConfig } from '@app/config/ui.config';
+import type { HeroQuote } from '@app/config/ui.config';
 
 // Fisher-Yates shuffle
 function shuffleArray<T>(array: readonly T[]): T[] {

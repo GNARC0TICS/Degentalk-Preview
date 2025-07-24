@@ -5,11 +5,11 @@
  */
 
 import React from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@app/components/ui/card';
+import { Badge } from '@app/components/ui/badge';
+import { Alert, AlertDescription } from '@app/components/ui/alert';
 import { AlertTriangle, XCircle, CheckCircle, Clock, Activity } from 'lucide-react';
-import type { SystemOverview } from '@/features/admin/api/system-analytics.api';
+import type { SystemOverview } from '@app/features/admin/api/system-analytics.api';
 
 interface SystemAlertsCardProps {
 	alerts: SystemOverview['alerts'];

@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
-import { useShopItems } from '@/hooks/use-shop-items';
-import type { ItemCategory } from '@/hooks/use-vault-items';
-import type { ShopItem } from '@/hooks/use-shop-items';
+import { useShopItems } from '@app/hooks/use-shop-items';
+import type { ItemCategory } from '@app/hooks/use-vault-items';
+import type { ShopItem } from '@app/hooks/use-shop-items';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Wide } from '@/layout/primitives';
+import { Wide } from '@app/layout/primitives';
 
 // Import components
-import { ShopItemCard } from '@/components/shop/shop-item-card';
-import { Skeleton } from '@/components/ui/skeleton';
-import { LoadingSpinner } from '@/components/ui/loader';
-import { ErrorDisplay } from '@/components/ui/error-display';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { ShopItemCard } from '@app/components/shop/shop-item-card';
+import { Skeleton } from '@app/components/ui/skeleton';
+import { LoadingSpinner } from '@app/components/ui/loader';
+import { ErrorDisplay } from '@app/components/ui/error-display';
+import { Button } from '@app/components/ui/button';
+import { Badge } from '@app/components/ui/badge';
 import {
 	AlertCircle,
 	Coins,
@@ -27,7 +27,7 @@ import {
 	TrendingUp,
 	Clock
 } from 'lucide-react';
-import { Input } from '@/components/ui/input';
+import { Input } from '@app/components/ui/input';
 
 const categories: Array<{ id: ItemCategory | 'all'; label: string; icon?: React.ElementType }> = [
 	{ id: 'all', label: 'All Items', icon: ShoppingCart },

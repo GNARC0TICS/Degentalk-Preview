@@ -1,15 +1,15 @@
 import React from 'react';
 import { Settings } from 'lucide-react';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Button } from '@/components/ui/button';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Label } from '@/components/ui/label';
-import { useShoutbox } from '@/contexts/shoutbox-context';
-import type { ShoutboxPosition } from '@/contexts/shoutbox-context';
-import { useToast } from '@/hooks/use-toast';
-import { useMobileDetector } from '@/hooks/use-media-query';
-import { useLayoutStore, type SlotId } from '@/stores/useLayoutStore';
-import { logger } from "@/lib/logger";
+import { Popover, PopoverContent, PopoverTrigger } from '@app/components/ui/popover';
+import { Button } from '@app/components/ui/button';
+import { RadioGroup, RadioGroupItem } from '@app/components/ui/radio-group';
+import { Label } from '@app/components/ui/label';
+import { useShoutbox } from '@app/contexts/shoutbox-context';
+import type { ShoutboxPosition } from '@app/contexts/shoutbox-context';
+import { useToast } from '@app/hooks/use-toast';
+import { useMobileDetector } from '@app/hooks/use-media-query';
+import { useLayoutStore, type SlotId } from '@app/stores/useLayoutStore';
+import { logger } from '@app/lib/logger";
 
 // Desktop position options
 const desktopPositionOptions: { value: ShoutboxPosition; label: string; description: string }[] = [

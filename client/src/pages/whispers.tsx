@@ -1,10 +1,10 @@
 import React from 'react';
-import { WhispersInbox } from '@/components/messages/WhispersInbox';
-import { WhisperButton } from '@/components/messages/WhisperButton';
-import { useMessages } from '@/hooks/use-messages';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { MessageSquareWave } from '@/components/messages/icons/MessageSquareWave';
+import { WhispersInbox } from '@app/components/messages/WhispersInbox';
+import { WhisperButton } from '@app/components/messages/WhisperButton';
+import { useMessages } from '@app/hooks/use-messages';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@app/components/ui/card';
+import { Badge } from '@app/components/ui/badge';
+import { MessageSquareWave } from '@app/components/messages/icons/MessageSquareWave';
 
 export default function WhispersPage() {
 	const { useUnreadCount } = useMessages();

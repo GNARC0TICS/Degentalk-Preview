@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { forumApi } from '@/features/forum/services/forumApi';
-import { useForumStructure } from '@/features/forum/contexts/ForumStructureContext';
-import type { MergedZone } from '@/features/forum/contexts/ForumStructureContext'; // Use MergedZone as type-only import
-import type { CanonicalThread, CanonicalPost } from '@/types/canonical.types';
+import { forumApi } from '@app/features/forum/services/forumApi';
+import { useForumStructure } from '@app/features/forum/contexts/ForumStructureContext';
+import type { MergedZone } from '@app/features/forum/contexts/ForumStructureContext'; // Use MergedZone as type-only import
+import type { CanonicalThread, CanonicalPost } from '@app/types/canonical.types';
 
 interface UseThreadZoneParams {
 	page?: number;

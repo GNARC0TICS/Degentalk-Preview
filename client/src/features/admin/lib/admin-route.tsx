@@ -1,6 +1,6 @@
 import type { ComponentType } from 'react';
 import { Navigate } from 'react-router-dom';
-import { useAuth } from '@/hooks/use-auth';
+import { useAuth } from '@app/hooks/use-auth';
 import { Loader2 } from 'lucide-react';
 
 /**

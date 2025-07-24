@@ -1,16 +1,16 @@
 import React from 'react'; // Removed useState
 import { useQuery } from '@tanstack/react-query';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Card, CardHeader, CardTitle, CardContent } from '@app/components/ui/card';
 // Temporarily remove heavy lottie dependency until build issues resolved
 import { Link } from 'react-router-dom';
 import { MessageSquare, Eye, ThumbsUp, ArrowRight, Clock, TrendingUp } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
-import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { HotThreadsSkeleton } from '@/components/ui/thread-skeleton';
-import { API_ROUTES } from '@/constants/apiRoutes';
+import { Badge } from '@app/components/ui/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '@app/components/ui/avatar';
+import { HotThreadsSkeleton } from '@app/components/ui/thread-skeleton';
+import { API_ROUTES } from '@app/constants/apiRoutes';
 import type { ThreadId } from '@shared/types/ids';
-import type { ThreadTag } from '@/types/thread.types';
+import type { ThreadTag } from '@app/types/thread.types';
 
 // Removed motion, AnimatePresence
 

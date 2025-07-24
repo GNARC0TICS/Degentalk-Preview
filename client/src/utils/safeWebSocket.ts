@@ -1,6 +1,6 @@
-import { IS_PRODUCTION } from '@/constants/env';
-import { WEBSOCKET_DISABLED } from '@/constants/websocket-disabled';
-import { logger } from "@/lib/logger";
+import { IS_PRODUCTION } from '@app/constants/env';
+import { WEBSOCKET_DISABLED } from '@app/constants/websocket-disabled';
+import { logger } from '@app/lib/logger";
 
 /**
  * A type for WebSocket messages

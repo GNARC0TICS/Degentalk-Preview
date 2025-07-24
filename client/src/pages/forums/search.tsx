@@ -1,6 +1,6 @@
 import React from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
-import { SiteFooter } from '@/components/footer';
+import { SiteFooter } from '@app/components/footer';
 import {
 	Breadcrumb,
 	BreadcrumbList,
@@ -8,11 +8,11 @@ import {
 	BreadcrumbLink,
 	BreadcrumbPage,
 	BreadcrumbSeparator
-} from '@/components/ui/breadcrumb'; // Corrected import path
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
+} from '@app/components/ui/breadcrumb'; // Corrected import path
+import { Input } from '@app/components/ui/input';
+import { Button } from '@app/components/ui/button';
 import { Search } from 'lucide-react';
-import { Wide } from '@/layout/primitives';
+import { Wide } from '@app/layout/primitives';
 
 // Placeholder for search results type
 type SearchResult = {

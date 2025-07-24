@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@app/components/ui/button';
 import {
 	ChevronLeftIcon,
 	ChevronRightIcon,
@@ -7,7 +7,7 @@ import {
 	ChevronsRightIcon,
 	MoreHorizontalIcon
 } from 'lucide-react';
-import { cn } from '@/utils/utils';
+import { cn } from '@app/utils/utils';
 
 interface BasePaginationProps {
 	currentPage: number;

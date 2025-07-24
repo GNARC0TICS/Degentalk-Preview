@@ -1,13 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Progress } from '@/components/ui/progress';
-import { Button } from '@/components/ui/button';
-import { useAuth } from '@/hooks/use-auth';
-import { useWallet } from '@/hooks/use-wallet';
+import { Card, CardContent } from '@app/components/ui/card';
+import { Badge } from '@app/components/ui/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '@app/components/ui/avatar';
+import { Progress } from '@app/components/ui/progress';
+import { Button } from '@app/components/ui/button';
+import { useAuth } from '@app/hooks/use-auth';
+import { useWallet } from '@app/hooks/use-wallet';
 import {
 	Crown,
 	Zap,
@@ -20,7 +20,7 @@ import {
 	Shield,
 	Award
 } from 'lucide-react';
-import { cn } from '@/utils/utils';
+import { cn } from '@app/utils/utils';
 import { formatDistanceToNow } from 'date-fns';
 
 interface ProfileCardProps {

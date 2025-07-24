@@ -1,9 +1,9 @@
-import { cn } from '@/utils/utils';
+import { cn } from '@app/utils/utils';
 import { Sparkles } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import type { LevelVisualConfig } from '@/features/gamification/components/LevelBadge';
-import { LevelBadge } from '@/features/gamification/components/LevelBadge';
+import { Badge } from '@app/components/ui/badge';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@app/components/ui/tooltip';
+import type { LevelVisualConfig } from '@app/features/gamification/components/LevelBadge';
+import { LevelBadge } from '@app/features/gamification/components/LevelBadge';
 
 type UserLevelDisplayProps = {
 	level?: number;

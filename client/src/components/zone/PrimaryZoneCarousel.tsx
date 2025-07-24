@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef, memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight, Play, Pause } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { ZoneCard, type ZoneCardProps } from '@/components/forum/ZoneCard';
-import { cn } from '@/utils/utils';
-import { useBreakpoint } from '@/hooks/useMediaQuery';
+import { Button } from '@app/components/ui/button';
+import { ZoneCard, type ZoneCardProps } from '@app/components/forum/ZoneCard';
+import { cn } from '@app/utils/utils';
+import { useBreakpoint } from '@app/hooks/useMediaQuery';
 import './PrimaryZoneCarousel.css';
 
 // Content type for future extensibility (ads, promotions, etc.)

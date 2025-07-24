@@ -5,12 +5,12 @@
  */
 
 import React, { useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Separator } from '@/components/ui/separator';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@app/components/ui/card';
+import { Button } from '@app/components/ui/button';
+import { Badge } from '@app/components/ui/badge';
+import { Progress } from '@app/components/ui/progress';
+import { Alert, AlertDescription } from '@app/components/ui/alert';
+import { Separator } from '@app/components/ui/separator';
 import {
 	Zap,
 	Database,
@@ -23,12 +23,12 @@ import {
 	CheckCircle,
 	BarChart3
 } from 'lucide-react';
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@app/components/ui/chart';
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, ResponsiveContainer } from 'recharts';
-import { useCacheOperation } from '@/features/admin/hooks/useSystemAnalytics';
-import type { CacheStats } from '@/features/admin/api/system-analytics.api';
+import { useCacheOperation } from '@app/features/admin/hooks/useSystemAnalytics';
+import type { CacheStats } from '@app/features/admin/api/system-analytics.api';
 import { toast } from 'sonner';
-import { logger } from "@/lib/logger";
+import { logger } from '@app/lib/logger";
 
 interface CacheAnalyticsCardProps {
 	cache: CacheStats;

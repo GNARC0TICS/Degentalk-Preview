@@ -7,7 +7,7 @@ import React from 'react';
 import { ErrorBoundary } from './ErrorBoundary';
 // import * as Sentry from '@sentry/react';
 import { AlertTriangle, RefreshCw, Home } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@app/components/ui/button';
 
 interface GlobalErrorBoundaryProps {
   children: React.ReactNode;

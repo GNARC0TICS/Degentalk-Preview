@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { useAuth } from './use-auth';
-import { hasRoleAtLeast } from '@/utils/roles';
-import type { Role } from '@/utils/roles';
+import { hasRoleAtLeast } from '@app/utils/roles';
+import type { Role } from '@app/utils/roles';
 
 interface RouteProtectionResult {
 	canAccess: boolean;

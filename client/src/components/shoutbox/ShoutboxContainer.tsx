@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { MessageSquare, Send, Lock } from 'lucide-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiRequest } from '@/utils/queryClient';
-import { useAuth } from '@/hooks/use-auth';
-import { useToast } from '@/hooks/use-toast';
+import { apiRequest } from '@app/utils/queryClient';
+import { useAuth } from '@app/hooks/use-auth';
+import { useToast } from '@app/hooks/use-toast';
 import {
 	Card,
 	CardContent,
@@ -11,15 +11,15 @@ import {
 	CardFooter,
 	CardHeader,
 	CardTitle
-} from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
-import { Skeleton } from '@/components/ui/skeleton';
-import FeatureGate from '@/components/ui/feature-gate';
-import { Username } from '@/components/users/Username';
-import RainButton from '@/features/wallet/components/rain-button';
+} from '@app/components/ui/card';
+import { Input } from '@app/components/ui/input';
+import { Button } from '@app/components/ui/button';
+import { Avatar, AvatarFallback, AvatarImage } from '@app/components/ui/avatar';
+import { Badge } from '@app/components/ui/badge';
+import { Skeleton } from '@app/components/ui/skeleton';
+import FeatureGate from '@app/components/ui/feature-gate';
+import { Username } from '@app/components/users/Username';
+import RainButton from '@app/features/wallet/components/rain-button';
 import type { UserId } from '@shared/types/ids';
 
 // ShoutMessage type definition

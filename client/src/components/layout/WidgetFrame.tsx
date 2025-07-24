@@ -1,9 +1,9 @@
 import type { ComponentType } from 'react';
 import { Suspense, useMemo, useState, lazy } from 'react';
 import { Settings, AlertCircle, Maximize2, Minimize2, GripVertical } from 'lucide-react';
-import { useLayoutStore, type SlotId } from '@/stores/useLayoutStore';
-import { widgetRegistry, getWidgetMetadata } from '@/config/widgetRegistry';
-import { Skeleton } from '@/components/ui/skeleton';
+import { useLayoutStore, type SlotId } from '@app/stores/useLayoutStore';
+import { widgetRegistry, getWidgetMetadata } from '@app/config/widgetRegistry';
+import { Skeleton } from '@app/components/ui/skeleton';
 import {
 	DropdownMenu,
 	DropdownMenuTrigger,
@@ -11,11 +11,11 @@ import {
 	DropdownMenuItem,
 	DropdownMenuSeparator,
 	DropdownMenuLabel
-} from '@/components/ui/dropdown-menu';
-import { Button } from '@/components/ui/button';
-import { useShoutbox } from '@/contexts/shoutbox-context';
-import { cn } from '@/utils/utils';
-import { ErrorBoundary } from '@/components/errors/ErrorBoundary';
+} from '@app/components/ui/dropdown-menu';
+import { Button } from '@app/components/ui/button';
+import { useShoutbox } from '@app/contexts/shoutbox-context';
+import { cn } from '@app/utils/utils';
+import { ErrorBoundary } from '@app/components/errors/ErrorBoundary';
 
 interface WidgetFrameProps {
 	instanceId: string;

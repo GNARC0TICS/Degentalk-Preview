@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import gsap from 'gsap';
 import { NavLink } from './NavLink';
-import { primaryNavigation, filterNavItems } from '@/config/navigation';
+import { primaryNavigation, filterNavItems } from '@app/config/navigation';
 import { useHeader } from './HeaderContext';
 
 // Function to generate random underline paths (from original header)

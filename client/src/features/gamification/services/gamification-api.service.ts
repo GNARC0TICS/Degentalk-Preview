@@ -9,7 +9,7 @@
  * - Analytics and statistics
  */
 
-import { apiRequest } from '@/utils/api-request';
+import { apiRequest } from '@app/utils/api-request';
 import type { UserId, AchievementId, MissionId, TitleId, BadgeId } from '@shared/types/ids';
 
 // Types for API responses

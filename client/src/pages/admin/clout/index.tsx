@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@app/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@app/components/ui/tabs';
+import { Button } from '@app/components/ui/button';
+import { Badge } from '@app/components/ui/badge';
 import { Crown, Trophy, Zap, TrendingUp, Users, Award, Plus, Settings } from 'lucide-react';
-import { AdminPageShell } from '@/features/admin/layout/layout/AdminPageShell';
-import { apiRequest } from '@/utils/queryClient';
-import { CloutTiersSection } from '@/features/admin/clout/CloutTiersSection';
-import { AchievementsSection } from '@/features/admin/clout/AchievementsSection';
-import { CloutGrantsSection } from '@/features/admin/clout/CloutGrantsSection';
-import { CloutLogsSection } from '@/features/admin/clout/CloutLogsSection';
+import { AdminPageShell } from '@app/features/admin/layout/layout/AdminPageShell';
+import { apiRequest } from '@app/utils/queryClient';
+import { CloutTiersSection } from '@app/features/admin/clout/CloutTiersSection';
+import { AchievementsSection } from '@app/features/admin/clout/AchievementsSection';
+import { CloutGrantsSection } from '@app/features/admin/clout/CloutGrantsSection';
+import { CloutLogsSection } from '@app/features/admin/clout/CloutLogsSection';
 import { type AchievementId } from '@shared/types/ids';
 import type { CloutAchievement } from '@shared/types/entities/clout.types';
 

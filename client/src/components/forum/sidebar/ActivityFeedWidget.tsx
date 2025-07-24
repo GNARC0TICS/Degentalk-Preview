@@ -3,9 +3,9 @@ import { Link } from 'react-router-dom';
 import { Activity, ChevronRight, Clock } from 'lucide-react';
 import { SidebarWidgetCard } from './SidebarWidgetCard';
 import { WidgetSkeleton } from './WidgetSkeleton';
-import { useActivityFeed } from '@/features/activity/hooks/useActivityFeed';
+import { useActivityFeed } from '@app/features/activity/hooks/useActivityFeed';
 import { formatDistanceToNow } from 'date-fns';
-import type { EventLog } from '@/features/activity/services/activityApi';
+import type { EventLog } from '@app/features/activity/services/activityApi';
 import { type StructureId } from '@shared/types/ids';
 
 interface ActivityFeedWidgetProps {

@@ -11,9 +11,9 @@ export { ModularAdminLayout } from './ModularAdminLayout';
 export { ModularAdminSidebar } from './ModularAdminSidebar';
 
 // Layout Components
-export { AdminPageShell } from '@/features/admin/layout/layout/AdminPageShell';
-export { EntityTable } from '@/features/admin/layout/layout/EntityTable';
-export { EntityFilters } from '@/features/admin/layout/layout/EntityFilters';
+export { AdminPageShell } from '@app/features/admin/layout/layout/AdminPageShell';
+export { EntityTable } from '@app/features/admin/layout/layout/EntityTable';
+export { EntityFilters } from '@app/features/admin/layout/layout/EntityFilters';
 
 // Form Controls
 export { ColorPicker } from './form-controls/ColorPicker';

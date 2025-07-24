@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useMissions } from '@/hooks/useMissions';
+import { useMissions } from '@app/hooks/useMissions';
 import {
 	Card,
 	CardContent,
@@ -7,13 +7,13 @@ import {
 	CardFooter,
 	CardHeader,
 	CardTitle
-} from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
-import { Badge } from '@/components/ui/badge';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Skeleton } from '@/components/ui/skeleton';
+} from '@app/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@app/components/ui/tabs';
+import { Button } from '@app/components/ui/button';
+import { Progress } from '@app/components/ui/progress';
+import { Badge } from '@app/components/ui/badge';
+import { ScrollArea } from '@app/components/ui/scroll-area';
+import { Skeleton } from '@app/components/ui/skeleton';
 import {
 	Calendar,
 	Trophy,
@@ -26,8 +26,8 @@ import {
 	AlertCircle
 } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { useAuth } from '@/hooks/use-auth';
-import { cn } from '@/utils/utils';
+import { useAuth } from '@app/hooks/use-auth';
+import { cn } from '@app/utils/utils';
 import type { MissionId } from '@shared/types/ids';
 
 /**

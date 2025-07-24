@@ -6,11 +6,11 @@ import {
 	DialogTitle,
 	DialogDescription,
 	DialogFooter
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import type { AdminUser, UserFormData } from '@/types/admin.types';
+} from '@app/components/ui/dialog';
+import { Button } from '@app/components/ui/button';
+import { Input } from '@app/components/ui/input';
+import { Label } from '@app/components/ui/label';
+import type { AdminUser, UserFormData } from '@app/types/admin.types';
 
 interface UserFormDialogProps {
 	isOpen: boolean;

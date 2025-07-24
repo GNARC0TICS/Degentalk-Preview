@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiRequest } from '@/utils/queryClient';
+import { apiRequest } from '@app/utils/queryClient';
 import { ArrowUpDown, Lock, CheckCircle, Edit, Save, Plus, Shield, X } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { useToast } from '@app/hooks/use-toast';
+import { Button } from '@app/components/ui/button';
+import { Input } from '@app/components/ui/input';
 import {
 	Card,
 	CardContent,
@@ -12,10 +12,10 @@ import {
 	CardFooter,
 	CardHeader,
 	CardTitle
-} from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
-import { Switch } from '@/components/ui/switch';
+} from '@app/components/ui/card';
+import { Badge } from '@app/components/ui/badge';
+import { Separator } from '@app/components/ui/separator';
+import { Switch } from '@app/components/ui/switch';
 import {
 	Table,
 	TableBody,
@@ -23,7 +23,7 @@ import {
 	TableHead,
 	TableHeader,
 	TableRow
-} from '@/components/ui/table';
+} from '@app/components/ui/table';
 import {
 	Dialog,
 	DialogContent,
@@ -32,8 +32,8 @@ import {
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger
-} from '@/components/ui/dialog';
-import { Label } from '@/components/ui/label';
+} from '@app/components/ui/dialog';
+import { Label } from '@app/components/ui/label';
 
 // Feature gate types
 interface FeatureGate {

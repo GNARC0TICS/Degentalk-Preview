@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Badge } from '@/components/ui/badge';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@app/components/ui/card';
+import { Skeleton } from '@app/components/ui/skeleton';
+import { Badge } from '@app/components/ui/badge';
+import { ScrollArea } from '@app/components/ui/scroll-area';
+import { Button } from '@app/components/ui/button';
 import {
 	ArrowDownToLine,
 	ArrowUpFromLine,
@@ -18,7 +18,7 @@ import {
 	Coins,
 	Clock
 } from 'lucide-react';
-import type { TransactionItem as Transaction } from '@/features/wallet/services/wallet-api.service';
+import type { TransactionItem as Transaction } from '@app/features/wallet/services/wallet-api.service';
 
 interface TransactionHistoryProps {
 	history: Transaction[];

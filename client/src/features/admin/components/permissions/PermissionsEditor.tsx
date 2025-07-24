@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@app/components/ui/card';
+import { Checkbox } from '@app/components/ui/checkbox';
+import { Button } from '@app/components/ui/button';
 
 interface Permission {
 	id: string;

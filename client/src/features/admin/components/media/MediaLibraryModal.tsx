@@ -5,16 +5,16 @@ import {
 	DialogHeader,
 	DialogTitle,
 	DialogFooter
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
+} from '@app/components/ui/dialog';
+import { Button } from '@app/components/ui/button';
 import { useDropzone } from 'react-dropzone';
-import { MediaAsset } from '@/components/media/MediaAsset';
-import { useToast } from '@/hooks/use-toast';
+import { MediaAsset } from '@app/components/media/MediaAsset';
+import { useToast } from '@app/hooks/use-toast';
 import {
 	mediaApiService,
 	type MediaItem,
 	type MediaType
-} from '@/features/admin/services/media-api.service';
+} from '@app/features/admin/services/media-api.service';
 
 interface Props {
 	open: boolean;

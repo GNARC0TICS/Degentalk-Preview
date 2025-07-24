@@ -8,18 +8,18 @@
  * - Quick stats
  */
 
-import { cn } from '@/utils/utils';
+import { cn } from '@app/utils/utils';
 import { useNavigate } from 'react-router-dom';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
-import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
+import { Card, CardContent, CardHeader, CardTitle } from '@app/components/ui/card';
+import { Badge } from '@app/components/ui/badge';
+import { Progress } from '@app/components/ui/progress';
+import { Button } from '@app/components/ui/button';
+import { Separator } from '@app/components/ui/separator';
 import { LevelDisplay } from './level-display';
-import { formatNumber } from '@/utils/utils';
+import { formatNumber } from '@app/utils/utils';
 import { Trophy, Target, Flame, TrendingUp, ChevronRight, Sparkles, Award } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
-import type { UserProgression } from '@/features/gamification/services/gamification-api.service';
+import type { UserProgression } from '@app/features/gamification/services/gamification-api.service';
 
 interface ProfileGamificationWidgetProps {
 	progression: UserProgression;

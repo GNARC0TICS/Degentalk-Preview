@@ -1,9 +1,9 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import type { ThreadFiltersState, ThreadSortOption } from '@/components/forum/ThreadFilters';
+import type { ThreadFiltersState, ThreadSortOption } from '@app/components/forum/ThreadFilters';
 import type { TagId } from '@shared/types/ids';
-import type { PrefixId } from '@/types/ids';
-import { logger } from "@/lib/logger";
+import type { PrefixId } from '@app/types/ids';
+import { logger } from '@app/lib/logger";
 
 interface UseForumFiltersOptions {
 	defaultSort?: ThreadSortOption;

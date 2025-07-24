@@ -1,4 +1,4 @@
-import { ROUTES } from '@/constants/routes';
+import { ROUTES } from '@app/constants/routes';
 
 /**
  * Forum URL generation utilities for the clean /forums/ structure

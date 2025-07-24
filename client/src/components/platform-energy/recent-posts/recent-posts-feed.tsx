@@ -8,14 +8,14 @@ import {
 	CardFooter,
 	CardHeader,
 	CardTitle
-} from '@/components/ui/card';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Skeleton } from '@/components/ui/skeleton';
+} from '@app/components/ui/card';
+import { Avatar, AvatarFallback, AvatarImage } from '@app/components/ui/avatar';
+import { Button } from '@app/components/ui/button';
+import { Badge } from '@app/components/ui/badge';
+import { Skeleton } from '@app/components/ui/skeleton';
 import { format } from 'date-fns';
 import { MessageSquare, Eye, ArrowRight } from 'lucide-react';
-import { getInitials } from '@/utils/utils';
+import { getInitials } from '@app/utils/utils';
 import type { PostId, ThreadId, UserId } from '@shared/types/ids';
 
 export type RecentPost = {

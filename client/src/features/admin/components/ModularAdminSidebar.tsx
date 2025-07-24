@@ -20,13 +20,13 @@ import {
 	Clock,
 	Zap
 } from 'lucide-react';
-import { cn } from '@/utils/utils';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { useAdminNavigation } from '@/hooks/use-admin-modules';
-import { useAuth } from '@/hooks/use-auth';
-import type { AdminModuleV2 } from '@/config/admin.config';
+import { cn } from '@app/utils/utils';
+import { Button } from '@app/components/ui/button';
+import { Badge } from '@app/components/ui/badge';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@app/components/ui/tooltip';
+import { useAdminNavigation } from '@app/hooks/use-admin-modules';
+import { useAuth } from '@app/hooks/use-auth';
+import type { AdminModuleV2 } from '@app/config/admin.config';
 
 // Icon mapping for module icons
 const iconMap: Record<string, any> = {

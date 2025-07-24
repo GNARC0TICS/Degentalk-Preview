@@ -1,8 +1,8 @@
-import { useCloutAchievements } from '@/features/admin/services/cloutAchievementsService';
-import { Table, TableHead, TableHeader, TableRow, TableBody } from '@/components/ui/table';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Switch } from '@/components/ui/switch';
-import { useToggleAchievement } from '@/features/admin/services/cloutAchievementsService';
+import { useCloutAchievements } from '@app/features/admin/services/cloutAchievementsService';
+import { Table, TableHead, TableHeader, TableRow, TableBody } from '@app/components/ui/table';
+import { Card, CardHeader, CardTitle, CardContent } from '@app/components/ui/card';
+import { Switch } from '@app/components/ui/switch';
+import { useToggleAchievement } from '@app/features/admin/services/cloutAchievementsService';
 
 export default function CloutAchievementsAdminPage() {
 	const { data, isLoading, error } = useCloutAchievements();

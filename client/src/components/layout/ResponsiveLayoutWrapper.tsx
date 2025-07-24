@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { useLayoutStore, type SlotId } from '@/stores/useLayoutStore';
+import { useLayoutStore, type SlotId } from '@app/stores/useLayoutStore';
 import { SlotRenderer } from './SlotRenderer';
 import { WidgetGallery } from './WidgetGallery';
-import { Button } from '@/components/ui/button';
+import { Button } from '@app/components/ui/button';
 import { Settings2, Sidebar, SidebarClose, PanelLeft, PanelRight } from 'lucide-react';
 import {
 	Sheet,
@@ -10,10 +10,10 @@ import {
 	SheetDescription,
 	SheetHeader,
 	SheetTitle
-} from '@/components/ui/sheet';
-import { cn } from '@/utils/utils';
-import { useMediaQuery } from '@/hooks/use-media-query';
-import { ENABLE_WIDGETS } from '@/config/featureFlags';
+} from '@app/components/ui/sheet';
+import { cn } from '@app/utils/utils';
+import { useMediaQuery } from '@app/hooks/use-media-query';
+import { ENABLE_WIDGETS } from '@app/config/featureFlags';
 
 interface ResponsiveLayoutWrapperProps {
 	page: 'home' | 'forum' | 'profile';

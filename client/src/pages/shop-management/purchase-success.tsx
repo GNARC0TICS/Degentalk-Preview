@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Check, Home, ChevronLeft, Wallet, ShoppingCart } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@app/components/ui/button';
 import { Link } from 'react-router-dom';
 import confetti from 'canvas-confetti';
-import { Wide } from '@/layout/primitives';
-import useSearchParams from '@/hooks/useSearchParams';
+import { Wide } from '@app/layout/primitives';
+import useSearchParams from '@app/hooks/useSearchParams';
 
 export default function PurchaseSuccessPage() {
 	const navigate = useNavigate();

@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import type { FooterLink } from '@/config/footer-navigation';
+import type { FooterLink } from '@app/config/footer-navigation';
 
 interface FooterSectionProps {
 	title: string;

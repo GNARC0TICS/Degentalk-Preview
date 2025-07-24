@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { trackNavigation } from '@/config/navigation';
+import { trackNavigation } from '@app/config/navigation';
 
 interface NavLinkProps {
 	href: string;

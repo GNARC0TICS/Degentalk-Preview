@@ -1,6 +1,6 @@
 import React from 'react';
 import { Shield, TrendingUp, Calendar, Zap } from 'lucide-react';
-import { cn } from '@/utils/utils';
+import { cn } from '@app/utils/utils';
 
 interface ReputationCardProps {
 	clout?: number;

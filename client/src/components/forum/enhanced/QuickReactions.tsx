@@ -15,9 +15,9 @@ import {
 	Coins
 } from 'lucide-react';
 
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { cn } from '@/utils/utils';
+import { Button } from '@app/components/ui/button';
+import { Badge } from '@app/components/ui/badge';
+import { cn } from '@app/utils/utils';
 
 export interface Reaction {
 	id: string;

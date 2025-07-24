@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { cn } from '@/utils/utils';
+import { cn } from '@app/utils/utils';
 
 interface MentionRendererProps {
 	content: string;

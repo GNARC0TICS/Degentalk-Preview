@@ -1,7 +1,7 @@
 import React from 'react';
 import { PathProgress } from './path-progress';
 import { getDominantPath } from '@shared/path-config';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Alert, AlertDescription, AlertTitle } from '@app/components/ui/alert';
 import { Lightbulb } from 'lucide-react';
 import { type PathId } from '@shared/types/ids';
 

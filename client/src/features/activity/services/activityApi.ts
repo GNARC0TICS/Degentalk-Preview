@@ -1,10 +1,10 @@
-import { apiRequest } from '@/utils/queryClient';
+import { apiRequest } from '@app/utils/queryClient';
 import type { UserId } from '@shared/types/ids';
 import type {
 	EventLog,
 	EventLogFilters,
 	EventLogPagination
-} from '@/features/activity/types/activity.types';
+} from '@app/features/activity/types/activity.types';
 
 // Re-export types for components
 export type { EventLog, EventLogFilters, EventLogPagination };

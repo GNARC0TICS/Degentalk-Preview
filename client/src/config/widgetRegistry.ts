@@ -1,5 +1,5 @@
 import React from 'react';
-import type { SlotId } from '@/stores/useLayoutStore';
+import type { SlotId } from '@app/stores/useLayoutStore';
 import type { LucideIcon } from 'lucide-react';
 
 export interface WidgetMetadata {

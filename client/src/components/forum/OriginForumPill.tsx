@@ -1,5 +1,5 @@
 import React from 'react';
-import { Badge } from '@/components/ui/badge';
+import { Badge } from '@app/components/ui/badge';
 
 interface OriginForumPillProps {
 	forum: { name: string; slug: string };

@@ -1,6 +1,6 @@
 import React from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'; // Assuming shadcn/ui tabs
-import { cn } from '@/utils/utils';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@app/components/ui/tabs'; // Assuming shadcn/ui tabs
+import { cn } from '@app/utils/utils';
 
 export interface TabConfig {
 	// Export TabConfig

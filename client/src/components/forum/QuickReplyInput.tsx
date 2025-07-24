@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
-import { useThreadActions } from '@/features/forum/contexts/ThreadActionsContext';
-import { cn } from '@/utils/utils';
+import { Button } from '@app/components/ui/button';
+import { Textarea } from '@app/components/ui/textarea';
+import { useThreadActions } from '@app/features/forum/contexts/ThreadActionsContext';
+import { cn } from '@app/utils/utils';
 
 export interface QuickReplyInputProps {
 	className?: string;

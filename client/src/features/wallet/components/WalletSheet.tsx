@@ -7,14 +7,14 @@ import {
 	SheetDescription,
 	SheetFooter,
 	SheetClose
-} from '@/components/ui/sheet';
-import { Button } from '@/components/ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+} from '@app/components/ui/sheet';
+import { Button } from '@app/components/ui/button';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@app/components/ui/tabs';
 import { WalletBalanceDisplay } from './wallet-balance-display';
 import { WalletAddressDisplay } from './wallet-address-display';
 import TransactionHistory from './transaction-history';
 import { TransactionSheet } from './TransactionSheet';
-import { useWallet } from '@/hooks/use-wallet';
+import { useWallet } from '@app/hooks/use-wallet';
 import {
 	Wallet,
 	ArrowDown,
@@ -32,10 +32,10 @@ import {
 	Zap,
 	Settings
 } from 'lucide-react';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Separator } from '@/components/ui/separator';
-import { Badge } from '@/components/ui/badge';
-import { cn } from '@/utils/utils';
+import { ScrollArea } from '@app/components/ui/scroll-area';
+import { Separator } from '@app/components/ui/separator';
+import { Badge } from '@app/components/ui/badge';
+import { cn } from '@app/utils/utils';
 import type { WalletBalance } from '../services/wallet-api.service';
 
 // [REFAC-DGT]

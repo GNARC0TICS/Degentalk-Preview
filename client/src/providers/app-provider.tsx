@@ -1,8 +1,8 @@
 import React from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ThemeProvider } from 'next-themes';
-import XpToastProvider from '@/contexts/XpToastContext';
-import LevelUpProvider from '@/contexts/LevelUpContext';
+import XpToastProvider from '@app/contexts/XpToastContext';
+import LevelUpProvider from '@app/contexts/LevelUpContext';
 
 // Create a client
 const queryClient = new QueryClient();

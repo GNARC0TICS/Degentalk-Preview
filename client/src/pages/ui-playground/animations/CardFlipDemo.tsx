@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { DemoCard } from '@/pages/dev/DemoCard';
+import { DemoCard } from '@app/pages/dev/DemoCard';
 import { useMemo } from 'react';
 
 export const CardFlipDemo: React.FC = () => {

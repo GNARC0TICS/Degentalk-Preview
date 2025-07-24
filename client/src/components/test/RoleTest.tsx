@@ -1,7 +1,7 @@
 import React from 'react';
-import { useAuth } from '@/hooks/use-auth';
-import { hasRoleAtLeast, getUserPermissions } from '@/utils/roles';
-import type { Role } from '@/utils/roles';
+import { useAuth } from '@app/hooks/use-auth';
+import { hasRoleAtLeast, getUserPermissions } from '@app/utils/roles';
+import type { Role } from '@app/utils/roles';
 
 export function RoleTest() {
 	const { user } = useAuth();

@@ -5,13 +5,13 @@
  */
 
 import React, { useState } from 'react';
-import { AdminPageShell } from '@/features/admin/layout/layout/AdminPageShell';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import { AdminPageShell } from '@app/features/admin/layout/layout/AdminPageShell';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@app/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@app/components/ui/tabs';
+import { Badge } from '@app/components/ui/badge';
+import { Button } from '@app/components/ui/button';
+import { Skeleton } from '@app/components/ui/skeleton';
+import { Alert, AlertDescription } from '@app/components/ui/alert';
 import {
 	RefreshCw,
 	Activity,
@@ -32,15 +32,15 @@ import {
 	useRefreshSystemAnalytics,
 	useSystemAnalyticsLoadingState,
 	useSystemAnalyticsErrorState
-} from '@/features/admin/hooks/useSystemAnalytics';
-import { SystemOverviewCard } from '@/features/admin/components/analytics/SystemOverviewCard';
-import { SystemHealthCard } from '@/features/admin/components/analytics/SystemHealthCard';
-import { RealtimeMetricsCard } from '@/features/admin/components/analytics/RealtimeMetricsCard';
-import { CacheAnalyticsCard } from '@/features/admin/components/analytics/CacheAnalyticsCard';
-import { PerformanceHeatmapCard } from '@/features/admin/components/analytics/PerformanceHeatmapCard';
-import { DatabaseStatsCard } from '@/features/admin/components/analytics/DatabaseStatsCard';
-import { APIMetricsCard } from '@/features/admin/components/analytics/APIMetricsCard';
-import { SystemAlertsCard } from '@/features/admin/components/analytics/SystemAlertsCard';
+} from '@app/features/admin/hooks/useSystemAnalytics';
+import { SystemOverviewCard } from '@app/features/admin/components/analytics/SystemOverviewCard';
+import { SystemHealthCard } from '@app/features/admin/components/analytics/SystemHealthCard';
+import { RealtimeMetricsCard } from '@app/features/admin/components/analytics/RealtimeMetricsCard';
+import { CacheAnalyticsCard } from '@app/features/admin/components/analytics/CacheAnalyticsCard';
+import { PerformanceHeatmapCard } from '@app/features/admin/components/analytics/PerformanceHeatmapCard';
+import { DatabaseStatsCard } from '@app/features/admin/components/analytics/DatabaseStatsCard';
+import { APIMetricsCard } from '@app/features/admin/components/analytics/APIMetricsCard';
+import { SystemAlertsCard } from '@app/features/admin/components/analytics/SystemAlertsCard';
 
 export default function SystemAnalyticsDashboard() {
 	const [activeTab, setActiveTab] = useState('overview');

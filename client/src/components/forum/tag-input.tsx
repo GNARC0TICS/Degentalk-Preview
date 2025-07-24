@@ -1,9 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { X, Tag as TagIcon } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
-import { useTags } from '@/features/forum/hooks/useForumQueries';
-import type { ThreadTag } from '@/types/thread.types'; // Import ThreadTag type
+import { Badge } from '@app/components/ui/badge';
+import { Input } from '@app/components/ui/input';
+import { useTags } from '@app/features/forum/hooks/useForumQueries';
+import type { ThreadTag } from '@app/types/thread.types'; // Import ThreadTag type
 
 interface TagInputProps {
 	value: ThreadTag[]; // Use ThreadTag which is what useTags returns

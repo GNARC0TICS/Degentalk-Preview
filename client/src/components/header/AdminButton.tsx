@@ -1,10 +1,10 @@
 import React from 'react';
-import { IconRenderer } from '@/components/icons/iconRenderer';
-import { Button } from '@/components/ui/button';
+import { IconRenderer } from '@app/components/icons/iconRenderer';
+import { Button } from '@app/components/ui/button';
 import { NavLink } from './NavLink';
-import { useAuth } from '@/hooks/use-auth';
-import { hasRoleAtLeast } from '@/utils/roles';
-import type { Role } from '@/utils/roles';
+import { useAuth } from '@app/hooks/use-auth';
+import { hasRoleAtLeast } from '@app/utils/roles';
+import type { Role } from '@app/utils/roles';
 
 interface AdminButtonProps {
 	className?: string;

@@ -1,10 +1,10 @@
 import React from 'react';
-import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@app/components/ui/card';
+import { Badge } from '@app/components/ui/badge';
+import { Button } from '@app/components/ui/button';
 import { Flame, Users, MessageSquare, Plus } from 'lucide-react';
-import { cn } from '@/utils/utils';
-import type { MergedForum, MergedZone } from '@/features/forum/contexts/ForumStructureContext';
+import { cn } from '@app/utils/utils';
+import type { MergedForum, MergedZone } from '@app/features/forum/contexts/ForumStructureContext';
 
 interface ForumHeaderProps {
 	forum: MergedForum | MergedZone;

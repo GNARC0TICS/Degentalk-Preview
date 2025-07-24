@@ -6,10 +6,10 @@ import {
 	TableHead,
 	TableHeader,
 	TableRow
-} from '@/components/ui/table';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Input } from '@/components/ui/input';
-import { cn } from '@/utils/utils';
+} from '@app/components/ui/table';
+import { Skeleton } from '@app/components/ui/skeleton';
+import { Input } from '@app/components/ui/input';
+import { cn } from '@app/utils/utils';
 
 export interface ColumnDef<T> {
 	key: string; // Corresponds to a key in the data object T

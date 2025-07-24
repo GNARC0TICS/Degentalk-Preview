@@ -1,5 +1,5 @@
 import React from 'react';
-import { cn } from '@/utils/utils';
+import { cn } from '@app/utils/utils';
 
 type FramedAvatarProps = {
 	avatarUrl: string | null;

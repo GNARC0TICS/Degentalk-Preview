@@ -1,6 +1,6 @@
 import React from 'react';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { Input } from '@app/components/ui/input';
+import { Label } from '@app/components/ui/label';
 
 interface SettingsInputProps {
 	id: string;

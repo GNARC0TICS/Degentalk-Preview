@@ -6,13 +6,13 @@ import {
 	DialogFooter,
 	DialogHeader,
 	DialogTitle
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
+} from '@app/components/ui/dialog';
+import { Button } from '@app/components/ui/button';
+import { Textarea } from '@app/components/ui/textarea';
+import { Label } from '@app/components/ui/label';
 import { Quote, Eye, EyeOff } from 'lucide-react';
-import { cn } from '@/utils/utils';
-import type { PostWithUser } from '@/types/compat/forum';
+import { cn } from '@app/utils/utils';
+import type { PostWithUser } from '@app/types/compat/forum';
 import type { PostId } from '@shared/types/ids';
 
 interface QuotePostModalProps {

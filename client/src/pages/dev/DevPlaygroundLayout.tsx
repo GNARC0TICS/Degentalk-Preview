@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { cn } from '@/utils/utils';
+import { cn } from '@app/utils/utils';
 import { ControlsDrawer } from './ControlsDrawer';
-import { usePlaygroundControls } from '@/stores/usePlaygroundControls';
+import { usePlaygroundControls } from '@app/stores/usePlaygroundControls';
 
 interface DevPlaygroundLayoutProps {
 	children: React.ReactNode;

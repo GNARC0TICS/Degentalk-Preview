@@ -9,9 +9,9 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { forumApi } from '../services/forumApi';
 import type { ThreadSearchParams as OriginalThreadSearchParams } from '../services/forumApi';
 import { toast } from 'sonner';
-import type { Tag } from '@/types/forum';
-import type { ForumTag } from '@/types/compat/forum';
-import type { ThreadPrefix } from '@/types/compat/forum';
+import type { Tag } from '@app/types/forum';
+import type { ForumTag } from '@app/types/compat/forum';
+import type { ThreadPrefix } from '@app/types/compat/forum';
 import { useEffect } from 'react';
 import type { ForumId, TagId, ContentId, PrefixId, ThreadId, PostId } from '@shared/types/ids';
 

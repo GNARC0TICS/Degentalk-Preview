@@ -7,8 +7,8 @@ import React, {
 	useEffect
 } from 'react';
 import { AnimatePresence } from 'framer-motion';
-import XpToast from '@/components/xp/XpToast';
-import { setupXpGainListener } from '@/utils/queryClient';
+import XpToast from '@app/components/xp/XpToast';
+import { setupXpGainListener } from '@app/utils/queryClient';
 
 // Types
 interface XpToastData {

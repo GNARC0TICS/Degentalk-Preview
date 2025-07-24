@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import QuickReactions from '@/components/forum/enhanced/QuickReactions';
+import { Button } from '@app/components/ui/button';
+import QuickReactions from '@app/components/forum/enhanced/QuickReactions';
 import {
 	Heart,
 	ThumbsUp,
@@ -22,7 +22,7 @@ import {
 	DropdownMenuItem,
 	DropdownMenuSeparator,
 	DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu';
+} from '@app/components/ui/dropdown-menu';
 import { formatDistanceToNow } from 'date-fns';
 import type { PostId } from '@shared/types/ids';
 

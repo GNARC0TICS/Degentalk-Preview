@@ -5,12 +5,12 @@
  * with all forum stats, online status, and other canonical fields
  */
 
-import { useAuth } from '@/hooks/use-auth';
+import { useAuth } from '@app/hooks/use-auth';
 import { useQuery } from '@tanstack/react-query';
-import { apiRequest } from '@/utils/api-request';
-import type { CanonicalUser } from '@/types/canonical.types';
-import type { User } from '@/types/user';
-import { toCanonicalUser } from '@/utils/user-transformer';
+import { apiRequest } from '@app/utils/api-request';
+import type { CanonicalUser } from '@app/types/canonical.types';
+import type { User } from '@app/types/user';
+import { toCanonicalUser } from '@app/utils/user-transformer';
 
 interface UserProfileResponse {
   user: CanonicalUser;

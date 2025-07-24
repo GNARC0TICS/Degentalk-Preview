@@ -1,15 +1,15 @@
 import React from 'react';
-import { apiRequest } from '@/utils/api-request';
+import { apiRequest } from '@app/utils/api-request';
 import { useQuery } from '@tanstack/react-query';
-import { useCanonicalAuth } from '@/features/auth/useCanonicalAuth';
-import { logger } from "@/lib/logger";
+import { useCanonicalAuth } from '@app/features/auth/useCanonicalAuth';
+import { logger } from '@app/lib/logger";
 import { 
   ShopOwnershipResponse, 
   ShopOwnershipResponseSchema,
   UserInventoryResponse,
   UserInventoryResponseSchema,
   validateApiResponse 
-} from '@/schemas';
+} from '@app/schemas';
 
 /**
  * Hook to check if the current user owns a specific shop item

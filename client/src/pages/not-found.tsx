@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { AlertTriangle, HomeIcon } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { SiteHeader } from '@/components/header'; // Assuming a shared header
+import { Button } from '@app/components/ui/button';
+import { SiteHeader } from '@app/components/header'; // Assuming a shared header
 
 export default function NotFoundPage() {
 	return (

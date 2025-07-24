@@ -1,4 +1,4 @@
-import { apiRequest } from '@/utils/api-request';
+import { apiRequest } from '@app/utils/api-request';
 import type { EntryId } from '@shared/types/ids';
 
 interface DictionarySubmission {

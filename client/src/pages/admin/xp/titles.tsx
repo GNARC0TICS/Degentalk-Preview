@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import type { MediaId } from '@shared/types/ids';
 import { Plus, Pencil, Trash2, ArrowUpDown, Search } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { useToast } from '@app/hooks/use-toast';
+import { Input } from '@app/components/ui/input';
+import { Button } from '@app/components/ui/button';
+import { Badge } from '@app/components/ui/badge';
 import {
 	Table,
 	TableBody,
@@ -13,7 +13,7 @@ import {
 	TableHead,
 	TableHeader,
 	TableRow
-} from '@/components/ui/table';
+} from '@app/components/ui/table';
 import {
 	Dialog,
 	DialogContent,
@@ -21,23 +21,23 @@ import {
 	DialogFooter,
 	DialogHeader,
 	DialogTitle
-} from '@/components/ui/dialog';
+} from '@app/components/ui/dialog';
 import {
 	Select,
 	SelectContent,
 	SelectItem,
 	SelectTrigger,
 	SelectValue
-} from '@/components/ui/select';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useDebounce } from '@/hooks/use-debounce';
-import { apiRequest } from '@/utils/queryClient';
-import { AdminPageShell } from '@/features/admin/layout/layout/AdminPageShell';
-import { TitleMediaInput } from '@/features/admin/components/forms/xp/TitleMediaInput';
-import { MediaAsset } from '@/components/media/MediaAsset';
+} from '@app/components/ui/select';
+import { Label } from '@app/components/ui/label';
+import { Textarea } from '@app/components/ui/textarea';
+import { Card, CardContent, CardHeader, CardTitle } from '@app/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@app/components/ui/tabs';
+import { useDebounce } from '@app/hooks/use-debounce';
+import { apiRequest } from '@app/utils/queryClient';
+import { AdminPageShell } from '@app/features/admin/layout/layout/AdminPageShell';
+import { TitleMediaInput } from '@app/features/admin/components/forms/xp/TitleMediaInput';
+import { MediaAsset } from '@app/components/media/MediaAsset';
 
 // Title types
 interface Title {

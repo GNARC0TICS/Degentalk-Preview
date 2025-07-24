@@ -1,8 +1,8 @@
 import React from 'react';
 import { FramedAvatar } from './framed-avatar';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { cn } from '@/utils/utils';
-import { useUserCosmetics } from '@/hooks/useUserCosmetics';
+import { Avatar, AvatarFallback, AvatarImage } from '@app/components/ui/avatar';
+import { cn } from '@app/utils/utils';
+import { useUserCosmetics } from '@app/hooks/useUserCosmetics';
 import type { FrameId } from '@shared/types/ids';
 
 interface UserAvatarProps {

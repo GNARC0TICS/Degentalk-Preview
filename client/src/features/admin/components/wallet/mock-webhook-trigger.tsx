@@ -6,20 +6,20 @@ import {
 	CardFooter,
 	CardHeader,
 	CardTitle
-} from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+} from '@app/components/ui/card';
+import { Button } from '@app/components/ui/button';
+import { Input } from '@app/components/ui/input';
+import { Label } from '@app/components/ui/label';
 import {
 	Select,
 	SelectContent,
 	SelectItem,
 	SelectTrigger,
 	SelectValue
-} from '@/components/ui/select';
-import { useToast } from '@/hooks/use-toast';
+} from '@app/components/ui/select';
+import { useToast } from '@app/hooks/use-toast';
 import { useMutation } from '@tanstack/react-query';
-import { apiRequest } from '@/utils/api-request';
+import { apiRequest } from '@app/utils/api-request';
 import type { UserId } from '@shared/types/ids';
 
 interface MockWebhookResponse {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { cn } from '@/utils/utils';
+import { cn } from '@app/utils/utils';
 
 interface ClampPaddingProps extends React.HTMLAttributes<HTMLDivElement> {
 	as?: keyof JSX.IntrinsicElements;

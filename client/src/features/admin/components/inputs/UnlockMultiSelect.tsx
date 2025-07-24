@@ -1,11 +1,11 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Button } from '@/components/ui/button';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { Checkbox } from '@app/components/ui/checkbox';
+import { Button } from '@app/components/ui/button';
+import { Popover, PopoverContent, PopoverTrigger } from '@app/components/ui/popover';
+import { ScrollArea } from '@app/components/ui/scroll-area';
 import { Loader2, Check } from 'lucide-react';
-import { cn } from '@/utils/utils';
+import { cn } from '@app/utils/utils';
 
 interface Item {
 	id: string;

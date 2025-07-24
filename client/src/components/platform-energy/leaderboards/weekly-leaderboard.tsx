@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Badge } from '@/components/ui/badge';
-import { getInitials } from '@/utils/utils';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@app/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@app/components/ui/tabs';
+import { Avatar, AvatarFallback, AvatarImage } from '@app/components/ui/avatar';
+import { Skeleton } from '@app/components/ui/skeleton';
+import { Badge } from '@app/components/ui/badge';
+import { getInitials } from '@app/utils/utils';
 import { Award, MessageSquare, TrendingUp, Clock } from 'lucide-react';
 import type { UserId } from '@shared/types/ids';
 

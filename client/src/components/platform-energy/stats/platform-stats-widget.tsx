@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Skeleton } from '@/components/ui/skeleton';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@app/components/ui/card';
+import { Skeleton } from '@app/components/ui/skeleton';
 import { Users, MessageSquare, FileText, TrendingUp, Award, Flame, BarChart } from 'lucide-react';
 
 interface PlatformStatsWidgetProps {

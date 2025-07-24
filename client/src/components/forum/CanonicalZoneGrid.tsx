@@ -2,9 +2,9 @@ import type { UserId } from '@shared/types/ids';
 import React from 'react';
 // Link is not used directly in CanonicalZoneGrid if ZoneCard handles its own linking.
 // import { Link } from 'react-router-dom';
-import { ShopCard } from '@/components/forum/ShopCard';
+import { ShopCard } from '@app/components/forum/ShopCard';
 import { motion } from 'framer-motion';
-import { animationConfig } from '@/config/animation.config';
+import { animationConfig } from '@app/config/animation.config';
 // Icons previously used by internal ForumZoneCard might not be needed directly here
 // if ZoneCard handles its own icon rendering logic.
 // import {
@@ -14,7 +14,7 @@ import { animationConfig } from '@/config/animation.config';
 // 	Hash,
 // 	Folder
 // } from 'lucide-react';
-import ZoneCard, { type ZoneCardProps } from '@/components/forum/ZoneCard';
+import ZoneCard, { type ZoneCardProps } from '@app/components/forum/ZoneCard';
 
 // Re-export ShopCardData for external consumers (unchanged)
 export interface ShopCardData {

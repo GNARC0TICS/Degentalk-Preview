@@ -1,6 +1,6 @@
 import type { UserId } from '@shared/types/ids';
-import { apiRequest } from '@/utils/api-request';
-import type { ActiveUser } from '@/components/users/ActiveMembersWidget';
+import { apiRequest } from '@app/utils/api-request';
+import type { ActiveUser } from '@app/components/users/ActiveMembersWidget';
 
 /**
  * Fetch active users from the API

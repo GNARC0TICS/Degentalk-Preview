@@ -1,9 +1,9 @@
 import React from 'react';
-import { PlaygroundSection } from '@/pages/dev';
+import { PlaygroundSection } from '@app/pages/dev';
 import { Users } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
+import { Badge } from '@app/components/ui/badge';
 import { userTitles } from '../demo-data';
-import { frameRarityConfig } from '@/config/frames.config';
+import { frameRarityConfig } from '@app/config/frames.config';
 
 export const AvatarBadgesSection: React.FC = () => (
 	<PlaygroundSection id="avatars" title="Avatar Frames & User Titles">

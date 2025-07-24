@@ -5,10 +5,10 @@
  * based on forum rules, user role, and ownership.
  */
 
-import { useCanonicalAuth } from '@/features/auth/useCanonicalAuth';
-import { useForumStructure, type MergedForum } from '@/features/forum/contexts/ForumStructureContext';
-import type { ThreadDisplay, ResolvedZone } from '@/types/thread.types';
-import type { CanonicalUser } from '@/types/canonical.types';
+import { useCanonicalAuth } from '@app/features/auth/useCanonicalAuth';
+import { useForumStructure, type MergedForum } from '@app/features/forum/contexts/ForumStructureContext';
+import type { ThreadDisplay, ResolvedZone } from '@app/types/thread.types';
+import type { CanonicalUser } from '@app/types/canonical.types';
 import { toId } from '@shared/utils/id';
 import type { ThreadId, UserId, ZoneId } from '@shared/types/ids';
 
