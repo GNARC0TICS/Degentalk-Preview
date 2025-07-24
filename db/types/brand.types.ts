@@ -1,4 +1,4 @@
-import type { BrandConfig } from '@/config/brand.config';
+import type { BrandConfig } from '@app/config/brand.config';
 
 /**
  * RuntimeBrandConfig represents the static BrandConfig enriched with runtime metadata.

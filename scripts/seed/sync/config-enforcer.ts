@@ -1,5 +1,5 @@
 import { db } from '../../../db';
-// import { logger } from '@server/core/logger'; // Logger not needed in seeding
+// import { logger } from '@api/core/logger'; // Logger not needed in seeding
 import { forumMap } from './config-stubs';
 import { economyConfig } from '../../../shared/economy/economy.config';
 import { featureFlags } from './config-stubs';

@@ -1,7 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import { createId } from '@paralleldrive/cuid2';
-import { db } from '@/db';
-import { badges, titles, levels, economySettings } from '@/schema';
+import { db } from '@app/db';
+import { badges, titles, levels, economySettings } from '@app/schema';
 import { eq } from 'drizzle-orm';
 
 type BadgeId = string;

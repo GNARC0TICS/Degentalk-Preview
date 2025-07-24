@@ -7,7 +7,7 @@
  * Transformations:
  * - logger.error(err) → logger.error({ err }, 'error occurred')
  * - logger.info(msg) → logger.info('general', msg)
- * - Add: import { logger } from '@/core/logger'
+ * - Add: import { logger } from '@app/core/logger'
  * - Remove: all old logger imports
  * 
  * Usage:

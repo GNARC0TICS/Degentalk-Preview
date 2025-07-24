@@ -14,7 +14,7 @@ import { API, FileInfo, Options, JSCodeshift } from 'jscodeshift';
  * Strategy:
  * 1. For every import declaration whose source matches one of the obsolete
  *    modules, rewrite to:
- *      import { GlobalRouteGuard } from '@/components/auth/GlobalRouteGuard';
+ *      import { GlobalRouteGuard } from '@app/components/auth/GlobalRouteGuard';
  *
  *    – If the old import used a default import, it is replaced by a **named**
  *      import of GlobalRouteGuard (since GRG has named export).

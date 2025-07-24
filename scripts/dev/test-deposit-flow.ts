@@ -11,11 +11,11 @@
  * 4. Follow the prompts.
  */
 
-import { db } from '@/db';
-import { users } from '@/db/schema';
-import { ccpaymentService } from '@/server/domains/wallet/providers/ccpayment/ccpayment.service';
-import { walletService } from '@/server/domains/wallet/services/wallet.service';
-import { logger } from '@/core/logger';
+import { db } from '@app/db';
+import { users } from '@app/db/schema';
+import { ccpaymentService } from '@app/server/domains/wallet/providers/ccpayment/ccpayment.service';
+import { walletService } from '@app/server/domains/wallet/services/wallet.service';
+import { logger } from '@app/core/logger';
 import inquirer from 'inquirer';
 
 async function main() {

@@ -1,5 +1,5 @@
 import { db } from '../../../db';
-// import { logger } from '@server/core/logger'; // Logger not needed in seeding
+// import { logger } from '@api/core/logger'; // Logger not needed in seeding
 import * as schema from '../../../db/schema';
 import { eq, and, gte, lte, sql, desc } from 'drizzle-orm';
 import type { UserId, ThreadId, PostId, ForumId } from '../../../shared/types/ids';

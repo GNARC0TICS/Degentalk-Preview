@@ -27,16 +27,16 @@ export * from '../admin.validation';
  * Usage Examples:
  *
  * // Query utilities
- * import { FilterBuilder, buildSearchConditions } from '@/domains/admin/shared';
+ * import { FilterBuilder, buildSearchConditions } from '@app/domains/admin/shared';
  *
  * // Operation utilities
- * import { validateRoleAssignment, USER_ROLES } from '@/domains/admin/shared';
+ * import { validateRoleAssignment, USER_ROLES } from '@app/domains/admin/shared';
  *
  * // Error boundaries
- * import { AdminOperationBoundary, AdminErrorFactory } from '@/domains/admin/shared';
+ * import { AdminOperationBoundary, AdminErrorFactory } from '@app/domains/admin/shared';
  *
  * // Response formatting
- * import { sendSuccess, sendError } from '@/domains/admin/shared';
+ * import { sendSuccess, sendError } from '@app/domains/admin/shared';
  */
 
 /**

@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
-import { CCPaymentWebhookController } from '@/domains/wallet/webhooks/ccpayment-webhook.controller';
-import { ccpaymentWebhookService } from '@/domains/wallet/webhooks/ccpayment-webhook.service';
+import { CCPaymentWebhookController } from '@app/domains/wallet/webhooks/ccpayment-webhook.controller';
+import { ccpaymentWebhookService } from '@app/domains/wallet/webhooks/ccpayment-webhook.service';
 import { getMockReq, getMockRes } from '@jest-mock/express';
 
 describe('CCPaymentWebhookController', () => {

@@ -6,8 +6,8 @@
  * Tests basic functionality of UserRepository and TransactionRepository
  */
 
-import { getUserRepository, getTransactionRepository, repositoryFactory } from '@server/src/core/repository';
-import { logger } from '@server/src/core/logger';
+import { getUserRepository, getTransactionRepository, repositoryFactory } from '@api/src/core/repository';
+import { logger } from '@api/src/core/logger';
 
 async function testRepositoryImplementation() {
   console.log('🧪 Testing Repository Implementation...\n');

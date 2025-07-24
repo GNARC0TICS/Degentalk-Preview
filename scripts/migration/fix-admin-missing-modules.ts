@@ -22,8 +22,8 @@ const MODULE_FIXES: ModuleFix[] = [
     file: 'client/src/pages/admin/activity/index.tsx',
     fixes: [
       {
-        oldImport: "import { useAuth } from '@/hooks/useAuth';",
-        newImport: "// TODO: Replace with actual auth hook when available\n// import { useAuth } from '@/hooks/use-auth';",
+        oldImport: "import { useAuth } from '@app/hooks/useAuth';",
+        newImport: "// TODO: Replace with actual auth hook when available\n// import { useAuth } from '@app/hooks/use-auth';",
         description: 'Comment out missing useAuth import'
       }
     ]
@@ -32,13 +32,13 @@ const MODULE_FIXES: ModuleFix[] = [
     file: 'client/src/pages/admin/activity/user/[userId].tsx',
     fixes: [
       {
-        oldImport: "import { EventLogFilters } from '@/types/admin';",
-        newImport: "import type { EventLogFilters } from '@/types/admin';",
+        oldImport: "import { EventLogFilters } from '@app/types/admin';",
+        newImport: "import type { EventLogFilters } from '@app/types/admin';",
         description: 'Make EventLogFilters a type-only import'
       },
       {
-        oldImport: "import { useAuth } from '@/hooks/useAuth';",
-        newImport: "// TODO: Replace with actual auth hook when available\n// import { useAuth } from '@/hooks/use-auth';",
+        oldImport: "import { useAuth } from '@app/hooks/useAuth';",
+        newImport: "// TODO: Replace with actual auth hook when available\n// import { useAuth } from '@app/hooks/use-auth';",
         description: 'Comment out missing useAuth import'
       }
     ]
@@ -68,7 +68,7 @@ const MODULE_FIXES: ModuleFix[] = [
     fixes: [
       {
         oldImport: "import toast from 'react-hot-toast';",
-        newImport: "import { useToast } from '@/hooks/use-toast';",
+        newImport: "import { useToast } from '@app/hooks/use-toast';",
         description: 'Replace react-hot-toast with custom toast hook'
       }
     ]

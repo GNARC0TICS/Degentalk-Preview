@@ -6,7 +6,7 @@
 
 import { db } from '@db';
 import { sql } from 'drizzle-orm';
-import { logger } from '@server/core/logger';
+import { logger } from '@api/core/logger';
 
 const indexes = [
   // Thread performance indexes

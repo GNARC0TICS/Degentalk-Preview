@@ -52,7 +52,7 @@ import tsParser from 'recast/parsers/typescript';
     // Inject import if not present
     if (!output.includes('EntityId') || !/import[^;]*EntityId[^;]*from/.test(output)) {
       const firstImportMatch = output.match(/import[^;]+;/);
-      const importLine = "import type { EntityId } from '@/types/ids';";
+      const importLine = "import type { EntityId } from '@app/types/ids';";
       if (firstImportMatch) {
         output = output.replace(firstImportMatch[0], `${firstImportMatch[0]}\n${importLine}`);
       } else {

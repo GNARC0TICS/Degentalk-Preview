@@ -4,7 +4,7 @@
  * Prefer using the ForumStructureContext for dynamic forum rules.
  */
 
-import type { MergedRules } from '@/contexts/ForumStructureContext';
+import type { MergedRules } from '@app/contexts/ForumStructureContext';
 import { logger } from '../../server/src/core/logger';
 
 // This function is deprecated - use ForumStructureContext instead
