@@ -9,7 +9,10 @@ import { db } from '@db';
 import { logger } from '@core/logger';
 import { forumStructure, threads, threadPrefixes, tags } from '@schema';
 import { sql, desc, asc, and, eq, inArray } from 'drizzle-orm';
-import type { ForumStructureWithStats, ThreadWithPostsAndUser } from '@db/types/forum.types';
+import type {
+	ForumStructureWithStats,
+	ThreadWithPostsAndUser
+} from '@shared/types/core/forum.types';
 // Import specialized services
 import { forumStructureService } from './services/structure.service';
 import { threadService } from './services/thread.service';

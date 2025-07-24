@@ -9,7 +9,7 @@ import { db } from '@db';
 import { logger } from '@core/logger';
 import { forumStructure, threads, posts } from '@schema';
 import { sql, desc, eq, count, isNull, and, inArray, gt } from 'drizzle-orm';
-import type { ForumStructureWithStats } from '@db/types/forum.types';
+import type { ForumStructureWithStats } from '@shared/types/core/forum.types';
 import type { StructureId } from '@shared/types/ids';
 import { forumMap, type Zone, type Forum } from '@shared/config/forum.config';
 
@@ -84,40 +84,40 @@ export class ForumStructureService {
 			}));
 
 			// Aggregate counts for zones (zones don't have direct threads)
-			const zones = structures.filter(s => s.type === 'zone');
-			const forums = structures.filter(s => s.type === 'forum');
-			
+			const zones = structures.filter((s) => s.type === 'zone');
+			const forums = structures.filter((s) => s.type === 'forum');
+
 			// Calculate aggregated counts for each zone
-			zones.forEach(zone => {
+			zones.forEach((zone) => {
 				let totalThreads = 0;
 				let totalPosts = 0;
 				let latestPostDate: Date | null = null;
-				
+
 				// Find all child forums (direct children)
-				const childForums = forums.filter(f => f.parentId === zone.id);
-				
-				childForums.forEach(forum => {
+				const childForums = forums.filter((f) => f.parentId === zone.id);
+
+				childForums.forEach((forum) => {
 					// Add forum's counts
 					totalThreads += Number(forum.threadCount) || 0;
 					totalPosts += Number(forum.postCount) || 0;
-					
+
 					// Track latest post
 					if (forum.lastPostAt && (!latestPostDate || forum.lastPostAt > latestPostDate)) {
 						latestPostDate = forum.lastPostAt;
 					}
-					
+
 					// Also include subforums (forums that have this forum as parent)
-					const subforums = forums.filter(sf => sf.parentId === forum.id);
-					subforums.forEach(subforum => {
+					const subforums = forums.filter((sf) => sf.parentId === forum.id);
+					subforums.forEach((subforum) => {
 						totalThreads += Number(subforum.threadCount) || 0;
 						totalPosts += Number(subforum.postCount) || 0;
-						
+
 						if (subforum.lastPostAt && (!latestPostDate || subforum.lastPostAt > latestPostDate)) {
 							latestPostDate = subforum.lastPostAt;
 						}
 					});
 				});
-				
+
 				// Update zone with aggregated counts
 				zone.threadCount = totalThreads;
 				zone.postCount = totalPosts;

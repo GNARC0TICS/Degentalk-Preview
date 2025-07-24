@@ -11,7 +11,7 @@ import {
 	type Forum as ConfigForum,
 	type Zone as ConfigZone
 } from '@shared/../client/src/config/forumMap.config';
-import type { ForumCategoryWithStats } from '@db/types/forum.types';
+import type { ForumCategoryWithStats } from '@shared/types/core/forum.types';
 import type { StructureId } from '@shared/types/ids';
 
 export interface ForumConfigEntry {

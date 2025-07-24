@@ -25,7 +25,7 @@ import type {
 	ThreadWithUser,
 	ThreadWithPostsAndUser,
 	ThreadWithUserAndCategory
-} from '@db/types/forum.types';
+} from '@shared/types/core/forum.types';
 import { eventLogger } from '../../activity/services/event-logger.service';
 import type { ForumId, StructureId, ThreadId, UserId, PostId, TagId } from '@shared/types/ids';
 
@@ -1036,14 +1036,14 @@ export class ThreadService {
 		try {
 			// Clear all thread tab caches
 			await redisCacheService.clear('thread_tab');
-			
+
 			// Clear zone info caches if forum specific
 			if (forumId) {
 				await redisCacheService.delete(`ThreadService:getZoneInfo:${JSON.stringify([forumId])}`, {
 					prefix: 'forum'
 				});
 			}
-			
+
 			logger.debug('ThreadService', 'Thread caches invalidated', { forumId });
 		} catch (error) {
 			logger.error('ThreadService', 'Error invalidating thread caches', { error });

@@ -6,7 +6,7 @@
  */
 
 import { logger } from '@core/logger';
-import type { ForumCategoryWithStats } from '@db/types/forum.types';
+import type { ForumCategoryWithStats } from '@shared/types/core/forum.types';
 
 // Cache configuration
 const CACHE_DURATION_MS = 30 * 1000; // 30 seconds
