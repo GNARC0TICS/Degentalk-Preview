@@ -10,6 +10,10 @@
 		"jsx": "react-jsx",
 		"baseUrl": ".",
 		"paths": {
+			// NEW paths (target state)
+			"@app/*": ["src/*"],
+			
+			// OLD paths (temporary - for transition)
 			"@/*": ["src/*"],
 			"@config/*": ["../config/*"],
 			"@shared/*": ["../shared/*"],

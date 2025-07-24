@@ -29,7 +29,16 @@ export default defineConfig(async () => {
 			},
 			resolve: {
 				alias: [
+					// NEW patterns
+					{ find: '@app', replacement: path.resolve(projectRoot, 'client/src') },
+					{ find: '@api', replacement: path.resolve(projectRoot, 'server/src') },
+					{ find: '@core', replacement: path.resolve(projectRoot, 'server/src/core') },
+					
+					// OLD patterns (temporary)
 					{ find: '@', replacement: path.resolve(projectRoot, 'client/src') },
+					{ find: '@server', replacement: path.resolve(projectRoot, 'server/src') },
+					
+					// Shared patterns (keep)
 					{ find: '@shared/types/ids', replacement: path.resolve(projectRoot, 'shared/types/ids.ts') },
 					{ find: '@shared/types/index', replacement: path.resolve(projectRoot, 'shared/types/index.ts') },
 					{ find: '@shared/types/entities', replacement: path.resolve(projectRoot, 'shared/types/entities/index.ts') },

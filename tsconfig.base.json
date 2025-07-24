@@ -5,11 +5,22 @@
 		"moduleResolution": "nodenext",
 		"baseUrl": ".",
 		"paths": {
+			// NEW paths (target state)
+			"@app/*": ["client/src/*"],
+			"@api/*": ["server/src/*"],
+			"@core/*": ["server/src/core/*"],
+			"@shared/*": ["shared/*"],
 			"@db": ["db/index.ts"],
 			"@db/*": ["db/*"],
 			"@schema": ["db/schema/index.ts"],
 			"@schema/*": ["db/schema/*"],
-			"@shared/*": ["shared/*"],
+			
+			// OLD paths (temporary - for transition)
+			"@/*": ["client/src/*"],
+			"@server/*": ["server/src/*"],
+			"@server-core/*": ["server/src/core/*"],
+			"@server/core/*": ["server/src/core/*"],
+			"@types/*": ["shared/types/*"],
 			"@admin/*": ["client/src/views/admin/*"]
 		},
 		"resolveJsonModule": true,

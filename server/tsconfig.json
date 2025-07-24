@@ -39,13 +39,17 @@
 		"outDir": "./dist",
 		"types": ["node"],
 		"paths": {
+			// NEW paths (target state)
+			"@api/*": ["src/*"],
+			"@core/*": ["src/core/*"],
+			
+			// OLD paths (temporary - for transition)
 			"@config/*": ["../config/*"],
 			"@shared/types": ["../shared/types/index.ts"],
 			"@shared/types/ids": ["../shared/types/ids.ts"],
 			"@shared/*": ["../shared/*"],
 			"@server/*": ["src/*", "./*"],
 			"@server-core/*": ["src/core/*"],
-			"@core/*": ["src/core/*"],
 			"@server-utils/*": ["src/utils/*"],
 			"@server-middleware/*": ["src/middleware/*"],
 			"@db": ["../db/index.ts"],
