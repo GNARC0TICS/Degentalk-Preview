@@ -52,6 +52,3 @@ db/schema/**/*.map
 
 # Claude audit logs
 .claude/audit/
-
-# Ignore Zen MCP server directory (AI orchestration tooling)
-zen-mcp-server/
