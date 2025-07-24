@@ -11,7 +11,7 @@ import {
 	DialogTitle,
 	DialogTrigger
 } from '@app/components/ui/dialog';
-import { logger } from '@app/lib/logger";
+import { logger } from '@app/lib/logger';
 
 interface GifPickerProps {
 	onSelect?: (gifUrl: string) => void;

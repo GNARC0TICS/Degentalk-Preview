@@ -4,7 +4,7 @@ import { apiRequest } from '@app/utils/api-request';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import { toast } from 'sonner';
-import { logger } from '@app/lib/logger";
+import { logger } from '@app/lib/logger';
 
 interface Package {
 	id: string;

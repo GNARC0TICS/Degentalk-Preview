@@ -2,7 +2,7 @@ import React from 'react';
 import { apiRequest } from '@app/utils/api-request';
 import { useQuery } from '@tanstack/react-query';
 import { useCanonicalAuth } from '@app/features/auth/useCanonicalAuth';
-import { logger } from '@app/lib/logger";
+import { logger } from '@app/lib/logger';
 import { 
   ShopOwnershipResponse, 
   ShopOwnershipResponseSchema,

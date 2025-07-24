@@ -28,7 +28,7 @@ import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, ResponsiveContainer }
 import { useCacheOperation } from '@app/features/admin/hooks/useSystemAnalytics';
 import type { CacheStats } from '@app/features/admin/api/system-analytics.api';
 import { toast } from 'sonner';
-import { logger } from '@app/lib/logger";
+import { logger } from '@app/lib/logger';
 
 interface CacheAnalyticsCardProps {
 	cache: CacheStats;

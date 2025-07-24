@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiRequest } from '@app/utils/queryClient';
 import { useMobileDetector } from '@app/hooks/use-media-query';
-import { logger } from '@app/lib/logger";
+import { logger } from '@app/lib/logger';
 
 // Define ShoutboxPosition type here to avoid import issues
 export type ShoutboxPosition =

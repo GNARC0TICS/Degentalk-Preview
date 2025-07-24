@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { RainNotification } from '@app/components/shoutbox/shoutbox-rain-notification';
 import { useAuth } from '@app/hooks/use-auth';
-import { logger } from '@app/lib/logger";
+import { logger } from '@app/lib/logger';
 
 export function useRainNotifications() {
 	const [notifications, setNotifications] = useState<RainNotification[]>([]);

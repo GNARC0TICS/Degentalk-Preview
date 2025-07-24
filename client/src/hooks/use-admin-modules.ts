@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { adminModuleRegistry } from '@app/lib/admin-module-registry';
 import { useAuth } from '@app/hooks/use-auth';
 import type { AdminModuleV2 } from '@app/config/admin.config';
-import { logger } from '@app/lib/logger";
+import { logger } from '@app/lib/logger';
 
 export interface UseAdminModuleV2sReturn {
 	modules: AdminModuleV2[];

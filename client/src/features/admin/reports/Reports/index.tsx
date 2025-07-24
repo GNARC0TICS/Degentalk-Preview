@@ -67,7 +67,7 @@ import { AdminPageShell } from '@app/features/admin/layout/layout/AdminPageShell
 import { Alert, AlertDescription, AlertTitle } from '@app/components/ui/alert';
 import { apiRequest } from '@app/utils/queryClient';
 import type { ContentId, UserId } from '@shared/types/ids';
-import { logger } from '@app/lib/logger";
+import { logger } from '@app/lib/logger';
 
 // Types for reports
 interface ReportedContent {

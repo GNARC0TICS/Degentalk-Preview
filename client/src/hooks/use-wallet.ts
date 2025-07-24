@@ -13,7 +13,7 @@ import type {
 	DepositAddress
 } from '@app/features/wallet/services/wallet-api.service';
 import type { UserId } from '@shared/types/ids';
-import { logger } from '@app/lib/logger";
+import { logger } from '@app/lib/logger';
 
 export function useWallet() {
 	const queryClient = useQueryClient();

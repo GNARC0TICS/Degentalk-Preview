@@ -41,7 +41,7 @@ import {
 import { ROUTES } from '@app/constants/routes';
 
 import type { AdminUser } from '@app/types/admin.types';
-import { logger } from '@app/lib/logger";
+import { logger } from '@app/lib/logger';
 
 // Form data for user creation/updates
 export interface UserFormData {

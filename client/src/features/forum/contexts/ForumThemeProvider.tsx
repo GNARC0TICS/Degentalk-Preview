@@ -39,7 +39,7 @@ const UI_THEMES_ENDPOINT = '/api/ui/themes';
 
 // Use centralized CSS variable utilities
 import { setZoneAccentVariables } from '@app/styles/cssVariables';
-import { logger } from '@app/lib/logger";
+import { logger } from '@app/lib/logger';
 
 // Local alias for icon component type
 type LucideIcon = ComponentType<LucideProps>;

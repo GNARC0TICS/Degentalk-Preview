@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useRef, useState, useCallback } from 'react';
 import { useAuth } from './use-auth';
 import { toast } from 'sonner';
-import { logger } from '@app/lib/logger";
+import { logger } from '@app/lib/logger';
 
 interface WebSocketContextType {
   isConnected: boolean;

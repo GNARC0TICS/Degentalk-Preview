@@ -27,7 +27,7 @@ import {
 	Activity
 } from 'lucide-react';
 import { toast } from 'sonner';
-import { logger } from '@app/lib/logger";
+import { logger } from '@app/lib/logger';
 
 interface FixtureSession {
 	id: string;

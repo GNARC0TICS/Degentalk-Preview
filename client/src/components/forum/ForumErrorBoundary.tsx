@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@app/components/ui/car
 import { Wide } from '@app/layout/primitives';
 import { Button } from '@app/components/ui/button';
 import { ErrorBoundary } from '@app/components/errors/ErrorBoundary';
-import { logger } from '@app/lib/logger";
+import { logger } from '@app/lib/logger';
 
 interface FallbackProps {
 	error: Error;

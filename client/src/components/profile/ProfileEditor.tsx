@@ -10,7 +10,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiRequest } from '@app/utils/queryClient';
 import { Save, X, User, Image, Globe, MessageSquare } from 'lucide-react'; // Removed Upload icon
 import { FileDropZone } from '@app/components/ui/file-drop-zone';
-import { logger } from '@app/lib/logger";
+import { logger } from '@app/lib/logger';
 
 interface ProfileEditorProps {
 	profile: {

@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiRequest } from '@app/utils/api-request';
 import { useToast } from '@app/hooks/use-toast';
 import type { PreferenceSection } from '@app/types/preferences.types';
-import { logger } from '@app/lib/logger";
+import { logger } from '@app/lib/logger';
 
 /**
  * Hook to update user preferences

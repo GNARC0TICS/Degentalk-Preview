@@ -3,7 +3,7 @@ import { createContext, useContext, useState } from 'react';
 import type { ShopItem } from './use-shop-items';
 import { apiRequest } from '@app/utils/api-request';
 import { useAuth } from '@app/hooks/use-auth';
-import { logger } from '@app/lib/logger";
+import { logger } from '@app/lib/logger';
 
 interface PurchaseModalContextType {
 	isOpen: boolean;

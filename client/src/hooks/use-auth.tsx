@@ -8,7 +8,7 @@ import type { AuthUser, UserRole } from '@shared/types/auth-user.types';
 import type { UserId, FrameId } from '@shared/types/ids';
 import { toId } from '@shared/types/index';
 import { setAuthToken, removeAuthToken } from '@app/utils/auth-token';
-import { logger } from '@app/lib/logger";
+import { logger } from '@app/lib/logger';
 
 // Define user type
 // Re-export AuthUser as User for backward compatibility

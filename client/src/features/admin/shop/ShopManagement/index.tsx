@@ -10,7 +10,7 @@ import { AdminDataTable } from '@app/features/admin/components/common/AdminDataT
 import type { ColumnDef } from '@app/features/admin/layout/layout/EntityTable';
 import { Badge } from '@app/components/ui/badge';
 import type { UserId } from '@shared/types/ids';
-import { logger } from '@app/lib/logger";
+import { logger } from '@app/lib/logger';
 
 // Local Product shape (minimal) – avoids server schema coupling
 interface Product {

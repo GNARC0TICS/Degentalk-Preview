@@ -5,7 +5,7 @@ import { forumMap } from '@app/config/forumMap.config';
 import type { Zone } from '@app/config/forumMap.config';
 import type { CategoryId, ForumId, GroupId, ParentZoneId, ZoneId } from '@shared/types/ids';
 import { toId, parseId, toParentZoneId } from '@shared/types/index';
-import { logger } from '@app/lib/logger";
+import { logger } from '@app/lib/logger';
 
 // ===========================================================
 // ForumStructureContext v2.0  🛠️  (2025-06-16)

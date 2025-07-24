@@ -6,7 +6,7 @@ import { Button } from '@app/components/ui/button';
 import { Checkbox } from '@app/components/ui/checkbox';
 import { Label } from '@app/components/ui/label';
 import { Dialog, DialogContent, DialogTitle } from '@app/components/ui/dialog';
-import { logger } from '@app/lib/logger";
+import { logger } from '@app/lib/logger';
 
 interface Package {
 	id?: string;

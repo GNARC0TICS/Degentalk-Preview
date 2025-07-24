@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { logger } from '@app/lib/logger";
+import { logger } from '@app/lib/logger';
 
 /**
  * A hook that manages state with localStorage persistence

@@ -68,7 +68,7 @@ import { Badge } from '@app/components/ui/badge';
 import { useLocation } from 'react-router-dom'; // Fixed import for useLocation
 import { AdminPageShell } from '@app/features/admin/layout/layout/AdminPageShell';
 import { apiRequest } from '@app/utils/api-request';
-import { logger } from '@app/lib/logger";
+import { logger } from '@app/lib/logger';
 
 const categorySchema = z.object({
 	name: z

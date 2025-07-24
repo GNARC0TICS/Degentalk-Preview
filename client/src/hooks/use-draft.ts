@@ -16,7 +16,7 @@ const debounce = <T extends (...args: any[]) => any>(
 	};
 };
 import type { CategoryId, PrefixId, DraftId, TagId } from '@shared/types/ids';
-import { logger } from '@app/lib/logger";
+import { logger } from '@app/lib/logger';
 
 interface DraftData {
 	id?: DraftId;

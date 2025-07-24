@@ -3,7 +3,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiRequest } from '@app/utils/queryClient';
 import type { Transaction } from '@app/types/wallet';
 import type { WalletBalances } from '@app/types/wallet';
-import { logger } from '@app/lib/logger";
+import { logger } from '@app/lib/logger';
 
 // Define the wallet context state type
 interface WalletContextType {

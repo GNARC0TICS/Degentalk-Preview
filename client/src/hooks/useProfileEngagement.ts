@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@app/hooks/use-auth';
-import { logger } from '@app/lib/logger";
+import { logger } from '@app/lib/logger';
 
 interface EngagementEvent {
 	type: 'view' | 'tab_switch' | 'action' | 'scroll' | 'time_spent';

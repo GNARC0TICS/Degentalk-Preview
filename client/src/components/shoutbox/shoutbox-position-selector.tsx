@@ -9,7 +9,7 @@ import type { ShoutboxPosition } from '@app/contexts/shoutbox-context';
 import { useToast } from '@app/hooks/use-toast';
 import { useMobileDetector } from '@app/hooks/use-media-query';
 import { useLayoutStore, type SlotId } from '@app/stores/useLayoutStore';
-import { logger } from '@app/lib/logger";
+import { logger } from '@app/lib/logger';
 
 // Desktop position options
 const desktopPositionOptions: { value: ShoutboxPosition; label: string; description: string }[] = [

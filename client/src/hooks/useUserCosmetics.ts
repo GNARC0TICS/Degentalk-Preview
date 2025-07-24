@@ -4,7 +4,7 @@ import type { UserInventoryWithProduct, AppliedCosmetics } from '@app/types/inve
 import { apiRequest } from '@app/utils/api-request';
 import { applyPluginRewards } from '@app/utils/applyPluginRewards';
 import type { UserId } from '@shared/types/ids';
-import { logger } from '@app/lib/logger";
+import { logger } from '@app/lib/logger';
 
 // TODO: Replace with actual useUser hook from your application
 // This is a placeholder/mock for demonstration if the real hook doesn't exist yet.

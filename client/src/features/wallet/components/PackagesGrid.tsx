@@ -3,7 +3,7 @@ import { useDgtPackages } from '@app/hooks/use-dgt-packages';
 import { WalletApiService } from '@app/features/wallet/services/wallet-api.service';
 import { DgtPackageCard } from './DgtPackageCard';
 import { DegenLoader } from '@app/components/uiverse-clones/loaders';
-import { logger } from '@app/lib/logger";
+import { logger } from '@app/lib/logger';
 
 const walletApi = new WalletApiService();
 

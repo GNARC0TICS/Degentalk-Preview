@@ -1,4 +1,4 @@
-import { logger } from '@app/lib/logger";
+import { logger } from '@app/lib/logger';
 
 /**
  * JWT Token Management Utilities

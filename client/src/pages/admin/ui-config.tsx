@@ -64,7 +64,7 @@ import { useAdminModuleV2 } from '@app/hooks/use-admin-modules';
 import { VisualJsonTabs } from '@app/features/admin/components/VisualJsonTabs';
 import { useJsonConfig } from '@app/hooks/useJsonConfig';
 import { uiQuotesSchema, type UIQuotes } from '@app/schemas/uiQuotes.schema';
-import { logger } from '@app/lib/logger";
+import { logger } from '@app/lib/logger';
 
 // Types
 interface Quote {

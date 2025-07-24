@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useReducer, useEffect, ReactNode } from 'react';
 import { z } from 'zod';
-import { logger } from '@app/lib/logger";
+import { logger } from '@app/lib/logger';
 
 // Schema definitions
 const ResponsiveSpacingSchema = z.object({

@@ -4,7 +4,7 @@ import { apiRequest } from '@app/utils/api-request';
 import { useToast } from '@app/hooks/use-toast';
 import type { Notification } from '@app/types/notifications';
 import api from '@app/core/api';
-import { logger } from '@app/lib/logger";
+import { logger } from '@app/lib/logger';
 
 export function useNotifications() {
 	const queryClient = useQueryClient();

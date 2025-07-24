@@ -3,7 +3,7 @@ import { AlertTriangle, Settings, RefreshCw, Shield } from 'lucide-react';
 import { Button } from '@app/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@app/components/ui/card';
 import { ErrorBoundary } from './ErrorBoundary';
-import { logger } from '@app/lib/logger";
+import { logger } from '@app/lib/logger';
 
 /**
  * Specialized Error Boundary for Admin operations

@@ -20,7 +20,7 @@ import { Card, CardContent, CardFooter } from '@app/components/ui/card';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@app/components/ui/tooltip';
 import { useToast } from '@app/hooks/use-toast';
 import { LoadingSpinner } from '@app/components/ui/loader';
-import { logger } from '@app/lib/logger";
+import { logger } from '@app/lib/logger';
 
 interface ShopItemCardProps {
 	item: ShopItem;

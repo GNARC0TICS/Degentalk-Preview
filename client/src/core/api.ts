@@ -8,7 +8,7 @@ import type {
 	WalletBalances
 } from '@app/types/wallet';
 import type { RoomId, TipId, VaultId, ActionId, UserId } from '@shared/types/ids';
-import { logger } from '@app/lib/logger";
+import { logger } from '@app/lib/logger';
 
 // API endpoint base URL
 const API_BASE_URL = '/api';

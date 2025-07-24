@@ -21,7 +21,7 @@ import { useAuth } from '@app/hooks/use-auth';
 import { apiRequest } from '@app/utils/queryClient';
 import { LoadingSpinner as Spinner } from '@app/components/ui/loader';
 import type { RuleId, UserId, EntityId } from '@shared/types/ids';
-import { logger } from '@app/lib/logger";
+import { logger } from '@app/lib/logger';
 
 // Type definitions
 interface ForumRule {

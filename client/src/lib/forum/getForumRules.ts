@@ -6,7 +6,7 @@ import type { AdminId } from '@shared/types/ids';
  */
 
 import type { MergedRules } from '@app/features/forum/contexts/ForumStructureContext';
-import { logger } from '@app/lib/logger";
+import { logger } from '@app/lib/logger';
 
 // This function is deprecated - use ForumStructureContext instead
 export function getForumRules(forumSlug: AdminId): MergedRules | undefined {
