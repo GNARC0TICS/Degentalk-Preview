@@ -17,7 +17,7 @@ module.exports = {
 		schema: [],
 		messages: {
 			missingImport:
-				"Missing import for branded ID type: {{idType}}. Add: import type { {{idType}} } from '@db/types';",
+				"Missing import for branded ID type: {{idType}}. Add: import type { {{idType}} } from '@shared/types/ids';",
 			suggestImport: 'Consider adding import for {{idType}}'
 		}
 	},
@@ -59,9 +59,9 @@ module.exports = {
 		function checkForDbTypesImport(node) {
 			if (
 				node.source &&
-				(node.source.value === '@db/types' ||
-					node.source.value === '@/db/types' ||
-					node.source.value.includes('db/types'))
+				(node.source.value === '@shared/types/ids' ||
+					node.source.value === '@/shared/types/ids' ||
+					node.source.value.includes('shared/types/ids'))
 			) {
 				hasDbTypesImport = true;
 
@@ -90,14 +90,14 @@ module.exports = {
 						messageId: 'missingImport',
 						data: { idType: name },
 						fix(fixer) {
-							// Find existing @db/types import to extend
+							// Find existing @shared/types/ids import to extend
 							const existingImport = sourceCode.ast.body.find(
 								(node) =>
 									node.type === 'ImportDeclaration' &&
 									node.source &&
-									(node.source.value === '@db/types' ||
-										node.source.value === '@/db/types' ||
-										node.source.value.includes('db/types'))
+									(node.source.value === '@shared/types/ids' ||
+										node.source.value === '@/shared/types/ids' ||
+										node.source.value.includes('shared/types/ids'))
 							);
 
 							if (existingImport) {
@@ -113,7 +113,7 @@ module.exports = {
 								const insertPosition = firstImport ? firstImport.range[0] : 0;
 								return fixer.insertTextAt(
 									insertPosition,
-									`import type { ${name} } from '@db/types';\n`
+									`import type { ${name} } from '@shared/types/ids';\n`
 								);
 							}
 						}
@@ -135,7 +135,7 @@ module.exports = {
 				const missingTypes = Array.from(usedTypes).filter((type) => !importedTypes.has(type));
 
 				if (missingTypes.length > 0 && !hasDbTypesImport) {
-					// If no @db/types import exists, suggest adding one with all missing types
+					// If no @shared/types/ids import exists, suggest adding one with all missing types
 					const firstNode = sourceCode.ast.body[0];
 					if (firstNode) {
 						context.report({
@@ -145,7 +145,7 @@ module.exports = {
 							fix(fixer) {
 								return fixer.insertTextBefore(
 									firstNode,
-									`import type { ${missingTypes.join(', ')} } from '@db/types';\n`
+									`import type { ${missingTypes.join(', ')} } from '@shared/types/ids';\n`
 								);
 							}
 						});

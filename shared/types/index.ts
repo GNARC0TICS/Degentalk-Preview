@@ -451,7 +451,7 @@ export {
 // Auth User types (unified)
 export type {
 	AuthUser,
-	UserRole
+	UserRole as LegacyUserRole
 } from './auth-user.types.js';
 
 export {
@@ -462,6 +462,9 @@ export {
 
 // Branded ID types
 export * from './ids.js';
+
+// Auth types (new consolidated types)
+export * from './auth.types.js';
 
 // ID creation helpers from utils
 export {

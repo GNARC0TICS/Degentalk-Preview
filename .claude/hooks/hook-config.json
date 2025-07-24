@@ -89,6 +89,13 @@
       "enabled": true,
       "severity": "error",
       "autoFix": false
+    },
+    "prevent-duplicate-directories": {
+      "enabled": true,
+      "severity": "error",
+      "autoFix": false,
+      "description": "Prevents creating duplicate directories in shared workspace",
+      "hooks": ["pre-edit", "pre-create"]
     }
   },
   "projectType": "monorepo",

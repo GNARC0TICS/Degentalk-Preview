@@ -5,7 +5,7 @@
  * Used by the auth system throughout the application
  */
 
-import type { UserId, FrameId, WalletId, BadgeId, TitleId } from './ids';
+import type { UserId, FrameId, WalletId, BadgeId, TitleId } from './ids.js';
 
 /**
  * User roles as string literals for type safety
@@ -13,6 +13,9 @@ import type { UserId, FrameId, WalletId, BadgeId, TitleId } from './ids';
 export type UserRole = 'user' | 'moderator' | 'admin' | 'super_admin';
 
 /**
+ * @deprecated Use AuthenticatedUser from auth.types.ts for server-side auth
+ * or CanonicalUser from user.types.ts for client-side display
+ * 
  * The unified User type used by the auth system
  * This combines all the properties needed across the application
  */

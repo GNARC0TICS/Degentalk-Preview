@@ -9,8 +9,9 @@ import type { Id } from './ids.js';
 import type { BasicRole } from './index.js';
 
 /**
- * Basic User type for authentication
- * @deprecated Use CanonicalUser for new features
+ * @deprecated Use CanonicalUser for UI/display or AuthenticatedUser for auth/security
+ * Migration: Server code should use AuthenticatedUser, client code should use CanonicalUser
+ * See /docs/USER_MODEL_CONTRACT.md for migration guide
  */
 export interface User {
   id: Id<'UserId'>;

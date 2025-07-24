@@ -21,6 +21,10 @@ export interface LevelConfig {
  * across the application. They ensure type safety and consistency.
  */
 
+/**
+ * @deprecated Use CanonicalUser for UI/display or AuthenticatedUser for auth/security
+ * Migration guide: /docs/USER_MODEL_CONTRACT.md
+ */
 export interface User {
 	id: UserId;
 	username: string;
@@ -275,12 +279,30 @@ export function isUserInventory(value: unknown): value is UserInventory {
 }
 
 // Utility types
+/**
+ * @deprecated Use CanonicalUser with wallet field
+ */
 export type UserWithWallet = User & { wallet: UserWallet };
+
+/**
+ * @deprecated Use CanonicalUser with stats included
+ */
 export type UserWithStats = User & { stats: UserStats };
+
+/**
+ * @deprecated Use role-based DTOs from user-secure.types.ts
+ */
 export type PublicUser = Omit<User, 'email' | 'emailVerified' | 'settings'>;
 
 // Additional user response types for different contexts
+/**
+ * @deprecated Use AuthenticatedUser for auth contexts
+ */
 export type AuthenticatedUserSelf = User; // Full user data for own profile
+
+/**
+ * @deprecated Use AdminUserDetail from user-secure.types.ts
+ */
 export type AdminUserDetail = User & {
 	adminNotes?: string;
 	internalFlags?: string[];

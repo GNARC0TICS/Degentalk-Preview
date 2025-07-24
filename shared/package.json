@@ -17,12 +17,13 @@
 		"./constants": "./constants.ts",
 		"./enums": "./enums/index.ts",
 		"./lib": "./lib/index.ts",
-		"./paths": "./paths.config.ts",
-		"./wallet": "./wallet.config.ts",
+		"./paths": "./config/paths.config.ts",
+		"./wallet": "./config/wallet.config.ts",
 		"./utils/id": "./utils/id.ts",
 		"./utils/id-conversions": "./utils/id-conversions.ts"
 	},
 	"scripts": {
+		"prebuild": "! find . -name '*.js' -not -path './node_modules/*' -not -path './dist/*' | grep .",
 		"build": "tsc -b",
 		"typecheck": "tsc -b --noEmit"
 	},

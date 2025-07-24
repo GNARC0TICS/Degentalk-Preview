@@ -35,7 +35,6 @@
 		"allowImportingTsExtensions": true,
 		"experimentalDecorators": true,
 		"emitDecoratorMetadata": true,
-		"composite": true,
 		"outDir": "./dist",
 		"types": ["node"],
 		"paths": {
@@ -64,6 +63,5 @@
 			"@lib/*": ["../lib/*"],
 			"@forum-sdk/*": ["../forum-sdk/*"]
 		}
-	},
-	"references": [{ "path": "../shared" }]
+	}
 }

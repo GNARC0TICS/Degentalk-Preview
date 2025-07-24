@@ -1,10 +1,9 @@
 {
 	"extends": "../tsconfig.base.json",
 	"compilerOptions": {
-		"composite": true,
 		"outDir": "dist",
 		"skipLibCheck": true,
-		"rootDir": "../",
+		"rootDir": ".",
 		"module": "ESNext",
 		"moduleResolution": "bundler",
 		"jsx": "react-jsx",
@@ -30,6 +29,5 @@
 		},
 		"allowImportingTsExtensions": true
 	},
-	"include": ["src", "../config/uiverse-components.config.ts"],
-	"references": [{ "path": "../shared" }]
+	"include": ["src", "../config/uiverse-components.config.ts"]
 }

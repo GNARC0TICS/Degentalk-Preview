@@ -1,8 +1,5 @@
-import { economyConfig, getXpForLevel } from './economy.config.js';
+import { economyConfig, getXpForLevel } from '../config/economy.config.js';
 import { rainTipConfig } from './rain-tip-config.js';
-
-// Re-export for convenience
-export { getXpForLevel };
 
 // -------- XP → Level helpers --------
 export const getLevelForXp = (totalXp: number): number => {

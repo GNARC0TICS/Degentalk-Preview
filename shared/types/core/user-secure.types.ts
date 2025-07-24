@@ -13,6 +13,10 @@ import type { UserId } from '../ids.js';
 // Security-enhanced user types
 export type UserRole = 'admin' | 'moderator' | 'user' | 'banned';
 
+/**
+ * @deprecated Use CanonicalUser for public display contexts
+ * This type will be removed in favor of privacy-filtered CanonicalUser
+ */
 export interface PublicUser {
 	id: UserId;
 	username: string;
@@ -22,6 +26,10 @@ export interface PublicUser {
 	createdAt: Date;
 }
 
+/**
+ * @deprecated Use AuthenticatedUser from auth.types.ts for auth contexts
+ * or CanonicalUser for UI contexts
+ */
 export interface AuthenticatedUserSelf extends PublicUser {
 	email: string;
 	emailVerified: boolean;
@@ -30,6 +38,10 @@ export interface AuthenticatedUserSelf extends PublicUser {
 	privacy: PrivacySettings;
 }
 
+/**
+ * @deprecated Use AuthenticatedUser with admin-specific fields
+ * Will be replaced with proper role-based access control
+ */
 export interface AdminUserDetail extends AuthenticatedUserSelf {
 	ipAddressHash?: string;
 	registrationIp?: string;
