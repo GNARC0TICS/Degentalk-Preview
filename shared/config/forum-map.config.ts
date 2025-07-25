@@ -51,12 +51,12 @@ const ForumThemeSchema = z.object({
 	customStyles: z.optional(z.record(z.string()))
 });
 
-// TypeScript types that need to be defined before Forum interface
+// TypeScript types that need to be defined before Forum
 export type ForumRules = z.infer<typeof ForumRulesSchema>;
 export type ForumTheme = z.infer<typeof ForumThemeSchema>;
 
-// Define the Forum interface
-export interface Forum {
+// Forum type definition
+export type Forum = {
 	slug: string;
 	name: string;
 	description?: string;
@@ -65,7 +65,7 @@ export interface Forum {
 	position?: number;
 	tags?: string[];
 	forums?: Forum[];
-}
+};
 
 // Forum schema with recursive subforums
 const ForumSchema: z.ZodType<Forum> = z.lazy(() =>
@@ -101,8 +101,7 @@ export const forumMapSchema = z.object({
 
 // TypeScript types derived from Zod schemas
 export type PrefixGrantRule = z.infer<typeof PrefixGrantRuleSchema>;
-// ForumRules and ForumTheme are defined above before Forum interface
-// Forum type is defined as interface above
+// ForumRules, ForumTheme, and Forum are defined above
 export type RootForum = z.infer<typeof RootForumSchema>;
 export type ForumMap = z.infer<typeof forumMapSchema>;
 
