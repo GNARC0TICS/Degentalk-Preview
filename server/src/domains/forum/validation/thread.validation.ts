@@ -8,7 +8,7 @@ const createThreadSchema = z.object({
 			.min(3, 'Title must be at least 3 characters')
 			.max(200, 'Title cannot exceed 200 characters'),
 		content: z.string().min(1, 'Content is required'),
-		structureId: z.string().uuid(),
+		forumSlug: z.string().min(1, 'Forum slug is required'),
 		tags: z.array(z.string().max(50)).optional(),
 		isLocked: z.boolean().optional(),
 		isPinned: z.boolean().optional(),

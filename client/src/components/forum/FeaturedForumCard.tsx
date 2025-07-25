@@ -95,7 +95,9 @@ export const getForumThemeVars = (colorTheme: string): React.CSSProperties => {
 };
 
 // Generate CSS custom properties from a theme object
-export const getForumThemeVarsFromTheme = (theme: ReturnType<typeof getForumTheme>): React.CSSProperties => {
+export const getForumThemeVarsFromTheme = (
+	theme: ReturnType<typeof getForumTheme>
+): React.CSSProperties => {
 	// Convert Tailwind classes to CSS custom properties
 	const accentColorMap: Record<string, string> = {
 		'text-red-400': '#f87171',
@@ -139,14 +141,14 @@ const FeaturedForumCardPure = memo(
 		onEnter,
 		onCtaClick
 	}: FeaturedForumCardProps) => {
-		const derivedForum = zone;
+		const derivedForum = forum;
 
 		// Use consolidated theme configuration
 		// Apply fallback theme if no banner image is provided
-		const theme = forum.bannerImage 
+		const theme = forum.bannerImage
 			? getForumTheme(forum.colorTheme)
 			: getFallbackForumTheme(forum.id);
-		
+
 		// Map string icon names to React components
 		const iconMap: Record<string, React.ComponentType<any>> = {
 			Flame,
@@ -166,7 +168,7 @@ const FeaturedForumCardPure = memo(
 			Snowflake,
 			Moon
 		};
-		
+
 		const IconComponent = iconMap[theme.icon] || MessageSquare;
 
 		// Generate CSS variables for theming
@@ -252,7 +254,7 @@ const FeaturedForumCardPure = memo(
 
 						{/* Fallback pattern when no banner image */}
 						{!forum.bannerImage && (
-							<div 
+							<div
 								className="absolute inset-0 opacity-10"
 								style={{
 									backgroundImage: `radial-gradient(circle at 20% 80%, var(--zone-accent) 0%, transparent 50%),
@@ -317,7 +319,9 @@ const FeaturedForumCardPure = memo(
 							</Link>
 						)}
 
-						<CardHeader className={cn("relative z-10", layout === 'compact' ? "pb-2 pt-3" : "pb-3")}>
+						<CardHeader
+							className={cn('relative z-10', layout === 'compact' ? 'pb-2 pt-3' : 'pb-3')}
+						>
 							{slots?.header ?? (
 								<div className="flex items-center gap-3">
 									<motion.div
@@ -327,29 +331,35 @@ const FeaturedForumCardPure = memo(
 											ease: animationConfig.easings.standard
 										}}
 										className={cn(
-											"rounded-full bg-zinc-800/50 backdrop-blur-sm border border-zinc-700/50 flex items-center justify-center",
-											layout === 'compact' ? "w-10 h-10" : "w-12 h-12"
+											'rounded-full bg-zinc-800/50 backdrop-blur-sm border border-zinc-700/50 flex items-center justify-center',
+											layout === 'compact' ? 'w-10 h-10' : 'w-12 h-12'
 										)}
 										style={{ color: 'var(--zone-accent)' }}
 									>
 										{derivedForum.icon ? (
-											<span className={layout === 'compact' ? "text-xl" : "text-2xl"}>{derivedForum.icon}</span>
+											<span className={layout === 'compact' ? 'text-xl' : 'text-2xl'}>
+												{derivedForum.icon}
+											</span>
 										) : (
-											<IconComponent className={layout === 'compact' ? "w-5 h-5" : "w-6 h-6"} />
+											<IconComponent className={layout === 'compact' ? 'w-5 h-5' : 'w-6 h-6'} />
 										)}
 									</motion.div>
 
 									<div className="flex-1 min-w-0">
-										<h3 className={cn(
-											"font-bold text-white group-hover:text-[var(--zone-accent)] transition-colors",
-											layout === 'compact' ? "text-lg mb-0.5" : "text-xl mb-1"
-										)}>
+										<h3
+											className={cn(
+												'font-bold text-white group-hover:text-[var(--zone-accent)] transition-colors',
+												layout === 'compact' ? 'text-lg mb-0.5' : 'text-xl mb-1'
+											)}
+										>
 											{derivedForum.name}
 										</h3>
-										<p className={cn(
-											"text-zinc-400 line-clamp-1 leading-tight",
-											layout === 'compact' ? "text-xs" : "text-sm"
-										)}>
+										<p
+											className={cn(
+												'text-zinc-400 line-clamp-1 leading-tight',
+												layout === 'compact' ? 'text-xs' : 'text-sm'
+											)}
+										>
 											{derivedForum.description}
 										</p>
 									</div>
@@ -357,9 +367,12 @@ const FeaturedForumCardPure = memo(
 							)}
 						</CardHeader>
 
-						<CardContent className={cn("relative z-10", layout === 'compact' ? "space-y-2 py-2" : "space-y-3")}>
+						<CardContent
+							className={cn('relative z-10', layout === 'compact' ? 'space-y-2 py-2' : 'space-y-3')}
+						>
 							{/* Activity Stats */}
-							{showStats && layout !== 'compact' &&
+							{showStats &&
+								layout !== 'compact' &&
 								(slots?.stats ?? (
 									<div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
 										<motion.div
@@ -456,8 +469,8 @@ const FeaturedForumCardPure = memo(
 							{/* Forum Previews - Always Visible */}
 							{derivedForum.forums &&
 								derivedForum.forums.length > 0 &&
-								(slots?.preview ?? (
-									layout === 'compact' ? (
+								(slots?.preview ??
+									(layout === 'compact' ? (
 										<div className="flex flex-wrap gap-2">
 											{previewForums.map(
 												(forumItem: { id: ForumId; name: string; threadCount?: number }) => (
@@ -489,17 +502,18 @@ const FeaturedForumCardPure = memo(
 												)
 											)}
 										</div>
-									)
-								))}
+									)))}
 						</CardContent>
 
-						<CardFooter className={cn("relative z-10", layout === 'compact' ? "pt-1 pb-2" : "pt-2")}>
+						<CardFooter
+							className={cn('relative z-10', layout === 'compact' ? 'pt-1 pb-2' : 'pt-2')}
+						>
 							{slots?.footer ?? (
 								<Button
 									size={layout === 'compact' ? 'sm' : 'default'}
 									className={cn(
-										"w-full transition-all duration-300 bg-zinc-800/50 hover:bg-zinc-700/50 border border-zinc-700/50 hover:border-[var(--zone-accent)] hover:shadow-lg text-[var(--zone-accent)]",
-										layout === 'compact' && "h-8 text-sm"
+										'w-full transition-all duration-300 bg-zinc-800/50 hover:bg-zinc-700/50 border border-zinc-700/50 hover:border-[var(--zone-accent)] hover:shadow-lg text-[var(--zone-accent)]',
+										layout === 'compact' && 'h-8 text-sm'
 									)}
 									style={
 										{
@@ -510,7 +524,12 @@ const FeaturedForumCardPure = memo(
 									aria-label={`Enter forum ${derivedForum.name}`}
 								>
 									<span>Enter {derivedForum.name}</span>
-									<ArrowRight className={cn("ml-2 group-hover:translate-x-1 transition-transform", layout === 'compact' ? "w-3 h-3" : "w-4 h-4")} />
+									<ArrowRight
+										className={cn(
+											'ml-2 group-hover:translate-x-1 transition-transform',
+											layout === 'compact' ? 'w-3 h-3' : 'w-4 h-4'
+										)}
+									/>
 								</Button>
 							)}
 						</CardFooter>

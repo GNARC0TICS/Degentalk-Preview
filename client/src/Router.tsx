@@ -11,6 +11,7 @@ import ForumsIndexPage from './pages/forums/index';
 import ForumRoutePage from './pages/forums/[forumSlug]';
 import ForumSearchPage from './pages/forums/search';
 import CreateThreadPage from './pages/threads/create';
+import ThreadDetailPage from './pages/threads/[slug]';
 import ShopPage from './pages/shop';
 import LeaderboardPage from './pages/leaderboard';
 import DegenIndexPage from './pages/degen-index';
@@ -66,6 +67,10 @@ export const router = createBrowserRouter([
       { path: 'forums/:forumSlug', element: <ForumRoutePage /> },
       { path: 'forums/:forumSlug/:subforumSlug', element: <ForumRoutePage /> },
       
+      // Thread Routes
+      { path: 'threads/create', element: <ProtectedRoute><CreateThreadPage /></ProtectedRoute> },
+      { path: 'threads/:slug', element: <ThreadDetailPage /> },
+
       // Protected Forum Routes
       { 
         path: 'forums/:forumSlug/create', 

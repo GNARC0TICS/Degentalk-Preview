@@ -38,12 +38,9 @@ interface ThreadFormProps {
 	className?: string;
 }
 
-export function ThreadForm({
-	forumSlug,
-	forumRules,
-	onSuccess,
-	className
-}: ThreadFormProps) {
+export function ThreadForm({ forumSlug, forumRules, onSuccess, className }: ThreadFormProps) {
+	// forumRules will be used for validation in future updates
+	void forumRules; // Mark as intentionally unused for now
 	const navigate = useNavigate();
 	const { toast } = useToast();
 	const [activeTab, setActiveTab] = useState<'write' | 'preview'>('write');
@@ -61,7 +58,7 @@ export function ThreadForm({
 	const createThreadMutation = useMutation({
 		mutationFn: async (data: ThreadFormData) => {
 			return apiRequest<{ slug: string }>({
-				url: '/api/threads',
+				url: '/api/forum/threads',
 				method: 'POST',
 				data: {
 					...data,

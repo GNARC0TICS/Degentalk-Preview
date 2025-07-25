@@ -1,18 +1,22 @@
 import React, { useState, memo, useCallback } from 'react';
-import { Navigate, useParams } from 'react-router-dom';
+import { Navigate, useParams, useNavigate } from 'react-router-dom';
 import { Filter } from 'lucide-react';
 
 import { Button } from '@app/components/ui/button';
-import { getCreateThreadUrl } from '@app/utils/forum';
 import { useForumStructure } from '@app/features/forum/contexts/ForumStructureContext';
 import { useForumFilters } from '@app/hooks/useForumFilters';
 import { Wide } from '@app/layout/primitives';
 import { ThreadFilters } from '@app/components/forum/ThreadFilters';
-import { ForumBreadcrumbs, createForumBreadcrumbs } from '@app/components/navigation/ForumBreadcrumbs';
+import {
+	ForumBreadcrumbs,
+	createForumBreadcrumbs
+} from '@app/components/navigation/ForumBreadcrumbs';
 import ThreadList from '@app/features/forum/components/ThreadList';
 import { DynamicSidebar } from '@app/components/forum/sidebar';
 import { ForumHeader } from '@app/features/forum/components/ForumHeader';
 import { MyBBThreadList } from '@app/components/forum/MyBBThreadList';
+import { ChevronRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import type { ForumId, StructureId, UserId, ThreadId } from '@shared/types/ids';
 import { toUserId, toThreadId, toStructureId, toForumId } from '@shared/utils/id';
 import type { Thread } from '@shared/types/thread.types';
@@ -26,7 +30,7 @@ function getDemoThreads(forumSlug: string): Thread[] {
 	const baseThreads = [
 		{
 			id: '1',
-			title: '🚀 Bitcoin hitting $100k EOY - Here\'s why',
+			title: "🚀 Bitcoin hitting $100k EOY - Here's why",
 			slug: 'bitcoin-hitting-100k-eoy-heres-why',
 			user: { id: '1', username: 'CryptoKing', avatarUrl: null, isOnline: true },
 			createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
@@ -93,7 +97,7 @@ function getDemoThreads(forumSlug: string): Thread[] {
 	];
 
 	// Add required properties to make threads conform to Thread type
-	return baseThreads.map(thread => ({
+	return baseThreads.map((thread) => ({
 		...thread,
 		id: toThreadId(thread.id),
 		// Add missing Thread properties
@@ -101,17 +105,21 @@ function getDemoThreads(forumSlug: string): Thread[] {
 		isHidden: false,
 		firstPostLikeCount: 0,
 		userId: toUserId(thread.user.id),
-		
+
 		// Add structure relationship
 		structure: {
 			id: toStructureId('struct_1'),
-			name: forumSlug === 'market-analysis' ? 'Market Analysis' : 
-			      forumSlug === 'live-trade-reacts' ? 'Live-Trade Reacts' : 'Shill Zone',
+			name:
+				forumSlug === 'market-analysis'
+					? 'Market Analysis'
+					: forumSlug === 'live-trade-reacts'
+						? 'Live-Trade Reacts'
+						: 'Shill Zone',
 			slug: forumSlug,
 			type: 'forum' as const
 		},
-		
-		// Add featured forum relationship  
+
+		// Add featured forum relationship
 		featuredForum: {
 			id: toForumId('forum_1'),
 			name: 'Trading',
@@ -133,7 +141,7 @@ function getDemoThreads(forumSlug: string): Thread[] {
 			createdAt: new Date().toISOString(),
 			updatedAt: new Date().toISOString()
 		},
-		
+
 		// Add enhanced user data for Thread
 		user: {
 			...thread.user,
@@ -157,10 +165,10 @@ function getDemoThreads(forumSlug: string): Thread[] {
 			isVerified: false,
 			isBanned: false
 		},
-		
+
 		// Add tags array
 		tags: [],
-		
+
 		// Add permissions
 		permissions: {
 			canEdit: false,
@@ -169,29 +177,28 @@ function getDemoThreads(forumSlug: string): Thread[] {
 			canMarkSolved: false,
 			canModerate: false
 		},
-		
+
 		// Legacy fields for compatibility
 		zoneName: 'Trading',
 		zoneSlug: 'trading',
-		forumName: forumSlug === 'market-analysis' ? 'Market Analysis' : 
-		           forumSlug === 'live-trade-reacts' ? 'Live-Trade Reacts' : 'Shill Zone',
+		forumName:
+			forumSlug === 'market-analysis'
+				? 'Market Analysis'
+				: forumSlug === 'live-trade-reacts'
+					? 'Live-Trade Reacts'
+					: 'Shill Zone',
 		forumSlug
 	})) as Thread[];
 }
 
 const ForumPage = memo(() => {
 	const params = useParams<{ zoneSlug?: string; forumSlug?: string; subforumSlug?: string }>();
+	const navigate = useNavigate();
 	// Use subforum slug if present, otherwise forum slug
 	const forumSlug = params?.subforumSlug || params?.forumSlug;
-	const zoneSlug = params?.zoneSlug;
-
-	// If no forum slug present, redirect to forums index
-	if (!forumSlug) {
-		return <Navigate to="/forums" replace />;
-	}
 
 	// We need zones because that's where top-level forums are stored (unfortunately)
-	const { getForum, getForumById, forums, forumsById, zones, isUsingFallback } = useForumStructure();
+	const { getForum, forumsById, zones, isUsingFallback } = useForumStructure();
 
 	// State management
 	const [showFilters, setShowFilters] = useState(false);
@@ -216,30 +223,31 @@ const ForumPage = memo(() => {
 	try {
 		// Try to find the forum by slug in child forums first
 		forum = forumSlug ? getForum(forumSlug) : null;
-		
+
 		// If not found, check top-level forums (stored in zones)
 		if (!forum && forumSlug) {
-			forum = zones.find(f => f.slug === forumSlug) || null;
+			forum = zones.find((f) => f.slug === forumSlug) || null;
 		}
-		
+
 		// If still not found, search all forums by ID
 		if (!forum && forumSlug) {
-			forum = Object.values(forumsById).find(f => f.slug === forumSlug) || null;
+			forum = Object.values(forumsById).find((f) => f.slug === forumSlug) || null;
 		}
 
 		// If we have a subforum, find its parent
 		if (params?.subforumSlug && params?.forumSlug) {
-			parentForum = getForum(params.forumSlug) || 
-				Object.values(forumsById).find(f => f.slug === params.forumSlug) || null;
+			parentForum =
+				getForum(params.forumSlug) ||
+				Object.values(forumsById).find((f) => f.slug === params.forumSlug) ||
+				null;
 		}
 	} catch (error) {
 		throw error as Error; // bubble up to error boundary
 	}
 
 	// Find parent forum if this is a child forum
-	const parentTopLevelForum = forum && forum.parentId 
-		? Object.values(forumsById).find(f => f.id === forum.parentId)
-		: null;
+	const parentTopLevelForum =
+		forum && forum.parentId ? Object.values(forumsById).find((f) => f.id === forum.parentId) : null;
 
 	const handleFiltersChange = useCallback(
 		(newFilters: typeof filters) => {
@@ -249,17 +257,21 @@ const ForumPage = memo(() => {
 	);
 
 	const handleNewThread = useCallback(() => {
-		// Navigate to create thread page using smart URL generation
-		if (forumSlug) {
-			const createUrl = getCreateThreadUrl(forumSlug, parentTopLevelForum?.slug);
-			window.location.href = createUrl;
+		// Navigate to create thread page with forum slug
+		if (forum) {
+			navigate(`/threads/create?forumSlug=${forum.slug}`);
 		}
-	}, [parentTopLevelForum, forumSlug]);
+	}, [forum, navigate]);
 
 	const breadcrumbItems = React.useMemo(() => {
 		if (!forum) return [];
 		return createForumBreadcrumbs.smartForum(parentForum, forum);
-	}, [parentTopLevelForum, forum, parentForum]);
+	}, [forum, parentForum]);
+
+	// If no forum slug present, redirect to forums index
+	if (!forumSlug) {
+		return <Navigate to="/forums" replace />;
+	}
 
 	if (!forum) {
 		return (
@@ -287,6 +299,35 @@ const ForumPage = memo(() => {
 						{/* Forum Header */}
 						{forum && (
 							<ForumHeader forum={forum} variant="detailed" onNewThread={handleNewThread} />
+						)}
+
+						{/* Subforums Display */}
+						{forum && forum.forums && forum.forums.length > 0 && (
+							<div className="mb-8">
+								<h3 className="text-lg font-semibold mb-4 text-zinc-200">Subforums</h3>
+								<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+									{forum.forums.map((subforum) => (
+										<Link
+											key={subforum.id}
+											to={`/forums/${subforum.slug}`}
+											className="group p-4 bg-zinc-900/50 border border-zinc-800 rounded-lg hover:bg-zinc-800/50 hover:border-zinc-700 transition-all"
+										>
+											<div className="flex items-center justify-between">
+												<div>
+													<h4 className="font-medium text-zinc-100 group-hover:text-white">
+														{subforum.name}
+													</h4>
+													<p className="text-sm text-zinc-500 mt-1">
+														{subforum.stats?.totalThreads || 0} threads •{' '}
+														{subforum.stats?.totalPosts || 0} posts
+													</p>
+												</div>
+												<ChevronRight className="w-5 h-5 text-zinc-600 group-hover:text-zinc-400" />
+											</div>
+										</Link>
+									))}
+								</div>
+							</div>
 						)}
 
 						{/* Filter Toggle */}
@@ -330,16 +371,17 @@ const ForumPage = memo(() => {
 								displayMode="table"
 							/>
 						) : (
-							<div className="text-center py-8 text-zinc-400">
-								{'No forum data available'}
-							</div>
+							<div className="text-center py-8 text-zinc-400">{'No forum data available'}</div>
 						)}
 					</div>
 
 					{/* Right Sidebar */}
 					<aside className="space-y-6">
-						{parentZone && forum?.id && (
-							<DynamicSidebar structureId={toStructureId(forum.id)} zoneSlug={parentZone.slug} />
+						{forum?.id && (
+							<DynamicSidebar
+								structureId={toStructureId(forum.id)}
+								zoneSlug={parentTopLevelForum?.slug || forum.slug}
+							/>
 						)}
 					</aside>
 				</div>

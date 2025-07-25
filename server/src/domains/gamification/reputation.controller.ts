@@ -13,7 +13,10 @@ const reputationService = new ReputationService();
 /** ---------------------------- ACHIEVEMENTS CRUD --------------------------- */
 export const getAllAchievements = async (req: Request, res: Response, next: NextFunction) => {
 	try {
-		const achievements = await db.select().from(reputationAchievements).orderBy(reputationAchievements.id);
+		const achievements = await db
+			.select()
+			.from(reputationAchievements)
+			.orderBy(reputationAchievements.id);
 
 		// Transform achievements for admin view
 		const transformedAchievements = ReputationTransformer.toAchievementList(
@@ -100,7 +103,10 @@ export const updateAchievement = async (req: Request, res: Response, next: NextF
 			.limit(1);
 		if (!exists.length) return sendErrorResponse(res, 'Achievement not found', 404);
 
-		await db.update(reputationAchievements).set(updateData).where(eq(reputationAchievements.id, id));
+		await db
+			.update(reputationAchievements)
+			.set(updateData)
+			.where(eq(reputationAchievements.id, id));
 		sendSuccessResponse(res, { message: 'Achievement updated' });
 	} catch (err) {
 		next(err);
@@ -127,7 +133,10 @@ export const toggleAchievement = async (req: Request, res: Response, next: NextF
 			.limit(1);
 		if (!rows.length) return sendErrorResponse(res, 'Achievement not found', 404);
 		const enabled = !rows[0].enabled;
-		await db.update(reputationAchievements).set({ enabled }).where(eq(reputationAchievements.id, id));
+		await db
+			.update(reputationAchievements)
+			.set({ enabled })
+			.where(eq(reputationAchievements.id, id));
 		sendSuccessResponse(res, { message: `Achievement ${enabled ? 'enabled' : 'disabled'}` });
 	} catch (err) {
 		next(err);
@@ -237,7 +246,11 @@ export const adjustReputation = async (req: Request, res: Response, next: NextFu
 
 		// Apply the reputation adjustment using our service
 		if (reputationChange !== 0) {
-			await reputationService.grantReputation(userId, reputationChange, `Admin Adjustment: ${reason}`);
+			await reputationService.grantReputation(
+				userId,
+				reputationChange,
+				`Admin Adjustment: ${reason}`
+			);
 		}
 
 		// Get updated user data
@@ -281,7 +294,11 @@ export const adjustReputation = async (req: Request, res: Response, next: NextFu
 	}
 };
 
-export const getReputationAdjustmentLogs = async (req: Request, res: Response, next: NextFunction) => {
+export const getReputationAdjustmentLogs = async (
+	req: Request,
+	res: Response,
+	next: NextFunction
+) => {
 	try {
 		const { userId, limit = 50 } = req.query as { userId?: string; limit?: string };
 

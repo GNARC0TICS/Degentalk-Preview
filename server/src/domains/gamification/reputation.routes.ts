@@ -1,4 +1,4 @@
-import { Router } from 'express'
+import { Router } from 'express';
 import type { Router as RouterType } from 'express';
 import { isAdmin } from '../../../auth/middleware/auth.middleware';
 import * as reputationController from './reputation.controller';

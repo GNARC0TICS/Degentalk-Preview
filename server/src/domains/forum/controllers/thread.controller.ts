@@ -6,6 +6,10 @@ import { getUser } from '@core/utils/auth.helpers';
 import { threadService } from '@api/domains/forum/services/thread.service';
 import { ThreadTransformer } from '@api/domains/forum/transformers/thread.transformer';
 import type { StructureId, ThreadId, UserId, TagId } from '@shared/types/ids';
+import { db } from '@db';
+import { forumStructure } from '@schema';
+import { eq } from 'drizzle-orm';
+import { ForumTransformer } from '@api/domains/forum/transformers/forum.transformer';
 
 class ThreadController {
 	async searchThreads(req: Request, res: Response) {
@@ -75,17 +79,27 @@ class ThreadController {
 
 	async createThread(req: Request, res: Response) {
 		const userId = getUser(req)?.id as UserId;
+		const { forumSlug, ...restBody } = req.body;
+
+		// Get forum structure by slug
+		const [structure] = await db
+			.select()
+			.from(forumStructure)
+			.where(eq(forumStructure.slug, forumSlug))
+			.limit(1);
+
+		if (!structure) {
+			return sendErrorResponse(res, 'Forum not found', 404);
+		}
+
 		const newThread = await threadService.createThread({
-			...req.body,
+			...restBody,
+			structureId: structure.id,
 			userId
 		});
 
-		const user = getUser(req);
-		const transformedThread = user
-			? ForumTransformer.toAuthenticatedThread(newThread, user)
-			: ForumTransformer.toPublicThread(newThread);
-
-		return sendSuccessResponse(res, transformedThread, 201);
+		// Return just the slug for the client to navigate
+		return sendSuccessResponse(res, { slug: newThread.slug }, 201);
 	}
 
 	async updateThreadSolvedStatus(req: Request, res: Response) {
