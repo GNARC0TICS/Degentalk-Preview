@@ -12,12 +12,22 @@ export default function ForumsIndexPage() {
   const context = useForumStructure();
   const [selectedCategory, setSelectedCategory] = useState<'all' | 'featured' | 'general'>('all');
   
-  // Since zones are now top-level forums, use zones as our forums list
-  const allForums = context.zones || [];
+  // The context unfortunately still uses 'zones' for top-level forums
+  // We need to work with this until we can refactor the context
+  const topLevelForums = context.zones || [];
+  const childForums = context.forums || {};
+  const allForumsById = context.forumsById || {};
   const loading = context.isLoading;
   const error = context.error;
   
-  console.log('Forums page - allForums:', allForums, 'loading:', loading);
+  // For now, display top-level forums only
+  const allForums = topLevelForums;
+  
+  console.log('Forums data:', {
+    topLevelForums,
+    childForums: Object.values(childForums),
+    allForumsById: Object.values(allForumsById)
+  });
 
   if (loading) {
     return (

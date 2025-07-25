@@ -190,7 +190,8 @@ const ForumPage = memo(() => {
 		return <Navigate to="/forums" replace />;
 	}
 
-	const { getForum, getZone, zones, isUsingFallback } = useForumStructure();
+	// We need zones because that's where top-level forums are stored (unfortunately)
+	const { getForum, getForumById, forums, forumsById, zones, isUsingFallback } = useForumStructure();
 
 	// State management
 	const [showFilters, setShowFilters] = useState(false);
@@ -213,27 +214,32 @@ const ForumPage = memo(() => {
 	let forum = null as ReturnType<typeof getForum> | null;
 	let parentForum = null as ReturnType<typeof getForum> | null;
 	try {
-		// First try to find it as a top-level forum (zone)
-		forum = forumSlug ? getZone(forumSlug) : null;
+		// Try to find the forum by slug in child forums first
+		forum = forumSlug ? getForum(forumSlug) : null;
 		
-		// If not found as top-level, try as a child forum
+		// If not found, check top-level forums (stored in zones)
 		if (!forum && forumSlug) {
-			forum = getForum(forumSlug);
+			forum = zones.find(f => f.slug === forumSlug) || null;
+		}
+		
+		// If still not found, search all forums by ID
+		if (!forum && forumSlug) {
+			forum = Object.values(forumsById).find(f => f.slug === forumSlug) || null;
 		}
 
 		// If we have a subforum, find its parent
 		if (params?.subforumSlug && params?.forumSlug) {
-			// Parent could be either a zone or a forum
-			parentForum = getZone(params.forumSlug) || getForum(params.forumSlug);
+			parentForum = getForum(params.forumSlug) || 
+				Object.values(forumsById).find(f => f.slug === params.forumSlug) || null;
 		}
 	} catch (error) {
 		throw error as Error; // bubble up to error boundary
 	}
 
-	// Find parent zone - either from URL or by searching
-	const parentZone = zoneSlug
-		? zones?.find((zone) => zone.slug === zoneSlug)
-		: zones?.find((zone) => zone.forums.some((f) => f.slug === forumSlug));
+	// Find parent forum if this is a child forum
+	const parentTopLevelForum = forum && forum.parentId 
+		? Object.values(forumsById).find(f => f.id === forum.parentId)
+		: null;
 
 	const handleFiltersChange = useCallback(
 		(newFilters: typeof filters) => {
@@ -245,15 +251,15 @@ const ForumPage = memo(() => {
 	const handleNewThread = useCallback(() => {
 		// Navigate to create thread page using smart URL generation
 		if (forumSlug) {
-			const createUrl = getCreateThreadUrl(forumSlug, parentZone?.slug);
+			const createUrl = getCreateThreadUrl(forumSlug, parentTopLevelForum?.slug);
 			window.location.href = createUrl;
 		}
-	}, [parentZone, forumSlug]);
+	}, [parentTopLevelForum, forumSlug]);
 
 	const breadcrumbItems = React.useMemo(() => {
 		if (!forum) return [];
 		return createForumBreadcrumbs.smartForum(parentForum, forum);
-	}, [parentZone, forum, parentForum]);
+	}, [parentTopLevelForum, forum, parentForum]);
 
 	if (!forum) {
 		return (
