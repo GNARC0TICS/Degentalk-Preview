@@ -20,6 +20,7 @@ export type ThreadId = Id<'ThreadId'>;
 export type PostId = Id<'PostId'>;
 export type ForumId = Id<'ForumId'>;
 export type CategoryId = Id<'CategoryId'>;
+export type ZoneId = ForumId; // Backward compatibility alias
 export type StructureId = Id<'StructureId'>;
 export type PrefixId = Id<'PrefixId'>;
 export type TagId = Id<'TagId'>;

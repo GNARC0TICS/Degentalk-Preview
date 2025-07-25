@@ -223,7 +223,7 @@ const EnhancedThreadCard = memo(
 								{/* Zone indicator */}
 								{thread.zone && (
 									<Badge variant="outline" className="text-xs">
-										{thread.zone.name}
+										{thread.featuredForum.name}
 									</Badge>
 								)}
 							</div>
@@ -327,7 +327,7 @@ const EnhancedThreadCard = memo(
 
 								{thread.zone && (
 									<Badge variant="outline" className="text-xs">
-										{thread.zone.name}
+										{thread.featuredForum.name}
 									</Badge>
 								)}
 							</div>

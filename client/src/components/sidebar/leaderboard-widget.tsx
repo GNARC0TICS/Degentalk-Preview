@@ -7,7 +7,7 @@
 
 import React from 'react';
 import { LeaderboardWidget } from '@app/components/leaderboard';
-import type { User } from '@app/types/compat/user';
+import type { User } from '@shared/types/user';
 
 // Define structure needed by the component
 type FormattedUser = {

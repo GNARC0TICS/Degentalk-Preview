@@ -349,7 +349,7 @@ function ContentItem({ item, showCategory = true }: { item: Thread; showCategory
 							<div className="flex items-center gap-2">
 								{/* Category tag */}
 								{showCategory && item.zone && (
-									<Link to={`/forums/${item.zone.slug}`}>
+									<Link to={`/forums/${item.featuredForum.slug}`}>
 										<span
 											className={cn(
 												'bg-zinc-900/60 text-zinc-300 border border-zinc-700 transition-all cursor-pointer rounded px-2 py-0.5',
@@ -358,13 +358,13 @@ function ContentItem({ item, showCategory = true }: { item: Thread; showCategory
 											)}
 											style={{ 
 												fontSize: theme.components.feed.typography.stats.size,
-												borderColor: item.zone.colorTheme ? `${item.zone.colorTheme}50` : undefined
+												borderColor: item.featuredForum.colorTheme ? `${item.featuredForum.colorTheme}50` : undefined
 											}}
 											onClick={(e) => {
 												e.stopPropagation();
 											}}
 										>
-											{item.zone.name}
+											{item.featuredForum.name}
 										</span>
 									</Link>
 								)}

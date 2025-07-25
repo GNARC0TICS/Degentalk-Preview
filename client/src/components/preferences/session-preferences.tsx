@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import type { User } from '@app/types/compat/user';
+import type { User } from '@shared/types/user';
 import { Button } from '@app/components/ui/button';
 import { Card, CardContent } from '@app/components/ui/card';
 import { Badge } from '@app/components/ui/badge';

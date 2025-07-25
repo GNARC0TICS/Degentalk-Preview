@@ -7,7 +7,7 @@ import type { Id } from '@shared/types/ids';
 // Alias for backward compatibility with existing variable names
 const titles = titlesTable;
 
-export class AdminTitlesService {
+export class TitlesService {
 	async list() {
 		// Get titles with their associated role information
 		const titles = await db

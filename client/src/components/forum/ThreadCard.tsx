@@ -90,7 +90,7 @@ const ThreadCard = memo(
 		const cardVariants = getCardSpacing();
 
 		// Resolve theme safely via shared config util
-		const zoneTheme = getForumTheme(thread.zone.colorTheme);
+		const zoneTheme = getForumTheme(thread.featuredForum.colorTheme);
 		const zoneThemeClass = zoneTheme.border ?? 'border-zinc-700/30 hover:border-zinc-600/60';
 
 		return (
@@ -193,10 +193,10 @@ const ThreadCard = memo(
 												<TooltipProvider>
 													<Tooltip>
 														<TooltipTrigger asChild>
-															<span className="text-zinc-400 cursor-help">{thread.zone.name}</span>
+															<span className="text-zinc-400 cursor-help">{thread.featuredForum.name}</span>
 														</TooltipTrigger>
 														<TooltipContent>
-															<p className="text-xs">Click to explore more threads in {thread.zone.name}</p>
+															<p className="text-xs">Click to explore more threads in {thread.featuredForum.name}</p>
 														</TooltipContent>
 													</Tooltip>
 												</TooltipProvider>

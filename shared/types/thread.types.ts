@@ -156,6 +156,12 @@ export interface Thread {
   bookmarkCount?: number;
   shareCount?: number;
   
+  // Temporary engagement object for backward compatibility
+  engagement?: {
+    tips?: number;
+    replies?: number;
+  };
+  
   // ========== Admin/Moderation Fields ==========
   deletedAt?: string;
   deletedBy?: UserId;

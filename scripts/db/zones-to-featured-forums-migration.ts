@@ -10,8 +10,7 @@
 import { drizzle } from 'drizzle-orm/node-postgres';
 import { eq } from 'drizzle-orm';
 import pg from 'pg';
-import { forumStructure } from '@db/schema';
-import { logger } from '@core/logger';
+import { forumStructure } from '../../db/schema/index.js';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -26,7 +25,7 @@ async function migrateZonesToFeaturedForums() {
 	const db = drizzle(pool);
 
 	try {
-		logger.info('Starting zones → featured forums migration...');
+		console.log('Starting zones → featured forums migration...');
 
 		// Get all zones
 		const zones = await db
@@ -34,7 +33,7 @@ async function migrateZonesToFeaturedForums() {
 			.from(forumStructure)
 			.where(eq(forumStructure.type, 'zone'));
 
-		logger.info(`Found ${zones.length} zones to migrate`);
+		console.log(`Found ${zones.length} zones to migrate`);
 
 		let featuredCount = 0;
 		let regularCount = 0;
@@ -65,10 +64,10 @@ async function migrateZonesToFeaturedForums() {
 				.where(eq(forumStructure.id, zone.id));
 
 			if (isPrimaryZone) {
-				logger.info(`✨ Converted primary zone "${zone.name}" to FEATURED forum`);
+				console.info(`✨ Converted primary zone "${zone.name}" to FEATURED forum`);
 				featuredCount++;
 			} else {
-				logger.info(`📁 Converted zone "${zone.name}" to regular top-level forum`);
+				console.info(`📁 Converted zone "${zone.name}" to regular top-level forum`);
 				regularCount++;
 			}
 		}
@@ -80,9 +79,9 @@ async function migrateZonesToFeaturedForums() {
 			.where(eq(forumStructure.type, 'zone'));
 
 		if (remainingZones.length === 0) {
-			logger.info('✅ Migration complete!');
-			logger.info(`   - ${featuredCount} featured forums created`);
-			logger.info(`   - ${regularCount} regular top-level forums created`);
+			console.info('✅ Migration complete!');
+			console.info(`   - ${featuredCount} featured forums created`);
+			console.info(`   - ${regularCount} regular top-level forums created`);
 			
 			// Show featured forums
 			const featuredForums = await db
@@ -99,9 +98,9 @@ async function migrateZonesToFeaturedForums() {
 				return data?.isFeatured === true;
 			});
 			
-			logger.info('\nFeatured Forums:');
+			console.info('\nFeatured Forums:');
 			featured.forEach(f => {
-				logger.info(`   ⭐ ${f.name} (/${f.slug})`);
+				console.info(`   ⭐ ${f.name} (/${f.slug})`);
 			});
 			
 		} else {
@@ -109,7 +108,7 @@ async function migrateZonesToFeaturedForums() {
 		}
 
 	} catch (error) {
-		logger.error('Migration failed:', error);
+		console.error('Migration failed:', error);
 		process.exit(1);
 	} finally {
 		await pool.end();
@@ -118,6 +117,6 @@ async function migrateZonesToFeaturedForums() {
 
 // Run the migration
 migrateZonesToFeaturedForums().catch(error => {
-	logger.error('Migration failed:', error);
+	console.error('Migration failed:', error);
 	process.exit(1);
 });

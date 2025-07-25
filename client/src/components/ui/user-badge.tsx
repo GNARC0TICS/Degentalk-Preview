@@ -1,4 +1,4 @@
-import type { User } from '@app/types/compat/user';
+import type { User } from '@shared/types/user';
 import { Badge } from '@app/components/ui/badge';
 import { cn } from '@app/utils/utils';
 
