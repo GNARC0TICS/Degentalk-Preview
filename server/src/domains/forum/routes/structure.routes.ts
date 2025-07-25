@@ -12,8 +12,14 @@ const router: RouterType = Router();
 router.get('/', asyncHandler(forumStructureController.getStructure.bind(forumStructureController)));
 
 router.get(
+	'/forum-stats',
+	asyncHandler(forumStructureController.getForumStats.bind(forumStructureController))
+);
+
+// Legacy route for backward compatibility
+router.get(
 	'/zone-stats',
-	asyncHandler(forumStructureController.getZoneStats.bind(forumStructureController))
+	asyncHandler(forumStructureController.getForumStats.bind(forumStructureController))
 );
 
 export default router;

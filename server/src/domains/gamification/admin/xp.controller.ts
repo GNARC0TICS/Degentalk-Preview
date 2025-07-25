@@ -2,13 +2,13 @@ import type { Request, Response, NextFunction } from 'express';
 import { userService } from '@core/services/user.service';
 import { xpAdminService } from './xp.service';
 import { logger } from '@core/logger';
-import { xpService } from '../../../xp/xp.service';
-import { XP_ACTION } from '../../../xp/xp-actions';
+import { xpService } from '../../xp/xp.service';
+import { XP_ACTION } from '../../xp/xp-actions';
 import { db } from '@db';
 import { xpAdjustmentLogs } from '@schema';
 import { eq, desc } from 'drizzle-orm';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
-import { validateRequestBody, validateNumberParam } from '../../admin.validation';
+import { validateRequestBody, validateNumberParam } from '../../admin/admin.validation';
 import {
 	XpSettingsSchema,
 	CreateLevelSchema,

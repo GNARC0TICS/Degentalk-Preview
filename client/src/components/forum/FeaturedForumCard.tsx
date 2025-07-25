@@ -30,7 +30,7 @@ import { CARD_STYLES } from '@app/utils/card-constants';
 import { useShowHotRibbon } from '@app/hooks/useShowHotRibbon';
 import { SafeImage } from '@app/components/ui/safe-image';
 import { animationConfig } from '@app/config/animation.config';
-import { getForumTheme, getFallbackForumTheme } from '@shared/config/zoneThemes.config';
+import { getForumTheme, getFallbackForumTheme } from '@shared/config/forumThemes.config';
 import XpBoostBadge from './XpBoostBadge';
 
 export interface FeaturedForumCardProps {

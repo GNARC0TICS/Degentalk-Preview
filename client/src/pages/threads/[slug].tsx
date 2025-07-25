@@ -28,34 +28,58 @@ import { Separator } from '@app/components/ui/separator';
 import { useToast } from '@app/hooks/use-toast';
 import { useCanonicalAuth } from '@app/features/auth/useCanonicalAuth';
 import { cn } from '@app/utils/utils';
-import type { Thread } from '@shared/types/thread.types';
 import type { PostId, ThreadId } from '@shared/types/ids';
 import { toPostId } from '@shared/utils/id';
+import PostCard from '@app/features/forum/components/PostCard';
+import { forumApi } from '@app/features/forum/services/forumApi';
+import ReplyForm from '@app/features/forum/components/ReplyForm';
+import { EditPostDialog } from '@app/features/forum/components/EditPostDialog';
+import { useDeletePost } from '@app/features/forum/hooks/useForumQueries';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@app/components/ui/alert-dialog';
+import type { PostWithUser } from '@app/types/compat/forum';
 
-interface Post {
-  id: PostId;
-  content: string;
+
+interface ThreadDetail {
+  id: ThreadId;
+  title: string;
+  slug: string;
+  content?: string;
   createdAt: string;
   updatedAt: string;
-  isDeleted: boolean;
+  viewCount: number;
+  postCount: number;
+  isSticky: boolean;
+  isLocked: boolean;
+  isSolved: boolean;
   user: {
     id: string;
     username: string;
     avatarUrl?: string;
-    reputation?: number;
-    forumStats?: {
-      level: number;
-      totalPosts: number;
-    };
+    role: string;
   };
-  likes: number;
-  hasLiked?: boolean;
-  tips: number;
-}
-
-interface ThreadDetail extends Thread {
-  posts: Post[];
-  firstPost: Post;
+  forum?: {
+    name: string;
+    slug: string;
+  };
+  category?: {
+    name: string;
+    slug: string;
+  };
+  tags?: Array<{ id: string; name: string }>;
+  permissions?: {
+    canEdit: boolean;
+    canDelete: boolean;
+    canReply: boolean;
+  };
 }
 
 export default function ThreadDetailPage() {
@@ -64,6 +88,11 @@ export default function ThreadDetailPage() {
   const { user } = useCanonicalAuth();
   const { toast } = useToast();
   const queryClient = useQueryClient();
+
+  // Edit/Delete state
+  const [editingPost, setEditingPost] = useState<PostWithUser | null>(null);
+  const [deletingPostId, setDeletingPostId] = useState<PostId | null>(null);
+  const deletePost = useDeletePost();
 
   // Fetch thread data
   const { data: thread, isLoading, error } = useQuery<ThreadDetail>({
@@ -77,34 +106,61 @@ export default function ThreadDetailPage() {
     }
   });
 
-  // Fetch posts
-  const { data: postsData } = useQuery({
+  // Fetch posts for this thread
+  const { data: postsData, isLoading: postsLoading } = useQuery({
     queryKey: ['posts', thread?.id],
     queryFn: async () => {
       if (!thread?.id) return null;
-      const response = await apiRequest<{ posts: Post[]; total: number }>({
-        url: `/api/forum/posts/${thread.firstPost.id}/replies`,
-        method: 'GET'
-      });
-      return response;
+      return forumApi.getPosts(thread.id);
     },
     enabled: !!thread?.id
   });
 
-  // Like post mutation
-  const likeMutation = useMutation({
-    mutationFn: async (postId: PostId) => {
-      return apiRequest({
-        url: `/api/forum/posts/${postId}/react`,
-        method: 'POST',
-        data: { reaction: 'like' }
-      });
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['thread', slug] });
-      queryClient.invalidateQueries({ queryKey: ['posts'] });
+  // Handle post creation
+  const handleReplySubmit = async (content: string) => {
+    if (!thread?.id) return;
+    await forumApi.createPost({
+      threadId: thread.id,
+      content
+    });
+    queryClient.invalidateQueries({ queryKey: ['posts', thread.id] });
+  };
+
+  // Handle post edit
+  const handleEditPost = (postId: PostId) => {
+    const post = postsData?.posts?.find(p => p.id === postId);
+    if (post) {
+      setEditingPost(post);
     }
-  });
+  };
+
+  // Handle post delete
+  const handleDeletePost = (postId: PostId) => {
+    setDeletingPostId(postId);
+  };
+
+  // Confirm delete
+  const confirmDelete = async () => {
+    if (!deletingPostId) return;
+    
+    try {
+      await deletePost.mutateAsync(deletingPostId);
+      queryClient.invalidateQueries({ queryKey: ['posts', thread?.id] });
+      setDeletingPostId(null);
+    } catch (error) {
+      // Error is already handled by the mutation
+    }
+  };
+
+  // Check if user can edit/delete post
+  const canEditPost = (post: PostWithUser): boolean => {
+    if (!user) return false;
+    // User can edit their own posts
+    if (post.user.id === user.id) return true;
+    // Moderators/admins can edit any post
+    if (user.role === 'admin' || user.role === 'moderator') return true;
+    return false;
+  };
 
   if (isLoading) {
     return (
@@ -134,7 +190,9 @@ export default function ThreadDetailPage() {
     );
   }
 
-  const allPosts = [thread.firstPost, ...(postsData?.posts || [])];
+  // Get forum info
+  const forumSlug = thread?.forum?.slug || thread?.category?.slug || 'forums';
+  const forumName = thread?.forum?.name || thread?.category?.name || 'Forums';
 
   return (
     <Container className="py-8">
@@ -142,8 +200,8 @@ export default function ThreadDetailPage() {
       <div className="flex items-center gap-2 text-sm text-zinc-400 mb-6">
         <Link to="/forums" className="hover:text-white">Forums</Link>
         <ChevronRight className="w-4 h-4" />
-        <Link to={`/forums/${thread.forumSlug}`} className="hover:text-white">
-          {thread.forumName}
+        <Link to={`/forums/${forumSlug}`} className="hover:text-white">
+          {forumName}
         </Link>
         <ChevronRight className="w-4 h-4" />
         <span className="text-zinc-200">{thread.title}</span>
@@ -217,92 +275,94 @@ export default function ThreadDetailPage() {
 
       {/* Posts */}
       <div className="space-y-4">
-        {allPosts.map((post, index) => (
-          <Card key={post.id} className="bg-zinc-900/50 border-zinc-800">
+        {postsLoading ? (
+          <Card className="bg-zinc-900/50 border-zinc-800">
             <div className="p-6">
-              {/* Post Header */}
-              <div className="flex items-start justify-between mb-4">
-                <div className="flex items-start gap-3">
-                  <Avatar>
-                    <AvatarImage src={post.user.avatarUrl} />
-                    <AvatarFallback className="bg-zinc-800">
-                      {post.user.username.slice(0, 2).toUpperCase()}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <div className="font-medium text-white">{post.user.username}</div>
-                    <div className="text-sm text-zinc-400">
-                      {post.user.forumStats && (
-                        <span>Level {post.user.forumStats.level} • </span>
-                      )}
-                      {formatDistanceToNow(new Date(post.createdAt), { addSuffix: true })}
-                    </div>
-                  </div>
-                </div>
-                {index === 0 && (
-                  <Badge variant="outline" className="text-zinc-400">
-                    Original Post
-                  </Badge>
-                )}
-              </div>
-
-              {/* Post Content */}
-              <div 
-                className="prose prose-invert max-w-none mb-4"
-                dangerouslySetInnerHTML={{ __html: post.content }}
-              />
-
-              {/* Post Actions */}
-              <div className="flex items-center gap-2 pt-4 border-t border-zinc-800">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => likeMutation.mutate(post.id)}
-                  className={cn(
-                    "text-zinc-400 hover:text-red-400",
-                    post.hasLiked && "text-red-400"
-                  )}
-                >
-                  <Heart className={cn("w-4 h-4 mr-1", post.hasLiked && "fill-current")} />
-                  {post.likes || 0}
-                </Button>
-                
-                {!thread.isLocked && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="text-zinc-400 hover:text-blue-400"
-                  >
-                    <Reply className="w-4 h-4 mr-1" />
-                    Reply
-                  </Button>
-                )}
-
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-zinc-400 hover:text-emerald-400"
-                >
-                  <Zap className="w-4 h-4 mr-1" />
-                  Tip
-                </Button>
+              <div className="animate-pulse space-y-4">
+                <div className="h-4 bg-zinc-800 rounded w-3/4" />
+                <div className="h-4 bg-zinc-800 rounded w-1/2" />
+                <div className="h-20 bg-zinc-800 rounded" />
               </div>
             </div>
           </Card>
-        ))}
+        ) : postsData?.posts && postsData.posts.length > 0 ? (
+          postsData.posts.map((post, index) => (
+            <PostCard
+              key={post.id}
+              post={post}
+              isEditable={canEditPost(post)}
+              isFirst={index === 0}
+              onEdit={handleEditPost}
+              onDelete={handleDeletePost}
+              onLike={(postId, hasLiked) => {
+                // TODO: Implement like functionality
+                toast({
+                  title: 'Coming soon',
+                  description: 'Like functionality will be implemented soon'
+                });
+              }}
+              onReply={(postId) => {
+                // TODO: Implement reply quote functionality
+                toast({
+                  title: 'Coming soon',
+                  description: 'Reply quote functionality will be implemented soon'
+                });
+              }}
+              onReport={(postId) => {
+                // TODO: Implement report functionality
+                toast({
+                  title: 'Coming soon', 
+                  description: 'Report functionality will be implemented soon'
+                });
+              }}
+            />
+          ))
+        ) : (
+          <Card className="bg-zinc-900/50 border-zinc-800">
+            <div className="p-6 text-center text-zinc-400">
+              No posts yet. Be the first to contribute!
+            </div>
+          </Card>
+        )}
       </div>
 
       {/* Reply Box */}
       {!thread.isLocked && user && (
-        <Card className="bg-zinc-900/50 border-zinc-800 mt-6">
-          <div className="p-6">
-            <h3 className="text-lg font-semibold text-white mb-4">Reply to Thread</h3>
-            <div className="text-center py-8 text-zinc-400">
-              Reply functionality coming soon...
-            </div>
-          </div>
-        </Card>
+        <div className="mt-6">
+          <ReplyForm
+            threadId={thread.id}
+            onSubmit={handleReplySubmit}
+          />
+        </div>
       )}
+
+      {/* Edit Post Dialog */}
+      <EditPostDialog
+        post={editingPost}
+        isOpen={!!editingPost}
+        onClose={() => {
+          setEditingPost(null);
+          queryClient.invalidateQueries({ queryKey: ['posts', thread.id] });
+        }}
+      />
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={!!deletingPostId} onOpenChange={(open) => !open && setDeletingPostId(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete the post.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDelete} className="bg-red-600 hover:bg-red-700">
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </Container>
   );
 }

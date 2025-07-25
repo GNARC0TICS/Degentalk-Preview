@@ -1,6 +1,6 @@
 /**
  * Thread Service Batch Optimization Methods
- * N+1 query elimination for getZoneInfo calls
+ * N+1 query elimination for getForumInfo calls
  */
 
 import { db } from '@db';
@@ -10,10 +10,10 @@ import { logger } from '@core/logger';
 import type { StructureId } from '@shared/types/ids';
 
 /**
- * Batch fetch zone information for multiple structure IDs
+ * Batch fetch forum information for multiple structure IDs
  * Eliminates N+1 queries in thread listing operations
  */
-export async function getZoneInfoBatch(
+export async function getForumInfoBatch(
 	structureIds: StructureId[]
 ): Promise<
 	Map<
@@ -21,7 +21,7 @@ export async function getZoneInfoBatch(
 		{ id: StructureId; name: string; slug: string; colorTheme: string; isPrimary?: boolean } | null
 	>
 > {
-	logger.info('ThreadService', 'Starting getZoneInfoBatch', {
+	logger.info('ThreadService', 'Starting getForumInfoBatch', {
 		structureIds,
 		count: structureIds.length
 	});
@@ -31,7 +31,7 @@ export async function getZoneInfoBatch(
 	}
 
 	try {
-		// Batch query to get all parent zones for the given structure IDs
+		// Batch query to get all parent forums for the given structure IDs
 		const structures = await db
 			.select({
 				id: forumStructure.id,
@@ -45,7 +45,7 @@ export async function getZoneInfoBatch(
 			.from(forumStructure)
 			.where(inArray(forumStructure.id, structureIds));
 
-		// Get all unique parent IDs to fetch zone data
+		// Get all unique parent IDs to fetch forum data
 		const parentIds = [
 			...new Set(structures.map((s) => s.parentId).filter(Boolean))
 		] as StructureId[];

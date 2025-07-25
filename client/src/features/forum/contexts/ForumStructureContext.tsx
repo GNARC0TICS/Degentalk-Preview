@@ -629,11 +629,6 @@ export const useForumStructure = () => {
 };
 
 export const useForums = () => {
-	const { zones, isLoading, error } = useForumStructure();
-	return { zones, isLoading, error };
-};
-
-export const useForums = () => {
 	const { forums, isLoading, error } = useForumStructure();
 	return { forums, isLoading, error };
 };

@@ -2,9 +2,9 @@ import type { Request, Response } from 'express';
 import { userService } from '@core/services/user.service';
 import type { CategoryId, TagId, ThreadId, EntityId } from '@shared/types/ids';
 import { adminForumService } from './forum.service';
-import { AdminError, AdminErrorCodes } from '../../admin.errors';
-import { getUserId } from '../../admin.middleware';
-import { adminController } from '../../admin.controller';
+import { AdminError, AdminErrorCodes } from '../../admin/admin.errors';
+import { getUserId } from '../../admin/admin.middleware';
+import { adminController } from '../../admin/admin.controller';
 import { validateAndConvertId } from '@core/helpers/validate-controller-ids';
 import {
 	CategorySchema,
@@ -17,7 +17,7 @@ import {
 	type ModerateThreadInput
 } from './forum.validators';
 import { logger } from '@core/logger';
-import { validateRequestBody, validateQueryParams } from '../../admin.validation';
+import { validateRequestBody, validateQueryParams } from '../../admin/admin.validation';
 import { ForumTransformer } from '@api/domains/forum/transformers/forum.transformer';
 import {
 	toPublicList,

@@ -4,7 +4,6 @@
  * Comprehensive analytics and reporting for all gamification systems:
  * - User progression tracking
  * - Achievement completion analytics
- * - Mission engagement metrics
  * - Leveling progression insights
  * - System performance monitoring
  */
@@ -16,8 +15,6 @@ import {
 	levels,
 	achievements,
 	userAchievements,
-	missions,
-	userMissionProgress,
 	xpAdjustmentLogs,
 	transactions
 } from '@schema';
@@ -55,19 +52,6 @@ export interface AchievementMetrics {
 	}>;
 }
 
-export interface MissionMetrics {
-	period: string;
-	totalMissions: number;
-	totalCompletions: number;
-	dailyMissionRate: number;
-	weeklyMissionRate: number;
-	avgCompletionTime: number;
-	streakData: {
-		avgStreak: number;
-		maxStreak: number;
-		usersWithStreaks: number;
-	};
-}
 
 export interface EngagementMetrics {
 	period: string;
@@ -98,12 +82,10 @@ export interface GamificationDashboard {
 		activeToday: number;
 		levelUpsToday: number;
 		achievementsEarned: number;
-		missionsCompleted: number;
 		totalXpAwarded: number;
 	};
 	progression: ProgressionMetrics;
 	achievements: AchievementMetrics;
-	missions: MissionMetrics;
 	engagement: EngagementMetrics;
 	topPerformers: Array<{
 		userId: UserId;
@@ -116,7 +98,7 @@ export interface GamificationDashboard {
 	trends: {
 		xpGrowth: Array<{ date: string; value: number }>;
 		userActivity: Array<{ date: string; value: number }>;
-		completionRates: Array<{ date: string; achievements: number; missions: number }>;
+		completionRates: Array<{ date: string; achievements: number }>;
 	};
 }
 
@@ -144,7 +126,6 @@ export class GamificationAnalyticsService {
 				overview,
 				progressionMetrics,
 				achievementMetrics,
-				missionMetrics,
 				engagementMetrics,
 				topPerformers,
 				trends
@@ -152,7 +133,6 @@ export class GamificationAnalyticsService {
 				this.getOverviewStats(timeFilter),
 				this.getProgressionMetrics(timeframe, timeFilter),
 				this.getAchievementMetrics(timeframe, timeFilter),
-				this.getMissionMetrics(timeframe, timeFilter),
 				this.getEngagementMetrics(timeframe, timeFilter),
 				this.getTopPerformers(10),
 				this.getTrendData(timeframe)
@@ -162,7 +142,6 @@ export class GamificationAnalyticsService {
 				overview,
 				progression: progressionMetrics,
 				achievements: achievementMetrics,
-				missions: missionMetrics,
 				engagement: engagementMetrics,
 				topPerformers,
 				trends
@@ -191,7 +170,6 @@ export class GamificationAnalyticsService {
 			activeToday,
 			levelUpsToday,
 			achievementsEarned,
-			missionsCompleted,
 			totalXpAwarded
 		] = await Promise.all([
 			db.select({ count: count() }).from(users),
@@ -217,16 +195,6 @@ export class GamificationAnalyticsService {
 				.where(gte(userAchievements.earnedAt, timeFilter)),
 
 			db
-				.select({ count: count() })
-				.from(userMissionProgress)
-				.where(
-					and(
-						eq(userMissionProgress.isCompleted, true),
-						gte(userMissionProgress.completedAt || userMissionProgress.updatedAt, timeFilter)
-					)
-				),
-
-			db
 				.select({ total: sum(xpAdjustmentLogs.amount) })
 				.from(xpAdjustmentLogs)
 				.where(
@@ -242,7 +210,6 @@ export class GamificationAnalyticsService {
 			activeToday: activeToday[0]?.count || 0,
 			levelUpsToday: levelUpsToday[0]?.count || 0,
 			achievementsEarned: achievementsEarned[0]?.count || 0,
-			missionsCompleted: missionsCompleted[0]?.count || 0,
 			totalXpAwarded: parseInt(totalXpAwarded[0]?.total || '0')
 		};
 	}
@@ -371,43 +338,6 @@ export class GamificationAnalyticsService {
 		};
 	}
 
-	/**
-	 * Get mission metrics
-	 */
-	private async getMissionMetrics(timeframe: string, timeFilter: Date): Promise<MissionMetrics> {
-		const totalMissions = await db.select({ count: count() }).from(missions);
-
-		const completions = await db
-			.select({
-				count: count(),
-				daily: sum(sql`CASE WHEN ${missions.isDaily} THEN 1 ELSE 0 END`),
-				weekly: sum(sql`CASE WHEN ${missions.isWeekly} THEN 1 ELSE 0 END`)
-			})
-			.from(userMissionProgress)
-			.innerJoin(missions, eq(userMissionProgress.missionId, missions.id))
-			.where(
-				and(
-					eq(userMissionProgress.isCompleted, true),
-					gte(userMissionProgress.completedAt || userMissionProgress.updatedAt, timeFilter)
-				)
-			);
-
-		const completionData = completions[0];
-
-		return {
-			period: timeframe,
-			totalMissions: totalMissions[0]?.count || 0,
-			totalCompletions: completionData?.count || 0,
-			dailyMissionRate: parseInt(completionData?.daily || '0'),
-			weeklyMissionRate: parseInt(completionData?.weekly || '0'),
-			avgCompletionTime: 0, // TODO: Implement completion time tracking
-			streakData: {
-				avgStreak: 0, // TODO: Implement streak calculation
-				maxStreak: 0,
-				usersWithStreaks: 0
-			}
-		};
-	}
 
 	/**
 	 * Get engagement metrics
@@ -426,28 +356,12 @@ export class GamificationAnalyticsService {
 			.where(gte(userAchievements.earnedAt, timeFilter))
 			.groupBy(userAchievements.userId);
 
-		const missionEngagements = await db
-			.select({
-				userId: userMissionProgress.userId,
-				missions: count(userMissionProgress.id)
-			})
-			.from(userMissionProgress)
-			.where(
-				and(
-					eq(userMissionProgress.isCompleted, true),
-					gte(userMissionProgress.completedAt || userMissionProgress.updatedAt, timeFilter)
-				)
-			)
-			.groupBy(userMissionProgress.userId);
-
 		const uniqueUsers = new Set([
-			...engagements.map((e) => e.userId),
-			...missionEngagements.map((e) => e.userId)
+			...engagements.map((e) => e.userId)
 		]).size;
 
 		const totalEngagements =
-			engagements.reduce((sum, e) => sum + e.achievements, 0) +
-			missionEngagements.reduce((sum, e) => sum + e.missions, 0);
+			engagements.reduce((sum, e) => sum + e.achievements, 0);
 
 		return {
 			period: timeframe,
@@ -504,8 +418,7 @@ export class GamificationAnalyticsService {
 			userActivity: dates.map((date) => ({ date, value: Math.random() * 100 })),
 			completionRates: dates.map((date) => ({
 				date,
-				achievements: Math.random() * 50,
-				missions: Math.random() * 30
+				achievements: Math.random() * 50
 			}))
 		};
 	}

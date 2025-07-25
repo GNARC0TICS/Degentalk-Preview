@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import type { Router as RouterType } from 'express';
-import { isAdmin } from '../../admin.middleware';
+import { isAdmin } from '../../admin/admin.middleware';
 import { getEconomyConfig, updateEconomyConfig, resetEconomyConfig } from './economy.controller';
 
 const router: RouterType = Router();

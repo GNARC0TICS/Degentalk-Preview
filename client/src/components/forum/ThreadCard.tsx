@@ -23,7 +23,7 @@ import { useBreakpoint } from '@app/hooks/useMediaQuery';
 import type { Thread } from '@shared/types/thread.types';
 import type { ThreadId } from '@shared/types/ids';
 import { toId, parseId } from '@shared/types/index';
-import { getForumTheme } from '@shared/config/zoneThemes.config';
+import { getForumTheme } from '@shared/config/forumThemes.config';
 import { useThreadActionsOptional } from '@app/features/forum/contexts/ThreadActionsContext';
 import QuickReplyInput from '@app/components/forum/QuickReplyInput';
 import { ButtonTooltip } from '@app/components/ui/tooltip-utils';

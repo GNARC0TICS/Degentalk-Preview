@@ -19,7 +19,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '@app/hooks/use-auth';
 import { useForumStructure } from '@app/features/forum/contexts/ForumStructureContext';
-import type { MergedForum, MergedForum } from '@app/features/forum/contexts/ForumStructureContext';
+import type { MergedForum } from '@app/features/forum/contexts/ForumStructureContext';
 import {
 	Breadcrumb,
 	BreadcrumbList,

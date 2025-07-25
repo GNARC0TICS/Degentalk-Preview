@@ -92,9 +92,7 @@ export function TabSwitcher({
 	};
 
 	return (
-		<div className={cn('relative border-b border-zinc-800/60 backdrop-blur-sm', className)}>
-			{/* Animated background glow */}
-			<div className="absolute inset-0 bg-gradient-to-r from-orange-500/5 via-transparent to-red-500/5 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+		<div className={cn('border-b border-zinc-800', className)}>
 
 			<nav className="relative flex space-x-1 sm:space-x-4 overflow-x-auto overflow-y-hidden scrollbar-none" aria-label="Content tabs">
 				{availableTabs.map((tab, index) => {
@@ -111,14 +109,13 @@ export function TabSwitcher({
 							onMouseLeave={() => setHoveredTab(null)}
 							disabled={isDisabled}
 							className={cn(
-								'group relative flex items-center gap-2 py-3 px-2 sm:px-3 text-sm font-medium transition-all duration-300',
-								'border-b-2 border-transparent rounded-t-lg',
-								'hover:bg-zinc-800/30 hover:scale-105 transform-gpu',
-								'disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none',
+								'relative flex items-center gap-2 py-3 px-2 sm:px-3 text-sm font-medium transition-colors',
+								'border-b-2 border-transparent',
+								'hover:text-zinc-200',
+								'disabled:opacity-50 disabled:cursor-not-allowed',
 								isActive
-									? 'text-orange-400 border-orange-400 bg-zinc-800/20 shadow-lg shadow-orange-500/10'
-									: 'text-zinc-400 hover:text-orange-300 hover:border-orange-300/50',
-								isHovered && !isActive && 'text-orange-200 border-orange-200/30'
+									? 'text-white border-orange-400'
+									: 'text-zinc-400'
 							)}
 							aria-current={isActive ? 'page' : undefined}
 						>
@@ -126,12 +123,8 @@ export function TabSwitcher({
 							<div className="relative">
 								<Icon
 									className={cn(
-										'h-4 w-4 transition-all duration-300',
-										isActive
-											? 'text-orange-400 drop-shadow-lg'
-											: 'text-zinc-500 group-hover:text-orange-300',
-										isHovered && !isActive && 'scale-110 text-orange-200',
-										isChanging && isActive && 'opacity-75'
+										'h-4 w-4 transition-colors',
+										isActive ? 'text-orange-400' : 'text-zinc-500'
 									)}
 								/>
 
@@ -150,8 +143,8 @@ export function TabSwitcher({
 							</div>
 
 							{/* Tab content */}
-							<div className="flex flex-col items-start transition-all duration-300">
-								<span className={cn('text-left whitespace-nowrap', isActive && 'drop-shadow-sm')} style={{ fontWeight: theme.components.tabs.fontWeight }}>
+							<div className="flex flex-col items-start">
+								<span className="text-left whitespace-nowrap">
 									{tab.label}
 								</span>
 								{!isCompact && (

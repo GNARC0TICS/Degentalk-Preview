@@ -6,9 +6,9 @@
 
 import type { Request, Response } from 'express';
 import { fraudDetectionService } from './fraud-detection.service';
-import { formatAdminResponse, AdminOperationBoundary } from '../../shared';
-import { AdminError, AdminErrorCodes } from '../../admin.errors';
-import { getUser } from '../../../../core/utils/auth.helpers';
+import { formatAdminResponse, AdminOperationBoundary } from '../../admin/shared';
+import { AdminError, AdminErrorCodes } from '../../admin/admin.errors';
+import { getUser } from '@core/utils/auth.helpers';
 import { z } from 'zod';
 
 // Validation schemas

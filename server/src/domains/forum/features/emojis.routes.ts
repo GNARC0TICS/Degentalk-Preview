@@ -9,7 +9,7 @@ import {
 	bulkDeleteEmojis,
 	getEmojiCategories
 } from './emojis.controller';
-import { asyncHandler } from '../../admin.middleware';
+import { asyncHandler } from '../../admin/admin.middleware';
 
 const router: RouterType = Router();
 

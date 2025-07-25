@@ -10,257 +10,136 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 4. **TypeScript Hooks are ACTIVE** - Code quality checks run automatically. Use `SKIP_HOOKS=1 git commit` for emergencies.
 5. **Repository Pattern is MANDATORY** - All DB queries MUST go through repositories, services MUST NOT contain direct DB calls.
 6. **Event-Driven Architecture** - Cross-domain communication ONLY via EventBus, NO direct service imports between domains.
-7. **Missions System DEPRECATED** - Being removed completely, do not add new mission features.
+7. **Forum terminology** - Use "forum" not "zone". Legacy "zone" references are being phased out.
+8. **Dont create new files unless you request a whitelisting. CCODEBASE IS LOCKED DOWN.**
 
-## Workspace Details
+## Essential Commands
 
-- Uses **pnpm workspace architecture** with strict boundaries: `client/`, `server/`, `db/`, `shared/`, `scripts/`
-- **PostgreSQL only** with Drizzle ORM (SQLite support completely removed)
-- **TypeScript strict mode** enabled across all workspaces
-- **Domain-driven backend** architecture with event-driven communication
-- **Repository pattern** for all data access (services → repositories → database)
-- **Configuration-first** approach - centralized ConfigService for all settings
-
-## User Model Architecture
-
-### ⚠️ CRITICAL: CanonicalUser is the Single Source of Truth
-
-1. **ALWAYS use CanonicalUser type** for user data across the platform
-   - Import from `@shared/types/user` or `@/types/canonical.types`
-   - Basic `User` type is deprecated - DO NOT use for new features
-
-2. **Use the enhanced auth hook** for all user data needs:
-   ```typescript
-   // ❌ OLD - Don't use
-   import { useAuth } from '@/hooks/use-auth';
-   
-   // ✅ NEW - Always use
-   import { useCanonicalAuth } from '@/features/auth/useCanonicalAuth';
-   ```
-
-3. **User data contract**:
-   - Full type definition in `/docs/USER_MODEL_CONTRACT.md`
-   - All user fields must match the CanonicalUser interface
-   - Transform legacy data using `toCanonicalUser()` utility
-
-4. **API endpoints must return CanonicalUser**:
-   - `/api/auth/user` - Current authenticated user
-   - `/api/users/:id/profile` - User profile with all fields
-   - Use transformers in server to ensure compliance
-
-5. **Type generation**:
-   - Run `pnpm codegen` to sync API types with frontend
-   - GraphQL/OpenAPI schemas must define CanonicalUser
-
-### Migration Rules
-
-1. **When fixing TypeScript errors**:
-   - If error is "User missing properties", use `useCanonicalAuth()` instead
-   - If component needs user data, import from `@/features/auth/useCanonicalAuth`
-   - Never add optional properties to make errors go away
-
-2. **When creating new features**:
-   - Always design with CanonicalUser from the start
-   - Include all relevant user fields in API responses
-   - Use `UserSummary` type for lists to optimize payload size
-
-3. **Transform at the boundary**:
-   - Server: Transform DB user → CanonicalUser in service layer
-   - Client: Use `toCanonicalUser()` only for legacy endpoints
-   - Goal: Remove all transformers once APIs are updated
-
-4. **Performance considerations**:
-   - Cache CanonicalUser with 5min stale time
-   - Prefetch on SSR pages
-   - Use React Query for all user data fetching
-
-## TypeScript Hooks System ✅ ACTIVE
-
-**Status**: Production-ready, automatically enforcing code quality
-
-### What's Checked
-1. **Branded ID Usage**: Prevents `userId > 0`, enforces `isValidId(userId)`
-2. **Console Usage**: Blocks `console.*`, enforces `logger.*`
-3. **Import Validation**: Blocks `@db/types`, enforces `@shared/types/ids`
-4. **Any Types**: Prevents `any`, allows CCPayment API exceptions
-5. **Type Conversions**: Enforces `toId()` over type assertions
-
-### Performance
-- **~17ms per file** (Target: <2s ✅)
-- **~50ms per commit** (Target: <5s ✅)
-- **Zero false positives** on clean code
-
-### Commands
 ```bash
-# Check a file
-node tools/claude-hooks/run-checks.cjs --file <path> --mode pre-edit
+# Development
+pnpm dev                    # Start both client (5173) and server (5001)
+pnpm dev:seed              # Start with seeded data (admin user: cryptoadmin)
+pnpm dev:client            # Client only
+pnpm dev:server            # Server only
 
-# Emergency bypass
-SKIP_HOOKS=1 git commit -m "Emergency fix"
+# Database
+pnpm db:migrate            # Run migrations (NOT db:push!)
+pnpm db:studio             # Open Drizzle Studio
+pnpm db:sync:forums        # Sync forum config to database
+
+# Testing & Validation
+pnpm typecheck             # Check TypeScript across all workspaces
+pnpm lint                  # Lint all workspaces
+pnpm validate:boundaries   # Check import boundaries
+pnpm test                  # Run all tests
+
+# Seeding
+pnpm seed:all              # Seed all data
+pnpm seed:enhanced:dev     # Enhanced dev environment with wallet data
 ```
 
-### Hook Configuration
-- Config: `.claude/hooks/hook-config.json`
-- Hooks: `.claude/hooks/{react-app,shared,server}/`
-- Patterns: `.claude/hooks/branded-id-patterns.json`
+## Architecture Overview
 
-## Domain-Driven Architecture Rules 🏗️
-
-### Domain Structure
+### Workspace Structure
 ```
-server/src/domains/[domain-name]/
-├── index.ts                    // Public API exports ONLY
-├── types.ts                    // Domain-specific types  
-├── events.ts                   // Domain event definitions
-├── [domain].service.ts         // Business logic (NO db calls)
-├── [domain].repository.ts      // Data access (ALL db calls)
-├── [domain].controller.ts      // HTTP endpoints
-├── [domain].validator.ts       // Zod schemas
-├── [domain].transformer.ts     // DTOs & response shaping
-├── handlers/                   // Event handlers
-│   └── index.ts
-├── admin/                      // Admin-specific features
-└── __tests__/                  // Domain tests
+degentalk/
+├── client/          # React/Vite frontend (port 5173)
+├── server/          # Express backend (port 5001)
+├── db/              # Database schemas & migrations
+├── shared/          # Shared types & utilities
+└── scripts/         # Tooling & maintenance scripts
 ```
 
-### Architecture Enforcement Rules
-1. **Repository Pattern**:
-   - ALL database queries MUST be in `*.repository.ts` files
-   - Services MUST inject repositories, NO direct DB imports
-   - Repositories MUST extend `BaseRepository<T>`
-   - Use transactions via `options.tx` parameter
+### Domain-Driven Backend (`server/src/domains/`)
+Each domain follows strict patterns:
+- `*.service.ts` - Business logic (NO database calls)
+- `*.repository.ts` - ALL database operations
+- `*.controller.ts` - HTTP endpoints
+- `*.transformer.ts` - Response shaping
+- `index.ts` - Public API exports ONLY
 
-2. **Domain Boundaries**:
-   - Domains can ONLY import from their own files or `index.ts` of other domains
-   - Cross-domain imports of services/repositories are FORBIDDEN
-   - Use EventBus for cross-domain communication
-   - Each domain MUST export only through `index.ts`
+### Forum System Architecture
+- **Config-as-Truth**: Forum hierarchy defined in `shared/config/forum-map.config.ts`
+- **Sync Pattern**: Config → Database via `pnpm db:sync:forums`
+- **Structure**: Featured Forums → Forums → Sub-forums
+- **IDs**: Using branded types (ForumId, ThreadId, etc.)
 
-3. **Event-Driven Communication**:
-   - Emit domain events instead of calling other services
-   - Listen to events in `handlers/index.ts`
-   - Events MUST include metadata (userId, timestamp, correlationId)
-   - Use typed events from domain's `events.ts`
+### User Model
+- **CanonicalUser** is the single source of truth
+- Always use `useCanonicalAuth()` hook, never `useAuth()`
+- Transform at boundaries: DB → CanonicalUser → API
 
-4. **Core Infrastructure**:
-   - `@core/config` - ConfigService for all env vars & settings
-   - `@core/cache` - Unified CacheService with domain-specific keys
-   - `@core/auth` - Centralized AuthorizationService
-   - `@core/errors` - Standard domain errors (NotFoundError, ValidationError, etc.)
-   - `@core/events` - EventBus for domain communication
+## TypeScript Hooks System
 
-### Import Rules
+Automated code quality enforcement:
+- Branded ID usage (`isValidId()` not `> 0`)
+- Console logging (`logger.*` not `console.*`)
+- Import validation (no direct `@db` imports in services)
+- Type safety (no `any` except CCPayment API)
+
+Check a file: `node tools/claude-hooks/run-checks.cjs --file <path>`
+
+## Key Technical Decisions
+
+### PostgreSQL with Drizzle ORM
+- Neon-hosted PostgreSQL
+- Drizzle for type-safe queries
+- Repository pattern for data access
+
+### Branded IDs
+All IDs use branded types for compile-time safety:
 ```typescript
-// ✅ ALLOWED
-import { something } from './internal-file';
-import { types } from '@shared/types';
-import { logger } from '@core/logger';
-import { OtherDomainService } from '@domains/other/index';
-
-// ❌ FORBIDDEN
-import { service } from '../other-domain/other.service';
-import { repo } from '../other-domain/other.repository';
-import { db } from '@db';  // Only in repositories!
+type ThreadId = Id<'Thread'>;
+const id = toThreadId('123');
 ```
 
-### Error Handling
-- Use standard errors from `@core/errors`
-- Throw domain errors in services
-- Let error middleware handle responses
-- Include context in error messages
+### Event-Driven Cross-Domain Communication
+Domains communicate via EventBus, not direct imports:
+```typescript
+eventBus.emit('user.created', { userId, timestamp });
+```
 
-### Testing Requirements
-- Unit tests for services (mock repositories)
-- Integration tests for repositories
-- Domain isolation tests must pass
-- Event flow tests for handlers
+### Forum Terminology Migration
+- "Zone" → "Forum" (ongoing migration)
+- Featured Forums = highlighted forum categories
+- Forum Structure = hierarchical forum organization
 
-## Development Fixes
+## SSH Development Workflow
 
-### PostCSS Configuration Fix
-- ✅ Converted postcss.config.js to ES module format
-- ✅ Removed duplicate @tailwind directives (kept only in index.css)  
-- ✅ Fixed theme() functions → actual color values
-- ✅ Removed @layer wrapper from admin-theme.css
+When working over SSH:
+1. Use tmux for persistent sessions: `tmux attach -t degentalk`
+2. Window layout:
+   - Window 0: Dev servers
+   - Window 1: Database operations
+   - Window 2: Testing/type checking
+   - Window 3: Git/scripts
+3. Hot-reload is automatic (Vite + nodemon)
 
-## Layout Architecture Rules 🏗️
+## Common Pitfalls
 
-### Page Component Guidelines
-1. **NEVER import SiteHeader or SiteFooter in page components**
-   - These are already provided by `RootLayout`
-   - TypeScript hook enforces this rule automatically
-   
-2. **Page Structure Requirements**:
-   ```tsx
-   // ❌ WRONG - Don't do this
-   export default function MyPage() {
-     return (
-       <div className="min-h-screen">
-         <SiteHeader />
-         <main>...</main>
-         <SiteFooter />
-       </div>
-     );
-   }
-   
-   // ✅ CORRECT - Let RootLayout handle it
-   export default function MyPage() {
-     return (
-       <Container className="py-8">
-         {/* Your page content */}
-       </Container>
-     );
-   }
-   ```
+1. **Import Boundaries**: Client can't import server, server can't import client
+2. **Database Access**: Only in repositories, never in services
+3. **Forum Config**: Edit `forum-map.config.ts` then sync, don't modify DB directly
+4. **User Types**: Use CanonicalUser everywhere, transform legacy data
+5. **ID Comparisons**: Use `isValidId()`, not numeric comparisons
 
-3. **Layout Hierarchy**:
-   - `RootLayout` provides: min-h-screen wrapper, SiteHeader, main container, SiteFooter
-   - Pages should only return their specific content
-   - Use `<Container>` or `<Wide>` for consistent spacing
+## Layout Rules
 
-4. **Error/Loading States**:
-   - Return simple divs without layout wrappers
-   - RootLayout will ensure proper structure
+Pages should NOT import SiteHeader/SiteFooter - RootLayout provides them:
+```tsx
+// ✅ CORRECT
+export default function Page() {
+  return <Container className="py-8">Content</Container>;
+}
 
-5. **Special Pages**:
-   - Error boundary pages (404, error pages) can be standalone
-   - They're used as `errorElement` in router and bypass normal layout
-
-## SSH-Only Development Workflow 🚀
-
-### Development Environment Management
-When working over SSH with running dev servers, follow these practices:
-
-1. **Use tmux for session persistence**
-   ```bash
-   # Check if tmux session exists
-   tmux ls
-   # Attach to existing session
-   tmux attach -t degentalk
-   # Create new session
-   tmux new -s degentalk
-   ```
-
-2. **Multi-window workflow**
-   - Window 0: Dev servers (`pnpm dev`)
-   - Window 1: Database operations (`pnpm db:studio`, migrations)
-   - Window 2: Testing (`pnpm test`, `pnpm typecheck`)
-   - Window 3: Git operations and scripts
-
-3. **Hot-reload development**
-   - Vite (client) and nodemon (server) auto-reload on file changes
-   - Make edits in window 3, servers reload in window 0
-   - No manual restarts needed
-
-4. **Safe refactoring over SSH**
-   ```bash
-   # Run type checks without affecting servers
-   pnpm typecheck --watch
-   # Run scripts in background
-   tmux send-keys -t degentalk:2 'pnpm tsx scripts/migrate.ts' C-m
-   ```
-
-5. **Emergency commands**
-   - `Ctrl-Z` + `bg`: Move process to background
-   - `fg`: Bring back to foreground
-   - `jobs`: List background processes
+// ❌ WRONG
+export default function Page() {
+  return (
+    <div>
+      <SiteHeader />
+      <main>Content</main>
+      <SiteFooter />
+    </div>
+  );
+}
+```

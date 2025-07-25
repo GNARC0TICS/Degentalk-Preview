@@ -17,9 +17,7 @@ import {
 	userBadges,
 	titles,
 	userTitles,
-	transactions,
-	missions,
-	userMissionProgress
+	transactions
 } from '@schema';
 import { logger } from '@core/logger';
 import { XpService } from '../../xp/xp.service';
@@ -61,11 +59,7 @@ export interface UserProgression {
 		total: number;
 		recent: any[];
 	};
-	missions: {
-		completed: number;
-		available: number;
-		streak: number;
-	};
+	// Missions removed from system
 }
 
 export interface LeaderboardEntry {
@@ -91,7 +85,7 @@ export interface ProgressionAnalytics {
 	engagementMetrics: {
 		activeUsers: number;
 		levelUpsToday: number;
-		missionCompletions: number;
+		// missionCompletions: number; // Missions removed from system
 	};
 }
 
@@ -243,20 +237,7 @@ export class LevelingService {
 				.orderBy(desc(userAchievements.earnedAt))
 				.limit(5);
 
-			// Get mission stats
-			const missionStats = await db
-				.select({
-					total: count(),
-					completed: sum(sql`CASE WHEN ${userMissionProgress.isCompleted} THEN 1 ELSE 0 END`),
-					streak: count() // TODO: Implement streak calculation
-				})
-				.from(userMissionProgress)
-				.where(eq(userMissionProgress.userId, userId));
-
-			const availableMissions = await db
-				.select({ count: count() })
-				.from(missions)
-				.where(eq(missions.isActive, true));
+			// Mission stats removed - missions system deprecated
 
 			return {
 				userId: user.id,
@@ -278,11 +259,7 @@ export class LevelingService {
 						earnedAt: a.earnedAt
 					}))
 				},
-				missions: {
-					completed: parseInt(missionStats[0]?.completed || '0'),
-					available: availableMissions[0]?.count || 0,
-					streak: parseInt(missionStats[0]?.streak || '0')
-				}
+				// missions data removed - missions system deprecated
 			};
 		} catch (error) {
 			logger.error('LEVELING_SERVICE', 'Error getting user progression:', error);
@@ -522,16 +499,7 @@ export class LevelingService {
 					)
 				);
 
-			// Mission completions
-			const missionCompletions = await db
-				.select({ count: count() })
-				.from(userMissionProgress)
-				.where(
-					and(
-						eq(userMissionProgress.isCompleted, true),
-						gte(userMissionProgress.completedAt || userMissionProgress.updatedAt, timeFilter)
-					)
-				);
+			// Mission completions removed - missions system deprecated
 
 			// Average progression metrics
 			const avgXpPerDay = await db
@@ -561,7 +529,7 @@ export class LevelingService {
 				engagementMetrics: {
 					activeUsers: activeUsers[0]?.count || 0,
 					levelUpsToday: levelUpsToday[0]?.count || 0,
-					missionCompletions: missionCompletions[0]?.count || 0
+					// missionCompletions removed - missions system deprecated
 				}
 			};
 		} catch (error) {

@@ -1,9 +1,9 @@
 import type { Request, Response } from 'express';
 import { userService } from '@core/services/user.service';
 import { adminTreasuryService } from './treasury.service';
-import { AdminError, AdminErrorCodes } from '../../admin.errors';
-import { getUserId } from '../../admin.middleware';
-import { adminController } from '../../admin.controller';
+import { AdminError, AdminErrorCodes } from '../../admin/admin.errors';
+import { getUserId } from '../../admin/admin.middleware';
+import { adminController } from '../../admin/admin.controller';
 import {
 	TreasuryDepositSchema,
 	TreasuryWithdrawalSchema,
@@ -14,7 +14,7 @@ import {
 	type TreasurySettingsUpdateInput,
 	type MassAirdropInput
 } from './treasury.validators';
-import { validateRequestBody } from '../../admin.validation';
+import { validateRequestBody } from '../../admin/admin.validation';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
 export class AdminTreasuryController {

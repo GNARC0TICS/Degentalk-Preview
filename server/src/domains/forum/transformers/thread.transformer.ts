@@ -5,7 +5,7 @@
  * response objects with GDPR compliance and audit trail.
  */
 
-import type { UserId, ThreadId, ZoneId } from '@shared/types/ids';
+import type { UserId, ThreadId, ForumId } from '@shared/types/ids';
 import type {
 	PublicThread,
 	SlimThread,
@@ -45,13 +45,15 @@ export class ThreadTransformer {
 				role: dbThread.user?.role || 'user'
 			},
 
-			// Zone/Category data (safe fields only)
-			zone: {
-				id: dbThread.zone?.id as ZoneId,
-				name: dbThread.zone?.name || 'General',
-				slug: dbThread.zone?.slug || 'general',
-				colorTheme: dbThread.zone?.colorTheme || undefined
-			},
+			// Forum data (safe fields only)
+			forum: dbThread.forum || dbThread.zone
+				? {
+						id: (dbThread.forum?.id || dbThread.zone?.id) as ForumId,
+						name: dbThread.forum?.name || dbThread.zone?.name || 'General',
+						slug: dbThread.forum?.slug || dbThread.zone?.slug || 'general',
+						colorTheme: dbThread.forum?.colorTheme || dbThread.zone?.colorTheme || undefined
+					}
+				: undefined,
 
 			category: dbThread.category
 				? {
@@ -93,11 +95,11 @@ export class ThreadTransformer {
 				role: dbThread.user?.role || 'user'
 			},
 
-			// Minimal zone data
-			zone: {
-				name: dbThread.zone?.name || 'General',
-				slug: dbThread.zone?.slug || 'general',
-				colorTheme: dbThread.zone?.colorTheme || undefined
+			// Minimal forum data
+			forum: {
+				name: dbThread.forum?.name || dbThread.zone?.name || 'General',
+				slug: dbThread.forum?.slug || dbThread.zone?.slug || 'general',
+				colorTheme: dbThread.forum?.colorTheme || dbThread.zone?.colorTheme || undefined
 			},
 
 			// Optional engagement for homepage

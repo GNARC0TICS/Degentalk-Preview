@@ -4,7 +4,7 @@
  */
 
 import type { Request, Response, NextFunction } from 'express';
-import { reportErrorServer, type ErrorContext } from '../lib/report-error';
+import { reportErrorServer, type ErrorContext } from '@server/lib/report-error';
 import { sendErrorResponse } from '../core/utils/transformer.helpers';
 import { logger, LogAction } from '../core/logger';
 import type { UserId } from '@shared/types/ids';

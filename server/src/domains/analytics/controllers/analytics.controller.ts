@@ -9,7 +9,7 @@ import { Request, Response } from 'express';
 import { logger } from '@core/logger';
 import { sessionTrackingService } from '../services/session-tracking.service';
 import { redisCacheService } from '@core/cache/redis.service';
-import { getUser } from '@utils/request-user';
+import { getUser } from '@core/utils/auth.helpers';
 import { send } from '@api/utils/response';
 import { PlatformAnalyticsService } from '../services/platform.service';
 

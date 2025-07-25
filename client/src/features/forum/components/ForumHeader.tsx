@@ -4,10 +4,10 @@ import { Badge } from '@app/components/ui/badge';
 import { Button } from '@app/components/ui/button';
 import { Flame, Users, MessageSquare, Plus } from 'lucide-react';
 import { cn } from '@app/utils/utils';
-import type { MergedForum, MergedForum } from '@app/features/forum/contexts/ForumStructureContext';
+import type { MergedForum } from '@app/features/forum/contexts/ForumStructureContext';
 
 interface ForumHeaderProps {
-	forum: MergedForum | MergedForum;
+	forum: MergedForum;
 	isFeaturedZone?: boolean;
 	className?: string;
 	variant?: 'compact' | 'detailed' | 'minimal' | 'themed';

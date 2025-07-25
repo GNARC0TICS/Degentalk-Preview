@@ -1,10 +1,10 @@
 import type { Request, Response } from 'express';
-import { AdminTitlesService } from './titles.service';
+import { TitlesService } from './titles.service';
 import { createTitleSchema, updateTitleSchema } from './titles.validators';
-import { validateRequestBody } from '../../admin.validation';
+import { validateRequestBody } from '../admin/admin.validation';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
-const service = new AdminTitlesService();
+const service = new TitlesService();
 
 export class AdminTitlesController {
 	async list(req: Request, res: Response) {

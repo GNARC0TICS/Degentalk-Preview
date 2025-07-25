@@ -12,8 +12,8 @@ import type {
 	PublicUserDTO,
 	UserSelfDTO,
 	UserProfileDTO
-} from '../../../../../shared/dto/user';
-import type { UserId } from '../../../../../shared/types/ids';
+} from '@shared/dto/user';
+import type { UserId } from '@shared/types/ids';
 import { createHash } from 'crypto';
 
 export class UserTransformer {

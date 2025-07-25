@@ -265,3 +265,6 @@ export class PlatformAnalyticsService {
 		}
 	}
 }
+
+// Export instance for backward compatibility
+export const platformService = PlatformAnalyticsService;

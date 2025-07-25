@@ -7,7 +7,7 @@ import type { MergedFeaturedForum, MergedForum } from '@app/features/forum/conte
 import { HeroSection } from '@app/components/layout/hero-section';
 import { AnnouncementTicker } from '@app/components/layout/announcement-ticker';
 import { ResponsiveLayoutWrapper } from '@app/components/layout/ResponsiveLayoutWrapper';
-import { default as FeaturedForumCarousel } from '@app/components/zone/FeaturedForumCarousel';
+import { FeaturedForumCarousel } from '@app/components/forum/FeaturedForumCarousel';
 import { Wide } from '@app/layout/primitives/Wide';
 import { HomeContentArea } from '@app/components/ui/content-area';
 import { ContentFeedProvider } from '@app/contexts/content-feed-context';
@@ -19,7 +19,7 @@ import HomePageSkeleton from '@app/components/skeletons/HomePageSkeleton';
 
 // Removed grid-related UI imports (Skeleton, Button, icons)
 
-import type { FeaturedForumCardProps } from '@app/components/forum/FeaturedForumCard';
+import type { ConfigurableFeaturedForumCardProps } from '@app/components/forum/ConfigurableFeaturedForumCard';
 import { ErrorBoundary } from '@app/components/errors/ErrorBoundary';
 
 function HomePage() {
@@ -41,7 +41,7 @@ function HomePage() {
 		return <HomePageSkeleton />;
 	}
 
-	const featuredForumCardDataForGrid: FeaturedForumCardProps['zone'][] = primaryFeaturedForumsFromContext.map(
+	const featuredForumCardDataForGrid: ConfigurableFeaturedForumCardProps['forum'][] = primaryFeaturedForumsFromContext.map(
 		(zone: MergedForum) => {
 			const stats = featuredForumStatsMap[zone.slug] ?? {
 				todaysPosts: 0,

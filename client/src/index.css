@@ -775,7 +775,8 @@ body.no-motion .announcement-ticker-content {
 	
 	.forum-glow::before {
 		content: '';
-		@apply absolute inset-0 bg-forum-gradient opacity-0 transition-opacity duration-300;
+		@apply absolute inset-0 opacity-0 transition-opacity duration-300;
+		background: linear-gradient(135deg, var(--forum-gradient-from, rgba(139, 92, 246, 0.2)), var(--forum-gradient-to, rgba(139, 92, 246, 0.1)));
 	}
 	
 	.forum-glow:hover::before {

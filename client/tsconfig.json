@@ -3,18 +3,19 @@
 	"compilerOptions": {
 		"outDir": "dist",
 		"skipLibCheck": true,
-		"rootDir": ".",
+
 		"module": "ESNext",
 		"moduleResolution": "bundler",
 		"jsx": "react-jsx",
 		"baseUrl": ".",
+		"composite": true,
 		"paths": {
 			// NEW paths (target state)
 			"@app/*": ["src/*"],
 			
 			// OLD paths (temporary - for transition)
 			"@/*": ["src/*"],
-			"@config/*": ["../config/*"],
+			"@config/*": ["src/config/*"],
 			"@config/forumMap": ["../shared/config/forum-map.config.ts"],
 			"@config/forumEconomy": ["../shared/config/forum-economy.config.ts"],
 			"@shared/*": ["../shared/*"],
@@ -30,7 +31,7 @@
 			"@schema/*": ["../db/schema/*"]
 		},
 		"allowImportingTsExtensions": true,
-		"noEmit": true
+		"emitDeclarationOnly": true
 	},
-	"include": ["src", "../config/uiverse-components.config.ts"]
+	"include": ["src"]
 }

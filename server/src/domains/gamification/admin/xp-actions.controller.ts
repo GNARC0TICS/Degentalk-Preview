@@ -10,8 +10,8 @@ import { xpActionSettings } from '@schema';
 import { eq } from 'drizzle-orm';
 import { logger } from '@core/logger';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
-import { xpService } from '../../../xp/xp.service';
-import { XP_ACTION, getXpActions, loadXpActionsFromDb } from '../../../xp/xp-actions';
+import { xpService } from '../../xp/xp.service';
+import { XP_ACTION, getXpActions, loadXpActionsFromDb } from '../../xp/xp-actions';
 // import { XpActionSettingsSchema, XpActionKeySchema } from '@shared/validators/admin'; // Commented out as schemas not found/used
 // import { validateRequest } from '@api/middleware/validate'; // Removed as not used and not exported
 // import { XpActionsAdminService } from './xp-actions.service'; // Removed as file not found and service not used

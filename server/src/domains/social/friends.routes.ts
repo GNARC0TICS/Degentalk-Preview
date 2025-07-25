@@ -3,7 +3,7 @@ import { Router } from 'express'
 import type { Router as RouterType } from 'express';
 import type { EntityId } from '@shared/types/ids';
 import { FriendsService } from './friends.service';
-import { requireAuth } from '../../../middleware/auth';
+import { requireAuth } from '@server/middleware/auth';
 import { z } from 'zod';
 import { logger } from '@core/logger';
 import { UserTransformer } from '@api/domains/users/transformers/user.transformer';

@@ -3,8 +3,8 @@ import { db } from '@db';
 import { reputationAchievements, userReputationLog, users } from '@schema';
 import { eq, desc } from 'drizzle-orm';
 import { logger } from '@core/logger';
-import { ReputationService } from '../../../gamification/services/reputationService';
-import { ReputationTransformer } from '../../../gamification/transformers/reputation.transformer';
+import { ReputationService } from './services/reputationService';
+import { ReputationTransformer } from './transformers/reputation.transformer';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
 // Instantiate once – can be swapped with dependency injection later

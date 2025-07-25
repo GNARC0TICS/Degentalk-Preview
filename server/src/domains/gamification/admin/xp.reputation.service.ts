@@ -1,7 +1,7 @@
 import { db } from '@db';
 import { eq } from 'drizzle-orm';
 import { xpActionSettings } from '@schema';
-import { AdminError } from '../../admin.errors';
+import { AdminError } from '../../admin/admin.errors';
 
 export class XpReputationService {
 	async getSettings() {

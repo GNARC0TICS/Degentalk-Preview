@@ -305,6 +305,64 @@ export class ForumStructureService {
 	}
 
 	/**
+	 * Get forum statistics (modern naming)
+	 * Supports both parent forums and individual forums
+	 */
+	async getForumStats(slug: string) {
+		// Fetch the forum node
+		const [forum] = await db
+			.select()
+			.from(forumStructure)
+			.where(eq(forumStructure.slug, slug))
+			.limit(1);
+		if (!forum) {
+			return null;
+		}
+		
+		// Find child forums if this is a parent forum
+		const childForumRows = await db
+			.select({ id: forumStructure.id })
+			.from(forumStructure)
+			.where(eq(forumStructure.parentId, forum.id));
+		const forumIds = [forum.id, ...childForumRows.map((row) => row.id)];
+		
+		// Get total posts today
+		const today = new Date();
+		today.setHours(0, 0, 0, 0);
+
+		const postsTodayResult = await db
+			.select({ count: sql<number>`count(*)` })
+			.from(posts)
+			.where(
+				and(
+					inArray(
+						posts.threadId,
+						db
+							.select({ id: threads.id })
+							.from(threads)
+							.where(inArray(threads.structureId, forumIds))
+					),
+					gt(posts.createdAt, today)
+				)
+			);
+
+		const totalPostsToday = postsTodayResult[0]?.count || 0;
+
+		// Get trending threads (latest 5)
+		const trendingThreads = await db
+			.select()
+			.from(threads)
+			.where(inArray(threads.structureId, forumIds))
+			.orderBy(desc(threads.lastPostAt))
+			.limit(5);
+
+		return {
+			totalPostsToday,
+			trendingThreads
+		};
+	}
+
+	/**
 	 * Get structure statistics
 	 */
 	async getStructureStats(structureId: StructureId): Promise<{

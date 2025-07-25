@@ -15,7 +15,7 @@ import { logger, LogAction } from '@core/logger';
 import { XpService } from '../../xp/xp.service';
 import { DegenAchievementEvaluators } from './evaluators/degen-evaluators';
 import type { UserId, AchievementId } from '@shared/types/ids';
-import { reportErrorServer } from '../../../lib/report-error';
+import { reportErrorServer } from '@server/lib/report-error';
 
 export interface AchievementProgress {
 	current: number;

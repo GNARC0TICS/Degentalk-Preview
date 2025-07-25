@@ -6,7 +6,7 @@
 
 import { eq, desc, count, avg, sum, sql, and, gte, lte, gt, lt, inArray } from 'drizzle-orm';
 import { db } from '@db';
-import { adminCacheService } from '../../shared/admin-cache.service';
+import { adminCacheService } from '../../admin/shared';
 import {
 	users,
 	transactions,

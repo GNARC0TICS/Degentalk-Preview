@@ -1,6 +1,6 @@
 import express from 'express';
 import { eventLogController } from '../controllers/event-log.controller';
-import { isAuthenticated } from '../../auth/middleware/auth.middleware';
+import { isAuthenticated } from '@api/domains/auth/middleware/auth.middleware';
 import { isAdmin } from '../../auth/middleware/admin.middleware';
 
 import { Router } from 'express'

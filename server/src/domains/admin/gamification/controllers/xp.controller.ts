@@ -1,8 +1,8 @@
 import type { Request, Response, NextFunction } from 'express';
 import { userService } from '@core/services/user.service';
 import { logger } from '@core/logger';
-import { xpService } from '../../../xp/xp.service';
-import { XP_ACTION } from '../../../xp/xp-actions';
+import { xpService } from '@domains/xp/xp.service';
+import { XP_ACTION } from '@domains/xp/xp-actions';
 import { db } from '@db';
 import { xpAdjustmentLogs } from '@schema';
 import { eq, desc } from 'drizzle-orm';

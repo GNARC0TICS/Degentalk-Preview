@@ -7,7 +7,7 @@
 import { Router } from 'express'
 import type { Router as RouterType } from 'express';
 import { emailTemplateController } from './email-templates.controller';
-import { isAdminOrModerator } from '../../admin.middleware';
+import { isAdminOrModerator } from '@domains/admin';
 
 export const emailTemplateRoutes: RouterType = Router();
 

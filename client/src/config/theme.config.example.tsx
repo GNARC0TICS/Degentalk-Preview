@@ -5,7 +5,7 @@
  * in various scenarios throughout the application.
  */
 
-import { theme, getForumTheme, type ZoneTheme } from '@shared/config/zoneThemes.config';
+import { theme, getForumTheme, type ZoneTheme } from '@shared/config/forumThemes.config';
 
 // ============================================================================
 // Example 1: Using colors

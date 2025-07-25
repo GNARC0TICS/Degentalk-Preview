@@ -22,5 +22,5 @@
 		"**/*.tsx",
 		"shims/**/*.d.ts"
 	],
-	"exclude": ["../db/**/*", "dist/**/*"]
+	"exclude": ["dist/**/*"]
 }

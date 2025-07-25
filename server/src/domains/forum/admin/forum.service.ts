@@ -8,7 +8,7 @@ import { db } from '@db';
 import type { Id } from '@shared/types/ids';
 import { forumStructure, threads, posts, threadPrefixes, tags } from '@schema';
 import { eq, and, sql, count, desc, asc, isNull, not, ne } from 'drizzle-orm';
-import { AdminError } from '../../admin.errors';
+import { AdminError } from '../../admin/admin.errors';
 import type {
 	CategoryInput,
 	PrefixInput,

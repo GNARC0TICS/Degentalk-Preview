@@ -1,7 +1,7 @@
 import { db } from '@db';
 import { productCategories as shopCategories } from '@schema';
 import { eq, desc, asc } from 'drizzle-orm';
-import { AdminError } from '../../admin.errors';
+import { AdminError } from '../../admin/admin.errors';
 import type { Id } from '@shared/types/ids';
 
 interface CategoryInput {

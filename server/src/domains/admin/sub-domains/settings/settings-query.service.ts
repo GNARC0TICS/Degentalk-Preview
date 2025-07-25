@@ -14,7 +14,7 @@ import {
 	adminCacheService,
 	AdminCacheKeys,
 	CacheResult
-} from '../../shared/admin-cache.service';
+} from '../../shared';
 import type { FilterSettingsInput } from '../settings.validators';
 
 export class SettingsQueryService {

@@ -7,7 +7,7 @@
 import { Router } from 'express'
 import type { Router as RouterType } from 'express';
 import { adminForumController } from './forum.controller';
-import { asyncHandler } from '../../admin.middleware';
+import { asyncHandler } from '../../admin/admin.middleware';
 import { forumPrefixService } from '../forumPrefix/forumPrefix.service';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 import type { PrefixId } from '@shared/types/ids';
@@ -58,6 +58,8 @@ router.delete(
 	asyncHandler(adminForumController.deleteCategory.bind(adminForumController))
 );
 
+// TODO: Implement forumPrefixService
+/*
 // Thread prefix management routes
 router.get(
 	'/prefixes',
@@ -96,7 +98,7 @@ router.post(
 		sendSuccessResponse(res, result);
 	})
 );
-
+*/
 // Tag management routes
 router.get('/tags', asyncHandler(adminForumController.getAllTags.bind(adminForumController)));
 router.post('/tags', asyncHandler(adminForumController.createTag.bind(adminForumController)));

@@ -208,9 +208,6 @@ export function ContentArea({
 	};
 
 	const isCompact = variant === 'compact';
-	const cardBackground = isCompact
-		? 'bg-zinc-950/80'
-		: 'bg-gradient-to-br from-zinc-950/95 to-zinc-900/90';
 
 	// Enhanced error handling component
 	const ErrorState = ({ error, onRetry }: { error: Error; onRetry: () => void }) => (
@@ -245,8 +242,7 @@ export function ContentArea({
 	return (
 		<Card
 			className={cn(
-				'w-full overflow-hidden border border-zinc-800/80 shadow-2xl backdrop-blur-sm relative',
-				cardBackground,
+				'w-full overflow-hidden border border-zinc-800',
 				className
 			)}
 			onTouchStart={handleTouchStart}
@@ -256,7 +252,7 @@ export function ContentArea({
 			{/* Pull-to-refresh indicator */}
 			{isPulling && (
 				<div
-					className="absolute top-0 left-0 right-0 flex items-center justify-center py-2 bg-orange-500/10 backdrop-blur-sm border-b border-orange-500/20 transition-all duration-200"
+					className="absolute top-0 left-0 right-0 flex items-center justify-center py-2 transition-all duration-200"
 					style={{
 						opacity: pullDistance / 50,
 						transform: `translateY(${pullDistance - 50}px)`
@@ -264,11 +260,11 @@ export function ContentArea({
 				>
 					<RefreshCw
 						className={cn(
-							'h-5 w-5 text-orange-400 transition-transform',
+							'h-5 w-5 text-zinc-400 transition-transform',
 							pullDistance > 50 && 'animate-spin'
 						)}
 					/>
-					<span className="ml-2 text-sm text-orange-300">
+					<span className="ml-2 text-sm text-zinc-400">
 						{pullDistance > 50 ? 'Release to refresh' : 'Pull to refresh'}
 					</span>
 				</div>
@@ -288,7 +284,7 @@ export function ContentArea({
 					<div className="mb-4 flex items-start justify-between">
 						<div>
 							{title && (
-								<h2 className="text-xl font-bold bg-gradient-to-r from-orange-400 to-red-400 text-transparent bg-clip-text">
+								<h2 className="text-xl font-bold text-white">
 									{title}
 								</h2>
 							)}
@@ -308,16 +304,14 @@ export function ContentArea({
 								onClick={handleManualRefresh}
 								disabled={isManualRefreshing || isLoading}
 								className={cn(
-									'p-2 rounded-lg bg-zinc-900/60 hover:bg-zinc-800/80 transition-all duration-200',
-									'text-zinc-400 hover:text-orange-300 disabled:opacity-50 disabled:cursor-not-allowed',
-									'hover:shadow-lg hover:shadow-orange-500/10',
-									isManualRefreshing && 'animate-pulse'
+									'p-2 border border-zinc-800 rounded-lg hover:bg-zinc-900/50 transition-colors',
+									'text-zinc-400 disabled:opacity-50 disabled:cursor-not-allowed'
 								)}
 								title="Refresh content"
 							>
 								<RefreshCw
 									className={cn(
-										'h-4 w-4 transition-transform duration-300',
+										'h-4 w-4',
 										(isManualRefreshing || isFetching) && 'animate-spin'
 									)}
 								/>

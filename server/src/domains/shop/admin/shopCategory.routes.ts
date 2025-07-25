@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import type { Router as RouterType } from 'express';
-import { asyncHandler } from '../../admin.middleware';
+import { asyncHandler } from '../../admin/admin.middleware';
 import { shopCategoryService } from './shopCategory.service';
 import type { EntityId } from '@shared/types/ids';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';

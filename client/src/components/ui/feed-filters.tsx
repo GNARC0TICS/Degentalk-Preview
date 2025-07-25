@@ -179,12 +179,12 @@ export function FeedFilters({
     <div className={cn('relative', className)}>
       <Popover open={isOpen} onOpenChange={setIsOpen}>
         <PopoverTrigger asChild>
-          <Button
-            variant="outline"
-            size={isCompact ? 'sm' : 'default'}
+          <button
             className={cn(
-              'gap-2',
-              hasActiveFilters() && 'border-orange-500/50 text-orange-300'
+              'flex items-center gap-2 px-3 py-2 text-sm font-medium transition-colors',
+              'border border-zinc-800 rounded-lg',
+              'hover:bg-zinc-900/50',
+              hasActiveFilters() ? 'text-orange-400' : 'text-zinc-400'
             )}
           >
             <SortIcon className="h-4 w-4" />
@@ -193,34 +193,32 @@ export function FeedFilters({
               <span className="ml-1 h-2 w-2 rounded-full bg-orange-400" />
             )}
             <ChevronDown className="h-3 w-3 ml-1" />
-          </Button>
+          </button>
         </PopoverTrigger>
 
         <PopoverContent
-          className="w-80 p-0 bg-zinc-950/95 backdrop-blur-md border-zinc-800"
+          className="w-72 p-0 border-zinc-800"
           align="end"
         >
-          <div className="p-4 border-b border-zinc-800">
+          <div className="p-3 border-b border-zinc-800">
             <div className="flex items-center justify-between">
-              <h3 className="font-semibold text-zinc-100">Feed Filters</h3>
+              <h3 className="text-sm font-medium text-zinc-100">Feed Filters</h3>
               {hasActiveFilters() && (
-                <Button
-                  variant="ghost"
-                  size="sm"
+                <button
                   onClick={resetFilters}
                   className="text-xs text-zinc-400 hover:text-orange-300"
                 >
                   Reset
-                </Button>
+                </button>
               )}
             </div>
           </div>
 
-          <div className="p-4 space-y-4">
+          <div className="p-3 space-y-3">
             {/* Sort By */}
             <div className="space-y-2">
               <Label className="text-xs text-zinc-400">Sort By</Label>
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-2 gap-1.5">
                 {sortOptions.map((option) => {
                   const Icon = option.icon;
                   const isActive = localFilters.sortBy === option.value;
@@ -229,15 +227,15 @@ export function FeedFilters({
                       key={option.value}
                       onClick={() => updateFilters({ ...localFilters, sortBy: option.value as FeedFilter['sortBy'] })}
                       className={cn(
-                        'flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-all',
+                        'flex items-center gap-1.5 px-2 py-1.5 rounded text-xs transition-colors',
                         'border border-zinc-800 hover:border-zinc-700',
                         isActive
-                          ? 'bg-orange-500/20 border-orange-500/50 text-orange-300'
-                          : 'bg-zinc-900/60 text-zinc-400 hover:text-zinc-300'
+                          ? 'bg-zinc-800 text-orange-400'
+                          : 'text-zinc-400 hover:text-zinc-300'
                       )}
                     >
-                      <Icon className="h-3.5 w-3.5" />
-                      <span className="text-xs">{option.label}</span>
+                      <Icon className="h-3 w-3" />
+                      <span>{option.label}</span>
                     </button>
                   );
                 })}
@@ -250,7 +248,7 @@ export function FeedFilters({
               <select
                 value={localFilters.timeRange}
                 onChange={(e) => updateFilters({ ...localFilters, timeRange: e.target.value as FeedFilter['timeRange'] })}
-                className="w-full px-3 py-2 bg-zinc-900/60 border border-zinc-800 rounded-lg text-sm text-zinc-300 focus:border-orange-500/50 focus:outline-none"
+                className="w-full px-2 py-1.5 bg-zinc-900/60 border border-zinc-800 rounded text-xs text-zinc-300 focus:border-orange-400 focus:outline-none"
               >
                 {timeRangeOptions.map((option) => (
                   <option key={option.value} value={option.value}>
@@ -261,7 +259,7 @@ export function FeedFilters({
             </div>
 
             {/* Toggle Filters */}
-            <div className="space-y-3 border-t border-zinc-800 pt-3">
+            <div className="space-y-2 border-t border-zinc-800 pt-3">
               <div className="flex items-center justify-between">
                 <Label htmlFor="show-sticky" className="text-xs text-zinc-400 cursor-pointer">
                   Show Sticky Threads
@@ -270,7 +268,7 @@ export function FeedFilters({
                   id="show-sticky"
                   checked={localFilters.showSticky}
                   onCheckedChange={(checked) => updateFilters({ ...localFilters, showSticky: checked })}
-                  className="data-[state=checked]:bg-orange-500"
+                  className="data-[state=checked]:bg-orange-500 scale-75"
                 />
               </div>
 
@@ -282,14 +280,14 @@ export function FeedFilters({
                   id="show-solved"
                   checked={localFilters.showSolved}
                   onCheckedChange={(checked) => updateFilters({ ...localFilters, showSolved: checked })}
-                  className="data-[state=checked]:bg-orange-500"
+                  className="data-[state=checked]:bg-orange-500 scale-75"
                 />
               </div>
             </div>
 
             {/* Advanced Filters */}
-            <div className="space-y-3 border-t border-zinc-800 pt-3">
-              <div className="space-y-2">
+            <div className="space-y-2 border-t border-zinc-800 pt-3">
+              <div className="space-y-1.5">
                 <Label className="text-xs text-zinc-400">Minimum Replies</Label>
                 <input
                   type="number"
@@ -300,7 +298,7 @@ export function FeedFilters({
                     minReplies: e.target.value ? parseInt(e.target.value) : undefined 
                   })}
                   placeholder="Any"
-                  className="w-full px-3 py-2 bg-zinc-900/60 border border-zinc-800 rounded-lg text-sm text-zinc-300 placeholder:text-zinc-600 focus:border-orange-500/50 focus:outline-none"
+                  className="w-full px-2 py-1.5 bg-zinc-900/60 border border-zinc-800 rounded text-xs text-zinc-300 placeholder:text-zinc-600 focus:border-orange-400 focus:outline-none"
                 />
               </div>
 
@@ -315,19 +313,19 @@ export function FeedFilters({
                     minViews: e.target.value ? parseInt(e.target.value) : undefined 
                   })}
                   placeholder="Any"
-                  className="w-full px-3 py-2 bg-zinc-900/60 border border-zinc-800 rounded-lg text-sm text-zinc-300 placeholder:text-zinc-600 focus:border-orange-500/50 focus:outline-none"
+                  className="w-full px-2 py-1.5 bg-zinc-900/60 border border-zinc-800 rounded text-xs text-zinc-300 placeholder:text-zinc-600 focus:border-orange-400 focus:outline-none"
                 />
               </div>
             </div>
           </div>
 
-          <div className="p-4 border-t border-zinc-800 bg-zinc-900/40">
-            <Button
+          <div className="p-3 border-t border-zinc-800">
+            <button
               onClick={() => setIsOpen(false)}
-              className="w-full bg-orange-600 hover:bg-orange-500 text-white"
+              className="w-full px-3 py-1.5 bg-orange-600 hover:bg-orange-700 text-white text-xs font-medium rounded transition-colors"
             >
               Apply Filters
-            </Button>
+            </button>
           </div>
         </PopoverContent>
       </Popover>

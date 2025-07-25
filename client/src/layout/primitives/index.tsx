@@ -4,3 +4,4 @@ export { FullBleedSection } from './FullBleedSection';
 export { ClampPadding } from './ClampPadding';
 export { StickyRegion } from './StickyRegion';
 export { PageBackdrop } from './PageBackdrop';
+export { Container } from '../../components/ui/Container';

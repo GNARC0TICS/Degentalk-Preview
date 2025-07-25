@@ -25,7 +25,7 @@ export interface ForumTheme {
 	rarityOverlay?: RarityOverlay;
 }
 
-export const ZONE_THEMES: Record<string, ForumTheme> = {
+export const FORUM_THEMES: Record<string, ForumTheme> = {
 	pit: {
 		gradient: 'from-red-900/40 via-red-800/20 to-red-700/10',
 		accent: 'text-red-400',
@@ -173,11 +173,11 @@ export const ZONE_THEMES: Record<string, ForumTheme> = {
 	}
 } as const;
 
-export type ForumThemeKey = keyof typeof ZONE_THEMES;
+export type ForumThemeKey = keyof typeof FORUM_THEMES;
 
 // Utility helper – safely fetch a theme by id with graceful fallback
 export const getForumTheme = (themeId?: string | null) =>
-	ZONE_THEMES[themeId as ForumThemeKey] ?? ZONE_THEMES.default;
+	FORUM_THEMES[themeId as ForumThemeKey] ?? FORUM_THEMES.default;
 
 // Fallback theme selector for forums without custom artwork
 // Uses a deterministic hash of the forum ID to assign consistent themes
@@ -194,5 +194,5 @@ export const getFallbackForumTheme = (forumId: string): ForumTheme => {
 	// Select a theme based on the hash
 	const themeKey = fallbackThemeKeys[hash % fallbackThemeKeys.length];
 	
-	return ZONE_THEMES[themeKey];
+	return FORUM_THEMES[themeKey];
 };

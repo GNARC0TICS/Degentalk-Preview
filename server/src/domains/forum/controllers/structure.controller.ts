@@ -20,17 +20,17 @@ class ForumStructureController {
 		}
 	}
 
-	async getZoneStats(req: Request, res: Response) {
+	async getForumStats(req: Request, res: Response) {
 		try {
 			const slug = req.query.slug as string;
 			if (!slug) {
 				return sendErrorResponse(res, 'Missing slug query param', 400);
 			}
 
-			const stats = await forumStructureService.getZoneStats(slug);
+			const stats = await forumStructureService.getForumStats(slug);
 
 			if (!stats) {
-				return sendErrorResponse(res, 'Zone not found', 404);
+				return sendErrorResponse(res, 'Forum not found', 404);
 			}
 
 			const publicStats = {
@@ -40,9 +40,14 @@ class ForumStructureController {
 
 			return sendSuccessResponse(res, publicStats);
 		} catch (error) {
-			logger.error('ForumStructureController', 'Error in getZoneStats', { error });
-			return sendErrorResponse(res, 'Failed to fetch zone stats', 500);
+			logger.error('ForumStructureController', 'Error in getForumStats', { error });
+			return sendErrorResponse(res, 'Failed to fetch forum stats', 500);
 		}
+	}
+
+	// Legacy alias for backward compatibility
+	async getZoneStats(req: Request, res: Response) {
+		return this.getForumStats(req, res);
 	}
 }
 

@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import type { Router as RouterType } from 'express';
-import { asyncHandler } from '../../admin.middleware';
+import { asyncHandler } from '../../admin/admin.middleware';
 import {
 	listPackages,
 	getPackageById,

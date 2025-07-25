@@ -1,7 +1,7 @@
 // REFACTORED: Updated auth middleware imports to use canonical path
 import { Router } from 'express'
 import type { Router as RouterType } from 'express';
-import { isAdmin } from '../../../auth/middleware/auth.middleware'; // Correct path to the auth middleware
+import { isAdmin } from '../../auth/middleware/auth.middleware';
 import * as xpController from './xp.controller';
 import * as xpActionsController from './xp-actions.controller';
 

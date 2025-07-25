@@ -23,7 +23,7 @@ import { cn } from '@app/utils/utils';
 import { useUIConfig, buildResponsiveClasses } from '@app/contexts/UIConfigContext';
 import { SafeImage } from '@app/components/ui/safe-image';
 import { animationConfig } from '@app/config/animation.config';
-import { getForumTheme } from '@shared/config/zoneThemes.config';
+import { getForumTheme } from '@shared/config/forumThemes.config';
 import XpBoostBadge from './XpBoostBadge';
 
 export interface ConfigurableFeaturedForumCardProps {

@@ -5,7 +5,7 @@ import { Card, CardContent } from '@app/components/ui/card';
 import { Container } from '@app/layout/primitives';
 import { useForumStructure } from '@app/features/forum/contexts/ForumStructureContext';
 import { Button } from '@app/components/ui/button';
-import { cn } from '@app/lib/utils';
+import { cn } from '@app/utils/utils';
 
 // Theme color utility function
 const getForumThemeClass = (theme?: string, prefix = 'bg') => {

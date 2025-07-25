@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import type { Router as RouterType } from 'express';
 import { shopAdminController } from './shop.admin.controller';
-import { asyncHandler } from '../../admin.middleware'; // Adjust path if admin.middleware is elsewhere
+import { asyncHandler } from '../../admin/admin.middleware';
 import categoryRoutes from './shopCategory.routes';
 import rarityRoutes from './rarity.routes';
 

@@ -6,7 +6,7 @@ import { userService } from '@core/services/user.service';
  */
 
 import type { Request, Response } from 'express';
-import { subscriptionService } from '../../../subscriptions/subscription.service';
+import { subscriptionService } from '../subscription.service';
 import { logger } from '@core/logger';
 import { db } from '@db';
 import { subscriptions, cosmeticDrops, users } from '@schema';

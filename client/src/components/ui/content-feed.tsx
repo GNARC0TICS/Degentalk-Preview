@@ -37,8 +37,7 @@ function ContentFeedSkeleton({ count = 5 }: { count?: number }) {
 			{Array.from({ length: count }).map((_, i) => (
 				<div
 					key={i}
-					className="border-b border-zinc-800/60 last:border-b-0 p-4 animate-pulse"
-					style={{ animationDelay: `${i * 100}ms` }}
+					className="border-b border-zinc-800 last:border-b-0 p-4"
 				>
 					<div className="space-y-3">
 						<div className="flex items-start gap-3">
@@ -117,58 +116,21 @@ function ContentItem({ item, showCategory = true }: { item: Thread; showCategory
 
 	return (
 		<div
-			className="content-item relative border-b last:border-b-0 transition-all group touch-feedback"
-			style={{
-				borderColor: isHovered ? theme.colors.surface.border.default : theme.components.feed.colors.border,
-				transitionDuration: theme.animation.durations.normal,
-				backgroundColor: isHovered ? theme.colors.surface.elevated : 'transparent',
-				transform: isHovered ? 'translateX(4px)' : 'translateX(0)'
-			}}
-			onMouseEnter={() => {
-				setIsHovered(true);
-				setTimeout(() => setShowQuickActions(true), 200);
-			}}
-			onMouseLeave={() => {
-				setIsHovered(false);
-				setShowQuickActions(false);
-			}}
+			className="content-item relative border-b border-zinc-800 last:border-b-0 hover:bg-zinc-900/30 transition-colors"
+			onMouseEnter={() => setIsHovered(true)}
+			onMouseLeave={() => setIsHovered(false)}
 		>
-			{/* Enhanced hover background effect */}
-			<div
-				className={cn(
-					'absolute inset-0 bg-gradient-to-r from-orange-500/10 via-transparent to-red-500/10 transition-all',
-					isHovered ? 'opacity-100' : 'opacity-0'
-				)}
-				style={{
-					transitionDuration: theme.animation.durations.normal,
-					backgroundImage: isHovered 
-						? `linear-gradient(to right, ${theme.colors.brand.gradient.orange}15, transparent, ${theme.colors.brand.gradient.red}15)`
-						: 'none'
-				}}
-			/>
 
-			{/* Enhanced hot indicator with glow */}
+			{/* Hot indicator */}
 			{hotLevel === 'volcanic' && (
-				<>
-					<div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-red-500 to-orange-500 shadow-lg shadow-red-500/50" />
-					<div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-red-500/20 to-transparent blur-xl" />
-				</>
+				<div className="absolute left-0 top-0 bottom-0 w-1 bg-orange-500" />
 			)}
 			{hotLevel === 'hot' && (
-				<>
-					<div className="absolute left-0 top-0 bottom-0 w-0.5 bg-gradient-to-b from-orange-500 to-yellow-500" />
-					<div className="absolute left-0 top-0 bottom-0 w-6 bg-gradient-to-r from-orange-500/15 to-transparent blur-lg" />
-				</>
+				<div className="absolute left-0 top-0 bottom-0 w-0.5 bg-orange-400" />
 			)}
 
 			<Link to={`/threads/${item.slug}`}>
-				<div
-					className="relative cursor-pointer transition-colors"
-					style={{
-						padding: theme.components.feed.item.padding,
-						transitionDuration: theme.animation.durations.normal
-					}}
-				>
+				<div className="relative cursor-pointer p-4">
 					<div className="space-y-3">
 						{/* Thread title with enhanced hover effects */}
 						<div className="flex items-start gap-3">
@@ -178,13 +140,12 @@ function ContentItem({ item, showCategory = true }: { item: Thread; showCategory
 									<div className="absolute -left-2 top-1/2 -translate-y-1/2 w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse" />
 								)}
 								{hotLevel === 'volcanic' ? (
-									<Flame className="h-5 w-5 text-red-400 mt-0.5 flex-shrink-0 drop-shadow-glow" />
+									<Flame className="h-5 w-5 text-orange-500 mt-0.5 flex-shrink-0" />
 								) : (
 									<TrendingUp
 										className={cn(
-											'h-5 w-5 mt-0.5 flex-shrink-0 transition-colors duration-300',
-											hotLevel === 'hot' ? 'text-orange-400' : 'text-zinc-500',
-											isHovered && 'text-orange-300'
+											'h-5 w-5 mt-0.5 flex-shrink-0',
+											hotLevel === 'hot' ? 'text-orange-400' : 'text-zinc-500'
 										)}
 									/>
 								)}
@@ -193,15 +154,9 @@ function ContentItem({ item, showCategory = true }: { item: Thread; showCategory
 							<div className="flex-1 min-w-0">
 								<h3
 									className={cn(
-										'text-zinc-100 transition-all line-clamp-2',
-										isHovered && 'text-orange-300'
+										'text-zinc-100 line-clamp-2 font-medium',
+										isHovered && 'text-white'
 									)}
-									style={{
-										fontSize: theme.components.feed.typography.title.size,
-										fontWeight: theme.components.feed.typography.title.weight,
-										lineHeight: theme.components.feed.typography.title.lineHeight,
-										transitionDuration: theme.animation.durations.normal
-									}}
 								>
 									{item.title}
 								</h3>

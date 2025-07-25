@@ -28,7 +28,7 @@ import { registerRoutes } from './routes';
 import { logger } from './src/core/logger';
 import { centralizedErrorHandler, notFoundHandler } from './src/middleware/centralized-error-handler.middleware';
 import { traceMiddleware } from './src/middleware/trace.middleware';
-import { initSentry, sentryRequestHandler, sentryTracingHandler, sentryErrorHandler } from './src/lib/sentry-server';
+// import { initSentry, sentryRequestHandler, sentryTracingHandler, sentryErrorHandler } from './src/lib/sentry-server'; // TODO: Add sentry-server file
 import { wsService } from './src/core/websocket/websocket.service';
 import { sentinelBot } from './src/domains/shoutbox/services/sentinel-bot.service';
 import { initEventNotificationListener } from './src/domains/notifications/event-notification-listener';
@@ -48,9 +48,10 @@ async function bootstrap() {
 		const app = express();
 
 		// 2. Initialize Sentry
-		initSentry(app);
-		app.use(sentryRequestHandler);
-		app.use(sentryTracingHandler);
+		// TODO: Re-enable when sentry-server file is added
+		// initSentry(app);
+		// app.use(sentryRequestHandler);
+		// app.use(sentryTracingHandler);
 
 		// 3. Configure middleware
 		app.use(express.json());
@@ -71,7 +72,7 @@ async function bootstrap() {
 
 		// 6. Add error handlers
 		app.use(notFoundHandler);
-		app.use(sentryErrorHandler);
+		// app.use(sentryErrorHandler); // TODO: Re-enable when sentry-server file is added
 		app.use(centralizedErrorHandler);
 
 		// 7. Create HTTP server

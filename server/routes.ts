@@ -24,19 +24,20 @@ import whaleWatchRoutes from './src/domains/social/whale-watch.routes';
 import messageRoutes from './src/domains/messaging/message.routes';
 import vaultRoutes from './src/domains/engagement/vault/vault.routes';
 import ccpaymentWebhookRoutes from './src/domains/wallet/webhooks/ccpayment-webhook.routes';
-import { registerAnnouncementRoutes } from './src/domains/admin/sub-domains/announcements';
+import { registerAnnouncementRoutes } from '@api/domains/forum/features/announcements.routes';
 import featureGatesRoutes from './src/domains/feature-gates/feature-gates.routes';
 import notificationRoutes from './src/domains/notifications/notification.routes';
 import preferencesRoutes from './src/domains/preferences/preferences.routes';
 import { adRoutes } from './src/domains/advertising/ad.routes';
 import { globalErrorHandler } from './src/core/errors';
 import { registerPathRoutes } from './src/domains/paths/paths.routes';
-import { 
-  initSentry, 
-  sentryRequestHandler, 
-  sentryTracingHandler, 
-  sentryErrorHandler 
-} from './src/lib/sentry-server';
+// TODO: Re-enable when sentry-server file is added
+// import { 
+//   initSentry, 
+//   sentryRequestHandler, 
+//   sentryTracingHandler, 
+//   sentryErrorHandler 
+// } from './src/lib/sentry-server';
 import userInventoryRoutes from './src/routes/api/user/inventory';
 import notificationStubRoutes from './src/routes/api/notifications';
 import { awardPathXp } from './utils/path-utils';
@@ -76,12 +77,13 @@ import { getUser } from '@core/utils/auth.helpers';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
 export async function registerRoutes(app: Express): Promise<void> {
+	// TODO: Re-enable when sentry-server file is added
 	// Initialize Sentry before any other middleware
-	initSentry(app);
+	// initSentry(app);
 	
 	// Sentry request handler must be the first middleware
-	app.use(sentryRequestHandler);
-	app.use(sentryTracingHandler);
+	// app.use(sentryRequestHandler);
+	// app.use(sentryTracingHandler);
 	
 	app.use(securityHeaders);
 	app.use(corsMiddleware);
@@ -350,8 +352,9 @@ export async function registerRoutes(app: Express): Promise<void> {
 		}
 	});
 
+	// TODO: Re-enable when sentry-server file is added
 	// Sentry error handler must go before other error handlers
-	app.use(sentryErrorHandler);
+	// app.use(sentryErrorHandler);
 	
 	// Global error handler comes last
 	app.use(globalErrorHandler);

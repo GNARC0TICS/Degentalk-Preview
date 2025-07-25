@@ -10,7 +10,7 @@ import { siteSettings, featureFlags } from '@schema';
 import { eq } from 'drizzle-orm';
 import { logger } from '@core/logger';
 import { AdminError, AdminErrorCodes } from '../../admin.errors';
-import { adminCacheService } from '../../shared/admin-cache.service';
+import { adminCacheService } from '../../shared';
 import { settingsQueryService } from './settings-query.service';
 import { settingsValidationService } from './settings-validation.service';
 import type {

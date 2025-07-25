@@ -16,7 +16,7 @@ import {
 } from './system-analytics.validators';
 import { formatAdminResponse, AdminOperationBoundary } from '@api/domains/admin/shared';
 import { AdminError, AdminErrorCodes } from '@api/domains/admin/admin.errors';
-import { adminCacheService } from '@api/domains/admin/shared/admin-cache.service';
+import { adminCacheService } from '../../admin/shared';
 
 export class SystemAnalyticsController {
 	/**

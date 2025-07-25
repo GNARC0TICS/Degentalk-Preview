@@ -10,6 +10,7 @@ import { db } from '@db';
 import { forumStructure } from '@schema';
 import { eq } from 'drizzle-orm';
 import { ForumTransformer } from '@api/domains/forum/transformers/forum.transformer';
+import { postService } from '@api/domains/forum/services/post.service';
 
 class ThreadController {
 	async searchThreads(req: Request, res: Response) {
@@ -159,6 +160,30 @@ class ThreadController {
 		const pinned = req.method === 'POST';
 		const updatedThread = await threadService.toggleThreadPin(threadId, pinned);
 		return sendSuccessResponse(res, updatedThread);
+	}
+
+	async getThreadPosts(req: Request, res: Response) {
+		const { threadId } = req.params as { threadId: ThreadId };
+		const page = parseInt(req.query.page as string) || 1;
+		const limit = Math.min(parseInt(req.query.limit as string) || 20, 100);
+		const sortBy = (req.query.sortBy as string) || 'oldest';
+
+		const result = await postService.getPostsByThread({
+			threadId,
+			page,
+			limit,
+			sortBy: sortBy as any
+		});
+
+		return sendSuccessResponse(res, {
+			posts: result.posts,
+			pagination: {
+				page,
+				limit,
+				totalPosts: result.total,
+				totalPages: result.totalPages
+			}
+		});
 	}
 }
 

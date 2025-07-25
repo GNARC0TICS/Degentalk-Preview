@@ -20,7 +20,7 @@ import {
 } from '@schema';
 import crypto from 'crypto';
 import { z } from 'zod';
-import { isAuthenticated } from '../../auth/middleware/auth.middleware';
+import { isAuthenticated } from '@api/domains/auth/middleware/auth.middleware';
 import { db } from '@core/db';
 import { asyncHandler } from '@core/errors'; // Assuming asyncHandler is in core errors
 import { getUserIdFromRequest } from '@api/utils/auth';

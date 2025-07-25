@@ -10,7 +10,7 @@ import { logger } from '@core/logger';
 import { postService } from './post.service';
 import { redisCacheService, CacheMinute } from '@core/cache/redis.service';
 import { AchievementEventEmitter } from '@core/events/achievement-events.service';
-import { getZoneInfoBatch } from './thread.service.batch-optimization';
+import { getForumInfoBatch } from './thread.service.forum-batch-optimization';
 import {
 	threads,
 	posts,
@@ -327,7 +327,7 @@ export class ThreadService {
 			// Batch fetch zone info for all unique structure IDs to eliminate N+1
 			let zoneInfoMap: Map<number, any>;
 			try {
-				zoneInfoMap = await getZoneInfoBatch(structureIds);
+				zoneInfoMap = await getForumInfoBatch(structureIds);
 			} catch (batchError) {
 				logger.warn('ThreadService', 'Batch zone fetch failed, using individual lookups', {
 					error: batchError.message,

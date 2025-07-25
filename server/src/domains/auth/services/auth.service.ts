@@ -9,7 +9,7 @@ import { isDevMode } from '@api/utils/environment';
 import { logger } from '@core/logger';
 import { v4 as uuidv4 } from 'uuid';
 import bcrypt from 'bcrypt';
-import { createServiceReporter } from '../../../lib/report-error';
+import { createServiceReporter } from '@server/lib/report-error';
 
 // Create service-specific error reporter
 const reportError = createServiceReporter('AuthService');

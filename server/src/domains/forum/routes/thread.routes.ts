@@ -5,7 +5,7 @@
 
 import { Router } from 'express'
 import type { Router as RouterType } from 'express';
-import { isAuthenticated, isAdminOrModerator } from '../../auth/middleware/auth.middleware';
+import { isAuthenticated, isAdminOrModerator } from '@api/domains/auth/middleware/auth.middleware';
 import {
 	requireThreadSolvePermission,
 	requireThreadTagPermission
@@ -29,6 +29,8 @@ router.get(
 );
 
 router.get('/slug/:slug', asyncHandler(threadController.getThreadBySlug.bind(threadController)));
+
+router.get('/:threadId/posts', asyncHandler(threadController.getThreadPosts.bind(threadController)));
 
 // --- Authenticated User Routes ---
 router.post(

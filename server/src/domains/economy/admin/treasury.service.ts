@@ -14,8 +14,8 @@ import {
 } from '@schema';
 import type { Transaction } from '@schema';
 import { sql, eq, desc, and, inArray } from 'drizzle-orm';
-import { AdminError, AdminErrorCodes } from '../../admin.errors';
-import { vanitySinkAnalyzer } from '../../../shop/services/vanity-sink.analyzer';
+import { AdminError, AdminErrorCodes } from '../../admin/admin.errors';
+import { vanitySinkAnalyzer } from '@domains/shop/services/vanity-sink.analyzer';
 import type {
 	TreasuryDepositInput,
 	TreasuryWithdrawalInput,

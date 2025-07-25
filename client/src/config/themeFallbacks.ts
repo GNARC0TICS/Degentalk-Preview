@@ -3,7 +3,7 @@
  * This file is maintained for backward compatibility
  */
 import { type LucideIcon } from 'lucide-react';
-import { zoneThemes, getForumTheme } from '@shared/config/zoneThemes.config';
+import { zoneThemes, getForumTheme } from '@shared/config/forumThemes.config';
 
 export interface DefaultZoneTheme {
 	icon: LucideIcon;

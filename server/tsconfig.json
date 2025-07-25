@@ -1,6 +1,6 @@
 {
 	"extends": "../tsconfig.base.json",
-	"include": ["src/**/*", "../shared/**/*"],
+	"include": ["src/**/*"],
 	"exclude": [
 		"../node_modules",
 		"build",
@@ -30,10 +30,12 @@
 	],
 	"compilerOptions": {
 		"baseUrl": ".",
+
 		"module": "ESNext",
 		"moduleResolution": "bundler",
-		"noEmit": true,
+		"composite": true,
 		"allowImportingTsExtensions": true,
+		"emitDeclarationOnly": true,
 		"experimentalDecorators": true,
 		"emitDecoratorMetadata": true,
 		"outDir": "./dist",

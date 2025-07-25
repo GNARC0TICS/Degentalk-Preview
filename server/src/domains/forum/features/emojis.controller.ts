@@ -11,9 +11,9 @@ import {
 	validateRequestBody,
 	validateQueryParams,
 	validateNumberParam
-} from '../../admin.validation';
+} from '../../admin/admin.validation';
 import { logger } from '@core/logger';
-import { AdminError, AdminErrorCodes } from '../../admin.errors';
+import { AdminError, AdminErrorCodes } from '../../admin/admin.errors';
 import {
 	toPublicList,
 	sendSuccessResponse,

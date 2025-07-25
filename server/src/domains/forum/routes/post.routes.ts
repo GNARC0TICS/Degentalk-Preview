@@ -5,7 +5,7 @@
 
 import { Router } from 'express'
 import type { Router as RouterType } from 'express';
-import { isAuthenticated } from '../../auth/middleware/auth.middleware';
+import { isAuthenticated } from '@api/domains/auth/middleware/auth.middleware';
 import {
 	requirePostEditPermission,
 	requirePostDeletePermission
