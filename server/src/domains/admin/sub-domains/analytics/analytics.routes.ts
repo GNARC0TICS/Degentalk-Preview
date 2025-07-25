@@ -1,37 +1,13 @@
 /**
- * Admin Analytics Routes
- *
- * Aggregates all analytics-related routes for the admin dashboard
+ * Analytics Bridge Routes
+ * 
+ * This file forwards to the analytics domain's admin routes
+ * to maintain backward compatibility with existing admin panel structure
  */
 
-import express from 'express';
-import { isAuthenticated, isAdmin } from '@api/domains/auth/middleware/auth.middleware';
-import rainAnalyticsRoutes from './rain-analytics.routes';
-import tippingAnalyticsRoutes from './tipping-analytics.routes';
-import platformStatsRoutes from './stats.routes';
-import fraudDetectionRoutes from './fraud-detection.routes';
-// import { systemAnalyticsRoutes } from './system-analytics.routes';
-import { Router } from 'express'
-import type { Router as RouterType } from 'express';
-import { AdminAnalyticsController } from './analytics.controller';
-import { validateQuery } from '@api/middleware/validate';
-import { AnalyticsQuerySchema } from './analytics.validators';
+// Import and re-export the analytics admin routes from the analytics domain
+export { adminAnalyticsRoutes as default } from '@domains/analytics';
 
-const router: RouterType = express.Router();
-
-// Apply authentication middleware to all routes
-router.use(isAuthenticated);
-router.use(isAdmin);
-
-// Register analytics sub-routes
-router.use('/engagement/rain', rainAnalyticsRoutes);
-router.use('/engagement/tips', tippingAnalyticsRoutes);
-router.use('/platform-stats', platformStatsRoutes);
-router.use('/fraud', fraudDetectionRoutes);
-// router.use('/system', systemAnalyticsRoutes);
-
-// Additional analytics routes can be added here
-// e.g., router.use('/users', userAnalyticsRoutes);
-// e.g., router.use('/forum', forumAnalyticsRoutes);
-
-export default router;
+// Note: All analytics functionality has been moved to the analytics domain
+// at server/src/domains/analytics/admin/
+// This file exists only for backward compatibility

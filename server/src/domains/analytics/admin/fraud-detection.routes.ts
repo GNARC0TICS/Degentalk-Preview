@@ -7,7 +7,7 @@
 import express from 'express'
 import type { Router as RouterType } from 'express';
 import { fraudDetectionController } from './fraud-detection.controller';
-import { isAuthenticated, isAdmin } from '@api/domains/auth/middleware/auth.middleware';
+import { isAuthenticated, isAdmin } from '@domains/auth/middleware/auth.middleware';
 
 const router: RouterType = express.Router();
 

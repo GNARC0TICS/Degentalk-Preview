@@ -19,6 +19,7 @@ export { AchievementController, achievementController } from './achievement.cont
 export { default as levelingRoutes } from './leveling.routes';
 export { default as achievementRoutes } from './achievement.routes';
 export { default as titlesRoutes } from './titles.routes';
+export { default as xpAdminRoutes } from './admin/xp.routes';
 
 // Types
 export type {

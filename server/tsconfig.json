@@ -42,6 +42,7 @@
 			// NEW paths (target state)
 			"@api/*": ["src/*"],
 			"@core/*": ["src/core/*"],
+			"@domains/*": ["src/domains/*"],
 			
 			// OLD paths (temporary - for transition)
 			"@config/*": ["../config/*"],

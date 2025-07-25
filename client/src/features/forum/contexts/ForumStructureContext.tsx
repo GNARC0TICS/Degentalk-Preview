@@ -304,8 +304,15 @@ function processApiData(resp: ForumStructureApiResponse) {
 	const forumById = new Map<string, MergedForum>();
 	const handled = new Set<string>();
 
-	// Zones first
-	resp.zones.forEach((z) => {
+	// Process top-level forums as zones (since zone type was removed)
+	// Also handle legacy resp.zones if they exist
+	const zonesData = resp.zones && resp.zones.length > 0 
+		? resp.zones 
+		: resp.forums.filter(f => !f.parentId);
+	const childForums = resp.forums.filter(f => f.parentId);
+
+	// Zones first (top-level forums)
+	zonesData.forEach((z) => {
 		const zone: MergedForum = {
 			id: z.id,
 			slug: z.slug,
@@ -333,8 +340,8 @@ function processApiData(resp: ForumStructureApiResponse) {
 		zoneById.set(zone.id, zone);
 	});
 
-	// Forums tier 1
-	resp.forums.forEach((f) => {
+	// Forums tier 1 (child forums)
+	childForums.forEach((f) => {
 		if (f.parentId && zoneById.has(f.parentId)) {
 			const m = makeMergedForum(f, f.parentId as unknown as ForumId);
 			forums[m.slug] = m;
@@ -346,7 +353,7 @@ function processApiData(resp: ForumStructureApiResponse) {
 	});
 
 	// Subforums
-	resp.forums.forEach((f) => {
+	childForums.forEach((f) => {
 		if (!handled.has(f.id) && f.parentId && forumById.has(f.parentId)) {
 			const parent = forumById.get(f.parentId)!;
 			const sub = makeMergedForum(f, parent.parentForumId!);
@@ -541,8 +548,8 @@ export const ForumStructureProvider = ({ children }: { children: ReactNode }) =>
 				// Fallback: some environments may still send an *array* of structures
 				// (mixing zones & forums).  We coerce that into the expected object.
 				if (Array.isArray(raw)) {
-					const topLevelForums = raw.filter((s: Record<string, unknown>) => s.type === 'zone'); // FIXME: any → safe record
-					const forums = raw.filter((s: Record<string, unknown>) => s.type === 'forum'); // FIXME: any → safe record
+					const zones = raw.filter((s: Record<string, unknown>) => s.parentId === null); // Top-level forums are now "zones"
+					const forums = raw.filter((s: Record<string, unknown>) => s.type === 'forum'); // All forums
 					const coerced = { zones, forums };
 					try {
 						const parsed = ForumStructureApiResponseSchema.parse(coerced);

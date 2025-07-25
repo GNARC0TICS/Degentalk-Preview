@@ -7,7 +7,7 @@
 import express from 'express'
 import type { Router as RouterType } from 'express';
 import { tippingAnalyticsController } from './tipping-analytics.controller';
-import { isAdmin } from '@api/domains/auth/middleware/auth.middleware';
+import { isAdmin } from '@domains/auth/middleware/auth.middleware';
 
 const router: RouterType = express.Router();
 

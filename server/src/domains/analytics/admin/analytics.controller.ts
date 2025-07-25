@@ -6,9 +6,9 @@
 
 import type { Request, Response } from 'express';
 import { adminAnalyticsService } from './analytics.service';
-import { AdminError, AdminErrorCodes } from '../../admin.errors';
+import { NotFoundError, ValidationError } from '@core/errors';
 import { AnalyticsQuerySchema, AnalyticsPeriodSchema } from './analytics.validators';
-import { validateQueryParams } from '../../admin.validation';
+import { validateQueryParams } from '@domains/admin/admin.validation';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
 export class AdminAnalyticsController {
@@ -19,8 +19,8 @@ export class AdminAnalyticsController {
 			const stats = await adminAnalyticsService.getOverviewStats(query);
 			sendSuccessResponse(res, stats);
 		} catch (error) {
-			if (error instanceof AdminError)
-				return sendErrorResponse(res, error.message, error.httpStatus);
+			if (error instanceof ValidationError)
+				return sendErrorResponse(res, error.message, 400);
 			sendErrorResponse(res, 'Failed to fetch overview statistics', 500);
 		}
 	}
@@ -32,8 +32,8 @@ export class AdminAnalyticsController {
 			const chartData = await adminAnalyticsService.getUserGrowthChart(query);
 			sendSuccessResponse(res, chartData);
 		} catch (error) {
-			if (error instanceof AdminError)
-				return sendErrorResponse(res, error.message, error.httpStatus);
+			if (error instanceof ValidationError)
+				return sendErrorResponse(res, error.message, 400);
 			sendErrorResponse(res, 'Failed to fetch user growth chart data', 500);
 		}
 	}
@@ -45,8 +45,8 @@ export class AdminAnalyticsController {
 			const threads = await adminAnalyticsService.getMostActiveThreads(query);
 			sendSuccessResponse(res, threads);
 		} catch (error) {
-			if (error instanceof AdminError)
-				return sendErrorResponse(res, error.message, error.httpStatus);
+			if (error instanceof ValidationError)
+				return sendErrorResponse(res, error.message, 400);
 			sendErrorResponse(res, 'Failed to fetch most active threads', 500);
 		}
 	}
