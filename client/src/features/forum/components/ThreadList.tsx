@@ -23,7 +23,7 @@ interface ThreadListProps {
 	displayMode?: DisplayMode;
 }
 
-const THREADS_API_BASE_PATH = '/api/forum/threads';
+const THREADS_API_BASE_PATH = '/api/forums/threads';
 
 const ThreadListComponent: React.FC<ThreadListProps> = ({
 	forumId,
