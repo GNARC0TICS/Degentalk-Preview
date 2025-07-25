@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { Tabs, TabsContent } from '@app/components/ui/tabs';
-import { SiteFooter } from '@app/components/footer';
 import ProfileSidebar from '@app/components/profile/ProfileSidebar';
 import OverviewTab from '@app/components/profile/OverviewTab';
 import InventoryTab from '@app/components/profile/InventoryTab';
@@ -117,26 +116,24 @@ export default function ProfilePage() {
 
 	if (isLoading) {
 		return (
-			<div className="flex flex-col min-h-screen bg-gradient-to-b from-zinc-900 to-black">
+			<div className="bg-gradient-to-b from-zinc-900 to-black">
 				<ProfileSkeleton />
-				<SiteFooter />
 			</div>
 		);
 	}
 
 	if (isError || !profile) {
 		return (
-			<div className="flex flex-col min-h-screen bg-gradient-to-b from-zinc-900 to-black">
-				<Wide className="p-4 flex-1">
+			<div className="bg-gradient-to-b from-zinc-900 to-black">
+				<Wide className="p-4">
 					<ErrorDisplay title="Profile Error" error={error} variant="card" />
 				</Wide>
-				<SiteFooter />
 			</div>
 		);
 	}
 
 	return (
-		<div className="flex flex-col min-h-screen">
+		<>
 			<SeoHead
 				title={`${profile.username}'s Profile`}
 				description={`Profile of ${profile.username}`}
@@ -260,8 +257,6 @@ export default function ProfilePage() {
 				</Wide>
 			</main>
 
-			<SiteFooter />
-
 			{isEditMode && (
 				<ProfileEditor
 					profile={{
@@ -279,6 +274,6 @@ export default function ProfilePage() {
 					onClose={() => setIsEditMode(false)}
 				/>
 			)}
-		</div>
+		</>
 	);
 }

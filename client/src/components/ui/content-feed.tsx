@@ -10,16 +10,20 @@ import {
 	Bookmark,
 	Share2,
 	MoreHorizontal,
-	Flame
+	Flame,
+	Bell,
+	ChevronDown,
+	Coins
 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { Badge } from '@app/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@app/components/ui/avatar';
 import { Skeleton } from '@app/components/ui/skeleton';
-import type { ContentItem } from '@app/hooks/use-content';
+import type { Thread } from '@shared/types/thread.types';
+import theme from '@app/config/theme.config';
 
 export interface ContentFeedProps {
-	items: ContentItem[];
+	items: Thread[];
 	isLoading?: boolean;
 	error?: Error | null;
 	className?: string;
@@ -66,9 +70,10 @@ function ContentFeedSkeleton({ count = 5 }: { count?: number }) {
 	);
 }
 
-function ContentItem({ item, showCategory = true }: { item: ContentItem; showCategory?: boolean }) {
+function ContentItem({ item, showCategory = true }: { item: Thread; showCategory?: boolean }) {
 	const [isHovered, setIsHovered] = useState(false);
 	const [showQuickActions, setShowQuickActions] = useState(false);
+	const [isExpanded, setIsExpanded] = useState(false);
 
 	const formatTimeAgo = (dateString: string) => {
 		try {
@@ -91,11 +96,34 @@ function ContentItem({ item, showCategory = true }: { item: ContentItem; showCat
 	const handleQuickAction = (e: React.MouseEvent, action: string) => {
 		e.preventDefault();
 		e.stopPropagation();
+		
+		// Handle different quick actions
+		switch (action) {
+			case 'bookmark':
+				// TODO: Implement bookmark functionality
+				console.log('Bookmarking thread:', item.id);
+				break;
+			case 'share':
+				// Copy thread URL to clipboard
+				const threadUrl = `${window.location.origin}/threads/${item.slug}`;
+				navigator.clipboard.writeText(threadUrl);
+				break;
+			case 'hide':
+				// TODO: Implement hide functionality
+				console.log('Hiding thread:', item.id);
+				break;
+		}
 	};
 
 	return (
 		<div
-			className="content-item relative border-b border-zinc-800/60 last:border-b-0 transition-colors duration-300 group touch-feedback"
+			className="content-item relative border-b last:border-b-0 transition-all group touch-feedback"
+			style={{
+				borderColor: isHovered ? theme.colors.surface.border.default : theme.components.feed.colors.border,
+				transitionDuration: theme.animation.durations.normal,
+				backgroundColor: isHovered ? theme.colors.surface.elevated : 'transparent',
+				transform: isHovered ? 'translateX(4px)' : 'translateX(0)'
+			}}
 			onMouseEnter={() => {
 				setIsHovered(true);
 				setTimeout(() => setShowQuickActions(true), 200);
@@ -105,35 +133,52 @@ function ContentItem({ item, showCategory = true }: { item: ContentItem; showCat
 				setShowQuickActions(false);
 			}}
 		>
-			{/* Hover background effect */}
+			{/* Enhanced hover background effect */}
 			<div
 				className={cn(
-					'absolute inset-0 bg-gradient-to-r from-orange-500/5 via-transparent to-red-500/5 transition-opacity duration-300',
+					'absolute inset-0 bg-gradient-to-r from-orange-500/10 via-transparent to-red-500/10 transition-all',
 					isHovered ? 'opacity-100' : 'opacity-0'
 				)}
+				style={{
+					transitionDuration: theme.animation.durations.normal,
+					backgroundImage: isHovered 
+						? `linear-gradient(to right, ${theme.colors.brand.gradient.orange}15, transparent, ${theme.colors.brand.gradient.red}15)`
+						: 'none'
+				}}
 			/>
 
-			{/* Hot indicator glow */}
+			{/* Enhanced hot indicator with glow */}
 			{hotLevel === 'volcanic' && (
-				<div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-red-500 to-orange-500 shadow-lg shadow-red-500/50" />
+				<>
+					<div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-red-500 to-orange-500 shadow-lg shadow-red-500/50" />
+					<div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-red-500/20 to-transparent blur-xl" />
+				</>
 			)}
 			{hotLevel === 'hot' && (
-				<div className="absolute left-0 top-0 bottom-0 w-0.5 bg-gradient-to-b from-orange-500 to-yellow-500" />
+				<>
+					<div className="absolute left-0 top-0 bottom-0 w-0.5 bg-gradient-to-b from-orange-500 to-yellow-500" />
+					<div className="absolute left-0 top-0 bottom-0 w-6 bg-gradient-to-r from-orange-500/15 to-transparent blur-lg" />
+				</>
 			)}
 
 			<Link to={`/threads/${item.slug}`}>
 				<div
-					className={cn(
-						'relative p-4 cursor-pointer transition-colors duration-300',
-						isHovered && 'bg-zinc-800/30'
-					)}
+					className="relative cursor-pointer transition-colors"
+					style={{
+						padding: theme.components.feed.item.padding,
+						transitionDuration: theme.animation.durations.normal
+					}}
 				>
 					<div className="space-y-3">
 						{/* Thread title with enhanced hover effects */}
 						<div className="flex items-start gap-3">
 							<div className="relative">
+								{/* Unread indicator */}
+								{item.hasNewReplies && !isHovered && (
+									<div className="absolute -left-2 top-1/2 -translate-y-1/2 w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse" />
+								)}
 								{hotLevel === 'volcanic' ? (
-									<Flame className="h-5 w-5 text-red-400 mt-0.5 flex-shrink-0" />
+									<Flame className="h-5 w-5 text-red-400 mt-0.5 flex-shrink-0 drop-shadow-glow" />
 								) : (
 									<TrendingUp
 										className={cn(
@@ -148,22 +193,56 @@ function ContentItem({ item, showCategory = true }: { item: ContentItem; showCat
 							<div className="flex-1 min-w-0">
 								<h3
 									className={cn(
-										'font-semibold text-zinc-100 transition-all duration-300 line-clamp-2 leading-snug',
+										'text-zinc-100 transition-all line-clamp-2',
 										isHovered && 'text-orange-300'
 									)}
+									style={{
+										fontSize: theme.components.feed.typography.title.size,
+										fontWeight: theme.components.feed.typography.title.weight,
+										lineHeight: theme.components.feed.typography.title.lineHeight,
+										transitionDuration: theme.animation.durations.normal
+									}}
 								>
 									{item.title}
 								</h3>
 								{/* Excerpt preview - hidden on small screens */}
-								{item.excerpt && (
-									<p
-										className={cn(
-											'mt-1 text-zinc-400 text-sm leading-relaxed line-clamp-2 hidden md:block',
-											'group-hover:text-zinc-300 transition-colors duration-300'
+								{(item.excerpt || item.content) && (
+									<>
+										<p
+											className={cn(
+												'mt-1 text-zinc-400 hidden md:block',
+												'group-hover:text-zinc-300 transition-colors',
+												!isExpanded && 'line-clamp-2'
+											)}
+											style={{
+												fontSize: theme.components.feed.typography.preview.size,
+												fontWeight: theme.components.feed.typography.preview.weight,
+												lineHeight: theme.components.feed.typography.preview.lineHeight,
+												transitionDuration: theme.animation.durations.normal
+											}}
+										>
+											{(() => {
+												const text = item.excerpt || item.content || '';
+												if (isExpanded) return text;
+												// Strip HTML and truncate to 180 chars for better preview
+												const stripped = text.replace(/<[^>]*>/g, '').trim();
+												return stripped.length > 180 ? stripped.substring(0, 180) + '...' : stripped;
+											})()}
+										</p>
+										{(item.excerpt || item.content || '').length > 180 && (
+											<button
+												className="hidden md:inline-flex items-center gap-1 mt-1 text-xs text-orange-400 hover:text-orange-300 transition-colors"
+												onClick={(e) => {
+													e.preventDefault();
+													e.stopPropagation();
+													setIsExpanded(!isExpanded);
+												}}
+											>
+												<span>{isExpanded ? 'Show less' : 'Read more'}</span>
+												<ChevronDown className={cn('h-3 w-3 transition-transform', isExpanded && 'rotate-180')} />
+											</button>
 										)}
-									>
-										{item.excerpt}
-									</p>
+									</>
 								)}
 							</div>
 
@@ -189,63 +268,103 @@ function ContentItem({ item, showCategory = true }: { item: ContentItem; showCat
 										🔥 Hot
 									</Badge>
 								)}
+								{item.hasNewReplies && (
+									<div className="flex items-center gap-1 relative">
+										<div className="relative">
+											<div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+											<div className="absolute inset-0 w-2 h-2 bg-green-400 rounded-full animate-ping" />
+										</div>
+										<span className="text-xs text-green-400 font-medium">New</span>
+									</div>
+								)}
 							</div>
 						</div>
 
 						{/* User info with enhanced avatars */}
-						<div className="flex items-center gap-3 text-xs text-zinc-400">
+						<div className="flex items-center gap-3" style={{ fontSize: theme.components.feed.typography.meta.size, color: theme.components.feed.typography.meta.color }}>
 							<div className="flex items-center gap-2">
 								<div className="relative">
-									<Avatar className="h-8 w-8 ring-2 ring-zinc-700">
+									<Avatar className="h-8 w-8 ring-2 ring-zinc-800 hover:ring-zinc-700 transition-all">
 										<AvatarImage src={item.user.avatarUrl || undefined} alt={item.user.username} />
-										<AvatarFallback className="text-xs bg-zinc-700">
+										<AvatarFallback className="text-xs bg-zinc-800">
 											{item.user.username.substring(0, 2).toUpperCase()}
 										</AvatarFallback>
 									</Avatar>
+									{item.user.isVerified && (
+										<div className="absolute -bottom-1 -right-1 w-4 h-4 bg-blue-500 rounded-full flex items-center justify-center">
+											<svg className="w-2.5 h-2.5 text-white" fill="currentColor" viewBox="0 0 20 20">
+												<path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+											</svg>
+										</div>
+									)}
 								</div>
 
-								<span className={cn('font-medium text-zinc-300')}>{item.user.username}</span>
+								<span className="font-medium text-zinc-300">{item.user.username}</span>
+								{item.user.role === 'admin' && (
+									<Badge variant="outline" className="border-blue-500/30 text-blue-300 text-xs px-1.5 py-0">
+										Staff
+									</Badge>
+								)}
 							</div>
 
 							<span className="text-zinc-600">•</span>
 
 							<div className="flex items-center gap-1">
 								<Clock className="h-3.5 w-3.5" />
-								<span>{formatTimeAgo(item.lastPostAt || item.createdAt)}</span>
+								<span title={new Date(item.lastPostAt || item.createdAt).toLocaleString()}>
+									{formatTimeAgo(item.lastPostAt || item.createdAt)}
+								</span>
 							</div>
 						</div>
 
 						{/* Enhanced stats with hover effects */}
 						<div className="flex items-center justify-between">
-							<div className="flex items-center gap-6 text-xs">
-								<div className="flex items-center gap-1.5 text-zinc-400">
-									<MessageSquare className="h-4 w-4" />
-									<span className="font-medium">{item.postCount}</span>
-								</div>
-								<div className="flex items-center gap-1.5 text-zinc-400">
-									<Eye className="h-4 w-4" />
-									<span className="font-medium">{item.viewCount}</span>
-								</div>
-								<div className="flex items-center gap-1.5 text-zinc-400">
-									<ThumbsUp className="h-4 w-4" />
-									<span className="font-medium">{item.firstPostLikeCount}</span>
-								</div>
+							<div className="flex items-center gap-2 text-xs" style={{ color: theme.components.feed.typography.stats.color }}>
+								<span className="flex items-center gap-1">
+									<span>💬</span>
+									<span style={{ fontWeight: theme.components.feed.typography.stats.weight }}>
+										{item.postCount} {item.postCount === 1 ? 'reply' : 'replies'}
+									</span>
+								</span>
+								<span className="text-zinc-600">·</span>
+								<span className="flex items-center gap-1">
+									<span>👁️</span>
+									<span style={{ fontWeight: theme.components.feed.typography.stats.weight }}>
+										{item.viewCount.toLocaleString()} {item.viewCount === 1 ? 'view' : 'views'}
+									</span>
+								</span>
+								{item.totalTips && item.totalTips > 0 && (
+									<>
+										<span className="text-zinc-600">·</span>
+										<span className="flex items-center gap-1">
+											<span>💰</span>
+											<span style={{ fontWeight: theme.components.feed.typography.stats.weight }}>
+												{item.totalTips.toLocaleString()} DGT tipped
+											</span>
+										</span>
+									</>
+								)}
 							</div>
 
 							<div className="flex items-center gap-2">
 								{/* Category tag */}
-								{showCategory && item.category && (
-									<Link to={`/forums/${item.category.slug}`}>
+								{showCategory && item.zone && (
+									<Link to={`/forums/${item.zone.slug}`}>
 										<span
 											className={cn(
-												'bg-zinc-800/50 text-zinc-400 border border-zinc-600 transition-all text-xs cursor-pointer rounded px-2 py-0.5',
-												'hover:border-orange-500/50 hover:text-orange-300 hover:bg-zinc-800/70'
+												'bg-zinc-900/60 text-zinc-300 border border-zinc-700 transition-all cursor-pointer rounded px-2 py-0.5',
+												'hover:border-orange-500/50 hover:text-orange-300 hover:bg-zinc-800/80',
+												'hover:shadow-md hover:shadow-orange-500/10'
 											)}
+											style={{ 
+												fontSize: theme.components.feed.typography.stats.size,
+												borderColor: item.zone.colorTheme ? `${item.zone.colorTheme}50` : undefined
+											}}
 											onClick={(e) => {
 												e.stopPropagation();
 											}}
 										>
-											{item.category.name}
+											{item.zone.name}
 										</span>
 									</Link>
 								)}
@@ -255,12 +374,12 @@ function ContentItem({ item, showCategory = true }: { item: ContentItem; showCat
 				</div>
 			</Link>
 
-			{/* Quick actions overlay - Hidden on mobile, shown on hover for desktop */}
+			{/* Enhanced quick actions overlay */}
 			{showQuickActions && (
-				<div className="hidden sm:flex absolute top-2 right-2 gap-1 bg-zinc-900/90 backdrop-blur-sm rounded-lg p-1 border border-zinc-700/50 shadow-lg opacity-0 animate-fade-in">
+				<div className="hidden sm:flex absolute top-2 right-2 gap-1 bg-zinc-950/95 backdrop-blur-md rounded-lg p-1 border border-zinc-800/80 shadow-xl opacity-0 animate-fade-in">
 					<button
 						onClick={(e) => handleQuickAction(e, 'bookmark')}
-						className="quick-action-btn p-1.5 hover:bg-zinc-700/50 rounded text-zinc-400 hover:text-orange-300 transition-colors focus-ring"
+						className="quick-action-btn p-1.5 hover:bg-zinc-800/80 rounded text-zinc-400 hover:text-orange-300 transition-all hover:scale-110 focus-ring"
 						title="Bookmark"
 						aria-label="Bookmark this thread"
 					>
@@ -268,17 +387,17 @@ function ContentItem({ item, showCategory = true }: { item: ContentItem; showCat
 					</button>
 					<button
 						onClick={(e) => handleQuickAction(e, 'share')}
-						className="quick-action-btn p-1.5 hover:bg-zinc-700/50 rounded text-zinc-400 hover:text-blue-300 transition-colors focus-ring"
+						className="quick-action-btn p-1.5 hover:bg-zinc-800/80 rounded text-zinc-400 hover:text-blue-300 transition-all hover:scale-110 focus-ring"
 						title="Share"
 						aria-label="Share this thread"
 					>
 						<Share2 className="h-3 w-3" />
 					</button>
 					<button
-						onClick={(e) => handleQuickAction(e, 'more')}
-						className="quick-action-btn p-1.5 hover:bg-zinc-700/50 rounded text-zinc-400 hover:text-zinc-200 transition-colors focus-ring"
-						title="More options"
-						aria-label="More options"
+						onClick={(e) => handleQuickAction(e, 'hide')}
+						className="quick-action-btn p-1.5 hover:bg-zinc-800/80 rounded text-zinc-400 hover:text-red-300 transition-all hover:scale-110 focus-ring"
+						title="Hide thread"
+						aria-label="Hide this thread"
 					>
 						<MoreHorizontal className="h-3 w-3" />
 					</button>

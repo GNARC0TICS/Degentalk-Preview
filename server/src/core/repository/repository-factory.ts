@@ -18,6 +18,7 @@ import type {
 
 import { UserRepository } from './repositories/user-repository';
 import { TransactionRepository } from './repositories/transaction-repository';
+import { ThreadRepository } from './repositories/thread-repository';
 import { logger } from '../logger';
 
 // Default configuration
@@ -75,12 +76,13 @@ export class RepositoryFactory implements IRepositoryFactory {
 	}
 
 	/**
-	 * Get Thread Repository instance (placeholder for future implementation)
+	 * Get Thread Repository instance
 	 */
 	getThreadRepository(): IThreadRepository {
 		if (!this.instances.has('threadRepository')) {
-			// For now, throw an error as it's not implemented yet
-			throw new Error('ThreadRepository not yet implemented');
+			const repository = new ThreadRepository();
+			this.instances.set('threadRepository', repository);
+			logger.debug('RepositoryFactory', 'Created ThreadRepository instance');
 		}
 		return this.instances.get('threadRepository');
 	}

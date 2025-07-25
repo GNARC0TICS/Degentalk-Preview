@@ -70,4 +70,18 @@ router.get(
   analyticsController.getPerformanceDashboard
 );
 
+// Leaderboard endpoints
+const leaderboardSchema = z.object({
+  current: z.string().transform(val => val === 'true').optional().default(true)
+});
+
+router.get(
+  '/leaderboards/:type',
+  validateRequest({ 
+    params: z.object({ type: z.enum(['xp', 'posts', 'clout', 'tips']) }),
+    query: leaderboardSchema 
+  }),
+  analyticsController.getLeaderboard
+);
+
 export default router;

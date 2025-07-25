@@ -1,4 +1,4 @@
-import { redis } from '@core/redis';
+import { redisClient } from '@core/services/rate-limit.service';
 import { xpService } from '../xp.service';
 import { logger } from '@core/logger';
 import type { UserId } from '@shared/types/ids';
@@ -30,7 +30,7 @@ export class DailyBonusService {
       const streakKey = `daily_streak:${userId}`;
       
       // Check if already claimed today
-      const claimed = await redis.get(claimKey);
+      const claimed = await redisClient?.get(claimKey);
       if (claimed) {
         const currentStreak = await this.getCurrentStreak(userId);
         return {
@@ -45,11 +45,11 @@ export class DailyBonusService {
       const yesterday = new Date();
       yesterday.setDate(yesterday.getDate() - 1);
       const yesterdayKey = `daily_bonus:${userId}:${yesterday.toDateString()}`;
-      const claimedYesterday = await redis.get(yesterdayKey);
+      const claimedYesterday = await redisClient?.get(yesterdayKey);
       
       let streak = 1;
       if (claimedYesterday) {
-        const currentStreak = await redis.get(streakKey);
+        const currentStreak = await redisClient?.get(streakKey);
         streak = currentStreak ? parseInt(currentStreak) + 1 : 1;
       }
       
@@ -64,10 +64,10 @@ export class DailyBonusService {
       });
       
       // Mark as claimed (expires in 48 hours to allow for missed days)
-      await redis.setex(claimKey, 172800, '1');
+      await redisClient?.setex(claimKey, 172800, '1');
       
       // Update streak
-      await redis.setex(streakKey, 172800, streak.toString());
+      await redisClient?.setex(streakKey, 172800, streak.toString());
       
       logger.info('DAILY_BONUS', 'Daily bonus awarded', {
         userId,
@@ -98,7 +98,7 @@ export class DailyBonusService {
    */
   async getCurrentStreak(userId: UserId): Promise<number> {
     const streakKey = `daily_streak:${userId}`;
-    const streak = await redis.get(streakKey);
+    const streak = await redisClient?.get(streakKey);
     return streak ? parseInt(streak) : 0;
   }
   
@@ -108,7 +108,7 @@ export class DailyBonusService {
   async getTodayClaimCount(): Promise<number> {
     const today = new Date().toDateString();
     const pattern = `daily_bonus:*:${today}`;
-    const keys = await redis.keys(pattern);
+    const keys = await redisClient?.keys(pattern);
     return keys.length;
   }
   
@@ -117,7 +117,7 @@ export class DailyBonusService {
    */
   async resetStreak(userId: UserId): Promise<void> {
     const streakKey = `daily_streak:${userId}`;
-    await redis.del(streakKey);
+    await redisClient?.del(streakKey);
     
     logger.info('DAILY_BONUS', 'Streak reset', { userId });
   }

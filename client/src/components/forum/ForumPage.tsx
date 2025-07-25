@@ -1,5 +1,5 @@
 import React, { useState, memo, useCallback } from 'react';
-import { useParams } from 'react-router-dom';
+import { Navigate, useParams } from 'react-router-dom';
 import { Filter } from 'lucide-react';
 
 import { Button } from '@app/components/ui/button';
@@ -11,19 +11,18 @@ import { ThreadFilters } from '@app/components/forum/ThreadFilters';
 import { ForumBreadcrumbs, createForumBreadcrumbs } from '@app/components/navigation/ForumBreadcrumbs';
 import ThreadList from '@app/features/forum/components/ThreadList';
 import { DynamicSidebar } from '@app/components/forum/sidebar';
-import { SiteFooter } from '@app/components/footer';
 import { ForumHeader } from '@app/features/forum/components/ForumHeader';
 import { MyBBThreadList } from '@app/components/forum/MyBBThreadList';
 import type { ForumId, StructureId, ZoneId, UserId, ThreadId } from '@shared/types/ids';
 import { toUserId, toThreadId, toStructureId, toZoneId, toForumId } from '@shared/utils/id';
-import type { ThreadDisplay } from '@app/types/thread.types';
+import type { Thread } from '@shared/types/thread.types';
 
 export interface ForumPageProps {
 	className?: string;
 }
 
 // Demo threads for fallback mode
-function getDemoThreads(forumSlug: string): ThreadDisplay[] {
+function getDemoThreads(forumSlug: string): Thread[] {
 	const baseThreads = [
 		{
 			id: '1',
@@ -93,11 +92,11 @@ function getDemoThreads(forumSlug: string): ThreadDisplay[] {
 		}
 	];
 
-	// Add required properties to make threads conform to ThreadDisplay/CanonicalThread
+	// Add required properties to make threads conform to Thread type
 	return baseThreads.map(thread => ({
 		...thread,
 		id: toThreadId(thread.id),
-		// Add missing CanonicalThread properties
+		// Add missing Thread properties
 		structureId: toStructureId('struct_1'),
 		isHidden: false,
 		firstPostLikeCount: 0,
@@ -112,7 +111,7 @@ function getDemoThreads(forumSlug: string): ThreadDisplay[] {
 			type: 'forum' as const
 		},
 		
-		// Add zone relationship (ThreadDisplay requires full zone)
+		// Add zone relationship (Thread requires full zone)
 		zone: {
 			id: toZoneId('zone_1'),
 			name: 'Trading',
@@ -135,7 +134,7 @@ function getDemoThreads(forumSlug: string): ThreadDisplay[] {
 			updatedAt: new Date().toISOString()
 		},
 		
-		// Add enhanced user data for ThreadDisplay
+		// Add enhanced user data for Thread
 		user: {
 			...thread.user,
 			id: toUserId(thread.user.id),
@@ -177,7 +176,7 @@ function getDemoThreads(forumSlug: string): ThreadDisplay[] {
 		forumName: forumSlug === 'market-analysis' ? 'Market Analysis' : 
 		           forumSlug === 'live-trade-reacts' ? 'Live-Trade Reacts' : 'Shill Zone',
 		forumSlug
-	})) as ThreadDisplay[];
+	})) as Thread[];
 }
 
 const ForumPage = memo(() => {
@@ -185,6 +184,12 @@ const ForumPage = memo(() => {
 	// Use subforum slug if present, otherwise forum slug
 	const forumSlug = params?.subforumSlug || params?.forumSlug;
 	const zoneSlug = params?.zoneSlug;
+
+	// If no forum slug present, redirect to forums index
+	if (!forumSlug) {
+		return <Navigate to="/forums" replace />;
+	}
+
 	const { getForum, zones, isUsingFallback } = useForumStructure();
 
 	// State management
@@ -326,7 +331,6 @@ const ForumPage = memo(() => {
 					</aside>
 				</div>
 			</Wide>
-			<SiteFooter />
 		</div>
 	);
 });

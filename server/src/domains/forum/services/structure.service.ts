@@ -11,7 +11,7 @@ import { forumStructure, threads, posts } from '@schema';
 import { sql, desc, eq, count, isNull, and, inArray, gt } from 'drizzle-orm';
 import type { ForumStructureWithStats } from '@shared/types/core/forum.types';
 import type { StructureId } from '@shared/types/ids';
-import { forumMap, type Zone, type Forum } from '@shared/config/forum.config';
+import { forumMap, type RootForum as Zone, type Forum } from '@config/forumMap';
 
 // Simple in-memory cache for forum structure
 const CACHE_DURATION_MS = 30 * 1000; // 30 seconds
@@ -455,7 +455,7 @@ export class ForumStructureService {
 			});
 		};
 
-		forumMap.zones.forEach((zone) => {
+		forumMap.forums.forEach((zone) => {
 			configForums.set(zone.slug, { ...zone, type: 'zone', parentForumSlug: null });
 			if (zone.forums) {
 				flattenForums(zone.forums, zone.slug, zone.slug);

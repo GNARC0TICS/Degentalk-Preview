@@ -1,8 +1,8 @@
 import { createContext, useContext, useMemo, useState, useEffect } from 'react';
 import type { ReactNode } from 'react';
 import { z } from 'zod';
-import { forumMap } from '@app/config/forumMap.config';
-import type { Zone } from '@app/config/forumMap.config';
+import { forumMap } from '@config/forumMap';
+import type { RootForum as Zone } from '@config/forumMap';
 import type { CategoryId, ForumId, GroupId, ParentZoneId, ZoneId } from '@shared/types/ids';
 import { toId, parseId, toParentZoneId } from '@shared/types/index';
 import { logger } from '@app/lib/logger';
@@ -558,7 +558,7 @@ export const ForumStructureProvider = ({ children }: { children: ReactNode }) =>
 		}
 
 		logger.info('ForumStructureContext', '[ForumStructureContext] Using fallback forum structure');
-		const fb = fallbackStructure(forumMap.zones);
+		const fb = fallbackStructure(forumMap.forums);
 		return {
 			...fb,
 			isUsingFallback: true,

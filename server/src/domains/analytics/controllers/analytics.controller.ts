@@ -11,6 +11,7 @@ import { sessionTrackingService } from '../services/session-tracking.service';
 import { redisCacheService } from '@core/cache/redis.service';
 import { getUser } from '@utils/request-user';
 import { send } from '@api/utils/response';
+import { PlatformAnalyticsService } from '../services/platform.service';
 
 export class AnalyticsController {
   /**
@@ -159,6 +160,26 @@ export class AnalyticsController {
       res.status(500).json({
         success: false,
         error: 'Failed to get performance dashboard'
+      });
+    }
+  }
+
+  /**
+   * Get leaderboard data
+   */
+  async getLeaderboard(req: Request, res: Response): Promise<void> {
+    try {
+      const type = req.params.type as 'xp' | 'posts' | 'clout' | 'tips';
+      const isCurrentWeek = req.query.current !== false;
+      
+      const leaderboard = await PlatformAnalyticsService.getLeaderboards(type, isCurrentWeek);
+      
+      send(res, leaderboard);
+    } catch (error) {
+      logger.error('AnalyticsController', 'Error getting leaderboard', { error });
+      res.status(500).json({
+        success: false,
+        error: 'Failed to get leaderboard data'
       });
     }
   }

@@ -32,6 +32,7 @@
 		"baseUrl": ".",
 		"module": "ESNext",
 		"moduleResolution": "bundler",
+		"noEmit": true,
 		"allowImportingTsExtensions": true,
 		"experimentalDecorators": true,
 		"emitDecoratorMetadata": true,
@@ -44,6 +45,8 @@
 			
 			// OLD paths (temporary - for transition)
 			"@config/*": ["../config/*"],
+			"@config/forumMap": ["../shared/config/forum-map.config.ts"],
+			"@config/forumEconomy": ["../shared/config/forum-economy.config.ts"],
 			"@shared/types": ["../shared/types/index.ts"],
 			"@shared/types/ids": ["../shared/types/ids.ts"],
 			"@shared/*": ["../shared/*"],

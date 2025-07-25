@@ -93,14 +93,15 @@ export function UserMenu({ className, onLogout }: UserMenuProps) {
 	);
 
 	return (
-		<DropdownMenu>
-			<DropdownMenuTrigger asChild>
-				<motion.div
-					whileHover={{ scale: 1.05 }}
-					whileTap={{ scale: 0.95 }}
-					transition={{ duration: 0.2 }}
-				>
-					<Button variant="ghost" className={`p-1 ${className}`}>
+		<div className="relative">
+			<DropdownMenu>
+				<DropdownMenuTrigger asChild>
+					<motion.div
+						whileHover={{ scale: 1.05 }}
+						whileTap={{ scale: 0.95 }}
+						transition={{ duration: 0.2 }}
+					>
+						<Button variant="ghost" className={`p-1 ${className}`}>
 						<div className="flex items-center space-x-2">
 							<Avatar className="h-8 w-8">
 								<AvatarFallback className="bg-emerald-800 text-emerald-200">
@@ -121,7 +122,7 @@ export function UserMenu({ className, onLogout }: UserMenuProps) {
 					</Button>
 				</motion.div>
 			</DropdownMenuTrigger>
-			<DropdownMenuContent align="end" className="w-56 overflow-hidden">
+			<DropdownMenuContent align="end" className="w-56 overflow-hidden max-h-[calc(100vh-100px)]">
 				<AnimatePresence>
 					<motion.div variants={dropdownVariants} initial="hidden" animate="visible" exit="exit">
 						<DropdownMenuLabel>My Account</DropdownMenuLabel>
@@ -176,5 +177,6 @@ export function UserMenu({ className, onLogout }: UserMenuProps) {
 				</AnimatePresence>
 			</DropdownMenuContent>
 		</DropdownMenu>
+		</div>
 	);
 }

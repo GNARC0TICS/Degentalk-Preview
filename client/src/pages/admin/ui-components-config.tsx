@@ -34,16 +34,16 @@ import {
 	Eye
 } from 'lucide-react';
 import LoadingIndicator from '@app/components/ui/LoadingIndicator';
-import { ZoneCard } from '@app/components/forum/ZoneCard';
+import { default as FeaturedForumCard } from '@app/components/forum/FeaturedForumCard';
 
 // Sample data for previews
-const sampleZone = {
+const sampleFeaturedForum = {
 	id: 'sample' as any,
-	name: 'Sample Zone',
-	description: 'This is a preview of how zones will look with your settings',
+	name: 'Sample Featured Forum',
+	description: 'This is a preview of how featured forums will look with your settings',
 	slug: 'sample',
 	color: '#10b981',
-	bannerImage: '/images/zone-banners/sample.jpg',
+	bannerImage: '/images/forum-banners/sample.jpg',
 	postCount: 142,
 	threadCount: 23,
 	lastActivity: new Date(),
@@ -500,9 +500,9 @@ const UIComponentsConfig: React.FC = () => {
 						<CardContent className="space-y-4">
 							{/* Zone Card Preview */}
 							<div>
-								<Label className="text-xs text-zinc-400">Zone Card</Label>
+								<Label className="text-xs text-zinc-400">Featured Forum Card</Label>
 								<div className="mt-2">
-									<ZoneCard zone={sampleZone} />
+									<FeaturedForumCard zone={sampleFeaturedForum} />
 								</div>
 							</div>
 

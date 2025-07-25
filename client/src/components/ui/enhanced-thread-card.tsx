@@ -24,10 +24,10 @@ import { Button } from '@app/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@app/components/ui/avatar';
 import { cn } from '@app/utils/utils';
 import { useBreakpoint } from '@app/hooks/useMediaQuery';
-import type { ThreadDisplay } from '@app/types/thread.types';
+import type { Thread } from '@shared/types/thread.types';
 
 export interface EnhancedThreadCardProps {
-	thread: ThreadDisplay;
+	thread: Thread;
 	variant?: 'default' | 'compact' | 'featured' | 'mobile-optimized';
 	showPreview?: boolean;
 	onTip?: (threadId: string, amount: number) => void;

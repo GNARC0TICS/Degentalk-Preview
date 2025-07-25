@@ -1,4 +1,4 @@
-import { economyConfig } from '@shared/economy/economy.config';
+import { economyConfig } from '@shared/config/economy.config';
 import { economyConfigOverrides } from '@schema';
 import { db } from '@db';
 

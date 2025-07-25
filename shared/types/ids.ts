@@ -20,9 +20,7 @@ export type ThreadId = Id<'ThreadId'>;
 export type PostId = Id<'PostId'>;
 export type ForumId = Id<'ForumId'>;
 export type CategoryId = Id<'CategoryId'>;
-export type ZoneId = Id<'ZoneId'>;
 export type StructureId = Id<'StructureId'>;
-export type ParentZoneId = Id<'ParentZoneId'>;
 export type PrefixId = Id<'PrefixId'>;
 export type TagId = Id<'TagId'>;
 export type DraftId = Id<'DraftId'>;
@@ -143,8 +141,3 @@ export const asCategoryId = (id: string): CategoryId => {
 	return id as CategoryId;
 };
 
-/** @deprecated SECURITY: Use toId<'Zone'>() from @shared/utils/id instead */
-export const asZoneId = (id: string): ZoneId => {
-	console.error('SECURITY WARNING: asZoneId() bypasses validation. Use toId() instead.');
-	return id as ZoneId;
-};

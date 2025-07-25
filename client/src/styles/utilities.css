@@ -27,13 +27,13 @@
 
 .hover-glow {
 	@apply transition-shadow hover:shadow-lg;
-	box-shadow: 0 10px 15px -3px rgba(var(--zone-accent-rgb, 16, 185, 129), 0.15);
+	box-shadow: 0 10px 15px -3px rgba(var(--forum-accent-rgb, 16, 185, 129), 0.15);
 }
 
 /* Focus States */
 .accent-ring {
 	@apply focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-900;
-	--tw-ring-color: var(--zone-accent, #10b981);
+	--tw-ring-color: var(--forum-accent, #10b981);
 }
 
 /* Typography */
@@ -57,13 +57,13 @@
 .accent-gradient {
 	background: linear-gradient(
 		135deg,
-		var(--zone-accent-gradient-start, rgba(16, 185, 129, 0.8)) 0%,
-		var(--zone-accent-gradient-end, rgba(16, 185, 129, 0.4)) 100%
+		var(--forum-accent-gradient-start, rgba(16, 185, 129, 0.8)) 0%,
+		var(--forum-accent-gradient-end, rgba(16, 185, 129, 0.4)) 100%
 	);
 }
 
 .accent-border-left {
-	border-left: 3px solid var(--zone-accent, #10b981);
+	border-left: 3px solid var(--forum-accent, #10b981);
 }
 
 /* Animations */

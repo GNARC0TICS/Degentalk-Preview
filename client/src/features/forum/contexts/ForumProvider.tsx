@@ -14,7 +14,7 @@ interface ForumProviderProps {
  * Provides forum structure, theming, and ordering contexts.
  * 
  * Note: ThreadActionsProvider should be used at the component level where
- * you have access to a specific ThreadDisplay object.
+ * you have access to a specific Thread object.
  */
 export function ForumProvider({ children }: ForumProviderProps) {
 	return (

@@ -8,7 +8,7 @@
 import { db } from '@core/database';
 import { logger } from '@core/logger';
 import { dgtService } from '../services/dgtService';
-import { walletConfig } from '@shared/wallet.config';
+import { walletConfig } from '@shared/config/wallet.config';
 import { settingsService } from '@core/services/settings.service';
 import { validateAndConvertId } from '@core/helpers/validate-controller-ids';
 import { ccpaymentApiService } from '../providers/ccpayment/ccpayment-api.service';

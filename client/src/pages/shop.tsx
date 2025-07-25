@@ -4,7 +4,7 @@ import type { ItemCategory } from '@app/hooks/use-vault-items';
 import type { ShopItem } from '@app/hooks/use-shop-items';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Wide } from '@app/layout/primitives';
+// Removed Wide import - using standard container instead
 
 // Import components
 import { ShopItemCard } from '@app/components/shop/shop-item-card';
@@ -89,7 +89,7 @@ export default function ShopPage() {
 
 	return (
 		<div className="min-h-screen bg-gradient-to-br from-black via-zinc-950 to-black">
-			<Wide className="px-4 py-8">
+			<div className="max-w-7xl mx-auto px-4 py-8">
 				{/* Navigation */}
 				<motion.div
 					className="mb-6"
@@ -194,8 +194,9 @@ export default function ShopPage() {
 					</div>
 
 					{/* Categories */}
-					<div className="no-scrollbar overflow-x-auto pb-2">
-						<div className="flex gap-2 min-w-max">
+					<div className="relative overflow-hidden">
+						<div className="no-scrollbar overflow-x-auto pb-2">
+							<div className="flex gap-2 min-w-max">
 							{categories.map((category) => {
 								const IconComponent = category.icon || ShoppingCart;
 								return (
@@ -221,6 +222,7 @@ export default function ShopPage() {
 									</motion.div>
 								);
 							})}
+							</div>
 						</div>
 					</div>
 				</motion.div>
@@ -326,7 +328,7 @@ export default function ShopPage() {
 						</AnimatePresence>
 					</motion.div>
 				)}
-			</Wide>
+			</div>
 		</div>
 	);
 }

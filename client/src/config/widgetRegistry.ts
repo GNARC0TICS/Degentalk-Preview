@@ -136,10 +136,9 @@ export const widgetRegistry: Record<string, WidgetConfig> = {
 
 	// Navigation Widgets
 	forumNav: {
-		component: () =>
-			import('@/features/forum/components/HierarchicalZoneNav').then((module) => ({
-				default: module.default
-			})),
+		component: () => import("@/features/forum/components/ForumTreeNav").then((module) => ({
+			default: module.default
+		})),
 		metadata: {
 			id: 'forumNav',
 			name: 'Forum Navigation',

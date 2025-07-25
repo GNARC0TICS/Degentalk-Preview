@@ -7,14 +7,15 @@ import ProtectedRoute from './components/auth/ProtectedRoute';
 // Import pages
 import HomePage from './pages/home';
 import AuthPage from './pages/auth';
-import ForumsPage from './pages/forums';
-import ForumBySlugPage from './pages/forums/[forumSlug]';
+import ForumsIndexPage from './pages/forums/index';
+import ForumRoutePage from './pages/forums/[forumSlug]';
 import ForumSearchPage from './pages/forums/search';
 import CreateThreadPage from './pages/threads/create';
 import ShopPage from './pages/shop';
 import LeaderboardPage from './pages/leaderboard';
 import DegenIndexPage from './pages/degen-index';
-import MissionsPage from './pages/missions';
+// import MissionsPage from './pages/missions'; // Disabled - replaced with about page
+import AboutPage from './pages/about/index';
 import AnnouncementsPage from './pages/announcements';
 import SearchPage from './pages/search';
 import ProfilePage from './pages/profile';
@@ -61,9 +62,9 @@ export const router = createBrowserRouter([
       { path: 'auth', element: <AuthPage /> },
 
       // Forum Routes
-      { path: 'forums', element: <ForumsPage /> },
-      { path: 'forums/:forumSlug', element: <ForumBySlugPage /> },
-      { path: 'forums/:forumSlug/:subforumSlug', element: <ForumBySlugPage /> },
+      { path: 'forums', element: <ForumsIndexPage /> },
+      { path: 'forums/:forumSlug', element: <ForumRoutePage /> },
+      { path: 'forums/:forumSlug/:subforumSlug', element: <ForumRoutePage /> },
       
       // Protected Forum Routes
       { 
@@ -77,12 +78,6 @@ export const router = createBrowserRouter([
       { 
         path: 'search/forums', 
         element: <ProtectedRoute><ForumSearchPage /></ProtectedRoute> 
-      },
-
-      // Thread Routes
-      { 
-        path: 'threads/create', 
-        element: <ProtectedRoute><CreateThreadPage /></ProtectedRoute> 
       },
 
       // Shop Routes
@@ -104,9 +99,13 @@ export const router = createBrowserRouter([
         path: 'leaderboard', 
         element: <ProtectedRoute><LeaderboardPage /></ProtectedRoute> 
       },
+      // { 
+      //   path: 'missions', 
+      //   element: <ProtectedRoute><MissionsPage /></ProtectedRoute> 
+      // },
       { 
-        path: 'missions', 
-        element: <ProtectedRoute><MissionsPage /></ProtectedRoute> 
+        path: 'about', 
+        element: <AboutPage /> 
       },
       { 
         path: 'announcements', 

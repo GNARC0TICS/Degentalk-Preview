@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import useSearchParams from '@app/hooks/useSearchParams';
-import { SiteHeader } from '@app/components/header';
-import { SiteFooter } from '@app/components/footer';
 import { useCanonicalAuth } from '@app/features/auth/useCanonicalAuth';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@app/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@app/components/ui/card';
@@ -55,29 +53,22 @@ function PreferencesPage() {
 
 	if (!user) {
 		return (
-			<div className="min-h-screen bg-black text-white flex flex-col">
-				<SiteHeader />
-				<Container className="flex-1 flex items-center justify-center" padding="lg">
-					<Card className="w-full max-w-md bg-zinc-900 border-zinc-800">
-						<CardHeader>
-							<CardTitle>Authentication Required</CardTitle>
-							<CardDescription>You need to be logged in to access preferences.</CardDescription>
-						</CardHeader>
-						<CardContent>
-							<p className="text-zinc-400">Please log in to view and manage your preferences.</p>
-						</CardContent>
-					</Card>
-				</Container>
-				<SiteFooter />
-			</div>
+			<Container className="flex-1 flex items-center justify-center" padding="lg">
+				<Card className="w-full max-w-md bg-zinc-900 border-zinc-800">
+					<CardHeader>
+						<CardTitle>Authentication Required</CardTitle>
+						<CardDescription>You need to be logged in to access preferences.</CardDescription>
+					</CardHeader>
+					<CardContent>
+						<p className="text-zinc-400">Please log in to view and manage your preferences.</p>
+					</CardContent>
+				</Card>
+			</Container>
 		);
 	}
 
 	return (
-		<div className="min-h-screen bg-black text-white flex flex-col">
-			<SiteHeader />
-
-			<Container className="flex-1" padding="lg">
+		<Container className="flex-1" padding="lg">
 				<div className="max-w-5xl mx-auto">
 					<div className="mb-8">
 						<h1 className="text-3xl font-bold mb-2">Preferences</h1>
@@ -169,9 +160,6 @@ function PreferencesPage() {
 					</Tabs>
 				</div>
 			</Container>
-
-			<SiteFooter />
-		</div>
 	);
 }
 

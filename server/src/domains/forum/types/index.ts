@@ -205,7 +205,7 @@ export interface PublicForumStructure {
 	name: string;
 	slug: string;
 	description?: string;
-	type: 'zone' | 'forum' | 'subforum';
+	type: 'category' | 'forum' | 'subforum';
 	position: number;
 	color?: string;
 	icon?: string;
@@ -217,7 +217,7 @@ export interface PublicForumStructure {
 	minXp: number;
 	tippingEnabled: boolean;
 
-	// Child forums/zones
+	// Child forums
 	children?: PublicForumStructure[];
 }
 

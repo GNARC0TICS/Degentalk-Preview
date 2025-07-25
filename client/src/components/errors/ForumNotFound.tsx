@@ -50,10 +50,10 @@ export function ForumNotFound({ forumSlug, onBack }: ForumNotFoundProps) {
 							</Button>
 						)}
 
-						<Link to="/zones">
+						<Link to="/forums">
 							<Button variant="outline" className="gap-2">
 								<Compass className="h-4 w-4" />
-								Browse All Zones
+								Browse All Forums
 							</Button>
 						</Link>
 

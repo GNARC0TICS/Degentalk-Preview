@@ -1,6 +1,6 @@
 import React, { useState, useCallback, memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import type { ThreadDisplay } from '@app/types/thread.types';
+import type { Thread } from '@shared/types/thread.types';
 import type { ThreadId, UserId, ZoneId, StructureId, ForumId } from '@shared/types/ids';
 import type { CanonicalForum } from '@app/types/canonical.types';
 import {
@@ -156,8 +156,8 @@ const MagicForumBuilder = memo(
 			setConfig(defaultConfig);
 		};
 
-		// Sample data for preview - typed as ThreadDisplay
-		const sampleThreads: ThreadDisplay[] = [
+		// Sample data for preview - typed as Thread
+		const sampleThreads: Thread[] = [
 			{
 				id: '1' as ThreadId,
 				title: 'Sample Thread: What are your thoughts on the latest DeFi protocols?',
@@ -210,7 +210,7 @@ const MagicForumBuilder = memo(
 						totalThreads: 150,
 						totalPosts: 2400
 					}
-				} as unknown as ThreadDisplay['zone'],
+				} as unknown as Thread['zone'],
 				structure: {
 					id: 'struct_1' as StructureId,
 					name: 'General Discussion',
@@ -289,7 +289,7 @@ const MagicForumBuilder = memo(
 						totalThreads: 89,
 						totalPosts: 1450
 					}
-				} as unknown as ThreadDisplay['zone'],
+				} as unknown as Thread['zone'],
 				structure: {
 					id: 'struct_2' as StructureId,
 					name: 'Market Analysis',

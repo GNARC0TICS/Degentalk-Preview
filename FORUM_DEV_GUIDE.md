@@ -45,7 +45,7 @@ graph TD
 
 A critical architectural principle is that the **forum hierarchy is defined in a version-controlled configuration file**, not directly in the database.
 
--   **Single Source of Truth:** `shared/config/forum.config.ts` defines the complete layout of zones, forums, and sub-forums, including their properties, themes, and rules.
+-   **Single Source of Truth:** `shared/config/forum-map.config.ts` defines the complete layout of featured forums, regular forums, and sub-forums, including their properties, themes, and rules.
 -   **Synchronization:** A sync script (`pnpm db:sync:forums`) reads this configuration and populates the `forum_structure` table in the database. The `structure.service.ts` on the server contains the logic for this sync.
 -   **Benefits:** This approach makes the forum structure auditable, version-controlled, and easy to replicate across different environments. It prevents ad-hoc changes directly in the database that can lead to inconsistencies.
 
@@ -94,8 +94,8 @@ erDiagram
 ### 2.2. Key Tables
 
 -   **`forum_structure`**:
-    -   Stores the hierarchy of both **zones** (top-level containers) and **forums** (discussion areas).
-    -   `type`: Can be `'zone'` or `'forum'`.
+    -   Stores the hierarchy of **forums** (both featured and regular forums).
+    -   `type`: Can be `'forum'` (with `isFeatured` boolean to distinguish featured forums).
     -   `parent_id`: A self-referencing foreign key that creates the nested structure (e.g., a sub-forum's `parent_id` points to its parent forum).
     -   `plugin_data`: A flexible `jsonb` column used to store configuration that doesn't fit into a rigid column structure. **This is currently used to store permission rules.**
 
@@ -163,7 +163,7 @@ Custom hooks in `client/src/features/forum/hooks/` provide a clean and reusable 
 
 **NEVER** modify the `forum_structure` table directly in the database.
 
-1.  **Edit the Config File:** Open `shared/config/forum.config.ts`. Add, remove, or modify the zones and forums in the `forumMap` object.
+1.  **Edit the Config File:** Open `shared/config/forum-map.config.ts`. Add, remove, or modify the forums in the `forumMap` object.
 2.  **Run the Sync Script:** From the root of the project, run the following command:
     ```bash
     pnpm db:sync:forums

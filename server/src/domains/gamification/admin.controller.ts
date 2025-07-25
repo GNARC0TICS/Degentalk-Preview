@@ -13,10 +13,8 @@ import type { Request, Response } from 'express';
 import { z } from 'zod';
 import { levelingService } from './services/leveling.service';
 import { achievementService } from './services/achievement.service';
-import { missionsService } from '../missions/missions.service';
 import { gamificationAnalyticsService } from './services/analytics.service';
 import { CloutTransformer } from './transformers/clout.transformer';
-import { MissionsTransformer } from '../missions/transformers/missions.transformer';
 import {
 	toPublicList,
 	sendSuccessResponse,

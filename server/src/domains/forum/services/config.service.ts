@@ -8,9 +8,10 @@
 import { logger } from '@core/logger';
 import {
 	forumMap,
+	getForumBySlug as getForumBySlugFromConfig,
 	type Forum as ConfigForum,
-	type Zone as ConfigZone
-} from '@shared/../client/src/config/forumMap.config';
+	type RootForum as ConfigZone
+} from '@config/forumMap';
 import type { ForumCategoryWithStats } from '@shared/types/core/forum.types';
 import type { StructureId } from '@shared/types/ids';
 
@@ -67,18 +68,21 @@ export class ConfigService {
 	 * Get forum configuration by slug from forumMap
 	 */
 	getForumBySlug(slug: string): ForumConfigEntry | null {
-		const entry = forumMap.getForumBySlug?.(slug);
+		const entry = getForumBySlugFromConfig(slug);
 		if (!entry) {
 			return null;
 		}
-		return entry as ForumConfigEntry;
+		return {
+			forum: entry.forum,
+			zone: entry.parent
+		};
 	}
 
 	/**
 	 * Validate forum slug and ensure it's a leaf forum (no sub-forums)
 	 */
 	ensureValidLeafForum(slug: string): ConfigForum {
-		const entry = forumMap.getForumBySlug?.(slug);
+		const entry = getForumBySlugFromConfig(slug);
 		if (!entry) {
 			throw new Error(`Invalid forum slug: ${slug}`);
 		}

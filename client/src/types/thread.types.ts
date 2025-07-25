@@ -1,149 +1,57 @@
 /**
- * Thread Display Types
- *
- * ENFORCED AS OF 2025-01-27 - ALL AGENTS MUST FOLLOW
- * Implements the canonical thread architecture mandated in CLAUDE.md
- * ALL frontend thread views MUST use ThreadDisplay type
+ * Thread Types for Frontend
+ * 
+ * Re-exports the consolidated Thread type from shared types.
+ * All thread data now uses the single Thread type.
  */
 
-import type { CanonicalThread, CanonicalUser, CanonicalZone } from './canonical.types';
-import type { UserId } from '@shared/types/ids';
+// Re-export everything from the shared thread types
+export type {
+  Thread,
+  ThreadUser,
+  ThreadZone,
+  ThreadPrefix,
+  ThreadTag,
+  ThreadPermissions,
+  ThreadListItem,
+  CreateThreadInput,
+  UpdateThreadInput,
+  ThreadSearchParams,
+  ThreadResponse,
+  ThreadsListResponse
+} from '@shared/types/thread.types';
 
-// Canonical zone with optional isPrimary flag for frontend helpers
-export type ResolvedZone = CanonicalZone & { isPrimary?: boolean };
+// Re-export type guards
+export {
+  isThread,
+  hasThreadPermissions,
+  isThreadListItem
+} from '@shared/types/thread.types';
 
-// User type for thread author
-export interface ThreadUser {
-	id: UserId;
-	username: string;
-	avatarUrl?: string | null;
-	activeAvatarUrl?: string | null;
-	reputation?: number;
-	isVerified?: boolean;
-	role?: 'user' | 'moderator' | 'admin' | null;
-}
+// All legacy type aliases have been removed
+// Use Thread from @shared/types/thread.types
 
-// Zone information for theming and navigation
-export interface ThreadZone {
-	id?: string;
-	name: string;
-	slug: string;
-	colorTheme: string;
-}
-
-// Category/Forum information
-export interface ThreadCategory {
-	id: string;
-	name: string;
-	slug: string;
-}
-
-// Tag information
-export interface ThreadTag {
-	id: string;
-	name: string;
-	slug?: string;
-	color?: string;
-}
-
-// Thread prefix for categorization
-export interface ThreadPrefix {
-	id?: string;
-	name: string;
-	color: string;
-}
-
-// Engagement metrics
-export interface ThreadEngagement {
-	totalTips: number;
-	uniqueTippers: number;
-	bookmarks: number;
-	momentum: 'bullish' | 'bearish' | 'neutral';
-	reputationScore?: number;
-	qualityScore?: number;
-	hotScore?: number;
-	tipLeaderboard?: Array<{
-		username: string;
-		amount: number;
-		avatarUrl: string;
-	}>;
-	shares?: number;
-}
-
-// Reaction data
-export interface ThreadReaction {
-	id: string;
-	type: string;
-	emoji: string;
-	label: string;
-	count: number;
-	hasReacted: boolean;
-	color: string;
-	bgColor: string;
-	borderColor: string;
-}
+// Additional frontend-specific types that extend the base Thread
 
 /**
- * ThreadDisplay - The ONLY type for frontend thread views
- * ALL frontend thread components MUST use this type
- * Backend provides zone data automatically - DO NOT manually enrich thread data
- */
-export interface ThreadDisplay extends Omit<CanonicalThread, 'zone' | 'user'> {
-	// Additional display-specific fields
-	relativeTime?: string; // "2 hours ago", "3 days ago"
-	excerpt?: string; // First 150 chars of content for previews
-	isHot?: boolean; // Thread has high engagement/activity
-	hotScore?: number; // Numeric score for sorting hot threads
-	prefix?: ThreadPrefix; // Thread prefix/category
-	lastPosterUsername?: string; // Username of last poster
-	lastActivityAt?: string; // Last activity timestamp
-	participantCount?: number; // Number of unique participants
-
-	// Enhanced zone data (automatically provided by backend)
-	zone: ResolvedZone;
-
-	// Enhanced user data for display
-	user: CanonicalUser & {
-		displayRole?: string; // "Admin", "Moderator", "Level 42 User"
-		badgeColor?: string; // CSS color for role badge
-	};
-
-	// Legacy compatibility fields (DEPRECATED - migrate away)
-	/** @deprecated Use zone instead */
-	category?: ThreadCategory;
-	/** @deprecated Use engagement metrics from CanonicalThread */
-	engagement?: ThreadEngagement;
-	/** @deprecated Use reactions from future extension */
-	reactions?: ThreadReaction[];
-	/** @deprecated Use permissions from CanonicalThread */
-	canEdit?: boolean;
-	/** @deprecated Use permissions from CanonicalThread */
-	canDelete?: boolean;
-	/** @deprecated Use bookmarking system */
-	hasBookmarked?: boolean;
-}
-
-/**
- * API Response Types
- */
-export interface ThreadsApiResponse {
-	threads: ThreadDisplay[];
-	pagination: {
-		page: number;
-		limit: number;
-		totalThreads: number;
-		totalPages: number;
-	};
-}
-
-/**
- * Thread List Props
+ * Thread List Props for components
  */
 export interface ThreadListProps {
-	threads: ThreadDisplay[];
-	isLoading?: boolean;
-	error?: Error | null;
-	onTip?: (threadId: string, amount: number) => void;
-	onBookmark?: (threadId: string) => void;
-	layout?: 'list' | 'grid' | 'compact';
+  threads: Thread[];
+  isLoading?: boolean;
+  error?: Error | null;
+  onTip?: (threadId: string, amount: number) => void;
+  onBookmark?: (threadId: string) => void;
+  layout?: 'list' | 'grid' | 'compact';
+}
+
+/**
+ * Thread Card Props for components
+ */
+export interface ThreadCardProps {
+  thread: Thread;
+  variant?: 'default' | 'compact' | 'featured';
+  showZone?: boolean;
+  showExcerpt?: boolean;
+  onQuickAction?: (action: string) => void;
 }

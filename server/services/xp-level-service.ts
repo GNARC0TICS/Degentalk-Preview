@@ -18,7 +18,7 @@ import type { UserId } from '@shared/types/ids';
 import { eq, sql, lte, desc, and, isNull } from 'drizzle-orm';
 import { logger } from '../src/core/logger';
 import { getLevelForXp, getXpForLevel } from '@shared/economy/reward-calculator';
-import { sanitizeMultiplier } from '@shared/economy/economy.config';
+import { sanitizeMultiplier } from '@shared/config/economy.config';
 import type { TitleId, BadgeId, FrameId, ForumId } from '../shared/types/ids';
 
 /**

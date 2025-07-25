@@ -1,12 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { MessageSquare, Pin, Lock, CheckCircle, Eye, Calendar } from 'lucide-react';
-import type { ThreadDisplay } from '@app/types/thread.types';
+import type { Thread } from '@shared/types/thread.types';
 import { formatDistanceToNow } from 'date-fns';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@app/components/ui/tooltip';
 
 interface MyBBThreadListProps {
-	threads: ThreadDisplay[];
+	threads: Thread[];
 	forumName: string;
 	forumSlug: string;
 }
@@ -57,7 +57,7 @@ export function MyBBThreadList({ threads, forumName, forumSlug }: MyBBThreadList
 }
 
 interface ThreadRowProps {
-	thread: ThreadDisplay;
+	thread: Thread;
 	isEven: boolean;
 	forumSlug: string;
 	getPrefixClass: (prefix: string) => string;

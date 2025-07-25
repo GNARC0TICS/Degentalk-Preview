@@ -15,6 +15,8 @@
 			// OLD paths (temporary - for transition)
 			"@/*": ["src/*"],
 			"@config/*": ["../config/*"],
+			"@config/forumMap": ["../shared/config/forum-map.config.ts"],
+			"@config/forumEconomy": ["../shared/config/forum-economy.config.ts"],
 			"@shared/*": ["../shared/*"],
 			"@shared/types/ids": ["../shared/types/ids.ts"],
 			"@shared/types/index": ["../shared/types/index.ts"],
@@ -27,7 +29,8 @@
 			"@schema": ["../db/schema/index.ts"],
 			"@schema/*": ["../db/schema/*"]
 		},
-		"allowImportingTsExtensions": true
+		"allowImportingTsExtensions": true,
+		"noEmit": true
 	},
 	"include": ["src", "../config/uiverse-components.config.ts"]
 }

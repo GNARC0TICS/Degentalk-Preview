@@ -32,9 +32,9 @@ export function WeeklyLeaderboard({ showHeader = true, className = '' }: WeeklyL
 		isLoading,
 		error
 	} = useQuery<LeaderboardUser[]>({
-		queryKey: ['/api/leaderboards', activeTab, viewCurrent],
+		queryKey: ['/api/analytics/leaderboards', activeTab, viewCurrent],
 		queryFn: async () => {
-			const response = await fetch(`/api/leaderboards/${activeTab}?current=${viewCurrent}`);
+			const response = await fetch(`/api/analytics/leaderboards/${activeTab}?current=${viewCurrent}`);
 			if (!response.ok) {
 				throw new Error(`Failed to fetch ${activeTab} leaderboard`);
 			}

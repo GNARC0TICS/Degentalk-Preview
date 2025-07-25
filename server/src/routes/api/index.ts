@@ -10,6 +10,8 @@ import userFramesRoutes from './user/frames';
 import shoutboxRoutes from '@api/domains/shoutbox/shoutbox.routes';
 import userInventoryRoutes from './user/inventory';
 import notificationRoutes from './notifications';
+import analyticsRoutes from '@api/domains/analytics/routes/analytics.routes';
+import preferencesRoutes from './preferences.routes';
 
 const router: Router = Router();
 
@@ -42,5 +44,11 @@ router.use('/user', userInventoryRoutes);
 
 // Notification routes (mounted at root level since endpoint starts with /)
 router.use('/', notificationRoutes);
+
+// Analytics routes (includes leaderboards)
+router.use('/analytics', analyticsRoutes);
+
+// Preferences routes
+router.use('/preferences', preferencesRoutes);
 
 export default router;

@@ -24,7 +24,7 @@ Degentalk is a modern, highly satirical crypto forum platform designed for gambl
 
 ## 🌟 Key Features
 
-- **🏛️ Forum System**: Multi-zone discussion platform with advanced moderation
+- **🏛️ Forum System**: Featured forums and discussion platform with advanced moderation
 - **💰 DGT Economy**: Native token system with $0.10 fixed value and crypto integration
 - **🎮 XP & Leveling**: Comprehensive experience point system with action-based rewards
 - **💳 Crypto Wallet**: CCPayment integration for deposits, withdrawals, and trading
@@ -333,7 +333,7 @@ Database schema is managed through Drizzle ORM:
 (Refer to `db/schema/` for a comprehensive list. Key domains include:)
 
 - **User**: `users`, `roles`, `permissions`, `profiles`, `preferences`
-- **Forum**: `categories` (zones/forums), `threads`, `posts`, `tags`
+- **Forum**: `forum_structure` (featured forums/regular forums), `threads`, `posts`, `tags`
 - **Economy**: `wallets`, `transactions`, `dgtPackages`, `badges`, `levels`
 - **Shop**: `products`, `orders`, `userInventory`
 - **XP System**: `xpActionSettings`, `xpAdjustmentLogs`
@@ -344,7 +344,7 @@ Database schema is managed through Drizzle ORM:
 
 ### Core Features
 
-- **Forum System** - Hierarchical categories, threads, posts with zone-based theming
+- **Forum System** - Hierarchical forums, threads, posts with forum-based theming
 - **User Progression** - XP levels, achievements, reputation system
 - **Integrated Wallet System** - Complete DGT token economy with crypto deposits, transfers, and CCPayment integration
 - **Real-time Features** - Live shoutbox, instant balance updates, transaction notifications

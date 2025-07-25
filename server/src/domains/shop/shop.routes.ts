@@ -8,7 +8,7 @@ import { products, userInventory, transactions } from '@schema';
 import { eq, isNull, or, and, gte, lte } from 'drizzle-orm';
 import { dgtService } from '@api/domains/wallet/services/dgtService';
 import { isAuthenticated } from '@api/domains/auth/middleware/auth.middleware';
-import { walletConfig } from '@shared/wallet.config';
+import { walletConfig } from '@shared/config/wallet.config';
 import { logger } from '@core/logger';
 import { z } from 'zod';
 import { WalletTransformer } from '../wallet/transformers/wallet.transformer';

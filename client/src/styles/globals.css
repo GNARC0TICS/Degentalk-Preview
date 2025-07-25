@@ -34,12 +34,12 @@
 
 		--radius: 0.5rem;
 
-		/* Zone accent color variables */
-		--zone-accent: #10b981;
-		--zone-accent-rgb: 16, 185, 129;
-		--zone-accent-faded: rgba(16, 185, 129, 0.3);
-		--zone-accent-gradient-start: rgba(16, 185, 129, 0.8);
-		--zone-accent-gradient-end: rgba(16, 185, 129, 0.4);
+		/* Forum accent color variables */
+		--forum-accent: #10b981;
+		--forum-accent-rgb: 16, 185, 129;
+		--forum-accent-faded: rgba(16, 185, 129, 0.3);
+		--forum-accent-gradient-start: rgba(16, 185, 129, 0.8);
+		--forum-accent-gradient-end: rgba(16, 185, 129, 0.4);
 	}
 
 	.dark {

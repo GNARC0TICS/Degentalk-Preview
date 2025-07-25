@@ -183,9 +183,9 @@ export function ProfileGamificationWidget({
 							<Trophy className="w-3 h-3 mr-1" />
 							Achievements
 						</Button>
-						<Button variant="outline" size="sm" onClick={() => navigate('/missions')}>
-							<Target className="w-3 h-3 mr-1" />
-							Missions
+						<Button variant="outline" size="sm" onClick={() => navigate('/about')}>
+							<Info className="w-3 h-3 mr-1" />
+							About
 						</Button>
 					</div>
 				)}

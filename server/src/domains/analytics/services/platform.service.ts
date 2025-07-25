@@ -10,6 +10,7 @@ import { db } from '@db';
 import type { UserId, ThreadId } from '@shared/types/ids';
 import { threads, posts, users, forumStructure } from '@db/schema';
 import { logger } from '@core/logger';
+import { redisCacheService } from '@core/cache/redis.service';
 
 export class PlatformAnalyticsService {
 	/**
@@ -178,13 +179,54 @@ export class PlatformAnalyticsService {
 	}
 
 	/**
-	 * Get leaderboards - Placeholder for MVP
+	 * Get leaderboards with real data from LevelingService with caching
 	 */
 	static async getLeaderboards(type: string = 'xp', isCurrentWeek: boolean = true) {
 		try {
-			// Placeholder - return empty array for MVP
-			logger.info('PLATFORM_ANALYTICS', `Getting ${type} leaderboard (MVP stub - returning empty)`);
-			return [];
+			// Create cache key
+			const cacheKey = `leaderboard:${type}:${isCurrentWeek ? 'current' : 'previous'}`;
+			
+			// Try to get from cache first
+			const cached = await redisCacheService.get(cacheKey);
+			if (cached) {
+				logger.info('PLATFORM_ANALYTICS', `Returning cached ${type} leaderboard`);
+				return cached;
+			}
+			
+			logger.info('PLATFORM_ANALYTICS', `Getting ${type} leaderboard from database`);
+			
+			// Import LevelingService dynamically to avoid circular dependencies
+			const { levelingService } = await import('../../gamification/services/leveling.service');
+			
+			// Map type to LevelingService format
+			let leaderboardType: 'level' | 'xp' | 'weekly' | 'monthly' = 'xp';
+			if (type === 'xp' && isCurrentWeek) {
+				leaderboardType = 'weekly';
+			} else if (type === 'level') {
+				leaderboardType = 'level';
+			}
+			
+			// Get leaderboard data with proper limit
+			const entries = await levelingService.getLeaderboard(leaderboardType, 20);
+			
+			// Transform to expected format for compatibility
+			const transformedEntries = entries.map(entry => ({
+				userId: entry.userId,
+				username: entry.username,
+				level: entry.level,
+				xp: entry.totalXp,
+				weeklyXp: entry.weeklyXp,
+				rank: entry.rank,
+				trend: entry.trend,
+				// Additional fields for compatibility
+				totalXp: entry.totalXp,
+				avatar: `/api/avatar/${entry.userId}` // Standard avatar URL format
+			}));
+			
+			// Cache for 5 minutes
+			await redisCacheService.set(cacheKey, transformedEntries, 300);
+			
+			return transformedEntries;
 		} catch (error) {
 			logger.error('PLATFORM_ANALYTICS', `Error getting ${type} leaderboard:`, { error });
 			return [];

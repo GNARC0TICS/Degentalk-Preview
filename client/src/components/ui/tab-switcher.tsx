@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { cn } from '@app/utils/utils';
-import { TrendingUp, Clock, Users, Sparkles } from 'lucide-react';
+import { Flame, Clock, Users, Newspaper, User } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import type { ContentTab } from '@app/hooks/use-content';
+import theme from '@app/config/theme.config';
 
 export interface TabConfig {
 	id: ContentTab;
@@ -24,8 +25,8 @@ const DEFAULT_TABS: TabConfig[] = [
 	{
 		id: 'trending',
 		label: 'Trending',
-		description: 'Hot discussions right now',
-		icon: TrendingUp,
+		description: 'Hot threads',
+		icon: Flame,
 		requiresAuth: false
 	},
 	{
@@ -38,8 +39,22 @@ const DEFAULT_TABS: TabConfig[] = [
 	{
 		id: 'following',
 		label: 'Following',
-		description: 'From people you follow',
+		description: 'Your follows',
 		icon: Users,
+		requiresAuth: true
+	},
+	{
+		id: 'announcements',
+		label: 'News/Updates',
+		description: 'Official news',
+		icon: Newspaper,
+		requiresAuth: false
+	},
+	{
+		id: 'my-threads',
+		label: 'My Threads',
+		description: 'Your posts',
+		icon: User,
 		requiresAuth: true
 	}
 ];
@@ -81,7 +96,7 @@ export function TabSwitcher({
 			{/* Animated background glow */}
 			<div className="absolute inset-0 bg-gradient-to-r from-orange-500/5 via-transparent to-red-500/5 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
 
-			<nav className="relative flex space-x-1 sm:space-x-6" aria-label="Content tabs">
+			<nav className="relative flex space-x-1 sm:space-x-4 overflow-x-auto overflow-y-hidden scrollbar-none" aria-label="Content tabs">
 				{availableTabs.map((tab, index) => {
 					const Icon = tab.icon;
 					const isActive = activeTab === tab.id;
@@ -120,9 +135,12 @@ export function TabSwitcher({
 									)}
 								/>
 
-								{/* Sparkle effect for trending tab when active */}
+								{/* Special effects for different tabs */}
 								{tab.id === 'trending' && isActive && (
-									<Sparkles className="absolute -top-1 -right-1 h-2 w-2 text-orange-300" />
+									<div className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full animate-pulse" />
+								)}
+								{tab.id === 'announcements' && (
+									<div className="absolute -top-1 -right-1 w-2 h-2 bg-blue-500 rounded-full" />
 								)}
 
 								{/* Notification dot for following tab (if needed) */}
@@ -133,16 +151,17 @@ export function TabSwitcher({
 
 							{/* Tab content */}
 							<div className="flex flex-col items-start transition-all duration-300">
-								<span className={cn('text-left font-medium', isActive && 'drop-shadow-sm')}>
+								<span className={cn('text-left whitespace-nowrap', isActive && 'drop-shadow-sm')} style={{ fontWeight: theme.components.tabs.fontWeight }}>
 									{tab.label}
 								</span>
 								{!isCompact && (
 									<span
 										className={cn(
-											'text-xs opacity-70 text-left transition-all duration-300',
+											'text-xs opacity-70 text-left transition-all whitespace-nowrap',
 											isActive ? 'text-orange-300/90' : 'text-zinc-500',
 											isHovered && !isActive && 'text-orange-200/80 opacity-90'
 										)}
+										style={{ transitionDuration: theme.animation.durations.normal }}
 									>
 										{tab.description}
 									</span>

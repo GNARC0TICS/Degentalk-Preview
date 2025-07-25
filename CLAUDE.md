@@ -182,3 +182,85 @@ import { db } from '@db';  // Only in repositories!
 - ✅ Removed duplicate @tailwind directives (kept only in index.css)  
 - ✅ Fixed theme() functions → actual color values
 - ✅ Removed @layer wrapper from admin-theme.css
+
+## Layout Architecture Rules 🏗️
+
+### Page Component Guidelines
+1. **NEVER import SiteHeader or SiteFooter in page components**
+   - These are already provided by `RootLayout`
+   - TypeScript hook enforces this rule automatically
+   
+2. **Page Structure Requirements**:
+   ```tsx
+   // ❌ WRONG - Don't do this
+   export default function MyPage() {
+     return (
+       <div className="min-h-screen">
+         <SiteHeader />
+         <main>...</main>
+         <SiteFooter />
+       </div>
+     );
+   }
+   
+   // ✅ CORRECT - Let RootLayout handle it
+   export default function MyPage() {
+     return (
+       <Container className="py-8">
+         {/* Your page content */}
+       </Container>
+     );
+   }
+   ```
+
+3. **Layout Hierarchy**:
+   - `RootLayout` provides: min-h-screen wrapper, SiteHeader, main container, SiteFooter
+   - Pages should only return their specific content
+   - Use `<Container>` or `<Wide>` for consistent spacing
+
+4. **Error/Loading States**:
+   - Return simple divs without layout wrappers
+   - RootLayout will ensure proper structure
+
+5. **Special Pages**:
+   - Error boundary pages (404, error pages) can be standalone
+   - They're used as `errorElement` in router and bypass normal layout
+
+## SSH-Only Development Workflow 🚀
+
+### Development Environment Management
+When working over SSH with running dev servers, follow these practices:
+
+1. **Use tmux for session persistence**
+   ```bash
+   # Check if tmux session exists
+   tmux ls
+   # Attach to existing session
+   tmux attach -t degentalk
+   # Create new session
+   tmux new -s degentalk
+   ```
+
+2. **Multi-window workflow**
+   - Window 0: Dev servers (`pnpm dev`)
+   - Window 1: Database operations (`pnpm db:studio`, migrations)
+   - Window 2: Testing (`pnpm test`, `pnpm typecheck`)
+   - Window 3: Git operations and scripts
+
+3. **Hot-reload development**
+   - Vite (client) and nodemon (server) auto-reload on file changes
+   - Make edits in window 3, servers reload in window 0
+   - No manual restarts needed
+
+4. **Safe refactoring over SSH**
+   ```bash
+   # Run type checks without affecting servers
+   pnpm typecheck --watch
+   # Run scripts in background
+   tmux send-keys -t degentalk:2 'pnpm tsx scripts/migrate.ts' C-m
+   ```
+
+5. **Emergency commands**
+   - `Ctrl-Z` + `bg`: Move process to background
+   - `fg`: Bring back to foreground
+   - `jobs`: List background processes

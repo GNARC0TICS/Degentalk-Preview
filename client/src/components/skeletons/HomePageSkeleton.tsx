@@ -1,5 +1,5 @@
 import React from 'react';
-import ZoneCardSkeleton from './ZoneCardSkeleton';
+import FeaturedForumCardSkeleton from './FeaturedForumCardSkeleton';
 
 export default function HomePageSkeleton() {
 	return (
@@ -11,7 +11,7 @@ export default function HomePageSkeleton() {
 			<div className="py-8 container mx-auto">
 				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 					{Array.from({ length: 3 }).map((_, idx) => (
-						<ZoneCardSkeleton key={idx} />
+						<FeaturedForumCardSkeleton key={idx} />
 					))}
 				</div>
 			</div>

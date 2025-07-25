@@ -6,8 +6,8 @@
 
 import { db } from '../../db';
 import { forumStructure } from '../../db/schema/forum/structure';
-import { forumMap } from '../../client/src/config/forumMap.config';
-import type { Zone, Forum } from '../../client/src/config/forumMap.config';
+import { forumMap } from '@config/forumMap';
+import type { RootForum as Zone, Forum } from '@config/forumMap';
 import { eq } from 'drizzle-orm';
 
 interface DbStructure {
@@ -41,7 +41,7 @@ export async function seedForumsFromConfig() {
     const insertedStructures: DbStructure[] = [];
     
     // Process each zone from config
-    for (const [zoneIndex, zone] of forumMap.zones.entries()) {
+    for (const [zoneIndex, zone] of forumMap.forums.entries()) {
       console.log(`📁 Processing zone: ${zone.name} (${zone.slug})`);
       
       // Insert zone

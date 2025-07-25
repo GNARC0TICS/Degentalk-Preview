@@ -1,6 +1,5 @@
 import React from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
-import { SiteFooter } from '@app/components/footer';
 import {
 	Breadcrumb,
 	BreadcrumbList,
@@ -76,9 +75,7 @@ const ForumSearchPage = () => {
 	}
 
 	return (
-		<div className="flex flex-col min-h-screen bg-black text-white">
-			<main className="flex-grow">
-				<Wide className="px-4 py-8">
+		<Wide className="px-4 py-8">
 					<Breadcrumb className="mb-6">
 						<BreadcrumbList>
 							{breadcrumbItems.map((item, index) => (
@@ -141,10 +138,7 @@ const ForumSearchPage = () => {
 							</ul>
 						</div>
 					)}
-				</Wide>
-			</main>
-			<SiteFooter />
-		</div>
+			</Wide>
 	);
 };
 

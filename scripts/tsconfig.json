@@ -19,6 +19,8 @@
       "@degentalk/db": ["../db/index.ts"],
       "@degentalk/shared": ["../shared/index.ts"],
       "@shared/*": ["../shared/*"],
+      "@config/forumMap": ["../shared/config/forum-map.config.ts"],
+      "@config/forumEconomy": ["../shared/config/forum-economy.config.ts"],
       "@db/*": ["../db/*"],
       "@server/*": ["../server/src/*"],
       "@core/*": ["../server/src/core/*"]

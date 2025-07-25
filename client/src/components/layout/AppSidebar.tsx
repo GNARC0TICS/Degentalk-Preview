@@ -15,7 +15,7 @@ import { Avatar, AvatarFallback } from '@app/components/ui/avatar';
 import { Badge } from '@app/components/ui/badge';
 import { cn } from '@app/utils/utils';
 import { useLocation } from 'react-router-dom';
-import HierarchicalZoneNav from '@app/features/forum/components/HierarchicalZoneNav';
+import ForumTreeNav from '@app/features/forum/components/ForumTreeNav';
 import { ROUTES } from '@app/constants/routes';
 import { ProfileCard } from '@app/components/widgets/ProfileCard';
 import { useAuth } from '@app/hooks/use-auth';

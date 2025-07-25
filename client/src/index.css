@@ -44,12 +44,12 @@
 
 		--radius: 0.75rem;
 		
-		/* Zone accent color variables */
-		--zone-accent: #10b981;
-		--zone-accent-rgb: 16, 185, 129;
-		--zone-accent-faded: rgba(16, 185, 129, 0.3);
-		--zone-accent-gradient-start: rgba(16, 185, 129, 0.8);
-		--zone-accent-gradient-end: rgba(16, 185, 129, 0.4);
+		/* Forum accent color variables */
+		--forum-accent: #10b981;
+		--forum-accent-rgb: 16, 185, 129;
+		--forum-accent-faded: rgba(16, 185, 129, 0.3);
+		--forum-accent-gradient-start: rgba(16, 185, 129, 0.8);
+		--forum-accent-gradient-end: rgba(16, 185, 129, 0.4);
 		
 		/* Additional design tokens */
 		--glow-color: rgba(16, 185, 129, 0.5);
@@ -768,17 +768,17 @@ body.no-motion .announcement-ticker-content {
 		@apply bg-black/20 backdrop-blur-md border border-white/5;
 	}
 	
-	/* Zone-specific styles */
-	.zone-card {
+	/* Forum-specific styles */
+	.forum-card {
 		@apply relative overflow-hidden rounded-xl border bg-gradient-to-br p-6 transition-all duration-300;
 	}
 	
-	.zone-glow::before {
+	.forum-glow::before {
 		content: '';
-		@apply absolute inset-0 bg-zone-gradient opacity-0 transition-opacity duration-300;
+		@apply absolute inset-0 bg-forum-gradient opacity-0 transition-opacity duration-300;
 	}
 	
-	.zone-glow:hover::before {
+	.forum-glow:hover::before {
 		@apply opacity-10;
 	}
 	
@@ -895,5 +895,15 @@ body.no-motion .announcement-ticker-content {
 	
 	.safe-right {
 		padding-right: env(safe-area-inset-right);
+	}
+
+	/* No scrollbar utility */
+	.no-scrollbar {
+		-ms-overflow-style: none; /* IE and Edge */
+		scrollbar-width: none; /* Firefox */
+	}
+	
+	.no-scrollbar::-webkit-scrollbar {
+		display: none; /* Chrome, Safari and Opera */
 	}
 }

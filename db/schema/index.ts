@@ -136,8 +136,6 @@ export * from './admin/settings.js';
 export * from './gamification/achievements.js';
 export * from './gamification/userAchievements.js';
 export * from './gamification/achievementEvents.js';
-export * from './gamification/missions.js';
-export * from './gamification/userMissionProgress.js';
 export * from './gamification/leaderboards.js';
 export * from './gamification/platformStats.js';
 // System domain exports

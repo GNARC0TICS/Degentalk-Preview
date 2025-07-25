@@ -3,7 +3,7 @@ import { useToast } from '@app/hooks/use-toast';
 import { useTip } from '@app/hooks/use-tip';
 import { useCreatePost } from '@app/features/forum/hooks/useForumQueries';
 import { useBookmarkThread, useRemoveBookmark } from '@app/features/forum/hooks/useForumQueries';
-import type { ThreadDisplay } from '@app/types/thread.types';
+import type { Thread } from '@shared/types/thread.types';
 import { useQueryClient } from '@tanstack/react-query';
 import type { UserId, ThreadId } from '@shared/types/ids';
 import { toId, parseId } from '@shared/types/index';
@@ -19,7 +19,7 @@ interface ThreadActionsContextValue {
 const ThreadActionsContext = createContext<ThreadActionsContextValue | undefined>(undefined);
 
 export const ThreadActionsProvider: React.FC<{
-	thread: ThreadDisplay;
+	thread: Thread;
 	children: React.ReactNode;
 }> = ({ thread, children }) => {
 	const [isBookmarked, setIsBookmarked] = useState<boolean>(thread.hasBookmarked ?? false);

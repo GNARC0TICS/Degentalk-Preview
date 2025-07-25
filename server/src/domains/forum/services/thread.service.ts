@@ -28,6 +28,7 @@ import type {
 } from '@shared/types/core/forum.types';
 import { eventLogger } from '../../activity/services/event-logger.service';
 import type { ForumId, StructureId, ThreadId, UserId, PostId, TagId } from '@shared/types/ids';
+import { getThreadRepository } from '@core/repository/repository-factory';
 
 // Using centralized cache service (Redis with in-memory fallback)
 
@@ -65,6 +66,8 @@ export interface ThreadCreateInput {
 }
 
 export class ThreadService {
+	private threadRepository = getThreadRepository();
+
 	constructor() {
 		// Cache is now handled by the centralized cache service
 	}

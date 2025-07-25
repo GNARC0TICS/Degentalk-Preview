@@ -14,7 +14,6 @@ export const eventTypeEnum = pgEnum('event_type', [
 	'xp_earned',
 	'referral_completed',
 	'product_purchased',
-	'mission_completed',
 	'airdrop_claimed'
 ]);
 export const eventLogs = pgTable(

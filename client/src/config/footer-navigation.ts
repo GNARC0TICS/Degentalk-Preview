@@ -16,9 +16,7 @@ export const footerNavigation: FooterNavigationSection[] = [
 		animationDelay: 0,
 		links: [
 			{ label: 'Home', href: '/' },
-			{ label: 'Forum', href: '/forums' },
-			{ label: 'Zones', href: '/zones' },
-			{ label: 'Missions', href: '/missions' },
+			{ label: 'Forums', href: '/forums' },
 			{ label: 'Shop', href: '/shop' },
 			{ label: 'Degen Index', href: '/degen-index' },
 			{ label: 'Leaderboard', href: '/leaderboard' }

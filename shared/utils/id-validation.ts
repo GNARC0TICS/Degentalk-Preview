@@ -55,7 +55,6 @@ export const uuidSchema = z.string().uuid('Invalid UUID format');
 export const userIdSchema = uuidSchema.transform((val): UserId => val as UserId);
 export const threadIdSchema = uuidSchema.transform((val): ThreadId => val as ThreadId);
 export const postIdSchema = uuidSchema.transform((val): PostId => val as PostId);
-export const missionIdSchema = uuidSchema.transform((val): MissionId => val as MissionId);
 export const achievementIdSchema = uuidSchema.transform(
 	(val): AchievementId => val as AchievementId
 );
@@ -121,7 +120,6 @@ export const commonSchemas = {
 	userId: userIdSchema,
 	threadId: threadIdSchema,
 	postId: postIdSchema,
-	missionId: missionIdSchema,
 	achievementId: achievementIdSchema,
 
 	// Optional variants

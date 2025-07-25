@@ -6,7 +6,7 @@
 
 // =================== CORE COMPONENTS (default exports) ===================
 export { default as ThreadCard } from './ThreadCard';
-export { default as ZoneCard } from './ZoneCard';
+export { default as FeaturedForumCard } from './FeaturedForumCard';
 export { default as ForumPage } from './ForumPage';
 export { default as ForumErrorBoundary } from './ForumErrorBoundary';
 
@@ -18,7 +18,7 @@ export { ThreadSidebar } from './ThreadSidebar';
 export { ThreadPagination } from './ThreadPagination';
 export { ReactionBar } from './ReactionBar';
 export { ModeratorActions } from './ModeratorActions';
-export { ConfigurableZoneCard } from './ConfigurableZoneCard';
+export { ConfigurableFeaturedForumCard } from './ConfigurableFeaturedForumCard';
 export { CreateThreadButton } from './CreateThreadButton';
 export { QuickStats } from './QuickStats';
 export { HotTopics } from './HotTopics';
@@ -32,7 +32,7 @@ export { MyBBStats } from './MyBBStats';
 export { MyBBThreadList } from './MyBBThreadList';
 
 // =================== COMPONENTS (default exports) ===================
-export { default as CanonicalZoneGrid } from './CanonicalZoneGrid';
+export { default as FeaturedForumGrid } from './FeaturedForumGrid';
 export { default as QuickReplyInput } from './QuickReplyInput';
 export { default as ShareButton } from './ShareButton';
 export { default as SolveBadge } from './SolveBadge';
@@ -42,11 +42,11 @@ export { default as StickyBackButton } from './StickyBackButton';
 export { default as XpBoostBadge } from './XpBoostBadge';
 
 // =================== FORUM STRUCTURE ===================
-export { ZoneStats } from './ZoneStats';
+export { FeaturedForumStats } from './FeaturedForumStats';
 export { ForumCard } from './forum-card';
 export { ForumCategoryCard } from './forum-category-card';
 export { CategoryCard } from './category-card';
-export { ZoneGroup } from './zone-group';
+export { ForumGroup } from './featured-forum-group';
 
 // =================== NAVIGATION & UI ===================
 export { BreadcrumbNav } from './breadcrumb-nav';

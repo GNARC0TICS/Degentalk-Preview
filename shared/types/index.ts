@@ -55,24 +55,16 @@ export type {
 	ForumPrefix,
 	ForumRule,
 	ForumStats,
-	Thread,
-	ThreadMetadata,
 	Post,
 	PostMetadata,
 	PostReaction,
 	ThreadView,
 	ThreadSubscription,
-	CreateThreadRequest,
-	UpdateThreadRequest,
 	CreatePostRequest,
 	UpdatePostRequest,
-	ThreadSearchParams,
 	PostSearchParams,
-	ThreadWithAuthor,
 	PostWithAuthor,
-	ThreadSummary,
 	ForumHierarchy,
-	ThreadPreview,
 
 	// Economy types
 	DGTToken,
@@ -128,10 +120,24 @@ export type {
 	RarityConfig
 } from './core/index.js';
 
+// Thread types (consolidated)
+export type {
+	Thread,
+	ThreadUser,
+	ThreadPrefix,
+	ThreadTag,
+	ThreadPermissions,
+	ThreadListItem,
+	CreateThreadInput,
+	UpdateThreadInput,
+	ThreadSearchParams,
+	ThreadResponse,
+	ThreadsListResponse
+} from './thread.types.js';
+
 // Type guards
 export {
 	isForum,
-	isThread,
 	isPost,
 	isWallet,
 	isTransaction,
@@ -140,6 +146,12 @@ export {
 	isBadge,
 	isTitle
 } from './core/index.js';
+
+export {
+	isThread,
+	hasThreadPermissions,
+	isThreadListItem
+} from './thread.types.js';
 
 // Economy helpers
 export { toDGTAmount, fromDGTAmount, DGT_DECIMALS, DGT_PRECISION, RARITY_COLORS } from './core/index.js';
@@ -296,8 +308,6 @@ export type {
 	TagId,
 	OrderId,
 	GroupId,
-	ParentZoneId,
-	ZoneId,
 	StructureId,
 	InventoryId,
 	MessageId,
@@ -428,8 +438,6 @@ export {
 	toPostId,
 	toForumId,
 	toStructureId,
-	toZoneId,
-	toParentZoneId,
 	toTransactionId,
 	toWalletId,
 	toItemId,

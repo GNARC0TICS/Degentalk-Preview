@@ -15,7 +15,7 @@ import {
 } from '@api/domains/auth/services/auth.service';
 import { isDevMode } from '@api/utils/environment';
 import { walletService } from '@api/domains/wallet';
-import { walletConfig } from '@shared/wallet.config';
+import { walletConfig } from '@shared/config/wallet.config';
 import { UserTransformer } from '@api/domains/users/transformers/user.transformer';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 import { generateToken } from '../utils/jwt.utils';

@@ -3,11 +3,14 @@ import { cn } from '@app/utils/utils';
 import { Card, CardContent, CardHeader } from '@app/components/ui/card';
 import { TabSwitcher } from '@app/components/ui/tab-switcher';
 import { ContentFeed } from '@app/components/ui/content-feed';
+import { VirtualizedContentFeed } from '@app/components/ui/virtualized-content-feed';
+import { FeedFilters, type FeedFilter } from '@app/components/ui/feed-filters';
 import { useAuth } from '@app/hooks/use-auth';
 import { useContentFeed } from '@app/contexts/content-feed-context';
 import { RefreshCw, Wifi, WifiOff, AlertCircle, RotateCcw } from 'lucide-react';
 import type { ContentTab, UseContentParams } from '@app/hooks/use-content';
 import { useContent, useHomeContent, useForumContent } from '@app/hooks/use-content';
+import { useInfiniteContent } from '@app/hooks/use-infinite-content';
 import type { ForumId } from '@shared/types/ids';
 
 export interface ContentAreaProps {
@@ -18,6 +21,7 @@ export interface ContentAreaProps {
 	variant?: 'default' | 'compact';
 	title?: string;
 	description?: string;
+	useInfiniteScroll?: boolean;
 }
 
 /**
@@ -31,7 +35,8 @@ export function ContentArea({
 	showCategory = true,
 	variant = 'default',
 	title,
-	description
+	description,
+	useInfiniteScroll = true
 }: ContentAreaProps) {
 	const { isAuthenticated } = useAuth();
 	const [isOnline, setIsOnline] = useState(navigator.onLine);
@@ -39,6 +44,13 @@ export function ContentArea({
 	const [isManualRefreshing, setIsManualRefreshing] = useState(false);
 	const [pullDistance, setPullDistance] = useState(0);
 	const [isPulling, setIsPulling] = useState(false);
+	const [activeTab, setActiveTab] = useState<ContentTab>(initialTab);
+	const [feedFilters, setFeedFilters] = useState<FeedFilter>({
+		sortBy: 'recent',
+		timeRange: 'all',
+		showSticky: true,
+		showSolved: true
+	});
 
 	// Use ContentFeedContext if available for state synchronization
 	let feedContext;
@@ -48,9 +60,54 @@ export function ContentArea({
 		feedContext = null; // Graceful fallback when not in provider
 	}
 
-	// Use appropriate hook based on whether forumId is provided
-	const contentHook = forumId ? useForumContent(forumId, initialTab) : useHomeContent(initialTab);
-	const { items, meta, activeTab, isLoading, error, isFetching, switchTab, refetch } = contentHook;
+	// Use either infinite scroll or regular content hook
+	const regularContentHook = forumId ? useForumContent(forumId, activeTab) : useHomeContent(activeTab);
+	const infiniteContentHook = useInfiniteContent({
+		tab: activeTab,
+		forumId: forumId?.toString(),
+		enabled: useInfiniteScroll
+	});
+
+	// Select which hook to use based on useInfiniteScroll
+	const isUsingInfinite = useInfiniteScroll && !forumId; // Start with home page only
+	const { 
+		items, 
+		isLoading, 
+		error,
+		refetch 
+	} = isUsingInfinite
+		? {
+			items: infiniteContentHook.items,
+			isLoading: infiniteContentHook.isLoading,
+			error: infiniteContentHook.error as Error | null,
+			refetch: infiniteContentHook.refetch
+		}
+		: {
+			items: regularContentHook.items,
+			isLoading: regularContentHook.isLoading,
+			error: regularContentHook.error,
+			refetch: regularContentHook.refetch
+		};
+
+	const meta = isUsingInfinite
+		? {
+			total: infiniteContentHook.totalItems,
+			hasMore: infiniteContentHook.hasNextPage || false,
+			page: 1
+		}
+		: regularContentHook.meta;
+
+	const isFetching = isUsingInfinite
+		? infiniteContentHook.isFetchingNextPage
+		: regularContentHook.isFetching;
+
+	// Tab switching
+	const switchTab = (newTab: ContentTab) => {
+		setActiveTab(newTab);
+		if (!isUsingInfinite && regularContentHook.switchTab) {
+			regularContentHook.switchTab(newTab);
+		}
+	};
 
 	// Sync with ContentFeedContext when available
 	useEffect(() => {
@@ -152,8 +209,8 @@ export function ContentArea({
 
 	const isCompact = variant === 'compact';
 	const cardBackground = isCompact
-		? 'bg-zinc-900/70'
-		: 'bg-gradient-to-br from-zinc-900/90 to-zinc-900/60';
+		? 'bg-zinc-950/80'
+		: 'bg-gradient-to-br from-zinc-950/95 to-zinc-900/90';
 
 	// Enhanced error handling component
 	const ErrorState = ({ error, onRetry }: { error: Error; onRetry: () => void }) => (
@@ -188,7 +245,7 @@ export function ContentArea({
 	return (
 		<Card
 			className={cn(
-				'w-full overflow-hidden border border-zinc-800/60 shadow-xl backdrop-blur-sm relative',
+				'w-full overflow-hidden border border-zinc-800/80 shadow-2xl backdrop-blur-sm relative',
 				cardBackground,
 				className
 			)}
@@ -238,24 +295,34 @@ export function ContentArea({
 							{description && <p className="text-xs text-zinc-400 mt-0.5">{description}</p>}
 						</div>
 
-						{/* Smart refresh button */}
-						<button
-							onClick={handleManualRefresh}
-							disabled={isManualRefreshing || isLoading}
-							className={cn(
-								'p-2 rounded-lg bg-zinc-800/50 hover:bg-zinc-700/50 transition-all duration-200',
-								'text-zinc-400 hover:text-orange-300 disabled:opacity-50 disabled:cursor-not-allowed',
-								isManualRefreshing && 'animate-pulse'
-							)}
-							title="Refresh content"
-						>
-							<RefreshCw
-								className={cn(
-									'h-4 w-4 transition-transform duration-300',
-									(isManualRefreshing || isFetching) && 'animate-spin'
-								)}
+						<div className="flex items-center gap-2">
+							{/* Feed Filters */}
+							<FeedFilters
+								filters={feedFilters}
+								onFiltersChange={setFeedFilters}
+								variant={isCompact ? 'compact' : 'default'}
 							/>
-						</button>
+
+							{/* Smart refresh button */}
+							<button
+								onClick={handleManualRefresh}
+								disabled={isManualRefreshing || isLoading}
+								className={cn(
+									'p-2 rounded-lg bg-zinc-900/60 hover:bg-zinc-800/80 transition-all duration-200',
+									'text-zinc-400 hover:text-orange-300 disabled:opacity-50 disabled:cursor-not-allowed',
+									'hover:shadow-lg hover:shadow-orange-500/10',
+									isManualRefreshing && 'animate-pulse'
+								)}
+								title="Refresh content"
+							>
+								<RefreshCw
+									className={cn(
+										'h-4 w-4 transition-transform duration-300',
+										(isManualRefreshing || isFetching) && 'animate-spin'
+									)}
+								/>
+							</button>
+						</div>
 					</div>
 				)}
 
@@ -273,42 +340,59 @@ export function ContentArea({
 					<ErrorState error={error} onRetry={handleManualRefresh} />
 				) : (
 					<>
-						<ContentFeed
-							items={items}
-							isLoading={!items.length && (isLoading || isFetching)}
-							error={error}
-							variant={variant}
-							showCategory={showCategory && !forumId} // Hide category if in forum context
-						/>
+						{isUsingInfinite ? (
+							<VirtualizedContentFeed
+								items={items}
+								isLoading={!items.length && isLoading}
+								error={error}
+								variant={variant}
+								showCategory={showCategory && !forumId}
+								onLoadMore={() => infiniteContentHook.fetchNextPage()}
+								hasMore={infiniteContentHook.hasNextPage}
+								isLoadingMore={infiniteContentHook.isFetchingNextPage}
+								loadMoreRef={infiniteContentHook.loadMoreRef}
+							/>
+						) : (
+							<>
+								<ContentFeed
+									items={items}
+									isLoading={!items.length && (isLoading || isFetching)}
+									error={error}
+									variant={variant}
+									showCategory={showCategory && !forumId} // Hide category if in forum context
+								/>
 
-						{/* Enhanced load more with smart loading */}
-						{meta.hasMore && !isLoading && items.length > 0 && (
-							<div className="text-center py-6 border-t border-zinc-800/50 bg-gradient-to-b from-transparent to-zinc-900/20">
-								<button
-									onClick={() => refetch()}
-									disabled={isFetching}
-									className={cn(
-										'inline-flex items-center gap-2 px-6 py-3 bg-zinc-800/50 hover:bg-zinc-700/50',
-										'text-zinc-300 hover:text-orange-300 rounded-lg transition-all duration-200',
-										'border border-zinc-700/50 hover:border-orange-500/30 disabled:opacity-50',
-										isFetching && 'animate-pulse'
-									)}
-								>
-									{isFetching ? (
-										<>
-											<RefreshCw className="h-4 w-4 animate-spin" />
-											Loading...
-										</>
-									) : (
-										<>
-											<span>Load more</span>
-											<span className="text-xs text-zinc-500">
-												({meta.total - items.length} remaining)
-											</span>
-										</>
-									)}
-								</button>
-							</div>
+								{/* Enhanced load more with smart loading */}
+								{meta.hasMore && !isLoading && items.length > 0 && (
+									<div className="text-center py-6 border-t border-zinc-800/60 bg-gradient-to-b from-transparent to-zinc-950/40">
+										<button
+											onClick={() => refetch()}
+											disabled={isFetching}
+											className={cn(
+												'inline-flex items-center gap-2 px-6 py-3 bg-zinc-900/60 hover:bg-zinc-800/80',
+												'text-zinc-300 hover:text-orange-300 rounded-lg transition-all duration-200',
+												'border border-zinc-800/60 hover:border-orange-500/40 disabled:opacity-50',
+												'hover:shadow-lg hover:shadow-orange-500/10',
+												isFetching && 'animate-pulse'
+											)}
+										>
+											{isFetching ? (
+												<>
+													<RefreshCw className="h-4 w-4 animate-spin" />
+													Loading...
+												</>
+											) : (
+												<>
+													<span>Load more</span>
+													<span className="text-xs text-zinc-500">
+														({meta.total - items.length} remaining)
+													</span>
+												</>
+											)}
+										</button>
+									</div>
+								)}
+							</>
 						)}
 
 						{/* Connection status footer */}

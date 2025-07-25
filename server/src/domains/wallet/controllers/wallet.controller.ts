@@ -17,7 +17,7 @@ import { logger } from '@core/logger';
 import { WalletError, ErrorCodes } from '@core/errors';
 import { getUser } from '@core/utils/auth.helpers';
 import { walletService } from '@api/domains/wallet/services/wallet.service';
-import { walletConfig } from '@shared/wallet.config';
+import { walletConfig } from '@shared/config/wallet.config';
 import { settingsService } from '@core/services/settings.service';
 import { hasPermission } from '@api/domains/admin/adminRegistry';
 import { send } from '@api/utils/response';

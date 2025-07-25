@@ -33,6 +33,7 @@ export default defineConfig(async () => {
 					{ find: '@app', replacement: path.resolve(projectRoot, 'client/src') },
 					{ find: '@api', replacement: path.resolve(projectRoot, 'server/src') },
 					{ find: '@core', replacement: path.resolve(projectRoot, 'server/src/core') },
+					{ find: '@config', replacement: path.resolve(projectRoot, 'client/src/config') },
 					
 					// OLD patterns (temporary)
 					{ find: '@', replacement: path.resolve(projectRoot, 'client/src') },
@@ -42,7 +43,6 @@ export default defineConfig(async () => {
 					{ find: '@shared/types/ids', replacement: path.resolve(projectRoot, 'shared/types/ids.ts') },
 					{ find: '@shared/types/index', replacement: path.resolve(projectRoot, 'shared/types/index.ts') },
 					{ find: '@shared/types/entities', replacement: path.resolve(projectRoot, 'shared/types/entities/index.ts') },
-					{ find: '@shared/config/zoneThemes.config', replacement: path.resolve(projectRoot, 'shared/config/zoneThemes.config.ts') },
 					{ find: '@shared/utils/id', replacement: path.resolve(projectRoot, 'shared/utils/id.ts') },
 					{ find: '@shared', replacement: path.resolve(projectRoot, 'shared') },
 					{ find: '@assets', replacement: path.resolve(projectRoot, 'attached_assets') },
@@ -73,16 +73,22 @@ export default defineConfig(async () => {
 				// PostCSS config will be loaded from postcss.config.js
 			},
 			build: {
-				// Disable some optimizations that might cause issues
-				minify: false,
-				target: 'esnext',
-				sourcemap: false,
+				minify: 'terser',
+				target: 'es2015',
+				sourcemap: true,
 				rollupOptions: {
 					output: {
-						manualChunks: undefined
+						manualChunks: {
+							vendor: ['react', 'react-dom', 'react-router-dom'],
+							ui: ['@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu', '@radix-ui/react-select', '@radix-ui/react-tabs'],
+							utils: ['clsx', 'date-fns', 'zod']
+						}
 					},
-					treeshake: false
-				}
+					treeshake: {
+						moduleSideEffects: false
+					}
+				},
+				chunkSizeWarningLimit: 1000
 			}
 		};
 	} catch (err) {

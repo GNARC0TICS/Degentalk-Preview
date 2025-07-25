@@ -20,19 +20,20 @@ import {
 import type { UserId } from '@shared/types/ids';
 import { eq, sql, and, desc, gte, lt, asc, gt, count } from 'drizzle-orm';
 import { db } from '@db';
-import { MissionsService } from '../missions/missions.service';
 import { logger } from '@core/logger';
 import { getXpAction, XP_ACTION } from './xp-actions';
 import { LevelUpEvent, XpGainEvent, XpLossEvent } from './xp.events';
 import { xpActionLogs, xpActionLimits } from './xp-actions-schema';
 // Import the centralized event handlers
 import { handleXpAward, handleXpLoss, handleLevelUp } from './events/xp.events';
-import { economyConfig, sanitizeMultiplier } from '@shared/economy/economy.config';
+import { economyConfig, sanitizeMultiplier } from '@shared/config/economy.config';
 import type { AdminId, ForumId, UserId } from '@shared/types/ids';
+import { getUserRepository } from '@core/repository/repository-factory';
 
 const { MAX_XP_PER_DAY, MAX_TIP_XP_PER_DAY } = economyConfig;
 
 export class XpService {
+	private userRepository = getUserRepository();
 	/**
 	 * Update a user's XP and handle level recalculation
 	 *
@@ -80,21 +81,11 @@ export class XpService {
 				case 'set':
 					// For 'set' operations, we need to:
 					// 1. Get current XP
-					const userArray = await db
-						.select({
-							id: users.id,
-							xp: users.xp,
-							level: users.level
-						})
-						.from(users)
-						.where(eq(users.id, userId))
-						.limit(1);
+					const user = await this.userRepository.findById(userId);
 
-					if (userArray.length === 0) {
+					if (!user) {
 						throw new Error(`User with ID ${userId} not found.`);
 					}
-
-					const user = userArray[0];
 					const oldXp = user.xp;
 
 					// 2. Determine if we should add or subtract

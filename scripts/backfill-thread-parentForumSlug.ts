@@ -62,9 +62,8 @@ import type { AdminId } from 'shared/types/ids';
 import { db } from '../db'; // Adjust path to your Drizzle client
 import { threads } from '../db/schema/forum/threads'; // Adjust path
 import { forumCategories } from '../db/schema/forum/categories'; // Adjust path
-import { forumMap } from '../client/src/config/forumMap.config'; // Adjust path
-// Ensure Forum type from config includes parentForumSlug after Task 6a
-// import type { Forum } from '../client/src/config/forumMap.config';
+import { forumMap } from '@config/forumMap';
+// import type { Forum } from '@config/forumMap';
 import { eq, inArray } from 'drizzle-orm';
 
 async function backfillParentForumSlugs() {
@@ -75,7 +74,7 @@ async function backfillParentForumSlugs() {
   // 1. Prepare parent lookup from forumMap.config.ts
   // This map will store: childForumSlug (slug of the forum a thread is in) -> its parent's slug (from config)
   const forumParentConfigMap = new Map<string, string | undefined>();
-  forumMap.zones.forEach(zone => {
+  forumMap.forums.forEach(zone => {
     zone.forums.forEach(forumInConfig => {
       // Task 6a is to add 'parentForumSlug' to each forum in the config.
       // This 'parentForumSlug' in the config is the slug of the zone or a higher-level forum.

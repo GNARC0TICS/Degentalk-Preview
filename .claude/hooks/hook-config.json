@@ -108,6 +108,14 @@
       "severity": "error",
       "autoFix": false,
       "description": "Prevents cross-domain internal imports - must use index.ts exports"
+    },
+    "no-duplicate-layout-components": {
+      "enabled": true,
+      "severity": "error",
+      "autoFix": false,
+      "description": "Prevents pages from importing SiteHeader/SiteFooter - use RootLayout instead",
+      "hooks": ["pre-edit", "pre-create"],
+      "filePattern": "**/pages/**/*.tsx"
     }
   },
   "projectType": "monorepo",

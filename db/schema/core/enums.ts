@@ -37,7 +37,6 @@ export const notificationTypeEnum = pgEnum('notification_type', [
 	'airdrop_received',
 	'referral_complete',
 	'cosmetic_unlocked',
-	'mission_complete'
 ]);
 export const reactionTypeEnum = pgEnum('reaction_type', ['like', 'helpful']);
 export const walletStatusEnum = pgEnum('wallet_status', ['active', 'frozen', 'suspended']);

@@ -17,7 +17,7 @@
     box-shadow: 0 0 20px rgba(16, 185, 129, 0.1), 0 4px 6px -1px rgba(0, 0, 0, 0.5);
   }
   
-  .zone-card {
+  .forum-card {
     @apply card-base p-6 space-y-4;
     background: linear-gradient(145deg, hsl(var(--card)) 0%, hsl(var(--background)) 100%);
   }
@@ -254,25 +254,25 @@
     @apply px-6 py-4 whitespace-nowrap text-sm;
   }
   
-  /* Zone Themes */
-  .zone-pit {
-    --zone-color: theme('colors.red.500');
-    --zone-bg: theme('colors.red.950');
+  /* Forum Themes */
+  .forum-pit {
+    --forum-color: theme('colors.red.500');
+    --forum-bg: theme('colors.red.950');
   }
   
-  .zone-mission-control {
-    --zone-color: theme('colors.blue.500');
-    --zone-bg: theme('colors.blue.950');
+  .forum-mission-control {
+    --forum-color: theme('colors.blue.500');
+    --forum-bg: theme('colors.blue.950');
   }
   
-  .zone-casino {
-    --zone-color: theme('colors.purple.500');
-    --zone-bg: theme('colors.purple.950');
+  .forum-casino {
+    --forum-color: theme('colors.purple.500');
+    --forum-bg: theme('colors.purple.950');
   }
   
-  .zone-briefing {
-    --zone-color: theme('colors.amber.500');
-    --zone-bg: theme('colors.amber.950');
+  .forum-briefing {
+    --forum-color: theme('colors.amber.500');
+    --forum-bg: theme('colors.amber.950');
   }
   
   /* Footer Specific */

@@ -56,11 +56,10 @@ export const primaryNavigation: NavItemConfig[] = [
 		analyticsLabel: 'nav_forum'
 	},
 	{
-		label: 'Missions',
-		href: '/missions',
-		icon: React.createElement(IconRenderer, { icon: 'missions', size: 16, className: 'h-4 w-4' }),
-		requiresAuth: true,
-		analyticsLabel: 'nav_missions'
+		label: 'About',
+		href: '/about',
+		icon: React.createElement(IconRenderer, { icon: 'info', size: 16, className: 'h-4 w-4' }),
+		analyticsLabel: 'nav_about'
 	},
 	{
 		label: 'Shop',
@@ -99,10 +98,10 @@ export const createUserMenuItems = (
 		requiresAuth: true
 	},
 	{
-		label: 'Missions',
-		href: '/missions',
+		label: 'About',
+		href: '/about',
 		icon: React.createElement(IconRenderer, {
-			icon: 'missions',
+			icon: 'info',
 			size: 16,
 			className: 'mr-2 h-4 w-4'
 		}),

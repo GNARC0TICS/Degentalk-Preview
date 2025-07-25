@@ -12,7 +12,6 @@ import type {
 	PostId,
 	ForumId,
 	StructureId,
-	ZoneId,
 	TransactionId,
 	WalletId,
 	ItemId,
@@ -29,8 +28,7 @@ import type {
 	ConversationId,
 	RoomId,
 	LevelId,
-	EntityId,
-	ParentZoneId
+	EntityId
 } from '../types/ids.js';
 /**
  * Validates if a string is a valid UUID format
@@ -157,13 +155,6 @@ export function assertValidId(
 	}
 }
 
-/**
- * Convert ZoneId to ParentZoneId
- * This is safe because both are UUID strings, just differently branded
- */
-export function toParentZoneId(zoneId: Id<'ZoneId'>): Id<'ParentZoneId'> {
-	return zoneId as unknown as Id<'ParentZoneId'>;
-}
 
 /**
  * Legacy support for numeric validation during migration
@@ -206,8 +197,6 @@ export const toThreadId = (id: string): ThreadId => id as ThreadId;
 export const toPostId = (id: string): PostId => id as PostId;
 export const toForumId = (id: string): ForumId => id as ForumId;
 export const toStructureId = (id: string): StructureId => id as StructureId;
-export const toZoneId = (id: string): ZoneId => id as ZoneId;
-// Removed duplicate - toParentZoneId function already defined above
 export const toTransactionId = (id: string): TransactionId => id as TransactionId;
 export const toWalletId = (id: string): WalletId => id as WalletId;
 export const toItemId = (id: string): ItemId => id as ItemId;

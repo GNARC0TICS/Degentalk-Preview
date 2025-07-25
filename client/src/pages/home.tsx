@@ -1,48 +1,49 @@
 // Removed Link (no longer needed after zone grid removal)
 // Import context and hook
 import { useForumStructure } from '@app/features/forum/contexts/ForumStructureContext';
-import type { MergedZone } from '@app/features/forum/contexts/ForumStructureContext';
+import type { MergedFeaturedForum, MergedZone } from '@app/features/forum/contexts/ForumStructureContext';
 
 // Import components
 import { HeroSection } from '@app/components/layout/hero-section';
 import { AnnouncementTicker } from '@app/components/layout/announcement-ticker';
 import { ResponsiveLayoutWrapper } from '@app/components/layout/ResponsiveLayoutWrapper';
-import { PrimaryZoneCarousel } from '@app/components/zone/PrimaryZoneCarousel';
+import { default as FeaturedForumCarousel } from '@app/components/zone/FeaturedForumCarousel';
 import { Wide } from '@app/layout/primitives/Wide';
 import { HomeContentArea } from '@app/components/ui/content-area';
 import { ContentFeedProvider } from '@app/contexts/content-feed-context';
 import { getForumSpacing } from '@app/utils/spacing-constants';
 import { useActiveUsers } from '@app/features/users/hooks';
-import { useZoneStatsMap } from '@app/hooks/useZoneStats';
+import { useFeaturedForumStatsMap } from '@app/hooks/useFeaturedForumStats';
 import { getMomentumLabel } from '@app/utils/forum';
 import HomePageSkeleton from '@app/components/skeletons/HomePageSkeleton';
 
 // Removed grid-related UI imports (Skeleton, Button, icons)
 
-import type { ZoneCardProps } from '@app/components/forum/ZoneCard';
+import type { FeaturedForumCardProps } from '@app/components/forum/FeaturedForumCard';
 import { ErrorBoundary } from '@app/components/errors/ErrorBoundary';
 
 function HomePage() {
 	// Get forum structure from context
 	const { zones: mergedZones, isLoading: structureLoading } = useForumStructure();
 
-	const primaryZonesFromContext = mergedZones.filter((zone) => zone.isPrimary === true);
-
-	if (structureLoading) {
-		return <HomePageSkeleton />;
-	}
-
 	// Fetch currently active users once for quick homepage stats –
 	// this is a light-weight query (cached for 1 min via React-Query)
 	const { data: activeUsers = [] } = useActiveUsers({ limit: 100, enabled: true });
 	const activeUsersCount = activeUsers.length;
 
-	// Fetch stats for all primary zones in a single batch of queries
-	const zoneStatsMap = useZoneStatsMap(primaryZonesFromContext.map((z) => z.slug));
+	// Get primary zones for featured forums
+	const primaryFeaturedForumsFromContext = mergedZones?.filter((zone) => zone.isPrimary === true) || [];
 
-	const zoneCardDataForGrid: ZoneCardProps['zone'][] = primaryZonesFromContext.map(
+	// Fetch stats for all primary featured forums in a single batch of queries
+	const featuredForumStatsMap = useFeaturedForumStatsMap(primaryFeaturedForumsFromContext.map((f) => f.slug));
+
+	if (structureLoading) {
+		return <HomePageSkeleton />;
+	}
+
+	const featuredForumCardDataForGrid: FeaturedForumCardProps['zone'][] = primaryFeaturedForumsFromContext.map(
 		(zone: MergedZone) => {
-			const stats = zoneStatsMap[zone.slug] ?? {
+			const stats = featuredForumStatsMap[zone.slug] ?? {
 				todaysPosts: 0,
 				trendingThreads: 0,
 				lastActiveUser: undefined,
@@ -89,10 +90,10 @@ function HomePage() {
 		<ErrorBoundary level="component">
 			<HeroSection />
 			<AnnouncementTicker />
-			{/* Primary Zone Carousel */}
-			{primaryZonesFromContext.length > 0 && (
-				<PrimaryZoneCarousel
-					zones={zoneCardDataForGrid}
+			{/* Primary Featured Forum Carousel */}
+			{primaryFeaturedForumsFromContext.length > 0 && (
+				<FeaturedForumCarousel
+					forums={featuredForumCardDataForGrid}
 					autoRotateMs={8000}
 					className="bg-gradient-to-b from-zinc-900/50 to-transparent"
 				/>

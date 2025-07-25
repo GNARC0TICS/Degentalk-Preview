@@ -74,9 +74,9 @@ export default function NavigationWidget({ compact = false }: NavigationWidgetPr
 		},
 		{
 			id: 'explore',
-			label: 'Explore Zones',
+			label: 'Explore Forums',
 			icon: Compass,
-			href: '/zones',
+			href: '/forums',
 			variant: 'section'
 		},
 		{

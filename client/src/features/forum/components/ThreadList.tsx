@@ -6,7 +6,7 @@ import { getQueryFn } from '@app/utils/queryClient';
 import { Pagination } from '@app/components/ui/pagination';
 import { ThreadListSkeleton } from '@app/components/ui/thread-skeleton';
 import type { ThreadFiltersState } from '@app/components/forum/ThreadFilters';
-import type { ThreadDisplay, ThreadsApiResponse } from '@app/types/thread.types';
+import type { Thread, ThreadsListResponse } from '@shared/types/thread.types';
 import { PAGINATION_CONFIG } from '@app/config/pagination.config';
 import { ThreadActionsProvider } from '@app/features/forum/contexts/ThreadActionsContext';
 import type { ThreadId, ForumId } from '@shared/types/ids';
@@ -54,7 +54,7 @@ const ThreadListComponent: React.FC<ThreadListProps> = ({
 		isLoading,
 		error,
 		isPlaceholderData
-	} = useQuery<ThreadsApiResponse | null, Error>({
+	} = useQuery<ThreadsListResponse | null, Error>({
 		// Allow null for apiResponse
 		queryKey,
 		queryFn: async () => {
@@ -93,11 +93,11 @@ const ThreadListComponent: React.FC<ThreadListProps> = ({
 
 				// Handle wrapped API response
 				if (response && typeof response === 'object' && 'success' in response && response.success && 'data' in response) {
-					return response.data as ThreadsApiResponse;
+					return response.data as ThreadsListResponse;
 				}
 
-				// Assume direct ThreadsApiResponse if not wrapped
-				return response as ThreadsApiResponse;
+				// Assume direct ThreadsListResponse if not wrapped
+				return response as ThreadsListResponse;
 			} catch (e) {
 				// Error will be handled by useQuery's error state
 				throw e;
@@ -165,7 +165,7 @@ const ThreadListComponent: React.FC<ThreadListProps> = ({
 						</tr>
 					</thead>
 					<tbody>
-						{threads.map((thread: ThreadDisplay, idx) => (
+						{threads.map((thread: Thread, idx) => (
 							<ThreadActionsProvider key={thread.id} thread={thread}>
 								<ThreadRow thread={thread} index={idx} />
 							</ThreadActionsProvider>
@@ -173,7 +173,7 @@ const ThreadListComponent: React.FC<ThreadListProps> = ({
 					</tbody>
 				</table>
 			) : (
-				threads.map((thread: ThreadDisplay) => (
+				threads.map((thread: Thread) => (
 					<ThreadActionsProvider key={thread.id} thread={thread}>
 						<ThreadCard thread={thread} />
 					</ThreadActionsProvider>

@@ -7,7 +7,8 @@
 
 import { useAuth } from '@app/hooks/use-auth';
 import { useForumStructure, type MergedForum } from '@app/features/forum/contexts/ForumStructureContext';
-import type { ThreadDisplay, ResolvedZone } from '@app/types/thread.types';
+import type { Thread } from '@shared/types/thread.types';
+import type { ResolvedZone } from '@app/types/thread.types';
 import type { User } from '@shared/types/user.types';
 import { toId } from '@shared/utils/id';
 import type { ThreadId, UserId, ZoneId } from '@shared/types/ids';
@@ -28,7 +29,7 @@ interface ThreadPermissions {
 }
 
 // Type-safe mock data matching actual project types
-export const MOCK_THREAD: ThreadDisplay = {
+export const MOCK_THREAD: Thread = {
 	id: toId<'ThreadId'>(crypto.randomUUID()),
 	title: 'Test Thread',
 	slug: 'test-thread',
@@ -80,7 +81,7 @@ export const MOCK_POST = {
  * Hook to determine user permissions for thread/post actions
  */
 export const useThreadPermissions = (
-	thread: ThreadDisplay | null,
+	thread: Thread | null,
 	forumSlug: string | null
 ): ThreadPermissions => {
 	const { user } = useAuth();

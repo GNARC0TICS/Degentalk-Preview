@@ -1,5 +1,6 @@
-import type { ForumId, ParentZoneId, ZoneId, UserId, ThreadId, StructureId, PostId, TagId } from '@shared/types/ids';
+import type { ForumId, ParentFeaturedForumId, FeaturedForumId, UserId, ThreadId, StructureId, PostId, TagId } from '@shared/types/ids';
 import type { BasicRole } from '@shared/types/index';
+import type { Thread } from '@shared/types/thread.types';
 /**
  * Canonical Forum Types
  *
@@ -11,15 +12,15 @@ import type { BasicRole } from '@shared/types/index';
  * - Query hooks
  */
 /**
- * Canonical Zone - Top-level forum organization
- * Replaces: ZoneWithForums, MergedZone, etc.
+ * Canonical Featured Forum - Top-level forum organization
+ * Replaces: FeaturedForumWithForums, MergedFeaturedForum, etc.
  */
-export interface CanonicalZone {
-    id: ZoneId;
+export interface CanonicalFeaturedForum {
+    id: FeaturedForumId;
     name: string;
     slug: string;
     description?: string;
-    isPrimary: boolean;
+    isFeatured: boolean;
     sortOrder: number;
     isVisible: boolean;
     colorTheme: string;
@@ -49,8 +50,8 @@ export interface CanonicalForum {
     name: string;
     slug: string;
     description?: string;
-    parentZoneId: ParentZoneId;
-    parentZone?: Pick<CanonicalZone, 'id' | 'name' | 'slug' | 'colorTheme'>;
+    parentForumId: ParentFeaturedForumId;
+    parentForum?: Pick<CanonicalFeaturedForum, 'id' | 'name' | 'slug' | 'colorTheme'>;
     sortOrder: number;
     isVisible: boolean;
     colorTheme?: string;
@@ -64,7 +65,7 @@ export interface CanonicalForum {
         xpMultiplier: number;
     };
     subforums: CanonicalSubforum[];
-    threads?: CanonicalThread[];
+    threads?: Thread[];
     stats: {
         totalSubforums: number;
         totalThreads: number;
@@ -95,7 +96,7 @@ export interface CanonicalSubforum {
     colorTheme?: string;
     icon?: string;
     rules?: CanonicalForum['rules'];
-    threads?: CanonicalThread[];
+    threads?: Thread[];
     stats: {
         totalThreads: number;
         totalPosts: number;
@@ -109,49 +110,7 @@ export interface CanonicalSubforum {
     createdAt: string;
     updatedAt: string;
 }
-/**
- * Canonical Thread - Forum discussion container
- * Replaces: ThreadWithUser, ThreadWithPostsAndUser, etc.
- */
-export interface CanonicalThread {
-    id: ThreadId;
-    title: string;
-    slug: string;
-    content?: string;
-    structureId: StructureId;
-    isSticky: boolean;
-    isLocked: boolean;
-    isHidden: boolean;
-    isSolved: boolean;
-    isPinned?: boolean;
-    solvingPostId?: PostId;
-    participantCount?: number;
-    viewCount: number;
-    postCount: number;
-    firstPostLikeCount: number;
-    createdAt: string;
-    updatedAt: string;
-    lastPostAt?: string;
-    lastActivityAt?: string;
-    userId: UserId;
-    user: CanonicalUser;
-    structure: {
-        id: StructureId;
-        name: string;
-        slug: string;
-        type: 'forum' | 'subforum';
-    };
-    zone: Pick<CanonicalZone, 'id' | 'name' | 'slug' | 'colorTheme'>;
-    posts?: CanonicalPost[];
-    tags: CanonicalTag[];
-    permissions: {
-        canEdit: boolean;
-        canDelete: boolean;
-        canReply: boolean;
-        canMarkSolved: boolean;
-        canModerate: boolean;
-    };
-}
+// Thread type moved to @shared/types/thread.types.ts
 /**
  * Canonical Post - Individual forum response
  * Replaces: PostWithUser, various post representations
@@ -172,7 +131,7 @@ export interface CanonicalPost {
     updatedAt: string;
     lastEditedAt?: string;
     user: CanonicalUser;
-    thread?: Pick<CanonicalThread, 'id' | 'title' | 'slug'>;
+    thread?: Pick<Thread, 'id' | 'title' | 'slug'>;
     replyToPost?: Pick<CanonicalPost, 'id' | 'content' | 'user'>;
     permissions: {
         canEdit: boolean;
@@ -263,35 +222,8 @@ export interface PaginatedResponse<T> {
         hasPrev: boolean;
     };
 }
-/**
- * Thread Search Parameters
- * Unified parameters for all thread listing/searching
- */
-export interface CanonicalThreadSearchParams {
-    zoneId?: ZoneId;
-    forumId?: ForumId;
-    subforumId?: ForumId;
-    search?: string;
-    tagIds?: TagId[];
-    userId?: UserId;
-    isSticky?: boolean;
-    isLocked?: boolean;
-    isSolved?: boolean;
-    sortBy?: 'newest' | 'oldest' | 'trending' | 'mostReplies' | 'mostViews';
-    page?: number;
-    limit?: number;
-}
-/**
- * Thread Creation Parameters
- */
-export interface CanonicalThreadCreateParams {
-    title: string;
-    content: string;
-    structureId: StructureId;
-    tagIds?: TagId[];
-    isSticky?: boolean;
-    isLocked?: boolean;
-}
+// Thread search params moved to @shared/types/thread.types.ts
+// Thread creation params moved to @shared/types/thread.types.ts
 /**
  * Post Creation Parameters
  */
@@ -305,15 +237,15 @@ export interface CanonicalPostCreateParams {
  * For components that need to understand the complete structure
  */
 export interface ForumStructureContext {
-    zones: CanonicalZone[];
+    featuredForums: CanonicalFeaturedForum[];
     forumsById: Record<StructureId, CanonicalForum>;
     subforumsById: Record<StructureId, CanonicalSubforum>;
-    getZoneBySlug: (slug: string) => CanonicalZone | undefined;
+    getFeaturedForumBySlug: (slug: string) => CanonicalFeaturedForum | undefined;
     getForumBySlug: (slug: string) => CanonicalForum | undefined;
     getSubforumBySlug: (slug: string) => CanonicalSubforum | undefined;
     getStructureById: (id: StructureId) => CanonicalForum | CanonicalSubforum | undefined;
     getThreadContext: (structureId: StructureId) => {
-        zone?: CanonicalZone;
+        featuredForum?: CanonicalFeaturedForum;
         forum?: CanonicalForum;
         subforum?: CanonicalSubforum;
     };
@@ -330,7 +262,7 @@ export interface NavigationBreadcrumb {
 }
 /**
  * Theme Context
- * For applying zone/forum-specific styling
+ * For applying featuredForum/forum-specific styling
  */
 export interface ForumThemeContext {
     colorTheme: string;
@@ -338,22 +270,8 @@ export interface ForumThemeContext {
     icon?: string;
     customCss?: string;
 }
-/**
- * @deprecated Use CanonicalZone instead
- */
-export type MergedZone = CanonicalZone;
-/**
- * @deprecated Use CanonicalForum instead
- */
-export type MergedForum = CanonicalForum;
-/**
- * @deprecated Use CanonicalThread instead
- */
-export type ThreadWithUser = CanonicalThread;
-/**
- * @deprecated Use CanonicalThread instead
- */
-export type ThreadWithUserAndCategory = CanonicalThread;
+// FeaturedForum/Forum types remain as-is for now - will consolidate separately
+// Legacy thread type aliases removed - use Thread from @shared/types/thread.types.ts
 /**
  * @deprecated Use CanonicalPost instead
  */

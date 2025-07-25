@@ -1,7 +1,5 @@
 import { db } from '../db';
 import { users } from '../db/schema/user/users';
-import { userMissionProgress } from '../db/schema/gamification/userMissionProgress';
-import { missions } from '../db/schema/gamification/missions';
 import { sql } from 'drizzle-orm';
 
 async function createTestUsers() {

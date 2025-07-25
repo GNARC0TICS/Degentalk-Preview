@@ -9,8 +9,8 @@
 // NAVIGATION COMPONENTS
 // ==============================================================================
 
-export { default as HierarchicalZoneNav } from './HierarchicalZoneNav';
-export * from './HierarchicalZoneNav';
+export { default as ForumTreeNav } from './ForumTreeNav';
+export * from './ForumTreeNav';
 
 // ==============================================================================
 // FORUM LISTING COMPONENTS
@@ -26,7 +26,7 @@ export { ForumHeader } from './ForumHeader';
 
 export { default as ThreadList } from './ThreadList';
 export * from './ThreadList';
-export * from './CreateThreadForm';
+export { CreateThreadForm } from './CreateThreadForm';
 export { ThreadForm } from './ThreadForm';
 
 // ==============================================================================

@@ -29,7 +29,6 @@ import {
 	BreadcrumbSeparator
 } from '@app/components/ui/breadcrumb';
 import { cn } from '@app/utils/utils';
-import { SiteFooter } from '@app/components/footer/SiteFooter';
 import { Container } from '@app/components/ui/Container';
 
 export default function CreateThreadPage() {
@@ -366,7 +365,6 @@ export default function CreateThreadPage() {
 					</div>
 				</div>
 			</Container>
-			<SiteFooter />
 		</div>
 	);
 }

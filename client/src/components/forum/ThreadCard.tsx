@@ -20,17 +20,17 @@ import { Avatar, AvatarFallback, AvatarImage } from '@app/components/ui/avatar';
 import { OnlineIndicator, AvatarWithOnline } from '@app/components/common/OnlineIndicator';
 import { cn } from '@app/utils/utils';
 import { useBreakpoint } from '@app/hooks/useMediaQuery';
-import type { ThreadDisplay } from '@app/types/thread.types';
+import type { Thread } from '@shared/types/thread.types';
 import type { ThreadId } from '@shared/types/ids';
 import { toId, parseId } from '@shared/types/index';
-import { getZoneTheme } from '@shared/config/zoneThemes.config';
+import { getForumTheme } from '@shared/config/zoneThemes.config';
 import { useThreadActionsOptional } from '@app/features/forum/contexts/ThreadActionsContext';
 import QuickReplyInput from '@app/components/forum/QuickReplyInput';
 import { ButtonTooltip } from '@app/components/ui/tooltip-utils';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@app/components/ui/tooltip';
 
 export interface ThreadCardProps {
-	thread: ThreadDisplay;
+	thread: Thread;
 	variant?: 'default' | 'compact' | 'featured' | undefined;
 	showPreview?: boolean | undefined;
 	onTip?: ((threadId: ThreadId, amount: number) => void) | undefined;
@@ -90,7 +90,7 @@ const ThreadCard = memo(
 		const cardVariants = getCardSpacing();
 
 		// Resolve theme safely via shared config util
-		const zoneTheme = getZoneTheme(thread.zone.colorTheme);
+		const zoneTheme = getForumTheme(thread.zone.colorTheme);
 		const zoneThemeClass = zoneTheme.border ?? 'border-zinc-700/30 hover:border-zinc-600/60';
 
 		return (

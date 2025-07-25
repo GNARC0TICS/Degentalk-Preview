@@ -18,7 +18,7 @@ import { cn } from '@app/utils/utils';
 import { useBreakpoint } from '@app/hooks/useMediaQuery';
 
 import MobileForumNavigation from '@app/components/forum/enhanced/MobileForumNavigation';
-import HierarchicalZoneNav from '@app/features/forum/components/HierarchicalZoneNav';
+import ForumTreeNav from '@app/features/forum/components/ForumTreeNav';
 
 export interface ResponsiveForumLayoutProps {
 	children: React.ReactNode;
@@ -140,7 +140,7 @@ const ResponsiveForumLayout = memo(
 							{/* Sidebar Content */}
 							<div className="flex-1 overflow-hidden">
 								{sidebar || (
-									<HierarchicalZoneNav
+									<ForumTreeNav
 										className={cn(
 											'h-full transition-all duration-300',
 											isCollapsed ? 'px-2' : 'px-4'
@@ -297,7 +297,7 @@ const ResponsiveForumLayout = memo(
 								</Button>
 							</div>
 							<div className="p-4 h-full overflow-auto">
-								{sidebar || <HierarchicalZoneNav isCollapsed={false} />}
+								{sidebar || <ForumTreeNav isCollapsed={false} />}
 							</div>
 						</SheetContent>
 					</Sheet>

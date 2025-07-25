@@ -61,7 +61,7 @@ import type { ReporterId } from '../shared/types/ids';
 import type { AdminId } from '../shared/types/ids';
 import { db } from "../../db";
 import { forumStructure } from "../../db/schema/forum/structure";
-import { forumMap, type Zone as ConfigZone, type Forum as ConfigForum } from "../../client/src/config/forumMap.config";
+import { forumMap, type RootForum as ConfigZone, type Forum as ConfigForum } from "@config/forumMap";
 import { eq, isNull, or } from "drizzle-orm";
 import chalk from "chalk";
 
@@ -104,7 +104,7 @@ async function checkForumConfigSync() {
   const dbZones = dbStructures.filter(cat => cat.type === 'zone');
   const dbForums = dbStructures.filter(cat => cat.type === 'forum');
 
-  const configZones = forumMap.zones;
+  const configZones = forumMap.forums;
   const configForums: (ConfigForum & { parentZoneSlug: : AdminId, parentForumSlug?: : AdminId })[] = [];
   
   // Recursively flatten forums including subforums

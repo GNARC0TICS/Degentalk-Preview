@@ -1,16 +1,13 @@
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 
-export type ContentTab = 'trending' | 'recent' | 'following';
+export type ContentTab = 'trending' | 'recent' | 'following' | 'hot' | 'announcements' | 'my-threads';
 
-// Use unified ThreadDisplay type instead of custom ContentItem
-import type { ThreadDisplay } from '@app/types/thread.types';
+import type { Thread } from '@shared/types/thread.types';
 import type { ForumId } from '@shared/types/ids';
 
-export type ContentItem = ThreadDisplay;
-
 export interface ContentResponse {
-	items: ContentItem[];
+	items: Thread[];
 	meta: {
 		hasMore: boolean;
 		total: number;
@@ -22,6 +19,14 @@ export interface UseContentParams {
 	tab?: ContentTab;
 	forumId?: ForumId;
 	initialTab?: ContentTab;
+	filters?: ContentFilters;
+}
+
+export interface ContentFilters {
+	timeRange?: 'hour' | 'day' | 'week' | 'month' | 'all';
+	showFollowedOnly?: boolean;
+	hideReadThreads?: boolean;
+	sortBy?: 'latest' | 'replies' | 'tips' | 'views';
 }
 
 /**
@@ -34,7 +39,7 @@ export function useContent(params: UseContentParams = {}) {
 	);
 
 	const { data, isLoading, error, refetch, isFetching } = useQuery<ContentResponse>({
-		queryKey: ['content', activeTab, params.forumId || 'all'],
+		queryKey: ['content', activeTab, params.forumId || 'all', params.filters],
 		queryFn: async (): Promise<ContentResponse> => {
 			const searchParams = new URLSearchParams({
 				tab: activeTab,
@@ -44,6 +49,22 @@ export function useContent(params: UseContentParams = {}) {
 
 			if (params.forumId) {
 				searchParams.append('forumId', params.forumId.toString());
+			}
+
+			// Add filter params
+			if (params.filters) {
+				if (params.filters.timeRange) {
+					searchParams.append('timeRange', params.filters.timeRange);
+				}
+				if (params.filters.showFollowedOnly) {
+					searchParams.append('followedOnly', 'true');
+				}
+				if (params.filters.hideReadThreads) {
+					searchParams.append('hideRead', 'true');
+				}
+				if (params.filters.sortBy) {
+					searchParams.append('sort', params.filters.sortBy);
+				}
 			}
 
 			const response = await fetch(`/api/forums/content?${searchParams.toString()}`);

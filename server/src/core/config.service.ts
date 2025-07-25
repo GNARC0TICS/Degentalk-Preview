@@ -1,11 +1,11 @@
-import { forumConfig } from '@config/forum.config';
+import { forumEconomyConfig } from '@config/forumEconomy';
 
 /**
  * Retrieves a nested property from the forumConfig object via dot-notation path.
  * Example: getConfigValue<number>('xp.dailyCap')
  */
 export const getConfigValue = <T = unknown>(path: string): T | undefined => {
-	return path.split('.').reduce<any>((obj, key) => (obj ? obj[key] : undefined), forumConfig) as
+	return path.split('.').reduce<any>((obj, key) => (obj ? obj[key] : undefined), forumEconomyConfig) as
 		| T
 		| undefined;
 };
@@ -13,7 +13,7 @@ export const getConfigValue = <T = unknown>(path: string): T | undefined => {
 /**
  * Deep merge helper to apply runtime overrides (e.g., DB-backed). Not used yet.
  */
-export const mergeConfig = (overrides: Partial<typeof forumConfig>) => {
+export const mergeConfig = (overrides: Partial<typeof forumEconomyConfig>) => {
 	const deepMerge = (target: any, source: any) => {
 		for (const k of Object.keys(source)) {
 			if (source[k] && typeof source[k] === 'object') {
@@ -24,5 +24,5 @@ export const mergeConfig = (overrides: Partial<typeof forumConfig>) => {
 			}
 		}
 	};
-	deepMerge(forumConfig as any, overrides as any);
+	deepMerge(forumEconomyConfig as any, overrides as any);
 };
