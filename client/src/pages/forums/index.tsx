@@ -12,12 +12,12 @@ export default function ForumsIndexPage() {
   const context = useForumStructure();
   const [selectedCategory, setSelectedCategory] = useState<'all' | 'featured' | 'general'>('all');
   
-  console.log('Forums page context:', context);
-  
   // Since zones are now top-level forums, use zones as our forums list
   const allForums = context.zones || [];
   const loading = context.isLoading;
   const error = context.error;
+  
+  console.log('Forums page - allForums:', allForums, 'loading:', loading);
 
   if (loading) {
     return (
@@ -96,7 +96,7 @@ export default function ForumsIndexPage() {
                 "cursor-pointer transition-all hover:shadow-lg",
                 forum.isFeatured && "ring-2 ring-primary/20"
               )}
-              onClick={() => navigate(`/f/${forum.slug}`)}
+              onClick={() => navigate(`/forums/${forum.slug}`)}
             >
               <CardContent className="p-6">
                 <div className="space-y-4">

@@ -190,7 +190,7 @@ const ForumPage = memo(() => {
 		return <Navigate to="/forums" replace />;
 	}
 
-	const { getForum, zones, isUsingFallback } = useForumStructure();
+	const { getForum, getZone, zones, isUsingFallback } = useForumStructure();
 
 	// State management
 	const [showFilters, setShowFilters] = useState(false);
@@ -213,11 +213,18 @@ const ForumPage = memo(() => {
 	let forum = null as ReturnType<typeof getForum> | null;
 	let parentForum = null as ReturnType<typeof getForum> | null;
 	try {
-		forum = forumSlug ? getForum(forumSlug) : null;
+		// First try to find it as a top-level forum (zone)
+		forum = forumSlug ? getZone(forumSlug) : null;
+		
+		// If not found as top-level, try as a child forum
+		if (!forum && forumSlug) {
+			forum = getForum(forumSlug);
+		}
 
 		// If we have a subforum, find its parent
 		if (params?.subforumSlug && params?.forumSlug) {
-			parentForum = getForum(params.forumSlug);
+			// Parent could be either a zone or a forum
+			parentForum = getZone(params.forumSlug) || getForum(params.forumSlug);
 		}
 	} catch (error) {
 		throw error as Error; // bubble up to error boundary
