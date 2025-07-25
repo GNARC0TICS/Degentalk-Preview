@@ -42,7 +42,7 @@ export const leaderboardTheme = {
     // Metric colors
     metrics: {
       xp: '#10b981', // emerald-500
-      clout: '#06b6d4', // cyan-500
+      reputation: '#06b6d4', // cyan-500
       tips: '#a855f7', // purple-500
       activity: '#f59e0b' // amber-500
     }
@@ -163,7 +163,7 @@ export const getRankStyle = (rank: number) => {
   };
 };
 
-export const getMetricColor = (metric: 'xp' | 'clout' | 'tips' | 'activity') => {
+export const getMetricColor = (metric: 'xp' | 'reputation' | 'tips' | 'activity') => {
   return leaderboardTheme.colors.metrics[metric] || leaderboardTheme.colors.metrics.xp;
 };
 

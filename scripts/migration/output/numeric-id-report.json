@@ -497,13 +497,13 @@
         "client/src/components/admin/form-controls/InlineError.tsx",
         "client/src/components/admin/form-controls/ImageUpload.tsx",
         "client/src/components/admin/form-controls/ColorPicker.tsx",
-        "client/src/components/admin/effects/CloutObliterationEffect.tsx",
+        "client/src/components/admin/effects/ReputationObliterationEffect.tsx",
         "client/src/components/admin/effects/BankruptcyEffect.tsx",
         "client/src/components/admin/common/AdminDataTable.tsx",
-        "client/src/components/admin/clout/CloutTiersSection.tsx",
-        "client/src/components/admin/clout/CloutLogsSection.tsx",
-        "client/src/components/admin/clout/CloutGrantsSection.tsx",
-        "client/src/components/admin/clout/AchievementsSection.tsx",
+        "client/src/components/admin/reputation/ReputationTiersSection.tsx",
+        "client/src/components/admin/reputation/ReputationLogsSection.tsx",
+        "client/src/components/admin/reputation/ReputationGrantsSection.tsx",
+        "client/src/components/admin/reputation/AchievementsSection.tsx",
         "client/src/components/forum/enhanced/__tests__/QuickReactions.test.tsx",
         "client/src/components/forum/enhanced/__tests__/EnhancedThreadCard.test.tsx",
         "client/src/components/forum/enhanced/__tests__/CryptoEngagementBar.test.tsx",
@@ -638,7 +638,7 @@
           "suggestedType": "check entity context for correct branded type"
         },
         {
-          "file": "client/src/components/admin/clout/AchievementsSection.tsx",
+          "file": "client/src/components/admin/reputation/AchievementsSection.tsx",
           "line": 164,
           "column": 48,
           "pattern": "id: number",
@@ -647,7 +647,7 @@
           "suggestedType": "check entity context for correct branded type"
         },
         {
-          "file": "client/src/components/admin/clout/AchievementsSection.tsx",
+          "file": "client/src/components/admin/reputation/AchievementsSection.tsx",
           "line": 192,
           "column": 22,
           "pattern": "id: number",
@@ -656,7 +656,7 @@
           "suggestedType": "check entity context for correct branded type"
         },
         {
-          "file": "client/src/components/admin/clout/AchievementsSection.tsx",
+          "file": "client/src/components/admin/reputation/AchievementsSection.tsx",
           "line": 218,
           "column": 22,
           "pattern": "id: number",
@@ -803,9 +803,9 @@
         "client/src/pages/admin/config/xp.tsx",
         "client/src/pages/admin/config/tags.tsx",
         "client/src/pages/admin/config/economy.tsx",
-        "client/src/pages/admin/clout/index.tsx",
-        "client/src/pages/admin/clout/grants.tsx",
-        "client/src/pages/admin/clout/achievements.tsx",
+        "client/src/pages/admin/reputation/index.tsx",
+        "client/src/pages/admin/reputation/grants.tsx",
+        "client/src/pages/admin/reputation/achievements.tsx",
         "client/src/pages/admin/announcements/index.tsx",
         "client/src/pages/admin/activity/index.tsx",
         "client/src/pages/admin/activity/user/[userId].tsx"
@@ -1388,7 +1388,7 @@
           "suggestedType": "check entity context for correct branded type"
         },
         {
-          "file": "client/src/pages/admin/clout/index.tsx",
+          "file": "client/src/pages/admin/reputation/index.tsx",
           "line": 17,
           "column": 2,
           "pattern": "id: number",
@@ -1397,7 +1397,7 @@
           "suggestedType": "check entity context for correct branded type"
         },
         {
-          "file": "client/src/pages/admin/clout/index.tsx",
+          "file": "client/src/pages/admin/reputation/index.tsx",
           "line": 30,
           "column": 2,
           "pattern": "id: number",
@@ -1406,7 +1406,7 @@
           "suggestedType": "check entity context for correct branded type"
         },
         {
-          "file": "client/src/pages/admin/clout/grants.tsx",
+          "file": "client/src/pages/admin/reputation/grants.tsx",
           "line": 69,
           "column": 2,
           "pattern": "id: number",
@@ -2054,9 +2054,9 @@
         "client/src/pages/admin/config/xp.tsx",
         "client/src/pages/admin/config/tags.tsx",
         "client/src/pages/admin/config/economy.tsx",
-        "client/src/pages/admin/clout/index.tsx",
-        "client/src/pages/admin/clout/grants.tsx",
-        "client/src/pages/admin/clout/achievements.tsx",
+        "client/src/pages/admin/reputation/index.tsx",
+        "client/src/pages/admin/reputation/grants.tsx",
+        "client/src/pages/admin/reputation/achievements.tsx",
         "client/src/pages/admin/announcements/index.tsx",
         "client/src/pages/admin/activity/index.tsx",
         "client/src/features/users/services/usersApi.ts",
@@ -2085,15 +2085,15 @@
         "client/src/features/forum/components/EditPostDialog.tsx",
         "client/src/features/forum/components/CreateThreadForm.tsx",
         "client/src/features/forum/components/CreatePostForm.tsx",
-        "client/src/features/admin/services/xpCloutService.ts",
+        "client/src/features/admin/services/xpReputationService.ts",
         "client/src/features/admin/services/xpActionsService.ts",
         "client/src/features/admin/services/uiConfigApi.ts",
         "client/src/features/admin/services/sticker-api.service.ts",
         "client/src/features/admin/services/settingsService.ts",
         "client/src/features/admin/services/media-api.service.ts",
         "client/src/features/admin/services/economyConfigService.ts",
-        "client/src/features/admin/services/cloutGrantsService.ts",
-        "client/src/features/admin/services/cloutAchievementsService.ts",
+        "client/src/features/admin/services/reputationGrantsService.ts",
+        "client/src/features/admin/services/reputationAchievementsService.ts",
         "client/src/features/admin/services/brandConfigApi.ts",
         "client/src/features/admin/services/animation-pack-api.service.ts",
         "client/src/features/admin/hooks/useSystemAnalytics.ts",
@@ -2182,13 +2182,13 @@
         "client/src/components/admin/form-controls/InlineError.tsx",
         "client/src/components/admin/form-controls/ImageUpload.tsx",
         "client/src/components/admin/form-controls/ColorPicker.tsx",
-        "client/src/components/admin/effects/CloutObliterationEffect.tsx",
+        "client/src/components/admin/effects/ReputationObliterationEffect.tsx",
         "client/src/components/admin/effects/BankruptcyEffect.tsx",
         "client/src/components/admin/common/AdminDataTable.tsx",
-        "client/src/components/admin/clout/CloutTiersSection.tsx",
-        "client/src/components/admin/clout/CloutLogsSection.tsx",
-        "client/src/components/admin/clout/CloutGrantsSection.tsx",
-        "client/src/components/admin/clout/AchievementsSection.tsx",
+        "client/src/components/admin/reputation/ReputationTiersSection.tsx",
+        "client/src/components/admin/reputation/ReputationLogsSection.tsx",
+        "client/src/components/admin/reputation/ReputationGrantsSection.tsx",
+        "client/src/components/admin/reputation/AchievementsSection.tsx",
         "client/src/components/admin/roles/RolesSection.tsx",
         "client/src/components/admin/roles/RoleForm.tsx",
         "client/src/pages/admin/activity/user/[userId].tsx",
@@ -2932,7 +2932,7 @@
           "suggestedType": "check entity context for correct branded type"
         },
         {
-          "file": "client/src/pages/admin/clout/index.tsx",
+          "file": "client/src/pages/admin/reputation/index.tsx",
           "line": 17,
           "column": 2,
           "pattern": "id: number",
@@ -2941,7 +2941,7 @@
           "suggestedType": "check entity context for correct branded type"
         },
         {
-          "file": "client/src/pages/admin/clout/index.tsx",
+          "file": "client/src/pages/admin/reputation/index.tsx",
           "line": 30,
           "column": 2,
           "pattern": "id: number",
@@ -2950,7 +2950,7 @@
           "suggestedType": "check entity context for correct branded type"
         },
         {
-          "file": "client/src/pages/admin/clout/grants.tsx",
+          "file": "client/src/pages/admin/reputation/grants.tsx",
           "line": 69,
           "column": 2,
           "pattern": "id: number",
@@ -3328,7 +3328,7 @@
           "suggestedType": "check entity context for correct branded type"
         },
         {
-          "file": "client/src/features/admin/services/cloutAchievementsService.ts",
+          "file": "client/src/features/admin/services/reputationAchievementsService.ts",
           "line": 24,
           "column": 35,
           "pattern": "id: number",
@@ -3337,20 +3337,20 @@
           "suggestedType": "check entity context for correct branded type"
         },
         {
-          "file": "client/src/features/admin/services/cloutAchievementsService.ts",
+          "file": "client/src/features/admin/services/reputationAchievementsService.ts",
           "line": 33,
           "column": 16,
           "pattern": "id: number",
-          "context": "mutationFn: (id: number) => adminApi.post(`/clout/achievements/${id}/toggle`, {}),",
+          "context": "mutationFn: (id: number) => adminApi.post(`/reputation/achievements/${id}/toggle`, {}),",
           "severity": "critical",
           "suggestedType": "check entity context for correct branded type"
         },
         {
-          "file": "client/src/features/admin/services/cloutAchievementsService.ts",
+          "file": "client/src/features/admin/services/reputationAchievementsService.ts",
           "line": 41,
           "column": 16,
           "pattern": "id: number",
-          "context": "mutationFn: (id: number) => adminApi.delete(`/clout/achievements/${id}`),",
+          "context": "mutationFn: (id: number) => adminApi.delete(`/reputation/achievements/${id}`),",
           "severity": "critical",
           "suggestedType": "check entity context for correct branded type"
         },
@@ -3454,7 +3454,7 @@
           "suggestedType": "check entity context for correct branded type"
         },
         {
-          "file": "client/src/components/admin/clout/AchievementsSection.tsx",
+          "file": "client/src/components/admin/reputation/AchievementsSection.tsx",
           "line": 164,
           "column": 48,
           "pattern": "id: number",
@@ -3463,7 +3463,7 @@
           "suggestedType": "check entity context for correct branded type"
         },
         {
-          "file": "client/src/components/admin/clout/AchievementsSection.tsx",
+          "file": "client/src/components/admin/reputation/AchievementsSection.tsx",
           "line": 192,
           "column": 22,
           "pattern": "id: number",
@@ -3472,7 +3472,7 @@
           "suggestedType": "check entity context for correct branded type"
         },
         {
-          "file": "client/src/components/admin/clout/AchievementsSection.tsx",
+          "file": "client/src/components/admin/reputation/AchievementsSection.tsx",
           "line": 218,
           "column": 22,
           "pattern": "id: number",
@@ -3790,7 +3790,7 @@
         "server/src/domains/engagement/tip/tip.routes.ts",
         "server/src/domains/engagement/tip/tip.controller.ts",
         "server/src/domains/economy/services/rewardService.ts",
-        "server/src/domains/economy/services/cloutService.ts",
+        "server/src/domains/economy/services/reputationService.ts",
         "server/src/domains/collectibles/stickers/stickers.validators.ts",
         "server/src/domains/collectibles/stickers/stickers.service.ts",
         "server/src/domains/collectibles/stickers/stickers.routes.ts",
@@ -3833,7 +3833,7 @@
         "server/src/domains/admin/sub-domains/xp/xp.service.ts",
         "server/src/domains/admin/sub-domains/xp/xp.routes.ts",
         "server/src/domains/admin/sub-domains/xp/xp.controller.ts",
-        "server/src/domains/admin/sub-domains/xp/xp.clout.service.ts",
+        "server/src/domains/admin/sub-domains/xp/xp.reputation.service.ts",
         "server/src/domains/admin/sub-domains/xp/xp-actions.controller.ts",
         "server/src/domains/admin/sub-domains/users/users.service.ts",
         "server/src/domains/admin/sub-domains/users/users.routes.ts",
@@ -3910,8 +3910,8 @@
         "server/src/domains/admin/sub-domains/database/database.routes.ts",
         "server/src/domains/admin/sub-domains/database/database.controller.ts",
         "server/src/domains/admin/sub-domains/database/bulk-operations.controller.ts",
-        "server/src/domains/admin/sub-domains/clout/clout.routes.ts",
-        "server/src/domains/admin/sub-domains/clout/clout.controller.ts",
+        "server/src/domains/admin/sub-domains/reputation/reputation.routes.ts",
+        "server/src/domains/admin/sub-domains/reputation/reputation.controller.ts",
         "server/src/domains/admin/sub-domains/cache/cache.routes.ts",
         "server/src/domains/admin/sub-domains/cache/cache.controller.ts",
         "server/src/domains/admin/sub-domains/brand-config/brand.service.ts",
@@ -5424,7 +5424,7 @@
           "suggestedType": "UserId"
         },
         {
-          "file": "server/src/domains/admin/sub-domains/clout/clout.controller.ts",
+          "file": "server/src/domains/admin/sub-domains/reputation/reputation.controller.ts",
           "line": 24,
           "column": 14,
           "pattern": "Number(req.params.id)",
@@ -5433,7 +5433,7 @@
           "suggestedType": "remove Number(), use branded type"
         },
         {
-          "file": "server/src/domains/admin/sub-domains/clout/clout.controller.ts",
+          "file": "server/src/domains/admin/sub-domains/reputation/reputation.controller.ts",
           "line": 74,
           "column": 14,
           "pattern": "Number(req.params.id)",
@@ -5442,7 +5442,7 @@
           "suggestedType": "remove Number(), use branded type"
         },
         {
-          "file": "server/src/domains/admin/sub-domains/clout/clout.controller.ts",
+          "file": "server/src/domains/admin/sub-domains/reputation/reputation.controller.ts",
           "line": 95,
           "column": 14,
           "pattern": "Number(req.params.id)",
@@ -5451,7 +5451,7 @@
           "suggestedType": "remove Number(), use branded type"
         },
         {
-          "file": "server/src/domains/admin/sub-domains/clout/clout.controller.ts",
+          "file": "server/src/domains/admin/sub-domains/reputation/reputation.controller.ts",
           "line": 105,
           "column": 14,
           "pattern": "Number(req.params.id)",
@@ -6024,7 +6024,7 @@
         "db/schema/forum/emojiPackItems.ts",
         "db/schema/forum/customEmojis.ts",
         "db/schema/economy/xpLogs.ts",
-        "db/schema/economy/xpCloutSettings.ts",
+        "db/schema/economy/xpReputationSettings.ts",
         "db/schema/economy/xpAdjustmentLogs.ts",
         "db/schema/economy/xpActionSettings.ts",
         "db/schema/economy/withdrawalRequests.ts",
@@ -6032,7 +6032,7 @@
         "db/schema/economy/vaults.ts",
         "db/schema/economy/userTitles.ts",
         "db/schema/economy/userCommands.ts",
-        "db/schema/economy/userCloutLog.ts",
+        "db/schema/economy/userReputationLog.ts",
         "db/schema/economy/userBadges.ts",
         "db/schema/economy/treasurySettings.ts",
         "db/schema/economy/transactions.ts",
@@ -6043,7 +6043,7 @@
         "db/schema/economy/levels.ts",
         "db/schema/economy/dgtPurchaseOrders.ts",
         "db/schema/economy/dgtPackages.ts",
-        "db/schema/economy/cloutAchievements.ts",
+        "db/schema/economy/reputationAchievements.ts",
         "db/schema/economy/badges.ts",
         "db/schema/economy/airdropSettings.ts",
         "db/schema/economy/airdropRecords.ts",

@@ -14,7 +14,7 @@ export interface ProfileData {
 	totalThreads: number;
 	totalLikes: number;
 	totalTips: number;
-	clout: number;
+	reputation: number;
 	level: number;
 	xp: number;
 	nextLevelXp: number;

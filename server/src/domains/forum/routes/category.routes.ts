@@ -34,7 +34,7 @@ router.get(
 			const allStructures = await forumStructureService.getStructuresWithStats();
 
 			// Separate into zones and forums for the flat client payload
-			const zones = allStructures.filter((s) => s.type === 'zone');
+			const zones = allStructures.filter((s) => s.parentId === null);
 			const forums = allStructures.filter((s) => s.type === 'forum');
 
 			sendSuccessResponse(res, {

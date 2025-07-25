@@ -27,7 +27,7 @@ export const customEmojis = pgTable(
 		requiredPath: varchar('required_path', { length: 50 }),
 		requiredPathXP: integer('required_path_xp'),
 		xpValue: integer('xp_value').notNull().default(0),
-		cloutValue: integer('clout_value').notNull().default(0),
+		reputationValue: integer('reputation_value').notNull().default(0),
 		createdAt: timestamp('created_at')
 			.notNull()
 			.default(sql`now()`),

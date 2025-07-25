@@ -37,8 +37,8 @@ const TRANSFORMER_MAPPINGS = {
     }
   },
   'gamification': {
-    import: 'CloutTransformer',
-    module: '@server/src/domains/gamification/transformers/clout.transformer',
+    import: 'ReputationTransformer',
+    module: '@server/src/domains/gamification/transformers/reputation.transformer',
     methods: {
       achievement: 'toPublicAchievement',
       badge: 'toPublicBadge'

@@ -156,7 +156,7 @@ export function createMockUser(
 		createdAt: new Date(),
 		xp: 1000,
 		level: 10,
-		clout: 100,
+		reputation: 100,
 		dgtPoints: 1000,
 		dgtWalletBalance: 100,
 		pointsVersion: 1,

@@ -917,7 +917,7 @@ export class ThreadService {
 			if (!structure) return null;
 
 			// If it's already a zone, return it
-			if (structure.type === 'zone') {
+			if (structure.parentId === null) {
 				return {
 					id: structure.id,
 					name: structure.name,
@@ -938,7 +938,7 @@ export class ThreadService {
 
 				if (!parent) break;
 
-				if (parent.type === 'zone') {
+				if (parent.parentId === null) {
 					return {
 						id: parent.id,
 						name: parent.name,

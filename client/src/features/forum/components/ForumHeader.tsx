@@ -4,11 +4,11 @@ import { Badge } from '@app/components/ui/badge';
 import { Button } from '@app/components/ui/button';
 import { Flame, Users, MessageSquare, Plus } from 'lucide-react';
 import { cn } from '@app/utils/utils';
-import type { MergedForum, MergedZone } from '@app/features/forum/contexts/ForumStructureContext';
+import type { MergedForum, MergedForum } from '@app/features/forum/contexts/ForumStructureContext';
 
 interface ForumHeaderProps {
-	forum: MergedForum | MergedZone;
-	isPrimaryZone?: boolean;
+	forum: MergedForum | MergedForum;
+	isFeaturedZone?: boolean;
 	className?: string;
 	variant?: 'compact' | 'detailed' | 'minimal' | 'themed';
 	slots?: {
@@ -27,7 +27,7 @@ interface ForumHeaderProps {
  */
 export function ForumHeader({ 
 	forum, 
-	isPrimaryZone = false, 
+	isFeaturedZone = false, 
 	className = '',
 	variant = 'detailed',
 	slots,
@@ -87,7 +87,7 @@ export function ForumHeader({
 	};
 
 	// Themed primary zone variant
-	if ((variant === 'themed' || isPrimaryZone) && isPrimaryZone) {
+	if ((variant === 'themed' || isFeaturedZone) && isFeaturedZone) {
 		const colorTheme = 'theme' in forum ? forum.theme?.colorTheme : undefined;
 		const dynamicThemeClass = `theme-header-${colorTheme || 'zinc'}`;
 		
@@ -103,9 +103,9 @@ export function ForumHeader({
 									<Badge className="bg-forum-header-badge-bg hover:bg-forum-header-badge-bg-hover">
 										Primary Zone
 									</Badge>
-									{(forum as MergedZone).hasXpBoost && (
+									{(forum as MergedForum).hasXpBoost && (
 										<Badge className="bg-emerald-600 hover:bg-emerald-500">
-											{(forum as MergedZone).boostMultiplier || 2}x XP
+											{(forum as MergedForum).boostMultiplier || 2}x XP
 										</Badge>
 									)}
 								</div>

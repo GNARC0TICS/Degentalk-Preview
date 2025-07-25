@@ -50,7 +50,7 @@ export function UserDirectoryTable({ users, className = '' }: UserDirectoryTable
 								<TableHead className="text-zinc-400 font-medium">Member</TableHead>
 								<TableHead className="text-zinc-400 font-medium text-center">Level</TableHead>
 								<TableHead className="text-zinc-400 font-medium text-center">XP</TableHead>
-								<TableHead className="text-zinc-400 font-medium text-center">Clout</TableHead>
+								<TableHead className="text-zinc-400 font-medium text-center">Reputation</TableHead>
 								<TableHead className="text-zinc-400 font-medium text-center">Posts</TableHead>
 								<TableHead className="text-zinc-400 font-medium text-center">Joined</TableHead>
 								<TableHead className="text-zinc-400 font-medium text-center">Title</TableHead>
@@ -123,11 +123,11 @@ export function UserDirectoryTable({ users, className = '' }: UserDirectoryTable
 										</div>
 									</TableCell>
 
-									{/* Clout */}
+									{/* Reputation */}
 									<TableCell className="text-center">
 										<div className="flex flex-col items-center">
 											<span className="text-cyan-400 font-bold text-sm">
-												{formatNumber(user.clout)}
+												{formatNumber(user.reputation)}
 											</span>
 											<Trophy className="w-3 h-3 text-cyan-400/60 mt-0.5" />
 										</div>

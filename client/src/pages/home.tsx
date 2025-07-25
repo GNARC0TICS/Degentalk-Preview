@@ -1,7 +1,7 @@
 // Removed Link (no longer needed after zone grid removal)
 // Import context and hook
 import { useForumStructure } from '@app/features/forum/contexts/ForumStructureContext';
-import type { MergedFeaturedForum, MergedZone } from '@app/features/forum/contexts/ForumStructureContext';
+import type { MergedFeaturedForum, MergedForum } from '@app/features/forum/contexts/ForumStructureContext';
 
 // Import components
 import { HeroSection } from '@app/components/layout/hero-section';
@@ -32,7 +32,7 @@ function HomePage() {
 	const activeUsersCount = activeUsers.length;
 
 	// Get primary zones for featured forums
-	const primaryFeaturedForumsFromContext = mergedZones?.filter((zone) => zone.isPrimary === true) || [];
+	const primaryFeaturedForumsFromContext = mergedZones?.filter((zone) => zone.isFeatured === true) || [];
 
 	// Fetch stats for all primary featured forums in a single batch of queries
 	const featuredForumStatsMap = useFeaturedForumStatsMap(primaryFeaturedForumsFromContext.map((f) => f.slug));
@@ -42,7 +42,7 @@ function HomePage() {
 	}
 
 	const featuredForumCardDataForGrid: FeaturedForumCardProps['zone'][] = primaryFeaturedForumsFromContext.map(
-		(zone: MergedZone) => {
+		(zone: MergedForum) => {
 			const stats = featuredForumStatsMap[zone.slug] ?? {
 				todaysPosts: 0,
 				trendingThreads: 0,

@@ -123,7 +123,7 @@ export class FollowsService {
 					activeAvatarUrl: users.activeAvatarUrl,
 					level: users.level,
 					role: users.role,
-					clout: users.clout
+					reputation: users.reputation
 				}
 			})
 			.from(userFollows)
@@ -153,7 +153,7 @@ export class FollowsService {
 					activeAvatarUrl: users.activeAvatarUrl,
 					level: users.level,
 					role: users.role,
-					clout: users.clout
+					reputation: users.reputation
 				}
 			})
 			.from(userFollows)
@@ -325,7 +325,7 @@ export class FollowsService {
 	 */
 	static async getWhaleCandidates(limit = 20) {
 		// This would typically include complex logic to identify "whales"
-		// For now, we'll use level and clout as indicators
+		// For now, we'll use level and reputation as indicators
 		const whales = await db
 			.select({
 				id: users.id,
@@ -333,13 +333,13 @@ export class FollowsService {
 				avatarUrl: users.avatarUrl,
 				activeAvatarUrl: users.activeAvatarUrl,
 				level: users.level,
-				clout: users.clout,
+				reputation: users.reputation,
 				role: users.role,
 				createdAt: users.createdAt
 			})
 			.from(users)
-			.where(sql`${users.level} >= 25 OR ${users.clout} >= 10000`)
-			.orderBy(desc(users.clout), desc(users.level))
+			.where(sql`${users.level} >= 25 OR ${users.reputation} >= 10000`)
+			.orderBy(desc(users.reputation), desc(users.level))
 			.limit(limit);
 
 		return whales;
@@ -371,7 +371,7 @@ export class FollowsService {
 				activeAvatarUrl: users.activeAvatarUrl,
 				level: users.level,
 				role: users.role,
-				clout: users.clout,
+				reputation: users.reputation,
 				isFollowing: sql<boolean>`EXISTS(
 					SELECT 1 FROM ${userFollows} 
 					WHERE ${userFollows.followerId} = ${currentUserId} 

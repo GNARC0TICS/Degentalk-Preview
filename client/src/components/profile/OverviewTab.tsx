@@ -31,7 +31,7 @@ const OverviewTab: React.FC<Props> = ({ profile }) => {
 					{/* Enhanced Stats Grid */}
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 						<ReputationCard
-							clout={extendedStats.clout}
+							reputation={extendedStats.reputation}
 							reputation={extendedStats.reputation}
 							dailyXpGained={extendedStats.dailyXpGained}
 							lastXpGainDate={extendedStats.lastXpGainDate}

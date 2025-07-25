@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm/relations";
-import { users, siteSettings, adminThemes, siteTemplates, featureFlags, seoMetadata, announcements, uiQuotes, uiAnalytics, uiCollections, emailTemplates, emailTemplateVersions, moderatorNotes, adminBackups, backupSchedules, backupSettings, restoreOperations, brandConfigurations, profileAnalytics, activityFeed, adminManualAirdropLogs, roles, userAbuseFlags, cooldownState, analyticsEvents, mentionsIndex, dictionaryEntries, referralSources, dictionaryUpvotes, userMentionPreferences, userReferrals, mentions, threads, posts, userFollows, friendGroups, friendGroupMembers, friendships, userFriendPreferences, depositRecords, withdrawalRecords, internalTransfers, ccpaymentUsers, cryptoWallets, stickerUsage, stickers, userStickerInventory, swapRecords, stickerPacks, userStickerPacks, campaigns, adGovernanceProposals, adGovernanceVotes, cryptoPayments, userPromotions, announcementSlots, threadBoosts, shoutboxPins, shoutboxMessages, adImpressions, adPlacements, campaignMetrics, profileSpotlights, userPromotionAnalytics, notifications, eventLogs, platformTreasurySettings, productCategories, products, mediaLibrary, avatarFrames, userInventory, inventoryTransactionLinks, transactions, animationPacks, animationPackItems, uiCollectionQuotes, emailTemplateLogs, titles, badges, displayPreferences, notificationSettings, userSettings, userBans, userOwnedFrames, userRelationships, subscriptions, featurePermissions, verificationTokens, passwordResetTokens, userSettingsHistory, userSocialPreferences, cosmeticDrops, forumStructure, threadPrefixes, threadDrafts, postDrafts, postLikes, polls, pollOptions, pollVotes, emojiPacks, emojiPackItems, customEmojis, forumRules, threadFeaturePermissions, levels, xpAdjustmentLogs, userEmojiPacks, wallets, vaults, rainEvents, postTips, dgtEconomyParameters, withdrawalRequests, userCommands, dgtPurchaseOrders, userCloutLog, cloutAchievements, airdropSettings, productMedia, airdropRecords, xpLogs, orders, orderItems, inventoryTransactions, userSignatureItems, signatureShopItems, conversations, chatRooms, onlineUsers, conversationParticipants, messages, directMessages, auditLogs, reportedContent, contentModerationActions, threadTags, tags, userThreadBookmarks, userTitles, userBadges, messageReads, userAchievements, achievements, rolePermissions, permissions, postReactions, userRulesAgreements, userRoles } from "./schema";
+import { users, siteSettings, adminThemes, siteTemplates, featureFlags, seoMetadata, announcements, uiQuotes, uiAnalytics, uiCollections, emailTemplates, emailTemplateVersions, moderatorNotes, adminBackups, backupSchedules, backupSettings, restoreOperations, brandConfigurations, profileAnalytics, activityFeed, adminManualAirdropLogs, roles, userAbuseFlags, cooldownState, analyticsEvents, mentionsIndex, dictionaryEntries, referralSources, dictionaryUpvotes, userMentionPreferences, userReferrals, mentions, threads, posts, userFollows, friendGroups, friendGroupMembers, friendships, userFriendPreferences, depositRecords, withdrawalRecords, internalTransfers, ccpaymentUsers, cryptoWallets, stickerUsage, stickers, userStickerInventory, swapRecords, stickerPacks, userStickerPacks, campaigns, adGovernanceProposals, adGovernanceVotes, cryptoPayments, userPromotions, announcementSlots, threadBoosts, shoutboxPins, shoutboxMessages, adImpressions, adPlacements, campaignMetrics, profileSpotlights, userPromotionAnalytics, notifications, eventLogs, platformTreasurySettings, productCategories, products, mediaLibrary, avatarFrames, userInventory, inventoryTransactionLinks, transactions, animationPacks, animationPackItems, uiCollectionQuotes, emailTemplateLogs, titles, badges, displayPreferences, notificationSettings, userSettings, userBans, userOwnedFrames, userRelationships, subscriptions, featurePermissions, verificationTokens, passwordResetTokens, userSettingsHistory, userSocialPreferences, cosmeticDrops, forumStructure, threadPrefixes, threadDrafts, postDrafts, postLikes, polls, pollOptions, pollVotes, emojiPacks, emojiPackItems, customEmojis, forumRules, threadFeaturePermissions, levels, xpAdjustmentLogs, userEmojiPacks, wallets, vaults, rainEvents, postTips, dgtEconomyParameters, withdrawalRequests, userCommands, dgtPurchaseOrders, userReputationLog, reputationAchievements, airdropSettings, productMedia, airdropRecords, xpLogs, orders, orderItems, inventoryTransactions, userSignatureItems, signatureShopItems, conversations, chatRooms, onlineUsers, conversationParticipants, messages, directMessages, auditLogs, reportedContent, contentModerationActions, threadTags, tags, userThreadBookmarks, userTitles, userBadges, messageReads, userAchievements, achievements, rolePermissions, permissions, postReactions, userRulesAgreements, userRoles } from "./schema";
 
 export const siteSettingsRelations = relations(siteSettings, ({one}) => ({
 	user: one(users, {
@@ -273,7 +273,7 @@ export const usersRelations = relations(users, ({one, many}) => ({
 	}),
 	userCommands: many(userCommands),
 	dgtPurchaseOrders: many(dgtPurchaseOrders),
-	userCloutLogs: many(userCloutLog),
+	userReputationLogs: many(userReputationLog),
 	airdropRecords: many(airdropRecords),
 	xpLogs: many(xpLogs),
 	userInventories: many(userInventory),
@@ -1626,19 +1626,19 @@ export const dgtPurchaseOrdersRelations = relations(dgtPurchaseOrders, ({one}) =
 	}),
 }));
 
-export const userCloutLogRelations = relations(userCloutLog, ({one}) => ({
+export const userReputationLogRelations = relations(userReputationLog, ({one}) => ({
 	user: one(users, {
-		fields: [userCloutLog.userId],
+		fields: [userReputationLog.userId],
 		references: [users.userId]
 	}),
-	cloutAchievement: one(cloutAchievements, {
-		fields: [userCloutLog.achievementId],
-		references: [cloutAchievements.id]
+	reputationAchievement: one(reputationAchievements, {
+		fields: [userReputationLog.achievementId],
+		references: [reputationAchievements.id]
 	}),
 }));
 
-export const cloutAchievementsRelations = relations(cloutAchievements, ({many}) => ({
-	userCloutLogs: many(userCloutLog),
+export const reputationAchievementsRelations = relations(reputationAchievements, ({many}) => ({
+	userReputationLogs: many(userReputationLog),
 }));
 
 export const airdropSettingsRelations = relations(airdropSettings, ({one}) => ({

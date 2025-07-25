@@ -29,7 +29,7 @@ export interface Persona {
 		xp: number;
 		level: number;
 		dgt: number;
-		clout?: number;
+		reputation?: number;
 		warnings?: number;
 		bans?: number;
 		reputation?: number;
@@ -60,7 +60,7 @@ export const personas: Record<string, Persona> = {
 			xp: 999999,
 			level: 99,
 			dgt: 50000,
-			clout: 10000,
+			reputation: 10000,
 			reputation: 10000
 		},
 		cosmetics: {
@@ -118,7 +118,7 @@ export const personas: Record<string, Persona> = {
 			xp: 85000,
 			level: 50,
 			dgt: 500000,
-			clout: 8000,
+			reputation: 8000,
 			warnings: 2
 		},
 		cosmetics: {
@@ -153,7 +153,7 @@ export const personas: Record<string, Persona> = {
 			xp: 65000,
 			level: 40,
 			dgt: 1000, // Spends it all on cosmetics
-			clout: 6000,
+			reputation: 6000,
 			reputation: 8000
 		},
 		cosmetics: {
@@ -183,7 +183,7 @@ export const personas: Record<string, Persona> = {
 			xp: 45000,
 			level: 30,
 			dgt: 25000,
-			clout: 5000
+			reputation: 5000
 		},
 		cosmetics: {
 			equipped: ['insider_frame', 'encrypted_name', 'classified_signature'],
@@ -211,7 +211,7 @@ export const personas: Record<string, Persona> = {
 			xp: 25000,
 			level: 20,
 			dgt: 5000,
-			clout: 3000
+			reputation: 3000
 		},
 		cosmetics: {
 			equipped: ['pepe_frame', 'comic_sans_name', 'meme_collage_sig'],

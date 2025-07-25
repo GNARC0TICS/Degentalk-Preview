@@ -26,7 +26,7 @@ export interface UserAchievement {
 		iconEmoji?: string;
 		rewardXp: number;
 		rewardDgt: number;
-		rewardClout: number;
+		rewardReputation: number;
 		isSecret: boolean;
 		unlockMessage?: string;
 	};
@@ -45,7 +45,7 @@ export interface Achievement {
 	triggerConfig: any;
 	rewardXp: number;
 	rewardDgt: number;
-	rewardClout: number;
+	rewardReputation: number;
 	isActive: boolean;
 	isSecret: boolean;
 	unlockMessage?: string;

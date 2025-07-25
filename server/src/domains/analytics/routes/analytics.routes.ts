@@ -78,7 +78,7 @@ const leaderboardSchema = z.object({
 router.get(
   '/leaderboards/:type',
   validateRequest({ 
-    params: z.object({ type: z.enum(['xp', 'posts', 'clout', 'tips']) }),
+    params: z.object({ type: z.enum(['xp', 'posts', 'reputation', 'tips']) }),
     query: leaderboardSchema 
   }),
   analyticsController.getLeaderboard

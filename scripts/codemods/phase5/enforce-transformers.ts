@@ -194,9 +194,9 @@ function getTransformerSuggestion(domain: string, filePath: string, context: str
       'CosmeticsTransformer.toPublicCosmetic(cosmetic)'
     ],
     'gamification': [
-      'CloutTransformer.toPublicAchievement(achievement)',
-      'CloutTransformer.toAuthenticatedAchievement(achievement)',
-      'CloutTransformer.toAdminAchievement(achievement)'
+      'ReputationTransformer.toPublicAchievement(achievement)',
+      'ReputationTransformer.toAuthenticatedAchievement(achievement)',
+      'ReputationTransformer.toAdminAchievement(achievement)'
     ],
     'messaging': [
       'MessageTransformer.toPublicMessage(message)',

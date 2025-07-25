@@ -3,7 +3,7 @@ import { Shield, TrendingUp, Calendar, Zap } from 'lucide-react';
 import { cn } from '@app/utils/utils';
 
 interface ReputationCardProps {
-	clout?: number;
+	reputation?: number;
 	reputation?: number;
 	dailyXpGained?: number;
 	lastXpGainDate?: string | null;
@@ -12,7 +12,7 @@ interface ReputationCardProps {
 }
 
 export function ReputationCard({
-	clout = 0,
+	reputation = 0,
 	reputation = 0,
 	dailyXpGained = 0,
 	lastXpGainDate = null,
@@ -53,8 +53,8 @@ export function ReputationCard({
 					<div className="text-xs text-zinc-400">Trust Score</div>
 				</div>
 				<div className="space-y-1">
-					<div className="text-2xl font-bold text-amber-400">{(clout ?? 0).toLocaleString()}</div>
-					<div className="text-xs text-zinc-400">Clout</div>
+					<div className="text-2xl font-bold text-amber-400">{(reputation ?? 0).toLocaleString()}</div>
+					<div className="text-xs text-zinc-400">Reputation</div>
 				</div>
 			</div>
 

@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import BackToHomeButton from '@app/components/common/BackToHomeButton';
 
 export default function LeaderboardPage() {
-	const [activeTab, setActiveTab] = useState<'xp' | 'clout' | 'tips' | 'activity'>('xp');
+	const [activeTab, setActiveTab] = useState<'xp' | 'reputation' | 'tips' | 'activity'>('xp');
 	const [timeframe, setTimeframe] = useState<'daily' | 'weekly' | 'monthly' | 'all-time'>('all-time');
 
 	// Animation variants
@@ -40,7 +40,7 @@ export default function LeaderboardPage() {
 				<Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as any)} className="w-full">
 					<TabsList className="grid grid-cols-4 w-full max-w-md mx-auto mb-8">
 						<TabsTrigger value="xp">XP</TabsTrigger>
-						<TabsTrigger value="clout">Clout</TabsTrigger>
+						<TabsTrigger value="reputation">Reputation</TabsTrigger>
 						<TabsTrigger value="tips">Tips</TabsTrigger>
 						<TabsTrigger value="activity">Activity</TabsTrigger>
 					</TabsList>

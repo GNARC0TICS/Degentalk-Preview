@@ -7,7 +7,7 @@ import {
 	badges,
 	titles,
 	xpAdjustmentLogs,
-	xpCloutSettings
+	xpReputationSettings
 } from '@schema';
 import { eq, and, desc, sql } from 'drizzle-orm';
 import { logger } from '@core/logger';
@@ -23,16 +23,16 @@ export class XpAdminService {
 		// No manual table creation needed
 	}
 
-	// --- XP Settings Management (Economy Settings & xpCloutSettings) ---
+	// --- XP Settings Management (Economy Settings & xpReputationSettings) ---
 	async getXpSettings() {
-		// TODO: Fetch relevant settings from economySettings and xpCloutSettings
-		// e.g., xp_per_post, daily_xp_cap, clout_per_helpful etc.
+		// TODO: Fetch relevant settings from economySettings and xpReputationSettings
+		// e.g., xp_per_post, daily_xp_cap, reputation_per_helpful etc.
 		logger.info('XP_ADMIN_SERVICE', 'Get XP Settings called - not implemented');
 		return { message: 'Get XP Settings not implemented' };
 	}
 
 	async updateXpSettings(settings: Array<{ key: string; value: any }>) {
-		// TODO: Update settings in economySettings or xpCloutSettings table
+		// TODO: Update settings in economySettings or xpReputationSettings table
 		// Ensure proper validation and typing
 		logger.info('XP_ADMIN_SERVICE', 'Update XP Settings called - not implemented', { settings });
 		return { message: 'Update XP Settings not implemented' };

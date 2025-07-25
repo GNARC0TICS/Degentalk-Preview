@@ -199,7 +199,7 @@ export class FriendsService {
 					activeAvatarUrl: users.activeAvatarUrl,
 					level: users.level,
 					role: users.role,
-					clout: users.clout
+					reputation: users.reputation
 				}
 			})
 			.from(friendships)
@@ -447,7 +447,7 @@ export class FriendsService {
 				activeAvatarUrl: users.activeAvatarUrl,
 				level: users.level,
 				role: users.role,
-				clout: users.clout,
+				reputation: users.reputation,
 				friendshipStatus: sql<string | null>`
 					CASE 
 						WHEN ${friendships.status} = 'accepted' THEN 'friends'

@@ -72,22 +72,22 @@ export class ForumStructureService {
 			// Transform to domain model
 			const structures: ForumStructureWithStats[] = structuresWithStats.map((item) => ({
 				...item,
-				canHaveThreads: item.type === 'forum', // Only forums can have threads, not zones
-				isZone: item.type === 'zone',
-				canonical: item.type === 'zone', // Zones are canonical in the hierarchy
+				canHaveThreads: item.type === 'forum', // All forums can have threads
+				isZone: item.parentId === null,
+				canonical: item.parentId === null, // Zones are canonical in the hierarchy
 				childStructures: [], // Will be populated in tree methods
 				// Plugin data parsing for additional properties
-				isPrimary: item.type === 'zone' && (item.pluginData as any)?.configZoneType === 'primary',
+				isPrimary: item.parentId === null && (item.pluginData as any)?.configZoneType === 'primary',
 				features: (item.pluginData as any)?.features || [],
 				customComponents: (item.pluginData as any)?.customComponents || [],
 				staffOnly: (item.pluginData as any)?.staffOnly || false
 			}));
 
-			// Aggregate counts for zones (zones don't have direct threads)
-			const zones = structures.filter((s) => s.type === 'zone');
+			// Aggregate counts for top-level forums (top-level forums aggregate child forum threads)
+			const zones = structures.filter((s) => s.parentId === null);
 			const forums = structures.filter((s) => s.type === 'forum');
 
-			// Calculate aggregated counts for each zone
+			// Calculate aggregated counts for top-level forums
 			zones.forEach((zone) => {
 				let totalThreads = 0;
 				let totalPosts = 0;
@@ -227,11 +227,11 @@ export class ForumStructureService {
 			return {
 				...structure,
 				canHaveThreads: structure.type === 'forum',
-				isZone: structure.type === 'zone',
-				canonical: structure.type === 'zone',
+				isZone: structure.parentId === null,
+				canonical: structure.parentId === null,
 				childStructures: [],
 				isPrimary:
-					structure.type === 'zone' && (structure.pluginData as any)?.configZoneType === 'primary',
+					structure.parentId === null && (structure.pluginData as any)?.configZoneType === 'primary',
 				features: (structure.pluginData as any)?.features || [],
 				customComponents: (structure.pluginData as any)?.customComponents || [],
 				staffOnly: (structure.pluginData as any)?.staffOnly || false
@@ -249,7 +249,7 @@ export class ForumStructureService {
 			.from(forumStructure)
 			.where(eq(forumStructure.slug, slug))
 			.limit(1);
-		if (!zone || zone.type !== 'zone') {
+		if (!zone || zone.parentId !== null) {
 			return null;
 		}
 

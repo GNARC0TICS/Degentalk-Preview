@@ -88,7 +88,7 @@ export const CORE_ACHIEVEMENT_TEMPLATES: AchievementTemplate[] = [
 
 		rewardXp: 500,
 		rewardDgt: 100,
-		rewardClout: 25,
+		rewardReputation: 25,
 		unlockMessage: "You're becoming a regular! Keep the quality content coming!"
 	},
 
@@ -162,11 +162,11 @@ export const CORE_ACHIEVEMENT_TEMPLATES: AchievementTemplate[] = [
 
 		rewardXp: 100,
 		rewardDgt: 100,
-		rewardClout: 10,
+		rewardReputation: 10,
 		unlockMessage: '1K XP milestone reached! Experience is everything!'
 	},
 
-	// === CLOUT & REPUTATION ===
+	// === REPUTATION & REPUTATION ===
 	{
 		templateId: 'first_tip',
 		templateName: 'First Tip',
@@ -212,7 +212,7 @@ export const CORE_ACHIEVEMENT_TEMPLATES: AchievementTemplate[] = [
 
 		rewardXp: 200,
 		rewardDgt: 100,
-		rewardClout: 50,
+		rewardReputation: 50,
 		unlockMessage: 'Your generosity shines! Spreading the wealth!'
 	},
 
@@ -241,7 +241,7 @@ export const CORE_ACHIEVEMENT_TEMPLATES: AchievementTemplate[] = [
 
 		rewardXp: 500,
 		rewardDgt: 250,
-		rewardClout: 100,
+		rewardReputation: 100,
 		unlockMessage: 'Welcome to the bag holders club! Diamond hands formation training begins now.',
 		isSecret: false
 	},
@@ -270,7 +270,7 @@ export const CORE_ACHIEVEMENT_TEMPLATES: AchievementTemplate[] = [
 
 		rewardXp: 1000,
 		rewardDgt: 500,
-		rewardClout: 200,
+		rewardReputation: 200,
 		unlockMessage: 'DIAMOND HANDS CONFIRMED! 💎🙌 You are the legend!'
 	},
 
@@ -326,7 +326,7 @@ export const CORE_ACHIEVEMENT_TEMPLATES: AchievementTemplate[] = [
 
 		rewardXp: 300,
 		rewardDgt: 150,
-		rewardClout: 75,
+		rewardReputation: 75,
 		unlockMessage: 'Thread necromancy mastered! Bringing the dead back to life!'
 	},
 
@@ -354,7 +354,7 @@ export const CORE_ACHIEVEMENT_TEMPLATES: AchievementTemplate[] = [
 
 		rewardXp: 400,
 		rewardDgt: 200,
-		rewardClout: 100,
+		rewardReputation: 100,
 		unlockMessage: 'Your doom posting skills are legendary! Crash prophet confirmed!'
 	},
 
@@ -384,7 +384,7 @@ export const CORE_ACHIEVEMENT_TEMPLATES: AchievementTemplate[] = [
 
 		rewardXp: 300,
 		rewardDgt: 200,
-		rewardClout: 50,
+		rewardReputation: 50,
 		unlockMessage: 'The night belongs to you! 🦉 Secret achievement unlocked!',
 		isSecret: true
 	},
@@ -439,7 +439,7 @@ export const CORE_ACHIEVEMENT_TEMPLATES: AchievementTemplate[] = [
 
 		rewardXp: 500,
 		rewardDgt: 300,
-		rewardClout: 150,
+		rewardReputation: 150,
 		unlockMessage: 'Meme mastery achieved! 🐸 You are the meme lord now!',
 		isSecret: true
 	},
@@ -469,7 +469,7 @@ export const CORE_ACHIEVEMENT_TEMPLATES: AchievementTemplate[] = [
 
 		rewardXp: 1000,
 		rewardDgt: 500,
-		rewardClout: 500,
+		rewardReputation: 500,
 		unlockMessage: 'WHALE DETECTED! 🐋 Your generosity is legendary!'
 	},
 
@@ -497,7 +497,7 @@ export const CORE_ACHIEVEMENT_TEMPLATES: AchievementTemplate[] = [
 
 		rewardXp: 2000,
 		rewardDgt: 1000,
-		rewardClout: 1000,
+		rewardReputation: 1000,
 		unlockMessage: 'PROPHET STATUS CONFIRMED! 🔮 Your market insights are legendary!'
 	}
 ];
@@ -553,7 +553,7 @@ export const CULTURAL_ACHIEVEMENT_TEMPLATES: AchievementTemplate[] = [
 
 		rewardXp: 750,
 		rewardDgt: 400,
-		rewardClout: 200,
+		rewardReputation: 200,
 		unlockMessage: "Contrarian genius confirmed! 🎭 You see what others don't!"
 	},
 
@@ -581,7 +581,7 @@ export const CULTURAL_ACHIEVEMENT_TEMPLATES: AchievementTemplate[] = [
 
 		rewardXp: 1500,
 		rewardDgt: 750,
-		rewardClout: 500,
+		rewardReputation: 500,
 		unlockMessage: 'COMEBACK KING CROWNED! 👑 From rekt to riches!'
 	}
 ];

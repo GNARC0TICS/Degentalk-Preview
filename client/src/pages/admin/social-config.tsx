@@ -748,9 +748,9 @@ export default function SocialConfigPage() {
 									</div>
 
 									<div>
-										<Label htmlFor="whale-detect-clout">Minimum Clout</Label>
+										<Label htmlFor="whale-detect-reputation">Minimum Reputation</Label>
 										<Input
-											id="whale-detect-clout"
+											id="whale-detect-reputation"
 											type="number"
 											min="0"
 											value={config.whaleWatch.settings.whaleThresholds.dgtBalance}

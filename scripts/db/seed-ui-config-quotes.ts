@@ -349,7 +349,7 @@ const existingHeroQuotes = [
     },
     {
         headline: "We celebrate wins. We meme the losses.",
-        subheader: "Post your pain for clout."
+        subheader: "Post your pain for reputation."
     }
 ];
 

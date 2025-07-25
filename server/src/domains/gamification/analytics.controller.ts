@@ -11,7 +11,7 @@ import {
 	gamificationAnalyticsService,
 	GamificationAnalyticsService
 } from './services/analytics.service';
-import { CloutTransformer } from './transformers/clout.transformer';
+import { ReputationTransformer } from './transformers/reputation.transformer';
 import {
 	toPublicList,
 	sendSuccessResponse,
@@ -138,7 +138,7 @@ export class GamificationAnalyticsController {
 			sendTransformedResponse(
 				res,
 				{
-					achievements: dashboard.achievements.map((a) => CloutTransformer.toPublicAchievement(a)),
+					achievements: dashboard.achievements.map((a) => ReputationTransformer.toPublicAchievement(a)),
 					trends: {
 						completionRates: dashboard.trends.completionRates.map((t) => ({
 							date: t.date,

@@ -1,7 +1,7 @@
-export interface InsertXpCloutSettings {
+export interface InsertXpReputationSettings {
 	id?: string;
 	xpAmount: number;
-	cloutAmount: number;
+	reputationAmount: number;
 	description?: string;
 }
 

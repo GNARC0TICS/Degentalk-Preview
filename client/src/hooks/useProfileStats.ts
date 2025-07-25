@@ -13,7 +13,7 @@ export interface ExtendedProfileStats {
 	joinedAt: string;
 
 	// Reputation & trust
-	clout: number;
+	reputation: number;
 	reputation: number;
 	dailyXpGained: number;
 	lastXpGainDate: string | null;

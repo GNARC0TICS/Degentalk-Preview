@@ -21,7 +21,6 @@ export interface User {
   // Gamification
   xp: number;
   level: number;
-  clout: number;
   reputation: number;
   
   // Wallet

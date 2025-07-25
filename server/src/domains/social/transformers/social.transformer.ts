@@ -220,7 +220,7 @@ export class SocialTransformer {
 			metadata: {
 				requesterLevel: requester.level || 1,
 				requesterJoinDate: requester.createdAt,
-				requesterReputation: requester.reputation || requester.clout || 0
+				requesterReputation: requester.reputation || requester.reputation || 0
 			}
 		};
 	}

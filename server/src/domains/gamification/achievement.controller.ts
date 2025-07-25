@@ -10,7 +10,7 @@ import type { Request, Response } from 'express';
 import { z } from 'zod';
 import { achievementService, AchievementService } from './services/achievement.service';
 import type { AchievementRequirement } from './services/achievement.service';
-import { CloutTransformer } from './transformers/clout.transformer';
+import { ReputationTransformer } from './transformers/reputation.transformer';
 import {
 	toPublicList,
 	sendSuccessResponse,
@@ -100,12 +100,12 @@ export class AchievementController {
 
 			const transformedAchievements = toPublicList(
 				achievements,
-				CloutTransformer.toPublicAchievement
+				ReputationTransformer.toPublicAchievement
 			);
 			const transformedGrouped = Object.fromEntries(
 				Object.entries(grouped).map(([category, items]) => [
 					category,
-					toPublicList(items, CloutTransformer.toPublicAchievement)
+					toPublicList(items, ReputationTransformer.toPublicAchievement)
 				])
 			);
 
@@ -146,7 +146,7 @@ export class AchievementController {
 			const transformedStats = {
 				...stats,
 				recentEarned: toPublicList(stats.recentEarned, (earned: any) => ({
-					...CloutTransformer.toAuthenticatedAchievement(earned.achievement, { id: userId }),
+					...ReputationTransformer.toAuthenticatedAchievement(earned.achievement, { id: userId }),
 					earnedAt: earned.earnedAt
 				}))
 			};
@@ -179,7 +179,7 @@ export class AchievementController {
 			const transformedStats = {
 				...stats,
 				recentEarned: toPublicList(stats.recentEarned, (earned: any) => ({
-					...CloutTransformer.toAuthenticatedAchievement(earned.achievement, { id: userId }),
+					...ReputationTransformer.toAuthenticatedAchievement(earned.achievement, { id: userId }),
 					earnedAt: earned.earnedAt
 				}))
 			};
@@ -216,7 +216,7 @@ export class AchievementController {
 			const transformProgress = (progressItems: any[]) =>
 				progressItems.map((p) => ({
 					...p,
-					achievement: CloutTransformer.toAuthenticatedAchievement(p.achievement, { id: userId })
+					achievement: ReputationTransformer.toAuthenticatedAchievement(p.achievement, { id: userId })
 				}));
 
 			sendSuccessResponse(res, {
@@ -266,7 +266,7 @@ export class AchievementController {
 			const transformProgress = (progressItems: any[]) =>
 				progressItems.map((p) => ({
 					...p,
-					achievement: CloutTransformer.toAuthenticatedAchievement(p.achievement, { id: userId })
+					achievement: ReputationTransformer.toAuthenticatedAchievement(p.achievement, { id: userId })
 				}));
 
 			sendSuccessResponse(res, {
@@ -308,7 +308,7 @@ export class AchievementController {
 			sendSuccessResponse(
 				res,
 				{
-					awarded: toPublicList(awardedAchievements, CloutTransformer.toPublicAchievement),
+					awarded: toPublicList(awardedAchievements, ReputationTransformer.toPublicAchievement),
 					count: awardedAchievements.length
 				},
 				awardedAchievements.length > 0
@@ -362,7 +362,7 @@ export class AchievementController {
 			sendTransformedResponse(
 				res,
 				achievement,
-				CloutTransformer.toAdminAchievement,
+				ReputationTransformer.toAdminAchievement,
 				`Achievement "${achievement.name}" created successfully`
 			);
 		} catch (error) {
@@ -428,7 +428,7 @@ export class AchievementController {
 				throw new AppError('Achievement not found', 404);
 			}
 
-			sendTransformedResponse(res, achievement, CloutTransformer.toPublicAchievement);
+			sendTransformedResponse(res, achievement, ReputationTransformer.toPublicAchievement);
 		} catch (error) {
 			logger.error('ACHIEVEMENT_CONTROLLER', 'Error getting achievement by ID:', error);
 			if (error instanceof AppError) {

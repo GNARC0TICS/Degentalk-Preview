@@ -235,7 +235,7 @@ export class AdminUsersController {
 	}
 
 	/**
-	 * Search users for admin tools (XP/Clout adjustments)
+	 * Search users for admin tools (XP/Reputation adjustments)
 	 */
 	async searchUsers(req: Request, res: Response) {
 		try {
@@ -244,13 +244,13 @@ export class AdminUsersController {
 				return sendSuccessResponse(res, { users: [] });
 			}
 
-			// Search users by username or ID and include clout data
+			// Search users by username or ID and include reputation data
 			const results = await db
 				.select({
 					id: users.id,
 					username: users.username,
 					avatarUrl: users.avatarUrl,
-					clout: users.clout,
+					reputation: users.reputation,
 					xp: users.xp,
 					level: users.level
 				})
@@ -260,28 +260,28 @@ export class AdminUsersController {
 
 			// Transform results to include tier information for frontend
 			const transformedResults = results.map((user) => {
-				// Import clout calculator functions
-				const clout = user.clout || 0;
+				// Import reputation calculator functions
+				const reputation = user.reputation || 0;
 
 				// Basic tier calculation (we'll import the proper calculator later)
 				let tier = { tier: 0, name: 'Unknown', color: '#6b7280' };
-				if (clout >= 50000) tier = { tier: 6, name: 'Mythic', color: '#ef4444' };
-				else if (clout >= 15000) tier = { tier: 5, name: 'Legendary', color: '#f59e0b' };
-				else if (clout >= 5000) tier = { tier: 4, name: 'Influential', color: '#8b5cf6' };
-				else if (clout >= 1500) tier = { tier: 3, name: 'Respected', color: '#3b82f6' };
-				else if (clout >= 500) tier = { tier: 2, name: 'Regular', color: '#22c55e' };
-				else if (clout >= 100) tier = { tier: 1, name: 'Newcomer', color: '#84cc16' };
+				if (reputation >= 50000) tier = { tier: 6, name: 'Mythic', color: '#ef4444' };
+				else if (reputation >= 15000) tier = { tier: 5, name: 'Legendary', color: '#f59e0b' };
+				else if (reputation >= 5000) tier = { tier: 4, name: 'Influential', color: '#8b5cf6' };
+				else if (reputation >= 1500) tier = { tier: 3, name: 'Respected', color: '#3b82f6' };
+				else if (reputation >= 500) tier = { tier: 2, name: 'Regular', color: '#22c55e' };
+				else if (reputation >= 100) tier = { tier: 1, name: 'Newcomer', color: '#84cc16' };
 
 				// Calculate progress to next tier
 				const nextTierThresholds = [0, 100, 500, 1500, 5000, 15000, 50000, Infinity];
 				const currentTierIndex = tier.tier;
-				const nextTierClout = nextTierThresholds[currentTierIndex + 1] || Infinity;
-				const currentTierClout = nextTierThresholds[currentTierIndex];
+				const nextTierReputation = nextTierThresholds[currentTierIndex + 1] || Infinity;
+				const currentTierReputation = nextTierThresholds[currentTierIndex];
 
 				let progressPercent = 0;
-				if (nextTierClout !== Infinity) {
-					const progressInTier = clout - currentTierClout;
-					const tierRange = nextTierClout - currentTierClout;
+				if (nextTierReputation !== Infinity) {
+					const progressInTier = reputation - currentTierReputation;
+					const tierRange = nextTierReputation - currentTierReputation;
 					progressPercent = tierRange > 0 ? (progressInTier / tierRange) * 100 : 0;
 				} else {
 					progressPercent = 100; // Max tier
@@ -291,9 +291,9 @@ export class AdminUsersController {
 					id: user.id,
 					username: user.username,
 					avatarUrl: user.avatarUrl,
-					clout: clout,
+					reputation: reputation,
 					tier: tier,
-					nextTierClout: nextTierClout === Infinity ? null : nextTierClout,
+					nextTierReputation: nextTierReputation === Infinity ? null : nextTierReputation,
 					progressPercent: Math.min(100, Math.max(0, progressPercent)),
 					// Include XP/level data for XP adjustments too
 					xp: user.xp || 0,

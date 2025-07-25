@@ -65,7 +65,7 @@ export const adminRegistry: Record<string, AdminDomain> = {
 
 	gamification: {
 		name: 'gamification',
-		description: 'XP, clout, and progression systems',
+		description: 'XP, reputation, and progression systems',
 		routes: gamificationRoutes,
 		fixtures: gamificationSettingsFixture,
 		permissions: {

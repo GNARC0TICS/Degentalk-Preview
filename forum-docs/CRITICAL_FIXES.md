@@ -213,7 +213,7 @@ export const getCreateThreadUrl = (forumSlug: string): string => {
 ## Testing Checklist
 
 ### Thread Counting
-- [ ] Primary zones show sum of child forum counts
+- [ ] Featured forums show sum of child forum counts
 - [ ] General zone shows total of all general forums
 - [ ] Subforums included in parent counts
 

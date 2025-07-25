@@ -3,8 +3,8 @@ import type { ReactNode } from 'react';
 import { z } from 'zod';
 import { forumMap } from '@config/forumMap';
 import type { RootForum as Zone } from '@config/forumMap';
-import type { CategoryId, ForumId, GroupId, ParentZoneId, ZoneId } from '@shared/types/ids';
-import { toId, parseId, toParentZoneId } from '@shared/types/index';
+import type { CategoryId, ForumId, GroupId } from '@shared/types/ids';
+import { toId, parseId } from '@shared/types/index';
 import { logger } from '@app/lib/logger';
 
 // ===========================================================
@@ -13,8 +13,8 @@ import { logger } from '@app/lib/logger';
 // Migration from v1:
 // • "categories" layer removed – use zones[].forums directly.
 // • getCategory() helper removed – use getForum().
-// • New helpers: primaryZones/generalZones arrays, isPrimaryZone(),
-//   isGeneralZone(), getZonesByType(), isUsingFallback flag.
+// • New helpers: primaryZones/generalZones arrays, isFeaturedZone(),
+//   isGeneralZone(), getForumsByType(), isUsingFallback flag.
 // • Legacy shim (`legacy`) emits console warnings to ease migration.
 // ===========================================================
 
@@ -174,7 +174,7 @@ export interface MergedForum {
 	description?: string | null;
 	type: 'forum';
 	parentId?: string | null;
-	parentZoneId?: ParentZoneId | null;
+	parentForumId?: ForumId | null;
 	isSubforum: boolean;
 	subforums: MergedForum[];
 	isVip: boolean;
@@ -192,13 +192,13 @@ export interface MergedForum {
 	lastActivityAt?: string;
 }
 
-export interface MergedZone {
+export interface MergedForum {
 	id: string;
 	slug: string;
 	name: string;
 	description?: string | null;
-	type: 'zone';
-	isPrimary: boolean;
+	type: 'forum';
+	isFeatured: boolean;
 	position: number;
 	forums: MergedForum[];
 	theme: MergedTheme;
@@ -217,23 +217,23 @@ export interface MergedZone {
 }
 
 export interface ForumStructureContextType {
-	zones: MergedZone[];
+	zones: MergedForum[];
 	forums: Record<string, MergedForum>;
 	forumsById: Record<string, MergedForum>;
-	primaryZones: MergedZone[];
-	generalZones: MergedZone[];
-	getZone: (slug: string) => MergedZone | undefined;
-	getZoneById: (id: string) => MergedZone | undefined;
+	primaryZones: MergedForum[];
+	generalZones: MergedForum[];
+	getZone: (slug: string) => MergedForum | undefined;
+	getZoneById: (id: string) => MergedForum | undefined;
 	getForum: (slug: string) => MergedForum | undefined;
 	getForumById: (id: string) => MergedForum | undefined;
-	getParentZone: (forumSlug: string) => MergedZone | undefined;
+	getParentZone: (forumSlug: string) => MergedForum | undefined;
 	getThreadContext: (structureId: string) => {
 		forum: MergedForum | undefined;
-		zone: MergedZone | undefined;
+		zone: MergedForum | undefined;
 	};
-	isPrimaryZone: (slug: string) => boolean;
+	isFeaturedZone: (slug: string) => boolean;
 	isGeneralZone: (slug: string) => boolean;
-	getZonesByType: (type: 'primary' | 'general') => MergedZone[];
+	getForumsByType: (type: 'primary' | 'general') => MergedForum[];
 	isLoading: boolean;
 	error: Error | null;
 	isUsingFallback: boolean;
@@ -266,7 +266,7 @@ function buildTheme(entity: ApiEntity): MergedTheme {
 	};
 }
 
-function makeMergedForum(api: ApiEntity, parentZoneId: ParentZoneId): MergedForum {
+function makeMergedForum(api: ApiEntity, parentForumId: ForumId): MergedForum {
 	return {
 		id: parseId<'ForumId'>(api.id) || toId<'ForumId'>(api.id),
 		slug: api.slug,
@@ -274,7 +274,7 @@ function makeMergedForum(api: ApiEntity, parentZoneId: ParentZoneId): MergedForu
 		description: api.description,
 		type: 'forum',
 		parentId: api.parentId,
-		parentZoneId,
+		parentForumId,
 		isSubforum: false,
 		subforums: [],
 		isVip: api.isVip ?? false,
@@ -297,22 +297,22 @@ function makeMergedForum(api: ApiEntity, parentZoneId: ParentZoneId): MergedForu
 }
 
 function processApiData(resp: ForumStructureApiResponse) {
-	const zones: MergedZone[] = [];
+	const zones: MergedForum[] = [];
 	const forums: Record<string, MergedForum> = {};
 	const forumsById: Record<string, MergedForum> = {};
-	const zoneById = new Map<string, MergedZone>();
+	const zoneById = new Map<string, MergedForum>();
 	const forumById = new Map<string, MergedForum>();
 	const handled = new Set<string>();
 
 	// Zones first
 	resp.zones.forEach((z) => {
-		const zone: MergedZone = {
+		const zone: MergedForum = {
 			id: z.id,
 			slug: z.slug,
 			name: z.name,
 			description: z.description,
-			type: 'zone',
-			isPrimary: z.pluginData?.configZoneType === 'primary',
+			type: 'forum',
+			isFeatured: z.pluginData?.isFeatured === true,
 			position: z.position ?? 0,
 			forums: [],
 			theme: buildTheme(z),
@@ -336,7 +336,7 @@ function processApiData(resp: ForumStructureApiResponse) {
 	// Forums tier 1
 	resp.forums.forEach((f) => {
 		if (f.parentId && zoneById.has(f.parentId)) {
-			const m = makeMergedForum(f, f.parentId as unknown as ParentZoneId);
+			const m = makeMergedForum(f, f.parentId as unknown as ForumId);
 			forums[m.slug] = m;
 			forumsById[m.id] = m;
 			forumById.set(m.id, m);
@@ -349,7 +349,7 @@ function processApiData(resp: ForumStructureApiResponse) {
 	resp.forums.forEach((f) => {
 		if (!handled.has(f.id) && f.parentId && forumById.has(f.parentId)) {
 			const parent = forumById.get(f.parentId)!;
-			const sub = makeMergedForum(f, parent.parentZoneId!);
+			const sub = makeMergedForum(f, parent.parentForumId!);
 			sub.isSubforum = true;
 			forums[sub.slug] = sub;
 			forumsById[sub.id] = sub;
@@ -362,20 +362,20 @@ function processApiData(resp: ForumStructureApiResponse) {
 }
 
 function fallbackStructure(staticZones: Zone[]) {
-	const zones: MergedZone[] = [];
+	const zones: MergedForum[] = [];
 	const forums: Record<string, MergedForum> = {};
 	const forumsById: Record<string, MergedForum> = {};
 
 	staticZones.forEach((z) => {
 		const zoneIdNum = FALLBACK_ZONE_ID();
-		const zoneId = toId<'ZoneId'>(`550e8400-e29b-41d4-a716-${String(zoneIdNum).padStart(12, '0')}`);
-		const mz: MergedZone = {
+		const zoneId = toId<'ForumId'>(`550e8400-e29b-41d4-a716-${String(zoneIdNum).padStart(12, '0')}`);
+		const mz: MergedForum = {
 			id: zoneId,
 			slug: z.slug,
 			name: z.name,
 			description: z.description,
-			type: 'zone',
-			isPrimary: z.type === 'primary',
+			type: 'forum',
+			isFeatured: z.type === 'primary',
 			position: z.position ?? 0,
 			forums: [],
 			theme: {
@@ -404,7 +404,7 @@ function fallbackStructure(staticZones: Zone[]) {
 				description: f.description,
 				type: 'forum',
 				parentId: zoneId,
-				parentZoneId: toParentZoneId(zoneId),
+				parentForumId: zoneId,
 				isSubforum: false,
 				subforums: [],
 				isVip: false,
@@ -452,7 +452,7 @@ function fallbackStructure(staticZones: Zone[]) {
 						description: subforum.description,
 						type: 'forum',
 						parentId: forumId,
-						parentZoneId: toParentZoneId(zoneId),
+						parentForumId: zoneId,
 						isSubforum: true,
 						subforums: [],
 						isVip: false,
@@ -541,7 +541,7 @@ export const ForumStructureProvider = ({ children }: { children: ReactNode }) =>
 				// Fallback: some environments may still send an *array* of structures
 				// (mixing zones & forums).  We coerce that into the expected object.
 				if (Array.isArray(raw)) {
-					const zones = raw.filter((s: Record<string, unknown>) => s.type === 'zone'); // FIXME: any → safe record
+					const topLevelForums = raw.filter((s: Record<string, unknown>) => s.type === 'zone'); // FIXME: any → safe record
 					const forums = raw.filter((s: Record<string, unknown>) => s.type === 'forum'); // FIXME: any → safe record
 					const coerced = { zones, forums };
 					try {
@@ -566,8 +566,8 @@ export const ForumStructureProvider = ({ children }: { children: ReactNode }) =>
 		};
 	}, [raw]);
 
-	const primaryZones = useMemo(() => zones.filter((z) => z.isPrimary), [zones]);
-	const generalZones = useMemo(() => zones.filter((z) => !z.isPrimary), [zones]);
+	const primaryZones = useMemo(() => zones.filter((z) => z.isFeatured), [zones]);
+	const generalZones = useMemo(() => zones.filter((z) => !z.isFeatured), [zones]);
 
 	const value = useMemo<ForumStructureContextType>(
 		() => ({
@@ -583,17 +583,17 @@ export const ForumStructureProvider = ({ children }: { children: ReactNode }) =>
 			getParentZone: (forumSlug) => {
 				const f = forums[forumSlug];
 				if (!f) return undefined;
-				return zones.find((z) => z.id === f.parentZoneId);
+				return zones.find((z) => z.id === f.parentForumId);
 			},
 			getThreadContext: (structureId) => {
 				const forum = forumsById[structureId];
 				if (!forum) return { forum: undefined, zone: undefined };
-				const zone = zones.find((z) => z.id === forum.parentZoneId);
+				const zone = zones.find((z) => z.id === forum.parentForumId);
 				return { forum, zone };
 			},
-			isPrimaryZone: (s) => primaryZones.some((z) => z.slug === s),
+			isFeaturedZone: (s) => primaryZones.some((z) => z.slug === s),
 			isGeneralZone: (s) => generalZones.some((z) => z.slug === s),
-			getZonesByType: (t) => (t === 'primary' ? primaryZones : generalZones),
+			getForumsByType: (t) => (t === 'primary' ? primaryZones : generalZones),
 			isLoading,
 			error: null, // Always return null error when we have fallback data
 			isUsingFallback
@@ -621,7 +621,7 @@ export const useForumStructure = () => {
 	return ctx;
 };
 
-export const useZones = () => {
+export const useForums = () => {
 	const { zones, isLoading, error } = useForumStructure();
 	return { zones, isLoading, error };
 };

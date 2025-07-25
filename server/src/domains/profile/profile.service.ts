@@ -123,7 +123,7 @@ export async function getUserProfile(userId: UserId) {
 		totalThreads,
 		totalLikes,
 		totalTips,
-		clout: user.clout,
+		reputation: user.reputation,
 		level: user.level,
 		xp: user.xp,
 		nextLevelXp,

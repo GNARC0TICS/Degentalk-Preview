@@ -4,21 +4,21 @@ import XPBarsContainer from '../../components/xp/XPBarsContainer';
 // Mock initial XP for demo
 const initialXP = {
 	degen: 420,
-	clout: 1337
+	reputation: 1337
 };
 
 const XPDemoPage: React.FC = () => {
 	const [userXP, setUserXP] = useState(initialXP);
 
 	// Simulate XP gain for demo
-	const addXP = (track: 'degen' | 'clout', amount: number) => {
+	const addXP = (track: 'degen' | 'reputation', amount: number) => {
 		setUserXP((prev) => ({ ...prev, [track]: prev[track] + amount }));
 	};
 
 	return (
 		<div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-gray-950 flex flex-col items-center justify-center p-6">
 			<h1 className="text-3xl font-extrabold text-white mb-8 drop-shadow-lg">
-				XP & Clout Bar Demo
+				XP & Reputation Bar Demo
 			</h1>
 			<XPBarsContainer userXP={userXP} />
 			<div className="flex gap-4 mt-8">
@@ -30,9 +30,9 @@ const XPDemoPage: React.FC = () => {
 				</button>
 				<button
 					className="px-4 py-2 rounded-lg bg-orange-500 text-white font-bold shadow hover:bg-orange-600 transition"
-					onClick={() => addXP('clout', 50)}
+					onClick={() => addXP('reputation', 50)}
 				>
-					+50 Clout
+					+50 Reputation
 				</button>
 			</div>
 			{/*

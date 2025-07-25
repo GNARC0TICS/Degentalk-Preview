@@ -96,7 +96,7 @@ interface ColumnInfo {
 	type: string;
 	nullable: boolean;
 	defaultValue: string | null;
-	isPrimaryKey: boolean;
+	isFeaturedKey: boolean;
 	isForeignKey: boolean;
 	foreignKeyTable: string | null;
 	foreignKeyColumn: string | null;
@@ -405,7 +405,7 @@ export default function LiveDatabasePage() {
 	const saveEditedRow = async () => {
 		if (!editingRow || !schemaData) return;
 
-		const primaryKey = schemaData.columns.find((col) => col.isPrimaryKey);
+		const primaryKey = schemaData.columns.find((col) => col.isFeaturedKey);
 		if (!primaryKey) {
 			toast.error('Cannot update: No primary key found');
 			return;
@@ -653,11 +653,11 @@ export default function LiveDatabasePage() {
 													{schemaData?.columns.map((column) => (
 														<TableHead
 															key={column.name}
-															className={cn('min-w-32', column.isPrimaryKey && 'bg-blue-50')}
+															className={cn('min-w-32', column.isFeaturedKey && 'bg-blue-50')}
 														>
 															<div className="flex items-center gap-2">
 																<span>{column.name}</span>
-																{column.isPrimaryKey && (
+																{column.isFeaturedKey && (
 																	<Badge variant="outline" className="text-xs">
 																		PK
 																	</Badge>
@@ -832,7 +832,7 @@ export default function LiveDatabasePage() {
 								<div key={column.name}>
 									<label className="block text-sm font-medium mb-1">
 										{column.name}
-										{column.isPrimaryKey && (
+										{column.isFeaturedKey && (
 											<Badge variant="outline" className="ml-2 text-xs">
 												Primary Key
 											</Badge>
@@ -847,7 +847,7 @@ export default function LiveDatabasePage() {
 												[column.name]: e.target.value
 											}))
 										}
-										disabled={column.isPrimaryKey}
+										disabled={column.isFeaturedKey}
 										placeholder={column.nullable ? 'null' : 'Required'}
 									/>
 									<p className="text-xs text-gray-500 mt-1">

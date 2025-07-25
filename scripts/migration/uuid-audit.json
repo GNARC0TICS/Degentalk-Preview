@@ -443,12 +443,12 @@
       "match": "private async getUserXpMultiplier(userId: number, forumId?: number): Promise<number> {"
     },
     {
-      "file": "server/services/xp-clout-service.ts",
+      "file": "server/services/xp-reputation-service.ts",
       "line": 44,
       "match": "async awardPoints(userId: number, actionKey: string, multiplier: number = 1): Promise<boolean> {"
     },
     {
-      "file": "server/services/xp-clout-service.ts",
+      "file": "server/services/xp-reputation-service.ts",
       "line": 95,
       "match": "async checkLevelUp(userId: number): Promise<void> {"
     },

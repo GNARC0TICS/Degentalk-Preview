@@ -94,7 +94,7 @@ async function testXpSystem() {
           password: 'test_hash',
           xp: 0,
           level: 1,
-          clout: 0,
+          reputation: 0,
           dgtPoints: 0,
           dgtWalletBalance: 1000 * 1000000,
           role: 'user'

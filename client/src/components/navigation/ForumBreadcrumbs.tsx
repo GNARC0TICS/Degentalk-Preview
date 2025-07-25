@@ -81,10 +81,10 @@ export const createForumBreadcrumbs = {
 	/**
 	 * Home > Forum (simplified)
 	 */
-	forum: (forumName: string, forumSlug: string, isPrimary: boolean = false): BreadcrumbItem[] => [
+	forum: (forumName: string, forumSlug: string, isFeatured: boolean = false): BreadcrumbItem[] => [
 		{ label: 'Home', href: '/', icon: <Home className="w-4 h-4" /> },
 		{ label: 'Forums', href: '/forums' },
-		{ label: isPrimary ? `🌟 ${forumName}` : forumName, href: `/forums/${forumSlug}` }
+		{ label: isFeatured ? `🌟 ${forumName}` : forumName, href: `/forums/${forumSlug}` }
 	],
 
 	/**
@@ -106,7 +106,7 @@ export const createForumBreadcrumbs = {
 	 * - Subforums: Home > Forums > Forum Name > Subforum Name
 	 */
 	smartForum: (
-		forum?: { name: string; slug: string; isPrimary?: boolean } | null,
+		forum?: { name: string; slug: string; isFeatured?: boolean } | null,
 		subforum?: { name: string; slug: string } | null
 	): BreadcrumbItem[] => {
 		// If no forum, fallback to generic Forums list
@@ -117,7 +117,7 @@ export const createForumBreadcrumbs = {
 			];
 		}
 
-		const forumLabel = forum.isPrimary ? `🌟 ${forum.name}` : forum.name;
+		const forumLabel = forum.isFeatured ? `🌟 ${forum.name}` : forum.name;
 
 		// If we have both forum and subforum: Home > Forums > Forum > Subforum
 		if (subforum) {
@@ -143,7 +143,7 @@ export const createForumBreadcrumbs = {
 	 * - Subforum Threads: Home > Forums > Forum > Subforum > Thread
 	 */
 	threadInForum: (
-		forum?: { name: string; slug: string; isPrimary?: boolean } | null,
+		forum?: { name: string; slug: string; isFeatured?: boolean } | null,
 		subforum?: { name: string; slug: string } | null,
 		threadTitle?: string | null
 	): BreadcrumbItem[] => {
@@ -153,7 +153,7 @@ export const createForumBreadcrumbs = {
 
 		// If forum, subforum, and thread exist: Home > Forums > Forum > Subforum > Thread
 		if (forum && subforum) {
-			const forumLabel = forum.isPrimary ? `🌟 ${forum.name}` : forum.name;
+			const forumLabel = forum.isFeatured ? `🌟 ${forum.name}` : forum.name;
 			return [
 				{ label: 'Home', href: '/', icon: <Home className="w-4 h-4" /> },
 				{ label: 'Forums', href: '/forums' },
@@ -165,7 +165,7 @@ export const createForumBreadcrumbs = {
 
 		// If only forum and thread exist: Home > Forums > Forum > Thread
 		if (forum) {
-			const forumLabel = forum.isPrimary ? `🌟 ${forum.name}` : forum.name;
+			const forumLabel = forum.isFeatured ? `🌟 ${forum.name}` : forum.name;
 			return [
 				{ label: 'Home', href: '/', icon: <Home className="w-4 h-4" /> },
 				{ label: 'Forums', href: '/forums' },

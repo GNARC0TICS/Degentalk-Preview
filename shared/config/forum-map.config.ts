@@ -68,18 +68,16 @@ export type Forum = {
 };
 
 // Forum schema with recursive subforums
-const ForumSchema: z.ZodType<Forum> = z.lazy(() =>
-	z.object({
-		slug: z.string(),
-		name: z.string(),
-		description: z.optional(z.string()),
-		rules: ForumRulesSchema,
-		themeOverride: z.optional(ForumThemeSchema.partial()),
-		position: z.optional(z.number()),
-		tags: z.optional(z.array(z.string())),
-		forums: z.optional(z.array(ForumSchema))
-	})
-);
+const ForumSchema: z.ZodType<Forum> = z.object({
+	slug: z.string(),
+	name: z.string(),
+	description: z.optional(z.string()),
+	rules: ForumRulesSchema,
+	themeOverride: z.optional(ForumThemeSchema.partial()),
+	position: z.optional(z.number()),
+	tags: z.optional(z.array(z.string())),
+	forums: z.optional(z.lazy(() => z.array(ForumSchema)))
+});
 
 const RootForumSchema = z.object({
 	slug: z.string(),

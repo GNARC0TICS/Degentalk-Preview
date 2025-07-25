@@ -32,7 +32,7 @@ export const cacheKeys = {
   xpLeaderboard: (limit: number = 50) => `leaderboard:xp:${limit}`,
   weeklyTop: (week?: string) => `leaderboard:weekly:${week || getCurrentWeek()}`,
   monthlyTop: (month?: string) => `leaderboard:monthly:${month || getCurrentMonth()}`,
-  cloutLeaderboard: (limit: number = 50) => `leaderboard:clout:${limit}`,
+  reputationLeaderboard: (limit: number = 50) => `leaderboard:reputation:${limit}`,
   
   // Platform/System patterns
   platformStats: () => `platform:stats`,

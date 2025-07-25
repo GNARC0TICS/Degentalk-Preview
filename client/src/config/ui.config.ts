@@ -309,7 +309,7 @@ export const uiConfig = {
 		},
 		{
 			headline: 'We celebrate wins. We meme the losses.',
-			subheader: 'Post your pain for clout.'
+			subheader: 'Post your pain for reputation.'
 		},
 		{
 			headline: 'Where every thread is a support group.',

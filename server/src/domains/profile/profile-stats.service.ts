@@ -22,7 +22,7 @@ export interface ExtendedProfileStats {
 	joinedAt: string;
 
 	// Reputation & trust
-	clout: number;
+	reputation: number;
 	reputation: number;
 	dailyXpGained: number;
 	lastXpGainDate: string | null;
@@ -101,7 +101,7 @@ export class ProfileStatsService {
 					joinedAt: users.joinedAt,
 
 					// Reputation & trust
-					clout: users.clout,
+					reputation: users.reputation,
 					reputation: users.reputation,
 					dailyXpGained: users.dailyXpGained,
 					lastXpGainDate: users.lastXpGainDate,
@@ -174,7 +174,7 @@ export class ProfileStatsService {
 				joinedAt: user.joinedAt?.toISOString() || new Date().toISOString(),
 
 				// Reputation & trust
-				clout: user.clout || 0,
+				reputation: user.reputation || 0,
 				reputation: user.reputation || 0,
 				dailyXpGained: user.dailyXpGained || 0,
 				lastXpGainDate: user.lastXpGainDate?.toISOString() || null,

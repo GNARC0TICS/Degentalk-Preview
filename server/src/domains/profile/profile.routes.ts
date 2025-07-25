@@ -124,7 +124,7 @@ router.get('/:username', async (req: Request, res: Response) => {
 			totalThreads,
 			totalLikes,
 			totalTips,
-			clout: user.clout,
+			reputation: user.reputation,
 			level: user.level,
 			xp: user.xp,
 			nextLevelXp,

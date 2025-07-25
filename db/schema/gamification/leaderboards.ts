@@ -4,7 +4,7 @@ export const leaderboardHistory = pgTable('leaderboard_history', {
 	id: uuid('id').primaryKey().defaultRandom(),
 	weekStartDate: timestamp('week_start_date').notNull(),
 	weekEndDate: timestamp('week_end_date').notNull(),
-	leaderboardType: varchar('leaderboard_type', { length: 50 }).notNull(), // e.g., 'xp_weekly', 'clout_monthly'
+	leaderboardType: varchar('leaderboard_type', { length: 50 }).notNull(), // e.g., 'xp_weekly', 'reputation_monthly'
 	leaderboardData: jsonb('leaderboard_data').notNull().default('[]'), // Array of { userId, score, rank }
 	pathType: varchar('path_type', { length: 50 }), // Optional: if leaderboard is path-specific
 	createdAt: timestamp('created_at')

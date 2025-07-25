@@ -1928,8 +1928,8 @@
           "notNull": true,
           "default": 0
         },
-        "clout_value": {
-          "name": "clout_value",
+        "reputation_value": {
+          "name": "reputation_value",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
@@ -9919,8 +9919,8 @@
           "notNull": true,
           "default": 1
         },
-        "clout": {
-          "name": "clout",
+        "reputation": {
+          "name": "reputation",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
@@ -10919,8 +10919,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.xp_clout_settings": {
-      "name": "xp_clout_settings",
+    "public.xp_reputation_settings": {
+      "name": "xp_reputation_settings",
       "schema": "",
       "columns": {
         "action_key": {
@@ -10936,8 +10936,8 @@
           "notNull": true,
           "default": 0
         },
-        "clout_value": {
-          "name": "clout_value",
+        "reputation_value": {
+          "name": "reputation_value",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,

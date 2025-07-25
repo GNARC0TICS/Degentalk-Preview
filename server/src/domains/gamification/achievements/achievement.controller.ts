@@ -16,7 +16,7 @@ import {
 	getTemplatesByTags,
 	getTemplatesByCategory
 } from './templates/achievement-templates';
-import { CloutTransformer } from '../transformers/clout.transformer';
+import { ReputationTransformer } from '../transformers/reputation.transformer';
 import {
 	toPublicList,
 	sendSuccessResponse,
@@ -98,7 +98,7 @@ export class AchievementController {
 						iconEmoji: achievements.iconEmoji,
 						rewardXp: achievements.rewardXp,
 						rewardDgt: achievements.rewardDgt,
-						rewardClout: achievements.rewardClout,
+						rewardReputation: achievements.rewardReputation,
 						isSecret: achievements.isSecret,
 						unlockMessage: achievements.unlockMessage
 					}
@@ -110,7 +110,7 @@ export class AchievementController {
 
 			const transformedData = userAchievementsData.map((item) => ({
 				...item,
-				achievement: CloutTransformer.toAuthenticatedAchievement(item.achievement, { id: userId })
+				achievement: ReputationTransformer.toAuthenticatedAchievement(item.achievement, { id: userId })
 			}));
 
 			sendSuccessResponse(res, transformedData);
@@ -157,7 +157,7 @@ export class AchievementController {
 
 			sendSuccessResponse(
 				res,
-				toPublicList(result.achievements, CloutTransformer.toPublicAchievement),
+				toPublicList(result.achievements, ReputationTransformer.toPublicAchievement),
 				undefined,
 				{
 					page: parseInt(page as string),
@@ -205,7 +205,7 @@ export class AchievementController {
 				return;
 			}
 
-			sendTransformedResponse(res, achievement, CloutTransformer.toPublicAchievement);
+			sendTransformedResponse(res, achievement, ReputationTransformer.toPublicAchievement);
 		} catch (error) {
 			logger.error('ACHIEVEMENT_CONTROLLER', 'Failed to get achievement', {
 				id: req.params.id,
@@ -224,7 +224,7 @@ export class AchievementController {
 			const achievement = await this.adminService.createAchievement(req.body);
 
 			res.status(201);
-			sendTransformedResponse(res, achievement, CloutTransformer.toAdminAchievement);
+			sendTransformedResponse(res, achievement, ReputationTransformer.toAdminAchievement);
 		} catch (error) {
 			logger.error('ACHIEVEMENT_CONTROLLER', 'Failed to create achievement', {
 				body: req.body,
@@ -247,7 +247,7 @@ export class AchievementController {
 			const { id } = req.params;
 			const achievement = await this.adminService.updateAchievement(id as AchievementId, req.body);
 
-			sendTransformedResponse(res, achievement, CloutTransformer.toAdminAchievement);
+			sendTransformedResponse(res, achievement, ReputationTransformer.toAdminAchievement);
 		} catch (error) {
 			logger.error('ACHIEVEMENT_CONTROLLER', 'Failed to update achievement', {
 				id: req.params.id,
@@ -297,7 +297,7 @@ export class AchievementController {
 			sendTransformedListResponse(
 				res,
 				achievements,
-				CloutTransformer.toAdminAchievement,
+				ReputationTransformer.toAdminAchievement,
 				`Updated ${achievements.length} achievements`
 			);
 		} catch (error) {
@@ -484,7 +484,7 @@ export class AchievementController {
 			sendTransformedResponse(
 				res,
 				achievement,
-				CloutTransformer.toAdminAchievement,
+				ReputationTransformer.toAdminAchievement,
 				`Achievement created from template: ${template.templateName}`
 			);
 		} catch (error) {

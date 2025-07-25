@@ -8275,8 +8275,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.clout_achievements": {
-      "name": "clout_achievements",
+    "public.reputation_achievements": {
+      "name": "reputation_achievements",
       "schema": "",
       "columns": {
         "id": {
@@ -8304,8 +8304,8 @@
           "primaryKey": false,
           "notNull": false
         },
-        "clout_reward": {
-          "name": "clout_reward",
+        "reputation_reward": {
+          "name": "reputation_reward",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
@@ -8348,8 +8348,8 @@
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "clout_achievements_achievement_key_unique": {
-          "name": "clout_achievements_achievement_key_unique",
+        "reputation_achievements_achievement_key_unique": {
+          "name": "reputation_achievements_achievement_key_unique",
           "nullsNotDistinct": false,
           "columns": [
             "achievement_key"
@@ -9356,8 +9356,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.xp_clout_settings": {
-      "name": "xp_clout_settings",
+    "public.xp_reputation_settings": {
+      "name": "xp_reputation_settings",
       "schema": "",
       "columns": {
         "action_key": {
@@ -9373,8 +9373,8 @@
           "notNull": true,
           "default": 0
         },
-        "clout_value": {
-          "name": "clout_value",
+        "reputation_value": {
+          "name": "reputation_value",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
@@ -10121,8 +10121,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.user_clout_log": {
-      "name": "user_clout_log",
+    "public.user_reputation_log": {
+      "name": "user_reputation_log",
       "schema": "",
       "columns": {
         "id": {
@@ -10144,8 +10144,8 @@
           "primaryKey": false,
           "notNull": false
         },
-        "clout_earned": {
-          "name": "clout_earned",
+        "reputation_earned": {
+          "name": "reputation_earned",
           "type": "integer",
           "primaryKey": false,
           "notNull": true
@@ -10165,8 +10165,8 @@
         }
       },
       "indexes": {
-        "idx_user_clout": {
-          "name": "idx_user_clout",
+        "idx_user_reputation": {
+          "name": "idx_user_reputation",
           "columns": [
             {
               "expression": "user_id",
@@ -10188,9 +10188,9 @@
         }
       },
       "foreignKeys": {
-        "user_clout_log_user_id_users_user_id_fk": {
-          "name": "user_clout_log_user_id_users_user_id_fk",
-          "tableFrom": "user_clout_log",
+        "user_reputation_log_user_id_users_user_id_fk": {
+          "name": "user_reputation_log_user_id_users_user_id_fk",
+          "tableFrom": "user_reputation_log",
           "tableTo": "users",
           "columnsFrom": [
             "user_id"
@@ -10201,10 +10201,10 @@
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
-        "user_clout_log_achievement_id_clout_achievements_id_fk": {
-          "name": "user_clout_log_achievement_id_clout_achievements_id_fk",
-          "tableFrom": "user_clout_log",
-          "tableTo": "clout_achievements",
+        "user_reputation_log_achievement_id_reputation_achievements_id_fk": {
+          "name": "user_reputation_log_achievement_id_reputation_achievements_id_fk",
+          "tableFrom": "user_reputation_log",
+          "tableTo": "reputation_achievements",
           "columnsFrom": [
             "achievement_id"
           ],
@@ -11262,8 +11262,8 @@
           "notNull": true,
           "default": 0
         },
-        "clout_value": {
-          "name": "clout_value",
+        "reputation_value": {
+          "name": "reputation_value",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
@@ -13981,8 +13981,8 @@
           "notNull": true,
           "default": 0
         },
-        "reward_clout": {
-          "name": "reward_clout",
+        "reward_reputation": {
+          "name": "reward_reputation",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
@@ -14929,8 +14929,8 @@
           "notNull": true,
           "default": 1
         },
-        "clout": {
-          "name": "clout",
+        "reputation": {
+          "name": "reputation",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,

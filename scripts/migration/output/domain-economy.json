@@ -174,22 +174,22 @@
       "migrationEffort": 0.4
     },
     {
-      "path": "shared/economy/clout-calculator.ts",
+      "path": "shared/economy/reputation-calculator.ts",
       "domain": "economy",
-      "subdomain": "clout-calculator.ts",
+      "subdomain": "reputation-calculator.ts",
       "layer": "other",
       "size": 3248,
       "lines": 112,
       "complexity": 2,
       "dependencies": [],
       "exports": [
-        "CLOUT_TIERS",
-        "CloutTier",
-        "getTierForClout",
-        "getCloutForTier",
+        "REPUTATION_TIERS",
+        "ReputationTier",
+        "getTierForReputation",
+        "getReputationForTier",
         "getNextTierInfo",
-        "calculateCloutTierImpact",
-        "getAllCloutTiers"
+        "calculateReputationTierImpact",
+        "getAllReputationTiers"
       ],
       "idPatterns": [],
       "typeUsage": {
@@ -1587,9 +1587,9 @@
       "migrationEffort": 0.1
     },
     {
-      "path": "db/schema/economy/cloutAchievements.ts",
+      "path": "db/schema/economy/reputationAchievements.ts",
       "domain": "economy",
-      "subdomain": "cloutAchievements.ts",
+      "subdomain": "reputationAchievements.ts",
       "layer": "other",
       "size": 1161,
       "lines": 36,
@@ -1598,9 +1598,9 @@
         "drizzle-orm"
       ],
       "exports": [
-        "cloutAchievements",
-        "CloutAchievement",
-        "InsertCloutAchievement"
+        "reputationAchievements",
+        "ReputationAchievement",
+        "InsertReputationAchievement"
       ],
       "idPatterns": [],
       "typeUsage": {
@@ -2209,7 +2209,7 @@
       "complexity": 0,
       "dependencies": [],
       "exports": [
-        "InsertXpCloutSettings",
+        "InsertXpReputationSettings",
         "InsertXpActionSetting"
       ],
       "idPatterns": [],
@@ -2835,7 +2835,7 @@
       "migrationEffort": 0.6000000000000001
     },
     {
-      "path": "server/src/domains/economy/services/cloutService.ts",
+      "path": "server/src/domains/economy/services/reputationService.ts",
       "domain": "economy",
       "subdomain": "services",
       "layer": "services",
@@ -2850,7 +2850,7 @@
         "@server/src/core/logger"
       ],
       "exports": [
-        "CloutService"
+        "ReputationService"
       ],
       "idPatterns": [],
       "typeUsage": {

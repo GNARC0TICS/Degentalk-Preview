@@ -247,7 +247,7 @@ const ProfileSidebar: React.FC<Props> = ({ profile, isOwnProfile }) => {
 					)}
 				</div>
 
-				{/* XP, Balance & Clout */}
+				{/* XP, Balance & Reputation */}
 				<div className="text-xs text-zinc-400 w-full bg-zinc-800/20 p-3 rounded-lg">
 					<div>Member since {new Date(profile.joinedAt).toLocaleDateString()}</div>
 					{profile.lastActiveAt && (

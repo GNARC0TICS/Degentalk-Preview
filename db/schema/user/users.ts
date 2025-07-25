@@ -74,7 +74,7 @@ export const users = pgTable(
 		referralLevel: integer('referral_level'),
 		xp: bigint('xp', { mode: 'number' }).notNull().default(0),
 		level: integer('level').notNull().default(1),
-		clout: integer('clout').notNull().default(0),
+		reputation: integer('reputation').notNull().default(0),
 		activeTitleId: uuid('active_title_id').references(() => titles.id, { onDelete: 'set null' }),
 		activeBadgeId: uuid('active_badge_id').references(() => badges.id, { onDelete: 'set null' }),
 		dgtPoints: integer('dgt_points').notNull().default(0),

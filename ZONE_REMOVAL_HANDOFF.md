@@ -86,14 +86,14 @@ pnpm test:e2e
 git add -A
 git commit -m "feat: complete zone removal, migrate to featured forums
 
-- Convert primary zones to featured forums
+- Convert featured forums to featured forums
 - Remove zone type from codebase
 - Update all references to use forum terminology
 - Migrate CSS variables and classes"
 ```
 
 ## 📋 Key Context
-- **Zones → Featured Forums**: Primary zones get `isFeatured: true` flag
+- **Zones → Featured Forums**: Featured forums get `isFeatured: true` flag
 - **Zone type**: Being completely removed, not renamed
 - **Top-level detection**: Use `parentId === null` instead of `type === 'zone'`
 - **Hot reload**: Both servers auto-reload on file changes

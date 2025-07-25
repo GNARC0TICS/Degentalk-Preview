@@ -2290,7 +2290,7 @@ export const users = pgTable("users", {
 	// You can use { mode: "bigint" } if numbers are exceeding js number limitations
 	xp: bigint({ mode: "number" }).default(0).notNull(),
 	level: integer().default(1).notNull(),
-	clout: integer().default(0).notNull(),
+	reputation: integer().default(0).notNull(),
 	activeTitleId: integer("active_title_id"),
 	activeBadgeId: integer("active_badge_id"),
 	dgtPoints: integer("dgt_points").default(0).notNull(),
@@ -3048,7 +3048,7 @@ export const customEmojis = pgTable("custom_emojis", {
 	requiredPath: varchar("required_path", { length: 50 }),
 	requiredPathXp: integer("required_path_xp"),
 	xpValue: integer("xp_value").default(0).notNull(),
-	cloutValue: integer("clout_value").default(0).notNull(),
+	reputationValue: integer("reputation_value").default(0).notNull(),
 	createdAt: timestamp("created_at", { mode: 'string' }).defaultNow().notNull(),
 	updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow().notNull(),
 	createdBy: uuid("created_by"),
@@ -3556,31 +3556,31 @@ export const dgtPurchaseOrders = pgTable("dgt_purchase_orders", {
 		}).onDelete("cascade"),
 ]);
 
-export const xpCloutSettings = pgTable("xp_clout_settings", {
+export const xpReputationSettings = pgTable("xp_reputation_settings", {
 	actionKey: varchar("action_key", { length: 100 }).primaryKey().notNull(),
 	xpValue: integer("xp_value").default(0).notNull(),
-	cloutValue: integer("clout_value").default(0).notNull(),
+	reputationValue: integer("reputation_value").default(0).notNull(),
 	description: text(),
 });
 
-export const userCloutLog = pgTable("user_clout_log", {
+export const userReputationLog = pgTable("user_reputation_log", {
 	id: serial().primaryKey().notNull(),
 	userId: uuid("user_id").notNull(),
 	achievementId: integer("achievement_id"),
-	cloutEarned: integer("clout_earned").notNull(),
+	reputationEarned: integer("reputation_earned").notNull(),
 	reason: varchar({ length: 255 }),
 	createdAt: timestamp("created_at", { mode: 'string' }).defaultNow().notNull(),
 }, (table) => [
-	index("idx_user_clout").using("btree", table.userId.asc().nullsLast().op("timestamp_ops"), table.createdAt.asc().nullsLast().op("timestamp_ops")),
+	index("idx_user_reputation").using("btree", table.userId.asc().nullsLast().op("timestamp_ops"), table.createdAt.asc().nullsLast().op("timestamp_ops")),
 	foreignKey({
 			columns: [table.userId],
 			foreignColumns: [users.userId],
-			name: "user_clout_log_user_id_users_user_id_fk"
+			name: "user_reputation_log_user_id_users_user_id_fk"
 		}).onDelete("cascade"),
 	foreignKey({
 			columns: [table.achievementId],
-			foreignColumns: [cloutAchievements.id],
-			name: "user_clout_log_achievement_id_clout_achievements_id_fk"
+			foreignColumns: [reputationAchievements.id],
+			name: "user_reputation_log_achievement_id_reputation_achievements_id_fk"
 		}).onDelete("set null"),
 ]);
 
@@ -3622,19 +3622,19 @@ export const productMedia = pgTable("product_media", {
 	unique("product_media_unique").on(table.productId, table.mediaId),
 ]);
 
-export const cloutAchievements = pgTable("clout_achievements", {
+export const reputationAchievements = pgTable("reputation_achievements", {
 	id: serial().primaryKey().notNull(),
 	achievementKey: varchar("achievement_key", { length: 100 }).notNull(),
 	name: varchar({ length: 255 }).notNull(),
 	description: text(),
-	cloutReward: integer("clout_reward").default(0).notNull(),
+	reputationReward: integer("reputation_reward").default(0).notNull(),
 	criteriaType: varchar("criteria_type", { length: 50 }),
 	criteriaValue: integer("criteria_value"),
 	enabled: boolean().default(true).notNull(),
 	iconUrl: varchar("icon_url", { length: 500 }),
 	createdAt: timestamp("created_at", { mode: 'string' }).defaultNow().notNull(),
 }, (table) => [
-	unique("clout_achievements_achievement_key_unique").on(table.achievementKey),
+	unique("reputation_achievements_achievement_key_unique").on(table.achievementKey),
 ]);
 
 export const airdropRecords = pgTable("airdrop_records", {

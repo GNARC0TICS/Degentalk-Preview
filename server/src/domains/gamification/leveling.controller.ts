@@ -9,7 +9,7 @@ import { userService } from '@core/services/user.service';
 import type { Request, Response } from 'express';
 import { z } from 'zod';
 import { levelingService, LevelingService } from './services/leveling.service';
-import { CloutTransformer } from './transformers/clout.transformer';
+import { ReputationTransformer } from './transformers/reputation.transformer';
 import {
 	toPublicList,
 	sendSuccessResponse,

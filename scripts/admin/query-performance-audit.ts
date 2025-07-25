@@ -67,18 +67,18 @@ function analyzeAdminQueries(): QueryAnalysis[] {
 		method: 'searchUsers',
 		queries: [
 			'SELECT users.* FROM users WHERE username ILIKE %term% OR email ILIKE %term%',
-			'Clout tier calculations in application layer'
+			'Reputation tier calculations in application layer'
 		],
 		complexity: 'medium',
 		optimizationOpportunities: [
 			'ILIKE queries are slow - should use full-text search',
-			'Clout calculations done per-user instead of in SQL',
+			'Reputation calculations done per-user instead of in SQL',
 			'No LIMIT enforcement leading to large result sets'
 		],
 		suggestedIndices: [
 			'CREATE INDEX idx_users_search_gin ON users USING gin(to_tsvector(\'english\', username || \' \' || email))',
 			'CREATE INDEX idx_users_username_trgm ON users USING gin(username gin_trgm_ops)',
-			'CREATE INDEX idx_users_clout ON users(clout) WHERE clout IS NOT NULL'
+			'CREATE INDEX idx_users_reputation ON users(reputation) WHERE reputation IS NOT NULL'
 		],
 		estimatedTraffic: 'high'
 	});

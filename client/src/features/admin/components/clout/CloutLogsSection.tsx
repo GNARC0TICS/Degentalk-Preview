@@ -30,16 +30,16 @@ import {
 	ArrowUp,
 	ArrowDown
 } from 'lucide-react';
-import type { CloutLog, CloutAchievement } from '@app/pages/admin/clout';
+import type { ReputationLog, ReputationAchievement } from '@app/pages/admin/reputation';
 import type { UserId } from '@shared/types/ids';
 
-interface CloutLogsSectionProps {
-	logs: CloutLog[];
-	achievements: CloutAchievement[];
+interface ReputationLogsSectionProps {
+	logs: ReputationLog[];
+	achievements: ReputationAchievement[];
 	isLoading: boolean;
 }
 
-export function CloutLogsSection({ logs, achievements, isLoading }: CloutLogsSectionProps) {
+export function ReputationLogsSection({ logs, achievements, isLoading }: ReputationLogsSectionProps) {
 	const [searchQuery, setSearchQuery] = useState('');
 	const [filterType, setFilterType] = useState<string>('all');
 	const [sortBy, setSortBy] = useState<'date' | 'amount'>('date');
@@ -47,13 +47,13 @@ export function CloutLogsSection({ logs, achievements, isLoading }: CloutLogsSec
 
 	// Create achievement lookup map
 	const achievementMap = achievements.reduce(
-		(map: Record<number, CloutAchievement>, achievement) => {
+		(map: Record<number, ReputationAchievement>, achievement) => {
 			if (typeof achievement.id === 'number') {
 				map[achievement.id] = achievement;
 			}
 			return map;
 		},
-		{} as Record<number, CloutAchievement>
+		{} as Record<number, ReputationAchievement>
 	);
 
 	// Filter and sort logs
@@ -61,8 +61,8 @@ export function CloutLogsSection({ logs, achievements, isLoading }: CloutLogsSec
 		.filter((log) => {
 			if (filterType === 'achievements' && !log.achievementId) return false;
 			if (filterType === 'grants' && log.achievementId) return false;
-			if (filterType === 'positive' && log.cloutEarned <= 0) return false;
-			if (filterType === 'negative' && log.cloutEarned >= 0) return false;
+			if (filterType === 'positive' && log.reputationEarned <= 0) return false;
+			if (filterType === 'negative' && log.reputationEarned >= 0) return false;
 
 			if (searchQuery) {
 				const searchLower = searchQuery.toLowerCase();
@@ -83,35 +83,35 @@ export function CloutLogsSection({ logs, achievements, isLoading }: CloutLogsSec
 			if (sortBy === 'date') {
 				comparison = new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
 			} else if (sortBy === 'amount') {
-				comparison = a.cloutEarned - b.cloutEarned;
+				comparison = a.reputationEarned - b.reputationEarned;
 			}
 
 			return sortOrder === 'asc' ? comparison : -comparison;
 		});
 
 	// Calculate statistics
-	const totalCloutAwarded = logs.reduce((sum, log) => sum + Math.max(0, log.cloutEarned), 0);
-	const totalCloutDeducted = logs.reduce(
-		(sum, log) => sum + Math.abs(Math.min(0, log.cloutEarned)),
+	const totalReputationAwarded = logs.reduce((sum, log) => sum + Math.max(0, log.reputationEarned), 0);
+	const totalReputationDeducted = logs.reduce(
+		(sum, log) => sum + Math.abs(Math.min(0, log.reputationEarned)),
 		0
 	);
 	const achievementGrants = logs.filter((log) => log.achievementId).length;
 	const manualGrants = logs.filter((log) => !log.achievementId).length;
 	const uniqueUsers = new Set(logs.map((log) => log.userId)).size;
 
-	const getLogType = (log: CloutLog) => {
+	const getLogType = (log: ReputationLog) => {
 		if (log.achievementId && typeof log.achievementId === 'number') {
 			const achievement = achievementMap[log.achievementId];
 			return achievement ? 'Achievement' : 'Unknown Achievement';
 		}
-		return log.cloutEarned > 0 ? 'Manual Grant' : 'Manual Deduction';
+		return log.reputationEarned > 0 ? 'Manual Grant' : 'Manual Deduction';
 	};
 
-	const getLogIcon = (log: CloutLog) => {
+	const getLogIcon = (log: ReputationLog) => {
 		if (log.achievementId && typeof log.achievementId === 'number') {
 			return <Trophy className="h-4 w-4 text-yellow-500" />;
 		}
-		return log.cloutEarned > 0 ? (
+		return log.reputationEarned > 0 ? (
 			<ArrowUp className="h-4 w-4 text-green-500" />
 		) : (
 			<ArrowDown className="h-4 w-4 text-red-500" />
@@ -127,7 +127,7 @@ export function CloutLogsSection({ logs, achievements, isLoading }: CloutLogsSec
 			<Card>
 				<CardContent className="p-6">
 					<div className="flex justify-center">
-						<p>Loading clout logs...</p>
+						<p>Loading reputation logs...</p>
 					</div>
 				</CardContent>
 			</Card>
@@ -144,7 +144,7 @@ export function CloutLogsSection({ logs, achievements, isLoading }: CloutLogsSec
 							<div>
 								<p className="text-sm text-muted-foreground">Total Awarded</p>
 								<p className="text-lg font-bold text-green-600">
-									+{totalCloutAwarded.toLocaleString()}
+									+{totalReputationAwarded.toLocaleString()}
 								</p>
 							</div>
 							<ArrowUp className="h-6 w-6 text-green-500" />
@@ -158,7 +158,7 @@ export function CloutLogsSection({ logs, achievements, isLoading }: CloutLogsSec
 							<div>
 								<p className="text-sm text-muted-foreground">Total Deducted</p>
 								<p className="text-lg font-bold text-red-600">
-									-{totalCloutDeducted.toLocaleString()}
+									-{totalReputationDeducted.toLocaleString()}
 								</p>
 							</div>
 							<ArrowDown className="h-6 w-6 text-red-500" />
@@ -210,10 +210,10 @@ export function CloutLogsSection({ logs, achievements, isLoading }: CloutLogsSec
 						<div>
 							<CardTitle className="flex items-center gap-2">
 								<TrendingUp className="h-5 w-5" />
-								Clout Activity Logs
+								Reputation Activity Logs
 							</CardTitle>
 							<CardDescription>
-								Complete history of all clout grants, deductions, and achievements
+								Complete history of all reputation grants, deductions, and achievements
 							</CardDescription>
 						</div>
 						<div className="flex items-center gap-2">
@@ -295,7 +295,7 @@ export function CloutLogsSection({ logs, achievements, isLoading }: CloutLogsSec
 												<p className="text-muted-foreground">
 													{searchQuery || filterType !== 'all'
 														? 'No logs match your filters'
-														: 'No clout logs yet'}
+														: 'No reputation logs yet'}
 												</p>
 											</div>
 										</TableCell>
@@ -318,13 +318,13 @@ export function CloutLogsSection({ logs, achievements, isLoading }: CloutLogsSec
 												<Badge
 													variant="outline"
 													className={`${
-														log.cloutEarned > 0
+														log.reputationEarned > 0
 															? 'text-green-600 border-green-300'
 															: 'text-red-600 border-red-300'
 													}`}
 												>
-													{log.cloutEarned > 0 ? '+' : ''}
-													{log.cloutEarned} clout
+													{log.reputationEarned > 0 ? '+' : ''}
+													{log.reputationEarned} reputation
 												</Badge>
 											</TableCell>
 											<TableCell className="max-w-xs">

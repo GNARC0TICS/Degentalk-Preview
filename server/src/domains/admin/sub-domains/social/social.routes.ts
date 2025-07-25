@@ -40,7 +40,7 @@ const updateSocialConfigSchema = z.object({
 				maxFollowsPerHour: z.number().min(1).max(500),
 				whaleDetection: z.object({
 					minLevel: z.number().min(1).max(100),
-					minClout: z.number().min(0),
+					minReputation: z.number().min(0),
 					minFollowers: z.number().min(0),
 					minThreadsCreated: z.number().min(0),
 					minPostsCreated: z.number().min(0)

@@ -21,7 +21,7 @@ export function generateMockProfile(username: string): ProfileData {
 		totalThreads: 0,
 		totalLikes: 0,
 		totalTips: 0,
-		clout: 0,
+		reputation: 0,
 		level: 1,
 		xp: 0,
 		nextLevelXp: 100,

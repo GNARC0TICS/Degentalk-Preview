@@ -26,7 +26,7 @@ const EntitySchema = z.object({
 	name: z.string().min(2).max(100),
 	slug: z.string().min(2).max(100),
 	description: z.string().max(255).optional().nullable(),
-	type: z.enum(['zone', 'category', 'forum']),
+	type: z.enum(['forum', 'subforum']),
 	parentId: z.string().nullable().optional(),
 	position: z.number().int().min(0).default(0)
 });

@@ -18,7 +18,7 @@ const bulkOperationsController = new AdminUserBulkOperationsController();
 
 /**
  * @route GET /api/admin/users/search
- * @desc Search users for admin tools (includes clout/tier data)
+ * @desc Search users for admin tools (includes reputation/tier data)
  * @access Admin
  * @note This route must come before /:id to avoid conflicts
  */

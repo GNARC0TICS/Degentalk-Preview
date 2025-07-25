@@ -13,7 +13,7 @@ import { SortAsc, SortDesc, Zap, Users } from 'lucide-react';
 
 interface UserFiltersProps {
 	filters: {
-		sortBy: 'username' | 'level' | 'xp' | 'clout' | 'joinDate';
+		sortBy: 'username' | 'level' | 'xp' | 'reputation' | 'joinDate';
 		sortOrder: 'asc' | 'desc';
 		onlineOnly: boolean;
 		minXP: number;
@@ -48,8 +48,8 @@ export function UserFilters({ filters, onFiltersChange }: UserFiltersProps) {
 						<SelectItem value="xp" className="text-zinc-300 hover:bg-zinc-700">
 							XP Points
 						</SelectItem>
-						<SelectItem value="clout" className="text-zinc-300 hover:bg-zinc-700">
-							Clout Score
+						<SelectItem value="reputation" className="text-zinc-300 hover:bg-zinc-700">
+							Reputation Score
 						</SelectItem>
 						<SelectItem value="joinDate" className="text-zinc-300 hover:bg-zinc-700">
 							Join Date

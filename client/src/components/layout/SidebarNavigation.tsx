@@ -15,7 +15,7 @@ import { Badge } from '@app/components/ui/badge'; // For potential count display
 import { motion, AnimatePresence } from 'framer-motion';
 
 // interface PinnedItem extends ForumEntityBase { // Commenting out PinnedItem for now
-// 	type: 'zone' | 'category' | 'forum';
+// 	type: 'forum' | 'category' | 'forum';
 // }
 
 interface SidebarNavigationProps {

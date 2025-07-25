@@ -29,7 +29,7 @@ export interface CreateEmojiData {
 	requiredPath?: string;
 	requiredPathXP?: number;
 	xpValue?: number;
-	cloutValue?: number;
+	reputationValue?: number;
 	createdBy?: number;
 }
 
@@ -46,7 +46,7 @@ export interface UpdateEmojiData {
 	requiredPath?: string;
 	requiredPathXP?: number;
 	xpValue?: number;
-	cloutValue?: number;
+	reputationValue?: number;
 }
 
 // Helper function to normalize field names from frontend
@@ -64,7 +64,7 @@ function normalizeEmojiData(rawData: any): CreateEmojiData {
 		requiredPath: rawData.requiredPath || rawData.required_path,
 		requiredPathXP: rawData.requiredPathXP || rawData.required_path_xp,
 		xpValue: rawData.xpValue || rawData.xp_value,
-		cloutValue: rawData.cloutValue || rawData.clout_value,
+		reputationValue: rawData.reputationValue || rawData.reputation_value,
 		createdBy: rawData.createdBy || rawData.created_by
 	};
 }
@@ -132,7 +132,7 @@ export const emojiService = {
 					requiredPath: customEmojis.requiredPath,
 					requiredPathXP: customEmojis.requiredPathXP,
 					xpValue: customEmojis.xpValue,
-					cloutValue: customEmojis.cloutValue,
+					reputationValue: customEmojis.reputationValue,
 					createdAt: customEmojis.createdAt,
 					updatedAt: customEmojis.updatedAt,
 					createdBy: customEmojis.createdBy,
@@ -194,7 +194,7 @@ export const emojiService = {
 					requiredPath: customEmojis.requiredPath,
 					requiredPathXP: customEmojis.requiredPathXP,
 					xpValue: customEmojis.xpValue,
-					cloutValue: customEmojis.cloutValue,
+					reputationValue: customEmojis.reputationValue,
 					createdAt: customEmojis.createdAt,
 					updatedAt: customEmojis.updatedAt,
 					createdBy: customEmojis.createdBy,

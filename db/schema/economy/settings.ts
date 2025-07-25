@@ -93,15 +93,15 @@ export const cooldownSettings = pgTable('cooldown_settings', {
 // Add Zod schema if needed for cooldownSettings
 // export type CooldownSetting = typeof cooldownSettings.$inferSelect;
 // export type InsertCooldownSetting = typeof cooldownSettings.$inferInsert;
-export const xpCloutSettings = pgTable('xp_clout_settings', {
+export const xpReputationSettings = pgTable('xp_reputation_settings', {
 	actionKey: varchar('action_key', { length: 100 }).primaryKey(),
 	xpValue: integer('xp_value').notNull().default(0),
-	cloutValue: integer('clout_value').notNull().default(0),
+	reputationValue: integer('reputation_value').notNull().default(0),
 	description: text('description')
 });
 // Add Zod schema if needed
-// export type XpCloutSetting = typeof xpCloutSettings.$inferSelect;
-// export type InsertXpCloutSetting = typeof xpCloutSettings.$inferInsert;
+// export type XpReputationSetting = typeof xpReputationSettings.$inferSelect;
+// export type InsertXpReputationSetting = typeof xpReputationSettings.$inferInsert;
 export const economySettings = pgTable('economy_settings', {
 	key: text('key').primaryKey(),
 	value: integer('value').notNull()

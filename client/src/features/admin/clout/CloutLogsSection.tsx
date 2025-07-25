@@ -1,10 +1,10 @@
 import React from 'react';
 import { Card } from '@app/components/ui/card';
 
-export const CloutLogsSection: React.FC = () => {
+export const ReputationLogsSection: React.FC = () => {
   return (
     <Card className="p-6">
-      <h2 className="text-xl font-semibold mb-4">Clout Logs</h2>
+      <h2 className="text-xl font-semibold mb-4">Reputation Logs</h2>
       <p className="text-zinc-400">Log viewer coming soon...</p>
     </Card>
   );

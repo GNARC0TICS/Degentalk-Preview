@@ -7360,7 +7360,7 @@
           "migrationEffort": 2.8000000000000003
         },
         {
-          "path": "server/services/xp-clout-service.ts",
+          "path": "server/services/xp-reputation-service.ts",
           "domain": "gamification",
           "layer": "services",
           "size": 3578,
@@ -7372,8 +7372,8 @@
             "drizzle-orm"
           ],
           "exports": [
-            "XpCloutService",
-            "xpCloutService"
+            "XpReputationService",
+            "xpReputationService"
           ],
           "idPatterns": [
             {
@@ -7406,7 +7406,7 @@
           "migrationEffort": 1
         },
         {
-          "path": "server/migrations/xp-clout-levels-migration.ts",
+          "path": "server/migrations/xp-reputation-levels-migration.ts",
           "domain": "gamification",
           "layer": "other",
           "size": 7151,
@@ -7489,7 +7489,7 @@
           "migrationEffort": 0.9
         },
         {
-          "path": "server/migrations/20250618_add_clout_achievements.ts",
+          "path": "server/migrations/20250618_add_reputation_achievements.ts",
           "domain": "gamification",
           "layer": "other",
           "size": 3480,
@@ -10281,18 +10281,18 @@
           "migrationEffort": 1.7
         },
         {
-          "path": "client/src/pages/admin/clout/achievements.tsx",
+          "path": "client/src/pages/admin/reputation/achievements.tsx",
           "domain": "gamification",
           "layer": "pages",
           "size": 2032,
           "lines": 57,
           "complexity": 1,
           "dependencies": [
-            "@/features/admin/services/cloutAchievementsService",
+            "@/features/admin/services/reputationAchievementsService",
             "@/components/ui/table",
             "@/components/ui/card",
             "@/components/ui/switch",
-            "@/features/admin/services/cloutAchievementsService"
+            "@/features/admin/services/reputationAchievementsService"
           ],
           "exports": [],
           "idPatterns": [],
@@ -10309,7 +10309,7 @@
           "migrationEffort": 1.7
         },
         {
-          "path": "client/src/features/admin/services/xpCloutService.ts",
+          "path": "client/src/features/admin/services/xpReputationService.ts",
           "domain": "gamification",
           "layer": "services",
           "size": 670,
@@ -10321,8 +10321,8 @@
             "@/types/compat/economy"
           ],
           "exports": [
-            "useXpCloutSettings",
-            "useUpdateXpCloutSettings"
+            "useXpReputationSettings",
+            "useUpdateXpReputationSettings"
           ],
           "idPatterns": [],
           "typeUsage": {
@@ -10333,7 +10333,7 @@
             "hasTypeGuards": false,
             "hasZodValidation": false,
             "typeImports": [
-              "InsertXpCloutSettings"
+              "InsertXpReputationSettings"
             ]
           },
           "riskLevel": "medium",
@@ -10371,7 +10371,7 @@
           "migrationEffort": 0.7
         },
         {
-          "path": "client/src/features/admin/services/cloutAchievementsService.ts",
+          "path": "client/src/features/admin/services/reputationAchievementsService.ts",
           "domain": "gamification",
           "layer": "services",
           "size": 1394,
@@ -10383,7 +10383,7 @@
           ],
           "exports": [
             "ACHIEVEMENTS_KEY",
-            "useCloutAchievements",
+            "useReputationAchievements",
             "useCreateAchievement",
             "useUpdateAchievement",
             "useToggleAchievement",
@@ -10402,7 +10402,7 @@
               "type": "definition",
               "pattern": "id: number",
               "line": 33,
-              "context": "mutationFn: (id: number) => adminApi.post(`/clout/achievements/${id}/toggle`, {}),",
+              "context": "mutationFn: (id: number) => adminApi.post(`/reputation/achievements/${id}/toggle`, {}),",
               "suggestedFix": "check entity context for correct branded type",
               "confidence": 0.3
             },
@@ -10410,7 +10410,7 @@
               "type": "definition",
               "pattern": "id: number",
               "line": 41,
-              "context": "mutationFn: (id: number) => adminApi.delete(`/clout/achievements/${id}`),",
+              "context": "mutationFn: (id: number) => adminApi.delete(`/reputation/achievements/${id}`),",
               "suggestedFix": "check entity context for correct branded type",
               "confidence": 0.3
             }
@@ -10531,7 +10531,7 @@
           "migrationEffort": 0.7
         },
         {
-          "path": "client/src/components/admin/clout/AchievementsSection.tsx",
+          "path": "client/src/components/admin/reputation/AchievementsSection.tsx",
           "domain": "gamification",
           "layer": "components",
           "size": 25083,
@@ -10551,7 +10551,7 @@
             "zod",
             "@/hooks/use-toast",
             "@/lib/queryClient",
-            "@/pages/admin/clout"
+            "@/pages/admin/reputation"
           ],
           "exports": [
             "AchievementsSection"
@@ -10590,7 +10590,7 @@
             "hasTypeGuards": false,
             "hasZodValidation": true,
             "typeImports": [
-              "CloutAchievement"
+              "ReputationAchievement"
             ]
           },
           "riskLevel": "medium",
@@ -10867,11 +10867,11 @@
         "@/components/ui/button.tsx",
         "@/hooks/use-toast.ts",
         "@/lib/queryClient.ts",
-        "@/features/admin/services/cloutAchievementsService",
+        "@/features/admin/services/reputationAchievementsService",
         "@/lib/adminApi",
         "@/types/compat/economy",
         "@hookform/resolvers/zod",
-        "@/pages/admin/clout",
+        "@/pages/admin/reputation",
         "@schema/gamification/achievements",
         "@/components/admin/media/MediaPickerModal",
         "@/components/admin/inputs/UnlockMultiSelect"
@@ -18514,7 +18514,7 @@
             "XP_EASTER_EGGS",
             "BANKRUPTCY_EFFECTS",
             "BankruptcyMessage",
-            "CLOUT_EASTER_EGGS",
+            "REPUTATION_EASTER_EGGS",
             "OBLITERATION_EFFECTS",
             "ObliterationMessage"
           ],
@@ -26344,7 +26344,7 @@
           "migrationEffort": 2.8
         },
         {
-          "path": "server/src/domains/admin/sub-domains/xp/xp.clout.service.ts",
+          "path": "server/src/domains/admin/sub-domains/xp/xp.reputation.service.ts",
           "domain": "admin",
           "subdomain": "sub-domains",
           "layer": "other",
@@ -26356,8 +26356,8 @@
             "@schema"
           ],
           "exports": [
-            "XpCloutService",
-            "xpCloutService"
+            "XpReputationService",
+            "xpReputationService"
           ],
           "idPatterns": [],
           "typeUsage": {
@@ -28971,7 +28971,7 @@
           "migrationEffort": 0.7
         },
         {
-          "path": "server/src/domains/admin/sub-domains/clout/clout.routes.ts",
+          "path": "server/src/domains/admin/sub-domains/reputation/reputation.routes.ts",
           "domain": "admin",
           "subdomain": "sub-domains",
           "layer": "routes",
@@ -28996,7 +28996,7 @@
           "migrationEffort": 0.5
         },
         {
-          "path": "server/src/domains/admin/sub-domains/clout/clout.controller.ts",
+          "path": "server/src/domains/admin/sub-domains/reputation/reputation.controller.ts",
           "domain": "admin",
           "subdomain": "sub-domains",
           "layer": "controllers",
@@ -29016,10 +29016,10 @@
             "updateAchievement",
             "deleteAchievement",
             "toggleAchievement",
-            "grantClout",
-            "getCloutLogs",
-            "adjustClout",
-            "getCloutAdjustmentLogs"
+            "grantReputation",
+            "getReputationLogs",
+            "adjustReputation",
+            "getReputationAdjustmentLogs"
           ],
           "idPatterns": [
             {
@@ -34350,9 +34350,9 @@
           "migrationEffort": 0.7
         },
         {
-          "path": "client/src/pages/admin/clout/index.tsx",
+          "path": "client/src/pages/admin/reputation/index.tsx",
           "domain": "moderation",
-          "subdomain": "clout",
+          "subdomain": "reputation",
           "layer": "pages",
           "size": 11722,
           "lines": 414,
@@ -34367,16 +34367,16 @@
             "lucide-react",
             "@/components/admin/layout/AdminPageShell",
             "@/lib/queryClient",
-            "@/components/admin/clout/CloutTiersSection",
-            "@/components/admin/clout/AchievementsSection",
-            "@/components/admin/clout/CloutGrantsSection",
-            "@/components/admin/clout/CloutLogsSection"
+            "@/components/admin/reputation/ReputationTiersSection",
+            "@/components/admin/reputation/AchievementsSection",
+            "@/components/admin/reputation/ReputationGrantsSection",
+            "@/components/admin/reputation/ReputationLogsSection"
           ],
           "exports": [
-            "CloutAchievement",
-            "CloutLog",
-            "CloutTier",
-            "CLOUT_TIERS"
+            "ReputationAchievement",
+            "ReputationLog",
+            "ReputationTier",
+            "REPUTATION_TIERS"
           ],
           "idPatterns": [
             {
@@ -34409,9 +34409,9 @@
           "migrationEffort": 2.9
         },
         {
-          "path": "client/src/pages/admin/clout/grants.tsx",
+          "path": "client/src/pages/admin/reputation/grants.tsx",
           "domain": "moderation",
-          "subdomain": "clout",
+          "subdomain": "reputation",
           "layer": "pages",
           "size": 27360,
           "lines": 882,
@@ -34432,9 +34432,9 @@
             "@/components/ui/avatar",
             "@/hooks/use-debounce",
             "@/lib/queryClient",
-            "@shared/economy/clout-calculator",
+            "@shared/economy/reputation-calculator",
             "@/config/easter-eggs.config",
-            "@/components/admin/effects/CloutObliterationEffect"
+            "@/components/admin/effects/ReputationObliterationEffect"
           ],
           "exports": [],
           "idPatterns": [
@@ -34616,7 +34616,7 @@
           "migrationEffort": 2.9
         },
         {
-          "path": "client/src/features/admin/services/cloutGrantsService.ts",
+          "path": "client/src/features/admin/services/reputationGrantsService.ts",
           "domain": "moderation",
           "subdomain": "services",
           "layer": "services",
@@ -34628,9 +34628,9 @@
             "@/lib/adminApi"
           ],
           "exports": [
-            "CLOUT_LOGS_KEY",
-            "useGrantClout",
-            "useCloutLogs"
+            "REPUTATION_LOGS_KEY",
+            "useGrantReputation",
+            "useReputationLogs"
           ],
           "idPatterns": [],
           "typeUsage": {
@@ -35044,7 +35044,7 @@
           "migrationEffort": 0.7
         },
         {
-          "path": "client/src/components/admin/effects/CloutObliterationEffect.tsx",
+          "path": "client/src/components/admin/effects/ReputationObliterationEffect.tsx",
           "domain": "moderation",
           "subdomain": "effects",
           "layer": "components",
@@ -35058,7 +35058,7 @@
             "@/config/easter-eggs.config"
           ],
           "exports": [
-            "CloutObliterationEffect"
+            "ReputationObliterationEffect"
           ],
           "idPatterns": [],
           "typeUsage": {
@@ -35105,9 +35105,9 @@
           "migrationEffort": 0.7
         },
         {
-          "path": "client/src/components/admin/clout/CloutTiersSection.tsx",
+          "path": "client/src/components/admin/reputation/ReputationTiersSection.tsx",
           "domain": "moderation",
-          "subdomain": "clout",
+          "subdomain": "reputation",
           "layer": "components",
           "size": 8855,
           "lines": 265,
@@ -35119,10 +35119,10 @@
             "@/components/ui/button",
             "@/components/ui/progress",
             "lucide-react",
-            "@/pages/admin/clout"
+            "@/pages/admin/reputation"
           ],
           "exports": [
-            "CloutTiersSection"
+            "ReputationTiersSection"
           ],
           "idPatterns": [],
           "typeUsage": {
@@ -35133,16 +35133,16 @@
             "hasTypeGuards": false,
             "hasZodValidation": false,
             "typeImports": [
-              "CloutTier"
+              "ReputationTier"
             ]
           },
           "riskLevel": "medium",
           "migrationEffort": 0.9
         },
         {
-          "path": "client/src/components/admin/clout/CloutLogsSection.tsx",
+          "path": "client/src/components/admin/reputation/ReputationLogsSection.tsx",
           "domain": "moderation",
-          "subdomain": "clout",
+          "subdomain": "reputation",
           "layer": "components",
           "size": 11544,
           "lines": 374,
@@ -35153,10 +35153,10 @@
             "@/components/ui/button",
             "@/components/ui/input",
             "@/components/ui/badge",
-            "@/pages/admin/clout"
+            "@/pages/admin/reputation"
           ],
           "exports": [
-            "CloutLogsSection"
+            "ReputationLogsSection"
           ],
           "idPatterns": [],
           "typeUsage": {
@@ -35167,17 +35167,17 @@
             "hasTypeGuards": false,
             "hasZodValidation": false,
             "typeImports": [
-              "CloutLog",
-              "CloutAchievement"
+              "ReputationLog",
+              "ReputationAchievement"
             ]
           },
           "riskLevel": "medium",
           "migrationEffort": 0.9
         },
         {
-          "path": "client/src/components/admin/clout/CloutGrantsSection.tsx",
+          "path": "client/src/components/admin/reputation/ReputationGrantsSection.tsx",
           "domain": "moderation",
-          "subdomain": "clout",
+          "subdomain": "reputation",
           "layer": "components",
           "size": 11979,
           "lines": 381,
@@ -35198,7 +35198,7 @@
             "@/lib/queryClient"
           ],
           "exports": [
-            "CloutGrantsSection"
+            "ReputationGrantsSection"
           ],
           "idPatterns": [],
           "typeUsage": {
@@ -36047,15 +36047,15 @@
         "@/features/activity/services/activityApi",
         "@/hooks/useAuth",
         "@/layout/primitives",
-        "@/components/admin/clout/CloutTiersSection",
-        "@/components/admin/clout/AchievementsSection",
-        "@/components/admin/clout/CloutGrantsSection",
-        "@/components/admin/clout/CloutLogsSection",
+        "@/components/admin/reputation/ReputationTiersSection",
+        "@/components/admin/reputation/AchievementsSection",
+        "@/components/admin/reputation/ReputationGrantsSection",
+        "@/components/admin/reputation/ReputationLogsSection",
         "@/components/ui/radio-group",
         "@/hooks/use-debounce",
-        "@shared/economy/clout-calculator",
+        "@shared/economy/reputation-calculator",
         "@/config/easter-eggs.config",
-        "@/components/admin/effects/CloutObliterationEffect",
+        "@/components/admin/effects/ReputationObliterationEffect",
         "@/components/ui/dialog",
         "@/lib/utils/generateSlug",
         "@/lib/adminApi",
@@ -36064,7 +36064,7 @@
         "@radix-ui/react-switch",
         "@monaco-editor/react",
         "@/components/ui/progress",
-        "@/pages/admin/clout",
+        "@/pages/admin/reputation",
         "@/components/ui/scroll-area",
         "@/components/ui/date-range-picker",
         "@/components/admin/layout/EntityTable",
@@ -36263,22 +36263,22 @@
           "migrationEffort": 0.4
         },
         {
-          "path": "shared/economy/clout-calculator.ts",
+          "path": "shared/economy/reputation-calculator.ts",
           "domain": "economy",
-          "subdomain": "clout-calculator.ts",
+          "subdomain": "reputation-calculator.ts",
           "layer": "other",
           "size": 3248,
           "lines": 112,
           "complexity": 2,
           "dependencies": [],
           "exports": [
-            "CLOUT_TIERS",
-            "CloutTier",
-            "getTierForClout",
-            "getCloutForTier",
+            "REPUTATION_TIERS",
+            "ReputationTier",
+            "getTierForReputation",
+            "getReputationForTier",
             "getNextTierInfo",
-            "calculateCloutTierImpact",
-            "getAllCloutTiers"
+            "calculateReputationTierImpact",
+            "getAllReputationTiers"
           ],
           "idPatterns": [],
           "typeUsage": {
@@ -37676,9 +37676,9 @@
           "migrationEffort": 0.1
         },
         {
-          "path": "db/schema/economy/cloutAchievements.ts",
+          "path": "db/schema/economy/reputationAchievements.ts",
           "domain": "economy",
-          "subdomain": "cloutAchievements.ts",
+          "subdomain": "reputationAchievements.ts",
           "layer": "other",
           "size": 1161,
           "lines": 36,
@@ -37687,9 +37687,9 @@
             "drizzle-orm"
           ],
           "exports": [
-            "cloutAchievements",
-            "CloutAchievement",
-            "InsertCloutAchievement"
+            "reputationAchievements",
+            "ReputationAchievement",
+            "InsertReputationAchievement"
           ],
           "idPatterns": [],
           "typeUsage": {
@@ -38298,7 +38298,7 @@
           "complexity": 0,
           "dependencies": [],
           "exports": [
-            "InsertXpCloutSettings",
+            "InsertXpReputationSettings",
             "InsertXpActionSetting"
           ],
           "idPatterns": [],
@@ -38924,7 +38924,7 @@
           "migrationEffort": 0.6000000000000001
         },
         {
-          "path": "server/src/domains/economy/services/cloutService.ts",
+          "path": "server/src/domains/economy/services/reputationService.ts",
           "domain": "economy",
           "subdomain": "services",
           "layer": "services",
@@ -38939,7 +38939,7 @@
             "@server/src/core/logger"
           ],
           "exports": [
-            "CloutService"
+            "ReputationService"
           ],
           "idPatterns": [],
           "typeUsage": {
@@ -40257,7 +40257,7 @@
           "migrationEffort": 1.4
         },
         {
-          "path": "server/migrations/20250618_create_xp_clout_settings.ts",
+          "path": "server/migrations/20250618_create_xp_reputation_settings.ts",
           "domain": "user-management",
           "layer": "other",
           "size": 879,
@@ -41787,7 +41787,7 @@
           "migrationEffort": 0.5
         },
         {
-          "path": "db/schema/economy/xpCloutSettings.ts",
+          "path": "db/schema/economy/xpReputationSettings.ts",
           "domain": "user-management",
           "layer": "other",
           "size": 748,
@@ -41798,9 +41798,9 @@
             "drizzle-orm"
           ],
           "exports": [
-            "xpCloutSettings",
-            "XpCloutSettings",
-            "InsertXpCloutSettings"
+            "xpReputationSettings",
+            "XpReputationSettings",
+            "InsertXpReputationSettings"
           ],
           "idPatterns": [],
           "typeUsage": {
@@ -41903,7 +41903,7 @@
           "migrationEffort": 0.1
         },
         {
-          "path": "db/schema/economy/userCloutLog.ts",
+          "path": "db/schema/economy/userReputationLog.ts",
           "domain": "user-management",
           "layer": "other",
           "size": 1115,
@@ -41914,9 +41914,9 @@
             "drizzle-orm"
           ],
           "exports": [
-            "userCloutLog",
-            "UserCloutLog",
-            "InsertUserCloutLog"
+            "userReputationLog",
+            "UserReputationLog",
+            "InsertUserReputationLog"
           ],
           "idPatterns": [],
           "typeUsage": {
@@ -42015,9 +42015,9 @@
             "cooldownSettings",
             "CooldownSetting",
             "InsertCooldownSetting",
-            "xpCloutSettings",
-            "XpCloutSetting",
-            "InsertXpCloutSetting",
+            "xpReputationSettings",
+            "XpReputationSetting",
+            "InsertXpReputationSetting",
             "economySettings",
             "insertEconomySettingSchema",
             "EconomySetting",

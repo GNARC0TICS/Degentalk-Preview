@@ -28,7 +28,7 @@ import { z } from 'zod';
 import { useToast } from '@app/hooks/use-toast';
 import { apiRequest } from '@app/utils/api-request';
 
-interface CloutGrantsSectionProps {
+interface ReputationGrantsSectionProps {
 	isLoading: boolean;
 }
 
@@ -44,14 +44,14 @@ const grantSchema = z.object({
 type GrantForm = z.infer<typeof grantSchema>;
 
 const QUICK_GRANT_AMOUNTS = [
-	{ label: '+10 Clout', value: 10, color: 'bg-green-500', icon: '👍' },
-	{ label: '+25 Clout', value: 25, color: 'bg-green-600', icon: '⭐' },
-	{ label: '+50 Clout', value: 50, color: 'bg-blue-500', icon: '💎' },
-	{ label: '+100 Clout', value: 100, color: 'bg-purple-500', icon: '🏆' },
-	{ label: '+250 Clout', value: 250, color: 'bg-yellow-500', icon: '👑' },
-	{ label: '-10 Clout', value: -10, color: 'bg-red-400', icon: '👎' },
-	{ label: '-25 Clout', value: -25, color: 'bg-red-500', icon: '⚠️' },
-	{ label: '-50 Clout', value: -50, color: 'bg-red-600', icon: '🚫' }
+	{ label: '+10 Reputation', value: 10, color: 'bg-green-500', icon: '👍' },
+	{ label: '+25 Reputation', value: 25, color: 'bg-green-600', icon: '⭐' },
+	{ label: '+50 Reputation', value: 50, color: 'bg-blue-500', icon: '💎' },
+	{ label: '+100 Reputation', value: 100, color: 'bg-purple-500', icon: '🏆' },
+	{ label: '+250 Reputation', value: 250, color: 'bg-yellow-500', icon: '👑' },
+	{ label: '-10 Reputation', value: -10, color: 'bg-red-400', icon: '👎' },
+	{ label: '-25 Reputation', value: -25, color: 'bg-red-500', icon: '⚠️' },
+	{ label: '-50 Reputation', value: -50, color: 'bg-red-600', icon: '🚫' }
 ];
 
 const COMMON_REASONS = [
@@ -69,7 +69,7 @@ const COMMON_REASONS = [
 	'Other (see details)'
 ];
 
-export function CloutGrantsSection({ isLoading }: CloutGrantsSectionProps) {
+export function ReputationGrantsSection({ isLoading }: ReputationGrantsSectionProps) {
 	const { toast } = useToast();
 	const queryClient = useQueryClient();
 	const [selectedQuickAmount, setSelectedQuickAmount] = useState<number | null>(null);
@@ -83,28 +83,28 @@ export function CloutGrantsSection({ isLoading }: CloutGrantsSectionProps) {
 		}
 	});
 
-	// Grant clout mutation
-	const grantCloutMutation = useMutation({
+	// Grant reputation mutation
+	const grantReputationMutation = useMutation({
 		mutationFn: async (data: GrantForm) => {
 			return apiRequest({
-				url: '/api/admin/clout/grants',
+				url: '/api/admin/reputation/grants',
 				method: 'POST',
 				data
 			});
 		},
 		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ['admin-clout-logs'] });
+			queryClient.invalidateQueries({ queryKey: ['admin-reputation-logs'] });
 			form.reset();
 			setSelectedQuickAmount(null);
 			toast({
-				title: 'Clout Granted',
-				description: 'Clout has been successfully granted to the user.'
+				title: 'Reputation Granted',
+				description: 'Reputation has been successfully granted to the user.'
 			});
 		},
 		onError: (error: Error) => {
 			toast({
 				title: 'Grant Failed',
-				description: error.message || 'Failed to grant clout',
+				description: error.message || 'Failed to grant reputation',
 				variant: 'destructive'
 			});
 		}
@@ -126,7 +126,7 @@ export function CloutGrantsSection({ isLoading }: CloutGrantsSectionProps) {
 	};
 
 	const onSubmit = (data: GrantForm) => {
-		grantCloutMutation.mutate(data);
+		grantReputationMutation.mutate(data);
 	};
 
 	if (isLoading) {
@@ -147,10 +147,10 @@ export function CloutGrantsSection({ isLoading }: CloutGrantsSectionProps) {
 				<CardHeader>
 					<CardTitle className="flex items-center gap-2">
 						<Zap className="h-5 w-5" />
-						Manual Clout Grants
+						Manual Reputation Grants
 					</CardTitle>
 					<CardDescription>
-						Grant or deduct clout from users for special circumstances, violations, or recognition
+						Grant or deduct reputation from users for special circumstances, violations, or recognition
 					</CardDescription>
 				</CardHeader>
 				<CardContent className="space-y-6">
@@ -190,7 +190,7 @@ export function CloutGrantsSection({ isLoading }: CloutGrantsSectionProps) {
 													<Input placeholder="Enter user UUID" {...field} className="font-mono" />
 												</FormControl>
 												<FormDescription>
-													The UUID of the user to grant/deduct clout from
+													The UUID of the user to grant/deduct reputation from
 												</FormDescription>
 												<FormMessage />
 											</FormItem>
@@ -201,7 +201,7 @@ export function CloutGrantsSection({ isLoading }: CloutGrantsSectionProps) {
 										name="amount"
 										render={({ field }) => (
 											<FormItem>
-												<FormLabel>Clout Amount</FormLabel>
+												<FormLabel>Reputation Amount</FormLabel>
 												<FormControl>
 													<Input
 														type="number"
@@ -213,7 +213,7 @@ export function CloutGrantsSection({ isLoading }: CloutGrantsSectionProps) {
 													/>
 												</FormControl>
 												<FormDescription>
-													Positive numbers grant clout, negative numbers deduct clout
+													Positive numbers grant reputation, negative numbers deduct reputation
 												</FormDescription>
 												<FormMessage />
 											</FormItem>
@@ -229,7 +229,7 @@ export function CloutGrantsSection({ isLoading }: CloutGrantsSectionProps) {
 											<FormLabel>Reason</FormLabel>
 											<FormControl>
 												<Textarea
-													placeholder="Explain why this clout is being granted or deducted"
+													placeholder="Explain why this reputation is being granted or deducted"
 													{...field}
 													rows={3}
 												/>
@@ -281,7 +281,7 @@ export function CloutGrantsSection({ isLoading }: CloutGrantsSectionProps) {
 													}`}
 												>
 													{form.watch('amount') > 0 ? '+' : ''}
-													{form.watch('amount')} clout
+													{form.watch('amount')} reputation
 												</span>
 											</div>
 											<div className="flex justify-between">
@@ -307,14 +307,14 @@ export function CloutGrantsSection({ isLoading }: CloutGrantsSectionProps) {
 									</Button>
 									<Button
 										type="submit"
-										disabled={grantCloutMutation.isPending}
+										disabled={grantReputationMutation.isPending}
 										className={form.watch('amount') < 0 ? 'bg-red-600 hover:bg-red-700' : ''}
 									>
-										{grantCloutMutation.isPending
+										{grantReputationMutation.isPending
 											? 'Processing...'
 											: form.watch('amount') < 0
-												? 'Deduct Clout'
-												: 'Grant Clout'}
+												? 'Deduct Reputation'
+												: 'Grant Reputation'}
 									</Button>
 								</div>
 							</form>
@@ -328,7 +328,7 @@ export function CloutGrantsSection({ isLoading }: CloutGrantsSectionProps) {
 				<CardHeader>
 					<CardTitle className="flex items-center gap-2">
 						<AlertTriangle className="h-5 w-5 text-yellow-500" />
-						Clout Grant Guidelines
+						Reputation Grant Guidelines
 					</CardTitle>
 				</CardHeader>
 				<CardContent className="space-y-4">
@@ -336,7 +336,7 @@ export function CloutGrantsSection({ isLoading }: CloutGrantsSectionProps) {
 						<div>
 							<h4 className="font-semibold text-green-600 mb-2 flex items-center gap-1">
 								<Zap className="h-4 w-4" />
-								Positive Clout Grants
+								Positive Reputation Grants
 							</h4>
 							<ul className="space-y-1 text-sm text-muted-foreground">
 								<li>• Exceptional community contributions</li>
@@ -350,7 +350,7 @@ export function CloutGrantsSection({ isLoading }: CloutGrantsSectionProps) {
 						<div>
 							<h4 className="font-semibold text-red-600 mb-2 flex items-center gap-1">
 								<AlertTriangle className="h-4 w-4" />
-								Negative Clout Deductions
+								Negative Reputation Deductions
 							</h4>
 							<ul className="space-y-1 text-sm text-muted-foreground">
 								<li>• Violations of community guidelines</li>

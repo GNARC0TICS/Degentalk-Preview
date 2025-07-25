@@ -847,7 +847,7 @@
       "migrationEffort": 2.8
     },
     {
-      "path": "server/src/domains/admin/sub-domains/xp/xp.clout.service.ts",
+      "path": "server/src/domains/admin/sub-domains/xp/xp.reputation.service.ts",
       "domain": "admin",
       "subdomain": "sub-domains",
       "layer": "other",
@@ -859,8 +859,8 @@
         "@schema"
       ],
       "exports": [
-        "XpCloutService",
-        "xpCloutService"
+        "XpReputationService",
+        "xpReputationService"
       ],
       "idPatterns": [],
       "typeUsage": {
@@ -3474,7 +3474,7 @@
       "migrationEffort": 0.7
     },
     {
-      "path": "server/src/domains/admin/sub-domains/clout/clout.routes.ts",
+      "path": "server/src/domains/admin/sub-domains/reputation/reputation.routes.ts",
       "domain": "admin",
       "subdomain": "sub-domains",
       "layer": "routes",
@@ -3499,7 +3499,7 @@
       "migrationEffort": 0.5
     },
     {
-      "path": "server/src/domains/admin/sub-domains/clout/clout.controller.ts",
+      "path": "server/src/domains/admin/sub-domains/reputation/reputation.controller.ts",
       "domain": "admin",
       "subdomain": "sub-domains",
       "layer": "controllers",
@@ -3519,10 +3519,10 @@
         "updateAchievement",
         "deleteAchievement",
         "toggleAchievement",
-        "grantClout",
-        "getCloutLogs",
-        "adjustClout",
-        "getCloutAdjustmentLogs"
+        "grantReputation",
+        "getReputationLogs",
+        "adjustReputation",
+        "getReputationAdjustmentLogs"
       ],
       "idPatterns": [
         {

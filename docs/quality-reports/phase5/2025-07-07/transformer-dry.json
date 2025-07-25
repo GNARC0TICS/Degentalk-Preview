@@ -5381,1232 +5381,1232 @@ Violations by domain:
    File: server/src/domains/gamification/mission.controller.ts:118:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 763:
    File: server/src/domains/gamification/mission.controller.ts:134:5
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 764:
    File: server/src/domains/gamification/mission.controller.ts:140:5
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 765:
    File: server/src/domains/gamification/mission.controller.ts:178:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 766:
    File: server/src/domains/gamification/mission.controller.ts:205:5
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 767:
    File: server/src/domains/gamification/mission.controller.ts:211:5
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 768:
    File: server/src/domains/gamification/mission.controller.ts:236:5
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 769:
    File: server/src/domains/gamification/mission.controller.ts:241:5
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 770:
    File: server/src/domains/gamification/mission.controller.ts:268:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 771:
    File: server/src/domains/gamification/mission.controller.ts:276:5
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 772:
    File: server/src/domains/gamification/mission.controller.ts:281:5
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 773:
    File: server/src/domains/gamification/mission.controller.ts:287:5
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 774:
    File: server/src/domains/gamification/mission.controller.ts:312:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 775:
    File: server/src/domains/gamification/mission.controller.ts:330:5
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 776:
    File: server/src/domains/gamification/mission.controller.ts:336:5
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 777:
    File: server/src/domains/gamification/mission.controller.ts:361:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 778:
    File: server/src/domains/gamification/mission.controller.ts:368:5
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 779:
    File: server/src/domains/gamification/mission.controller.ts:373:5
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 780:
    File: server/src/domains/gamification/mission.controller.ts:391:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 781:
    File: server/src/domains/gamification/mission.controller.ts:399:5
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 782:
    File: server/src/domains/gamification/mission.controller.ts:405:5
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 783:
    File: server/src/domains/gamification/mission.controller.ts:432:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 784:
    File: server/src/domains/gamification/mission.controller.ts:440:5
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 785:
    File: server/src/domains/gamification/mission.controller.ts:445:5
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 786:
    File: server/src/domains/gamification/mission.controller.ts:451:5
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 787:
    File: server/src/domains/gamification/mission.controller.ts:467:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 788:
    File: server/src/domains/gamification/mission.controller.ts:473:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 789:
    File: server/src/domains/gamification/mission.controller.ts:488:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 790:
    File: server/src/domains/gamification/mission.controller.ts:494:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 791:
    File: server/src/domains/gamification/mission.controller.ts:509:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 792:
    File: server/src/domains/gamification/mission.controller.ts:515:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 793:
    File: server/src/domains/gamification/mission.controller.ts:531:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 794:
    File: server/src/domains/gamification/mission.controller.ts:540:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 795:
    File: server/src/domains/gamification/leveling.controller.ts:75:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 796:
    File: server/src/domains/gamification/leveling.controller.ts:82:5
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 797:
    File: server/src/domains/gamification/leveling.controller.ts:87:5
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 798:
    File: server/src/domains/gamification/leveling.controller.ts:103:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 799:
    File: server/src/domains/gamification/leveling.controller.ts:113:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 800:
    File: server/src/domains/gamification/leveling.controller.ts:134:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 801:
    File: server/src/domains/gamification/leveling.controller.ts:141:5
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 802:
    File: server/src/domains/gamification/leveling.controller.ts:146:5
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 803:
    File: server/src/domains/gamification/leveling.controller.ts:171:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 804:
    File: server/src/domains/gamification/leveling.controller.ts:178:5
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 805:
    File: server/src/domains/gamification/leveling.controller.ts:183:5
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 806:
    File: server/src/domains/gamification/leveling.controller.ts:201:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 807:
    File: server/src/domains/gamification/leveling.controller.ts:213:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 808:
    File: server/src/domains/gamification/leveling.controller.ts:230:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 809:
    File: server/src/domains/gamification/leveling.controller.ts:240:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 810:
    File: server/src/domains/gamification/leveling.controller.ts:257:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 811:
    File: server/src/domains/gamification/leveling.controller.ts:265:5
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 812:
    File: server/src/domains/gamification/leveling.controller.ts:271:5
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 813:
    File: server/src/domains/gamification/leveling.controller.ts:290:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 814:
    File: server/src/domains/gamification/leveling.controller.ts:303:5
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 815:
    File: server/src/domains/gamification/leveling.controller.ts:309:5
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 816:
    File: server/src/domains/gamification/leveling.controller.ts:339:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 817:
    File: server/src/domains/gamification/leveling.controller.ts:353:5
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 818:
    File: server/src/domains/gamification/leveling.controller.ts:358:5
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 819:
    File: server/src/domains/gamification/leveling.controller.ts:381:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 820:
    File: server/src/domains/gamification/leveling.controller.ts:394:5
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 821:
    File: server/src/domains/gamification/leveling.controller.ts:399:5
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 822:
    File: server/src/domains/gamification/gamification.routes.ts:30:2
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 823:
    File: server/src/domains/gamification/gamification.routes.ts:48:3
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 824:
    File: server/src/domains/gamification/gamification.routes.ts:57:3
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 825:
    File: server/src/domains/gamification/analytics.controller.ts:41:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 826:
    File: server/src/domains/gamification/analytics.controller.ts:53:5
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 827:
    File: server/src/domains/gamification/analytics.controller.ts:59:5
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 828:
    File: server/src/domains/gamification/analytics.controller.ts:77:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 829:
    File: server/src/domains/gamification/analytics.controller.ts:95:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 830:
    File: server/src/domains/gamification/analytics.controller.ts:111:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 831:
    File: server/src/domains/gamification/analytics.controller.ts:126:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 832:
    File: server/src/domains/gamification/analytics.controller.ts:142:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 833:
    File: server/src/domains/gamification/analytics.controller.ts:160:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 834:
    File: server/src/domains/gamification/analytics.controller.ts:176:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 835:
    File: server/src/domains/gamification/analytics.controller.ts:194:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 836:
    File: server/src/domains/gamification/analytics.controller.ts:210:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 837:
    File: server/src/domains/gamification/analytics.controller.ts:225:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 838:
    File: server/src/domains/gamification/analytics.controller.ts:241:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 839:
    File: server/src/domains/gamification/analytics.controller.ts:252:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 840:
    File: server/src/domains/gamification/analytics.controller.ts:271:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 841:
    File: server/src/domains/gamification/analytics.controller.ts:290:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 842:
    File: server/src/domains/gamification/analytics.controller.ts:305:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 843:
    File: server/src/domains/gamification/analytics.controller.ts:312:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 844:
    File: server/src/domains/gamification/analytics.controller.ts:331:5
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 845:
    File: server/src/domains/gamification/analytics.controller.ts:339:5
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 846:
    File: server/src/domains/gamification/analytics.controller.ts:344:5
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 847:
    File: server/src/domains/gamification/analytics.controller.ts:350:5
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 848:
    File: server/src/domains/gamification/analytics.controller.ts:390:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 849:
    File: server/src/domains/gamification/analytics.controller.ts:400:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 850:
    File: server/src/domains/gamification/analytics.controller.ts:416:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 851:
    File: server/src/domains/gamification/analytics.controller.ts:426:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 852:
    File: server/src/domains/gamification/admin.controller.ts:160:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 853:
    File: server/src/domains/gamification/admin.controller.ts:170:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 854:
    File: server/src/domains/gamification/admin.controller.ts:195:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 855:
    File: server/src/domains/gamification/admin.controller.ts:210:5
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 856:
    File: server/src/domains/gamification/admin.controller.ts:216:5
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 857:
    File: server/src/domains/gamification/admin.controller.ts:246:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 858:
    File: server/src/domains/gamification/admin.controller.ts:261:5
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 859:
    File: server/src/domains/gamification/admin.controller.ts:267:5
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 860:
    File: server/src/domains/gamification/admin.controller.ts:293:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 861:
    File: server/src/domains/gamification/admin.controller.ts:308:5
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 862:
    File: server/src/domains/gamification/admin.controller.ts:314:5
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 863:
    File: server/src/domains/gamification/admin.controller.ts:342:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 864:
    File: server/src/domains/gamification/admin.controller.ts:352:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 865:
    File: server/src/domains/gamification/admin.controller.ts:370:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 866:
    File: server/src/domains/gamification/admin.controller.ts:378:5
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 867:
    File: server/src/domains/gamification/admin.controller.ts:384:5
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 868:
    File: server/src/domains/gamification/admin.controller.ts:408:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 869:
    File: server/src/domains/gamification/admin.controller.ts:421:5
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 870:
    File: server/src/domains/gamification/admin.controller.ts:427:5
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 871:
    File: server/src/domains/gamification/admin.controller.ts:475:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 872:
    File: server/src/domains/gamification/admin.controller.ts:487:5
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 873:
    File: server/src/domains/gamification/admin.controller.ts:492:5
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 874:
    File: server/src/domains/gamification/admin.controller.ts:520:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 875:
    File: server/src/domains/gamification/admin.controller.ts:533:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 876:
    File: server/src/domains/gamification/admin.controller.ts:576:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 877:
    File: server/src/domains/gamification/admin.controller.ts:586:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 878:
    File: server/src/domains/gamification/achievement.controller.ts:89:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 879:
    File: server/src/domains/gamification/achievement.controller.ts:111:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 880:
    File: server/src/domains/gamification/achievement.controller.ts:128:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 881:
    File: server/src/domains/gamification/achievement.controller.ts:135:5
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 882:
    File: server/src/domains/gamification/achievement.controller.ts:141:5
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 883:
    File: server/src/domains/gamification/achievement.controller.ts:162:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 884:
    File: server/src/domains/gamification/achievement.controller.ts:169:5
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 885:
    File: server/src/domains/gamification/achievement.controller.ts:174:5
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 886:
    File: server/src/domains/gamification/achievement.controller.ts:200:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 887:
    File: server/src/domains/gamification/achievement.controller.ts:218:5
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 888:
    File: server/src/domains/gamification/achievement.controller.ts:224:5
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 889:
    File: server/src/domains/gamification/achievement.controller.ts:254:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 890:
    File: server/src/domains/gamification/achievement.controller.ts:272:5
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 891:
    File: server/src/domains/gamification/achievement.controller.ts:277:5
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 892:
    File: server/src/domains/gamification/achievement.controller.ts:299:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 893:
    File: server/src/domains/gamification/achievement.controller.ts:313:5
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 894:
    File: server/src/domains/gamification/achievement.controller.ts:319:5
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 895:
    File: server/src/domains/gamification/achievement.controller.ts:337:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 896:
    File: server/src/domains/gamification/achievement.controller.ts:344:5
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 897:
    File: server/src/domains/gamification/achievement.controller.ts:350:5
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 898:
    File: server/src/domains/gamification/achievement.controller.ts:355:5
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 899:
    File: server/src/domains/gamification/achievement.controller.ts:373:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 900:
    File: server/src/domains/gamification/achievement.controller.ts:381:5
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 901:
    File: server/src/domains/gamification/achievement.controller.ts:387:5
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 902:
    File: server/src/domains/gamification/achievement.controller.ts:405:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 903:
    File: server/src/domains/gamification/achievement.controller.ts:415:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 904:
    File: server/src/domains/gamification/achievement.controller.ts:430:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 905:
    File: server/src/domains/gamification/achievement.controller.ts:436:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 906:
    File: server/src/domains/gamification/achievement.controller.ts:461:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 907:
    File: server/src/domains/gamification/achievement.controller.ts:468:5
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 908:
    File: server/src/domains/gamification/achievement.controller.ts:473:5
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 909:
    File: server/src/domains/gamification/achievements/achievement.controller.ts:75:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 910:
    File: server/src/domains/gamification/achievements/achievement.controller.ts:84:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 911:
    File: server/src/domains/gamification/achievements/achievement.controller.ts:123:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 912:
    File: server/src/domains/gamification/achievements/achievement.controller.ts:137:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 913:
    File: server/src/domains/gamification/achievements/achievement.controller.ts:152:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 914:
    File: server/src/domains/gamification/achievements/achievement.controller.ts:160:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 915:
    File: server/src/domains/gamification/achievements/achievement.controller.ts:177:5
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 916:
    File: server/src/domains/gamification/achievements/achievement.controller.ts:184:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 917:
    File: server/src/domains/gamification/achievements/achievement.controller.ts:193:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 918:
    File: server/src/domains/gamification/achievements/achievement.controller.ts:208:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 919:
    File: server/src/domains/gamification/achievements/achievement.controller.ts:217:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 920:
    File: server/src/domains/gamification/achievements/achievement.controller.ts:233:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 921:
    File: server/src/domains/gamification/achievements/achievement.controller.ts:243:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 922:
    File: server/src/domains/gamification/achievements/achievement.controller.ts:259:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 923:
    File: server/src/domains/gamification/achievements/achievement.controller.ts:268:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 924:
    File: server/src/domains/gamification/achievements/achievement.controller.ts:284:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 925:
    File: server/src/domains/gamification/achievements/achievement.controller.ts:294:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 926:
    File: server/src/domains/gamification/achievements/achievement.controller.ts:316:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 927:
    File: server/src/domains/gamification/achievements/achievement.controller.ts:331:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 928:
    File: server/src/domains/gamification/achievements/achievement.controller.ts:349:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ℹ️ Violation 929:
    File: server/src/domains/gamification/achievements/achievement.controller.ts:359:4
    Domain: gamification
    Severity: INFO
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 930:
    File: server/src/domains/gamification/achievements/achievement.controller.ts:397:5
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 931:
    File: server/src/domains/gamification/achievements/achievement.controller.ts:410:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 932:
    File: server/src/domains/gamification/achievements/achievement.controller.ts:419:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 933:
    File: server/src/domains/gamification/achievements/achievement.controller.ts:445:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 934:
    File: server/src/domains/gamification/achievements/achievement.controller.ts:454:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 935:
    File: server/src/domains/gamification/achievements/achievement.controller.ts:471:5
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 936:
    File: server/src/domains/gamification/achievements/achievement.controller.ts:495:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 937:
    File: server/src/domains/gamification/achievements/achievement.controller.ts:506:4
    Domain: gamification
    Severity: ERROR
-   Suggestion: CloutTransformer.toPublicAchievement(achievement)
+   Suggestion: ReputationTransformer.toPublicAchievement(achievement)
    Auto-fixable: No
 
 ❌ Violation 938:
@@ -12850,133 +12850,133 @@ Violations by domain:
    Auto-fixable: No
 
 ⚠️ Violation 1828:
-   File: server/src/domains/admin/sub-domains/clout/clout.controller.ts:20:3
+   File: server/src/domains/admin/sub-domains/reputation/reputation.controller.ts:20:3
    Domain: admin
    Severity: WARNING
    Suggestion: // Use appropriate domain transformer with .toAdmin*() method
    Auto-fixable: No
 
 ⚠️ Violation 1829:
-   File: server/src/domains/admin/sub-domains/clout/clout.controller.ts:35:28
+   File: server/src/domains/admin/sub-domains/reputation/reputation.controller.ts:35:28
    Domain: admin
    Severity: WARNING
    Suggestion: // Use appropriate domain transformer with .toAdmin*() method
    Auto-fixable: No
 
 ⚠️ Violation 1830:
-   File: server/src/domains/admin/sub-domains/clout/clout.controller.ts:40:3
+   File: server/src/domains/admin/sub-domains/reputation/reputation.controller.ts:40:3
    Domain: admin
    Severity: WARNING
    Suggestion: // Use appropriate domain transformer with .toAdmin*() method
    Auto-fixable: No
 
 ⚠️ Violation 1831:
-   File: server/src/domains/admin/sub-domains/clout/clout.controller.ts:60:11
+   File: server/src/domains/admin/sub-domains/reputation/reputation.controller.ts:60:11
    Domain: admin
    Severity: WARNING
    Suggestion: // Use appropriate domain transformer with .toAdmin*() method
    Auto-fixable: No
 
 ⚠️ Violation 1832:
-   File: server/src/domains/admin/sub-domains/clout/clout.controller.ts:75:3
+   File: server/src/domains/admin/sub-domains/reputation/reputation.controller.ts:75:3
    Domain: admin
    Severity: WARNING
    Suggestion: // Use appropriate domain transformer with .toAdmin*() method
    Auto-fixable: No
 
 ⚠️ Violation 1833:
-   File: server/src/domains/admin/sub-domains/clout/clout.controller.ts:93:30
+   File: server/src/domains/admin/sub-domains/reputation/reputation.controller.ts:93:30
    Domain: admin
    Severity: WARNING
    Suggestion: // Use appropriate domain transformer with .toAdmin*() method
    Auto-fixable: No
 
 ⚠️ Violation 1834:
-   File: server/src/domains/admin/sub-domains/clout/clout.controller.ts:96:3
+   File: server/src/domains/admin/sub-domains/reputation/reputation.controller.ts:96:3
    Domain: admin
    Severity: WARNING
    Suggestion: // Use appropriate domain transformer with .toAdmin*() method
    Auto-fixable: No
 
 ⚠️ Violation 1835:
-   File: server/src/domains/admin/sub-domains/clout/clout.controller.ts:106:3
+   File: server/src/domains/admin/sub-domains/reputation/reputation.controller.ts:106:3
    Domain: admin
    Severity: WARNING
    Suggestion: // Use appropriate domain transformer with .toAdmin*() method
    Auto-fixable: No
 
 ⚠️ Violation 1836:
-   File: server/src/domains/admin/sub-domains/clout/clout.controller.ts:120:28
+   File: server/src/domains/admin/sub-domains/reputation/reputation.controller.ts:120:28
    Domain: admin
    Severity: WARNING
    Suggestion: // Use appropriate domain transformer with .toAdmin*() method
    Auto-fixable: No
 
 ⚠️ Violation 1837:
-   File: server/src/domains/admin/sub-domains/clout/clout.controller.ts:123:3
+   File: server/src/domains/admin/sub-domains/reputation/reputation.controller.ts:123:3
    Domain: admin
    Severity: WARNING
    Suggestion: // Use appropriate domain transformer with .toAdmin*() method
    Auto-fixable: No
 
 ⚠️ Violation 1838:
-   File: server/src/domains/admin/sub-domains/clout/clout.controller.ts:138:11
+   File: server/src/domains/admin/sub-domains/reputation/reputation.controller.ts:138:11
    Domain: admin
    Severity: WARNING
    Suggestion: // Use appropriate domain transformer with .toAdmin*() method
    Auto-fixable: No
 
 ⚠️ Violation 1839:
-   File: server/src/domains/admin/sub-domains/clout/clout.controller.ts:146:34
+   File: server/src/domains/admin/sub-domains/reputation/reputation.controller.ts:146:34
    Domain: admin
    Severity: WARNING
    Suggestion: // Use appropriate domain transformer with .toAdmin*() method
    Auto-fixable: No
 
 ⚠️ Violation 1840:
-   File: server/src/domains/admin/sub-domains/clout/clout.controller.ts:150:3
+   File: server/src/domains/admin/sub-domains/reputation/reputation.controller.ts:150:3
    Domain: admin
    Severity: WARNING
    Suggestion: // Use appropriate domain transformer with .toAdmin*() method
    Auto-fixable: No
 
 ⚠️ Violation 1841:
-   File: server/src/domains/admin/sub-domains/clout/clout.controller.ts:167:3
+   File: server/src/domains/admin/sub-domains/reputation/reputation.controller.ts:167:3
    Domain: admin
    Severity: WARNING
    Suggestion: // Use appropriate domain transformer with .toAdmin*() method
    Auto-fixable: No
 
 ⚠️ Violation 1842:
-   File: server/src/domains/admin/sub-domains/clout/clout.controller.ts:191:11
+   File: server/src/domains/admin/sub-domains/reputation/reputation.controller.ts:191:11
    Domain: admin
    Severity: WARNING
    Suggestion: // Use appropriate domain transformer with .toAdmin*() method
    Auto-fixable: No
 
 ⚠️ Violation 1843:
-   File: server/src/domains/admin/sub-domains/clout/clout.controller.ts:204:11
+   File: server/src/domains/admin/sub-domains/reputation/reputation.controller.ts:204:11
    Domain: admin
    Severity: WARNING
    Suggestion: // Use appropriate domain transformer with .toAdmin*() method
    Auto-fixable: No
 
 ⚠️ Violation 1844:
-   File: server/src/domains/admin/sub-domains/clout/clout.controller.ts:223:12
+   File: server/src/domains/admin/sub-domains/reputation/reputation.controller.ts:223:12
    Domain: admin
    Severity: WARNING
    Suggestion: // Use appropriate domain transformer with .toAdmin*() method
    Auto-fixable: No
 
 ⚠️ Violation 1845:
-   File: server/src/domains/admin/sub-domains/clout/clout.controller.ts:257:3
+   File: server/src/domains/admin/sub-domains/reputation/reputation.controller.ts:257:3
    Domain: admin
    Severity: WARNING
    Suggestion: // Use appropriate domain transformer with .toAdmin*() method
    Auto-fixable: No
 
 ⚠️ Violation 1846:
-   File: server/src/domains/admin/sub-domains/clout/clout.controller.ts:334:3
+   File: server/src/domains/admin/sub-domains/reputation/reputation.controller.ts:334:3
    Domain: admin
    Severity: WARNING
    Suggestion: // Use appropriate domain transformer with .toAdmin*() method

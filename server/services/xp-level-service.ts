@@ -9,7 +9,7 @@ import {
 	badges,
 	userOwnedFrames,
 	avatarFrames,
-	xpCloutSettings,
+	xpReputationSettings,
 	userRoles,
 	roles as rolesTable,
 	forumStructure
@@ -202,17 +202,17 @@ export class XpLevelService {
 				return economySetting[0].value;
 			}
 
-			// If not found in economySettings, try xpCloutSettings
-			const xpCloutSetting = await this.db
+			// If not found in economySettings, try xpReputationSettings
+			const xpReputationSetting = await this.db
 				.select({
-					xpValue: xpCloutSettings.xpValue
+					xpValue: xpReputationSettings.xpValue
 				})
-				.from(xpCloutSettings)
-				.where(eq(xpCloutSettings.actionKey, actionKey))
+				.from(xpReputationSettings)
+				.where(eq(xpReputationSettings.actionKey, actionKey))
 				.limit(1);
 
-			if (xpCloutSetting.length > 0) {
-				return xpCloutSetting[0].xpValue;
+			if (xpReputationSetting.length > 0) {
+				return xpReputationSetting[0].xpValue;
 			}
 
 			logger.warn('XpLevelService', `No XP value found for action key ${actionKey}`);

@@ -45,13 +45,13 @@ async function updateUsersTable() {
       `);
     }
     
-    // Rename reputation to clout if it exists
+    // Rename reputation to reputation if it exists
     const hasReputation = tableStructure.rows.some(col => col.column_name === 'reputation');
     if (hasReputation) {
-      console.log('Renaming reputation to clout...');
+      console.log('Renaming reputation to reputation...');
       await pool.query(`
         ALTER TABLE users 
-        RENAME COLUMN reputation TO clout;
+        RENAME COLUMN reputation TO reputation;
       `);
     }
     
@@ -61,7 +61,7 @@ async function updateUsersTable() {
     const updatedStructure = await pool.query(`
       SELECT column_name
       FROM information_schema.columns
-      WHERE table_name = 'users' AND column_name IN ('active_title_id', 'active_badge_id', 'clout')
+      WHERE table_name = 'users' AND column_name IN ('active_title_id', 'active_badge_id', 'reputation')
       ORDER BY ordinal_position;
     `);
 

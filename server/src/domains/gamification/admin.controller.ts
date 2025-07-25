@@ -14,7 +14,7 @@ import { z } from 'zod';
 import { levelingService } from './services/leveling.service';
 import { achievementService } from './services/achievement.service';
 import { gamificationAnalyticsService } from './services/analytics.service';
-import { CloutTransformer } from './transformers/clout.transformer';
+import { ReputationTransformer } from './transformers/reputation.transformer';
 import {
 	toPublicList,
 	sendSuccessResponse,
@@ -239,7 +239,7 @@ export class GamificationAdminController {
 			sendSuccessResponse(
 				res,
 				{
-					created: toPublicList(createdAchievements, CloutTransformer.toAdminAchievement),
+					created: toPublicList(createdAchievements, ReputationTransformer.toAdminAchievement),
 					stats: {
 						requested: achievements.length,
 						created: createdAchievements.length,

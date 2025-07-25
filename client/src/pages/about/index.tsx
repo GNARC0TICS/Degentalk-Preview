@@ -45,8 +45,8 @@ const AboutPage: React.FC = () => {
     },
     {
       icon: <TrendingUp className="h-6 w-6" />,
-      title: 'Clout Score',
-      description: 'Your social capital measured in degeneracy. More clout = bigger tips, exclusive access, and respect.',
+      title: 'Reputation Score',
+      description: 'Your social capital measured in degeneracy. More reputation = bigger tips, exclusive access, and respect.',
       color: 'text-purple-500'
     },
     {

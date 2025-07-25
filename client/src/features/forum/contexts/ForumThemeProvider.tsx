@@ -206,7 +206,7 @@ export const ForumThemeProvider: React.FC<{
 			const baseTheme = generateDynamicTheme(key);
 
 			// If icon is a component from dynamic themes, it's already LucideIcon.
-			// If it's a string (emoji from MergedZone/Forum), it's handled.
+			// If it's a string (emoji from MergedForum/Forum), it's handled.
 			let finalIcon: LucideIcon | string | undefined = baseTheme.icon;
 			if (override?.icon) {
 				finalIcon = override.icon;

@@ -6,7 +6,7 @@ export const gamificationSettingsFixture = {
 			levelMultiplier: 1.2,
 			bonusXpEvents: true
 		},
-		clout: {
+		reputation: {
 			decayRate: 0.01,
 			tierThresholds: [100, 500, 1500, 5000, 15000, 50000],
 			bonusMultipliers: [1.0, 1.1, 1.2, 1.3, 1.4, 1.5]

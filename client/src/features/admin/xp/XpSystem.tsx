@@ -31,9 +31,9 @@ import ProtectedAdminRoute from '@app/features/admin/components/protected-admin-
 import { useAdminModuleV2 } from '@app/hooks/use-admin-modules';
 import { useXpActions, useUpdateXpAction, type XpAction } from '@app/features/admin/services/xpActionsService';
 import {
-	useXpCloutSettings
-	// useUpdateXpCloutSettings
-} from '@app/features/admin/services/xpCloutService';
+	useXpReputationSettings
+	// useUpdateXpReputationSettings
+} from '@app/features/admin/services/xpReputationService';
 
 // API response structure
 interface LevelsApiResponse {
@@ -549,9 +549,9 @@ function XPSystemModuleContent() {
 		</Card>
 	);
 
-	// XP/Clout Settings Tab Content
-	const { data: xpCloutSettings, isLoading: settingsLoading } = useXpCloutSettings();
-	// const updateCloutSettings = useUpdateXpCloutSettings();
+	// XP/Reputation Settings Tab Content
+	const { data: xpReputationSettings, isLoading: settingsLoading } = useXpReputationSettings();
+	// const updateReputationSettings = useUpdateXpReputationSettings();
 
 	const settingsTabContent = (
 		<div className="space-y-6">
@@ -559,28 +559,28 @@ function XPSystemModuleContent() {
 				<CardHeader>
 					<CardTitle className="flex items-center gap-2">
 						<Settings className="h-5 w-5" />
-						XP & Clout Configuration
+						XP & Reputation Configuration
 					</CardTitle>
 					<CardDescription>
-						Global settings for the experience point and clout systems.
+						Global settings for the experience point and reputation systems.
 					</CardDescription>
 				</CardHeader>
 				<CardContent>
 					{settingsLoading && <p>Loading settings...</p>}
-					{xpCloutSettings && (
+					{xpReputationSettings && (
 						<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 							<div className="space-y-4">
 								<div>
 									<label className="text-sm font-medium">XP to DGT Rate</label>
 									<div className="flex items-center gap-2 mt-1">
-										<span className="text-2xl font-bold">{xpCloutSettings.xpToDgtRate}</span>
+										<span className="text-2xl font-bold">{xpReputationSettings.xpToDgtRate}</span>
 										<span className="text-sm text-muted-foreground">DGT per XP</span>
 									</div>
 								</div>
 								<div>
-									<label className="text-sm font-medium">Clout Multiplier</label>
+									<label className="text-sm font-medium">Reputation Multiplier</label>
 									<div className="flex items-center gap-2 mt-1">
-										<span className="text-2xl font-bold">{xpCloutSettings.cloutMultiplier}x</span>
+										<span className="text-2xl font-bold">{xpReputationSettings.reputationMultiplier}x</span>
 										<span className="text-sm text-muted-foreground">Applied to base XP</span>
 									</div>
 								</div>
@@ -588,9 +588,9 @@ function XPSystemModuleContent() {
 									<label className="text-sm font-medium">Decay Rate</label>
 									<div className="flex items-center gap-2 mt-1">
 										<span className="text-2xl font-bold">
-											{(Number(xpCloutSettings.decayRate) * 100).toFixed(1)}%
+											{(Number(xpReputationSettings.decayRate) * 100).toFixed(1)}%
 										</span>
-										<span className="text-sm text-muted-foreground">Daily clout decay</span>
+										<span className="text-sm text-muted-foreground">Daily reputation decay</span>
 									</div>
 								</div>
 							</div>
@@ -603,7 +603,7 @@ function XPSystemModuleContent() {
 										<span className="font-medium">Level-based</span>
 									</div>
 									<div className="flex justify-between">
-										<span>Clout System:</span>
+										<span>Reputation System:</span>
 										<span className="font-medium">Active</span>
 									</div>
 									<div className="flex justify-between">

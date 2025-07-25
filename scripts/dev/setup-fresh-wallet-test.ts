@@ -54,7 +54,7 @@ async function setupFreshWalletTest() {
 			isBanned: false,
 			isVerified: true,
 			xp: 0,
-			clout: 0,
+			reputation: 0,
 			level: 1,
 			reputation: 0,
 			bio: 'Fresh test user for wallet creation testing',

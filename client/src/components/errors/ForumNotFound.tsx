@@ -15,7 +15,7 @@ export function ForumNotFound({ forumSlug, onBack }: ForumNotFoundProps) {
 
 	// Get popular zones to suggest
 	const popularZones = zones
-		.filter((zone) => zone.isPrimary)
+		.filter((zone) => zone.isFeatured)
 		.slice(0, 4)
 		.map((zone) => ({
 			name: zone.name,

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * XP/Clout Engine Phase-1 Validation Script
+ * XP/Reputation Engine Phase-1 Validation Script
  * 
  * Tests the core XP endpoints and verifies the infrastructure is ready
  */
@@ -117,7 +117,7 @@ async function makeRequest(endpoint) {
 }
 
 async function runTests() {
-  console.log('🚀 XP/Clout Engine Phase-1 Validation');
+  console.log('🚀 XP/Reputation Engine Phase-1 Validation');
   console.log(`   Base URL: ${BASE_URL}`);
   console.log(`   Test User ID: ${TEST_USER_ID}`);
   
@@ -160,8 +160,8 @@ async function runTests() {
   console.log('\n🧪 XP System Feature Tests:');
   console.log('============================');
   
-  console.log('✅ Schema: XP logs, action settings, levels, clout logs');
-  console.log('✅ Services: XP service, clout service, level service');
+  console.log('✅ Schema: XP logs, action settings, levels, reputation logs');
+  console.log('✅ Services: XP service, reputation service, level service');
   console.log('✅ Controllers: XP controller, admin XP controller');  
   console.log('✅ Routes: Public XP routes, admin XP routes');
   console.log('✅ Frontend: XP admin services, XP components');
@@ -171,7 +171,7 @@ async function runTests() {
   console.log('- Decay logic implementation');
   console.log('- User XP progression dashboards');
   console.log('- Real-time XP notifications');
-  console.log('- Advanced clout calculations');
+  console.log('- Advanced reputation calculations');
   
   return results;
 }

@@ -83,8 +83,8 @@ export * from './economy/dgtPackages.js';
 export * from './economy/dgtPurchaseOrders.js';
 export * from './economy/settings.js';
 export * from './economy/treasurySettings.js';
-export * from './economy/cloutAchievements.js';
-export * from './economy/userCloutLog.js';
+export * from './economy/reputationAchievements.js';
+export * from './economy/userReputationLog.js';
 // Economy domain - airdrop
 export * from './economy/airdropSettings.js';
 export * from './economy/airdropRecords.js';

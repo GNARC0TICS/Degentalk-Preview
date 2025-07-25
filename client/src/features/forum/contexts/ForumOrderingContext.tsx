@@ -1,17 +1,17 @@
 import React, { createContext, useContext, useMemo } from 'react';
 import type { ReactNode } from 'react';
-import { useZones } from './ForumStructureContext';
-import type { MergedZone } from './ForumStructureContext';
+import { useForums } from './ForumStructureContext';
+import type { MergedForum } from './ForumStructureContext';
 import { featureFlags } from '@app/config/featureFlags';
 
 interface ForumOrderingContextValue {
-	orderedZones: MergedZone[];
+	orderedZones: MergedForum[];
 }
 
 const ForumOrderingContext = createContext<ForumOrderingContextValue | null>(null);
 
 export const ForumOrderingProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-	const { zones } = useZones();
+	const { zones } = useForums();
 
 	const orderedZones = useMemo(() => {
 		if (!featureFlags.forum.smartOrdering) return zones;

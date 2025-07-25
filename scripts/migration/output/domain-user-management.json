@@ -136,7 +136,7 @@
       "migrationEffort": 1.4
     },
     {
-      "path": "server/migrations/20250618_create_xp_clout_settings.ts",
+      "path": "server/migrations/20250618_create_xp_reputation_settings.ts",
       "domain": "user-management",
       "layer": "other",
       "size": 879,
@@ -1666,7 +1666,7 @@
       "migrationEffort": 0.5
     },
     {
-      "path": "db/schema/economy/xpCloutSettings.ts",
+      "path": "db/schema/economy/xpReputationSettings.ts",
       "domain": "user-management",
       "layer": "other",
       "size": 748,
@@ -1677,9 +1677,9 @@
         "drizzle-orm"
       ],
       "exports": [
-        "xpCloutSettings",
-        "XpCloutSettings",
-        "InsertXpCloutSettings"
+        "xpReputationSettings",
+        "XpReputationSettings",
+        "InsertXpReputationSettings"
       ],
       "idPatterns": [],
       "typeUsage": {
@@ -1782,7 +1782,7 @@
       "migrationEffort": 0.1
     },
     {
-      "path": "db/schema/economy/userCloutLog.ts",
+      "path": "db/schema/economy/userReputationLog.ts",
       "domain": "user-management",
       "layer": "other",
       "size": 1115,
@@ -1793,9 +1793,9 @@
         "drizzle-orm"
       ],
       "exports": [
-        "userCloutLog",
-        "UserCloutLog",
-        "InsertUserCloutLog"
+        "userReputationLog",
+        "UserReputationLog",
+        "InsertUserReputationLog"
       ],
       "idPatterns": [],
       "typeUsage": {
@@ -1894,9 +1894,9 @@
         "cooldownSettings",
         "CooldownSetting",
         "InsertCooldownSetting",
-        "xpCloutSettings",
-        "XpCloutSetting",
-        "InsertXpCloutSetting",
+        "xpReputationSettings",
+        "XpReputationSetting",
+        "InsertXpReputationSetting",
         "economySettings",
         "insertEconomySettingSchema",
         "EconomySetting",

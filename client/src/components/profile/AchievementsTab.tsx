@@ -273,10 +273,10 @@ export default function AchievementsTab({ profile, isOwnProfile = false }: Achie
 															{achievement.rewardDgt} DGT
 														</span>
 													)}
-													{achievement.rewardClout > 0 && (
+													{achievement.rewardReputation > 0 && (
 														<span className="flex items-center gap-1">
 															<Crown className="h-3 w-3" />
-															{achievement.rewardClout} Clout
+															{achievement.rewardReputation} Reputation
 														</span>
 													)}
 												</div>

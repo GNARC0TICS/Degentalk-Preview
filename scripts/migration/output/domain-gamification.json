@@ -82,7 +82,7 @@
       "migrationEffort": 2.8000000000000003
     },
     {
-      "path": "server/services/xp-clout-service.ts",
+      "path": "server/services/xp-reputation-service.ts",
       "domain": "gamification",
       "layer": "services",
       "size": 3578,
@@ -94,8 +94,8 @@
         "drizzle-orm"
       ],
       "exports": [
-        "XpCloutService",
-        "xpCloutService"
+        "XpReputationService",
+        "xpReputationService"
       ],
       "idPatterns": [
         {
@@ -128,7 +128,7 @@
       "migrationEffort": 1
     },
     {
-      "path": "server/migrations/xp-clout-levels-migration.ts",
+      "path": "server/migrations/xp-reputation-levels-migration.ts",
       "domain": "gamification",
       "layer": "other",
       "size": 7151,
@@ -211,7 +211,7 @@
       "migrationEffort": 0.9
     },
     {
-      "path": "server/migrations/20250618_add_clout_achievements.ts",
+      "path": "server/migrations/20250618_add_reputation_achievements.ts",
       "domain": "gamification",
       "layer": "other",
       "size": 3480,
@@ -3003,18 +3003,18 @@
       "migrationEffort": 1.7
     },
     {
-      "path": "client/src/pages/admin/clout/achievements.tsx",
+      "path": "client/src/pages/admin/reputation/achievements.tsx",
       "domain": "gamification",
       "layer": "pages",
       "size": 2032,
       "lines": 57,
       "complexity": 1,
       "dependencies": [
-        "@/features/admin/services/cloutAchievementsService",
+        "@/features/admin/services/reputationAchievementsService",
         "@/components/ui/table",
         "@/components/ui/card",
         "@/components/ui/switch",
-        "@/features/admin/services/cloutAchievementsService"
+        "@/features/admin/services/reputationAchievementsService"
       ],
       "exports": [],
       "idPatterns": [],
@@ -3031,7 +3031,7 @@
       "migrationEffort": 1.7
     },
     {
-      "path": "client/src/features/admin/services/xpCloutService.ts",
+      "path": "client/src/features/admin/services/xpReputationService.ts",
       "domain": "gamification",
       "layer": "services",
       "size": 670,
@@ -3043,8 +3043,8 @@
         "@/types/compat/economy"
       ],
       "exports": [
-        "useXpCloutSettings",
-        "useUpdateXpCloutSettings"
+        "useXpReputationSettings",
+        "useUpdateXpReputationSettings"
       ],
       "idPatterns": [],
       "typeUsage": {
@@ -3055,7 +3055,7 @@
         "hasTypeGuards": false,
         "hasZodValidation": false,
         "typeImports": [
-          "InsertXpCloutSettings"
+          "InsertXpReputationSettings"
         ]
       },
       "riskLevel": "medium",
@@ -3093,7 +3093,7 @@
       "migrationEffort": 0.7
     },
     {
-      "path": "client/src/features/admin/services/cloutAchievementsService.ts",
+      "path": "client/src/features/admin/services/reputationAchievementsService.ts",
       "domain": "gamification",
       "layer": "services",
       "size": 1394,
@@ -3105,7 +3105,7 @@
       ],
       "exports": [
         "ACHIEVEMENTS_KEY",
-        "useCloutAchievements",
+        "useReputationAchievements",
         "useCreateAchievement",
         "useUpdateAchievement",
         "useToggleAchievement",
@@ -3124,7 +3124,7 @@
           "type": "definition",
           "pattern": "id: number",
           "line": 33,
-          "context": "mutationFn: (id: number) => adminApi.post(`/clout/achievements/${id}/toggle`, {}),",
+          "context": "mutationFn: (id: number) => adminApi.post(`/reputation/achievements/${id}/toggle`, {}),",
           "suggestedFix": "check entity context for correct branded type",
           "confidence": 0.3
         },
@@ -3132,7 +3132,7 @@
           "type": "definition",
           "pattern": "id: number",
           "line": 41,
-          "context": "mutationFn: (id: number) => adminApi.delete(`/clout/achievements/${id}`),",
+          "context": "mutationFn: (id: number) => adminApi.delete(`/reputation/achievements/${id}`),",
           "suggestedFix": "check entity context for correct branded type",
           "confidence": 0.3
         }
@@ -3253,7 +3253,7 @@
       "migrationEffort": 0.7
     },
     {
-      "path": "client/src/components/admin/clout/AchievementsSection.tsx",
+      "path": "client/src/components/admin/reputation/AchievementsSection.tsx",
       "domain": "gamification",
       "layer": "components",
       "size": 25083,
@@ -3273,7 +3273,7 @@
         "zod",
         "@/hooks/use-toast",
         "@/lib/queryClient",
-        "@/pages/admin/clout"
+        "@/pages/admin/reputation"
       ],
       "exports": [
         "AchievementsSection"
@@ -3312,7 +3312,7 @@
         "hasTypeGuards": false,
         "hasZodValidation": true,
         "typeImports": [
-          "CloutAchievement"
+          "ReputationAchievement"
         ]
       },
       "riskLevel": "medium",
@@ -3589,11 +3589,11 @@
     "@/components/ui/button.tsx",
     "@/hooks/use-toast.ts",
     "@/lib/queryClient.ts",
-    "@/features/admin/services/cloutAchievementsService",
+    "@/features/admin/services/reputationAchievementsService",
     "@/lib/adminApi",
     "@/types/compat/economy",
     "@hookform/resolvers/zod",
-    "@/pages/admin/clout",
+    "@/pages/admin/reputation",
     "@schema/gamification/achievements",
     "@/components/admin/media/MediaPickerModal",
     "@/components/admin/inputs/UnlockMultiSelect"

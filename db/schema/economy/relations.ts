@@ -7,7 +7,7 @@ import { relations } from 'drizzle-orm';
 import { airdropRecords } from './airdropRecords';
 import { airdropSettings } from './airdropSettings';
 import { badges } from './badges';
-import { cloutAchievements } from './cloutAchievements';
+import { reputationAchievements } from './reputationAchievements';
 import { dgtPackages } from './dgtPackages';
 import { dgtPurchaseOrders } from './dgtPurchaseOrders';
 import { levels } from './levels';
@@ -18,14 +18,14 @@ import {
 	tipSettings,
 	rainSettings,
 	cooldownSettings,
-	xpCloutSettings,
+	xpReputationSettings,
 	economySettings
 } from './settings';
 import { titles } from './titles';
 import { transactions } from './transactions';
 import { platformTreasurySettings } from './treasurySettings';
 import { userBadges } from './userBadges';
-import { userCloutLog } from './userCloutLog';
+import { userReputationLog } from './userReputationLog';
 import { userCommands } from './userCommands';
 import { userTitles } from './userTitles';
 import { vaults } from './vaults';
@@ -84,10 +84,10 @@ export const platformTreasurySettingsRelations = relations(
 		})
 	})
 );
-export const userCloutLogRelations = relations(userCloutLog, ({ one, many }) => ({
-	achievement: one(cloutAchievements, {
-		fields: [userCloutLog.achievementId],
-		references: [cloutAchievements.id]
+export const userReputationLogRelations = relations(userReputationLog, ({ one, many }) => ({
+	achievement: one(reputationAchievements, {
+		fields: [userReputationLog.achievementId],
+		references: [reputationAchievements.id]
 	})
 }));
 export const vaultsRelations = relations(vaults, ({ one, many }) => ({
@@ -122,6 +122,6 @@ export const titlesRelations = relations(titles, ({ one, many }) => ({
 export const badgesRelations = relations(badges, ({ one, many }) => ({
 	levels: many(levels)
 }));
-export const cloutAchievementsRelations = relations(cloutAchievements, ({ one, many }) => ({
-	userCloutLog: many(userCloutLog)
+export const reputationAchievementsRelations = relations(reputationAchievements, ({ one, many }) => ({
+	userReputationLog: many(userReputationLog)
 }));

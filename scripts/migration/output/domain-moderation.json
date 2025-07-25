@@ -3414,9 +3414,9 @@
       "migrationEffort": 0.7
     },
     {
-      "path": "client/src/pages/admin/clout/index.tsx",
+      "path": "client/src/pages/admin/reputation/index.tsx",
       "domain": "moderation",
-      "subdomain": "clout",
+      "subdomain": "reputation",
       "layer": "pages",
       "size": 11722,
       "lines": 414,
@@ -3431,16 +3431,16 @@
         "lucide-react",
         "@/components/admin/layout/AdminPageShell",
         "@/lib/queryClient",
-        "@/components/admin/clout/CloutTiersSection",
-        "@/components/admin/clout/AchievementsSection",
-        "@/components/admin/clout/CloutGrantsSection",
-        "@/components/admin/clout/CloutLogsSection"
+        "@/components/admin/reputation/ReputationTiersSection",
+        "@/components/admin/reputation/AchievementsSection",
+        "@/components/admin/reputation/ReputationGrantsSection",
+        "@/components/admin/reputation/ReputationLogsSection"
       ],
       "exports": [
-        "CloutAchievement",
-        "CloutLog",
-        "CloutTier",
-        "CLOUT_TIERS"
+        "ReputationAchievement",
+        "ReputationLog",
+        "ReputationTier",
+        "REPUTATION_TIERS"
       ],
       "idPatterns": [
         {
@@ -3473,9 +3473,9 @@
       "migrationEffort": 2.9
     },
     {
-      "path": "client/src/pages/admin/clout/grants.tsx",
+      "path": "client/src/pages/admin/reputation/grants.tsx",
       "domain": "moderation",
-      "subdomain": "clout",
+      "subdomain": "reputation",
       "layer": "pages",
       "size": 27360,
       "lines": 882,
@@ -3496,9 +3496,9 @@
         "@/components/ui/avatar",
         "@/hooks/use-debounce",
         "@/lib/queryClient",
-        "@shared/economy/clout-calculator",
+        "@shared/economy/reputation-calculator",
         "@/config/easter-eggs.config",
-        "@/components/admin/effects/CloutObliterationEffect"
+        "@/components/admin/effects/ReputationObliterationEffect"
       ],
       "exports": [],
       "idPatterns": [
@@ -3680,7 +3680,7 @@
       "migrationEffort": 2.9
     },
     {
-      "path": "client/src/features/admin/services/cloutGrantsService.ts",
+      "path": "client/src/features/admin/services/reputationGrantsService.ts",
       "domain": "moderation",
       "subdomain": "services",
       "layer": "services",
@@ -3692,9 +3692,9 @@
         "@/lib/adminApi"
       ],
       "exports": [
-        "CLOUT_LOGS_KEY",
-        "useGrantClout",
-        "useCloutLogs"
+        "REPUTATION_LOGS_KEY",
+        "useGrantReputation",
+        "useReputationLogs"
       ],
       "idPatterns": [],
       "typeUsage": {
@@ -4108,7 +4108,7 @@
       "migrationEffort": 0.7
     },
     {
-      "path": "client/src/components/admin/effects/CloutObliterationEffect.tsx",
+      "path": "client/src/components/admin/effects/ReputationObliterationEffect.tsx",
       "domain": "moderation",
       "subdomain": "effects",
       "layer": "components",
@@ -4122,7 +4122,7 @@
         "@/config/easter-eggs.config"
       ],
       "exports": [
-        "CloutObliterationEffect"
+        "ReputationObliterationEffect"
       ],
       "idPatterns": [],
       "typeUsage": {
@@ -4169,9 +4169,9 @@
       "migrationEffort": 0.7
     },
     {
-      "path": "client/src/components/admin/clout/CloutTiersSection.tsx",
+      "path": "client/src/components/admin/reputation/ReputationTiersSection.tsx",
       "domain": "moderation",
-      "subdomain": "clout",
+      "subdomain": "reputation",
       "layer": "components",
       "size": 8855,
       "lines": 265,
@@ -4183,10 +4183,10 @@
         "@/components/ui/button",
         "@/components/ui/progress",
         "lucide-react",
-        "@/pages/admin/clout"
+        "@/pages/admin/reputation"
       ],
       "exports": [
-        "CloutTiersSection"
+        "ReputationTiersSection"
       ],
       "idPatterns": [],
       "typeUsage": {
@@ -4197,16 +4197,16 @@
         "hasTypeGuards": false,
         "hasZodValidation": false,
         "typeImports": [
-          "CloutTier"
+          "ReputationTier"
         ]
       },
       "riskLevel": "medium",
       "migrationEffort": 0.9
     },
     {
-      "path": "client/src/components/admin/clout/CloutLogsSection.tsx",
+      "path": "client/src/components/admin/reputation/ReputationLogsSection.tsx",
       "domain": "moderation",
-      "subdomain": "clout",
+      "subdomain": "reputation",
       "layer": "components",
       "size": 11544,
       "lines": 374,
@@ -4217,10 +4217,10 @@
         "@/components/ui/button",
         "@/components/ui/input",
         "@/components/ui/badge",
-        "@/pages/admin/clout"
+        "@/pages/admin/reputation"
       ],
       "exports": [
-        "CloutLogsSection"
+        "ReputationLogsSection"
       ],
       "idPatterns": [],
       "typeUsage": {
@@ -4231,17 +4231,17 @@
         "hasTypeGuards": false,
         "hasZodValidation": false,
         "typeImports": [
-          "CloutLog",
-          "CloutAchievement"
+          "ReputationLog",
+          "ReputationAchievement"
         ]
       },
       "riskLevel": "medium",
       "migrationEffort": 0.9
     },
     {
-      "path": "client/src/components/admin/clout/CloutGrantsSection.tsx",
+      "path": "client/src/components/admin/reputation/ReputationGrantsSection.tsx",
       "domain": "moderation",
-      "subdomain": "clout",
+      "subdomain": "reputation",
       "layer": "components",
       "size": 11979,
       "lines": 381,
@@ -4262,7 +4262,7 @@
         "@/lib/queryClient"
       ],
       "exports": [
-        "CloutGrantsSection"
+        "ReputationGrantsSection"
       ],
       "idPatterns": [],
       "typeUsage": {
@@ -5111,15 +5111,15 @@
     "@/features/activity/services/activityApi",
     "@/hooks/useAuth",
     "@/layout/primitives",
-    "@/components/admin/clout/CloutTiersSection",
-    "@/components/admin/clout/AchievementsSection",
-    "@/components/admin/clout/CloutGrantsSection",
-    "@/components/admin/clout/CloutLogsSection",
+    "@/components/admin/reputation/ReputationTiersSection",
+    "@/components/admin/reputation/AchievementsSection",
+    "@/components/admin/reputation/ReputationGrantsSection",
+    "@/components/admin/reputation/ReputationLogsSection",
     "@/components/ui/radio-group",
     "@/hooks/use-debounce",
-    "@shared/economy/clout-calculator",
+    "@shared/economy/reputation-calculator",
     "@/config/easter-eggs.config",
-    "@/components/admin/effects/CloutObliterationEffect",
+    "@/components/admin/effects/ReputationObliterationEffect",
     "@/components/ui/dialog",
     "@/lib/utils/generateSlug",
     "@/lib/adminApi",
@@ -5128,7 +5128,7 @@
     "@radix-ui/react-switch",
     "@monaco-editor/react",
     "@/components/ui/progress",
-    "@/pages/admin/clout",
+    "@/pages/admin/reputation",
     "@/components/ui/scroll-area",
     "@/components/ui/date-range-picker",
     "@/components/admin/layout/EntityTable",

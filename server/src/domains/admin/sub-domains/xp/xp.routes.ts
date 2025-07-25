@@ -7,10 +7,10 @@ import * as xpActionsController from './xp-actions.controller';
 
 const router: RouterType = Router();
 
-// --- XP Settings Management (Economy Settings for XP/Clout) ---
-// GET /api/admin/xp/settings - Get all XP/Clout related economy settings
+// --- XP Settings Management (Economy Settings for XP/Reputation) ---
+// GET /api/admin/xp/settings - Get all XP/Reputation related economy settings
 router.get('/settings', isAdmin, xpController.getXpSettings);
-// POST /api/admin/xp/settings - Update XP/Clout related economy settings
+// POST /api/admin/xp/settings - Update XP/Reputation related economy settings
 router.post('/settings', isAdmin, xpController.updateXpSettings);
 
 // --- Level Management ---

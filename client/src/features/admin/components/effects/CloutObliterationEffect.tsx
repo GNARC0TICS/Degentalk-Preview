@@ -1,31 +1,31 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Skull, Zap, AlertTriangle } from 'lucide-react';
-import { CLOUT_EASTER_EGGS, type ObliterationMessage } from '@app/config/easter-eggs.config';
+import { REPUTATION_EASTER_EGGS, type ObliterationMessage } from '@app/config/easter-eggs.config';
 
-interface CloutObliterationEffectProps {
+interface ReputationObliterationEffectProps {
 	isOpen: boolean;
 	username: string;
 	onClose: () => void;
 }
 
-export function CloutObliterationEffect({
+export function ReputationObliterationEffect({
 	isOpen,
 	username,
 	onClose
-}: CloutObliterationEffectProps) {
+}: ReputationObliterationEffectProps) {
 	const [message, setMessage] = useState<ObliterationMessage>(
-		CLOUT_EASTER_EGGS.obliterationMessages[0]
+		REPUTATION_EASTER_EGGS.obliterationMessages[0]
 	);
 
 	useEffect(() => {
 		if (isOpen) {
 			// Pick random obliteration message
 			const randomMessage =
-				CLOUT_EASTER_EGGS.obliterationMessages[
-					Math.floor(Math.random() * CLOUT_EASTER_EGGS.obliterationMessages.length)
+				REPUTATION_EASTER_EGGS.obliterationMessages[
+					Math.floor(Math.random() * REPUTATION_EASTER_EGGS.obliterationMessages.length)
 				];
-			setMessage(randomMessage as (typeof CLOUT_EASTER_EGGS.obliterationMessages)[number]);
+			setMessage(randomMessage as (typeof REPUTATION_EASTER_EGGS.obliterationMessages)[number]);
 
 			// Auto close after duration
 			const timer = setTimeout(() => {
@@ -105,7 +105,7 @@ export function CloutObliterationEffect({
 							transition={{ duration: 1, repeat: Infinity }}
 							className="text-5xl font-black text-red-100 mb-4 tracking-wider"
 						>
-							⚠️ CLOUT OBLITERATED ⚠️
+							⚠️ REPUTATION OBLITERATED ⚠️
 						</motion.h1>
 
 						{/* Username */}
@@ -134,7 +134,7 @@ export function CloutObliterationEffect({
 							</div>
 							<div className="flex items-center justify-center gap-2">
 								<Zap className="h-4 w-4" />
-								<span>Clout Level: CRITICAL FAILURE</span>
+								<span>Reputation Level: CRITICAL FAILURE</span>
 							</div>
 						</div>
 

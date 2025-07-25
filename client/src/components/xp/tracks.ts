@@ -11,8 +11,8 @@ export const xpTracks: XPTrack[] = [
 		gradient: 'conic-gradient(from 90deg, #7f5af0, #2cb67d, #7f5af0)'
 	},
 	{
-		id: 'clout',
-		label: 'Clout',
+		id: 'reputation',
+		label: 'Reputation',
 		gradient: 'conic-gradient(from 90deg, #ff8906, #f25f4c, #ff8906)'
 	}
 ];

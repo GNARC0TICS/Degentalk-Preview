@@ -9,7 +9,7 @@ export interface FollowUser {
 	activeAvatarUrl?: string | null;
 	level?: number | null;
 	role?: string | null;
-	clout?: number | null;
+	reputation?: number | null;
 	followedAt: string;
 }
 
@@ -98,7 +98,7 @@ export class WhaleWatchService {
 				activeAvatarUrl: users.activeAvatarUrl,
 				level: users.level,
 				role: users.role,
-				clout: users.clout,
+				reputation: users.reputation,
 				followedAt: userFollows.createdAt
 			})
 			.from(userFollows)
@@ -115,7 +115,7 @@ export class WhaleWatchService {
 			activeAvatarUrl: follow.activeAvatarUrl,
 			level: follow.level,
 			role: follow.role,
-			clout: follow.clout,
+			reputation: follow.reputation,
 			followedAt: follow.followedAt!.toISOString()
 		}));
 	}
@@ -134,7 +134,7 @@ export class WhaleWatchService {
 				activeAvatarUrl: users.activeAvatarUrl,
 				level: users.level,
 				role: users.role,
-				clout: users.clout,
+				reputation: users.reputation,
 				followedAt: userFollows.createdAt
 			})
 			.from(userFollows)
@@ -151,7 +151,7 @@ export class WhaleWatchService {
 			activeAvatarUrl: follower.activeAvatarUrl,
 			level: follower.level,
 			role: follower.role,
-			clout: follower.clout,
+			reputation: follower.reputation,
 			followedAt: follower.followedAt!.toISOString()
 		}));
 	}
@@ -186,7 +186,7 @@ export class WhaleWatchService {
 				activeAvatarUrl: users.activeAvatarUrl,
 				level: users.level,
 				role: users.role,
-				clout: users.clout,
+				reputation: users.reputation,
 				followerCount: drizzleSql<number>`COUNT(${userFollows.id})`
 			})
 			.from(users)
@@ -198,7 +198,7 @@ export class WhaleWatchService {
 				users.activeAvatarUrl,
 				users.level,
 				users.role,
-				users.clout
+				users.reputation
 			)
 			.having(drizzleSql`COUNT(${userFollows.id}) > 0`)
 			.orderBy(drizzleSql`COUNT(${userFollows.id}) DESC`)
@@ -211,7 +211,7 @@ export class WhaleWatchService {
 			activeAvatarUrl: whale.activeAvatarUrl,
 			level: whale.level,
 			role: whale.role,
-			clout: whale.clout,
+			reputation: whale.reputation,
 			followedAt: new Date().toISOString(), // Not applicable for whale list
 			followerCount: whale.followerCount
 		}));
@@ -235,7 +235,7 @@ export class WhaleWatchService {
 				activeAvatarUrl: users.activeAvatarUrl,
 				level: users.level,
 				role: users.role,
-				clout: users.clout,
+				reputation: users.reputation,
 				followerCount: drizzleSql<number>`COUNT(DISTINCT ${userFollows.id})`,
 				isFollowing: drizzleSql<boolean>`EXISTS(
 					SELECT 1 FROM ${userFollows} 
@@ -258,7 +258,7 @@ export class WhaleWatchService {
 				users.activeAvatarUrl,
 				users.level,
 				users.role,
-				users.clout
+				users.reputation
 			)
 			.orderBy(users.username)
 			.limit(limit);
@@ -270,7 +270,7 @@ export class WhaleWatchService {
 			activeAvatarUrl: user.activeAvatarUrl,
 			level: user.level,
 			role: user.role,
-			clout: user.clout,
+			reputation: user.reputation,
 			followedAt: new Date().toISOString(), // Not applicable for search
 			isFollowing: user.isFollowing,
 			followerCount: user.followerCount

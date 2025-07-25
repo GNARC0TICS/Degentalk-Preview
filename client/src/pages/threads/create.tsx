@@ -19,7 +19,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '@app/hooks/use-auth';
 import { useForumStructure } from '@app/features/forum/contexts/ForumStructureContext';
-import type { MergedForum, MergedZone } from '@app/features/forum/contexts/ForumStructureContext';
+import type { MergedForum, MergedForum } from '@app/features/forum/contexts/ForumStructureContext';
 import {
 	Breadcrumb,
 	BreadcrumbList,
@@ -45,7 +45,7 @@ export default function CreateThreadPage() {
 	} = useForumStructure();
 
 	const [targetForum, setTargetForum] = useState<MergedForum | undefined>(undefined);
-	const [parentZone, setParentZone] = useState<MergedZone | undefined>(undefined);
+	const [parentZone, setParentZone] = useState<MergedForum | undefined>(undefined);
 
 	useEffect(() => {
 		if (!isForumStructureLoading && forumSlugFromQuery) {

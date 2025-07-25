@@ -51,7 +51,7 @@ interface LeaderboardEntry {
   trend?: 'up' | 'down' | 'stable';
   avatar?: string;
   // Additional metrics
-  clout?: number;
+  reputation?: number;
   tips?: number;
   posts?: number;
 }
@@ -59,7 +59,7 @@ interface LeaderboardEntry {
 export interface LeaderboardWidgetProps {
   variant?: 'micro' | 'compact' | 'standard' | 'expanded';
   timeframe?: 'daily' | 'weekly' | 'monthly' | 'all-time';
-  metric?: 'xp' | 'clout' | 'tips' | 'activity';
+  metric?: 'xp' | 'reputation' | 'tips' | 'activity';
   limit?: number;
   showViewAll?: boolean;
   animated?: boolean;
@@ -72,7 +72,7 @@ const getMetricValue = (entry: LeaderboardEntry, metric: string, timeframe: stri
   if (metric === 'xp') {
     return timeframe === 'weekly' ? entry.weeklyXp : entry.totalXp;
   }
-  if (metric === 'clout') return entry.clout || 0;
+  if (metric === 'reputation') return entry.reputation || 0;
   if (metric === 'tips') return entry.tips || 0;
   if (metric === 'activity') return entry.posts || 0;
   return entry.totalXp;
@@ -82,7 +82,7 @@ const getMetricValue = (entry: LeaderboardEntry, metric: string, timeframe: stri
 const getMetricLabel = (metric: string, timeframe: string) => {
   const labels = {
     xp: timeframe === 'all-time' ? 'Total XP' : `${timeframe} XP`,
-    clout: 'Clout',
+    reputation: 'Reputation',
     tips: 'DGT Tipped',
     activity: 'Posts'
   };

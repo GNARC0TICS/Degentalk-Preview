@@ -169,7 +169,7 @@ export class AnalyticsController {
    */
   async getLeaderboard(req: Request, res: Response): Promise<void> {
     try {
-      const type = req.params.type as 'xp' | 'posts' | 'clout' | 'tips';
+      const type = req.params.type as 'xp' | 'posts' | 'reputation' | 'tips';
       const isCurrentWeek = req.query.current !== false;
       
       const leaderboard = await PlatformAnalyticsService.getLeaderboards(type, isCurrentWeek);

@@ -1,22 +1,22 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { adminApi } from '@app/features/admin/lib/adminApi';
-import type { InsertXpCloutSettings } from '@app/types/compat/economy';
+import type { InsertXpReputationSettings } from '@app/types/compat/economy';
 
-const XP_CLOUT_KEY = ['admin', 'xp-clout-settings'];
+const XP_REPUTATION_KEY = ['admin', 'xp-reputation-settings'];
 
-export function useXpCloutSettings() {
+export function useXpReputationSettings() {
 	return useQuery({
-		queryKey: XP_CLOUT_KEY,
-		queryFn: () => adminApi.get('/xp/clout-settings')
+		queryKey: XP_REPUTATION_KEY,
+		queryFn: () => adminApi.get('/xp/reputation-settings')
 	});
 }
 
-export function useUpdateXpCloutSettings() {
+export function useUpdateXpReputationSettings() {
 	const qc = useQueryClient();
 	return useMutation({
-		mutationFn: (data: Partial<InsertXpCloutSettings>) => adminApi.put('/xp/clout-settings', data),
+		mutationFn: (data: Partial<InsertXpReputationSettings>) => adminApi.put('/xp/reputation-settings', data),
 		onSuccess: () => {
-			qc.invalidateQueries({ queryKey: XP_CLOUT_KEY });
+			qc.invalidateQueries({ queryKey: XP_REPUTATION_KEY });
 		}
 	});
 }

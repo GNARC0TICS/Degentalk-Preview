@@ -13,8 +13,8 @@ import ThreadList from '@app/features/forum/components/ThreadList';
 import { DynamicSidebar } from '@app/components/forum/sidebar';
 import { ForumHeader } from '@app/features/forum/components/ForumHeader';
 import { MyBBThreadList } from '@app/components/forum/MyBBThreadList';
-import type { ForumId, StructureId, ZoneId, UserId, ThreadId } from '@shared/types/ids';
-import { toUserId, toThreadId, toStructureId, toZoneId, toForumId } from '@shared/utils/id';
+import type { ForumId, StructureId, UserId, ThreadId } from '@shared/types/ids';
+import { toUserId, toThreadId, toStructureId, toForumId } from '@shared/utils/id';
 import type { Thread } from '@shared/types/thread.types';
 
 export interface ForumPageProps {
@@ -111,14 +111,14 @@ function getDemoThreads(forumSlug: string): Thread[] {
 			type: 'forum' as const
 		},
 		
-		// Add zone relationship (Thread requires full zone)
-		zone: {
-			id: toZoneId('zone_1'),
+		// Add featured forum relationship  
+		featuredForum: {
+			id: toForumId('forum_1'),
 			name: 'Trading',
 			slug: 'trading',
 			colorTheme: 'emerald',
 			description: 'Trading and market discussion',
-			isPrimary: true,
+			isFeatured: true,
 			sortOrder: 1,
 			isVisible: true,
 			bannerImage: null,

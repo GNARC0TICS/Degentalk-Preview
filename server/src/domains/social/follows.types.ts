@@ -15,7 +15,7 @@ export interface UserStats {
 	activeAvatarUrl?: string | null;
 	level?: number | null;
 	role?: string | null;
-	clout?: number | null;
+	reputation?: number | null;
 	dgtBalance?: number | null;
 	postCount?: number | null;
 	followerCount?: number | null;
@@ -30,7 +30,7 @@ export interface FollowUser {
 	activeAvatarUrl?: string | null;
 	level?: number | null;
 	role?: string | null;
-	clout?: number | null;
+	reputation?: number | null;
 	isFollowing?: boolean;
 }
 

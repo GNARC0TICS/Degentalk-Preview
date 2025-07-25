@@ -48,9 +48,9 @@ const DEFAULT_FEATURE_GATES: FeatureGate[] = [
 		enabled: true
 	},
 	{
-		id: 'clout_voting',
-		name: 'Clout Voting',
-		description: "Vote on other users' clout",
+		id: 'reputation_voting',
+		name: 'Reputation Voting',
+		description: "Vote on other users' reputation",
 		minLevel: 10,
 		enabled: true
 	},

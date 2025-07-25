@@ -36,7 +36,7 @@ interface FollowUser {
 	activeAvatarUrl?: string | null;
 	level?: number | null;
 	role?: string | null;
-	clout?: number | null;
+	reputation?: number | null;
 	isFollowing?: boolean;
 }
 
@@ -192,7 +192,7 @@ export function WhaleWatchDashboard() {
 	};
 
 	const isWhale = (user: FollowUser) => {
-		return (user.level && user.level >= 25) || (user.clout && user.clout >= 10000);
+		return (user.level && user.level >= 25) || (user.reputation && user.reputation >= 10000);
 	};
 
 	const UserCard = ({
@@ -238,7 +238,7 @@ export function WhaleWatchDashboard() {
 
 					<div className="flex items-center gap-4 text-xs text-zinc-500">
 						{user.level && <span>Level {user.level}</span>}
-						{user.clout && <span>{user.clout.toLocaleString()} Clout</span>}
+						{user.reputation && <span>{user.reputation.toLocaleString()} Reputation</span>}
 						{relationship && (
 							<span>
 								Followed{' '}

@@ -6,4 +6,4 @@
 export * from './role.types.js';
 // User types moved to shared/types/user.types.ts
 export * from './title.types.js';
-export * from './clout.types.js';
+export * from './reputation.types.js';

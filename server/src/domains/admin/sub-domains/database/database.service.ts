@@ -26,7 +26,7 @@ const CONFIGURATION_TABLES = [
 
 	// Economy configuration
 	'xp_action_settings',
-	'xp_clout_settings',
+	'xp_reputation_settings',
 	'treasury_settings',
 	'airdrop_settings',
 	'economy_settings',
@@ -129,8 +129,8 @@ const EDITABLE_TABLES = [
 	'rain_events',
 	'xp_logs',
 	'xp_adjustment_logs',
-	'user_clout_log',
-	'clout_achievements',
+	'user_reputation_log',
+	'reputation_achievements',
 
 	// Shop operations
 	'orders',
@@ -868,7 +868,7 @@ export class DatabaseService {
 
 			// Economy configuration
 			xp_action_settings: '/admin/config/xp',
-			xp_clout_settings: '/admin/config/xp',
+			xp_reputation_settings: '/admin/config/xp',
 			treasury_settings: '/admin/config/economy',
 			airdrop_settings: '/admin/config/economy',
 			economy_settings: '/admin/config/economy',

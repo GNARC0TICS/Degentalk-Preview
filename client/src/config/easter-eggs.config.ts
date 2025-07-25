@@ -9,7 +9,7 @@ export const XP_EASTER_EGGS = {
 	titleOnBankruptcy: 'Bankrupt', // optional – assign temp title
 	bankruptXPReset: true, // reset XP to 0 after applying
 	liquidationMessages: [
-		'They leveraged their Clout on a 1000x shitpost and lost everything.',
+		'They leveraged their Reputation on a 1000x shitpost and lost everything.',
 		'Went all-in on a rug pull and got absolutely rekt.',
 		'Tried to short the forum meta and got liquidated.',
 		"FOMO'd into a scam thread and lost their bag.",
@@ -29,18 +29,18 @@ export const BANKRUPTCY_EFFECTS = {
 
 export type BankruptcyMessage = (typeof XP_EASTER_EGGS.liquidationMessages)[number];
 
-export const CLOUT_EASTER_EGGS = {
+export const REPUTATION_EASTER_EGGS = {
 	enableObliteration: true,
 	obliterationThreshold: -1000,
 	titleOnObliteration: 'Obliterated', // optional – assign temp title
-	resetCloutToZero: true, // reset clout to 0 after applying
+	resetReputationToZero: true, // reset reputation to 0 after applying
 	obliterationMessages: [
 		'Their reputation went nuclear and caused a total meltdown.',
 		'Reputation so toxic it contaminated the entire forum ecosystem.',
-		'Clout obliterated in a spectacular cascade failure.',
+		'Reputation obliterated in a spectacular cascade failure.',
 		'Reputation nuked from orbit – it was the only way to be sure.',
 		'Their credibility suffered a catastrophic core breach.',
-		'Clout vaporized in a chain reaction of bad takes.',
+		'Reputation vaporized in a chain reaction of bad takes.',
 		'Reputation went supernova and collapsed into a black hole.',
 		'Total reputational annihilation – nothing survived the blast.'
 	]
@@ -54,4 +54,4 @@ export const OBLITERATION_EFFECTS = {
 	effectColor: '#ef4444' // red theme for obliteration
 } as const;
 
-export type ObliterationMessage = (typeof CLOUT_EASTER_EGGS.obliterationMessages)[number];
+export type ObliterationMessage = (typeof REPUTATION_EASTER_EGGS.obliterationMessages)[number];

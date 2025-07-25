@@ -14,7 +14,7 @@ type UserSeedData = {
   password: string; // This holds the password hash
   role: UserRole;
   xp: number;
-  clout: number;
+  reputation: number;
   avatarUrl: string;
   isActive: boolean;
   isBanned: boolean;
@@ -41,7 +41,7 @@ export async function seedUsers() {
       password: passwordHash,
       role: 'admin',
       xp: 99999,
-      clout: 10000,
+      reputation: 10000,
       level: 99,
       reputation: 10000,
       avatarUrl: '/images/avatars/admin.png',
@@ -63,7 +63,7 @@ export async function seedUsers() {
       password: passwordHash,
       role: 'moderator',
       xp: 25000,
-      clout: 2500,
+      reputation: 2500,
       level: 50,
       reputation: 2500,
       avatarUrl: '/images/avatars/mod.png',
@@ -88,7 +88,7 @@ export async function seedUsers() {
       // displayName: faker.person.fullName(), // Removed
       role: 'user',
       xp: faker.number.int({ min: 10, max: 999 }), // Renamed
-      clout: faker.number.int({ min: 10, max: 99 }), // Renamed
+      reputation: faker.number.int({ min: 10, max: 99 }), // Renamed
       // postCount: 0, // Removed
       // threadCount: 0, // Removed
       avatarUrl: '/images/avatars/default.png',
@@ -111,7 +111,7 @@ export async function seedUsers() {
       password: sql`excluded.password_hash`,
       role: sql`excluded.role`,
       xp: sql`excluded.xp`,
-      clout: sql`excluded.clout`,
+      reputation: sql`excluded.reputation`,
       level: sql`excluded.level`,
       reputation: sql`excluded.reputation`,
       avatarUrl: sql`excluded.avatar_url`,

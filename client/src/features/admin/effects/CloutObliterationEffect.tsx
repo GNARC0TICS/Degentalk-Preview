@@ -1,11 +1,11 @@
 import React from 'react';
 
-interface CloutObliterationEffectProps {
+interface ReputationObliterationEffectProps {
   isActive?: boolean;
   intensity?: number;
 }
 
-export const CloutObliterationEffect: React.FC<CloutObliterationEffectProps> = ({
+export const ReputationObliterationEffect: React.FC<ReputationObliterationEffectProps> = ({
   isActive = false,
   intensity = 1
 }) => {

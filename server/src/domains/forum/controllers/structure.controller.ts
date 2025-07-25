@@ -8,7 +8,7 @@ class ForumStructureController {
 	async getStructure(req: Request, res: Response) {
 		try {
 			const structures = await forumStructureService.getStructuresWithStats();
-			const zones = structures.filter((s) => s.type === 'zone');
+			const zones = structures.filter((s) => s.parentId === null);
 			const forums = structures.filter((s) => s.type === 'forum');
 			return sendSuccessResponse(res, {
 				zones: zones.map((z) => ForumTransformer.toPublicForumStructure(z)),

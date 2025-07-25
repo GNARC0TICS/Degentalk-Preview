@@ -80,8 +80,8 @@ export function UserCard({ user, className = '' }: UserCardProps) {
 							<div className="text-xs text-zinc-500">XP</div>
 						</div>
 						<div className="bg-zinc-800/50 rounded-lg p-2 text-center">
-							<div className="text-lg font-bold text-cyan-400">{formatNumber(user.clout)}</div>
-							<div className="text-xs text-zinc-500">Clout</div>
+							<div className="text-lg font-bold text-cyan-400">{formatNumber(user.reputation)}</div>
+							<div className="text-xs text-zinc-500">Reputation</div>
 						</div>
 					</div>
 

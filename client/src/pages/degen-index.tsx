@@ -18,7 +18,7 @@ export interface DegenUser {
 	username: string;
 	avatarUrl?: string | null;
 	xp: number;
-	clout: number;
+	reputation: number;
 	postCount: number;
 	joinDate: string;
 	lastActive: string;
@@ -34,7 +34,7 @@ export default function DegenIndexPage() {
 	const [currentPage, setCurrentPage] = useState(1);
 	const [itemsPerPage] = useState(50); // Show 50 users per page
 	const [filters, setFilters] = useState({
-		sortBy: 'username' as 'username' | 'level' | 'xp' | 'clout' | 'joinDate',
+		sortBy: 'username' as 'username' | 'level' | 'xp' | 'reputation' | 'joinDate',
 		sortOrder: 'asc' as 'asc' | 'desc',
 		onlineOnly: false,
 		minXP: 0
@@ -65,7 +65,7 @@ export default function DegenIndexPage() {
 						username: 'CryptoKing',
 						avatarUrl: 'https://avatar.vercel.sh/cryptoking',
 						xp: 15000,
-						clout: 250,
+						reputation: 250,
 						postCount: 1247,
 						joinDate: '2023-01-15',
 						lastActive: '2 minutes ago',
@@ -79,7 +79,7 @@ export default function DegenIndexPage() {
 						username: 'DiamondHands',
 						avatarUrl: 'https://avatar.vercel.sh/diamondhands',
 						xp: 12500,
-						clout: 180,
+						reputation: 180,
 						postCount: 892,
 						joinDate: '2023-03-22',
 						lastActive: '1 hour ago',
@@ -93,7 +93,7 @@ export default function DegenIndexPage() {
 						username: 'WhaleWatcher',
 						avatarUrl: 'https://avatar.vercel.sh/whalewatcher',
 						xp: 11000,
-						clout: 150,
+						reputation: 150,
 						postCount: 567,
 						joinDate: '2023-02-10',
 						lastActive: '5 minutes ago',
@@ -107,7 +107,7 @@ export default function DegenIndexPage() {
 						username: 'NFTGuru',
 						avatarUrl: 'https://avatar.vercel.sh/nftguru',
 						xp: 9500,
-						clout: 120,
+						reputation: 120,
 						postCount: 334,
 						joinDate: '2023-04-05',
 						lastActive: '3 hours ago',
@@ -121,7 +121,7 @@ export default function DegenIndexPage() {
 						username: 'ShillMaster',
 						avatarUrl: 'https://avatar.vercel.sh/shillmaster',
 						xp: 8000,
-						clout: 90,
+						reputation: 90,
 						postCount: 445,
 						joinDate: '2023-05-18',
 						lastActive: '1 day ago',
@@ -135,7 +135,7 @@ export default function DegenIndexPage() {
 						username: 'PaperHands',
 						avatarUrl: 'https://avatar.vercel.sh/paperhands',
 						xp: 500,
-						clout: 10,
+						reputation: 10,
 						postCount: 23,
 						joinDate: '2024-01-20',
 						lastActive: '2 weeks ago',
@@ -148,7 +148,7 @@ export default function DegenIndexPage() {
 						id: toId<'UserId'>('550e8400-e29b-41d4-a716-446655440007'),
 						username: 'LaserEyes',
 						xp: 7500,
-						clout: 110,
+						reputation: 110,
 						postCount: 678,
 						joinDate: '2023-06-12',
 						lastActive: '30 minutes ago',
@@ -161,7 +161,7 @@ export default function DegenIndexPage() {
 						id: toId<'UserId'>('550e8400-e29b-41d4-a716-446655440008'),
 						username: 'ToTheMoon',
 						xp: 6800,
-						clout: 105,
+						reputation: 105,
 						postCount: 234,
 						joinDate: '2023-07-30',
 						lastActive: '4 hours ago',
@@ -275,7 +275,7 @@ export default function DegenIndexPage() {
 						username,
 						avatarUrl: `https://avatar.vercel.sh/${username.toLowerCase()}`,
 						xp,
-						clout: Math.floor(Math.random() * 1000) + 5,
+						reputation: Math.floor(Math.random() * 1000) + 5,
 						postCount: Math.floor(Math.random() * 2000) + 1,
 						joinDate: new Date(
 							2023,
@@ -325,9 +325,9 @@ export default function DegenIndexPage() {
 						aVal = a.xp;
 						bVal = b.xp;
 						break;
-					case 'clout':
-						aVal = a.clout;
-						bVal = b.clout;
+					case 'reputation':
+						aVal = a.reputation;
+						bVal = b.reputation;
 						break;
 					case 'joinDate':
 						aVal = new Date(a.joinDate);

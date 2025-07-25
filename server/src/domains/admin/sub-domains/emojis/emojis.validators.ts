@@ -74,7 +74,7 @@ export const EmojiBaseSchema = z.object({
 
 	xpValue: z.number().min(0, 'XP value must be non-negative').optional().default(0),
 
-	cloutValue: z.number().min(0, 'Clout value must be non-negative').optional().default(0)
+	reputationValue: z.number().min(0, 'Reputation value must be non-negative').optional().default(0)
 });
 
 // Create emoji schema (excludes auto-generated fields)

@@ -29,7 +29,7 @@ interface FollowUser {
 	activeAvatarUrl?: string | null;
 	level?: number | null;
 	role?: string | null;
-	clout?: number | null;
+	reputation?: number | null;
 	followedAt: string;
 	followerCount?: number;
 }

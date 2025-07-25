@@ -47,7 +47,7 @@ interface FriendUser {
 	activeAvatarUrl?: string | null;
 	level?: number | null;
 	role?: string | null;
-	clout?: number | null;
+	reputation?: number | null;
 	friendshipStatus?: 'friends' | 'request_sent' | 'request_received' | 'blocked' | null;
 }
 
@@ -295,8 +295,8 @@ export function FriendsManager() {
 
 					<div className="flex items-center gap-4 text-xs text-zinc-500">
 						{friendship.friend.level && <span>Level {friendship.friend.level}</span>}
-						{friendship.friend.clout && (
-							<span>{friendship.friend.clout.toLocaleString()} Clout</span>
+						{friendship.friend.reputation && (
+							<span>{friendship.friend.reputation.toLocaleString()} Reputation</span>
 						)}
 						<span>
 							Friends since{' '}
@@ -467,7 +467,7 @@ export function FriendsManager() {
 
 					<div className="flex items-center gap-4 text-xs text-zinc-500">
 						{user.level && <span>Level {user.level}</span>}
-						{user.clout && <span>{user.clout.toLocaleString()} Clout</span>}
+						{user.reputation && <span>{user.reputation.toLocaleString()} Reputation</span>}
 					</div>
 				</div>
 			</div>

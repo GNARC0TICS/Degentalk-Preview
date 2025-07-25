@@ -63,11 +63,11 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useToast } from '@app/hooks/use-toast';
 import { apiRequest } from '@app/utils/api-request';
-import type { CloutAchievement } from '@shared/types/entities/clout.types';
+import type { ReputationAchievement } from '@shared/types/entities/reputation.types';
 import type { AchievementId } from '@shared/types/ids';
 
 interface AchievementsSectionProps {
-	achievements: CloutAchievement[];
+	achievements: ReputationAchievement[];
 	isLoading: boolean;
 }
 
@@ -78,7 +78,7 @@ const achievementSchema = z.object({
 		.regex(/^[a-z0-9_]+$/, 'Only lowercase letters, numbers, and underscores'),
 	name: z.string().min(1, 'Name is required').max(255),
 	description: z.string().optional(),
-	cloutReward: z.number().min(0, 'Clout reward must be positive'),
+	reputationReward: z.number().min(0, 'Reputation reward must be positive'),
 	criteriaType: z.string().optional(),
 	criteriaValue: z.number().optional(),
 	enabled: z.boolean().default(true),
@@ -114,7 +114,7 @@ const CRITERIA_TYPES = [
 export function AchievementsSection({ achievements, isLoading }: AchievementsSectionProps) {
 	const { toast } = useToast();
 	const queryClient = useQueryClient();
-	const [selectedAchievement, setSelectedAchievement] = useState<CloutAchievement | null>(null);
+	const [selectedAchievement, setSelectedAchievement] = useState<ReputationAchievement | null>(null);
 	const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
 	const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
 	const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -125,7 +125,7 @@ export function AchievementsSection({ achievements, isLoading }: AchievementsSec
 			achievementKey: '',
 			name: '',
 			description: '',
-			cloutReward: 10,
+			reputationReward: 10,
 			criteriaType: '',
 			criteriaValue: 1,
 			enabled: true,
@@ -137,13 +137,13 @@ export function AchievementsSection({ achievements, isLoading }: AchievementsSec
 	const createAchievementMutation = useMutation({
 		mutationFn: async (data: AchievementForm) => {
 			return apiRequest({
-				url: '/api/admin/clout/achievements',
+				url: '/api/admin/reputation/achievements',
 				method: 'POST',
 				data
 			});
 		},
 		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ['admin-clout-achievements'] });
+			queryClient.invalidateQueries({ queryKey: ['admin-reputation-achievements'] });
 			setIsCreateDialogOpen(false);
 			form.reset();
 			toast({
@@ -165,13 +165,13 @@ export function AchievementsSection({ achievements, isLoading }: AchievementsSec
 		mutationFn: async (data: AchievementForm & { id: AchievementId }) => {
 			const { id, ...updateData } = data;
 			return apiRequest({
-				url: `/api/admin/clout/achievements/${id}`,
+				url: `/api/admin/reputation/achievements/${id}`,
 				method: 'PUT',
 				data: updateData
 			});
 		},
 		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ['admin-clout-achievements'] });
+			queryClient.invalidateQueries({ queryKey: ['admin-reputation-achievements'] });
 			setIsEditDialogOpen(false);
 			setSelectedAchievement(null);
 			toast({
@@ -191,10 +191,10 @@ export function AchievementsSection({ achievements, isLoading }: AchievementsSec
 	// Delete achievement mutation
 	const deleteAchievementMutation = useMutation({
 		mutationFn: async (id: AchievementId) => {
-			return apiRequest({ url: `/api/admin/clout/achievements/${id}`, method: 'DELETE' });
+			return apiRequest({ url: `/api/admin/reputation/achievements/${id}`, method: 'DELETE' });
 		},
 		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ['admin-clout-achievements'] });
+			queryClient.invalidateQueries({ queryKey: ['admin-reputation-achievements'] });
 			setIsDeleteDialogOpen(false);
 			setSelectedAchievement(null);
 			toast({
@@ -214,10 +214,10 @@ export function AchievementsSection({ achievements, isLoading }: AchievementsSec
 	// Toggle achievement mutation
 	const toggleAchievementMutation = useMutation({
 		mutationFn: async (id: AchievementId) => {
-			return apiRequest({ url: `/api/admin/clout/achievements/${id}/toggle`, method: 'POST' });
+			return apiRequest({ url: `/api/admin/reputation/achievements/${id}/toggle`, method: 'POST' });
 		},
 		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ['admin-clout-achievements'] });
+			queryClient.invalidateQueries({ queryKey: ['admin-reputation-achievements'] });
 			toast({
 				title: 'Achievement Toggled',
 				description: 'Achievement status has been updated.'
@@ -237,13 +237,13 @@ export function AchievementsSection({ achievements, isLoading }: AchievementsSec
 		setIsCreateDialogOpen(true);
 	};
 
-	const handleEditAchievement = (achievement: CloutAchievement) => {
+	const handleEditAchievement = (achievement: ReputationAchievement) => {
 		setSelectedAchievement(achievement);
 		form.reset({
 			achievementKey: achievement.achievementKey,
 			name: achievement.name,
 			description: achievement.description || '',
-			cloutReward: achievement.cloutReward,
+			reputationReward: achievement.reputationReward,
 			criteriaType: achievement.criteriaType || '',
 			criteriaValue: achievement.criteriaValue || 1,
 			enabled: achievement.enabled,
@@ -252,12 +252,12 @@ export function AchievementsSection({ achievements, isLoading }: AchievementsSec
 		setIsEditDialogOpen(true);
 	};
 
-	const handleDeleteAchievement = (achievement: CloutAchievement) => {
+	const handleDeleteAchievement = (achievement: ReputationAchievement) => {
 		setSelectedAchievement(achievement);
 		setIsDeleteDialogOpen(true);
 	};
 
-	const handleToggleAchievement = (achievement: CloutAchievement) => {
+	const handleToggleAchievement = (achievement: ReputationAchievement) => {
 		toggleAchievementMutation.mutate(achievement.id as AchievementId);
 	};
 
@@ -302,10 +302,10 @@ export function AchievementsSection({ achievements, isLoading }: AchievementsSec
 						<div>
 							<CardTitle className="flex items-center gap-2">
 								<Trophy className="h-5 w-5" />
-								Clout Achievements
+								Reputation Achievements
 							</CardTitle>
 							<CardDescription>
-								Create and manage achievements that award clout to users
+								Create and manage achievements that award reputation to users
 							</CardDescription>
 						</div>
 						<Button onClick={handleCreateAchievement}>
@@ -321,7 +321,7 @@ export function AchievementsSection({ achievements, isLoading }: AchievementsSec
 								<TableRow>
 									<TableHead>Achievement</TableHead>
 									<TableHead>Criteria</TableHead>
-									<TableHead>Clout Reward</TableHead>
+									<TableHead>Reputation Reward</TableHead>
 									<TableHead>Status</TableHead>
 									<TableHead className="text-right">Actions</TableHead>
 								</TableRow>
@@ -383,7 +383,7 @@ export function AchievementsSection({ achievements, isLoading }: AchievementsSec
 											<TableCell>
 												<Badge variant="outline" className="flex items-center gap-1">
 													<Zap className="h-3 w-3" />
-													{achievement.cloutReward}
+													{achievement.reputationReward}
 												</Badge>
 											</TableCell>
 											<TableCell>
@@ -447,7 +447,7 @@ export function AchievementsSection({ achievements, isLoading }: AchievementsSec
 					<DialogHeader>
 						<DialogTitle>Create New Achievement</DialogTitle>
 						<DialogDescription>
-							Create a new achievement that awards clout when users meet specific criteria.
+							Create a new achievement that awards reputation when users meet specific criteria.
 						</DialogDescription>
 					</DialogHeader>
 					<Form {...form}>
@@ -504,10 +504,10 @@ export function AchievementsSection({ achievements, isLoading }: AchievementsSec
 							<div className="grid grid-cols-3 gap-4">
 								<FormField
 									control={form.control}
-									name="cloutReward"
+									name="reputationReward"
 									render={({ field }) => (
 										<FormItem>
-											<FormLabel>Clout Reward</FormLabel>
+											<FormLabel>Reputation Reward</FormLabel>
 											<FormControl>
 												<Input
 													type="number"
@@ -674,10 +674,10 @@ export function AchievementsSection({ achievements, isLoading }: AchievementsSec
 							<div className="grid grid-cols-3 gap-4">
 								<FormField
 									control={form.control}
-									name="cloutReward"
+									name="reputationReward"
 									render={({ field }) => (
 										<FormItem>
-											<FormLabel>Clout Reward</FormLabel>
+											<FormLabel>Reputation Reward</FormLabel>
 											<FormControl>
 												<Input
 													type="number"
@@ -807,7 +807,7 @@ export function AchievementsSection({ achievements, isLoading }: AchievementsSec
 										{selectedAchievement.achievementKey}
 									</p>
 									<Badge variant="outline" className="mt-1">
-										{selectedAchievement.cloutReward} clout reward
+										{selectedAchievement.reputationReward} reputation reward
 									</Badge>
 								</div>
 							</div>

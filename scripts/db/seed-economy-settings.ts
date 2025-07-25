@@ -7,9 +7,9 @@ import { eq } from 'drizzle-orm'; // Import eq for precise updates
 const defaultSettings = [
   { key: 'xp_per_post', value: 3 },
   { key: 'xp_per_reply', value: 2 },
-  { key: 'clout_per_upvote', value: 1 }, 
-  { key: 'clout_per_helpful', value: 2 },
-  { key: 'clout_max_cap', value: 999 },
+  { key: 'reputation_per_upvote', value: 1 }, 
+  { key: 'reputation_per_helpful', value: 2 },
+  { key: 'reputation_max_cap', value: 999 },
   { key: 'X_SHARE_XP', value: 10 },
   { key: 'X_SHARE_DGT', value: 0 },
   { key: 'X_REFERRAL_XP', value: 50 },

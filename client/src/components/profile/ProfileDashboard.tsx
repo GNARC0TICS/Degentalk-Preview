@@ -152,7 +152,7 @@ function renderWidget(
 		case 'reputation':
 			return (
 				<ReputationCard
-					clout={extendedStats.clout}
+					reputation={extendedStats.reputation}
 					reputation={extendedStats.reputation}
 					dailyXpGained={extendedStats.dailyXpGained}
 					lastXpGainDate={extendedStats.lastXpGainDate}

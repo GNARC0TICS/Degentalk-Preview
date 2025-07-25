@@ -67,7 +67,7 @@ export const UserSchema = z.object({
 	level: z.number().nonnegative(),
 	xp: z.number().nonnegative(),
 	dgt: z.number().nonnegative(),
-	clout: z.number(),
+	reputation: z.number(),
 	createdAt: z.string().datetime(),
 	updatedAt: z.string().datetime(),
 	bannedUntil: z.string().datetime().nullable(),

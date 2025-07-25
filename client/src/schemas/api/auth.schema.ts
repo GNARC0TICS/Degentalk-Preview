@@ -17,7 +17,7 @@ export const UserSchema = z.object({
   xp: z.number(),
   isVerified: z.boolean(),
   bio: z.string().nullable().optional(),
-  clout: z.number().optional(),
+  reputation: z.number().optional(),
   reputation: z.number().optional(),
   website: z.string().nullable().optional(),
   github: z.string().nullable().optional(),

@@ -463,12 +463,12 @@ export class AchievementProcessorService {
 				}
 			}
 
-			// Award Clout (integrate with existing Clout service)
-			if (achievement.rewardClout > 0) {
-				// TODO: Integrate with Clout service
+			// Award Reputation (integrate with existing Reputation service)
+			if (achievement.rewardReputation > 0) {
+				// TODO: Integrate with Reputation service
 				logger.info(
 					'ACHIEVEMENT_REWARD',
-					`Would award ${achievement.rewardClout} Clout to user ${userId}`
+					`Would award ${achievement.rewardReputation} Reputation to user ${userId}`
 				);
 			}
 

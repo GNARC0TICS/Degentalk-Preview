@@ -35,7 +35,7 @@ export const achievements = pgTable('achievements', {
 	rewardXp: integer('reward_xp').notNull().default(0),
 	rewardPoints: integer('reward_points').notNull().default(0),
 	rewardDgt: integer('reward_dgt').notNull().default(0),
-	rewardClout: integer('reward_clout').notNull().default(0),
+	rewardReputation: integer('reward_reputation').notNull().default(0),
 	// Behavior
 	isActive: boolean('is_active').notNull().default(true),
 	isSecret: boolean('is_secret').notNull().default(false),

@@ -4,14 +4,14 @@ import { Badge } from '@app/components/ui/badge';
 import { Button } from '@app/components/ui/button';
 import { Progress } from '@app/components/ui/progress';
 import { Crown, Sparkles, Zap, Star } from 'lucide-react';
-import type { CloutTier } from '@app/pages/admin/clout';
+import type { ReputationTier } from '@app/pages/admin/reputation';
 
-interface CloutTiersSectionProps {
-	tiers: CloutTier[];
+interface ReputationTiersSectionProps {
+	tiers: ReputationTier[];
 	isLoading: boolean;
 }
 
-export function CloutTiersSection({ tiers, isLoading }: CloutTiersSectionProps) {
+export function ReputationTiersSection({ tiers, isLoading }: ReputationTiersSectionProps) {
 	if (isLoading) {
 		return (
 			<Card>
@@ -24,7 +24,7 @@ export function CloutTiersSection({ tiers, isLoading }: CloutTiersSectionProps) 
 		);
 	}
 
-	const getTierEffectPreview = (tier: CloutTier) => {
+	const getTierEffectPreview = (tier: ReputationTier) => {
 		if (!tier.titleEffect) return null;
 
 		const previewStyles: React.CSSProperties = {
@@ -65,7 +65,7 @@ export function CloutTiersSection({ tiers, isLoading }: CloutTiersSectionProps) 
 						<div>
 							<CardTitle className="flex items-center gap-2">
 								<Crown className="h-5 w-5" />
-								Clout Tier Management
+								Reputation Tier Management
 							</CardTitle>
 							<CardDescription>
 								Configure reputation tiers, benefits, and visual effects for users
@@ -98,7 +98,7 @@ export function CloutTiersSection({ tiers, isLoading }: CloutTiersSectionProps) 
 												</div>
 												<div className="text-center mt-2">
 													<p className="text-xs font-medium">{tier.name}</p>
-													<p className="text-xs text-muted-foreground">{tier.minClout}+ clout</p>
+													<p className="text-xs text-muted-foreground">{tier.minReputation}+ reputation</p>
 												</div>
 											</div>
 											{index < tiers.length - 1 && <div className="flex-1 h-px bg-border"></div>}
@@ -130,8 +130,8 @@ export function CloutTiersSection({ tiers, isLoading }: CloutTiersSectionProps) 
 														{tier.name}
 													</h3>
 													<p className="text-sm text-muted-foreground">
-														{tier.minClout}+ clout
-														{tier.maxClout && ` (up to ${tier.maxClout})`}
+														{tier.minReputation}+ reputation
+														{tier.maxReputation && ` (up to ${tier.maxReputation})`}
 													</p>
 												</div>
 											</div>
@@ -180,26 +180,26 @@ export function CloutTiersSection({ tiers, isLoading }: CloutTiersSectionProps) 
 											<h4 className="text-sm font-semibold mb-2">Requirements</h4>
 											<div className="space-y-2">
 												<div className="flex justify-between text-xs">
-													<span>Minimum Clout:</span>
-													<span className="font-medium">{tier.minClout}</span>
+													<span>Minimum Reputation:</span>
+													<span className="font-medium">{tier.minReputation}</span>
 												</div>
-												{tier.maxClout && (
+												{tier.maxReputation && (
 													<div className="flex justify-between text-xs">
-														<span>Maximum Clout:</span>
-														<span className="font-medium">{tier.maxClout}</span>
+														<span>Maximum Reputation:</span>
+														<span className="font-medium">{tier.maxReputation}</span>
 													</div>
 												)}
-												{tier.minClout > 0 && (
+												{tier.minReputation > 0 && (
 													<div className="mt-2">
 														<div className="flex justify-between text-xs mb-1">
 															<span>Progress to next tier:</span>
 															<span>
-																{tier.maxClout
-																	? `${tier.maxClout - tier.minClout + 1} clout range`
+																{tier.maxReputation
+																	? `${tier.maxReputation - tier.minReputation + 1} reputation range`
 																	: 'Final tier'}
 															</span>
 														</div>
-														{tier.maxClout && (
+														{tier.maxReputation && (
 															<Progress
 																value={50}
 																className="h-2"
@@ -221,22 +221,22 @@ export function CloutTiersSection({ tiers, isLoading }: CloutTiersSectionProps) 
 						<Card>
 							<CardHeader>
 								<CardTitle className="text-lg">Tier System Configuration</CardTitle>
-								<CardDescription>Global settings for the clout tier system</CardDescription>
+								<CardDescription>Global settings for the reputation tier system</CardDescription>
 							</CardHeader>
 							<CardContent className="space-y-4">
 								<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 									<div className="space-y-2">
 										<label className="text-sm font-medium">Tier Calculation Method</label>
-										<Badge variant="outline">Total Lifetime Clout</Badge>
+										<Badge variant="outline">Total Lifetime Reputation</Badge>
 										<p className="text-xs text-muted-foreground">
-											Users are ranked by their total accumulated clout across all activities
+											Users are ranked by their total accumulated reputation across all activities
 										</p>
 									</div>
 									<div className="space-y-2">
 										<label className="text-sm font-medium">Tier Updates</label>
 										<Badge variant="outline">Real-time</Badge>
 										<p className="text-xs text-muted-foreground">
-											Tier changes apply immediately when clout thresholds are reached
+											Tier changes apply immediately when reputation thresholds are reached
 										</p>
 									</div>
 									<div className="space-y-2">
