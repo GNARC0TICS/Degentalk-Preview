@@ -2,13 +2,12 @@ import type { UserId } from '@shared/types/ids';
 import { userService } from '@core/services/user.service';
 import { Router } from 'express'
 import type { Router as RouterType } from 'express';
-// import { shopItems } from '@api/utils/shop-utils'; // TODO: File missing
-const shopItems: any[] = []; // Temporary empty array
+import { shopItems } from '@api/utils/shop-utils';
 import { db } from '@db';
 import { products, userInventory, transactions } from '@schema';
 import { eq, isNull, or, and, gte, lte } from 'drizzle-orm';
-import { dgtService } from '@api/domains/wallet/services/dgtService';
-import { isAuthenticated } from '@api/domains/auth/middleware/auth.middleware';
+import { dgtService } from '@domains/wallet/services/dgtService';
+import { isAuthenticated } from '@domains/auth/middleware/auth.middleware';
 import { walletConfig } from '@shared/config/wallet.config';
 import { logger } from '@core/logger';
 import { z } from 'zod';

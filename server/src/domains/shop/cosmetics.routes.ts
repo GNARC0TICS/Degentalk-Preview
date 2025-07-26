@@ -9,7 +9,7 @@ import type { UserId } from '@shared/types/ids';
 import { Router } from 'express'
 import type { Router as RouterType } from 'express';
 import { userService } from '@core/services/user.service';
-import { isAuthenticated } from '@api/domains/auth/middleware/auth.middleware';
+import { isAuthenticated } from '@domains/auth/middleware/auth.middleware';
 import { logger } from '@core/logger';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 import { db } from '@db';

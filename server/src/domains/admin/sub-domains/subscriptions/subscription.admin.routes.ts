@@ -1,4 +1,4 @@
 /**
  * Subscriptions Bridge Routes
  */
-export { default } from '@api/domains/subscriptions/admin/subscription.admin.routes';
+export { default } from '@domains/subscriptions/admin/subscription.admin.routes';

@@ -71,9 +71,7 @@ export interface ExtendedProfileStats {
 	referralLevel: number;
 	referralsCount: number;
 
-	// Path XP breakdown
-	pathXp: Record<string, number>;
-	pathMultipliers: Record<string, number>;
+	// Path XP removed - using linear XP system only
 
 	// Account security
 	lastSeenAt: string | null;
@@ -121,9 +119,7 @@ export class ProfileStatsService {
 					// Referrals
 					referralLevel: users.referralLevel,
 
-					// Path XP
-					pathXp: users.pathXp,
-					pathMultipliers: users.pathMultipliers,
+					// Path XP columns exist but deprecated
 
 					// Security
 					lastSeenAt: users.lastSeenAt,
@@ -213,9 +209,7 @@ export class ProfileStatsService {
 				referralLevel: user.referralLevel || 0,
 				referralsCount,
 
-				// Path XP breakdown
-				pathXp: (user.pathXp as Record<string, number>) || {},
-				pathMultipliers: (user.pathMultipliers as Record<string, number>) || {},
+				// Path XP removed - using linear XP system only
 
 				// Account security
 				lastSeenAt: user.lastSeenAt?.toISOString() || null,

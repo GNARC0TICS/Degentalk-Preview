@@ -6,7 +6,7 @@ import { FollowsService } from './follows.service';
 import { requireAuth } from '@server/middleware/auth';
 import { z } from 'zod';
 import { logger } from '@core/logger';
-import { UserTransformer } from '@api/domains/users/transformers/user.transformer';
+import { UserTransformer } from '@domains/users/transformers/user.transformer';
 import {
 	toPublicList,
 	sendSuccessResponse,

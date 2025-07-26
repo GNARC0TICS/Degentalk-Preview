@@ -3,7 +3,7 @@ import type { ReactNode } from 'react';
 import { z } from 'zod';
 import { forumMap } from '@config/forumMap';
 import type { RootForum as Zone } from '@config/forumMap';
-import type { CategoryId, ForumId, GroupId } from '@shared/types/ids';
+import type { ForumId, GroupId } from '@shared/types/ids';
 import { toId, parseId } from '@shared/types/index';
 import { logger } from '@app/lib/logger';
 
@@ -83,7 +83,7 @@ const ApiEntitySchema = z
 		slug: z.string().min(1),
 		name: z.string().min(1),
 		description: z.string().nullish(),
-		parentId: z.custom<CategoryId>().nullish(),
+		parentId: z.custom<ForumId>().nullish(),
 		type: z.enum(['zone', 'forum', 'category']),
 		position: z.preprocess((v) => (v === null || v === undefined ? 0 : v), z.number()).optional(),
 		isVip: z.boolean().default(false).optional(),
@@ -186,7 +186,7 @@ export interface MergedForum {
 	rules: MergedRules;
 	threadCount: number;
 	postCount: number;
-	parentCategoryId?: CategoryId | null;
+	parentForumId?: ForumId | null;
 	canHaveThreads?: boolean;
 	isPopular?: boolean;
 	lastActivityAt?: string;
@@ -286,7 +286,7 @@ function makeMergedForum(api: ApiEntity, parentForumId: ForumId): MergedForum {
 		rules: buildRules(api),
 		threadCount: api.threadCount ?? 0,
 		postCount: api.postCount ?? 0,
-		parentCategoryId: null,
+		parentForumId: null,
 		canHaveThreads: true,
 		isPopular: api.isPopular ?? false,
 		lastActivityAt:
@@ -441,7 +441,7 @@ function fallbackStructure(staticZones: Zone[]) {
 				},
 				threadCount: 0,
 				postCount: 0,
-				parentCategoryId: null,
+				parentForumId: null,
 				canHaveThreads: true,
 				isPopular: false,
 				lastActivityAt: undefined
@@ -489,7 +489,7 @@ function fallbackStructure(staticZones: Zone[]) {
 						},
 						threadCount: 0,
 						postCount: 0,
-						parentCategoryId: null,
+						parentForumId: null,
 						canHaveThreads: true,
 						isPopular: false,
 						lastActivityAt: undefined

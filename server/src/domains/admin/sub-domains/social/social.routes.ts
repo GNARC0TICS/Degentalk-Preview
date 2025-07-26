@@ -1,4 +1,4 @@
 /**
  * Social Bridge Routes
  */
-export { default } from '@api/domains/users/social/social.routes';
+export { default } from '@domains/users/social/social.routes';

@@ -8,12 +8,20 @@ import { logger } from '@core/logger';
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-if (!supabaseUrl || !supabaseServiceKey) {
-	logger.error(
-		'❌ STORAGE SERVICE: SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY is missing. Storage operations will fail.'
+let supabase: SupabaseClient | null = null;
+
+if (supabaseUrl && supabaseServiceKey) {
+	try {
+		supabase = createClient(supabaseUrl, supabaseServiceKey);
+		logger.info('✅ STORAGE SERVICE: Supabase client initialized');
+	} catch (error) {
+		logger.error('❌ STORAGE SERVICE: Failed to initialize Supabase client:', error);
+	}
+} else {
+	logger.warn(
+		'⚠️ STORAGE SERVICE: SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY is missing. Using fallback storage service.'
 	);
 }
-const supabase: SupabaseClient = createClient(supabaseUrl!, supabaseServiceKey!);
 
 // --- Constants for Buckets ---
 export const AVATARS_BUCKET = 'avatars';
@@ -128,10 +136,10 @@ class SupabaseStorageService implements IStorageService {
 	async getPresignedUploadUrl(params: GetPresignedUploadUrlParams): Promise<PresignedUrlInfo> {
 		const { bucket, relativePath: targetPath, fileType, fileSize } = params;
 
-		if (!supabaseUrl || !supabaseServiceKey) {
+		if (!supabase) {
 			throw new DegenUploadError(
-				'Storage Service misconfig: Supabase creds not set. Tell the devs their .env is jacked.',
-				500
+				'Storage Service not configured. Supabase credentials are required for file uploads.',
+				503
 			);
 		}
 
@@ -204,10 +212,10 @@ class SupabaseStorageService implements IStorageService {
 	}
 
 	getPublicUrl(bucket: string, relativePath: string): string {
-		if (!supabaseUrl) {
-			logger.error('Supabase URL not configured, cannot get public URL.');
+		if (!supabase) {
+			logger.error('Supabase not configured, cannot get public URL.');
 			// Return a non-functional placeholder or throw, depending on desired strictness
-			return `error://supabase_url_not_configured/${bucket}/${relativePath}`;
+			return `error://storage_not_configured/${bucket}/${relativePath}`;
 		}
 		const { data } = supabase.storage.from(bucket).getPublicUrl(relativePath);
 
@@ -293,7 +301,33 @@ class SupabaseStorageService implements IStorageService {
 }
 
 // Export a singleton instance
-export const storageService: IStorageService = new SupabaseStorageService();
+// Simple fallback storage service for when Supabase is not configured
+class FallbackStorageService implements IStorageService {
+	async getPresignedUploadUrl(params: GetPresignedUploadUrlParams): Promise<PresignedUrlInfo> {
+		logger.warn('⚠️ STORAGE: Using fallback storage service - uploads will not work');
+		throw new DegenUploadError(
+			'File uploads are not configured. Please configure Supabase or another storage provider.',
+			503
+		);
+	}
+
+	getPublicUrl(bucket: string, relativePath: string): string {
+		return `https://placeholder.com/${bucket}/${relativePath}`;
+	}
+
+	async verifyFileExists(bucket: string, relativePath: string): Promise<boolean> {
+		return false;
+	}
+
+	async deleteFile(bucket: string, relativePath: string): Promise<boolean> {
+		return true;
+	}
+}
+
+// Use Supabase if configured, otherwise fallback
+export const storageService: IStorageService = supabase 
+	? new SupabaseStorageService() 
+	: new FallbackStorageService();
 
 // --- Stub for Google Cloud Storage Service (Bonus) ---
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

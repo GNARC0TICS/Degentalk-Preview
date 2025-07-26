@@ -5,7 +5,7 @@
  */
 
 import { Router } from 'express';
-import { titlesRoutes } from '@api/domains/gamification';
+import { titlesRoutes } from '@domains/gamification';
 
 const router = Router();
 

@@ -1,7 +1,7 @@
 import { eq } from 'drizzle-orm';
 import { db } from '@core/db';
 import { uiThemes, type UiTheme, type NewUiTheme } from '@schema/admin/uiThemes';
-import { ZONE_THEMES as zoneThemesConfig } from '@shared/config/forumThemes.config';
+import { FORUM_THEMES as forumThemesConfig } from '@shared/config/forumThemes.config';
 
 interface UiThemesCache {
 	data: Record<string, UiTheme>;
@@ -31,16 +31,20 @@ export class UiThemesService {
 		}
 
 		// Merge with config as fallback
-		for (const [key, configTheme] of Object.entries(zoneThemesConfig)) {
+		for (const [key, configTheme] of Object.entries(forumThemesConfig)) {
 			if (!themeMap[key]) {
 				// Cast config to UiTheme-ish object (some fields may be undefined)
 				themeMap[key] = {
 					themeKey: key,
 					id: 0, // placeholder (config, not DB)
-					icon: configTheme.icon?.name ?? null,
+					icon: configTheme.icon ?? null,
 					color: configTheme.accent ?? null,
 					bgColor: configTheme.gradient ?? null,
 					borderColor: configTheme.border ?? null,
+					gradient: configTheme.gradient ?? null,
+					glow: configTheme.glow ?? null,
+					glowIntensity: configTheme.glowIntensity ?? null,
+					rarityOverlay: configTheme.rarityOverlay ?? null,
 					label: key ?? null,
 					version: 1,
 					isActive: true,

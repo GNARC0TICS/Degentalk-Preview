@@ -13,7 +13,7 @@ import { db } from '@db';
 import { sql } from 'drizzle-orm';
 import { users, transactions } from '@schema';
 import { eq } from 'drizzle-orm';
-import { isAdmin } from '@api/domains/auth/middleware/auth.middleware';
+import { isAdmin } from '@domains/auth/middleware/auth.middleware';
 import { getUserId } from '../auth/services/auth.service';
 import { logger } from '@core/logger';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';

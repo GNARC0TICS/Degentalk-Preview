@@ -14,8 +14,8 @@ import {
 	type RealtimeAnalyticsQuery,
 	type CacheOperation
 } from './system-analytics.validators';
-import { formatAdminResponse, AdminOperationBoundary } from '@api/domains/admin/shared';
-import { AdminError, AdminErrorCodes } from '@api/domains/admin/admin.errors';
+import { formatAdminResponse, AdminOperationBoundary } from '@domains/admin/shared';
+import { AdminError, AdminErrorCodes } from '@domains/admin/admin.errors';
 import { cacheService, CacheCategory } from '@core/cache/unified-cache.service';
 
 export class SystemAnalyticsController {

@@ -10,7 +10,7 @@ import {
 	getRecentSecurityEvents,
 	triggerTestSecurityEvent 
 } from '../controllers/security-monitor.controller';
-import { isAuthenticated, isAdmin } from '@api/domains/auth/middleware/auth.middleware';
+import { isAuthenticated, isAdmin } from '@domains/auth/middleware/auth.middleware';
 
 const router: RouterType = Router();
 

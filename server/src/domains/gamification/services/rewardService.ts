@@ -2,7 +2,7 @@ import { db } from '@db';
 import type { UserId } from '@shared/types/ids';
 import { economySettings } from '@schema';
 import { eq } from 'drizzle-orm';
-import { dgtService } from '@api/domains/wallet/services/dgtService';
+import { dgtService } from '@domains/wallet/services/dgtService';
 import { logger, LogAction } from '@core/logger';
 import { reportErrorServer } from '@server/lib/report-error';
 

@@ -10,7 +10,7 @@ import express from 'express'
 import type { Router as RouterType } from 'express';
 import { tipController } from './tip.controller';
 import { authenticateJWT as requireAuth } from '@api/middleware/authenticate-jwt';
-import { isAdmin as requireAdmin } from '@api/domains/auth/middleware/auth.middleware';
+import { isAdmin as requireAdmin } from '@domains/auth/middleware/auth.middleware';
 import { validateRequest } from '@api/middleware/validate-request';
 import { z } from 'zod';
 

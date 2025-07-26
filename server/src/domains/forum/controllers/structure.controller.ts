@@ -1,8 +1,8 @@
 import type { Request, Response } from 'express';
 import { logger } from '@core/logger';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
-import { forumStructureService } from '@api/domains/forum/services/structure.service';
-import { ForumTransformer } from '@api/domains/forum/transformers/forum.transformer';
+import { forumStructureService } from '@domains/forum/services/structure.service';
+import { ForumTransformer } from '@domains/forum/transformers/forum.transformer';
 
 class ForumStructureController {
 	async getStructure(req: Request, res: Response) {

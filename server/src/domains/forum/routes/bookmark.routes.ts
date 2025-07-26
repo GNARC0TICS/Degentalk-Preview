@@ -13,7 +13,7 @@ import { z } from 'zod';
 import { db } from '@db';
 import { userThreadBookmarks } from '@schema';
 import { eq, and } from 'drizzle-orm';
-import { isAuthenticated as requireAuth } from '@api/domains/auth/middleware/auth.middleware';
+import { isAuthenticated as requireAuth } from '@domains/auth/middleware/auth.middleware';
 import { logger } from '@core/logger';
 import { asyncHandler } from '@core/errors';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';

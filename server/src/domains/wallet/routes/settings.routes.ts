@@ -9,7 +9,7 @@ import type { Router as RouterType } from 'express';
 import { settingsService } from '@core/services/settings.service';
 import { logger } from '@core/logger';
 import { send } from '@api/utils/response';
-import { isAuthenticated } from '@api/domains/auth/middleware/auth.middleware';
+import { isAuthenticated } from '@domains/auth/middleware/auth.middleware';
 import { getUser } from '@api/utils/request-user';
 import { hasPermission } from '@shared/lib/auth/permissions';
 import { WalletError, ErrorCodes } from '@core/errors';

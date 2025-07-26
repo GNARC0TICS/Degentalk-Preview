@@ -1,4 +1,4 @@
 /**
  * Economy Admin Bridge Routes
  */
-export { default } from '@api/domains/economy/admin/economy.routes';
+export { default } from '@domains/economy/admin/economy.routes';

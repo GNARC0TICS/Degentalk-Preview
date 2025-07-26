@@ -4,7 +4,7 @@ import { forumService } from './forum.service';
 import type { ThreadSearchParams } from './forum.service';
 import { logger } from '@core/logger';
 import type { StructureId, ThreadId } from '@shared/types/ids';
-import { ForumTransformer } from '@api/domains/forum/transformers/forum.transformer';
+import { ForumTransformer } from '@domains/forum/transformers/forum.transformer';
 import {
 	toPublicList,
 	sendSuccessResponse,

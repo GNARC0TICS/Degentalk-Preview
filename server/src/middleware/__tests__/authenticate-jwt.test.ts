@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import type { Response, NextFunction } from 'express';
 import { authenticateJWT } from '../authenticate-jwt';
-import * as jwtUtils from '@api/domains/auth/utils/jwt.utils';
+import * as jwtUtils from '@domains/auth/utils/jwt.utils';
 import { userService } from '@core/services/user.service';
 import type { AuthenticatedRequest } from '@api/types/auth.types';
 

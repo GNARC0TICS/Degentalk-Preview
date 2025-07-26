@@ -134,10 +134,5 @@ export {
   isTitleId 
 } from '../utils/id.js';
 
-/* eslint-disable degen/no-missing-branded-id-import */
-/** @deprecated SECURITY: Use toId<'Category'>() from @shared/utils/id instead */
-export const asCategoryId = (id: string): CategoryId => {
-	console.error('SECURITY WARNING: asCategoryId() bypasses validation. Use toId() instead.');
-	return id as CategoryId;
-};
+// asCategoryId function removed - use toId<'Category'>() from @shared/utils/id instead
 

@@ -7,7 +7,7 @@
 import { Router } from 'express';
 
 // Import the moved XP routes from gamification domain
-import xpAdminRoutes from '@api/domains/gamification/admin/xp.routes';
+import xpAdminRoutes from '@domains/gamification/admin/xp.routes';
 
 const router = Router();
 

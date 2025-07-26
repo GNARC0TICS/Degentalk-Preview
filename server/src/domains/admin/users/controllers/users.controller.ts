@@ -13,7 +13,7 @@ import { ilike } from 'drizzle-orm';
 import type { UserId, AdminId } from '@shared/types/ids';
 import { toId, isValidId } from '@shared/types';
 import { logger } from '@core/logger';
-import { UserTransformer } from '@api/domains/users/transformers/user.transformer';
+import { UserTransformer } from '@domains/users/transformers/user.transformer';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 
 export class AdminUsersController {

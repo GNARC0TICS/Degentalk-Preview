@@ -5,7 +5,7 @@
 
 import { Router } from 'express'
 import type { Router as RouterType } from 'express';
-import { isAuthenticated, isAdminOrModerator } from '@api/domains/auth/middleware/auth.middleware';
+import { isAuthenticated, isAdminOrModerator } from '@domains/auth/middleware/auth.middleware';
 import {
 	requireThreadSolvePermission,
 	requireThreadTagPermission

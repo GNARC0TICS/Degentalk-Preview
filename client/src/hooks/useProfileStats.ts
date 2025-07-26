@@ -62,9 +62,7 @@ export interface ExtendedProfileStats {
 	referralLevel: number;
 	referralsCount: number;
 
-	// Path XP breakdown
-	pathXp: Record<string, number>;
-	pathMultipliers: Record<string, number>;
+	// Path XP removed - using linear XP system only
 
 	// Account security
 	lastSeenAt: string | null;

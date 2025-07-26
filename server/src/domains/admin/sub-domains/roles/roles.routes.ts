@@ -2,7 +2,7 @@ import { Router } from 'express'
 import type { Router as RouterType } from 'express';
 import { userService } from '@core/services/user.service';
 import { AdminRolesController } from './roles.controller';
-import { canUser } from '@api/domains/auth/utils/canUser';
+import { canUser } from '@domains/auth/utils/canUser';
 import { sendErrorResponse } from '@core/utils/transformer.helpers';
 
 const controller = new AdminRolesController();

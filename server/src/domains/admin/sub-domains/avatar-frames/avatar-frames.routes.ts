@@ -1,4 +1,4 @@
 /**
  * Avatar Frames Bridge Routes
  */
-export { default } from '@api/domains/shop/cosmetics/avatar-frames.routes';
+export { default } from '@domains/shop/cosmetics/avatar-frames.routes';

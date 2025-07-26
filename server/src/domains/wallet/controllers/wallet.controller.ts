@@ -16,10 +16,10 @@ import type {
 import { logger } from '@core/logger';
 import { WalletError, ErrorCodes } from '@core/errors';
 import { getUser } from '@core/utils/auth.helpers';
-import { walletService } from '@api/domains/wallet/services/wallet.service';
+import { walletService } from '@domains/wallet/services/wallet.service';
 import { walletConfig } from '@shared/config/wallet.config';
 import { settingsService } from '@core/services/settings.service';
-import { hasPermission } from '@api/domains/admin/adminRegistry';
+import { hasPermission } from '@domains/admin/adminRegistry';
 import { send } from '@api/utils/response';
 
 // Import transformers

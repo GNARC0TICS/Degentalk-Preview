@@ -30,7 +30,7 @@ import { WebSocket } from 'ws';
 import {
 	isAuthenticated,
 	isAuthenticatedOptional
-} from '@api/domains/auth/middleware/auth.middleware';
+} from '@domains/auth/middleware/auth.middleware';
 import { logger, LogLevel, LogAction } from '@core/logger';
 import { displayPreferencesSchema } from './preferences.validators';
 import { getUserIdFromRequest } from '@core/utils/auth.helpers';

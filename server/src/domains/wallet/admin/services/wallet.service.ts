@@ -12,8 +12,8 @@ import { eq, sql } from 'drizzle-orm';
 import type { UserId } from '@shared/types/ids';
 import { logger } from '@core/logger';
 import { WalletError, ErrorCodes } from '@core/errors';
-import { ccpaymentService } from '@api/domains/wallet/providers/ccpayment/ccpayment.service';
-import type { CryptoBalance } from '@api/domains/wallet/providers/ccpayment/ccpayment.service';
+import { ccpaymentService } from '@domains/wallet/providers/ccpayment/ccpayment.service';
+import type { CryptoBalance } from '@domains/wallet/providers/ccpayment/ccpayment.service';
 
 export class AdminWalletService {
 

@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import type { Router as RouterType } from 'express';
 import { createPresignedUploadUrlController, confirmUploadController } from './upload.controller';
-import { isAuthenticated } from '@api/domains/auth/middleware/auth.middleware';
+import { isAuthenticated } from '@domains/auth/middleware/auth.middleware';
 
 const router: RouterType = Router();
 

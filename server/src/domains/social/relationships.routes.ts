@@ -17,10 +17,10 @@ import {
 	isAuthenticated,
 	isAdminOrModerator,
 	isAdmin
-} from '@api/domains/auth/middleware/auth.middleware';
+} from '@domains/auth/middleware/auth.middleware';
 import { getUserIdFromRequest } from '@core/utils/auth.helpers';
 import { logger } from '@core/logger';
-import { UserTransformer } from '@api/domains/users/transformers/user.transformer';
+import { UserTransformer } from '@domains/users/transformers/user.transformer';
 import {
 	toPublicList,
 	sendSuccessResponse,

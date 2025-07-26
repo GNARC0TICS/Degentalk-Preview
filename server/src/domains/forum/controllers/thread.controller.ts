@@ -3,14 +3,14 @@ import { z } from 'zod';
 import { logger } from '@core/logger';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 import { getUser } from '@core/utils/auth.helpers';
-import { threadService } from '@api/domains/forum/services/thread.service';
-import { ThreadTransformer } from '@api/domains/forum/transformers/thread.transformer';
+import { threadService } from '@domains/forum/services/thread.service';
+import { ThreadTransformer } from '@domains/forum/transformers/thread.transformer';
 import type { StructureId, ThreadId, UserId, TagId } from '@shared/types/ids';
 import { db } from '@db';
 import { forumStructure } from '@schema';
 import { eq } from 'drizzle-orm';
-import { ForumTransformer } from '@api/domains/forum/transformers/forum.transformer';
-import { postService } from '@api/domains/forum/services/post.service';
+import { ForumTransformer } from '@domains/forum/transformers/forum.transformer';
+import { postService } from '@domains/forum/services/post.service';
 
 class ThreadController {
 	async searchThreads(req: Request, res: Response) {
