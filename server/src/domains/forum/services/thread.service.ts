@@ -28,6 +28,7 @@ import type {
 } from '@shared/types/core/forum.types';
 import { eventLogger } from '../../activity/services/event-logger.service';
 import type { ForumId, StructureId, ThreadId, UserId, PostId, TagId } from '@shared/types/ids';
+import { MentionsService } from '../../social/mentions.service';
 import { getThreadRepository } from '@core/repository/repository-factory';
 
 // Using centralized cache service (Redis with in-memory fallback)
@@ -711,7 +712,7 @@ export class ThreadService {
 				.returning();
 
 			// 1️⃣  Create the very first post inside this thread so the UI has content
-			await postService.createPost({
+			const firstPost = await postService.createPost({
 				content,
 				threadId: newThread.id,
 				userId,
@@ -723,7 +724,33 @@ export class ThreadService {
 				await this.addTagsToThread(newThread.id, tagNames);
 			}
 
-			// 3️⃣  Emit event-log for analytics / notifications
+			// 3️⃣  Process mentions in thread title and first post content
+			try {
+				// Process mentions in thread title
+				await MentionsService.processMentions({
+					content: title,
+					mentioningUserId: userId,
+					type: 'thread',
+					threadId: newThread.id,
+					context: title
+				});
+
+				// Process mentions in first post content
+				if (firstPost && firstPost.id) {
+					await MentionsService.processMentions({
+						content: content,
+						mentioningUserId: userId,
+						type: 'post',
+						threadId: newThread.id,
+						postId: firstPost.id,
+						context: content.slice(0, 200)
+					});
+				}
+			} catch (err) {
+				logger.warn('ThreadService', 'Failed to process mentions', { err });
+			}
+
+			// 4️⃣  Emit event-log for analytics / notifications
 			try {
 				await eventLogger.logThreadCreated(userId, String(newThread.id));
 			} catch (err) {

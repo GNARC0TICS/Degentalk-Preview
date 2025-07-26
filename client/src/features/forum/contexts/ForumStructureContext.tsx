@@ -312,6 +312,11 @@ function processApiData(resp: ForumStructureApiResponse) {
 	const childForums = resp.forums.filter(f => f.parentId);
 
 	// Zones first (top-level forums)
+	// Create a map of slug to config for easy lookup
+	const configBySlug = Object.fromEntries(
+		forumMap.forums.map(f => [f.slug, f])
+	);
+
 	zonesData.forEach((z) => {
 		const zone: MergedForum = {
 			id: z.id,
@@ -319,7 +324,7 @@ function processApiData(resp: ForumStructureApiResponse) {
 			name: z.name,
 			description: z.description,
 			type: 'forum',
-			isFeatured: z.pluginData?.isFeatured === true,
+			isFeatured: configBySlug[z.slug]?.isFeatured || z.pluginData?.isFeatured === true,
 			position: z.position ?? 0,
 			forums: [],
 			theme: buildTheme(z),
@@ -382,7 +387,7 @@ function fallbackStructure(staticZones: Zone[]) {
 			name: z.name,
 			description: z.description,
 			type: 'forum',
-			isFeatured: z.type === 'primary',
+			isFeatured: z.isFeatured === true,
 			position: z.position ?? 0,
 			forums: [],
 			theme: {

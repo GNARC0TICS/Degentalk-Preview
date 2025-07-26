@@ -45,7 +45,7 @@ import PreferencesPage from './pages/preferences/index';
 import UIPlaygroundPage from './pages/ui-playground';
 
 // Test Components (Development Only)
-import { ErrorBoundaryTest } from './components/test/ErrorBoundaryTest';
+import { ErrorBoundaryTest } from './__tests__/components/ErrorBoundaryTest';
 
 /**
  * Main Router Configuration

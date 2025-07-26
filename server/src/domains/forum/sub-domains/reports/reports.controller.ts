@@ -7,7 +7,7 @@
 import type { Request, Response } from 'express';
 import { reportsService } from './reports.service';
 import { CreateReportSchema } from './reports.validators';
-import { getUserIdFromRequest } from '@api/utils/auth';
+import { getUserIdFromRequest } from '@core/utils/auth.helpers';
 import { logger } from '@core/logger';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 

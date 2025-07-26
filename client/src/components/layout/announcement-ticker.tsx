@@ -94,10 +94,12 @@ export function AnnouncementTicker() {
 	} = useQuery({
 		queryKey: ['/api/announcements'],
 		queryFn: async () => {
-			const { data } = await axios.get<Announcement[]>('/api/announcements', {
+			const response = await axios.get('/api/announcements', {
 				params: { ticker: 'true' } // Only fetch announcements for the ticker
 			});
-			return data || []; // Ensure we always return an array even if API returns null/undefined
+			// Handle wrapped response from sendSuccessResponse
+			const announcements = response.data?.data || response.data || [];
+			return Array.isArray(announcements) ? announcements : [];
 		},
 		staleTime: 5 * 60 * 1000
 	});

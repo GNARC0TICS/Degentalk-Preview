@@ -11,6 +11,7 @@ import { RefreshCw, Wifi, WifiOff, AlertCircle, RotateCcw } from 'lucide-react';
 import type { ContentTab, UseContentParams } from '@app/hooks/use-content';
 import { useContent, useHomeContent, useForumContent } from '@app/hooks/use-content';
 import { useInfiniteContent } from '@app/hooks/use-infinite-content';
+import { useContentMentions, useUnreadMentionCount } from '@app/hooks/use-content-mentions';
 import type { ForumId } from '@shared/types/ids';
 
 export interface ContentAreaProps {
@@ -60,22 +61,35 @@ export function ContentArea({
 		feedContext = null; // Graceful fallback when not in provider
 	}
 
+	// Use mentions hook when on mentions tab
+	const mentionsHook = useContentMentions(1, 20);
+	const { data: unreadMentionCount } = useUnreadMentionCount();
+
 	// Use either infinite scroll or regular content hook
 	const regularContentHook = forumId ? useForumContent(forumId, activeTab) : useHomeContent(activeTab);
 	const infiniteContentHook = useInfiniteContent({
 		tab: activeTab,
 		forumId: forumId?.toString(),
-		enabled: useInfiniteScroll
+		enabled: useInfiniteScroll && activeTab !== 'mentions'
 	});
 
-	// Select which hook to use based on useInfiniteScroll
-	const isUsingInfinite = useInfiniteScroll && !forumId; // Start with home page only
+	// Select which hook to use based on useInfiniteScroll and tab
+	const isUsingInfinite = useInfiniteScroll && !forumId && activeTab !== 'mentions';
+	const isUsingMentions = activeTab === 'mentions';
+	
 	const { 
 		items, 
 		isLoading, 
 		error,
 		refetch 
-	} = isUsingInfinite
+	} = isUsingMentions
+		? {
+			items: mentionsHook.data?.items || [],
+			isLoading: mentionsHook.isLoading,
+			error: mentionsHook.error as Error | null,
+			refetch: mentionsHook.refetch
+		}
+		: isUsingInfinite
 		? {
 			items: infiniteContentHook.items,
 			isLoading: infiniteContentHook.isLoading,
@@ -89,7 +103,9 @@ export function ContentArea({
 			refetch: regularContentHook.refetch
 		};
 
-	const meta = isUsingInfinite
+	const meta = isUsingMentions
+		? mentionsHook.data?.meta || { total: 0, hasMore: false, page: 1 }
+		: isUsingInfinite
 		? {
 			total: infiniteContentHook.totalItems,
 			hasMore: infiniteContentHook.hasNextPage || false,
@@ -325,6 +341,7 @@ export function ContentArea({
 					onTabChange={switchTab}
 					variant={isCompact ? 'compact' : 'default'}
 					isAuthenticated={isAuthenticated}
+					unreadMentionCount={unreadMentionCount}
 				/>
 			</CardHeader>
 

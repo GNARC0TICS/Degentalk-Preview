@@ -1,4 +1,4 @@
-import { logger } from '../src/core/logger';
+import { logger } from '../core/logger';
 
 /**
  * Basic platform maintenance tasks

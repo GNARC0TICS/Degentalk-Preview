@@ -30,6 +30,7 @@ import { useToast } from '@app/hooks/use-toast';
 import { useShoutbox } from '@app/contexts/shoutbox-context';
 import { ShoutboxPositionSelector } from './shoutbox-position-selector';
 import { useIdentityDisplay } from '@app/hooks/useIdentityDisplay';
+import { generateId } from '@shared/utils/id';
 
 // Import icons
 import {
@@ -133,7 +134,7 @@ export default function ShoutboxWidget({ instanceId }: ShoutboxWidgetProps) {
 	const userLoggedIn = true;
 	// Mock user data for testing
 	const currentUser = {
-		id: toUserId(crypto.randomUUID()),
+		id: toUserId(generateId()),
 		username: 'TestUser',
 		avatarUrl: null,
 		activeAvatarUrl: null,

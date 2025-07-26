@@ -13,6 +13,7 @@ import { posts, threads, users as usersTable, postReactions } from '@schema';
 import { sql, desc, asc, eq, and, count } from 'drizzle-orm';
 import type { PostWithUser } from '@shared/types/core/forum.types';
 import type { ThreadId, UserId, PostId } from '@shared/types/ids';
+import { MentionsService } from '../../social/mentions.service';
 
 export interface PostCreateInput {
 	content: string;
@@ -168,6 +169,20 @@ export class PostService {
 
 			// Update thread post count and last post time
 			await this.updateThreadStats(threadId);
+
+			// Process mentions in post content
+			try {
+				await MentionsService.processMentions({
+					content: content,
+					mentioningUserId: userId,
+					type: 'post',
+					threadId: threadId,
+					postId: newPost.id,
+					context: content.slice(0, 200)
+				});
+			} catch (err) {
+				logger.warn('PostService', 'Failed to process mentions', { err });
+			}
 
 			// Fetch the complete post with relations
 			const completePost = await this.getPostById(newPost.id);

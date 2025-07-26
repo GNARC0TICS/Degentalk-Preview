@@ -12,7 +12,7 @@ import { z } from 'zod';
 import { db } from '@db';
 import { eq } from 'drizzle-orm';
 import { users } from '@schema';
-import { getUserIdFromRequest } from '@api/utils/auth';
+import { getUserIdFromRequest } from '@core/utils/auth.helpers';
 import {
 	isAuthenticated,
 	isAdminOrModerator,

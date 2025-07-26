@@ -24,7 +24,7 @@ import whaleWatchRoutes from './src/domains/social/whale-watch.routes';
 import messageRoutes from './src/domains/messaging/message.routes';
 import vaultRoutes from './src/domains/engagement/vault/vault.routes';
 import ccpaymentWebhookRoutes from './src/domains/wallet/webhooks/ccpayment-webhook.routes';
-import { registerAnnouncementRoutes } from '@api/domains/forum/features/announcements.routes';
+import { registerAnnouncementRoutes } from '@api/domains/admin/announcements/announcements.routes';
 import featureGatesRoutes from './src/domains/feature-gates/feature-gates.routes';
 import notificationRoutes from './src/domains/notifications/notification.routes';
 import preferencesRoutes from './src/domains/preferences/preferences.routes';

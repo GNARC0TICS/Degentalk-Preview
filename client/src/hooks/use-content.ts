@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 
-export type ContentTab = 'trending' | 'recent' | 'following' | 'hot' | 'announcements' | 'my-threads';
+export type ContentTab = 'trending' | 'recent' | 'following' | 'hot' | 'announcements' | 'my-threads' | 'mentions';
 
 import type { Thread } from '@shared/types/thread.types';
 import type { ForumId } from '@shared/types/ids';
@@ -41,6 +41,14 @@ export function useContent(params: UseContentParams = {}) {
 	const { data, isLoading, error, refetch, isFetching } = useQuery<ContentResponse>({
 		queryKey: ['content', activeTab, params.forumId || 'all', params.filters],
 		queryFn: async (): Promise<ContentResponse> => {
+			// Handle mentions tab separately
+			if (activeTab === 'mentions') {
+				// Import the mentions hook dynamically to avoid circular dependencies
+				const { useContentMentions } = await import('./use-content-mentions');
+				// This is a workaround - we'll handle mentions differently in content-area.tsx
+				return { items: [], meta: { hasMore: false, total: 0, page: 1 } };
+			}
+
 			const searchParams = new URLSearchParams({
 				tab: activeTab,
 				page: '1',

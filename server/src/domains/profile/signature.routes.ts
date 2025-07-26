@@ -11,7 +11,7 @@ import type { Request, Response } from 'express';
 import { SignatureService } from './signature.service';
 import { z } from 'zod';
 import { validateRequest } from '@api/middleware/validate-request';
-import { getUserIdFromRequest } from '@api/utils/auth';
+import { getUserIdFromRequest } from '@core/utils/auth.helpers';
 import { isValidId } from '@shared/types';
 import { logger } from '@core/logger';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';

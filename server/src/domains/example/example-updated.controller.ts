@@ -9,7 +9,7 @@ import { ValidationError, NotFoundError } from '../../middleware/centralized-err
 import { isAuthenticated } from '../../middleware/auth.middleware';
 import { validateRequest } from '../../middleware/validate-request.middleware';
 import { z } from 'zod';
-import { getUser } from '../../utils/auth-helpers';
+import { getUser } from '@core/utils/auth.helpers';
 import { LogAction } from '../../core/logger';
 
 const router = Router();

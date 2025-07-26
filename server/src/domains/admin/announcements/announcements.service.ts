@@ -102,7 +102,7 @@ export async function getAllAnnouncements() {
 /**
  * Get a single announcement by ID
  */
-export async function getAnnouncementById(id: Id<'id'>) {
+export async function getAnnouncementById(id: string) {
 	const result = await db.select().from(announcements).where(eq(announcements.id, id)).limit(1);
 
 	return result.length > 0 ? result[0] : null;
@@ -120,7 +120,7 @@ export async function createAnnouncement(announcementData: any) {
 /**
  * Update an existing announcement
  */
-export async function updateAnnouncement(id: Id<'id'>, updateData: any) {
+export async function updateAnnouncement(id: string, updateData: any) {
 	// Add updated timestamp
 	const dataWithTimestamp = {
 		...updateData,
@@ -139,7 +139,7 @@ export async function updateAnnouncement(id: Id<'id'>, updateData: any) {
 /**
  * Soft delete an announcement by setting isActive to false
  */
-export async function deactivateAnnouncement(id: Id<'id'>) {
+export async function deactivateAnnouncement(id: string) {
 	const result = await db
 		.update(announcements)
 		.set({

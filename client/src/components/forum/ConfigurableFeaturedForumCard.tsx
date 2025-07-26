@@ -156,41 +156,28 @@ const ConfigurableFeaturedForumCard = memo(
 		const cardClasses = cn(
 			// Base styling
 			'group relative overflow-hidden transition-all duration-300',
-			'bg-zinc-900/50 backdrop-blur-sm',
-			'hover:scale-[1.02] hover:bg-zinc-900/80',
+			'bg-zinc-900/90',
+			'hover:bg-zinc-900',
+			
+			// Enhanced hover state for clickability
+			'cursor-pointer',
+			'hover:transform hover:translate-y-[-2px]',
 
 			// Configurable styling
 			cards.borderRadius,
 			cards.shadow,
-			cards.borderStyle,
 
 			// Variant-specific classes
 			{
-				'hover:shadow-lg hover:shadow-[var(--forum-glow)]': variant === 'elevated',
-				'border-2 border-[var(--forum-border)]': variant === 'bordered',
-				'shadow-none border-none': variant === 'flat'
+				'hover:shadow-lg': variant === 'elevated',
+				'shadow-none': variant === 'flat'
 			},
 
-			// Layout-specific height
-			{
-				'min-h-[200px]': layout === 'default',
-				'min-h-[150px]': layout === 'compact',
-				'min-h-[250px]': layout === 'detailed',
-				'aspect-square': layout === 'grid'
-			},
+			// 72:32 aspect ratio (9:4) for banner style
+			'aspect-[9/4]',
 
 			className
 		);
-
-		const handleEnterForum = () => {
-			onEnter?.(forum.id);
-		};
-
-		const HandleCtaClick = (e: React.MouseEvent) => {
-			e.preventDefault();
-			e.stopPropagation();
-			onCtaClick?.(forum.id);
-		};
 
 		return (
 			<motion.div
@@ -200,108 +187,116 @@ const ConfigurableFeaturedForumCard = memo(
 				exit={{ opacity: 0, y: -20 }}
 				transition={animationConfig.card}
 				style={themeVars as React.CSSProperties}
-				className="relative"
+				className="relative p-2"
 			>
-				<Link to={`/forum/${forum.slug}`}>
+				<Link to={`/forum/${forum.slug}`} className="block">
 					<Card className={cardClasses}>
+						{/* Border overlay to fix rendering issues */}
+						<div className={cn(
+							"absolute inset-0 pointer-events-none z-20 transition-all duration-300",
+							cards.borderRadius,
+							{
+								"ring-1 ring-inset ring-zinc-700/50 group-hover:ring-zinc-400/60": variant === 'default',
+								"ring-2 ring-inset ring-[var(--forum-border)] group-hover:ring-zinc-300/50": variant === 'bordered'
+							}
+						)} />
+						
 						{/* Background Banner */}
 						{showBanner && (
 							<div className="absolute inset-0 overflow-hidden">
 								<SafeImage
 									src={forum.bannerImage!}
 									alt={`${forum.name} banner`}
-									className="absolute inset-0 w-full h-full object-cover opacity-20 transition-opacity group-hover:opacity-30"
+									className="absolute inset-0 w-full h-full object-cover"
 								/>
-								<div className="absolute inset-0 bg-gradient-to-t from-zinc-900 via-zinc-900/50 to-transparent" />
+								{/* Gradient overlay for text readability */}
+								<div className="absolute inset-0 bg-gradient-to-b from-zinc-900/80 via-transparent to-zinc-900/80" />
+								<div className="absolute inset-0 bg-gradient-to-r from-zinc-900/60 via-transparent to-zinc-900/60" />
 							</div>
 						)}
 
-						{/* Hot/Trending Ribbon */}
-						{forum.trending?.isHot && (
-							<div className="absolute top-2 right-2 z-10">
-								<Badge variant="destructive" className="bg-red-500/90 text-white animate-pulse">
-									🔥 HOT
-								</Badge>
+						{/* Grid-based layout with zones */}
+						<div className="relative h-full grid grid-cols-3 grid-rows-3 gap-2 p-4">
+							{/* Top Left Zone - XP Boost Badge */}
+							<div className="col-start-1 row-start-1 flex items-start justify-start">
+								{forum.features?.hasXpBoost && (
+									<XpBoostBadge boostMultiplier={forum.features.boostMultiplier} />
+								)}
 							</div>
-						)}
 
-						{/* XP Boost Badge */}
-						{forum.features?.hasXpBoost && (
-							<div className="absolute top-2 left-2 z-10">
-								<XpBoostBadge boostMultiplier={forum.features.boostMultiplier} />
+							{/* Top Center Zone - Reserved for artwork title */}
+							<div className="col-start-2 row-start-1" />
+
+							{/* Top Right Zone - Hot/Trending & Premium */}
+							<div className="col-start-3 row-start-1 flex items-start justify-end gap-2">
+								{forum.trending?.isHot && (
+									<Badge variant="destructive" className="bg-red-500/90 text-white animate-pulse">
+										🔥 HOT
+									</Badge>
+								)}
+								{forum.features?.isPremium && (
+									<Badge className="bg-yellow-500/20 text-yellow-500 border-yellow-500/50">
+										<Crown className="h-3.5 w-3.5 mr-1" />
+										Premium
+									</Badge>
+								)}
 							</div>
-						)}
 
-						<CardHeader className={cardPadding}>
-							{slots?.header}
+							{/* Middle Left Zone - Empty */}
+							<div className="col-start-1 row-start-2" />
 
-							<div className="flex items-start justify-between relative z-10">
-								<div className="flex items-center gap-3">
-									<div className="p-2 rounded-lg bg-[var(--forum-accent)]/20 border border-[var(--forum-border)]">
-										<IconComponent className="h-5 w-5 text-[var(--forum-accent)]" />
+							{/* Middle Center Zone - Reserved for artwork CTA */}
+							<div className="col-start-2 row-start-2" />
+
+							{/* Middle Right Zone - Empty for balance */}
+							<div className="col-start-3 row-start-2" />
+
+							{/* Bottom Left Zone - Icon, Forum Name and Stats */}
+							<div className="col-start-1 row-start-3 flex items-end">
+								<div className="bg-zinc-900/80 backdrop-blur-sm rounded-lg p-3 max-w-[200px]">
+									<div className="p-1.5 rounded-md bg-[var(--forum-accent)]/20 border border-[var(--forum-border)] inline-flex mb-2">
+										<IconComponent className="h-4 w-4 text-[var(--forum-accent)]" />
 									</div>
-
-									<div>
-										<h3 className="font-semibold text-lg group-hover:text-[var(--forum-accent)] transition-colors">
-											{forum.name}
-										</h3>
-										<p className="text-sm text-zinc-400 line-clamp-2">{forum.description}</p>
-									</div>
-								</div>
-
-								{forum.features?.isPremium && <Crown className="h-5 w-5 text-yellow-500" />}
-							</div>
-						</CardHeader>
-
-						{showStats && (
-							<CardContent className={cn('pt-0', cardPadding)}>
-								<div className="grid grid-cols-2 gap-4 text-sm relative z-10">
-									<div className="flex items-center gap-2">
-										<Users className="h-4 w-4 text-zinc-400" />
-										<span className="text-zinc-300">{forum.stats.activeUsers} active</span>
-									</div>
-
-									<div className="flex items-center gap-2">
-										<MessageSquare className="h-4 w-4 text-zinc-400" />
-										<span className="text-zinc-300">{forum.stats.totalThreads} threads</span>
-									</div>
-
-									<div className="flex items-center gap-2">
-										<Activity className="h-4 w-4 text-zinc-400" />
-										<span className="text-zinc-300">{forum.stats.totalPosts} posts</span>
-									</div>
-
-									<div className="flex items-center gap-2">
-										<TrendingUp className="h-4 w-4 text-emerald-400" />
-										<span className="text-emerald-400">+{forum.stats.todaysPosts} today</span>
-									</div>
-								</div>
-							</CardContent>
-						)}
-
-						<CardFooter className={cn('pt-4', cardPadding)}>
-							{slots?.actions || (
-								<div className="flex items-center justify-between w-full relative z-10">
-									<Button
-										variant="ghost"
-										size="sm"
-										onClick={handleEnterForum}
-										className="text-[var(--forum-accent)] hover:bg-[var(--forum-accent)]/10"
-									>
-										Enter Forum
-										<ArrowRight className="h-4 w-4 ml-2" />
-									</Button>
-
-									{forum.trending?.rank && (
-										<Badge variant="secondary" className="text-xs">
-											#{forum.trending.rank} trending
-										</Badge>
+									<h3 className="font-semibold text-white text-base mb-2">
+										{forum.name}
+									</h3>
+									{showStats && (
+										<div className="flex flex-col gap-1 text-xs">
+											<div className="flex items-center gap-1.5">
+												<Users className="h-3 w-3 text-zinc-400" />
+												<span className="text-zinc-300">{forum.stats.activeUsers} active</span>
+											</div>
+											<div className="flex items-center gap-1.5">
+												<MessageSquare className="h-3 w-3 text-zinc-400" />
+												<span className="text-zinc-300">{forum.stats.totalThreads} threads</span>
+											</div>
+										</div>
 									)}
 								</div>
-							)}
+							</div>
 
-							{slots?.footer}
-						</CardFooter>
+							{/* Bottom Center Zone - Reserved */}
+							<div className="col-start-2 row-start-3" />
+
+							{/* Bottom Right Zone - Additional Stats */}
+							<div className="col-start-3 row-start-3 flex items-end justify-end gap-2">
+								{showStats && forum.stats.todaysPosts > 0 && (
+									<Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/50 text-xs">
+										<TrendingUp className="h-3 w-3 mr-1" />
+										+{forum.stats.todaysPosts} today
+									</Badge>
+								)}
+								{forum.trending?.rank && (
+									<Badge variant="secondary" className="text-xs">
+										#{forum.trending.rank} trending
+									</Badge>
+								)}
+								{/* Subtle hover indicator */}
+								<div className="opacity-0 group-hover:opacity-100 transition-opacity">
+									<ArrowRight className="h-4 w-4 text-zinc-400" />
+								</div>
+							</div>
+						</div>
 					</Card>
 				</Link>
 			</motion.div>

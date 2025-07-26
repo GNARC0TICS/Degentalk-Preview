@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { cn } from '@app/utils/utils';
-import { Flame, Clock, Users, Newspaper, User } from 'lucide-react';
+import { Flame, Clock, Users, Newspaper, User, AtSign } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import type { ContentTab } from '@app/hooks/use-content';
 import theme from '@app/config/theme.config';
@@ -19,6 +19,7 @@ export interface TabSwitcherProps {
 	className?: string;
 	variant?: 'default' | 'compact';
 	isAuthenticated?: boolean;
+	unreadMentionCount?: number;
 }
 
 const DEFAULT_TABS: TabConfig[] = [
@@ -56,6 +57,13 @@ const DEFAULT_TABS: TabConfig[] = [
 		description: 'Your posts',
 		icon: User,
 		requiresAuth: true
+	},
+	{
+		id: 'mentions',
+		label: 'Mentions',
+		description: 'Tagged posts',
+		icon: AtSign,
+		requiresAuth: true
 	}
 ];
 
@@ -64,9 +72,9 @@ export function TabSwitcher({
 	onTabChange,
 	className,
 	variant = 'default',
-	isAuthenticated = false
+	isAuthenticated = false,
+	unreadMentionCount = 0
 }: TabSwitcherProps) {
-	const [isChanging, setIsChanging] = useState(false);
 	const [hoveredTab, setHoveredTab] = useState<ContentTab | null>(null);
 
 	// Filter tabs based on auth status
@@ -80,15 +88,8 @@ export function TabSwitcher({
 	const isCompact = variant === 'compact';
 
 	const handleTabChange = async (tabId: ContentTab) => {
-		if (tabId === activeTab || isChanging) return;
-
-		setIsChanging(true);
-
-		// Add slight delay for visual feedback
-		setTimeout(() => {
-			onTabChange(tabId);
-			setIsChanging(false);
-		}, 150);
+		if (tabId === activeTab) return;
+		onTabChange(tabId);
 	};
 
 	return (
@@ -99,7 +100,6 @@ export function TabSwitcher({
 					const Icon = tab.icon;
 					const isActive = activeTab === tab.id;
 					const isHovered = hoveredTab === tab.id;
-					const isDisabled = isChanging && !isActive;
 
 					return (
 						<button
@@ -107,7 +107,6 @@ export function TabSwitcher({
 							onClick={() => handleTabChange(tab.id)}
 							onMouseEnter={() => setHoveredTab(tab.id)}
 							onMouseLeave={() => setHoveredTab(null)}
-							disabled={isDisabled}
 							className={cn(
 								'relative flex items-center gap-2 py-3 px-2 sm:px-3 text-sm font-medium transition-colors',
 								'border-b-2 border-transparent',
@@ -139,6 +138,17 @@ export function TabSwitcher({
 								{/* Notification dot for following tab (if needed) */}
 								{tab.id === 'following' && isAuthenticated && isActive && (
 									<div className="absolute -top-0.5 -right-0.5 h-1.5 w-1.5 bg-green-400 rounded-full" />
+								)}
+
+								{/* Unread mention indicator */}
+								{tab.id === 'mentions' && isAuthenticated && unreadMentionCount > 0 && (
+									<div className="absolute -top-1 -right-1 min-w-[0.5rem] h-2 px-1 bg-orange-500 rounded-full animate-pulse flex items-center justify-center">
+										{unreadMentionCount > 9 ? (
+											<span className="text-[0.5rem] text-white font-bold">9+</span>
+										) : (
+											<span className="text-[0.5rem] text-white font-bold">{unreadMentionCount}</span>
+										)}
+									</div>
 								)}
 							</div>
 
@@ -187,19 +197,6 @@ export function TabSwitcher({
 				})}
 			</nav>
 
-			{/* Loading progress bar */}
-			{isChanging && (
-				<div className="absolute bottom-0 left-0 right-0 h-0.5 bg-zinc-800 overflow-hidden">
-					<div
-						className="h-full bg-gradient-to-r from-orange-400 to-red-400"
-						style={{
-							animation: 'shimmer 1s ease-in-out infinite',
-							background: 'linear-gradient(90deg, transparent, #fb923c, #dc2626, transparent)',
-							backgroundSize: '200% 100%'
-						}}
-					/>
-				</div>
-			)}
 		</div>
 	);
 }

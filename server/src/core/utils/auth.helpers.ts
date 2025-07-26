@@ -70,3 +70,15 @@ export function isOwner(user: User | null, resourceUserId: UserId): boolean {
 export function canAccessResource(user: User | null, resourceUserId: UserId): boolean {
 	return isModerator(user) || isOwner(user, resourceUserId);
 }
+
+/**
+ * Get user ID from request
+ * Convenience function for routes that only need the user ID
+ * 
+ * @param req Express request object
+ * @returns User ID or undefined if not authenticated
+ */
+export function getUserIdFromRequest(req: Request): UserId | undefined {
+	const user = getUser(req);
+	return user?.id;
+}

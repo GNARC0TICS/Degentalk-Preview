@@ -1,4 +1,5 @@
 // Demo data for UI Playground
+import { generateId } from '@shared/utils/id';
 
 export const usernameTiers = [
 	{ tier: 'cope', color: 'text-zinc-500', label: 'Cope', xpRange: '0-100' },
@@ -70,21 +71,21 @@ export const cryptoIcons = [
 
 export const sampleAnnouncements = [
 	{
-		id: crypto.randomUUID(),
+		id: generateId(),
 		title: 'New XP Multiplier Event!',
 		description: 'Double XP on all forum posts this weekend. Time to farm those gains!',
 		type: 'event',
 		timestamp: new Date()
 	},
 	{
-		id: crypto.randomUUID(),
+		id: generateId(),
 		title: 'Maintenance Notice',
 		description: 'Trading disabled for 30 minutes while we add more hopium to the reserves.',
 		type: 'warning',
 		timestamp: new Date()
 	},
 	{
-		id: crypto.randomUUID(),
+		id: generateId(),
 		title: 'Whale Alert!',
 		description: 'ChadGPT just dropped 1000 DGT in the community rain pool.',
 		type: 'success',

@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import type { Router as RouterType } from 'express';
-import { isAdmin } from '@api/domains/auth/middleware/auth.middleware';
+import { isAdmin } from '@api/domains/admin/admin.middleware';
 import {
 	getAnnouncementsController,
 	getAllAnnouncementsController,

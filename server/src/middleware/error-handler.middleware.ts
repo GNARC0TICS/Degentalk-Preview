@@ -6,7 +6,7 @@
 import type { Request, Response, NextFunction } from 'express';
 import { logger, LogLevel, LogAction } from '../core/logger';
 import { captureException } from '../lib/sentry-server';
-import { getUser } from '../utils/auth-helpers';
+import { getUser } from '@core/utils/auth.helpers';
 import type { UserId } from '@shared/types/ids';
 
 // Error types

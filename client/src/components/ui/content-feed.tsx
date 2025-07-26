@@ -21,6 +21,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@app/components/ui/avatar';
 import { Skeleton } from '@app/components/ui/skeleton';
 import type { Thread } from '@shared/types/thread.types';
 import theme from '@app/config/theme.config';
+import { MentionContentItem } from '@app/components/mentions/MentionContentItem';
 
 export interface ContentFeedProps {
 	items: Thread[];
@@ -413,9 +414,16 @@ export function ContentFeed({
 				aria-label={`Content feed with ${items.length} items`}
 				aria-live="polite"
 			>
-				{items.map((item, index) => (
-					<ContentItem key={item.id} item={item} showCategory={showCategory} />
-				))}
+				{items.map((item, index) => {
+					// Check if this is a mention item
+					const isMention = item.metadata?.mentionId != null;
+					
+					if (isMention) {
+						return <MentionContentItem key={item.id || `mention-${index}`} item={item} />;
+					}
+					
+					return <ContentItem key={item.id} item={item} showCategory={showCategory} />;
+				})}
 			</div>
 		</div>
 	);

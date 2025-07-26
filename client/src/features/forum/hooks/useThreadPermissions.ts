@@ -10,7 +10,7 @@ import { useForumStructure, type MergedForum } from '@app/features/forum/context
 import type { Thread } from '@shared/types/thread.types';
 import type { ResolvedZone } from '@app/types/thread.types';
 import type { User } from '@shared/types/user.types';
-import { toId } from '@shared/utils/id';
+import { toId, generateId } from '@shared/utils/id';
 import type { ThreadId, UserId, ZoneId } from '@shared/types/ids';
 
 interface PermissionResult {
@@ -30,7 +30,7 @@ interface ThreadPermissions {
 
 // Type-safe mock data matching actual project types
 export const MOCK_THREAD: Thread = {
-	id: toId<'ThreadId'>(crypto.randomUUID()),
+	id: toId<'ThreadId'>(generateId()),
 	title: 'Test Thread',
 	slug: 'test-thread',
 	content: 'Test content',
@@ -45,12 +45,12 @@ export const MOCK_THREAD: Thread = {
 		badgeColor: '#666'
 	} as User & { displayRole?: string; badgeColor?: string },
 	category: {
-		id: crypto.randomUUID(),
+		id: generateId(),
 		name: 'Test Category',
 		slug: 'test-category'
 	},
 	zone: {
-		id: toId<'ZoneId'>(crypto.randomUUID()),
+		id: toId<'ZoneId'>(generateId()),
 		name: 'Test Zone',
 		slug: 'test-zone',
 		colorTheme: 'blue',
@@ -71,7 +71,7 @@ export const MOCK_THREAD: Thread = {
 };
 
 export const MOCK_POST = {
-	id: crypto.randomUUID(),
+	id: generateId(),
 	userId: 'test-user-123',
 	content: 'Test post content',
 	createdAt: new Date().toISOString()

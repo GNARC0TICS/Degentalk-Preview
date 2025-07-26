@@ -1,0 +1,25 @@
+{
+  "mcpServers": {
+    "degentalk-fs": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "/home/developer/Degentalk-BETA"
+      ],
+      "env": {}
+    },
+    "postgres": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-postgres",
+        "-e",
+        "DATABASE_URL=postgresql://neondb_owner:npg_eZTUNmt3h5YE@ep-steep-field-a4mgmi29-pooler.us-east-1.aws.neon.tech/neondb?sslmode=require"
+      ],
+      "env": {}
+    }
+  }
+}

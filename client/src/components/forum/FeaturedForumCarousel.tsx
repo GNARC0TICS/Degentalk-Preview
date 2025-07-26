@@ -40,15 +40,16 @@ export function FeaturedForumCarousel({
   }
 
   return (
-    <div className={cn('w-full px-4 py-6', className)}>
-      <Carousel
-        opts={{
-          align: 'start',
-          loop: true,
-        }}
-        plugins={plugin}
-        className="w-full"
-      >
+    <div className={cn('w-full overflow-hidden', className)}>
+      <div className="px-4 py-4">
+        <Carousel
+          opts={{
+            align: 'start',
+            loop: true,
+          }}
+          plugins={plugin}
+          className="w-full"
+        >
         <CarouselContent className="-ml-4">
           {forums.map((forum, index) => (
             <CarouselItem key={forum.slug || index} className="pl-4 md:basis-1/2 lg:basis-1/3">
@@ -63,6 +64,7 @@ export function FeaturedForumCarousel({
           </>
         )}
       </Carousel>
+      </div>
     </div>
   );
 }

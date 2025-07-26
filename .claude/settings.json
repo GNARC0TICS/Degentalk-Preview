@@ -1,0 +1,68 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node /home/developer/Degentalk-BETA/tools/claude-hooks/run-checks.cjs --mode pre-edit --file \"{filePath}\" --hook enforce-repository-pattern"
+          },
+          {
+            "type": "command",
+            "command": "node /home/developer/Degentalk-BETA/tools/claude-hooks/run-checks.cjs --mode pre-edit --file \"{filePath}\" --hook enforce-domain-boundaries"
+          },
+          {
+            "type": "command",
+            "command": "node /home/developer/Degentalk-BETA/tools/claude-hooks/run-checks.cjs --mode pre-edit --file \"{filePath}\" --hook no-any-types"
+          },
+          {
+            "type": "command",
+            "command": "node /home/developer/Degentalk-BETA/tools/claude-hooks/run-checks.cjs --mode pre-edit --file \"{filePath}\" --hook check-branded-ids --autofix"
+          },
+          {
+            "type": "command",
+            "command": "node /home/developer/Degentalk-BETA/tools/claude-hooks/run-checks.cjs --mode pre-edit --file \"{filePath}\" --hook no-console --autofix"
+          },
+          {
+            "type": "command",
+            "command": "node /home/developer/Degentalk-BETA/tools/claude-hooks/run-checks.cjs --mode pre-edit --file \"{filePath}\" --hook validate-imports --autofix"
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit|MultiEdit|Create",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node /home/developer/Degentalk-BETA/tools/claude-hooks/run-checks.cjs --mode pre-edit --file \"{filePath}\" --hook security-checks"
+          }
+        ]
+      },
+      {
+        "matcher": "Create",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node /home/developer/Degentalk-BETA/tools/claude-hooks/run-checks.cjs --mode pre-create --file \"{filePath}\" --hook enforce-test-file-placement"
+          },
+          {
+            "type": "command",
+            "command": "node /home/developer/Degentalk-BETA/tools/claude-hooks/run-checks.cjs --mode pre-create --file \"{filePath}\" --hook prevent-duplicate-directories"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node /home/developer/Degentalk-BETA/tools/claude-hooks/run-checks.cjs --mode post-edit --file \"{filePath}\" --hook cleanup-debug-artifacts"
+          }
+        ]
+      }
+    ]
+  }
+}

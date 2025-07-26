@@ -15,11 +15,12 @@ import {
 	Clock,
 	Ban
 } from 'lucide-react';
+import { generateId } from '@shared/utils/id';
 
 // Mock data for development
 const recentReports = [
 	{
-		id: crypto.randomUUID(),
+		id: generateId(),
 		type: 'thread',
 		title: 'Inappropriate content in trading advice',
 		reporter: 'michael95',
@@ -28,7 +29,7 @@ const recentReports = [
 		time: '30 minutes ago'
 	},
 	{
-		id: crypto.randomUUID(),
+		id: generateId(),
 		type: 'post',
 		title: 'Spam links in NFT discussion',
 		reporter: 'artlover',
@@ -37,7 +38,7 @@ const recentReports = [
 		time: '2 hours ago'
 	},
 	{
-		id: crypto.randomUUID(),
+		id: generateId(),
 		type: 'user',
 		title: 'Multiple accounts for same user',
 		reporter: 'securityfirst',
@@ -46,7 +47,7 @@ const recentReports = [
 		time: '1 day ago'
 	},
 	{
-		id: crypto.randomUUID(),
+		id: generateId(),
 		type: 'post',
 		title: 'Offensive language',
 		reporter: 'community_lead',
@@ -58,7 +59,7 @@ const recentReports = [
 
 const recentActivity = [
 	{
-		id: crypto.randomUUID(),
+		id: generateId(),
 		action: 'User Warned',
 		user: 'traderguy',
 		moderator: 'admin',
@@ -66,7 +67,7 @@ const recentActivity = [
 		details: 'Multiple promotional posts'
 	},
 	{
-		id: crypto.randomUUID(),
+		id: generateId(),
 		action: 'Post Deleted',
 		user: 'cryptowhale',
 		moderator: 'admin',
@@ -74,7 +75,7 @@ const recentActivity = [
 		details: 'Rule violation in DeFi thread'
 	},
 	{
-		id: crypto.randomUUID(),
+		id: generateId(),
 		action: 'Thread Locked',
 		user: 'tokenmaster',
 		moderator: 'moderator2',
@@ -82,7 +83,7 @@ const recentActivity = [
 		details: 'Heated argument in price prediction thread'
 	},
 	{
-		id: crypto.randomUUID(),
+		id: generateId(),
 		action: 'User Banned',
 		user: 'scammer123',
 		moderator: 'moderator1',

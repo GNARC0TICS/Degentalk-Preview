@@ -18,7 +18,7 @@ import {
 	isAdminOrModerator,
 	isAdmin
 } from '@api/domains/auth/middleware/auth.middleware';
-import { getUserIdFromRequest } from '@api/utils/auth';
+import { getUserIdFromRequest } from '@core/utils/auth.helpers';
 import { logger } from '@core/logger';
 import { UserTransformer } from '@api/domains/users/transformers/user.transformer';
 import {

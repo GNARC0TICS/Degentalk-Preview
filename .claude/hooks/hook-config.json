@@ -116,6 +116,30 @@
       "description": "Prevents pages from importing SiteHeader/SiteFooter - use RootLayout instead",
       "hooks": ["pre-edit", "pre-create"],
       "filePattern": "**/pages/**/*.tsx"
+    },
+    "enforce-test-file-placement": {
+      "enabled": true,
+      "severity": "error",
+      "autoFix": false,
+      "description": "Ensures test files are created in correct directories (__tests__/)",
+      "hooks": ["pre-create"],
+      "filePattern": "**/*.{test,spec}.{ts,tsx,js,jsx}"
+    },
+    "cleanup-debug-artifacts": {
+      "enabled": true,
+      "severity": "info",
+      "autoFix": false,
+      "description": "Reminds to clean up debugging code and temporary artifacts",
+      "hooks": ["post-edit"],
+      "filePattern": "**/*.{ts,tsx,js,jsx}"
+    },
+    "final-cleanup-reminder": {
+      "enabled": true,
+      "severity": "info",
+      "autoFix": false,
+      "description": "Session-end reminder to clean up all debugging artifacts",
+      "hooks": ["session-end", "response-complete"],
+      "filePattern": "*"
     }
   },
   "projectType": "monorepo",

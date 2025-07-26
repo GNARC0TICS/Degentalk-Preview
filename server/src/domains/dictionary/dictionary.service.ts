@@ -1,7 +1,8 @@
 import { db } from '@db';
 import { and, count, desc, eq, ilike, or, sql } from 'drizzle-orm';
 import { dictionaryEntries, dictionaryUpvotes, insertDictionaryEntrySchema } from '@schema';
-import { XP_ACTIONS, xpLevelService } from '@server/services/xp-level-service';
+import { XP_ACTION } from '../xp/xp-actions';
+import { xpService } from '../xp/xp.service';
 import slugify from 'slugify';
 import type { EntryId } from '@shared/types/ids';
 
@@ -113,9 +114,9 @@ export class DictionaryService {
 			.returning();
 
 		// Award XP to author
-		await xpLevelService.awardXp(
+		await xpService.awardXp(
 			data.authorId as unknown as number,
-			XP_ACTIONS.DICTIONARY_ENTRY_SUBMITTED
+			XP_ACTION.DICTIONARY_ENTRY_SUBMITTED
 		);
 
 		return inserted;
@@ -133,13 +134,13 @@ export class DictionaryService {
 			// Award XP to author & moderator
 			if (updated) {
 				await Promise.all([
-					xpLevelService.awardXp(
+					xpService.awardXp(
 						updated.authorId as unknown as number,
-						XP_ACTIONS.DICTIONARY_ENTRY_APPROVED
+						XP_ACTION.DICTIONARY_ENTRY_APPROVED
 					),
-					xpLevelService.awardXp(
+					xpService.awardXp(
 						approverId as unknown as number,
-						XP_ACTIONS.DICTIONARY_ENTRY_APPROVAL
+						XP_ACTION.DICTIONARY_ENTRY_APPROVAL
 					)
 				]);
 			}
@@ -184,9 +185,9 @@ export class DictionaryService {
 				.where(eq(dictionaryEntries.id, entryId))
 				.limit(1);
 			if (entry) {
-				await xpLevelService.awardXp(
+				await xpService.awardXp(
 					entry.authorId as unknown as number,
-					XP_ACTIONS.DICTIONARY_ENTRY_UPVOTED
+					XP_ACTION.DICTIONARY_ENTRY_UPVOTED
 				);
 			}
 		}

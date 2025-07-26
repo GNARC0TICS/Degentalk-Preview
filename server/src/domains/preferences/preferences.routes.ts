@@ -33,7 +33,7 @@ import {
 } from '@api/domains/auth/middleware/auth.middleware';
 import { logger, LogLevel, LogAction } from '@core/logger';
 import { displayPreferencesSchema } from './preferences.validators';
-import { getUserIdFromRequest } from '@api/utils/auth';
+import { getUserIdFromRequest } from '@core/utils/auth.helpers';
 import { UserPreferencesService } from '../user/user-preferences.service';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 

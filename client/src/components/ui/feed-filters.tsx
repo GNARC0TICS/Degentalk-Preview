@@ -10,7 +10,9 @@ import {
   X,
   Check,
   ChevronDown,
-  Clock
+  Clock,
+  CalendarDays,
+  CalendarRange
 } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@app/components/ui/popover';
 import { Button } from '@app/components/ui/button';
@@ -49,11 +51,11 @@ const sortOptions = [
 ];
 
 const timeRangeOptions = [
-  { value: 'all', label: 'All Time' },
-  { value: 'today', label: 'Today' },
-  { value: 'week', label: 'This Week' },
-  { value: 'month', label: 'This Month' },
-  { value: 'year', label: 'This Year' }
+  { value: 'all', label: 'All Time', icon: Clock },
+  { value: 'today', label: 'Today', icon: Calendar },
+  { value: 'week', label: 'Week', icon: CalendarDays },
+  { value: 'month', label: 'Month', icon: CalendarDays },
+  { value: 'year', label: 'Year', icon: CalendarRange }
 ];
 
 export function FeedFilters({
@@ -199,6 +201,8 @@ export function FeedFilters({
         <PopoverContent
           className="w-72 p-0 border-zinc-800"
           align="end"
+          side="bottom"
+          sideOffset={8}
         >
           <div className="p-3 border-b border-zinc-800">
             <div className="flex items-center justify-between">
@@ -245,17 +249,29 @@ export function FeedFilters({
             {/* Time Range */}
             <div className="space-y-2">
               <Label className="text-xs text-zinc-400">Time Range</Label>
-              <select
-                value={localFilters.timeRange}
-                onChange={(e) => updateFilters({ ...localFilters, timeRange: e.target.value as FeedFilter['timeRange'] })}
-                className="w-full px-2 py-1.5 bg-zinc-900/60 border border-zinc-800 rounded text-xs text-zinc-300 focus:border-orange-400 focus:outline-none"
-              >
-                {timeRangeOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
+              <div className="grid grid-cols-3 gap-1.5">
+                {timeRangeOptions.map((option) => {
+                  const Icon = option.icon;
+                  const isActive = localFilters.timeRange === option.value;
+                  return (
+                    <button
+                      key={option.value}
+                      onClick={() => updateFilters({ ...localFilters, timeRange: option.value as FeedFilter['timeRange'] })}
+                      className={cn(
+                        'flex items-center justify-center gap-1 px-2 py-1.5 rounded text-xs transition-colors',
+                        'border border-zinc-800 hover:border-zinc-700',
+                        isActive
+                          ? 'bg-zinc-800 text-orange-400'
+                          : 'text-zinc-400 hover:text-zinc-300'
+                      )}
+                      title={option.label}
+                    >
+                      <Icon className="h-3 w-3" />
+                      <span className="hidden sm:inline">{option.label}</span>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
 
             {/* Toggle Filters */}

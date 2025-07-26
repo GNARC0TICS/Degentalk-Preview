@@ -11,7 +11,21 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 5. **Repository Pattern is MANDATORY** - All DB queries MUST go through repositories, services MUST NOT contain direct DB calls.
 6. **Event-Driven Architecture** - Cross-domain communication ONLY via EventBus, NO direct service imports between domains.
 7. **Forum terminology** - Use "forum" not "zone". Legacy "zone" references are being phased out.
-8. **Dont create new files unless you request a whitelisting. CCODEBASE IS LOCKED DOWN.**
+8. **CODEBASE IS LOCKED DOWN** - NO new files without explicit approval (see File Creation Whitelisting below).
+
+## File Creation Whitelisting Process
+
+The codebase is on LOCKDOWN during refactoring/hardening phase:
+
+1. **Default**: NO new files - use existing components/files only
+2. **Exception Request**: If you absolutely need a new file:
+   - Ask: "I need to create [filename] because [specific reason]"
+   - Explain why existing files won't work
+   - Wait for case-by-case approval
+3. **Auto-Approved Patterns**:
+   - Stub files for missing imports (to unblock development)
+   - Critical config files if missing
+   - Test files for new features
 
 ## Essential Commands
 
@@ -96,7 +110,14 @@ const id = toThreadId('123');
 ### Event-Driven Cross-Domain Communication
 Domains communicate via EventBus, not direct imports:
 ```typescript
-eventBus.emit('user.created', { userId, timestamp });
+// Emit an event
+eventBus.emit(ForumEvents.THREAD_CREATED, { threadId, forumId, userId });
+
+// Listen for events
+eventBus.on(ForumEvents.THREAD_CREATED, async (data) => {
+  // Handle the event
+  await notificationService.notifySubscribers(data.forumId, data.threadId);
+});
 ```
 
 ### Forum Terminology Migration
@@ -122,6 +143,44 @@ When working over SSH:
 3. **Forum Config**: Edit `forum-map.config.ts` then sync, don't modify DB directly
 4. **User Types**: Use CanonicalUser everywhere, transform legacy data
 5. **ID Comparisons**: Use `isValidId()`, not numeric comparisons
+
+## Test File Conventions
+
+Tests MUST be placed in proper directories (enforced by hooks):
+
+### Client Tests
+- Location: `client/src/__tests__/`
+- Structure mirrors source: `__tests__/components/`, `__tests__/features/`, etc.
+- Import pattern: Use `@app/*` aliases
+- Test files: `*.test.tsx` or `*.spec.tsx`
+
+### Server Tests  
+- Location: Either `server/src/**/__tests__/` OR `*.test.ts` alongside source files
+- Import pattern: Use relative imports
+- Test files: `*.test.ts` or `*.spec.ts`
+
+### E2E Tests
+- Location: `tests/e2e/`
+- Uses Playwright fixtures
+
+### ❌ NEVER create tests in:
+- `client/src/test/` (old location)
+- `client/src/components/test/` (old location)
+- Random directories without `__tests__`
+
+## Troubleshooting
+
+### Common Issues
+1. **Missing imports** → Create stub file to unblock development
+2. **Port 5001 conflict** → Kill existing process: `lsof -ti:5001 | xargs kill -9`
+3. **DB connection failed** → Check DATABASE_URL in .env
+4. **TypeScript errors** → Run `pnpm typecheck` to see all issues
+5. **API routes** → Self-documented via TypeScript types - see `/api/*` routes
+
+## Environment Setup
+- **Node.js**: 20+ required
+- **Package Manager**: pnpm (install via `npm install -g pnpm`)
+- **Environment**: Copy `.env.example` to `.env` and configure
 
 ## Layout Rules
 

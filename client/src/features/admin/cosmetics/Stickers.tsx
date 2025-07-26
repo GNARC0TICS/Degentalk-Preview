@@ -57,11 +57,12 @@ import {
 import { useToast } from '@app/hooks/use-toast';
 import { stickerApiService } from '@app/features/admin/services/sticker-api.service';
 import { rarityColorMap } from '@app/config/rarity.config';
+import { generateId } from '@shared/utils/id';
 
 // Mock data for development (replace with actual API calls)
 const mockStickers = [
 	{
-		id: crypto.randomUUID(),
+		id: generateId(),
 		name: 'pepe_cry',
 		displayName: 'Crying Pepe',
 		shortcode: ':pepe_cry:',
@@ -77,7 +78,7 @@ const mockStickers = [
 		createdAt: '2024-06-20T10:30:00Z'
 	},
 	{
-		id: crypto.randomUUID(),
+		id: generateId(),
 		name: 'whale_moon',
 		displayName: 'Whale to Moon',
 		shortcode: ':whale_moon:',
@@ -95,7 +96,7 @@ const mockStickers = [
 
 const mockPacks = [
 	{
-		id: crypto.randomUUID(),
+		id: generateId(),
 		name: 'pepe_pack',
 		displayName: 'Pepe Pack',
 		theme: 'memes',
@@ -108,7 +109,7 @@ const mockPacks = [
 		createdAt: '2024-06-15T09:00:00Z'
 	},
 	{
-		id: crypto.randomUUID(),
+		id: generateId(),
 		name: 'whale_pack',
 		displayName: 'Whale Pack',
 		theme: 'crypto',

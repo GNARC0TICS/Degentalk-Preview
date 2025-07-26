@@ -1,6 +1,5 @@
 import { userService } from '@core/services/user.service';
 import type { Request, Response } from 'express';
-import type { EntityId } from '@shared/types/ids';
 import { z } from 'zod';
 import { insertAnnouncementSchema } from '@schema';
 import {
@@ -23,7 +22,7 @@ export async function getAnnouncementsController(req: Request, res: Response) {
 	try {
 		const isTicker = req.query.ticker === 'true';
 		const userRole = userService.getUserFromRequest(req)?.role || 'guest';
-		const userId = userService.getUserFromRequest(req);
+		const userId = userService.getUserFromRequest(req)?.id;
 
 		const announcements = await getActiveAnnouncements({
 			tickerOnly: isTicker,
@@ -57,8 +56,8 @@ export async function getAllAnnouncementsController(req: Request, res: Response)
  */
 export async function getAnnouncementByIdController(req: Request, res: Response) {
 	try {
-		const id = req.params.id as EntityId;
-		if (isNaN(id)) {
+		const id = req.params.id;
+		if (!id) {
 			return sendErrorResponse(res, 'Invalid announcement ID', 400);
 		}
 
@@ -87,7 +86,7 @@ export async function createAnnouncementController(req: Request, res: Response) 
 		// Validate input against schema
 		const validatedData = insertAnnouncementSchema.parse({
 			...req.body,
-			createdBy: userService.getUserFromRequest(req)
+			createdBy: userService.getUserFromRequest(req)?.id
 		});
 
 		const newAnnouncement = await createAnnouncement(validatedData);
@@ -106,8 +105,8 @@ export async function createAnnouncementController(req: Request, res: Response) 
  */
 export async function updateAnnouncementController(req: Request, res: Response) {
 	try {
-		const id = req.params.id as EntityId;
-		if (isNaN(id)) {
+		const id = req.params.id;
+		if (!id) {
 			return sendErrorResponse(res, 'Invalid announcement ID', 400);
 		}
 
@@ -133,8 +132,8 @@ export async function updateAnnouncementController(req: Request, res: Response) 
  */
 export async function deactivateAnnouncementController(req: Request, res: Response) {
 	try {
-		const id = req.params.id as EntityId;
-		if (isNaN(id)) {
+		const id = req.params.id;
+		if (!id) {
 			return sendErrorResponse(res, 'Invalid announcement ID', 400);
 		}
 

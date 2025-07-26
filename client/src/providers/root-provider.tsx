@@ -12,6 +12,7 @@ import { getQueryFn } from '@app/utils/queryClient';
 import { ForumOrderingProvider } from '@app/features/forum/contexts/ForumOrderingContext';
 import { WebSocketProvider } from '@app/hooks/useWebSocket';
 import { ThemeProvider } from 'next-themes';
+import { UIConfigProvider } from '@app/contexts/UIConfigContext';
 
 // Initialize React Query client - MAIN APPLICATION QUERY CLIENT
 // This is the PRIMARY QueryClient instance used throughout the application
@@ -47,17 +48,19 @@ export function RootProvider({ children }: { children: React.ReactNode }) {
 						<WebSocketProvider>
 							<PurchaseModalProvider>
 								<ShoutboxProvider>
-									<ForumStructureProvider>
-										<ForumOrderingProvider>
-											<ForumThemeProvider>
-												<MotionProvider>
-													<ProfileCardProvider>
-														<TooltipProvider>{children}</TooltipProvider>
-													</ProfileCardProvider>
-												</MotionProvider>
-											</ForumThemeProvider>
-										</ForumOrderingProvider>
-									</ForumStructureProvider>
+									<UIConfigProvider>
+										<ForumStructureProvider>
+											<ForumOrderingProvider>
+												<ForumThemeProvider>
+													<MotionProvider>
+														<ProfileCardProvider>
+															<TooltipProvider>{children}</TooltipProvider>
+														</ProfileCardProvider>
+													</MotionProvider>
+												</ForumThemeProvider>
+											</ForumOrderingProvider>
+										</ForumStructureProvider>
+									</UIConfigProvider>
 								</ShoutboxProvider>
 							</PurchaseModalProvider>
 						</WebSocketProvider>
