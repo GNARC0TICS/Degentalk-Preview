@@ -33,5 +33,9 @@
 		"allowImportingTsExtensions": true,
 		"emitDeclarationOnly": true
 	},
-	"include": ["src"]
+	"include": ["src"],
+	"exclude": ["../shared/**/*", "../db/**/*", "../server/**/*"],
+	"references": [
+		{ "path": "../shared" }
+	]
 }

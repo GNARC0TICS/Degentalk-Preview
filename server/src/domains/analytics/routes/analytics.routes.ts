@@ -8,7 +8,7 @@
 import { Router } from 'express'
 import type { Router as RouterType } from 'express';
 import { analyticsController } from '../controllers/analytics.controller';
-import { authenticate } from '@api/middleware/auth.middleware';
+import { authenticate } from '@api/middleware/auth.unified';
 import { validateRequest } from '@api/middleware/validate-request';
 import { z } from 'zod';
 

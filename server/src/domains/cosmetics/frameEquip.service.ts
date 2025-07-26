@@ -1,10 +1,11 @@
 import { db } from '@db';
 import { avatarFrames, userOwnedFrames, users } from '@schema';
 import { eq } from 'drizzle-orm';
-import { xpService } from '../../xp/xp.service';
-import { XP_ACTION } from '../../xp/xp-actions';
+import { xpService } from '@domains/xp/xp.service';
+import { XP_ACTION } from '@domains/xp/xp-actions';
 import type { FrameId } from '@shared/types/ids';
 import { logger } from '@core/logger';
+import { isDefaultFrame } from '@shared/config/default-frames.config';
 
 class FrameEquipService {
 	async userOwnsFrame(userId: string, frameId: FrameId): Promise<boolean> {
@@ -18,10 +19,14 @@ class FrameEquipService {
 	}
 
 	async equipFrame(userId: string, frameId: FrameId) {
-		const owns = await this.userOwnsFrame(userId, frameId);
-		if (!owns) {
-			throw new Error('Frame not owned');
+		// Check if it's a default frame or user owns it
+		if (!isDefaultFrame(frameId)) {
+			const owns = await this.userOwnsFrame(userId, frameId);
+			if (!owns) {
+				throw new Error('Frame not owned');
+			}
 		}
+		
 		await db.update(users).set({ activeFrameId: frameId }).where(eq(users.id, userId));
 
 		// Award XP for equipping frame

@@ -14,9 +14,9 @@ export { AchievementCard } from './achievement-card';
 export { AchievementGrid } from './achievement-grid';
 export { AchievementUnlockModal } from './achievement-unlock-modal';
 
-// Mission Components
-export { MissionCard } from './mission-card';
-export { MissionDashboard } from './mission-dashboard';
+// Mission Components - REMOVED: Mission system has been deprecated
+// export { MissionCard } from './mission-card';
+// export { MissionDashboard } from './mission-dashboard';
 
 // Leaderboard Components
 export { Leaderboard } from './leaderboard';
@@ -30,8 +30,8 @@ export type {
 	UserProgression,
 	Achievement,
 	UserAchievement,
-	Mission,
-	MissionProgress,
+	// Mission,
+	// MissionProgress,
 	LeaderboardEntry,
 	GamificationStats,
 	GamificationDashboard

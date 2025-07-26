@@ -1,8 +1,8 @@
 import { Router } from 'express'
 import type { Router as RouterType } from 'express';
 import { SocialActionsController } from './social-actions.controller';
-import { isAuthenticated } from '@api/domains/auth/middleware/auth.middleware';
-import rateLimit from 'express-rate-limit';
+import { requireAuth } from '@api/middleware/auth.unified';
+import { createCustomRateLimiter } from '@core/services/rate-limit.service';
 
 const router: RouterType = Router();
 
@@ -12,47 +12,47 @@ const router: RouterType = Router();
  */
 
 // All social action routes require authentication
-router.use(isAuthenticated);
+router.use(requireAuth);
 
 // POST /api/social/follow - Follow/unfollow user
 router.post(
 	'/follow',
-	rateLimitMiddleware({ windowMs: 60000, max: 20 }), // 20 follow actions per minute
+	createCustomRateLimiter({ windowMs: 60000, max: 20 }), // 20 follow actions per minute
 	SocialActionsController.toggleFollow
 );
 
 // POST /api/social/friend - Send/accept/decline friend request
 router.post(
 	'/friend',
-	rateLimitMiddleware({ windowMs: 60000, max: 15 }), // 15 friend actions per minute
+	createCustomRateLimiter({ windowMs: 60000, max: 15 }), // 15 friend actions per minute
 	SocialActionsController.manageFriendRequest
 );
 
 // POST /api/social/block - Block/unblock user
 router.post(
 	'/block',
-	rateLimitMiddleware({ windowMs: 60000, max: 10 }), // 10 block actions per minute
+	createCustomRateLimiter({ windowMs: 60000, max: 10 }), // 10 block actions per minute
 	SocialActionsController.toggleBlock
 );
 
 // GET /api/social/relationship/:targetUserId - Get relationship status
 router.get(
 	'/relationship/:targetUserId',
-	rateLimitMiddleware({ windowMs: 60000, max: 60 }), // 60 relationship checks per minute
+	createCustomRateLimiter({ windowMs: 60000, max: 60 }), // 60 relationship checks per minute
 	SocialActionsController.getRelationshipStatus
 );
 
 // GET /api/social/suggestions - Get friend/follow suggestions
 router.get(
 	'/suggestions',
-	rateLimitMiddleware({ windowMs: 300000, max: 10 }), // 10 suggestion requests per 5 minutes
+	createCustomRateLimiter({ windowMs: 300000, max: 10 }), // 10 suggestion requests per 5 minutes
 	SocialActionsController.getSocialSuggestions
 );
 
 // GET /api/social/pending-requests - Get pending friend requests
 router.get(
 	'/pending-requests',
-	rateLimitMiddleware({ windowMs: 60000, max: 30 }), // 30 requests per minute
+	createCustomRateLimiter({ windowMs: 60000, max: 30 }), // 30 requests per minute
 	SocialActionsController.getPendingFriendRequests
 );
 

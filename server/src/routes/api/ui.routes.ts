@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import type { Router as RouterType } from 'express';
-import { uiThemesService } from '@api/domains/admin/sub-domains/ui-config/uiThemes.service';
+import { uiThemesService } from '@domains/admin/sub-domains/settings/uiThemes.service';
 import { logger } from '@core/logger';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 

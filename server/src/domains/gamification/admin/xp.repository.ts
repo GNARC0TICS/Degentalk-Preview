@@ -11,7 +11,7 @@ import {
 } from '@schema';
 import { eq, and, desc, sql } from 'drizzle-orm';
 import { BaseRepository } from '@core/repositories/base.repository';
-import type { DatabaseTransaction } from '@db/types';
+import type { DatabaseTransaction } from '@shared/types';
 
 export class XpAdminRepository extends BaseRepository<typeof levels> {
 	constructor() {

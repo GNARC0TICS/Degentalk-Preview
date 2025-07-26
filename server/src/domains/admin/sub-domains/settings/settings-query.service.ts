@@ -10,11 +10,8 @@ import { siteSettings, featureFlags } from '@schema';
 import { eq, and, or, ilike, asc } from 'drizzle-orm';
 import { logger } from '@core/logger';
 import { AdminError, AdminErrorCodes } from '../../admin.errors';
-import {
-	adminCacheService,
-	AdminCacheKeys,
-	CacheResult
-} from '../../shared';
+import { AdminCacheKeys } from '../../shared';
+import { cacheService, CacheCategory } from '@core/cache/unified-cache.service';
 import type { FilterSettingsInput } from '../settings.validators';
 
 export class SettingsQueryService {
@@ -25,9 +22,13 @@ export class SettingsQueryService {
 		try {
 			// Use cache for unfiltered settings queries
 			if (!filters) {
-				return await adminCacheService.getOrSet(AdminCacheKeys.settings(), async () => {
-					return await this.fetchSettingsFromDB();
-				});
+				const cacheKey = AdminCacheKeys.settings();
+				const cached = await cacheService.get(cacheKey, { category: CacheCategory.SETTINGS });
+				if (cached) return cached;
+				
+				const settings = await this.fetchSettingsFromDB();
+				await cacheService.set(cacheKey, settings, { category: CacheCategory.SETTINGS });
+				return settings;
 			}
 
 			// For filtered queries, bypass cache to ensure accuracy

@@ -7,7 +7,7 @@
 
 import { eq, desc, count, avg, sum, sql, and, gte, lte } from 'drizzle-orm';
 import { db } from '@db';
-import { adminCacheService } from '../../admin/shared';
+import { cacheService, CacheCategory } from '@core/cache/unified-cache.service';
 import { CacheStandard, CacheExtended } from '@core/cache/decorators';
 import { invalidateCache } from '@core/cache/invalidateCache';
 import {
@@ -123,40 +123,40 @@ export class SystemAnalyticsService {
 	async getSystemMetrics(timeRange: '1h' | '24h' | '7d' | '30d' = '24h'): Promise<SystemMetrics> {
 		const cacheKey = `${this.CACHE_KEY_PREFIX}:metrics:${timeRange}`;
 
-		return adminCacheService.getOrSet(
-			cacheKey,
-			async () => {
-				const [cacheMetrics, databaseMetrics, apiMetrics] = await Promise.all([
-					this.getCacheMetrics(),
-					this.getDatabaseMetrics(),
-					this.getAPIMetrics(timeRange)
-				]);
+		const cached = await cacheService.get(cacheKey, CacheCategory.ANALYTICS);
+		if (cached) return cached as SystemMetrics;
 
-				return {
-					performance: {
-						averageResponseTime: apiMetrics.averageResponseTime,
-						slowestEndpoints: apiMetrics.slowestEndpoints,
-						errorRate: apiMetrics.errorRate,
-						uptime: 99.9 // TODO: Implement actual uptime tracking
-					},
-					cache: cacheMetrics,
-					database: databaseMetrics,
-					api: {
-						requestsPerMinute: apiMetrics.requestsPerMinute,
-						topEndpoints: apiMetrics.topEndpoints,
-						errorsByType: apiMetrics.errorsByType,
-						statusCodes: apiMetrics.statusCodes
-					},
-					system: {
-						cpuUsage: undefined, // TODO: Implement system monitoring
-						memoryUsage: undefined,
-						diskUsage: undefined,
-						networkIO: undefined
-					}
-				};
+		const [cacheMetrics, databaseMetrics, apiMetrics] = await Promise.all([
+			this.getCacheMetrics(),
+			this.getDatabaseMetrics(),
+			this.getAPIMetrics(timeRange)
+		]);
+
+		const result: SystemMetrics = {
+			performance: {
+				averageResponseTime: apiMetrics.averageResponseTime,
+				slowestEndpoints: apiMetrics.slowestEndpoints,
+				errorRate: apiMetrics.errorRate,
+				uptime: 99.9 // TODO: Implement actual uptime tracking
 			},
-			this.DEFAULT_TTL
-		);
+			cache: cacheMetrics,
+			database: databaseMetrics,
+			api: {
+				requestsPerMinute: apiMetrics.requestsPerMinute,
+				topEndpoints: apiMetrics.topEndpoints,
+				errorsByType: apiMetrics.errorsByType,
+				statusCodes: apiMetrics.statusCodes
+			},
+			system: {
+				cpuUsage: undefined, // TODO: Implement system monitoring
+				memoryUsage: undefined,
+				diskUsage: undefined,
+				networkIO: undefined
+			}
+		};
+
+		await cacheService.set(cacheKey, result, CacheCategory.ANALYTICS, this.DEFAULT_TTL);
+		return result;
 	}
 
 	/**
@@ -168,51 +168,51 @@ export class SystemAnalyticsService {
 	): Promise<PerformanceHeatmap> {
 		const cacheKey = `${this.CACHE_KEY_PREFIX}:heatmap:${timeRange}:${granularity}`;
 
-		return adminCacheService.getOrSet(
-			cacheKey,
-			async () => {
-				const timeSlots = this.generateTimeSlots(timeRange, granularity);
-				const endTime = new Date();
-				const startTime = this.getStartTime(timeRange);
+		const cached = await cacheService.get(cacheKey, CacheCategory.ANALYTICS);
+		if (cached) return cached as PerformanceHeatmap;
 
-				// Generate mock heatmap data - In production, this would query actual metrics
-				const responseTimeData = this.generateHeatmapData(timeSlots, 50, 200);
-				const requestCountData = this.generateHeatmapData(timeSlots, 100, 1000);
-				const errorRateData = this.generateHeatmapData(timeSlots, 0, 5);
-				const cacheHitRateData = this.generateHeatmapData(timeSlots, 80, 98);
+		const timeSlots = this.generateTimeSlots(timeRange, granularity);
+		const endTime = new Date();
+		const startTime = this.getStartTime(timeRange);
 
-				return {
-					timeSlots,
-					metrics: [
-						{
-							name: 'Response Time (ms)',
-							type: 'response_time',
-							data: responseTimeData,
-							threshold: { excellent: 100, good: 200, fair: 500, poor: 1000 }
-						},
-						{
-							name: 'Request Count',
-							type: 'request_count',
-							data: requestCountData,
-							threshold: { excellent: 1000, good: 500, fair: 200, poor: 50 }
-						},
-						{
-							name: 'Error Rate (%)',
-							type: 'error_rate',
-							data: errorRateData,
-							threshold: { excellent: 0.1, good: 0.5, fair: 1, poor: 5 }
-						},
-						{
-							name: 'Cache Hit Rate (%)',
-							type: 'cache_hit_rate',
-							data: cacheHitRateData,
-							threshold: { excellent: 95, good: 90, fair: 80, poor: 70 }
-						}
-					]
-				};
-			},
-			this.DEFAULT_TTL
-		);
+		// Generate mock heatmap data - In production, this would query actual metrics
+		const responseTimeData = this.generateHeatmapData(timeSlots, 50, 200);
+		const requestCountData = this.generateHeatmapData(timeSlots, 100, 1000);
+		const errorRateData = this.generateHeatmapData(timeSlots, 0, 5);
+		const cacheHitRateData = this.generateHeatmapData(timeSlots, 80, 98);
+
+		const result: PerformanceHeatmap = {
+			timeSlots,
+			metrics: [
+				{
+					name: 'Response Time (ms)',
+					type: 'response_time',
+					data: responseTimeData,
+					threshold: { excellent: 100, good: 200, fair: 500, poor: 1000 }
+				},
+				{
+					name: 'Request Count',
+					type: 'request_count',
+					data: requestCountData,
+					threshold: { excellent: 1000, good: 500, fair: 200, poor: 50 }
+				},
+				{
+					name: 'Error Rate (%)',
+					type: 'error_rate',
+					data: errorRateData,
+					threshold: { excellent: 0.1, good: 0.5, fair: 1, poor: 5 }
+				},
+				{
+					name: 'Cache Hit Rate (%)',
+					type: 'cache_hit_rate',
+					data: cacheHitRateData,
+					threshold: { excellent: 95, good: 90, fair: 80, poor: 70 }
+				}
+			]
+		};
+
+		await cacheService.set(cacheKey, result, CacheCategory.ANALYTICS, this.DEFAULT_TTL);
+		return result;
 	}
 
 	/**
@@ -222,103 +222,103 @@ export class SystemAnalyticsService {
 	async getSystemHealth(): Promise<SystemHealth> {
 		const cacheKey = `${this.CACHE_KEY_PREFIX}:health`;
 
-		return adminCacheService.getOrSet(
-			cacheKey,
-			async () => {
-				const [cacheMetrics, databaseMetrics] = await Promise.all([
-					this.getCacheMetrics(),
-					this.getDatabaseMetrics()
-				]);
+		const cached = await cacheService.get(cacheKey, CacheCategory.ANALYTICS);
+		if (cached) return cached as SystemHealth;
 
-				const checks = [
-					{
-						name: 'Cache Hit Rate',
-						status: this.getHealthStatus(cacheMetrics.hitRate, 90, 80) as 'pass' | 'warn' | 'fail',
-						value: `${cacheMetrics.hitRate.toFixed(1)}%`,
-						threshold: '90%',
-						message:
-							cacheMetrics.hitRate >= 90
-								? 'Excellent cache performance'
-								: cacheMetrics.hitRate >= 80
-									? 'Good cache performance'
-									: 'Cache performance needs attention'
-					},
-					{
-						name: 'Database Connections',
-						status: this.getHealthStatus(databaseMetrics.connectionCount, 50, 80, true) as
-							| 'pass'
-							| 'warn'
-							| 'fail',
-						value: databaseMetrics.connectionCount,
-						threshold: '< 50',
-						message:
-							databaseMetrics.connectionCount < 50
-								? 'Normal connection usage'
-								: databaseMetrics.connectionCount < 80
-									? 'Elevated connection usage'
-									: 'High connection usage'
-					},
-					{
-						name: 'Memory Usage',
-						status: this.getHealthStatus(cacheMetrics.memoryUsage, 80, 90, true) as
-							| 'pass'
-							| 'warn'
-							| 'fail',
-						value: `${cacheMetrics.memoryUsage.toFixed(1)} MB`,
-						threshold: '< 80 MB',
-						message:
-							cacheMetrics.memoryUsage < 80
-								? 'Normal memory usage'
-								: cacheMetrics.memoryUsage < 90
-									? 'Elevated memory usage'
-									: 'High memory usage'
-					},
-					{
-						name: 'Query Performance',
-						status: this.getHealthStatus(
-							databaseMetrics.queryPerformance.averageTime,
-							50,
-							100,
-							true
-						) as 'pass' | 'warn' | 'fail',
-						value: `${databaseMetrics.queryPerformance.averageTime.toFixed(1)}ms`,
-						threshold: '< 50ms',
-						message:
-							databaseMetrics.queryPerformance.averageTime < 50
-								? 'Excellent query performance'
-								: databaseMetrics.queryPerformance.averageTime < 100
-									? 'Good query performance'
-									: 'Query performance needs optimization'
-					}
-				];
+		const [cacheMetrics, databaseMetrics] = await Promise.all([
+			this.getCacheMetrics(),
+			this.getDatabaseMetrics()
+		]);
 
-				const passCount = checks.filter((c) => c.status === 'pass').length;
-				const warnCount = checks.filter((c) => c.status === 'warn').length;
-				const failCount = checks.filter((c) => c.status === 'fail').length;
-
-				const score = Math.round((passCount * 100 + warnCount * 60) / checks.length);
-				const status: 'healthy' | 'degraded' | 'critical' =
-					failCount > 0 ? 'critical' : warnCount > 1 ? 'degraded' : 'healthy';
-
-				const recommendations = [
-					...cacheMetrics.recommendations,
-					...(score < 80 ? ['Consider optimizing database queries'] : []),
-					...(databaseMetrics.connectionCount > 50
-						? ['Monitor database connection pool usage']
-						: []),
-					...(cacheMetrics.memoryUsage > 80 ? ['Consider increasing cache memory limits'] : [])
-				];
-
-				return {
-					status,
-					score,
-					checks,
-					recommendations,
-					lastChecked: new Date()
-				};
+		const checks = [
+			{
+				name: 'Cache Hit Rate',
+				status: this.getHealthStatus(cacheMetrics.hitRate, 90, 80) as 'pass' | 'warn' | 'fail',
+				value: `${cacheMetrics.hitRate.toFixed(1)}%`,
+				threshold: '90%',
+				message:
+					cacheMetrics.hitRate >= 90
+						? 'Excellent cache performance'
+						: cacheMetrics.hitRate >= 80
+							? 'Good cache performance'
+							: 'Cache performance needs attention'
 			},
-			60 // 1 minute TTL for health checks
-		);
+			{
+				name: 'Database Connections',
+				status: this.getHealthStatus(databaseMetrics.connectionCount, 50, 80, true) as
+					| 'pass'
+					| 'warn'
+					| 'fail',
+				value: databaseMetrics.connectionCount,
+				threshold: '< 50',
+				message:
+					databaseMetrics.connectionCount < 50
+						? 'Normal connection usage'
+						: databaseMetrics.connectionCount < 80
+							? 'Elevated connection usage'
+							: 'High connection usage'
+			},
+			{
+				name: 'Memory Usage',
+				status: this.getHealthStatus(cacheMetrics.memoryUsage, 80, 90, true) as
+					| 'pass'
+					| 'warn'
+					| 'fail',
+				value: `${cacheMetrics.memoryUsage.toFixed(1)} MB`,
+				threshold: '< 80 MB',
+				message:
+					cacheMetrics.memoryUsage < 80
+						? 'Normal memory usage'
+						: cacheMetrics.memoryUsage < 90
+							? 'Elevated memory usage'
+							: 'High memory usage'
+			},
+			{
+				name: 'Query Performance',
+				status: this.getHealthStatus(
+					databaseMetrics.queryPerformance.averageTime,
+					50,
+					100,
+					true
+				) as 'pass' | 'warn' | 'fail',
+				value: `${databaseMetrics.queryPerformance.averageTime.toFixed(1)}ms`,
+				threshold: '< 50ms',
+				message:
+					databaseMetrics.queryPerformance.averageTime < 50
+						? 'Excellent query performance'
+						: databaseMetrics.queryPerformance.averageTime < 100
+							? 'Good query performance'
+							: 'Query performance needs optimization'
+			}
+		];
+
+		const passCount = checks.filter((c) => c.status === 'pass').length;
+		const warnCount = checks.filter((c) => c.status === 'warn').length;
+		const failCount = checks.filter((c) => c.status === 'fail').length;
+
+		const score = Math.round((passCount * 100 + warnCount * 60) / checks.length);
+		const status: 'healthy' | 'degraded' | 'critical' =
+			failCount > 0 ? 'critical' : warnCount > 1 ? 'degraded' : 'healthy';
+
+		const recommendations = [
+			...cacheMetrics.recommendations,
+			...(score < 80 ? ['Consider optimizing database queries'] : []),
+			...(databaseMetrics.connectionCount > 50
+				? ['Monitor database connection pool usage']
+				: []),
+			...(cacheMetrics.memoryUsage > 80 ? ['Consider increasing cache memory limits'] : [])
+		];
+
+		const result: SystemHealth = {
+			status,
+			score,
+			checks,
+			recommendations,
+			lastChecked: new Date()
+		};
+
+		await cacheService.set(cacheKey, result, CacheCategory.ANALYTICS, 60); // 1 minute TTL for health checks
+		return result;
 	}
 
 	/**
@@ -379,21 +379,49 @@ export class SystemAnalyticsService {
 	// ============ PRIVATE HELPER METHODS ============
 
 	private async getCacheMetrics() {
-		const metrics = adminCacheService.getCacheMetrics();
-		const analytics = adminCacheService.getCacheAnalytics();
+		const metrics = cacheService.getMetrics();
+		
+		// Calculate hit rate from metrics
+		const totalRequests = metrics.hits + metrics.misses;
+		const hitRate = totalRequests > 0 ? (metrics.hits / totalRequests) * 100 : 0;
+		
+		// Determine hit rate grade
+		const hitRateGrade = hitRate >= 95 ? 'A+' : 
+			hitRate >= 90 ? 'A' :
+			hitRate >= 85 ? 'B' :
+			hitRate >= 80 ? 'C' :
+			hitRate >= 70 ? 'D' : 'F';
+		
+		// Get keys by category from metrics
+		const keysByCategory: Record<string, number> = {};
+		for (const [key, value] of Object.entries(metrics.categoryCounts)) {
+			keysByCategory[key] = value;
+		}
+		
+		// Generate recommendations based on metrics
+		const recommendations: string[] = [];
+		if (hitRate < 80) {
+			recommendations.push('Cache hit rate is below 80%, consider reviewing cache strategies');
+		}
+		if (metrics.keys > 10000) {
+			recommendations.push('High number of cache keys, consider implementing cache eviction policies');
+		}
+		if (metrics.memoryUsage > 100 * 1024 * 1024) { // 100MB
+			recommendations.push('Cache memory usage is high, monitor for potential memory issues');
+		}
 
 		return {
-			hitRate: analytics.hitRate,
-			hitRateGrade: analytics.hitRateGrade,
+			hitRate,
+			hitRateGrade,
 			totalKeys: metrics.keys,
-			memoryUsage: parseFloat((metrics.ksize / 1024 / 1024).toFixed(2)), // Convert to MB
-			keysByCategory: analytics.keysByCategory,
+			memoryUsage: parseFloat((metrics.memoryUsage / 1024 / 1024).toFixed(2)), // Convert to MB
+			keysByCategory,
 			performance: {
-				hits: analytics.hits,
-				misses: analytics.misses,
-				totalRequests: analytics.hits + analytics.misses
+				hits: metrics.hits,
+				misses: metrics.misses,
+				totalRequests
 			},
-			recommendations: analytics.recommendations
+			recommendations
 		};
 	}
 

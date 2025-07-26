@@ -10,7 +10,8 @@ import { siteSettings, featureFlags } from '@schema';
 import { eq } from 'drizzle-orm';
 import { logger } from '@core/logger';
 import { AdminError, AdminErrorCodes } from '../../admin.errors';
-import { adminCacheService } from '../../shared';
+import { cacheService, CacheCategory } from '@core/cache/unified-cache.service';
+import { AdminCacheKeys } from '../../shared';
 import { settingsQueryService } from './settings-query.service';
 import { settingsValidationService } from './settings-validation.service';
 import type {
@@ -59,7 +60,7 @@ export class SettingsCommandService {
 				.returning();
 
 			// Invalidate cache after successful update
-			await adminCacheService.invalidateEntity('setting', key);
+			await cacheService.delete(AdminCacheKeys.settings(), { category: CacheCategory.SETTINGS });
 
 			logger.info('SettingsCommandService', 'Setting updated successfully', {
 				key,

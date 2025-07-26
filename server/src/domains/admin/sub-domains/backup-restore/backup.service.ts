@@ -8,7 +8,7 @@ import { db } from '@db';
 import { adminBackups, backupSettings } from '@schema';
 import { eq, desc, and, gte, lte, ilike, or } from 'drizzle-orm';
 import { AdminError, AdminErrorCodes } from '../../admin.errors';
-import { adminCacheService } from '../../shared';
+import { cacheService, CacheCategory } from '@core/cache/unified-cache.service';
 import { spawn } from 'child_process';
 import { createHash } from 'crypto';
 import { createReadStream, createWriteStream, statSync, unlinkSync, existsSync } from 'fs';
@@ -122,7 +122,7 @@ export class BackupService {
 			});
 
 			// Invalidate cache
-			await adminCacheService.invalidateEntity('backup');
+			await cacheService.deletePattern('backup', CacheCategory.ADMIN);
 
 			return {
 				backupId: backup.id,
@@ -288,7 +288,7 @@ export class BackupService {
 			await db.delete(adminBackups).where(eq(adminBackups.id, id));
 
 			// Invalidate cache
-			await adminCacheService.invalidateEntity('backup');
+			await cacheService.deletePattern('backup', CacheCategory.ADMIN);
 
 			return { success: true, message: `Backup "${backup.displayName}" deleted successfully` };
 		} catch (error) {

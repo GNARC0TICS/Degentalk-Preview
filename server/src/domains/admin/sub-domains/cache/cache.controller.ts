@@ -1,7 +1,7 @@
 import type { Request, Response } from 'express';
 import { userService } from '@core/services/user.service';
 import { z } from 'zod';
-import { adminCacheService } from '../../shared';
+import { cacheService, CacheCategory } from '@core/cache/unified-cache.service';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 import { validateRequestBody } from '../../admin.validation';
 
@@ -46,8 +46,8 @@ export class AdminCacheController {
 			});
 
 		const result = await boundary.execute(async () => {
-			const metrics = adminCacheService.getMetrics();
-			const health = adminCacheService.getHealth();
+			const metrics = cacheService.getMetrics();
+			const health = cacheService.getHealth();
 
 			return formatAdminResponse(
 				{
@@ -91,13 +91,22 @@ export class AdminCacheController {
 			let clearedCount = 0;
 
 			if (validatedData.category === 'all') {
-				await adminCacheService.flush();
+				await cacheService.clear();
 				clearedCount = -1; // Indicate full flush
 			} else if (validatedData.pattern) {
-				clearedCount = await adminCacheService.clearByPattern(validatedData.pattern);
+				clearedCount = await cacheService.deletePattern(validatedData.pattern);
 			} else if (validatedData.category) {
-				const pattern = this.getCategoryPattern(validatedData.category);
-				clearedCount = await adminCacheService.clearByPattern(pattern);
+				// Map string category to CacheCategory enum
+				let category: CacheCategory;
+				switch (validatedData.category) {
+					case 'settings': category = CacheCategory.SETTINGS; break;
+					case 'users': category = CacheCategory.USER; break;
+					case 'analytics': category = CacheCategory.ANALYTICS; break;
+					case 'forum': category = CacheCategory.FORUM; break;
+					default: category = CacheCategory.DEFAULT;
+				}
+				await cacheService.clear(category);
+				clearedCount = -1; // Indicate category clear
 			}
 
 			return formatAdminResponse(
@@ -148,7 +157,23 @@ export class AdminCacheController {
 			const targets = validatedData.targets || ['settings', 'usergroups', 'forumconfig'];
 			const warmupFetchers = this.createWarmupFetchers(targets);
 
-			await adminCacheService.warmup(warmupFetchers);
+			// Convert warmup fetchers to unified cache format
+			const warmupData = [];
+			for (const [key, fetcher] of Object.entries(warmupFetchers)) {
+				const value = await fetcher();
+				const [categoryPart] = key.split(':');
+				let category = CacheCategory.DEFAULT;
+				
+				// Map to appropriate categories
+				if (categoryPart === 'settings') category = CacheCategory.SETTINGS;
+				else if (categoryPart === 'usergroups') category = CacheCategory.USER;
+				else if (categoryPart === 'forumconfig') category = CacheCategory.FORUM;
+				else if (categoryPart === 'analytics') category = CacheCategory.ANALYTICS;
+				
+				warmupData.push({ key, value, options: { category } });
+			}
+			
+			await cacheService.warmup(warmupData);
 
 			return formatAdminResponse(
 				{
@@ -185,8 +210,8 @@ export class AdminCacheController {
 			});
 
 		const result = await boundary.execute(async () => {
-			const metrics = adminCacheService.getMetrics();
-			const health = adminCacheService.getHealth();
+			const metrics = cacheService.getMetrics();
+			const health = cacheService.getHealth();
 
 			// Calculate analytics
 			const analytics = {

@@ -10,7 +10,8 @@ import { emailTemplates, emailTemplateVersions, emailTemplateLogs } from '@schem
 import { eq, desc, and, ilike, or } from 'drizzle-orm';
 import { marked } from 'marked';
 import { AdminError, AdminErrorCodes } from '../../admin/admin.errors';
-import { adminCacheService, AdminCacheKeys } from '../../admin/shared';
+import { AdminCacheKeys } from '../../admin/shared';
+import { cacheService, CacheCategory } from '@core/cache/unified-cache.service';
 import { z } from 'zod';
 import type { TemplateId } from '@shared/types/ids';
 import { logger } from '@core/logger';
@@ -157,7 +158,7 @@ export class EmailTemplateService {
 				.returning();
 
 			// Invalidate cache
-			await adminCacheService.invalidateEntity('emailTemplate');
+			await cacheService.deletePattern('emailTemplate', CacheCategory.ADMIN);
 
 			return template;
 		} catch (error) {
@@ -224,7 +225,7 @@ export class EmailTemplateService {
 				.returning();
 
 			// Invalidate cache
-			await adminCacheService.invalidateEntity('emailTemplate');
+			await cacheService.deletePattern('emailTemplate', CacheCategory.ADMIN);
 
 			return updatedTemplate;
 		} catch (error) {
@@ -254,7 +255,7 @@ export class EmailTemplateService {
 				.where(eq(emailTemplates.id, id));
 
 			// Invalidate cache
-			await adminCacheService.invalidateEntity('emailTemplate');
+			await cacheService.deletePattern('emailTemplate', CacheCategory.ADMIN);
 
 			return { success: true };
 		} catch (error) {

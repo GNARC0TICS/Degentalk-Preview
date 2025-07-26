@@ -144,7 +144,7 @@ export async function isAdminOrModerator(req: Request, res: Response, next: Next
  * Async handler for error handling in admin routes
  * Wraps async route handlers to properly catch errors
  */
-export const asyncHandler = (fn: Function) => (req: Request, res: Response, next: NextFunction) => {
+export const asyncHandler = (fn: (req: Request, res: Response, next: NextFunction) => Promise<any>) => (req: Request, res: Response, next: NextFunction) => {
 	Promise.resolve(fn(req, res, next)).catch((error) => {
 		logger.error('AdminMiddleware', 'Admin route error in asyncHandler', {
 			err: error,

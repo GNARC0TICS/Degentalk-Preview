@@ -23,7 +23,7 @@ export { CreateThreadButton } from './CreateThreadButton';
 export { QuickStats } from './QuickStats';
 export { HotTopics } from './HotTopics';
 export { RecentActivity } from './RecentActivity';
-export { ProfileCard } from './ProfileCard';
+// ProfileCard has been moved to components/shared/ProfileCard
 export { UserLevelDisplay } from './UserLevelDisplay';
 export { SignatureRenderer } from './SignatureRenderer';
 export { MyBBBreadcrumb } from './MyBBBreadcrumb';

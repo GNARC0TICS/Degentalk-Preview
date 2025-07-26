@@ -25,7 +25,6 @@ export default function AvatarFramesShopPage() {
 	const queryClient = useQueryClient();
 	const { toast } = useToast();
 	const [activeEquipped, setActiveEquipped] = useState<FrameId | null>(null);
-	const [ownedFrames, setOwnedFrames] = useState<Set<FrameId>>(new Set());
 
 	// Fetch frames for sale
 	const {
@@ -37,12 +36,23 @@ export default function AvatarFramesShopPage() {
 		queryFn: () => apiRequest({ url: '/api/store/avatar-frames', method: 'GET' })
 	});
 
+	// Fetch user's owned frames
+	const { data: userFrames = [] } = useQuery<{ id: FrameId; source: string }[]>({
+		queryKey: ['user', 'owned-frames'],
+		queryFn: () => apiRequest({ url: '/api/users/me/frames', method: 'GET' }),
+		enabled: true
+	});
+
+	// Create a set of owned frame IDs for quick lookup
+	const ownedFrames = new Set(userFrames.map(f => f.id));
+
 	// Purchase mutation
 	const purchaseMutation = useMutation<{ success: boolean }, Error, FrameId>({
 		mutationFn: (frameId: FrameId) =>
 			apiRequest({ url: `/api/store/avatar-frames/${frameId}/purchase`, method: 'POST' }),
-		onSuccess: (_data, frameId) => {
-			setOwnedFrames((prev) => new Set(prev).add(frameId));
+		onSuccess: () => {
+			// Refresh the owned frames list
+			queryClient.invalidateQueries({ queryKey: ['user', 'owned-frames'] });
 			toast({ title: 'Purchased', description: 'Frame purchased successfully!' });
 		},
 		onError: (e) => {
@@ -54,7 +64,7 @@ export default function AvatarFramesShopPage() {
 	const equipMutation = useMutation<{ success: boolean }, Error, FrameId>({
 		mutationFn: (frameId: FrameId) =>
 			apiRequest({ url: `/api/users/me/frames/${frameId}/equip`, method: 'POST' }),
-		onSuccess: (_data, frameId) => {
+		onSuccess: () => {
 			setActiveEquipped(frameId);
 			toast({ title: 'Equipped', description: 'Avatar frame equipped!' });
 		},

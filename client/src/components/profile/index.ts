@@ -1,8 +1,5 @@
-// New unified components
-export { UnifiedProfileCard } from './UnifiedProfileCard';
-
-// Legacy components (now use UnifiedProfileCard internally)
-export { default as ProfileCard } from './ProfileCard';
+// ProfileCard has been moved to components/shared/ProfileCard
+// Please update imports to use: import { ProfileCard } from '@app/components/shared';
 export { UserProfileRenderer } from './UserProfileRenderer';
 
 export { default as FriendsTab } from './FriendsTab';

@@ -5,6 +5,8 @@ import { eq, and } from 'drizzle-orm';
 import { walletService } from '../wallet/services/wallet.service';
 import type { EntityId, ProductId, FrameId } from '@shared/types/ids';
 import { logger } from '@core/logger';
+import { dgtService } from '../wallet/services/dgtService';
+import { defaultFrames, isDefaultFrame } from '@shared/config/default-frames.config';
 
 export interface StoreFrame {
 	id: EntityId;
@@ -18,8 +20,8 @@ export interface StoreFrame {
 
 class AvatarFrameStoreService {
 	async listAvailableFrames(): Promise<StoreFrame[]> {
-		// Return published, non-deleted products that map to an avatar frame.
-		const rows = await db
+		// Get database frames
+		const dbFrames = await db
 			.select({
 				id: avatarFrames.id,
 				name: avatarFrames.name,
@@ -33,7 +35,22 @@ class AvatarFrameStoreService {
 			.innerJoin(avatarFrames, eq(products.frameId, avatarFrames.id))
 			.where(eq(products.status, 'published'));
 
-		return rows as StoreFrame[];
+		// Convert default frames to StoreFrame format
+		const defaultStoreFrames: StoreFrame[] = defaultFrames.map(frame => ({
+			id: frame.id as EntityId,
+			name: frame.name,
+			imageUrl: frame.imageUrl,
+			rarity: frame.rarity,
+			animated: frame.animated,
+			price: frame.price,
+			productId: `default-${frame.id}` as ProductId // Use a special productId for defaults
+		}));
+
+		// Merge database frames with default frames (database frames take precedence)
+		const dbFrameIds = new Set(dbFrames.map(f => f.id));
+		const uniqueDefaultFrames = defaultStoreFrames.filter(f => !dbFrameIds.has(f.id));
+
+		return [...dbFrames, ...uniqueDefaultFrames] as StoreFrame[];
 	}
 
 	async purchaseFrame(
@@ -46,28 +63,50 @@ class AvatarFrameStoreService {
 		message: string;
 	}> {
 		try {
-			// Get frame and product details
-			const frameData = await db
-				.select({
-					frameId: avatarFrames.id,
-					frameName: avatarFrames.name,
-					price: products.price,
-					productId: products.id
-				})
-				.from(products)
-				.innerJoin(avatarFrames, eq(products.frameId, avatarFrames.id))
-				.where(and(eq(avatarFrames.id, frameId), eq(products.status, 'published')))
-				.limit(1);
+			let frameName: string;
+			let price: number;
+			let productId: ProductId;
 
-			if (frameData.length === 0) {
-				return {
-					success: false,
-					frameId,
-					message: 'Frame not found or not available for purchase'
-				};
+			// Check if this is a default frame
+			if (isDefaultFrame(frameId)) {
+				const defaultFrame = defaultFrames.find(f => f.id === frameId);
+				if (!defaultFrame) {
+					return {
+						success: false,
+						frameId,
+						message: 'Frame not found'
+					};
+				}
+				frameName = defaultFrame.name;
+				price = defaultFrame.price;
+				productId = `default-${frameId}` as ProductId;
+			} else {
+				// Get frame and product details from database
+				const frameData = await db
+					.select({
+						frameId: avatarFrames.id,
+						frameName: avatarFrames.name,
+						price: products.price,
+						productId: products.id
+					})
+					.from(products)
+					.innerJoin(avatarFrames, eq(products.frameId, avatarFrames.id))
+					.where(and(eq(avatarFrames.id, frameId), eq(products.status, 'published')))
+					.limit(1);
+
+				if (frameData.length === 0) {
+					return {
+						success: false,
+						frameId,
+						message: 'Frame not found or not available for purchase'
+					};
+				}
+
+				const frame = frameData[0];
+				frameName = frame.frameName;
+				price = frame.price;
+				productId = frame.productId;
 			}
-
-			const frame = frameData[0];
 
 			// Check if user already owns this frame
 			const existingOwnership = await db
@@ -89,11 +128,11 @@ class AvatarFrameStoreService {
 			let newBalance: number | undefined;
 
 			// Handle wallet deduction for paid frames
-			if (frame.price > 0) {
-				const debitResult = await dgtService.debitDGT(userId, frame.price, {
+			if (price > 0) {
+				const debitResult = await dgtService.debitDGT(userId, price, {
 					source: 'shop_purchase',
-					shopItemId: frame.productId.toString(),
-					reason: `Purchased avatar frame: ${frame.frameName}`
+					shopItemId: productId.toString(),
+					reason: `Purchased avatar frame: ${frameName}`
 				});
 				newBalance = debitResult.balanceAfter;
 			}
@@ -102,8 +141,7 @@ class AvatarFrameStoreService {
 			await db.insert(userOwnedFrames).values({
 				userId: userId as UserId,
 				frameId: frameId,
-				purchasedAt: new Date(),
-				isActive: false // User needs to manually equip
+				source: isDefaultFrame(frameId) ? 'default' : 'shop'
 			});
 
 			return {
@@ -111,9 +149,9 @@ class AvatarFrameStoreService {
 				frameId,
 				newBalance,
 				message:
-					frame.price > 0
-						? `Successfully purchased ${frame.frameName} for ${frame.price} DGT!`
-						: `Successfully obtained ${frame.frameName}!`
+					price > 0
+						? `Successfully purchased ${frameName} for ${price} DGT!`
+						: `Successfully obtained ${frameName}!`
 			};
 		} catch (error) {
 			logger.error('Error purchasing frame:', error);

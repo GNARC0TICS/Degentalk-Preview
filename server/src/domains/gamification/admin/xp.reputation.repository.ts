@@ -2,7 +2,7 @@ import { db } from '@db';
 import { eq } from 'drizzle-orm';
 import { xpActionSettings } from '@schema';
 import { BaseRepository } from '@core/repositories/base.repository';
-import type { DatabaseTransaction } from '@db/types';
+import type { DatabaseTransaction } from '@shared/types';
 
 export class XpReputationRepository extends BaseRepository<typeof xpActionSettings> {
 	constructor() {

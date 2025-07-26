@@ -1,7 +1,7 @@
 import React, { useState, useCallback, memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { Thread } from '@shared/types/thread.types';
-import type { ThreadId, UserId, ZoneId, StructureId, ForumId } from '@shared/types/ids';
+import type { ThreadId, UserId, StructureId, ForumId } from '@shared/types/ids';
 import type { CanonicalForum } from '@app/types/canonical.types';
 import {
 	Wand2,
@@ -39,7 +39,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@app/components/ui/car
 import { cn } from '@app/utils/utils';
 
 import ThreadCard from '@app/components/forum/ThreadCard';
-import ZoneCard from '@app/components/forum/ZoneCard';
 import CryptoEngagementBar from '@app/components/forum/enhanced/CryptoEngagementBar';
 import QuickReactions from '@app/components/forum/enhanced/QuickReactions';
 
@@ -197,7 +196,7 @@ const MagicForumBuilder = memo(
 					isBanned: false
 				},
 				zone: {
-					id: 'zone_1' as ZoneId,
+					id: 'forum_1' as ForumId,
 					name: 'The Pit',
 					slug: 'pit',
 					colorTheme: 'pit',
@@ -276,7 +275,7 @@ const MagicForumBuilder = memo(
 					isBanned: false
 				},
 				zone: {
-					id: 'zone_2' as ZoneId,
+					id: 'forum_2' as ForumId,
 					name: 'Mission Control',
 					slug: 'mission',
 					colorTheme: 'mission',

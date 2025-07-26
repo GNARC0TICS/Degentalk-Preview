@@ -5,7 +5,7 @@ import { AvatarFrame } from '@app/components/identity/AvatarFrame';
 import { UserName } from '@app/components/users/Username';
 import { LevelBadge } from '@app/features/gamification/components/LevelBadge';
 import { useIdentityDisplay } from '@app/hooks/useIdentityDisplay';
-import type { User } from '@shared/types/user';
+import type { User } from '@shared/types/user.types';
 
 type ThreadAuthorProps = {
 	user: Partial<User>; // Accept partial user object

@@ -7,8 +7,7 @@
 // Auth schemas
 export * from './auth.schema';
 
-// Mission schemas  
-export * from './mission.schema';
+// Mission schemas - REMOVED: Mission system has been deprecated
 
 // Shop schemas
 export * from './shop.schema';

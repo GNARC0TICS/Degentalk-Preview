@@ -11,7 +11,7 @@ import type { Thread } from '@shared/types/thread.types';
 import type { ResolvedZone } from '@app/types/thread.types';
 import type { User } from '@shared/types/user.types';
 import { toId, generateId } from '@shared/utils/id';
-import type { ThreadId, UserId, ZoneId } from '@shared/types/ids';
+import type { ThreadId, UserId } from '@shared/types/ids';
 
 interface PermissionResult {
 	allowed: boolean;
@@ -50,7 +50,7 @@ export const MOCK_THREAD: Thread = {
 		slug: 'test-category'
 	},
 	zone: {
-		id: toId<'ZoneId'>(generateId()),
+		id: toId<'ForumId'>(generateId()),
 		name: 'Test Zone',
 		slug: 'test-zone',
 		colorTheme: 'blue',

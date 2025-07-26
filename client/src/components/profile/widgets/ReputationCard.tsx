@@ -4,7 +4,6 @@ import { cn } from '@app/utils/utils';
 
 interface ReputationCardProps {
 	reputation?: number;
-	reputation?: number;
 	dailyXpGained?: number;
 	lastXpGainDate?: string | null;
 	level?: number;
@@ -12,7 +11,6 @@ interface ReputationCardProps {
 }
 
 export function ReputationCard({
-	reputation = 0,
 	reputation = 0,
 	dailyXpGained = 0,
 	lastXpGainDate = null,

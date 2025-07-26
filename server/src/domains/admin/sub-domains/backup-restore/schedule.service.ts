@@ -8,7 +8,7 @@ import { db } from '@db';
 import { backupSchedules, adminBackups } from '@schema';
 import { eq, desc, and, lte } from 'drizzle-orm';
 import { AdminError, AdminErrorCodes } from '../../admin.errors';
-import { adminCacheService } from '../../shared';
+import { cacheService, CacheCategory } from '@core/cache/unified-cache.service';
 import { backupService } from './backup.service';
 import { z } from 'zod';
 import { logger } from '@core/logger';
@@ -79,7 +79,7 @@ export class BackupScheduleService {
 			await this.ensureSchedulerRunning();
 
 			// Invalidate cache
-			await adminCacheService.invalidateEntity('backupSchedule');
+			await cacheService.deletePattern('backupSchedule', CacheCategory.ADMIN);
 
 			return {
 				schedule,
@@ -138,7 +138,7 @@ export class BackupScheduleService {
 			}
 
 			// Invalidate cache
-			await adminCacheService.invalidateEntity('backupSchedule');
+			await cacheService.deletePattern('backupSchedule', CacheCategory.ADMIN);
 
 			return {
 				schedule: updatedSchedule,
@@ -168,7 +168,7 @@ export class BackupScheduleService {
 			await db.delete(backupSchedules).where(eq(backupSchedules.id, id));
 
 			// Invalidate cache
-			await adminCacheService.invalidateEntity('backupSchedule');
+			await cacheService.deletePattern('backupSchedule', CacheCategory.ADMIN);
 
 			return {
 				success: true,

@@ -6,7 +6,7 @@
 
 import { eq, desc, count, avg, sum, sql, and, gte, lte, gt, lt, inArray } from 'drizzle-orm';
 import { db } from '@db';
-import { adminCacheService } from '../../admin/shared';
+import { cacheService, CacheCategory } from '@core/cache/unified-cache.service';
 import {
 	users,
 	transactions,
@@ -102,70 +102,72 @@ export class FraudDetectionService {
 	async getFraudAlerts(status?: 'active' | 'investigating' | 'resolved' | 'false_positive'): Promise<FraudAlert[]> {
 		const cacheKey = `${this.CACHE_KEY_PREFIX}:alerts:${status || 'all'}`;
 
-		return adminCacheService.getOrSet(
-			cacheKey,
-			async () => {
-				// For now, return mock data - in production, this would query a fraud_alerts table
-				const mockAlerts: FraudAlert[] = [
-					{
-						id: 'alert_001',
-						type: 'suspicious_transactions',
-						severity: 'high',
-						userId: 'user_123' as UserId,
-						username: 'suspicious_user',
-						description: 'Unusual transaction pattern detected: 15 DGT transfers in 5 minutes',
-						evidence: {
-							transactionCount: 15,
-							timeframe: '5 minutes',
-							totalAmount: 5000,
-							averageAmount: 333.33,
-							recipientCount: 8
-						},
-						score: 82,
-						createdAt: new Date(Date.now() - 2 * 60 * 60 * 1000),
-						status: 'active'
-					},
-					{
-						id: 'alert_002',
-						type: 'potential_bot',
-						severity: 'medium',
-						userId: 'user_456' as UserId,
-						username: 'rapid_poster',
-						description: 'Automated posting pattern detected: 50 posts in 1 hour',
-						evidence: {
-							postCount: 50,
-							timeframe: '1 hour',
-							averageInterval: 72, // seconds
-							duplicateContent: 3,
-							threadCount: 25
-						},
-						score: 68,
-						createdAt: new Date(Date.now() - 4 * 60 * 60 * 1000),
-						status: 'investigating'
-					},
-					{
-						id: 'alert_003',
-						type: 'xp_manipulation',
-						severity: 'critical',
-						userId: 'user_789' as UserId,
-						username: 'xp_farmer',
-						description: 'Suspicious XP gain pattern: 2000 XP in 30 minutes',
-						evidence: {
-							xpGained: 2000,
-							timeframe: '30 minutes',
-							actions: ['post_create', 'thread_create', 'reaction_give'],
-							actionCounts: { post_create: 40, thread_create: 20, reaction_give: 100 }
-						},
-						score: 95,
-						createdAt: new Date(Date.now() - 1 * 60 * 60 * 1000),
-						status: 'active'
-					}
-				];
+		const cached = await cacheService.get(cacheKey, { category: CacheCategory.ANALYTICS });
+		if (cached) return cached;
 
-				return status ? mockAlerts.filter(alert => alert.status === status) : mockAlerts;
-			},
-			this.DEFAULT_TTL
-		);
+		const result = await (async () => {
+			// For now, return mock data - in production, this would query a fraud_alerts table
+			const mockAlerts: FraudAlert[] = [
+				{
+					id: 'alert_001',
+					type: 'suspicious_transactions',
+					severity: 'high',
+					userId: 'user_123' as UserId,
+					username: 'suspicious_user',
+					description: 'Unusual transaction pattern detected: 15 DGT transfers in 5 minutes',
+					evidence: {
+						transactionCount: 15,
+						timeframe: '5 minutes',
+						totalAmount: 5000,
+						averageAmount: 333.33,
+						recipientCount: 8
+					},
+					score: 82,
+					createdAt: new Date(Date.now() - 2 * 60 * 60 * 1000),
+					status: 'active'
+				},
+				{
+					id: 'alert_002',
+					type: 'potential_bot',
+					severity: 'medium',
+					userId: 'user_456' as UserId,
+					username: 'rapid_poster',
+					description: 'Automated posting pattern detected: 50 posts in 1 hour',
+					evidence: {
+						postCount: 50,
+						timeframe: '1 hour',
+						averageInterval: 72, // seconds
+						duplicateContent: 3,
+						threadCount: 25
+					},
+					score: 68,
+					createdAt: new Date(Date.now() - 4 * 60 * 60 * 1000),
+					status: 'investigating'
+				},
+				{
+					id: 'alert_003',
+					type: 'xp_manipulation',
+					severity: 'critical',
+					userId: 'user_789' as UserId,
+					username: 'xp_farmer',
+					description: 'Suspicious XP gain pattern: 2000 XP in 30 minutes',
+					evidence: {
+						xpGained: 2000,
+						timeframe: '30 minutes',
+						actions: ['post_create', 'thread_create', 'reaction_give'],
+						actionCounts: { post_create: 40, thread_create: 20, reaction_give: 100 }
+					},
+					score: 95,
+					createdAt: new Date(Date.now() - 1 * 60 * 60 * 1000),
+					status: 'active'
+				}
+			];
+
+			return status ? mockAlerts.filter(alert => alert.status === status) : mockAlerts;
+		})();
+
+		await cacheService.set(cacheKey, result, { category: CacheCategory.ANALYTICS });
+		return result;
 	}
 
 	/**
@@ -174,31 +176,33 @@ export class FraudDetectionService {
 	async getFraudMetrics(): Promise<FraudMetrics> {
 		const cacheKey = `${this.CACHE_KEY_PREFIX}:metrics`;
 
-		return adminCacheService.getOrSet(
-			cacheKey,
-			async () => {
-				// Mock metrics - in production, calculate from actual data
-				return {
-					activeAlerts: 3,
-					resolvedAlerts: 15,
-					falsePositives: 2,
-					averageResolutionTime: 4.2, // hours
-					topFraudTypes: [
-						{ type: 'suspicious_transactions', count: 8, percentage: 40 },
-						{ type: 'potential_bot', count: 5, percentage: 25 },
-						{ type: 'xp_manipulation', count: 4, percentage: 20 },
-						{ type: 'referral_fraud', count: 3, percentage: 15 }
-					],
-					riskDistribution: {
-						low: 2,
-						medium: 6,
-						high: 8,
-						critical: 4
-					}
-				};
-			},
-			this.DEFAULT_TTL
-		);
+		const cached = await cacheService.get(cacheKey, { category: CacheCategory.ANALYTICS });
+		if (cached) return cached;
+
+		const result = await (async () => {
+			// Mock metrics - in production, calculate from actual data
+			return {
+				activeAlerts: 3,
+				resolvedAlerts: 15,
+				falsePositives: 2,
+				averageResolutionTime: 4.2, // hours
+				topFraudTypes: [
+					{ type: 'suspicious_transactions', count: 8, percentage: 40 },
+					{ type: 'potential_bot', count: 5, percentage: 25 },
+					{ type: 'xp_manipulation', count: 4, percentage: 20 },
+					{ type: 'referral_fraud', count: 3, percentage: 15 }
+				],
+				riskDistribution: {
+					low: 2,
+					medium: 6,
+					high: 8,
+					critical: 4
+				}
+			};
+		})();
+
+		await cacheService.set(cacheKey, result, { category: CacheCategory.ANALYTICS });
+		return result;
 	}
 
 	/**
@@ -207,148 +211,150 @@ export class FraudDetectionService {
 	async analyzeUser(userId: UserId): Promise<SuspiciousActivity | null> {
 		const cacheKey = `${this.CACHE_KEY_PREFIX}:user_analysis:${userId}`;
 
-		return adminCacheService.getOrSet(
-			cacheKey,
-			async () => {
-				const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000);
-				const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+		const cached = await cacheService.get(cacheKey, { category: CacheCategory.ANALYTICS });
+		if (cached) return cached;
 
-				// Get user info
-				const [user] = await db
-					.select({ id: users.id, username: users.username })
-					.from(users)
-					.where(eq(users.id, userId));
+		const result = await (async () => {
+			const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000);
+			const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
 
-				if (!user) return null;
+			// Get user info
+			const [user] = await db
+				.select({ id: users.id, username: users.username })
+				.from(users)
+				.where(eq(users.id, userId));
 
-				// Analyze various activities
-				const [
-					recentTransactions,
-					recentPosts,
-					recentThreads,
-					recentXpGains,
-					recentTips
-				] = await Promise.all([
-					// Recent transactions
-					db.select({ count: count() })
-						.from(transactions)
-						.where(and(
-							eq(transactions.fromUserId, userId),
-							gte(transactions.createdAt, oneHourAgo)
-						)),
-					
-					// Recent posts
-					db.select({ count: count() })
-						.from(posts)
-						.where(and(
-							eq(posts.userId, userId),
-							gte(posts.createdAt, oneHourAgo)
-						)),
-					
-					// Recent threads
-					db.select({ count: count() })
-						.from(threads)
-						.where(and(
-							eq(threads.userId, userId),
-							gte(threads.createdAt, oneHourAgo)
-						)),
-					
-					// Recent XP gains
-					db.select({ totalXp: sum(xpLogs.xpChange) })
-						.from(xpLogs)
-						.where(and(
-							eq(xpLogs.userId, userId),
-							gte(xpLogs.createdAt, oneHourAgo),
-							gt(xpLogs.xpChange, 0)
-						)),
-					
-					// Recent tips
-					db.select({ count: count() })
-						.from(postTips)
-						.where(and(
-							eq(postTips.fromUserId, userId),
-							gte(postTips.createdAt, oneHourAgo)
-						))
-				]);
+			if (!user) return null;
 
-				const activities = [];
-				let riskScore = 0;
+			// Analyze various activities
+			const [
+				recentTransactions,
+				recentPosts,
+				recentThreads,
+				recentXpGains,
+				recentTips
+			] = await Promise.all([
+				// Recent transactions
+				db.select({ count: count() })
+					.from(transactions)
+					.where(and(
+						eq(transactions.fromUserId, userId),
+						gte(transactions.createdAt, oneHourAgo)
+					)),
+				
+				// Recent posts
+				db.select({ count: count() })
+					.from(posts)
+					.where(and(
+						eq(posts.userId, userId),
+						gte(posts.createdAt, oneHourAgo)
+					)),
+				
+				// Recent threads
+				db.select({ count: count() })
+					.from(threads)
+					.where(and(
+						eq(threads.userId, userId),
+						gte(threads.createdAt, oneHourAgo)
+					)),
+				
+				// Recent XP gains
+				db.select({ totalXp: sum(xpLogs.xpChange) })
+					.from(xpLogs)
+					.where(and(
+						eq(xpLogs.userId, userId),
+						gte(xpLogs.createdAt, oneHourAgo),
+						gt(xpLogs.xpChange, 0)
+					)),
+				
+				// Recent tips
+				db.select({ count: count() })
+					.from(postTips)
+					.where(and(
+						eq(postTips.fromUserId, userId),
+						gte(postTips.createdAt, oneHourAgo)
+					))
+			]);
 
-				// Check transaction velocity
-				const transactionCount = recentTransactions[0]?.count || 0;
-				if (transactionCount > this.settings.transactionVelocityThreshold) {
-					activities.push({
-						type: 'high_transaction_velocity',
-						count: transactionCount,
-						timeframe: '1 hour',
-						threshold: this.settings.transactionVelocityThreshold,
-						risk: 'high' as const
-					});
-					riskScore += 25;
-				}
+			const activities = [];
+			let riskScore = 0;
 
-				// Check posting activity
-				const postCount = recentPosts[0]?.count || 0;
-				if (postCount > 30) {
-					activities.push({
-						type: 'rapid_posting',
-						count: postCount,
-						timeframe: '1 hour',
-						threshold: 30,
-						risk: postCount > 50 ? 'high' : 'medium' as const
-					});
-					riskScore += postCount > 50 ? 20 : 10;
-				}
+			// Check transaction velocity
+			const transactionCount = recentTransactions[0]?.count || 0;
+			if (transactionCount > this.settings.transactionVelocityThreshold) {
+				activities.push({
+					type: 'high_transaction_velocity',
+					count: transactionCount,
+					timeframe: '1 hour',
+					threshold: this.settings.transactionVelocityThreshold,
+					risk: 'high' as const
+				});
+				riskScore += 25;
+			}
 
-				// Check thread creation
-				const threadCount = recentThreads[0]?.count || 0;
-				if (threadCount > 10) {
-					activities.push({
-						type: 'rapid_thread_creation',
-						count: threadCount,
-						timeframe: '1 hour',
-						threshold: 10,
-						risk: threadCount > 20 ? 'high' : 'medium' as const
-					});
-					riskScore += threadCount > 20 ? 15 : 8;
-				}
+			// Check posting activity
+			const postCount = recentPosts[0]?.count || 0;
+			if (postCount > 30) {
+				activities.push({
+					type: 'rapid_posting',
+					count: postCount,
+					timeframe: '1 hour',
+					threshold: 30,
+					risk: postCount > 50 ? 'high' : 'medium' as const
+				});
+				riskScore += postCount > 50 ? 20 : 10;
+			}
 
-				// Check XP farming
-				const xpGained = Number(recentXpGains[0]?.totalXp || 0);
-				if (xpGained > this.settings.xpGainThreshold) {
-					activities.push({
-						type: 'xp_farming',
-						count: xpGained,
-						timeframe: '1 hour',
-						threshold: this.settings.xpGainThreshold,
-						risk: xpGained > 2000 ? 'high' : 'medium' as const
-					});
-					riskScore += xpGained > 2000 ? 30 : 15;
-				}
+			// Check thread creation
+			const threadCount = recentThreads[0]?.count || 0;
+			if (threadCount > 10) {
+				activities.push({
+					type: 'rapid_thread_creation',
+					count: threadCount,
+					timeframe: '1 hour',
+					threshold: 10,
+					risk: threadCount > 20 ? 'high' : 'medium' as const
+				});
+				riskScore += threadCount > 20 ? 15 : 8;
+			}
 
-				// Check excessive tipping
-				const tipCount = recentTips[0]?.count || 0;
-				if (tipCount > 20) {
-					activities.push({
-						type: 'excessive_tipping',
-						count: tipCount,
-						timeframe: '1 hour',
-						threshold: 20,
-						risk: 'medium' as const
-					});
-					riskScore += 12;
-				}
+			// Check XP farming
+			const xpGained = Number(recentXpGains[0]?.totalXp || 0);
+			if (xpGained > this.settings.xpGainThreshold) {
+				activities.push({
+					type: 'xp_farming',
+					count: xpGained,
+					timeframe: '1 hour',
+					threshold: this.settings.xpGainThreshold,
+					risk: xpGained > 2000 ? 'high' : 'medium' as const
+				});
+				riskScore += xpGained > 2000 ? 30 : 15;
+			}
 
-				return activities.length > 0 ? {
-					userId,
-					username: user.username,
-					activities,
-					riskScore: Math.min(riskScore, 100),
-					lastActivity: new Date()
-				} : null;
-			},
-			60 // 1 minute TTL for user analysis
-		);
+			// Check excessive tipping
+			const tipCount = recentTips[0]?.count || 0;
+			if (tipCount > 20) {
+				activities.push({
+					type: 'excessive_tipping',
+					count: tipCount,
+					timeframe: '1 hour',
+					threshold: 20,
+					risk: 'medium' as const
+				});
+				riskScore += 12;
+			}
+
+			return activities.length > 0 ? {
+				userId,
+				username: user.username,
+				activities,
+				riskScore: Math.min(riskScore, 100),
+				lastActivity: new Date()
+			} : null;
+		})();
+
+		await cacheService.set(cacheKey, result, { category: CacheCategory.ANALYTICS });
+		return result;
 	}
 
 	/**
@@ -362,58 +368,60 @@ export class FraudDetectionService {
 	}> {
 		const cacheKey = `${this.CACHE_KEY_PREFIX}:scan_results`;
 
-		return adminCacheService.getOrSet(
-			cacheKey,
-			async () => {
-				const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000);
-				
-				// Get recently active users
-				const activeUsers = await db
-					.select({ userId: analyticsEvents.userId })
-					.from(analyticsEvents)
-					.where(gte(analyticsEvents.createdAt, oneHourAgo))
-					.groupBy(analyticsEvents.userId)
-					.limit(1000);
+		const cached = await cacheService.get(cacheKey, { category: CacheCategory.ANALYTICS });
+		if (cached) return cached;
 
-				let newAlerts = 0;
-				let highRiskUsers = 0;
-				let autoSuspensions = 0;
+		const result = await (async () => {
+			const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000);
+			
+			// Get recently active users
+			const activeUsers = await db
+				.select({ userId: analyticsEvents.userId })
+				.from(analyticsEvents)
+				.where(gte(analyticsEvents.createdAt, oneHourAgo))
+				.groupBy(analyticsEvents.userId)
+				.limit(1000);
 
-				// Analyze each user
-				for (const { userId } of activeUsers) {
-					if (!userId) continue;
+			let newAlerts = 0;
+			let highRiskUsers = 0;
+			let autoSuspensions = 0;
 
-					const analysis = await this.analyzeUser(userId);
-					if (analysis && analysis.riskScore > this.FRAUD_SCORE_THRESHOLD) {
-						newAlerts++;
+			// Analyze each user
+			for (const { userId } of activeUsers) {
+				if (!userId) continue;
+
+				const analysis = await this.analyzeUser(userId);
+				if (analysis && analysis.riskScore > this.FRAUD_SCORE_THRESHOLD) {
+					newAlerts++;
+					
+					if (analysis.riskScore > 85) {
+						highRiskUsers++;
+					}
+
+					// Auto-suspension if enabled and score is very high
+					if (this.settings.enableAutoSuspension && 
+						analysis.riskScore >= this.settings.autoSuspensionThreshold) {
 						
-						if (analysis.riskScore > 85) {
-							highRiskUsers++;
-						}
-
-						// Auto-suspension if enabled and score is very high
-						if (this.settings.enableAutoSuspension && 
-							analysis.riskScore >= this.settings.autoSuspensionThreshold) {
-							
-							try {
-								await this.autoSuspendUser(userId, analysis);
-								autoSuspensions++;
-							} catch (error) {
-								logger.error('Auto-suspension failed:', error);
-							}
+						try {
+							await this.autoSuspendUser(userId, analysis);
+							autoSuspensions++;
+						} catch (error) {
+							logger.error('Auto-suspension failed:', error);
 						}
 					}
 				}
+			}
 
-				return {
-					newAlerts,
-					usersScanned: activeUsers.length,
-					highRiskUsers,
-					autoSuspensions
-				};
-			},
-			300 // 5 minute TTL
-		);
+			return {
+				newAlerts,
+				usersScanned: activeUsers.length,
+				highRiskUsers,
+				autoSuspensions
+			};
+		})();
+
+		await cacheService.set(cacheKey, result, { category: CacheCategory.ANALYTICS });
+		return result;
 	}
 
 	/**
@@ -477,7 +485,7 @@ export class FraudDetectionService {
 		logger.info(`Fraud alert ${alertId} resolved by ${adminId} with status: ${status}`);
 		
 		// Clear cache to force refresh
-		adminCacheService.deletePattern(`${this.CACHE_KEY_PREFIX}:alerts:*`);
+		await cacheService.clear({ category: CacheCategory.ANALYTICS, pattern: `${this.CACHE_KEY_PREFIX}:alerts:*` });
 		
 		return true;
 	}
@@ -499,7 +507,7 @@ export class FraudDetectionService {
 		logger.info('Fraud detection settings updated:', settings);
 		
 		// Clear cache
-		adminCacheService.deletePattern(`${this.CACHE_KEY_PREFIX}:*`);
+		await cacheService.clear({ category: CacheCategory.ANALYTICS, pattern: `${this.CACHE_KEY_PREFIX}:*` });
 		
 		return this.settings;
 	}
@@ -510,38 +518,40 @@ export class FraudDetectionService {
 	async getSuspiciousUsersReport(limit: number = 50): Promise<SuspiciousActivity[]> {
 		const cacheKey = `${this.CACHE_KEY_PREFIX}:suspicious_users:${limit}`;
 
-		return adminCacheService.getOrSet(
-			cacheKey,
-			async () => {
-				// Get recently active users
-				const activeUsers = await db
-					.select({ 
-						userId: analyticsEvents.userId,
-						username: users.username 
-					})
-					.from(analyticsEvents)
-					.innerJoin(users, eq(analyticsEvents.userId, users.id))
-					.where(gte(analyticsEvents.createdAt, new Date(Date.now() - 24 * 60 * 60 * 1000)))
-					.groupBy(analyticsEvents.userId, users.username)
-					.limit(limit * 2); // Get more to filter
+		const cached = await cacheService.get(cacheKey, { category: CacheCategory.ANALYTICS });
+		if (cached) return cached;
 
-				const suspiciousUsers: SuspiciousActivity[] = [];
+		const result = await (async () => {
+			// Get recently active users
+			const activeUsers = await db
+				.select({ 
+					userId: analyticsEvents.userId,
+					username: users.username 
+				})
+				.from(analyticsEvents)
+				.innerJoin(users, eq(analyticsEvents.userId, users.id))
+				.where(gte(analyticsEvents.createdAt, new Date(Date.now() - 24 * 60 * 60 * 1000)))
+				.groupBy(analyticsEvents.userId, users.username)
+				.limit(limit * 2); // Get more to filter
 
-				for (const { userId, username } of activeUsers) {
-					if (!userId) continue;
+			const suspiciousUsers: SuspiciousActivity[] = [];
 
-					const analysis = await this.analyzeUser(userId);
-					if (analysis && analysis.riskScore > 30) { // Lower threshold for report
-						suspiciousUsers.push(analysis);
-					}
+			for (const { userId, username } of activeUsers) {
+				if (!userId) continue;
 
-					if (suspiciousUsers.length >= limit) break;
+				const analysis = await this.analyzeUser(userId);
+				if (analysis && analysis.riskScore > 30) { // Lower threshold for report
+					suspiciousUsers.push(analysis);
 				}
 
-				return suspiciousUsers.sort((a, b) => b.riskScore - a.riskScore);
-			},
-			180 // 3 minute TTL
-		);
+				if (suspiciousUsers.length >= limit) break;
+			}
+
+			return suspiciousUsers.sort((a, b) => b.riskScore - a.riskScore);
+		})();
+
+		await cacheService.set(cacheKey, result, { category: CacheCategory.ANALYTICS });
+		return result;
 	}
 }
 

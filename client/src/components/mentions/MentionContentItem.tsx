@@ -4,7 +4,7 @@ import { cn } from '@app/utils/utils';
 import { AtSign, MessageSquare, FileText, MessageCircle, Send } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@app/components/ui/avatar';
 import { Badge } from '@app/components/ui/badge';
-import { formatRelativeTime } from '@app/utils/date';
+import { formatRelativeTime } from '@app/utils/utils';
 import type { Thread } from '@shared/types/thread.types';
 
 interface MentionContentItemProps {

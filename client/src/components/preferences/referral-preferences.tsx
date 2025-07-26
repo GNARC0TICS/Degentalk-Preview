@@ -1,5 +1,5 @@
 import React from 'react';
-import type { User } from '@shared/types/user';
+import type { User } from '@shared/types/user.types';
 import { useUserReferrals } from '@app/features/users/hooks/useUserReferrals';
 import { PreferencesCard } from './PreferencesCard';
 import { PreferencesGroup } from './PreferencesGroup';

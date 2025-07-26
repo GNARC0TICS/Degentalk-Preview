@@ -1,7 +1,6 @@
 import express from 'express';
 import { eventLogController } from '../controllers/event-log.controller';
-import { isAuthenticated } from '@api/domains/auth/middleware/auth.middleware';
-import { isAdmin } from '../../auth/middleware/admin.middleware';
+import { requireAuth, requireAdmin } from '@api/middleware/auth.unified';
 
 import { Router } from 'express'
 import type { Router as RouterType } from 'express';
@@ -10,12 +9,12 @@ const router: Router = express.Router();
 // Public routes - none for event logs
 
 // Protected routes - require authentication
-router.get('/user/:userId', isAuthenticated, eventLogController.getUserEventLogs);
+router.get('/user/:userId', requireAuth, eventLogController.getUserEventLogs);
 
 // Admin routes - require admin permissions
-router.get('/', isAuthenticated, isAdmin, eventLogController.getEventLogs);
-router.post('/', isAuthenticated, isAdmin, eventLogController.createEventLog);
-router.get('/:id', isAuthenticated, isAdmin, eventLogController.getEventLogById);
-router.delete('/:id', isAuthenticated, isAdmin, eventLogController.deleteEventLog);
+router.get('/', requireAuth, requireAdmin, eventLogController.getEventLogs);
+router.post('/', requireAuth, requireAdmin, eventLogController.createEventLog);
+router.get('/:id', requireAuth, requireAdmin, eventLogController.getEventLogById);
+router.delete('/:id', requireAuth, requireAdmin, eventLogController.deleteEventLog);
 
 export default router;

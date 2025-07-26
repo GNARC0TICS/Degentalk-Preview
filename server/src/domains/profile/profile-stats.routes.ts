@@ -1,8 +1,8 @@
 import { Router } from 'express'
 import type { Router as RouterType } from 'express';
 import { ProfileStatsController } from './profile-stats.controller';
-import { rateLimitMiddleware } from '@api/middleware/validate-request';
-import { optionalAuthMiddleware } from '@api/middleware/validate-request';
+import { createCustomRateLimiter } from '@core/services/rate-limit.service';
+import { optionalAuth } from '@api/middleware/auth.unified';
 
 const router: RouterType = Router();
 
@@ -14,16 +14,16 @@ const router: RouterType = Router();
 // GET /api/profile/:username/stats - Extended profile statistics
 router.get(
 	'/:username/stats',
-	optionalAuthMiddleware, // Allow both authenticated and anonymous access
-	rateLimitMiddleware({ windowMs: 60000, max: 30 }), // 30 requests per minute
+	optionalAuth, // Allow both authenticated and anonymous access
+	createCustomRateLimiter({ windowMs: 60000, max: 30 }), // 30 requests per minute
 	ProfileStatsController.getExtendedProfileStats
 );
 
 // GET /api/profile/:username/quick-stats - Minimal stats for previews
 router.get(
 	'/:username/quick-stats',
-	optionalAuthMiddleware,
-	rateLimitMiddleware({ windowMs: 60000, max: 60 }), // 60 requests per minute (higher for previews)
+	optionalAuth,
+	createCustomRateLimiter({ windowMs: 60000, max: 60 }), // 60 requests per minute (higher for previews)
 	ProfileStatsController.getQuickProfileStats
 );
 
@@ -33,8 +33,8 @@ const analyticsRouter: RouterType = Router();
 // POST /api/analytics/profile-engagement - Track profile engagement
 analyticsRouter.post(
 	'/profile-engagement',
-	optionalAuthMiddleware,
-	rateLimitMiddleware({ windowMs: 60000, max: 100 }), // 100 analytics events per minute
+	optionalAuth,
+	createCustomRateLimiter({ windowMs: 60000, max: 100 }), // 100 analytics events per minute
 	ProfileStatsController.trackProfileEngagement
 );
 

@@ -9,7 +9,6 @@
 export type {
   Thread,
   ThreadUser,
-  ThreadZone,
   ThreadPrefix,
   ThreadTag,
   ThreadPermissions,

@@ -18,7 +18,7 @@ import { forumStructureService } from './services/structure.service';
 import { threadService } from './services/thread.service';
 import { postService } from './services/post.service';
 import { configService } from './services/config.service';
-import { forumCacheService } from './services/cache.service';
+import { cacheService, CacheCategory } from '@core/cache/unified-cache.service';
 import type { ForumId, StructureId, ThreadId, PostId } from '@shared/types/ids';
 
 export interface ThreadSearchParams {
@@ -394,8 +394,8 @@ export const forumService = {
 	/**
 	 * Clear all caches - delegates to CacheService
 	 */
-	clearCache() {
-		forumCacheService.clearAllCaches();
+	async clearCache() {
+		await cacheService.clear(CacheCategory.FORUM);
 	}
 };
 

@@ -23,9 +23,6 @@ export interface User {
   level: number;
   reputation: number;
   
-  // Admin flags
-  isAdmin?: boolean;
-  
   // Wallet
   walletId?: WalletId;
   dgtBalance: number;

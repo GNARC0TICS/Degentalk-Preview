@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import type { User } from '@shared/types/user';
+import type { User } from '@shared/types/user.types';
 import { Button } from '@app/components/ui/button';
 import {
 	Bell,

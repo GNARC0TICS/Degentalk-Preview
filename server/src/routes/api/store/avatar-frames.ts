@@ -1,15 +1,15 @@
 import { Router } from 'express';
-import { avatarFrameStoreService } from '@api/domains/cosmetics/avatarFrameStore.service';
-import { isAuthenticated } from '@api/domains/auth/middleware/auth.middleware';
-import { frameEquipService } from '@api/domains/cosmetics/frameEquip.service';
-import { dgtService } from '@api/domains/wallet/dgt.service';
+import { avatarFrameStoreService } from '@domains/cosmetics/avatarFrameStore.service';
+import { requireAuth } from '@api/middleware/auth.unified';
+import { frameEquipService } from '@domains/cosmetics/frameEquip.service';
+import { dgtService } from '@domains/wallet/services/dgtService';
 import { userService } from '@core/services/user.service';
 import { db } from '@db';
 import { products, avatarFrames } from '@schema';
 import { eq } from 'drizzle-orm';
 import { z } from 'zod';
 import type { FrameId } from '@shared/types/ids';
-import { CosmeticsTransformer } from '@api/domains/shop/transformers/cosmetics.transformer';
+import { CosmeticsTransformer } from '@domains/shop/transformers/cosmetics.transformer';
 import { logger } from '@core/logger';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 import { validateAndConvertId } from '@core/helpers/validate-controller-ids';
@@ -32,7 +32,7 @@ router.get('/', async (_req, res) => {
 });
 
 // POST /api/store/avatar-frames/:id/purchase
-router.post('/:id/purchase', isAuthenticated, async (req, res) => {
+router.post('/:id/purchase', requireAuth, async (req, res) => {
 	const authUser = userService.getUserFromRequest(req);
 	if (!authUser) return sendErrorResponse(res, 'Not authenticated', 401);
 	const userId = String(authUser.id);

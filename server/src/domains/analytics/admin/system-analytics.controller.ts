@@ -16,7 +16,7 @@ import {
 } from './system-analytics.validators';
 import { formatAdminResponse, AdminOperationBoundary } from '@api/domains/admin/shared';
 import { AdminError, AdminErrorCodes } from '@api/domains/admin/admin.errors';
-import { adminCacheService } from '../../admin/shared';
+import { cacheService, CacheCategory } from '@core/cache/unified-cache.service';
 
 export class SystemAnalyticsController {
 	/**
@@ -130,7 +130,7 @@ export class SystemAnalyticsController {
 
 			// Force refresh bypasses cache
 			if (query.forceRefresh) {
-				adminCacheService.delete('system_analytics:health');
+				await cacheService.delete('system_analytics:health', { category: CacheCategory.ANALYTICS });
 			}
 
 			const health = await systemAnalyticsService.getSystemHealth();
@@ -218,8 +218,8 @@ export class SystemAnalyticsController {
 		});
 
 		return boundary.execute(async () => {
-			const cacheMetrics = adminCacheService.getCacheMetrics();
-			const cacheAnalytics = adminCacheService.getCacheAnalytics();
+			const cacheMetrics = cacheService.getMetrics();
+			const cacheAnalytics = cacheService.getMetrics();
 
 			return formatAdminResponse(
 				{
@@ -256,9 +256,21 @@ export class SystemAnalyticsController {
 			switch (operation.operation) {
 				case 'clear':
 					if (operation.category) {
-						result = adminCacheService.clearCategory(operation.category);
+						// Map category string to CacheCategory enum
+						const categoryEnum = operation.category.toUpperCase() as keyof typeof CacheCategory;
+						const cacheCategory = CacheCategory[categoryEnum];
+						if (!cacheCategory) {
+							throw new AdminError(
+								`Invalid cache category: ${operation.category}`,
+								400,
+								AdminErrorCodes.VALIDATION_ERROR
+							);
+						}
+						await cacheService.clear(cacheCategory);
+						result = { success: true, message: `Cleared cache category: ${operation.category}` };
 					} else {
-						result = adminCacheService.flushAll();
+						await cacheService.clear();
+						result = { success: true, message: 'Cleared all cache' };
 					}
 					break;
 
@@ -269,7 +281,8 @@ export class SystemAnalyticsController {
 
 				case 'invalidate':
 					if (operation.pattern) {
-						result = adminCacheService.deletePattern(operation.pattern);
+						const deletedCount = await cacheService.deletePattern(operation.pattern);
+						result = { success: true, deletedCount, message: `Deleted ${deletedCount} keys matching pattern: ${operation.pattern}` };
 					} else {
 						throw new AdminError(
 							'Pattern required for invalidation',
@@ -281,8 +294,8 @@ export class SystemAnalyticsController {
 
 				case 'stats':
 					result = {
-						metrics: adminCacheService.getCacheMetrics(),
-						analytics: adminCacheService.getCacheAnalytics()
+						metrics: cacheService.getMetrics(),
+						analytics: cacheService.getMetrics()
 					};
 					break;
 

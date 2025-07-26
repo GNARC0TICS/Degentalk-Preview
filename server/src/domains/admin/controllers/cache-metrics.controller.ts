@@ -9,7 +9,6 @@ import type { Request, Response } from 'express';
 import { getCacheOperationStats, getRecentCacheOperations } from '@core/cache/decorators';
 import { getInvalidationStats, getInvalidationLog } from '@core/cache/invalidateCache';
 import { redisCacheService } from '@core/cache/redis.service';
-import { adminCacheService } from '../shared';
 import { logger } from '@core/logger';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 

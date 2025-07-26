@@ -1,12 +1,19 @@
 import React from 'react';
-import { ArrowLeft, MessageSquare, Calendar, Award, Zap } from 'lucide-react';
+import { ArrowLeft, MessageSquare, Calendar, Award, Zap, Loader2 } from 'lucide-react';
 import { Button } from '@app/components/ui/button';
 import { Card } from '@app/components/ui/card';
 import { formatDistanceToNow } from 'date-fns';
 import { Wide } from '@app/layout/primitives';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+import { useAuth } from '@app/hooks/use-auth';
+import { UserTitles } from '@app/components/profile/UserTitles';
+import { formatRelativeTime } from '@app/utils/utils';
+import { apiRequest } from '@app/lib/api';
+import type { ProfileData } from '@app/types/profile';
+import type { Thread } from '@shared/types/thread.types';
 
-// Demo user profile data
+// Demo user profile data (fallback for dev)
 const demoUser = {
   username: 'CryptoKing',
   displayName: 'CryptoKing',
@@ -46,9 +53,141 @@ const demoUser = {
 };
 
 export default function ProfilePage() {
-  const isOwnProfile = true; // For demo, assume viewing own profile
+  const { username: routeUsername } = useParams<{ username?: string }>();
+  const { user: currentUser } = useAuth();
   
-  // For demo purposes, show as CryptoKing regardless of auth status
+  // Use route username if provided, otherwise current user
+  const targetUsername = routeUsername || currentUser?.username;
+  const isOwnProfile = !routeUsername || (currentUser?.username === routeUsername);
+  
+  // Fetch profile data
+  const { data: profile, isLoading, error } = useQuery<ProfileData>({
+    queryKey: ['profile', targetUsername],
+    queryFn: async () => {
+      if (!targetUsername) throw new Error('No username provided');
+      
+      try {
+        const response = await apiRequest<ProfileData>({
+          url: `/api/profile/${targetUsername}`,
+          method: 'GET'
+        });
+        return response;
+      } catch (err) {
+        // Fallback to demo data in dev mode
+        if (import.meta.env.DEV) {
+          return {
+            id: 1,
+            username: targetUsername,
+            displayName: targetUsername,
+            bio: demoUser.bio,
+            avatarUrl: null,
+            activeAvatarUrl: null,
+            bannerUrl: null,
+            isOnline: true,
+            joinedAt: demoUser.joinedAt.toISOString(),
+            stats: demoUser.stats,
+            titles: [],
+            activeTitleId: null,
+            badges: demoUser.badges.map((b, i) => ({ id: i, ...b })),
+            forumStats: {
+              totalPosts: demoUser.stats.posts,
+              totalThreads: demoUser.stats.threads,
+              totalLikes: demoUser.stats.likes,
+              reputation: demoUser.stats.reputation
+            },
+            level: demoUser.stats.level,
+            xp: demoUser.stats.xp,
+            nextLevelXp: demoUser.stats.nextLevelXp
+          } as ProfileData;
+        }
+        throw err;
+      }
+    },
+    enabled: !!targetUsername
+  });
+  
+  // Fetch recent threads
+  const { data: recentThreads } = useQuery<Thread[]>({
+    queryKey: ['user-threads', targetUsername],
+    queryFn: async () => {
+      if (!targetUsername) return [];
+      
+      try {
+        const response = await apiRequest<{ threads: Thread[]; total: number }>({
+          url: `/api/forum/threads?userId=${targetUsername}&limit=5&sortBy=newest`,
+          method: 'GET'
+        });
+        return response.threads;
+      } catch (err) {
+        // Return demo threads in dev mode
+        if (import.meta.env.DEV) {
+          return demoUser.recentThreads.map((t, i) => ({
+            id: i,
+            title: t.title,
+            slug: t.slug,
+            createdAt: t.createdAt.toISOString(),
+            postCount: t.replyCount,
+            userId: 1,
+            structureId: 1,
+            viewCount: 0,
+            lastPostAt: null,
+            updatedAt: null,
+            isLocked: false,
+            isSticky: false,
+            isSolved: false
+          } as any));
+        }
+        return [];
+      }
+    },
+    enabled: !!targetUsername
+  });
+  
+  if (!targetUsername) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-black via-zinc-950 to-black flex items-center justify-center">
+        <p className="text-zinc-400">Please log in to view profiles</p>
+      </div>
+    );
+  }
+  
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-black via-zinc-950 to-black flex items-center justify-center">
+        <Loader2 className="w-8 h-8 text-zinc-400 animate-spin" />
+      </div>
+    );
+  }
+  
+  if (error || !profile) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-black via-zinc-950 to-black flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-zinc-400 mb-4">Profile not found</p>
+          <Link to="/">
+            <Button variant="outline">Return Home</Button>
+          </Link>
+        </div>
+      </div>
+    );
+  }
+  
+  // Use profile data with fallbacks
+  const user = {
+    ...demoUser,
+    ...profile,
+    stats: {
+      posts: profile.forumStats?.totalPosts || 0,
+      threads: profile.forumStats?.totalThreads || 0,
+      likes: profile.forumStats?.totalLikes || 0,
+      reputation: profile.forumStats?.reputation || 0,
+      level: profile.level || 1,
+      xp: profile.xp || 0,
+      nextLevelXp: profile.nextLevelXp || 1000
+    },
+    joinedAt: new Date(profile.joinedAt),
+    badges: profile.badges || demoUser.badges
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-zinc-950 to-black">
@@ -72,8 +211,17 @@ export default function ProfilePage() {
             <Card className="p-6 bg-zinc-900/60 border-zinc-800">
               {/* Avatar */}
               <div className="flex justify-center -mt-20 mb-4">
-                <div className="w-32 h-32 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full border-4 border-zinc-900 relative">
-                  {demoUser.isOnline && (
+                <div className="w-32 h-32 rounded-full border-4 border-zinc-900 relative overflow-hidden">
+                  {user.activeAvatarUrl || user.avatarUrl ? (
+                    <img 
+                      src={user.activeAvatarUrl || user.avatarUrl} 
+                      alt={user.username}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-gradient-to-br from-blue-500 to-purple-500" />
+                  )}
+                  {user.isOnline && (
                     <span className="absolute bottom-2 right-2 w-6 h-6 bg-green-500 rounded-full border-2 border-zinc-900" />
                   )}
                 </div>
@@ -81,27 +229,39 @@ export default function ProfilePage() {
 
               {/* User Info */}
               <div className="text-center mb-6">
-                <h1 className="text-2xl font-bold text-white mb-2">{demoUser.displayName}</h1>
-                <p className="text-zinc-400 mb-4">@{demoUser.username}</p>
-                <p className="text-sm text-zinc-300">{demoUser.bio}</p>
+                <h1 className="text-2xl font-bold text-white mb-2">{user.displayName || user.username}</h1>
+                <p className="text-zinc-400 mb-4">@{user.username}</p>
+                {user.bio && <p className="text-sm text-zinc-300">{user.bio}</p>}
+                {/* Active Title Display */}
+                {profile.activeTitleId && profile.titles && profile.titles.length > 0 && (() => {
+                  const activeTitle = profile.titles.find(t => t.id === profile.activeTitleId);
+                  return activeTitle ? (
+                    <div className="mt-3 inline-flex items-center gap-2 px-3 py-1 bg-zinc-800/50 rounded-full border border-zinc-700">
+                      {activeTitle.iconUrl && (
+                        <img src={activeTitle.iconUrl} alt="" className="w-4 h-4" />
+                      )}
+                      <span className="text-xs font-medium text-zinc-300">{activeTitle.name}</span>
+                    </div>
+                  ) : null;
+                })()}
               </div>
 
               {/* Stats Grid */}
               <div className="grid grid-cols-2 gap-4 mb-6">
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-white">{demoUser.stats.posts}</div>
+                  <div className="text-2xl font-bold text-white">{user.stats.posts.toLocaleString()}</div>
                   <div className="text-xs text-zinc-500">Posts</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-white">{demoUser.stats.threads}</div>
+                  <div className="text-2xl font-bold text-white">{user.stats.threads.toLocaleString()}</div>
                   <div className="text-xs text-zinc-500">Threads</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-white">{demoUser.stats.likes}</div>
+                  <div className="text-2xl font-bold text-white">{user.stats.likes.toLocaleString()}</div>
                   <div className="text-xs text-zinc-500">Likes</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-white">{demoUser.stats.reputation}</div>
+                  <div className="text-2xl font-bold text-white">{user.stats.reputation.toLocaleString()}</div>
                   <div className="text-xs text-zinc-500">Reputation</div>
                 </div>
               </div>
@@ -127,14 +287,30 @@ export default function ProfilePage() {
             <Card className="p-4 bg-zinc-900/60 border-zinc-800">
               <h3 className="text-sm font-semibold text-zinc-400 mb-3">Badges</h3>
               <div className="space-y-2">
-                {demoUser.badges.map((badge, i) => (
-                  <div key={i} className="flex items-center gap-2">
-                    <span className="text-xl">{badge.icon}</span>
-                    <span className="text-sm text-zinc-300">{badge.name}</span>
-                  </div>
-                ))}
+                {user.badges.length > 0 ? (
+                  user.badges.map((badge, i) => (
+                    <div key={badge.id || i} className="flex items-center gap-2">
+                      <span className="text-xl">{badge.icon}</span>
+                      <span className="text-sm text-zinc-300">{badge.name}</span>
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-xs text-zinc-500 italic">No badges earned yet</p>
+                )}
               </div>
             </Card>
+            
+            {/* User Titles */}
+            {profile.titles && profile.titles.length > 0 && (
+              <Card className="p-4 bg-zinc-900/60 border-zinc-800">
+                <h3 className="text-sm font-semibold text-zinc-400 mb-3">Titles</h3>
+                <UserTitles
+                  titles={profile.titles}
+                  activeTitleId={profile.activeTitleId}
+                  editable={false}
+                />
+              </Card>
+            )}
           </div>
 
           {/* Main Content */}
@@ -143,15 +319,15 @@ export default function ProfilePage() {
             <Card className="p-6 bg-zinc-900/60 border-zinc-800">
               <div className="flex items-center justify-between mb-4">
                 <div>
-                  <h2 className="text-lg font-semibold text-white">Level {demoUser.stats.level}</h2>
-                  <p className="text-sm text-zinc-400">{demoUser.stats.xp.toLocaleString()} / {demoUser.stats.nextLevelXp.toLocaleString()} XP</p>
+                  <h2 className="text-lg font-semibold text-white">Level {user.stats.level}</h2>
+                  <p className="text-sm text-zinc-400">{user.stats.xp.toLocaleString()} / {user.stats.nextLevelXp.toLocaleString()} XP</p>
                 </div>
                 <Zap className="w-8 h-8 text-yellow-500" />
               </div>
               <div className="w-full bg-zinc-800 rounded-full h-3">
                 <div 
                   className="bg-gradient-to-r from-blue-500 to-purple-500 h-3 rounded-full"
-                  style={{ width: `${(demoUser.stats.xp / demoUser.stats.nextLevelXp) * 100}%` }}
+                  style={{ width: `${(user.stats.xp / user.stats.nextLevelXp) * 100}%` }}
                 />
               </div>
             </Card>
@@ -160,23 +336,27 @@ export default function ProfilePage() {
             <Card className="p-6 bg-zinc-900/60 border-zinc-800">
               <h2 className="text-lg font-semibold text-white mb-4">Recent Threads</h2>
               <div className="space-y-3">
-                {demoUser.recentThreads.map((thread, i) => (
-                  <Link key={i} to={`/threads/${thread.slug}`}>
+                {recentThreads && recentThreads.length > 0 ? (
+                  recentThreads.map((thread) => (
+                    <Link key={thread.id} to={`/thread/${thread.slug}`}>
                     <div className="p-3 rounded-lg hover:bg-zinc-800/50 transition-colors cursor-pointer">
                       <h3 className="text-white font-medium mb-1">{thread.title}</h3>
                       <div className="flex items-center gap-4 text-sm text-zinc-400">
                         <span className="flex items-center gap-1">
                           <Calendar className="w-4 h-4" />
-                          {formatDistanceToNow(thread.createdAt, { addSuffix: true })}
+                          {formatRelativeTime(thread.createdAt)}
                         </span>
                         <span className="flex items-center gap-1">
                           <MessageSquare className="w-4 h-4" />
-                          {thread.replyCount} replies
+                          {thread.postCount} replies
                         </span>
                       </div>
                     </div>
-                  </Link>
-                ))}
+                    </Link>
+                  ))
+                ) : (
+                  <p className="text-sm text-zinc-500 italic">No threads yet</p>
+                )}
               </div>
             </Card>
 
@@ -187,13 +367,13 @@ export default function ProfilePage() {
                 <div className="flex justify-between">
                   <span className="text-zinc-400">Joined</span>
                   <span className="text-white">
-                    {formatDistanceToNow(demoUser.joinedAt, { addSuffix: true })}
+                    {formatDistanceToNow(user.joinedAt, { addSuffix: true })}
                   </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-zinc-400">Last Seen</span>
                   <span className="text-white">
-                    {demoUser.isOnline ? (
+                    {user.isOnline ? (
                       <span className="text-green-400">Online Now</span>
                     ) : (
                       'Recently'
@@ -202,7 +382,7 @@ export default function ProfilePage() {
                 </div>
                 <div className="flex justify-between">
                   <span className="text-zinc-400">Forum Role</span>
-                  <span className="text-white">Member</span>
+                  <span className="text-white capitalize">{profile.role || 'Member'}</span>
                 </div>
               </div>
             </Card>

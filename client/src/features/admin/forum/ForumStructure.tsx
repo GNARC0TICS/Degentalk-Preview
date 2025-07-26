@@ -19,7 +19,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AdminAccessSelector } from '@app/features/admin/components/inputs/AdminAccessSelector';
 import { AdminToggle } from '@app/features/admin/components/inputs/AdminToggle';
-import type { ForumId, CategoryId, ZoneId, UserId } from '@shared/types/ids';
+import type { ForumId, CategoryId, UserId } from '@shared/types/ids';
 
 const EntitySchema = z.object({
 	id: z.string().optional(),
@@ -178,7 +178,7 @@ export default function ForumStructureAdminPage() {
 	];
 
 	return (
-		<AdminPageShell title="Forum Structure" description="Manage zones, categories, and forums.">
+		<AdminPageShell title="Forum Structure" description="Manage forums and subforums.">
 			<Button className="mb-4" onClick={openCreateDialog}>
 				<Plus className="h-4 w-4 mr-2" /> New Entity
 			</Button>
@@ -220,9 +220,8 @@ export default function ForumStructureAdminPage() {
 								<SelectValue placeholder="Type" />
 							</SelectTrigger>
 							<SelectContent>
-								<SelectItem value="zone">Zone</SelectItem>
-								<SelectItem value="category">Category</SelectItem>
 								<SelectItem value="forum">Forum</SelectItem>
+								<SelectItem value="subforum">Subforum</SelectItem>
 							</SelectContent>
 						</Select>
 						<Input

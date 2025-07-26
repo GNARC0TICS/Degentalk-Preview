@@ -29,7 +29,7 @@ export function createServiceReporter(serviceName: string) {
   };
 }
 
-export function asyncHandlerWithReporting(fn: Function) {
+export function asyncHandlerWithReporting(fn: (req: any, res: any, next: any) => Promise<void>) {
   return async (req: any, res: any, next: any) => {
     try {
       await fn(req, res, next);

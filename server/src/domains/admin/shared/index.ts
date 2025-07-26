@@ -15,7 +15,7 @@ export * from './admin-operation-utils';
 export * from './admin-error-boundaries';
 
 // Cache service and utilities
-export * from './admin-cache.service';
+export * from './admin-cache-keys';
 
 // Response utilities (already created in Phase 1)
 // Legacy admin.response exports removed - use @core/utils/transformer.helpers

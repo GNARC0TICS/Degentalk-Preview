@@ -43,7 +43,7 @@ export class AdminWalletController {
 			});
 		} catch (error) {
 			logger.error('AdminWalletController', 'Error getting user financial profile', { error });
-			// @ts-ignore
+			// @ts-expect-error - Error object structure varies
 			sendErrorResponse(res, error.message || 'Failed to retrieve user profile', 500);
 		}
 	}
@@ -60,7 +60,7 @@ export class AdminWalletController {
 			sendSuccessResponse(res, { success: true, message: `Successfully credited ${amount} DGT` });
 		} catch (error) {
 			logger.error('AdminWalletController', 'Error crediting DGT', { error });
-			// @ts-ignore
+			// @ts-expect-error - Error object structure varies
 			sendErrorResponse(res, error.message || 'Failed to credit DGT', 500);
 		}
 	}
@@ -75,7 +75,7 @@ export class AdminWalletController {
 			sendSuccessResponse(res, { success: true, message: `Successfully debited ${amount} DGT` });
 		} catch (error) {
 			logger.error('AdminWalletController', 'Error debiting DGT', { error });
-			// @ts-ignore
+			// @ts-expect-error - Error object structure varies
 			sendErrorResponse(res, error.message || 'Failed to debit DGT', 500);
 		}
 	}
@@ -92,7 +92,7 @@ export class AdminWalletController {
 			sendSuccessResponse(res, { success: true, message: `Successfully credited ${amount} of coin ${coinId}` });
 		} catch (error) {
 			logger.error('AdminWalletController', 'Error crediting crypto', { error });
-			// @ts-ignore
+			// @ts-expect-error - Error object structure varies
 			sendErrorResponse(res, error.message || 'Failed to credit crypto', 500);
 		}
 	}
@@ -107,7 +107,7 @@ export class AdminWalletController {
 			sendSuccessResponse(res, { success: true, message: `Successfully debited ${amount} of coin ${coinId}` });
 		} catch (error) {
 			logger.error('AdminWalletController', 'Error debiting crypto', { error });
-			// @ts-ignore
+			// @ts-expect-error - Error object structure varies
 			sendErrorResponse(res, error.message || 'Failed to debit crypto', 500);
 		}
 	}
@@ -120,7 +120,7 @@ export class AdminWalletController {
 			sendSuccessResponse(res, { success: true, data: analytics });
 		} catch (error) {
 			logger.error('AdminWalletController', 'Error getting DGT analytics', { error });
-			// @ts-ignore
+			// @ts-expect-error - Error object structure varies
 			sendErrorResponse(res, error.message || 'Failed to retrieve DGT analytics', 500);
 		}
 	}

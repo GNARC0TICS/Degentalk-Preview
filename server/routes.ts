@@ -30,7 +30,7 @@ import notificationRoutes from './src/domains/notifications/notification.routes'
 import preferencesRoutes from './src/domains/preferences/preferences.routes';
 import { adRoutes } from './src/domains/advertising/ad.routes';
 import { globalErrorHandler } from './src/core/errors';
-import { registerPathRoutes } from './src/domains/paths/paths.routes';
+// Path routes removed - path system deprecated
 // TODO: Re-enable when sentry-server file is added
 // import { 
 //   initSentry, 
@@ -40,8 +40,7 @@ import { registerPathRoutes } from './src/domains/paths/paths.routes';
 // } from './src/lib/sentry-server';
 import userInventoryRoutes from './src/routes/api/user/inventory';
 import notificationStubRoutes from './src/routes/api/notifications';
-import { awardPathXp } from './utils/path-utils';
-import { xpRewards } from '@shared/path-config';
+// Path system deprecated - removed path-utils and path-config imports
 import { PlatformAnalyticsService } from './src/domains/analytics/services/platform.service';
 import { db } from './src/core/db';
 import { and, eq, sql } from 'drizzle-orm';
@@ -75,6 +74,7 @@ import gamificationRoutes from './src/domains/gamification/gamification.routes';
 import { achievementRoutes } from './src/domains/gamification/achievements';
 import { getUser } from '@core/utils/auth.helpers';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
+import apiRoutesV2 from './src/routes/api';
 
 export async function registerRoutes(app: Express): Promise<void> {
 	// TODO: Re-enable when sentry-server file is added
@@ -273,7 +273,7 @@ export async function registerRoutes(app: Express): Promise<void> {
 	app.use(passport.session());
 
 	const apiRouter = express.Router();
-	registerPathRoutes(apiRouter);
+	// registerPathRoutes(apiRouter); // Commented out - evaluating if path SQL tables exist
 	registerAdminRoutes(apiRouter);
 	registerAnnouncementRoutes(apiRouter);
 	apiRouter.use('/auth', authRoutes);
@@ -305,6 +305,9 @@ export async function registerRoutes(app: Express): Promise<void> {
 	apiRouter.use('/', notificationStubRoutes);
 
 	app.use('/api', apiRouter);
+	
+	// Mount new API routes (includes store/avatar-frames)
+	app.use('/api', apiRoutesV2);
 	app.use('/api/webhooks/ccpayment', ccpaymentWebhookRoutes);
 
 	if (process.env.NODE_ENV === 'development') {
@@ -315,25 +318,7 @@ export async function registerRoutes(app: Express): Promise<void> {
 		app.use('/api', testErrorRoutes);
 	}
 
-	app.post('/api/path-xp', isAuthenticated, async (req, res) => {
-		try {
-			const { path, step } = req.body;
-			const userId = getUser(req)?.id;
-			const xpToAward = xpRewards[path]?.[step] || 0;
-
-			if (xpToAward > 0) {
-				await awardPathXp(userId, path, step, xpToAward);
-				sendSuccessResponse(res, {
-					message: `Awarded ${xpToAward} XP for completing ${step} of ${path}`
-				});
-			} else {
-				sendSuccessResponse(res, { message: 'No XP for this step' });
-			}
-		} catch (error) {
-			logger.error('Error awarding path XP:', error);
-			sendErrorResponse(res, 'Failed to award XP', 500);
-		}
-	});
+	// Path XP route removed - using linear XP system instead
 
 	app.post('/api/log/analytic', isAuthenticated, async (req, res) => {
 		try {

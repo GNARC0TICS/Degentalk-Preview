@@ -8,7 +8,7 @@
 import { db } from '@db';
 import { logger } from '@core/logger';
 import { postService } from './post.service';
-import { redisCacheService, CacheMinute } from '@core/cache/redis.service';
+import { cacheService, CacheCategory, CacheMinute } from '@core/cache/unified-cache.service';
 import { AchievementEventEmitter } from '@core/events/achievement-events.service';
 import { getForumInfoBatch } from './thread.service.forum-batch-optimization';
 import {
@@ -91,7 +91,7 @@ export class ThreadService {
 		const cacheKey = `thread_tab:${tab}:${forumId ?? 'all'}:${page}:${limit}:${userId ?? 'anon'}:v2`;
 
 		// Try enhanced Redis cache first
-		const cached = await redisCacheService.get(cacheKey);
+		const cached = await cacheService.get(cacheKey, { category: CacheCategory.THREAD });
 		if (cached) {
 			logger.debug('ThreadService', 'Redis cache hit for tab content', { tab, cacheKey });
 			return cached;
@@ -120,7 +120,7 @@ export class ThreadService {
 
 		// Cache the result with 1-minute TTL for forum threads
 		const cacheTTL = this.getCacheTTLForTab(tab);
-		await redisCacheService.set(cacheKey, response, { ttl: cacheTTL, prefix: 'forum' });
+		await cacheService.set(cacheKey, response, { ttl: cacheTTL, category: CacheCategory.THREAD });
 
 		logger.info('ThreadService', 'Fetched tab content', {
 			tab,
@@ -927,7 +927,7 @@ export class ThreadService {
 	 * Get zone information for a given structure ID with caching
 	 * Traverses up the hierarchy to find the top-level zone
 	 */
-	@CacheMinute(5)
+	@CacheMinute(CacheCategory.FORUM)
 	private async getZoneInfo(structureId: StructureId): Promise<{
 		id: StructureId;
 		name: string;
@@ -1065,12 +1065,12 @@ export class ThreadService {
 	async invalidateThreadCaches(forumId?: StructureId): Promise<void> {
 		try {
 			// Clear all thread tab caches
-			await redisCacheService.clear('thread_tab');
+			await cacheService.deletePattern('thread_tab', CacheCategory.THREAD);
 
 			// Clear zone info caches if forum specific
 			if (forumId) {
-				await redisCacheService.delete(`ThreadService:getZoneInfo:${JSON.stringify([forumId])}`, {
-					prefix: 'forum'
+				await cacheService.delete(`ThreadService:getZoneInfo:${JSON.stringify([forumId])}`, {
+					category: CacheCategory.FORUM
 				});
 			}
 

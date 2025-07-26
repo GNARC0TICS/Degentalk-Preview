@@ -15,7 +15,9 @@ import { logger } from '@core/logger';
 import type { UserId } from '@shared/types/ids';
 
 // Extend Express Request type
+// eslint-disable-next-line @typescript-eslint/no-namespace
 declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Express {
     interface Request {
       user?: User;

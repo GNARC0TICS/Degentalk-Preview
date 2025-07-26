@@ -15,6 +15,7 @@ process.on('unhandledRejection', err => {
 });
 
 process.on('exit', code => {
+	// eslint-disable-next-line no-console
 	console.log(`[SHUTDOWN] Process exiting with code ${code}`);
 });
 

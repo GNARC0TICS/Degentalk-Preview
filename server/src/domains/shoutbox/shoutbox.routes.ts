@@ -357,7 +357,7 @@ router.get('/messages', isAuthenticatedOptional, async (req: Request, res: Respo
 /**
  * Dynamic rate-limiter middleware that picks limiter based on user role/level
  */
-async function dynamicRateLimiter(req: Request, res: Response, next: Function) {
+async function dynamicRateLimiter(req: Request, res: Response, next: () => void) {
 	try {
 		const authUser = userService.getUserFromRequest(req);
 		const userId = authUser?.id;
@@ -821,7 +821,7 @@ router.get('/export', isAdmin, async (req: Request, res: Response) => {
 router.get('/performance/stats', isAdmin, async (req: Request, res: Response) => {
 	try {
 		const stats = PerformanceService.getPerformanceStats();
-		const cacheStats = ShoutboxCacheService.getCacheStats();
+		const cacheStats = await ShoutboxCacheService.getCacheStats();
 		const queueStats = messageQueue.getStats();
 
 		sendSuccessResponse(res, {
@@ -925,14 +925,14 @@ router.post('/cache/clear', isAdmin, async (req: Request, res: Response) => {
 		switch (type) {
 			case 'messages':
 				if (roomId) {
-					ShoutboxCacheService.invalidateMessages(roomId);
+					await ShoutboxCacheService.invalidateMessages(roomId);
 				} else {
 					// Clear all message caches
-					ShoutboxCacheService.clearAll();
+					await ShoutboxCacheService.clearAll();
 				}
 				break;
 			case 'config':
-				ShoutboxCacheService.invalidateRoomConfig(roomId);
+				await ShoutboxCacheService.invalidateRoomConfig(roomId);
 				break;
 			case 'all':
 				ShoutboxCacheService.clearAll();

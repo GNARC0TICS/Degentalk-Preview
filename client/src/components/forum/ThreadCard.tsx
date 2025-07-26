@@ -5,7 +5,6 @@ import {
 	Clock,
 	MessageSquare,
 	Eye,
-	TrendingUp,
 	Zap,
 	Bookmark,
 	Share2,
@@ -172,9 +171,9 @@ const ThreadCard = memo(
 												aria-label="Verified account"
 											/>
 										)}
-										{thread.user.reputation && thread.user.reputation > 100 && (
+										{thread.user.forumStats?.reputation && thread.user.forumStats.reputation > 100 && (
 											<Badge variant="outline" className="text-xs px-1 py-0">
-												{thread.user.reputation}
+												{thread.user.forumStats.reputation}
 											</Badge>
 										)}
 									</div>
@@ -210,10 +209,10 @@ const ThreadCard = memo(
 						{/* Engagement Preview */}
 						{thread.engagement && (
 							<div className="flex items-center gap-1 text-xs">
-								{thread.engagement.totalTips > 0 && (
+								{thread.totalTips && thread.totalTips > 0 && (
 									<div className="flex items-center gap-1 text-emerald-400">
 										<Zap className="w-3 h-3" />
-										<span>{thread.engagement.totalTips} DGT</span>
+										<span>{thread.totalTips} DGT</span>
 									</div>
 								)}
 							</div>
@@ -301,12 +300,13 @@ const ThreadCard = memo(
 								<Eye className="w-3 h-3" />
 								<span>{thread.viewCount}</span>
 							</div>
-							{thread.engagement?.momentum === 'bullish' && (
+							{/* TODO: Re-enable when momentum is implemented in backend */}
+							{/* {thread.momentum === 'bullish' && (
 								<div className="flex items-center gap-1 text-emerald-400">
 									<TrendingUp className="w-3 h-3" />
 									<span>Trending</span>
 								</div>
-							)}
+							)} */}
 						</div>
 
 						{/* Quick Actions */}

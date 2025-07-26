@@ -17,7 +17,7 @@ import { cn } from '@app/utils/utils';
 import { useLocation } from 'react-router-dom';
 import ForumTreeNav from '@app/features/forum/components/ForumTreeNav';
 import { ROUTES } from '@app/constants/routes';
-import { ProfileCard } from '@app/components/widgets/ProfileCard';
+import { ProfileCard } from '@app/components/shared/ProfileCard';
 import { useAuth } from '@app/hooks/use-auth';
 import type { CategoryId, ForumId } from '@shared/types/ids';
 
@@ -67,7 +67,7 @@ export function Sidebar({ activeCategoryId, forumId }: SidebarProps) {
 	return (
 		<div className="w-full space-y-6">
 			{/* Profile Card - Show at top when authenticated */}
-			{isAuthenticated && <ProfileCard variant="sidebar" />}
+			{isAuthenticated && user && <ProfileCard username={user.username} variant="sidebar" />}
 
 			{/* Navigation */}
 			<Card className="bg-zinc-900/50 border border-zinc-800 shadow-md rounded-lg transition-all">

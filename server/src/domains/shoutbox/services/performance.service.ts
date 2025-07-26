@@ -65,7 +65,7 @@ export class PerformanceService {
 		const cacheKey = this.generateCacheKey('messages', options);
 
 		// Try cache first
-		const cached = ShoutboxCacheService.getCachedMessages(options.roomId);
+		const cached = await ShoutboxCacheService.getCachedMessages(options.roomId);
 		if (cached && this.isCacheValid(options, cached)) {
 			const filtered = this.applyFiltersToCache(cached, options);
 
@@ -253,9 +253,9 @@ export class PerformanceService {
 
 			// Invalidate cache for affected rooms
 			const affectedRooms = new Set(messages.map((m) => m.roomId));
-			affectedRooms.forEach((roomId) => {
-				ShoutboxCacheService.invalidateMessages(roomId);
-			});
+			for (const roomId of affectedRooms) {
+				await ShoutboxCacheService.invalidateMessages(roomId);
+			}
 
 			this.recordQueryMetric({
 				queryType: 'batch_insert',
@@ -291,7 +291,7 @@ export class PerformanceService {
 		const cacheKey = `active_users:${roomId}`;
 
 		// Try cache first
-		const cached = ShoutboxCacheService.getCachedRoom(roomId);
+		const cached = await ShoutboxCacheService.getCachedRoom(roomId);
 		if (cached && cached.onlineUsers.size > 0) {
 			// Get user details for online users
 			const userIds = Array.from(cached.onlineUsers);
@@ -515,13 +515,13 @@ export class PerformanceService {
 	/**
 	 * Cleanup and maintenance
 	 */
-	static cleanup(): void {
+	static async cleanup(): Promise<void> {
 		// Clean old metrics
 		const oneHourAgo = Date.now() - 3600000;
 		this.queryMetrics = this.queryMetrics.filter((m) => m.timestamp.getTime() > oneHourAgo);
 
 		// Clear expired cache entries
-		ShoutboxCacheService.clearExpiredEntries();
+		await ShoutboxCacheService.clearExpiredEntries();
 
 		logger.debug('PerformanceService', 'Cleanup completed', {
 			metricsCount: this.queryMetrics.length

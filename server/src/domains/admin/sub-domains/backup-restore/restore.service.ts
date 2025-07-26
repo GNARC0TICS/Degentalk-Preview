@@ -8,7 +8,7 @@ import { db } from '@db';
 import { adminBackups, restoreOperations, backupSettings } from '@schema';
 import { eq, desc } from 'drizzle-orm';
 import { AdminError, AdminErrorCodes } from '../../admin.errors';
-import { adminCacheService } from '../../shared';
+import { cacheService, CacheCategory } from '@core/cache/unified-cache.service';
 import { backupService } from './backup.service';
 import { spawn } from 'child_process';
 import { existsSync, statSync } from 'fs';
@@ -162,7 +162,7 @@ export class RestoreService {
 			});
 
 			// Invalidate cache
-			await adminCacheService.invalidateEntity('restore');
+			await cacheService.deletePattern('restore', CacheCategory.ADMIN);
 
 			return {
 				operationId,

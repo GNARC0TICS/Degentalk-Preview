@@ -2,7 +2,7 @@ import React from 'react';
 import DOMPurify from 'dompurify';
 import { Link } from 'react-router-dom';
 import { Card, CardContent, CardFooter, CardHeader } from '@app/components/ui/card';
-import { UnifiedProfileCard } from '@app/components/profile/UnifiedProfileCard';
+import { ProfileCard } from '@app/components/shared/ProfileCard';
 import { Button } from '@app/components/ui/button';
 import { Badge } from '@app/components/ui/badge';
 import { formatDistanceToNow } from 'date-fns';
@@ -100,7 +100,7 @@ export function PostCard({
 				)}
 			>
 				{/* Enhanced Author Profile Sidebar */}
-				<UnifiedProfileCard
+				<ProfileCard
 					username={post.user.username}
 					variant={breakpoint.isMobile ? 'compact' : 'sidebar'}
 					showStats={!breakpoint.isMobile} // Hide detailed stats on mobile

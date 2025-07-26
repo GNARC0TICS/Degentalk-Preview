@@ -198,7 +198,7 @@ export function createCustomRateLimiter(options: {
 /**
  * Rate limit bypass for development
  */
-export function bypassRateLimit(req: Request, res: Response, next: Function) {
+export function bypassRateLimit(req: Request, res: Response, next: () => void) {
 	if (isDevelopment() && req.headers['x-bypass-rate-limit']) {
 		logger.debug('RateLimit', 'Bypassing rate limit in development');
 		return next();
