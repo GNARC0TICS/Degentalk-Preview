@@ -11,7 +11,7 @@
 import { db } from '@db';
 import { users } from '../db/schema/user/users';
 import { forumStructure, threads, posts } from '../db/schema';
-import { ForumStructureService } from '@server/src/domains/forum/services/structure.service';
+import { ForumStructureService } from '@server/domains/forum/services/structure.service';
 import bcrypt from 'bcrypt';
 import { sql } from 'drizzle-orm';
 

@@ -4,8 +4,21 @@ import { db } from '@db';
 import { users } from '../../db/schema/user/users';
 import bcrypt from 'bcrypt';
 import { sql } from 'drizzle-orm';
-import { logger } from '@server/src/core/logger';
-import { generateToken } from '@server/src/domains/auth/utils/jwt.utils';
+import jwt from 'jsonwebtoken';
+
+// Simple console logger for scripts
+const logger = {
+	info: (...args: any[]) => console.log('[INFO]', ...args),
+	error: (...args: any[]) => console.error('[ERROR]', ...args),
+	warn: (...args: any[]) => console.warn('[WARN]', ...args)
+};
+
+// Simple token generator
+function generateToken(userId: UserId): string {
+	const secret = process.env.JWT_SECRET || 'test-secret';
+	const payload = { userId };
+	return jwt.sign(payload, secret, { expiresIn: '30d' });
+}
 import { writeFileSync, mkdirSync } from 'fs';
 import { join, dirname } from 'path';
 import chalk from 'chalk';

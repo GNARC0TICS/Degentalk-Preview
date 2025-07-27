@@ -1,5 +1,5 @@
 import '@server/config/loadEnv'; // Load environment variables like the server does
-import { forumService } from '@server/src/domains/forum/forum.service';
+import { forumService } from '@server/domains/forum/forum.service';
 
 async function testForumService() {
   console.log('🔍 Testing forum service methods...\n');

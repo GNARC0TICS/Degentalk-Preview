@@ -68,7 +68,7 @@ import type { AdminId } from '@shared/types/ids';
 import { config } from 'dotenv';
 config(); // Load environment variables
 
-import { db } from '@server/src/core/db.ts';
+import { db } from '@core/db.ts';
 import { uiQuotes, uiCollections, uiCollectionQuotes } from '../../db/schema/admin/uiConfig.ts';
 
 // Import existing quotes from the config file

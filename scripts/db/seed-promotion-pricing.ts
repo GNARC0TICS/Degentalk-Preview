@@ -5,7 +5,7 @@ import type { AdminId } from '@shared/types/ids';
  * Sets up initial pricing for DGT-powered user advertisements
  */
 
-import { db } from '@server/src/core/db';
+import { db } from '@core/db';
 import { 
   promotionPricingConfig, 
   announcementSlots,

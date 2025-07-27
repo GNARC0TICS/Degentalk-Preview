@@ -63,7 +63,7 @@ import type { AdminId } from '@shared/types/ids';
 import { db } from '@db';
 import { forumCategories } from '../../db/schema';
 import { eq, and, isNull, or, sql } from 'drizzle-orm';
-import { logger } from '@server/src/core/logger'; // Assuming logger is accessible
+import { logger } from '@core/logger'; // Assuming logger is accessible
 import chalk from 'chalk';
 
 async function backfillConfigZoneType() {

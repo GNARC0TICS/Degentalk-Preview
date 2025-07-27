@@ -4,7 +4,7 @@ import { randomUUID } from 'crypto';
  * Seeds the database with default shop items from the configuration
  */
 
-import { db } from '@server/src/core/db';
+import { db } from '@core/db';
 import { products } from '../../../db/schema/shop/products';
 import { defaultShopItems, isUsernameColorItem, isAvatarFrameItem, isUserTitleItem } from '../../../client/src/config/shop-items.config';
 import { sql } from 'drizzle-orm';

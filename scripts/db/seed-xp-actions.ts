@@ -1,7 +1,7 @@
 import { db } from '@db';
 import { xpActionSettings, type InsertXpActionSetting } from '../../db/schema/economy/xpActionSettings';
 import { eq } from 'drizzle-orm';
-import { logger } from '@server/src/core/logger.ts';
+import { logger } from '@core/logger.ts';
 
 // ACTION ENUM – source-of-truth lives in server domain, but re-declare subset here to avoid heavy imports
 export enum XP_ACTION {

@@ -10,7 +10,7 @@ import { achievements } from '../db/schema';
 import { 
 	CORE_ACHIEVEMENT_TEMPLATES, 
 	CULTURAL_ACHIEVEMENT_TEMPLATES 
-} from '@server/src/domains/gamification/achievements/templates/achievement-templates';
+} from '@server/domains/gamification/achievements/templates/achievement-templates';
 
 export async function seedAchievements() {
 	console.log('🏆 Seeding achievements...');

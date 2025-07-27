@@ -1,5 +1,5 @@
 // import { seedShopItems, addOGDripColorItem } from '../../server/utils/shop-utils'; // File doesn't exist
-import { logger } from '@server/src/core/logger';
+import { logger } from '@core/logger';
 
 async function seedShop() {
   try {

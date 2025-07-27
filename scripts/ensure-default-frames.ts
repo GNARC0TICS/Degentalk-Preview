@@ -8,7 +8,7 @@ import { db } from '@db/client';
 import { products, avatarFrames } from '@schema';
 import { defaultFrames } from '@shared/config/default-frames.config';
 import { eq, and } from 'drizzle-orm';
-import { logger } from '@server/src/core/logger';
+import { logger } from '@core/logger';
 import type { FrameId, ProductId } from '@shared/types/ids';
 
 async function ensureDefaultFrames() {
