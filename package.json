@@ -13,7 +13,7 @@
 		"dev:client": "pnpm --filter @degentalk/client dev",
 		"dev:server": "pnpm --filter @degentalk/server dev",
 		"dev:seed": "pnpm run kill-port:5001 && pnpm --filter @degentalk/scripts seed:all && pnpm dev",
-		"dev:frames": "tsx scripts/ensure-default-frames.ts && pnpm dev",
+		"dev:frames": "tsx -r tsconfig-paths/register scripts/ensure-default-frames.ts && pnpm dev",
 		"dev:quick": "pnpm run kill-ports && pnpm --parallel --filter @degentalk/server --filter @degentalk/client dev",
 		"dev:login": "tsx scripts/dev-login.ts",
 		"dev:logout": "tsx scripts/dev-logout.ts",
@@ -110,6 +110,7 @@
 		"@types/jsonwebtoken": "^9.0.9",
 		"@types/node": "^20.19.0",
 		"@types/react": "^18.3.20",
+		"@types/uuid": "^10.0.0",
 		"@types/ws": "^8.5.13",
 		"@typescript-eslint/eslint-plugin": "6.21.0",
 		"@typescript-eslint/parser": "6.21.0",
@@ -144,7 +145,8 @@
 		"tsconfig-paths": "^4.2.0",
 		"tsx": "^4.19.4",
 		"typescript": "5.6.3",
-		"utility-types": "^3.10.0"
+		"utility-types": "^3.10.0",
+		"uuid": "^11.1.0"
 	},
 	"simple-git-hooks": {
 		"pre-commit": "pnpm lint:staged && pnpm typecheck"

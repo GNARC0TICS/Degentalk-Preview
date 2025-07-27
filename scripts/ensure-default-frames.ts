@@ -4,12 +4,27 @@
  * Run this before starting dev server to guarantee frames show up in shop
  */
 
-import { db } from '@db/client';
-import { products, avatarFrames } from '@schema';
+import { db } from '@db';
+import { products, avatarFrames } from '@db/schema';
 import { defaultFrames } from '@shared/config/default-frames.config';
 import { eq, and } from 'drizzle-orm';
-import { logger } from '@core/logger';
+import { v5 as uuidv5 } from 'uuid';
+
+// Simple console logger for scripts
+const logger = {
+	info: (...args: any[]) => console.log('[INFO]', ...args),
+	error: (...args: any[]) => console.error('[ERROR]', ...args),
+	warn: (...args: any[]) => console.warn('[WARN]', ...args)
+};
 import type { FrameId, ProductId } from '@shared/types/ids';
+
+// Namespace UUID for generating deterministic UUIDs from string IDs
+const FRAME_NAMESPACE = '6ba7b810-9dad-11d1-80b4-00c04fd430c8';
+
+// Convert string frame ID to UUID
+function frameIdToUuid(frameId: string): string {
+	return uuidv5(frameId, FRAME_NAMESPACE);
+}
 
 async function ensureDefaultFrames() {
   logger.info('EnsureFrames', 'Checking default avatar frames...');
@@ -19,17 +34,20 @@ async function ensureDefaultFrames() {
 
   for (const frame of defaultFrames) {
     try {
+      // Convert string ID to UUID
+      const frameUuid = frameIdToUuid(frame.id);
+      
       // Check if frame exists in database
       const [existingFrame] = await db
         .select()
         .from(avatarFrames)
-        .where(eq(avatarFrames.id, frame.id))
+        .where(eq(avatarFrames.id, frameUuid))
         .limit(1);
 
       if (!existingFrame) {
         // Create frame in database
         await db.insert(avatarFrames).values({
-          id: frame.id,
+          id: frameUuid,
           name: frame.name,
           imageUrl: frame.imageUrl,
           rarity: frame.rarity,
@@ -42,18 +60,19 @@ async function ensureDefaultFrames() {
       const [existingProduct] = await db
         .select()
         .from(products)
-        .where(eq(products.frameId, frame.id))
+        .where(eq(products.frameId, frameUuid))
         .limit(1);
 
       if (!existingProduct) {
         // Create product for frame
+        const productUuid = frameIdToUuid(`frame-product-${frame.id}`);
         await db.insert(products).values({
-          id: `frame-product-${frame.id}` as ProductId,
+          id: productUuid as ProductId,
           name: frame.name,
           description: frame.description || `${frame.name} avatar frame`,
           categoryId: 'cosmetics', // Assuming this category exists
           price: frame.price,
-          frameId: frame.id,
+          frameId: frameUuid,
           status: 'published',
           createdAt: new Date(),
           updatedAt: new Date()

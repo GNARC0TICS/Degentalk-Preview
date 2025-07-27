@@ -56,6 +56,9 @@ importers:
       '@types/react':
         specifier: ^18.3.20
         version: 18.3.23
+      '@types/uuid':
+        specifier: ^10.0.0
+        version: 10.0.0
       '@types/ws':
         specifier: ^8.5.13
         version: 8.18.1
@@ -161,6 +164,9 @@ importers:
       utility-types:
         specifier: ^3.10.0
         version: 3.11.0
+      uuid:
+        specifier: ^11.1.0
+        version: 11.1.0
 
   client:
     dependencies:
