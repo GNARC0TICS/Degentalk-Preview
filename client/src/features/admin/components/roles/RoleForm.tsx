@@ -10,11 +10,11 @@ import {
 	DialogHeader,
 	DialogTitle
 } from '@/components/ui/dialog';
-import type { Role } from '@shared/types/entities/role.types';
+import type { RoleEntity } from '@shared/types/role.types';
 
 interface RoleFormProps {
-	role?: Role | undefined;
-	onSubmit: (role: Partial<Role>) => void;
+	role?: RoleEntity | undefined;
+	onSubmit: (role: Partial<RoleEntity>) => void;
 	onCancel: () => void;
 	isLoading?: boolean | undefined;
 }

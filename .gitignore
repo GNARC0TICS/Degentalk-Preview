@@ -53,3 +53,6 @@ db/schema/**/*.map
 # Claude audit logs
 .claude/audit/
 .codemod-backups/
+
+# MCP configuration (contains sensitive credentials)
+.mcp.json

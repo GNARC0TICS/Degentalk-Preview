@@ -1,7 +1,7 @@
 import React from 'react';
 import { CalendarClock } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
-import { generateId } from '@shared/utils/ids';
+import { createEntityId } from '@shared/src/utils/ids';
 
 interface UpcomingEventsWidgetProps {
 	className?: string;
@@ -10,12 +10,12 @@ interface UpcomingEventsWidgetProps {
 export default function UpcomingEventsWidget({ className = '' }: UpcomingEventsWidgetProps) {
 	const dummyEvents = [
 		{
-			id: generateId(),
+			id: createEntityId('event-1'),
 			title: 'Weekly AMA with Devs',
 			date: '2025-06-22T18:00:00Z'
 		},
 		{
-			id: generateId(),
+			id: createEntityId('event-2'),
 			title: 'DegenShop Flash Sale',
 			date: '2025-06-25T12:00:00Z'
 		}

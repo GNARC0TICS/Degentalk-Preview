@@ -13,6 +13,7 @@
 		"dev:client": "pnpm --filter @degentalk/client dev",
 		"dev:server": "pnpm --filter @degentalk/server dev",
 		"dev:seed": "pnpm run kill-port:5001 && pnpm --filter @degentalk/scripts seed:all && pnpm dev",
+		"dev:frames": "tsx scripts/ensure-default-frames.ts && pnpm dev",
 		"dev:quick": "pnpm run kill-ports && pnpm --parallel --filter @degentalk/server --filter @degentalk/client dev",
 		"dev:login": "tsx scripts/dev-login.ts",
 		"dev:logout": "tsx scripts/dev-logout.ts",

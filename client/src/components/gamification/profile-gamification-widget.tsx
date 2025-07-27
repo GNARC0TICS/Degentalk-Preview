@@ -17,7 +17,7 @@ import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { LevelDisplay } from './level-display';
 import { formatNumber } from '@/utils/utils';
-import { Trophy, Target, Flame, TrendingUp, ChevronRight, Sparkles, Award } from 'lucide-react';
+import { Trophy, Target, Flame, TrendingUp, ChevronRight, Sparkles, Award, Info } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 import type { UserProgression } from '@/features/gamification/services/gamification-api.service';
 

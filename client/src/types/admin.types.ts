@@ -6,7 +6,7 @@
 import type { UserId, RoleId } from '@shared/types/ids';
 
 // Re-export canonical types
-export type { Role, RoleFormData, RoleWithUsers } from '@shared/types/entities';
+export type { RoleEntity as Role, RoleFormData, RoleWithUsers } from '@shared/types/entities';
 export type { User, PublicUser, AuthenticatedUser, UserRole } from '@shared/types/entities';
 export type { Title, TitleFormData, TitleWithStats, AdminTitle } from '@shared/types/entities';
 

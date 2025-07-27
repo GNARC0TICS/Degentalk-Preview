@@ -3,11 +3,20 @@
  *
  * Centralized, type-safe access to all shared types.
  * Explicit exports ensure tree-shaking and clean APIs.
+ * 
+ * Organization:
+ * 1. Core Domain Types (User, Forum, Thread, etc.)
+ * 2. Economy Types (Wallet, Transaction, etc.)
+ * 3. Configuration Types
+ * 4. Utility Types & Helpers
+ * 5. ID Types & Validators
  */
 
 /* eslint-disable degen/no-missing-branded-id-import */
 
-// Re-export legacy API types (preserved for compatibility)
+// ============================================
+// API TYPES
+// ============================================
 export type {
 	ApiSuccess,
 	ApiError,
@@ -46,10 +55,13 @@ export type {
 	ConfigService
 } from './config.types.js';
 
-// Core domain types
-export type {
+// ============================================
+// CORE DOMAIN TYPES
+// ============================================
 
-	// Forum types
+// Forum & Content Types
+// Forum types
+export type {
 	Forum,
 	ForumSettings,
 	ForumPrefix,
@@ -64,9 +76,11 @@ export type {
 	UpdatePostRequest,
 	PostSearchParams,
 	PostWithAuthor,
-	ForumHierarchy,
+	ForumHierarchy
+} from './forum-core.types.js';
 
-	// Economy types
+// Economy types
+export type {
 	DGTToken,
 	Wallet,
 	WalletFeatures,
@@ -88,9 +102,11 @@ export type {
 	WalletWithUser,
 	TransactionWithWallets,
 	WalletSummary,
-	TransactionSummary,
+	TransactionSummary
+} from './economy-core.types.js';
 
-	// Cosmetics types
+// Cosmetics types
+export type {
 	ItemRarity,
 	ItemCategory,
 	ItemType,
@@ -118,9 +134,9 @@ export type {
 	ShopItemPreview,
 	ItemWithOwnership,
 	RarityConfig
-} from './core/index.js';
+} from './cosmetics.types.js';
 
-// Thread types (consolidated)
+// Thread Types
 export type {
 	Thread,
 	ThreadUser,
@@ -135,17 +151,23 @@ export type {
 	ThreadsListResponse
 } from './thread.types.js';
 
-// Type guards
+// Type Guards
 export {
 	isForum,
-	isPost,
+	isPost
+} from './forum-core.types.js';
+
+export {
 	isWallet,
-	isTransaction,
+	isTransaction
+} from './economy-core.types.js';
+
+export {
 	isShopItem,
 	isFrame,
 	isBadge,
 	isTitle
-} from './core/index.js';
+} from './cosmetics.types.js';
 
 export {
 	isThread,
@@ -154,12 +176,21 @@ export {
 } from './thread.types.js';
 
 // Economy helpers
-export { toDGTAmount, fromDGTAmount, DGT_DECIMALS, DGT_PRECISION, RARITY_COLORS } from './core/index.js';
+export { toDGTAmount, fromDGTAmount, DGT_DECIMALS, DGT_PRECISION } from './economy-core.types.js';
+export { RARITY_COLORS } from './cosmetics.types.js';
 
-// Role types (unified source of truth)
+// ============================================
+// USER & ROLE TYPES
+// ============================================
+
+// Role Types
 export type { 
 	Role, 
-	BasicRole
+	RoleName,
+	BasicRole,
+	RoleEntity,
+	RoleFormData,
+	RoleWithUsers
 } from './role.types.js';
 
 export {
@@ -181,27 +212,38 @@ export {
 	hasRoleOrHigher
 } from './role.types.js';
 
-// Configuration schemas and types
+// User Types
+export type { User, UserSummary, PublicUser } from './user.types.js';
+
+// ============================================
+// CONFIGURATION TYPES
+// ============================================
 export type {
 	XpConfig,
 	XpAction,
 	XpMultiplier,
 	LevelFormula,
-	LevelMilestone,
+	LevelMilestone
+} from './xp.schema.js';
+
+export type {
 	EconomyConfig,
 	CurrencyConfig,
 	FeeConfig,
 	WalletLimits,
 	DistributionConfig,
 	StakingConfig,
-	ShopPricing,
+	ShopPricing
+} from './economy.schema.js';
+
+export type {
 	FeaturesConfig,
 	FeatureFlag,
 	RolloutStrategy,
 	Permission as ConfigPermission,
 	AccessRule,
 	ForumAccess
-} from './config/index.js';
+} from './features.schema.js';
 
 // Schema validators
 export {
@@ -212,7 +254,10 @@ export {
 	LevelMilestoneSchema,
 	validateXpConfig,
 	validatePartialXpConfig,
-	defaultXpConfig,
+	defaultXpConfig
+} from './xp.schema.js';
+
+export {
 	EconomyConfigSchema,
 	CurrencyConfigSchema,
 	FeeConfigSchema,
@@ -221,7 +266,10 @@ export {
 	StakingConfigSchema,
 	ShopPricingSchema,
 	validateEconomyConfig,
-	validatePartialEconomyConfig,
+	validatePartialEconomyConfig
+} from './economy.schema.js';
+
+export {
 	FeaturesConfigSchema,
 	FeatureFlagSchema,
 	RolloutStrategySchema,
@@ -232,10 +280,12 @@ export {
 	validateFeaturesConfig,
 	validatePartialFeaturesConfig,
 	evaluateFeatureFlag
-} from './config/index.js';
+} from './features.schema.js';
 
-// Validation utilities
-export type { ValidationError } from './validation/index.js';
+// ============================================
+// VALIDATION & UTILITIES
+// ============================================
+export type { ValidationError } from './validation.js';
 
 export {
 	isValidUuid,
@@ -257,9 +307,11 @@ export {
 	validatePaginationParams,
 	validateSortParams,
 	createValidationError
-} from './validation/index.js';
+} from './validation.js';
 
-// Frontend-safe ID types
+// ============================================
+// ID TYPES & VALIDATORS
+// ============================================
 export type {
 	// Core entity IDs
 	UserId,
@@ -342,7 +394,9 @@ export {
 	isTitleId
 } from './ids.js';
 
-// Common utility types
+// ============================================
+// COMMON UTILITY TYPES
+// ============================================
 export type Nullable<T> = T | null;
 export type Optional<T> = T | undefined;
 export type PartialExcept<T, K extends keyof T> = Partial<T> & Pick<T, K>;
@@ -383,7 +437,9 @@ export type SearchResult<T> = WithPagination<T> & {
 	sortOrder?: 'asc' | 'desc';
 };
 
-// Economy value types
+// ============================================
+// ECONOMY TYPES
+// ============================================
 export type {
 	// Amount types
 	DgtAmount,
@@ -423,15 +479,9 @@ export {
 	ECONOMY_CONSTANTS
 } from './economy.js';
 
-// User type now in shared/types/user.types.ts
-export type { User, UserSummary, PublicUser } from './user.types.js';
-
-// Branded ID types
-export * from './ids.js';
-
-// Auth types removed - use User from user.types.ts
-
-// ID creation helpers from utils
+// ============================================
+// ID CREATION HELPERS
+// ============================================
 export {
 	toUserId,
 	toThreadId,

@@ -64,7 +64,7 @@ export function SignatureRenderer({
 				{/* Signature content */}
 				<div
 					className="signature-content text-xs text-zinc-400 leading-relaxed"
-					dangerouslySetInnerHTML={{ __html: sanitizedSignature }}
+					dangerouslySetInnerHTML={{ __html: sanitizedSignature as unknown as string }}
 				/>
 			</div>
 

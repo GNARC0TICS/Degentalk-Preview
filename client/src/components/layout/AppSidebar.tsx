@@ -52,7 +52,7 @@ type SidebarProps = {
 
 export function Sidebar({ activeCategoryId, forumId }: SidebarProps) {
 	const location = useLocation();
-	const { isAuthenticated } = useAuth();
+	const { isAuthenticated, user } = useAuth();
 
 	const navItems = [
 		{ icon: Home, label: 'Home', href: ROUTES.HOME },

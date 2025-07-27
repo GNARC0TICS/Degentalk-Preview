@@ -6,7 +6,7 @@
       "args": [
         "-y",
         "@modelcontextprotocol/server-filesystem",
-        "/home/developer/Degentalk-BETA"
+        "/path/to/your/degentalk/project"
       ],
       "env": {}
     },
@@ -17,7 +17,7 @@
         "-y",
         "@modelcontextprotocol/server-postgres",
         "-e",
-        "DATABASE_URL=${DATABASE_URL}"
+        "DATABASE_URL=your_database_url_here"
       ],
       "env": {}
     },
@@ -53,7 +53,7 @@
         "-y",
         "@neondatabase/mcp-server-neon",
         "start",
-        "${NEON_API_KEY}"
+        "your_neon_api_key_here"
       ]
     },
     "BraveSearch": {

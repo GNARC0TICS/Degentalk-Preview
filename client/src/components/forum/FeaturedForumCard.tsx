@@ -30,6 +30,7 @@ import { CARD_STYLES } from '@/utils/card-constants';
 import { useShowHotRibbon } from '@/hooks/useShowHotRibbon';
 import { SafeImage } from '@/components/ui/safe-image';
 import { animationConfig } from '@/config/animation.config';
+import { getForumTheme } from '@shared/config/forumThemes.config';
 // Theme is now applied via useTheme hook in RootLayout
 import XpBoostBadge from './XpBoostBadge';
 

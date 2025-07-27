@@ -2,8 +2,13 @@ import type { ForumStructureNode } from '../schema/forum/structure';
 import type { threadPrefixes } from '../schema'; // Import threadPrefixes schema
 import type { TagId } from '@shared/types/ids';
 
-// Canonical types – single source of truth
-import type { CanonicalThread, CanonicalPost } from '../../client/src/types/canonical.types';
+// Import from shared types to avoid cross-workspace violations
+import type { Thread } from '@shared/types/thread.types';
+import type { Post } from '@shared/types/post.types';
+
+// Temporary aliases for backward compatibility
+export type CanonicalThread = Thread;
+export type CanonicalPost = Post;
 
 /**
  * ---------------------------------------------------------------------------
@@ -16,14 +21,14 @@ import type { CanonicalThread, CanonicalPost } from '../../client/src/types/cano
  * ---------------------------------------------------------------------------
  */
 
-/** @deprecated – use CanonicalThread */
-export type ThreadWithUser = CanonicalThread;
+/** @deprecated – use Thread from @shared/types/thread.types */
+export type ThreadWithUser = Thread;
 
-/** @deprecated – use CanonicalPost */
-export type PostWithUser = CanonicalPost;
+/** @deprecated – use Post from @shared/types/post.types */
+export type PostWithUser = Post;
 
-/** @deprecated – use CanonicalThread */
-export type ThreadWithUserAndCategory = CanonicalThread;
+/** @deprecated – use Thread from @shared/types/thread.types */
+export type ThreadWithUserAndCategory = Thread;
 
 /** Pagination info retained for server responses – keep for now */
 export interface PaginationInfo {
@@ -33,17 +38,17 @@ export interface PaginationInfo {
 	totalPages: number;
 }
 
-/** @deprecated – use CanonicalThread */
-export interface ThreadWithUserAndStructure extends CanonicalThread {}
+/** @deprecated – use Thread from @shared/types/thread.types */
+export interface ThreadWithUserAndStructure extends Thread {}
 
-/** @deprecated – use CanonicalThread & CanonicalPost composite */
+/** @deprecated – use Thread & Post composite */
 export interface ThreadWithPostsAndUser {
-	thread: CanonicalThread;
-	posts: CanonicalPost[];
+	thread: Thread;
+	posts: Post[];
 	pagination: PaginationInfo;
 }
 
-/** @deprecated – consolidated under CanonicalThread */
+/** @deprecated – consolidated under Thread */
 export interface ThreadWithPostsAndUserStructure extends ThreadWithPostsAndUser {}
 
 // Non-thread structures (still used in admin analytics). Keep for now

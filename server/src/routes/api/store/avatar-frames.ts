@@ -19,6 +19,9 @@ const router: Router = Router();
 // GET /api/store/avatar-frames
 router.get('/', async (_req, res) => {
 	try {
+		// Add cache headers for better performance (5 minute cache)
+		res.setHeader('Cache-Control', 'public, max-age=300');
+		
 		const frames = await avatarFrameStoreService.listAvailableFrames();
 
 		// Transform raw DB rows → public DTOs (security-first)

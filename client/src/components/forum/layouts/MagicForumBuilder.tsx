@@ -155,6 +155,32 @@ const MagicForumBuilder = memo(
 			setConfig(defaultConfig);
 		};
 
+		// Demo engagement data for the CryptoEngagementBar
+		const demoEngagementData = {
+			'1': {
+				totalTips: 45,
+				uniqueTippers: 8,
+				momentum: 'bullish' as const,
+				reputationScore: 890,
+				bookmarks: 12,
+				tipLeaderboard: [
+					{ username: 'CryptoWhale', amount: 15, avatarUrl: '' },
+					{ username: 'DeFiMaster', amount: 10, avatarUrl: '' }
+				],
+				shares: 5
+			},
+			'2': {
+				totalTips: 78,
+				uniqueTippers: 15,
+				momentum: 'neutral' as const,
+				bookmarks: 8,
+				tipLeaderboard: [
+					{ username: 'MoonBoy', amount: 25, avatarUrl: '' },
+					{ username: 'DiamondHands', amount: 20, avatarUrl: '' }
+				]
+			}
+		};
+
 		// Sample data for preview - typed as Thread
 		const sampleThreads: Thread[] = [
 			{
@@ -189,27 +215,17 @@ const MagicForumBuilder = memo(
 						totalTips: 250
 					},
 					isOnline: true,
-					joinedAt: new Date().toISOString(),
-					isAdmin: false,
-					isModerator: false,
-					isVerified: false,
-					isBanned: false
+					joinedAt: new Date().toISOString()
 				},
-				zone: {
+				featuredForum: {
 					id: 'forum_1' as ForumId,
 					name: 'The Pit',
 					slug: 'pit',
 					colorTheme: 'pit',
-					isFeatured: true,
-					sortOrder: 1,
-					isVisible: true,
-					forums: [],
-					stats: {
-						totalForums: 5,
-						totalThreads: 150,
-						totalPosts: 2400
-					}
-				} as unknown as Thread['zone'],
+					icon: undefined,
+					bannerImage: undefined,
+					isPrimary: true
+				},
 				structure: {
 					id: 'struct_1' as StructureId,
 					name: 'General Discussion',
@@ -225,16 +241,8 @@ const MagicForumBuilder = memo(
 					canModerate: false
 				},
 				engagement: {
-					totalTips: 45,
-					uniqueTippers: 8,
-					momentum: 'bullish' as const,
-					reputationScore: 890,
-					bookmarks: 12,
-					tipLeaderboard: [
-						{ username: 'CryptoWhale', amount: 15, avatarUrl: '' },
-						{ username: 'DeFiMaster', amount: 10, avatarUrl: '' }
-					],
-					shares: 5
+					tips: 45,
+					replies: 15
 				}
 			},
 			{
@@ -268,27 +276,18 @@ const MagicForumBuilder = memo(
 						totalTips: 780
 					},
 					isOnline: false,
-					joinedAt: new Date().toISOString(),
-					isAdmin: false,
-					isModerator: false,
 					isVerified: true,
-					isBanned: false
+					joinedAt: new Date().toISOString()
 				},
-				zone: {
+				featuredForum: {
 					id: 'forum_2' as ForumId,
 					name: 'Mission Control',
 					slug: 'mission',
 					colorTheme: 'mission',
-					isFeatured: true,
-					sortOrder: 2,
-					isVisible: true,
-					forums: [],
-					stats: {
-						totalForums: 3,
-						totalThreads: 89,
-						totalPosts: 1450
-					}
-				} as unknown as Thread['zone'],
+					icon: undefined,
+					bannerImage: undefined,
+					isPrimary: true
+				},
 				structure: {
 					id: 'struct_2' as StructureId,
 					name: 'Market Analysis',
@@ -304,17 +303,8 @@ const MagicForumBuilder = memo(
 					canModerate: false
 				},
 				engagement: {
-					totalTips: 78,
-					uniqueTippers: 15,
-					momentum: 'neutral' as const,
-					reputationScore: 1100,
-					bookmarks: 28,
-					tipLeaderboard: [
-						{ username: 'TraderPro', amount: 25, avatarUrl: '' },
-						{ username: 'BullRunner', amount: 20, avatarUrl: '' },
-						{ username: 'MarketSage', amount: 15, avatarUrl: '' }
-					],
-					shares: 12
+					tips: 78,
+					replies: 32
 				}
 			}
 		];
@@ -770,7 +760,12 @@ const MagicForumBuilder = memo(
 
 										{config.showEngagement && thread.engagement && (
 											<CryptoEngagementBar
-												engagement={thread.engagement}
+												engagement={demoEngagementData[thread.id as keyof typeof demoEngagementData] || {
+													totalTips: thread.engagement.tips || 0,
+													uniqueTippers: 0,
+													momentum: 'neutral' as const,
+													bookmarks: 0
+												}}
 												onTip={(amount) => {
 													/* TODO: Implement tip functionality */
 												}}

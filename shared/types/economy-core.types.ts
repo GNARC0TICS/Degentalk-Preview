@@ -1,4 +1,4 @@
-import type { UserId, WalletId, TransactionId, ProductId } from '../ids.js';
+import type { UserId, WalletId, TransactionId, ProductId } from './ids.js';
 import type { TransactionType, TransactionStatus } from '@db/schema/core/enums';
 
 /**

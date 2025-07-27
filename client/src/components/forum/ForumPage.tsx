@@ -318,8 +318,8 @@ const ForumPage = memo(() => {
 														{subforum.name}
 													</h4>
 													<p className="text-sm text-zinc-500 mt-1">
-														{subforum.stats?.totalThreads || 0} threads •{' '}
-														{subforum.stats?.totalPosts || 0} posts
+														{subforum.threadCount || 0} threads •{' '}
+														{subforum.postCount || 0} posts
 													</p>
 												</div>
 												<ChevronRight className="w-5 h-5 text-zinc-600 group-hover:text-zinc-400" />

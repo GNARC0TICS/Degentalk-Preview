@@ -2,7 +2,7 @@ import React from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Link } from 'react-router-dom';
 import { FolderOpen, ChevronDown, ChevronRight, MessageSquare, Megaphone } from 'lucide-react';
-import type { ForumId, ForumId, ThreadId, EntityId } from '@shared/types/ids';
+import type { ForumId, ThreadId, EntityId } from '@shared/types/ids';
 
 // Define theme colors for different forums
 const FORUM_COLORS = {
@@ -51,10 +51,11 @@ const getForumTheme = (forum: Forum) => {
 export interface Forum {
 	id: ForumId;
 	name: string;
-	description: string | null;
-	threadCount: number;
-	postCount: number;
-	slug: string;
+	description?: string | null;
+	threadCount?: number;
+	postCount?: number;
+	slug?: string;
+	position?: number;
 	lastActivity?: string;
 	lastThread?: {
 		id: ThreadId;
@@ -68,14 +69,7 @@ export interface Forum {
 	isLocked?: boolean;
 	isVip?: boolean;
 	minXp?: number | null;
-}
-
-export interface Forum {
-	id: ForumId;
-	name: string;
-	position: number;
-	slug?: string;
-	forums: Forum[];
+	forums?: Forum[];
 }
 
 interface ForumGroupProps {

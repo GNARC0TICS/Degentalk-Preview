@@ -7,7 +7,7 @@
 		"types": ["node"],
 		"composite": true,
 		"outDir": "./dist",
-		"rootDir": ".",
+		"rootDir": "..",
 		"baseUrl": ".",
 		"paths": {
 			"@schema": ["./schema/index.ts"],
@@ -24,7 +24,8 @@
 	},
 	"include": [
 		"./**/*.ts",
-		"../drizzle.config.ts"
+		"../drizzle.config.ts",
+		"../shared/**/*.ts"
 	],
 	"exclude": [
 		"node_modules", 

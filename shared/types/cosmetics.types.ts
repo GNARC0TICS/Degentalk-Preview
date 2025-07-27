@@ -1,4 +1,4 @@
-import type { UserId, ItemId, FrameId, BadgeId, TitleId, Id } from '../ids.js';
+import type { UserId, ItemId, FrameId, BadgeId, TitleId, Id } from './ids.js';
 
 /**
  * Cosmetics Domain Types

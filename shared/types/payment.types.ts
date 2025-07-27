@@ -1,4 +1,4 @@
-import type { UserId, TransactionId } from '../ids.js';
+import type { UserId, TransactionId } from './ids.js';
 
 /**
  * Payment method types

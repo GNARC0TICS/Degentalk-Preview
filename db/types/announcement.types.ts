@@ -1,4 +1,4 @@
-import type { AnnouncementId } from './id.types';
+import type { AnnouncementId } from '@shared/types/ids';
 
 export type Announcement = {
 	id: AnnouncementId;
