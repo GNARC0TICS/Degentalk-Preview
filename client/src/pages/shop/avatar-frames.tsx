@@ -25,6 +25,7 @@ export default function AvatarFramesShopPage() {
 	const queryClient = useQueryClient();
 	const { toast } = useToast();
 	const [activeEquipped, setActiveEquipped] = useState<FrameId | null>(null);
+	const [previewFrame, setPreviewFrame] = useState<FrameId | null>(null);
 
 	// Fetch frames for sale
 	const {
@@ -104,7 +105,12 @@ export default function AvatarFramesShopPage() {
 					const owned = ownedFrames.has(frame.id);
 					const equipped = activeEquipped === frame.id;
 					return (
-						<Card key={frame.id} className="bg-zinc-900 border-zinc-700">
+						<Card 
+							key={frame.id} 
+							className="bg-zinc-900 border-zinc-700 transition-transform hover:scale-105"
+							onMouseEnter={() => setPreviewFrame(frame.id)}
+							onMouseLeave={() => setPreviewFrame(null)}
+						>
 							<CardHeader>
 								<CardTitle className="flex items-center justify-between">
 									{frame.name}
@@ -118,6 +124,7 @@ export default function AvatarFramesShopPage() {
 										frameUrl={frame.imageUrl}
 										username={frame.name}
 										size="lg"
+										className={previewFrame === frame.id ? 'ring-2 ring-primary' : ''}
 									/>
 								</div>
 								<div className="flex items-center justify-center gap-1 text-emerald-400 font-semibold">

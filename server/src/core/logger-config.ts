@@ -5,14 +5,7 @@
  * to reduce console noise while maintaining useful debugging information.
  */
 
-import { LogLevel } from './logger';
-
-export interface LoggerConfig {
-  minLevel: LogLevel;
-  suppressCategories?: string[];
-  onlyShowCategories?: string[];
-  suppressPatterns?: RegExp[];
-}
+import { LogLevel, LoggerConfig } from './logger-types';
 
 // Development mode logger configuration
 export const devLoggerConfig: LoggerConfig = {

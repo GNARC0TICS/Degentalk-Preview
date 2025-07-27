@@ -25,7 +25,7 @@ import type {
 	AuthenticatedCryptoWallet,
 	AdminCryptoWallet,
 	TransactionHistoryItem
-} from '@shared/types/wallet/wallet.types';
+} from '@shared/types';
 import { createHash } from 'crypto';
 import { logger } from '@core/logger';
 

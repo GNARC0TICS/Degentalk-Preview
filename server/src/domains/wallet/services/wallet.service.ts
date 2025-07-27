@@ -21,8 +21,8 @@ import type {
 	DgtTransfer,
 	SupportedCoin,
 	CCPaymentWithdrawFee
-} from '@shared/types/wallet/wallet.types';
-import { fromDbCryptoWallet } from '@shared/types/wallet/wallet.transformer';
+} from '@shared/types';
+import { fromDbCryptoWallet } from '@shared/types/wallet.transformer';
 
 import { logger, LogAction } from '@core/logger';
 import { WalletError, ErrorCodes } from '@core/errors';

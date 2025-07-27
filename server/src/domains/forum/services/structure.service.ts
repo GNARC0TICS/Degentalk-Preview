@@ -9,7 +9,7 @@ import { db } from '@db';
 import { logger } from '@core/logger';
 import { forumStructure, threads, posts } from '@schema';
 import { sql, desc, eq, count, isNull, and, inArray, gt } from 'drizzle-orm';
-import type { ForumStructureWithStats } from '@shared/types/core/forum.types';
+import type { ForumStructureWithStats } from '@shared/types/forum.types';
 import type { StructureId } from '@shared/types/ids';
 import { forumMap, type RootForum as Zone, type Forum } from '@config/forumMap';
 

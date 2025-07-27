@@ -6,7 +6,7 @@
  */
 
 import type { UserId } from '@shared/types/ids';
-import type { DgtTransaction, DgtTransactionMetadata } from '@shared/types/wallet/wallet.types';
+import type { DgtTransaction, DgtTransactionMetadata } from '@shared/types';
 import { walletService } from './wallet.service';
 import { logger } from '@core/logger';
 

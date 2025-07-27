@@ -11,7 +11,7 @@ import type {
 	WithdrawalRequest,
 	PaginationOptions,
 	DgtTransfer
-} from '@shared/types/wallet/wallet.types';
+} from '@shared/types';
 
 import { logger } from '@core/logger';
 import { WalletError, ErrorCodes } from '@core/errors';
@@ -33,7 +33,7 @@ import {
 	toPaginatedResponse,
 	toPublicSupportedCoin,
 	toPublicWithdrawFeeInfo
-} from '@shared/types/wallet/wallet.transformer';
+} from '@shared/types/wallet.transformer';
 
 export class WalletController {
 	/**

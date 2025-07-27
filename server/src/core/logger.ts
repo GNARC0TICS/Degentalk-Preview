@@ -12,59 +12,10 @@ import path from 'path';
 import { createWriteStream, WriteStream } from 'fs';
 import { getLoggerConfig } from './logger-config';
 import { loggerControl } from './logger-control';
+import { LogLevel, LogAction } from './logger-types';
 
-// Log levels
-export enum LogLevel {
-	DEBUG = 'DEBUG',
-	INFO = 'INFO',
-	WARN = 'WARN',
-	ERROR = 'ERROR',
-	CRITICAL = 'CRITICAL'
-}
-
-// Log action categories for better filtering and analysis
-export enum LogAction {
-	// System actions
-	SYSTEM_STARTUP = 'SYSTEM_STARTUP',
-	SYSTEM_SHUTDOWN = 'SYSTEM_SHUTDOWN',
-	SCHEDULED_TASK = 'SCHEDULED_TASK',
-
-	// User actions
-	USER_REGISTER = 'USER_REGISTER',
-	USER_LOGIN = 'USER_LOGIN',
-	USER_LOGOUT = 'USER_LOGOUT',
-	USER_UPDATE = 'USER_UPDATE',
-
-	// Wallet actions
-	WALLET_CREATE = 'WALLET_CREATE',
-	WALLET_IMPORT = 'WALLET_IMPORT',
-	WALLET_TRANSACTION = 'WALLET_TRANSACTION',
-	TRANSACTION_VERIFY = 'TRANSACTION_VERIFY',
-
-	// Vault actions
-	VAULT_CREATE = 'VAULT_CREATE',
-	VAULT_UNLOCK = 'VAULT_UNLOCK',
-	VAULT_AUTO_UNLOCK = 'VAULT_AUTO_UNLOCK',
-
-	// Forum actions
-	THREAD_CREATE = 'THREAD_CREATE',
-	POST_CREATE = 'POST_CREATE',
-	POST_EDIT = 'POST_EDIT',
-	POST_DELETE = 'POST_DELETE',
-
-	// XP actions
-	XP_AWARD = 'XP_AWARD',
-	XP_ADJUSTMENT = 'XP_ADJUSTMENT',
-	LEVEL_UP = 'LEVEL_UP',
-
-	// API actions
-	API_REQUEST = 'API_REQUEST',
-	API_RESPONSE = 'API_RESPONSE',
-	API_ERROR = 'API_ERROR',
-
-	// Custom
-	CUSTOM = 'CUSTOM'
-}
+// Re-export for convenience
+export { LogLevel, LogAction } from './logger-types';
 
 // Default configuration
 const DEFAULT_CONFIG = {

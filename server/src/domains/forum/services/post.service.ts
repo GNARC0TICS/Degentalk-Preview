@@ -11,7 +11,7 @@ import { eventLogger } from '../../activity/services/event-logger.service';
 import { AchievementEventEmitter } from '@core/events/achievement-events.service';
 import { posts, threads, users as usersTable, postReactions } from '@schema';
 import { sql, desc, asc, eq, and, count } from 'drizzle-orm';
-import type { PostWithUser } from '@shared/types/core/forum.types';
+import type { PostWithUser } from '@shared/types/forum.types';
 import type { ThreadId, UserId, PostId } from '@shared/types/ids';
 import { MentionsService } from '../../social/mentions.service';
 

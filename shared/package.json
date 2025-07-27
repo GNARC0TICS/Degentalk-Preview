@@ -10,6 +10,7 @@
 		"./types/index": "./types/index.ts",
 		"./types/entities": "./types/entities/index.ts",
 		"./types/user": "./types/user.types.ts",
+		"./types/wallet/wallet.types": "./types/wallet.types.ts",
 		"./config": "./config/index.ts",
 		"./validators": "./validators/index.ts",
 		"./economy": "./economy/index.ts",

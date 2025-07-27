@@ -7,7 +7,7 @@
 
 // STREAM-LOCK: B
 import type { PublicUser, UserSelf, AdminUserDetail, UserRole } from '../types';
-import type { DisplaySettings } from '@shared/types/core/user.types';
+import type { DisplaySettings } from '@shared/types/user.types';
 import type {
 	PublicUserDTO,
 	UserSelfDTO,

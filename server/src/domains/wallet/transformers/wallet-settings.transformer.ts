@@ -5,7 +5,7 @@
  * Following the security-first whitelisting pattern
  */
 
-import type { WalletSettings, PublicWalletSettings, AdminWalletSettings } from '@shared/types/wallet/wallet.types';
+import type { WalletSettings, PublicWalletSettings, AdminWalletSettings } from '@shared/types';
 
 export class WalletSettingsTransformer {
 	/**

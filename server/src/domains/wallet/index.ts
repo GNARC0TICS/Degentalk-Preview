@@ -37,7 +37,7 @@ export type {
 	WalletConfigPublic,
 	DgtTransfer,
 	PaginationOptions
-} from '@shared/types/wallet/wallet.types';
+} from '@shared/types';
 
 // Re-export transformers
 export {
@@ -53,7 +53,7 @@ export {
 	fromCCPaymentDepositAddress,
 	extractUserData,
 	toPaginatedResponse
-} from '@shared/types/wallet/wallet.transformer';
+} from '@shared/types/wallet.transformer';
 
 export type {
 	WalletBalancePublic,
@@ -61,4 +61,4 @@ export type {
 	DgtTransactionPublic,
 	DgtTransactionAuthenticated,
 	PaginatedResponse
-} from '@shared/types/wallet/wallet.transformer';
+} from '@shared/types/wallet.transformer';

@@ -14,7 +14,7 @@ import type {
 	WithdrawalResponse,
 	WebhookResult,
 	PaginationOptions
-} from '@shared/types/wallet/wallet.types';
+} from '@shared/types';
 
 import { logger } from '@core/logger';
 import { WalletError, ErrorCodes } from '@core/errors';

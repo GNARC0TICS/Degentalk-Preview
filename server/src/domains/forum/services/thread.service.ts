@@ -25,7 +25,7 @@ import type {
 	ThreadWithUser,
 	ThreadWithPostsAndUser,
 	ThreadWithUserAndCategory
-} from '@shared/types/core/forum.types';
+} from '@shared/types/forum.types';
 import { eventLogger } from '../../activity/services/event-logger.service';
 import type { ForumId, StructureId, ThreadId, UserId, PostId, TagId } from '@shared/types/ids';
 import { MentionsService } from '../../social/mentions.service';

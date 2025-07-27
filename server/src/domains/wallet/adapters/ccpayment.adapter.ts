@@ -19,13 +19,13 @@ import type {
 	PaginationOptions,
 	SupportedCoin,
 	CCPaymentWithdrawFee
-} from '@shared/types/wallet/wallet.types';
+} from '@shared/types';
 import {
 	fromCCPaymentBalance,
 	fromCCPaymentDepositAddress,
 	fromCCPaymentTokenInfo,
 	toPublicWithdrawFeeInfo
-} from '@shared/types/wallet/wallet.transformer';
+} from '@shared/types/wallet.transformer';
 
 import { logger } from '@core/logger';
 import { WalletError, ErrorCodes } from '@core/errors';

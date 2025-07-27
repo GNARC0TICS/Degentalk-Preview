@@ -12,7 +12,7 @@ import { sql, desc, asc, and, eq, inArray } from 'drizzle-orm';
 import type {
 	ForumStructureWithStats,
 	ThreadWithPostsAndUser
-} from '@shared/types/core/forum.types';
+} from '@shared/types/forum.types';
 // Import specialized services
 import { forumStructureService } from './services/structure.service';
 import { threadService } from './services/thread.service';
