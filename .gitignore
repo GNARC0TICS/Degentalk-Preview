@@ -52,3 +52,4 @@ db/schema/**/*.map
 
 # Claude audit logs
 .claude/audit/
+.codemod-backups/
