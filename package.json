@@ -96,6 +96,9 @@
 		"codemod:dry": "tsx scripts/codemods/phase5/run-all.ts --dry-run",
 		"codemod:test": "tsx scripts/codemods/phase5/test-compilation.ts",
 		"lint:staged": "lint-staged",
+		"commit:no-hooks": "./scripts/commit-no-hooks.sh",
+		"hooks:disable": "git config core.hooksPath /dev/null",
+		"hooks:enable": "git config --unset core.hooksPath",
 		"db:sync:forums": "tsx -r tsconfig-paths/register scripts/db/sync-forum-config.ts"
 	},
 	"devDependencies": {
