@@ -1,8 +1,8 @@
 import type { ReactNode, ComponentType } from 'react';
 import { Route, Navigate } from 'react-router-dom';
-import { useAuth } from '@app/hooks/use-auth';
-import { hasRoleAtLeast } from '@app/utils/roles';
-import type { Role } from '@app/utils/roles';
+import { useAuth } from '@/hooks/use-auth';
+import { hasRoleAtLeast } from '@/utils/roles';
+import type { Role } from '@/utils/roles';
 
 interface RouteGuardProps {
 	children: ReactNode;

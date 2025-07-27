@@ -1,4 +1,4 @@
-import { cn } from '@app/utils/utils';
+import { cn } from '@/utils/utils';
 import { ReactNode } from 'react';
 
 interface ContainerProps {

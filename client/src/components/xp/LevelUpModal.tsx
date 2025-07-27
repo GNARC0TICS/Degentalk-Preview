@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import confetti from 'canvas-confetti';
 import { Award, Star, Gift, TrendingUp, X } from 'lucide-react';
-import { Button } from '@app/components/ui/button';
+import { Button } from '@/components/ui/button';
 
 interface LevelUpModalProps {
 	isOpen: boolean;

@@ -1,7 +1,7 @@
 import React from 'react';
-import { cn } from '@app/utils/utils';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@app/components/ui/tooltip';
-import { rarityBorderMap } from '@app/config/rarity.config';
+import { cn } from '@/utils/utils';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { rarityBorderMap } from '@/config/rarity.config';
 import type { BadgeId } from '@shared/types/ids';
 
 // TODO: BadgeType import removed – local prop already typed without external schema

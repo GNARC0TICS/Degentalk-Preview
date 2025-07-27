@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { cn } from '@app/utils/utils';
+import { cn } from '@/utils/utils';
 
 interface SleepyLoaderProps {
   size?: 'sm' | 'md' | 'lg';

@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { errorService, useErrorHandler, withErrorHandling } from '@app/services/error.service';
-import type { AppError, ErrorCategory, ErrorSeverity } from '@app/services/error.service';
+import { errorService, useErrorHandler, withErrorHandling } from '@/services/error.service';
+import type { AppError, ErrorCategory, ErrorSeverity } from '@/services/error.service';
 
 // Mock console methods to avoid test output noise
 const mockConsole = {

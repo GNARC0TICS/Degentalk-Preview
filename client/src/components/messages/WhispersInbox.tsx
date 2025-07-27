@@ -6,17 +6,17 @@ import {
 	CardTitle,
 	CardDescription,
 	CardFooter
-} from '@app/components/ui/card';
-import { Button } from '@app/components/ui/button';
-import { Avatar, AvatarFallback, AvatarImage } from '@app/components/ui/avatar';
-import { ScrollArea } from '@app/components/ui/scroll-area';
-import { Input } from '@app/components/ui/input';
-import { Textarea } from '@app/components/ui/textarea';
-import { useMessages, type Conversation, type Message } from '@app/hooks/use-messages';
-import { useAsyncButton } from '@app/hooks/use-async-button';
-import { formatRelativeTime, getInitials } from '@app/utils/utils';
+} from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { useMessages, type Conversation, type Message } from '@/hooks/use-messages';
+import { useAsyncButton } from '@/hooks/use-async-button';
+import { formatRelativeTime, getInitials } from '@/utils/utils';
 import { Loader2, Send, Trash2, ArrowLeft, Search } from 'lucide-react';
-import { useToast } from '@app/hooks/use-toast';
+import { useToast } from '@/hooks/use-toast';
 import { useQuery } from '@tanstack/react-query';
 
 interface WhispersInboxProps {

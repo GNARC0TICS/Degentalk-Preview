@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { Skeleton } from '@app/components/ui/skeleton';
-import type { ProfileData } from '@app/types/profile';
-import { useFriends } from '@app/hooks/useFriends';
-import { Avatar, AvatarImage, AvatarFallback } from '@app/components/ui/avatar';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@app/components/ui/tabs';
+import { Skeleton } from '@/components/ui/skeleton';
+import type { ProfileData } from '@/types/profile';
+import { useFriends } from '@/hooks/useFriends';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 
 interface Props {
 	profile: ProfileData;

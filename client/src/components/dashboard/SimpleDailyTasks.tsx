@@ -1,10 +1,10 @@
 import React from 'react';
 import { CheckCircle, Lock, Flame, MessageSquare, Heart, Users, TrendingUp } from 'lucide-react';
-import { Progress } from '@app/components/ui/progress';
-import { Card, CardHeader, CardContent, CardTitle } from '@app/components/ui/card';
-import { Badge } from '@app/components/ui/badge';
-import { useCanonicalAuth } from '@app/features/auth/useCanonicalAuth';
-import { useDailyBonus } from '@app/hooks/useDailyBonus';
+import { Progress } from '@/components/ui/progress';
+import { Card, CardHeader, CardContent, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { useCanonicalAuth } from '@/features/auth/useCanonicalAuth';
+import { useDailyBonus } from '@/hooks/useDailyBonus';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 

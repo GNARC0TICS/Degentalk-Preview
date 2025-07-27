@@ -4,7 +4,7 @@ import { economySettings } from '@schema';
 import { eq } from 'drizzle-orm';
 import { dgtService } from '@domains/wallet/services/dgtService';
 import { logger, LogAction } from '@core/logger';
-import { reportErrorServer } from '@server/lib/report-error';
+import { reportErrorServer } from '../../../../lib/report-error';
 
 async function getSettingInt(key: string, defaultVal: number = 0): Promise<number> {
 	try {

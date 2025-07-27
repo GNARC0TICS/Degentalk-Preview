@@ -6,7 +6,7 @@
  */
 
 import React from 'react';
-import { LeaderboardWidget } from '@app/components/leaderboard';
+import { LeaderboardWidget } from '@/components/leaderboard';
 import type { User } from '@shared/types/user.types';
 
 // Define structure needed by the component

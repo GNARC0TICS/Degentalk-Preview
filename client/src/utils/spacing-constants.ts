@@ -5,7 +5,7 @@
  * NOTE: This is transitioning to use UIConfigContext for admin-configurable spacing
  */
 
-import { useUIConfig, buildResponsiveClasses } from '@app/contexts/UIConfigContext';
+import { useUIConfig, buildResponsiveClasses } from '@/contexts/UIConfigContext';
 
 // Static constants for non-React contexts (will be deprecated)
 export const FORUM_SPACING = {

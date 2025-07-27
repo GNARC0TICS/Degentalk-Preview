@@ -41,10 +41,12 @@
 		"outDir": "./dist",
 		"types": ["node"],
 		"paths": {
-			// NEW paths (target state)
-			"@api/*": ["src/*"],
+			// Server-specific explicit paths
 			"@core/*": ["src/core/*"],
 			"@domains/*": ["src/domains/*"],
+			"@middleware/*": ["src/middleware/*"],
+			"@utils/*": ["src/utils/*"],
+			"@lib/*": ["lib/*"],
 			
 			// OLD paths (temporary - for transition)
 			"@config/*": ["../config/*"],

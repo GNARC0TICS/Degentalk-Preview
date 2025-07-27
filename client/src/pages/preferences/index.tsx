@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import useSearchParams from '@app/hooks/useSearchParams';
-import { useCanonicalAuth } from '@app/features/auth/useCanonicalAuth';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@app/components/ui/tabs';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@app/components/ui/card';
-import { ProfilePreferences } from '@app/components/preferences/profile-preferences';
-import { AccountPreferences } from '@app/components/preferences/account-preferences';
-import { NotificationPreferences } from '@app/components/preferences/notification-preferences';
-import { DisplayPreferences } from '@app/components/preferences/display-preferences';
-import { SessionPreferences } from '@app/components/preferences/session-preferences';
-import { ReferralPreferences } from '@app/components/preferences/referral-preferences';
-import { SocialPreferences } from '@app/components/preferences/social-preferences';
+import useSearchParams from '@/hooks/useSearchParams';
+import { useCanonicalAuth } from '@/features/auth/useCanonicalAuth';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { ProfilePreferences } from '@/components/preferences/profile-preferences';
+import { AccountPreferences } from '@/components/preferences/account-preferences';
+import { NotificationPreferences } from '@/components/preferences/notification-preferences';
+import { DisplayPreferences } from '@/components/preferences/display-preferences';
+import { SessionPreferences } from '@/components/preferences/session-preferences';
+import { ReferralPreferences } from '@/components/preferences/referral-preferences';
+import { SocialPreferences } from '@/components/preferences/social-preferences';
 import { User, Shield, Bell, Monitor, Lock, Users, Share2, UserCheck } from 'lucide-react';
-import { ProtectedRoute } from '@app/components/auth';
-import { Container } from '@app/components/ui/Container';
+import { ProtectedRoute } from '@/components/auth';
+import { Container } from '@/components/ui/Container';
 
 /**
  * Preferences page with tabbed interface for different preferences categories.

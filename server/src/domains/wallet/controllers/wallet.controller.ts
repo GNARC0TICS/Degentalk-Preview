@@ -20,7 +20,7 @@ import { walletService } from '@domains/wallet/services/wallet.service';
 import { walletConfig } from '@shared/config/wallet.config';
 import { settingsService } from '@core/services/settings.service';
 import { hasPermission } from '@domains/admin/adminRegistry';
-import { send } from '@api/utils/response';
+import { send } from '@utils/response';
 
 // Import transformers
 import {

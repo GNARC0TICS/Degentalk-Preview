@@ -5,9 +5,9 @@
  * based on level rarity and milestones
  */
 
-import { cn } from '@app/utils/utils';
-import { Badge } from '@app/components/ui/badge';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@app/components/ui/tooltip';
+import { cn } from '@/utils/utils';
+import { Badge } from '@/components/ui/badge';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Crown, Sparkles, Star, Trophy, Zap } from 'lucide-react';
 import { motion } from 'framer-motion';
 

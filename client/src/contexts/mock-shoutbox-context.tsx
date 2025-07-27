@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { useToast } from '@app/hooks/use-toast';
-import { useMobileDetector } from '@app/hooks/use-media-query';
+import { useToast } from '@/hooks/use-toast';
+import { useMobileDetector } from '@/hooks/use-media-query';
 
 // Define ShoutboxPosition type here to avoid import issues
 export type ShoutboxPosition =

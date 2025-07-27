@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { Send, User, Lock, CheckCircle2 } from 'lucide-react';
-import { Button } from '@app/components/ui/button';
-import { Input } from '@app/components/ui/input';
-import { Textarea } from '@app/components/ui/textarea';
-import { Card, CardContent, CardHeader, CardTitle } from '@app/components/ui/card';
-import { Badge } from '@app/components/ui/badge';
-import { useToast } from '@app/hooks/use-toast';
-import { useWallet } from '@app/hooks/use-wallet';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { useToast } from '@/hooks/use-toast';
+import { useWallet } from '@/hooks/use-wallet';
 import type { UserId } from '@shared/types/ids';
 import { toId } from '@shared/types/index';
 

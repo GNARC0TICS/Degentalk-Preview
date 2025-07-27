@@ -1,10 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { cn } from '@app/utils/utils';
-import { AvatarFrame } from '@app/components/identity/AvatarFrame';
-import { UserName } from '@app/components/users/Username';
-import { LevelBadge } from '@app/features/gamification/components/LevelBadge';
-import { useIdentityDisplay } from '@app/hooks/useIdentityDisplay';
+import { cn } from '@/utils/utils';
+import { AvatarFrame } from '@/components/identity/AvatarFrame';
+import { UserName } from '@/components/users/Username';
+import { LevelBadge } from '@/features/gamification/components/LevelBadge';
+import { useIdentityDisplay } from '@/hooks/useIdentityDisplay';
 import type { User } from '@shared/types/user.types';
 
 type ThreadAuthorProps = {

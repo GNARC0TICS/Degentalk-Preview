@@ -2,9 +2,9 @@ import type { UserId } from '@shared/types/ids';
 import React from 'react';
 // Link is not used directly in FeaturedForumGrid if FeaturedForumCard handles its own linking.
 // import { Link } from 'react-router-dom';
-import { ShopCard } from '@app/components/forum/ShopCard';
+import { ShopCard } from '@/components/forum/ShopCard';
 import { motion } from 'framer-motion';
-import { animationConfig } from '@app/config/animation.config';
+import { animationConfig } from '@/config/animation.config';
 // Icons previously used by internal ForumFeaturedForumCard might not be needed directly here
 // if FeaturedForumCard handles its own icon rendering logic.
 // import {
@@ -14,7 +14,7 @@ import { animationConfig } from '@app/config/animation.config';
 // 	Hash,
 // 	Folder
 // } from 'lucide-react';
-import FeaturedForumCard, { type FeaturedForumCardProps } from '@app/components/forum/FeaturedForumCard';
+import FeaturedForumCard, { type FeaturedForumCardProps } from '@/components/forum/FeaturedForumCard';
 
 // Re-export ShopCardData for external consumers (unchanged)
 export interface ShopCardData {

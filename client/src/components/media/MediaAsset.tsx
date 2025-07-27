@@ -1,6 +1,6 @@
 import React from 'react';
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
-import type { MediaType } from '@app/features/admin/services/media-api.service';
+import type { MediaType } from '@/features/admin/services/media-api.service';
 
 interface Props {
 	url: string;

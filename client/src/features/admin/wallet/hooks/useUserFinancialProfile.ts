@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { apiRequest } from '@app/utils/queryClient'; // Assuming apiRequest is in the new utils directory
+import { apiRequest } from '@/utils/queryClient'; // Assuming apiRequest is in the new utils directory
 import type { UserId } from '@shared/types/ids';
 
 // Define the expected shape of the user's financial profile

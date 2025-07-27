@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { useDgtPurchase } from '@app/hooks/useDgtPurchase';
-import { StripeElementsWrapper } from '@app/components/payment/StripeElementsWrapper';
-import { PaymentForm } from '@app/components/payment/PaymentForm';
-import { useToast } from '@app/hooks/use-toast';
+import { useDgtPurchase } from '@/hooks/useDgtPurchase';
+import { StripeElementsWrapper } from '@/components/payment/StripeElementsWrapper';
+import { PaymentForm } from '@/components/payment/PaymentForm';
+import { useToast } from '@/hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
 import { Coins, ChevronLeft, Loader2, Info, CheckCircle } from 'lucide-react';
-import { Button } from '@app/components/ui/button';
-import { Card, CardContent } from '@app/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@app/components/ui/tabs';
-import { Badge } from '@app/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Badge } from '@/components/ui/badge';
 import { Link } from 'react-router-dom';
-import { Wide } from '@app/layout/primitives';
-import { logger } from '@app/lib/logger';
+import { Wide } from '@/layout/primitives';
+import { logger } from '@/lib/logger';
 
 // Define the package type for DGT purchases
 interface Package {

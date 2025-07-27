@@ -1,5 +1,5 @@
 import type { Request, Response, NextFunction } from 'express';
-import { loadEconomyConfig, saveEconomyOverrides } from '@api/utils/economy-loader';
+import { loadEconomyConfig, saveEconomyOverrides } from '@utils/economy-loader';
 import { economyConfig as canonicalEconomyConfig } from '@shared/config/economy.config';
 import { z } from 'zod';
 import { validateRequestBody } from '../../admin/admin.validation';

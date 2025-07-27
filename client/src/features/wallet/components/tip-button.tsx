@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button } from '@app/components/ui/button';
+import { Button } from '@/components/ui/button';
 import type { UserId } from '@shared/types/ids';
 import {
 	Dialog,
@@ -9,7 +9,7 @@ import {
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger
-} from '@app/components/ui/dialog';
+} from '@/components/ui/dialog';
 import {
 	Form,
 	FormControl,
@@ -18,13 +18,13 @@ import {
 	FormItem,
 	FormLabel,
 	FormMessage
-} from '@app/components/ui/form';
-import { Input } from '@app/components/ui/input';
-import { Textarea } from '@app/components/ui/textarea';
-import { Slider } from '@app/components/ui/slider';
-import { useToast } from '@app/hooks/use-toast';
-import { useTip } from '@app/hooks/use-tip';
-import { useWallet } from '@app/hooks/use-wallet';
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Slider } from '@/components/ui/slider';
+import { useToast } from '@/hooks/use-toast';
+import { useTip } from '@/hooks/use-tip';
+import { useWallet } from '@/hooks/use-wallet';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { Coins } from 'lucide-react';

@@ -1,19 +1,19 @@
 import React from 'react';
-import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@app/components/ui/card';
-import { Table, TableHeader, TableRow, TableHead, TableBody } from '@app/components/ui/table';
+import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
+import { Table, TableHeader, TableRow, TableHead, TableBody } from '@/components/ui/table';
 import { RefreshCw, ToggleLeft } from 'lucide-react';
-import ProtectedAdminRoute from '@app/features/admin/components/protected-admin-route';
-import { useAdminModuleV2 } from '@app/hooks/use-admin-modules';
-import { VisualJsonTabs } from '@app/features/admin/components/VisualJsonTabs';
-import { useJsonConfig } from '@app/hooks/useJsonConfig';
+import ProtectedAdminRoute from '@/features/admin/components/protected-admin-route';
+import { useAdminModuleV2 } from '@/hooks/use-admin-modules';
+import { VisualJsonTabs } from '@/features/admin/components/VisualJsonTabs';
+import { useJsonConfig } from '@/hooks/useJsonConfig';
 import {
 	featureFlagsSchema,
 	type FeatureFlags,
 	type FeatureFlag
-} from '@app/schemas/featureFlags.schema';
-import { SwitchRow } from '@app/features/admin/components/form-controls';
-import { Slider } from '@app/components/ui/slider';
-import { Input } from '@app/components/ui/input';
+} from '@/schemas/featureFlags.schema';
+import { SwitchRow } from '@/features/admin/components/form-controls';
+import { Slider } from '@/components/ui/slider';
+import { Input } from '@/components/ui/input';
 
 /* -------------------------------------------------------------------------
  * Visual feature-flag editor: simple table with inline controls

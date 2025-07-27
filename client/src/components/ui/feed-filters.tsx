@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { cn } from '@app/utils/utils';
+import { cn } from '@/utils/utils';
 import {
   Filter,
   Calendar,
@@ -14,11 +14,11 @@ import {
   CalendarDays,
   CalendarRange
 } from 'lucide-react';
-import { Popover, PopoverContent, PopoverTrigger } from '@app/components/ui/popover';
-import { Button } from '@app/components/ui/button';
-import { Label } from '@app/components/ui/label';
-import { Switch } from '@app/components/ui/switch';
-import theme from '@app/config/theme.config';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
+import theme from '@/config/theme.config';
 
 export interface FeedFilter {
   sortBy: 'recent' | 'hot' | 'views' | 'replies';

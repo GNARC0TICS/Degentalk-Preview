@@ -1,14 +1,14 @@
 import React from 'react';
 import { BarChart2, ShoppingBag, Award } from 'lucide-react';
-import { XPProgressBar } from '@app/components/profile/XPProgressBar';
+import { XPProgressBar } from '@/components/profile/XPProgressBar';
 import StatCard from './StatCard';
 import { ReputationCard } from './widgets/ReputationCard';
 import { ActivityStatsCard } from './widgets/ActivityStatsCard';
 import { WalletOverviewCard } from './widgets/WalletOverviewCard';
 import { SocialStatsCard } from './widgets/SocialStatsCard';
 import { MilestoneCard } from './widgets/MilestoneCard';
-import { useProfileStatsAvailable } from '@app/hooks/useProfileStats';
-import type { ProfileData } from '@app/types/profile';
+import { useProfileStatsAvailable } from '@/hooks/useProfileStats';
+import type { ProfileData } from '@/types/profile';
 
 interface Props {
 	profile: ProfileData;

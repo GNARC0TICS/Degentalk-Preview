@@ -21,12 +21,12 @@ import {
 	Bell
 } from 'lucide-react';
 
-import { Button } from '@app/components/ui/button';
-import { Badge } from '@app/components/ui/badge';
-import { Input } from '@app/components/ui/input';
-import { cn } from '@app/utils/utils';
-import { useForumStructure } from '@app/features/forum/contexts/ForumStructureContext';
-import { useAuth } from '@app/hooks/use-auth';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
+import { cn } from '@/utils/utils';
+import { useForumStructure } from '@/features/forum/contexts/ForumStructureContext';
+import { useAuth } from '@/hooks/use-auth';
 
 export interface MobileForumNavProps {
 	className?: string;

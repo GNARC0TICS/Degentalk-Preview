@@ -2,11 +2,11 @@ import React from 'react';
 // Removed: import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { ShoppingCart, Lock, Sparkles, ArrowUpCircle } from 'lucide-react';
-import { Button } from '@app/components/ui/button';
-import { Badge } from '@app/components/ui/badge';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@app/components/ui/tooltip';
-import { useAuth } from '@app/hooks/use-auth';
-import FeatureGate from '@app/components/ui/feature-gate';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { useAuth } from '@/hooks/use-auth';
+import FeatureGate from '@/components/ui/feature-gate';
 
 interface ShopItemProps {
 	id: string;

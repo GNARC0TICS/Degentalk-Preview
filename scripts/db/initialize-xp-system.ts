@@ -1,11 +1,11 @@
-import { addDailyXpTracking } from '../../server/migrations/add-daily-xp-tracking';
+import { addDailyXpTracking } from '@server/migrations/add-daily-xp-tracking';
 import { seedDefaultLevels } from './seed-default-levels';
-import { db } from '../db';
-import { users } from '../../shared/schema';
+import { db } from '@db';
+import { users } from '@shared/schema';
 import { sql } from 'drizzle-orm';
 import { fileURLToPath } from 'url';
 import { config } from 'dotenv';
-import { trackUserXpByDay, sqlSafe, sqlDate } from '../../shared/utils/sql-helpers';
+import { trackUserXpByDay, sqlSafe, sqlDate } from '@shared/utils/sql-helpers';
 
 // Load environment variables from .env file
 config();

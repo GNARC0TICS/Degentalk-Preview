@@ -1,5 +1,5 @@
 import { QueryClient, type QueryFunction } from '@tanstack/react-query';
-import { logger } from '@app/lib/logger';
+import { logger } from '@/lib/logger';
 
 const throwIfResNotOk = async (res: Response) => {
 	if (!res.ok) {

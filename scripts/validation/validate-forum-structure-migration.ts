@@ -7,7 +7,7 @@
  * was successful and all schema updates are working correctly.
  */
 
-import { db } from '../../db';
+import { db } from '@db';
 import { forumStructure } from '../../db/schema/forum/structure';
 import { threads } from '../../db/schema/forum/threads';
 import { threadPrefixes } from '../../db/schema/forum/prefixes';

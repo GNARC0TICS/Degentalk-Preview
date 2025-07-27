@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useToast } from './use-toast';
-import { useLevelUp } from '@app/contexts/LevelUpContext';
+import { useLevelUp } from '@/contexts/LevelUpContext';
 
 // Type for XP gain response
 export interface XpGainResponse {

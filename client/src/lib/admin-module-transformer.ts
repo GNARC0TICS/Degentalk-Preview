@@ -2,7 +2,7 @@
  * Transform AdminModuleV2 to include backward compatibility properties
  */
 
-import type { AdminModuleV2 } from '@app/config/admin.config';
+import type { AdminModuleV2 } from '@/config/admin.config';
 
 /**
  * Enrich AdminModuleV2 with additional properties for backward compatibility

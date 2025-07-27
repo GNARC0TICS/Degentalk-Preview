@@ -1,14 +1,14 @@
-import type { ShopItem } from '@app/hooks/use-shop-items';
-import type { ItemCategory } from '@app/hooks/use-vault-items';
-import type { Notification, NotificationsParams } from '@app/types/notifications';
+import type { ShopItem } from '@/hooks/use-shop-items';
+import type { ItemCategory } from '@/hooks/use-vault-items';
+import type { Notification, NotificationsParams } from '@/types/notifications';
 import type {
 	Transaction,
 	TransactionHistoryParams,
 	DepositAddress,
 	WalletBalances
-} from '@app/types/wallet';
+} from '@/types/wallet';
 import type { RoomId, TipId, VaultId, ActionId, UserId } from '@shared/types/ids';
-import { logger } from '@app/lib/logger';
+import { logger } from '@/lib/logger';
 
 // API endpoint base URL
 const API_BASE_URL = '/api';

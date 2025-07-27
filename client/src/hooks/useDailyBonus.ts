@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { apiRequest } from '@app/utils/api-request';
-import { useCanonicalAuth } from '@app/features/auth/useCanonicalAuth';
+import { apiRequest } from '@/utils/api-request';
+import { useCanonicalAuth } from '@/features/auth/useCanonicalAuth';
 import { toast } from 'sonner';
 
 interface DailyBonusResponse {

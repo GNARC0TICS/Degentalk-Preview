@@ -1,7 +1,7 @@
-import { cn } from '@app/utils/utils';
-import { Progress } from '@app/components/ui/progress';
-import { formatNumber } from '@app/utils/utils';
-import { Badge } from '@app/components/ui/badge';
+import { cn } from '@/utils/utils';
+import { Progress } from '@/components/ui/progress';
+import { formatNumber } from '@/utils/utils';
+import { Badge } from '@/components/ui/badge';
 import { Sparkles } from 'lucide-react';
 
 type XPProgressBarProps = {

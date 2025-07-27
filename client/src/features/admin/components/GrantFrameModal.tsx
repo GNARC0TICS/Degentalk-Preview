@@ -6,14 +6,14 @@ import {
 	DialogDescription,
 	DialogTitle,
 	DialogFooter
-} from '@app/components/ui/dialog';
-import { Button } from '@app/components/ui/button';
-import { Textarea } from '@app/components/ui/textarea';
-import { useToast } from '@app/hooks/use-toast';
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
+import { useToast } from '@/hooks/use-toast';
 import { useMutation } from '@tanstack/react-query';
-import { apiRequest } from '@app/utils/api-request';
-import { LoadingSpinner } from '@app/components/ui/loader';
-import type { AvatarFrame } from '@app/types/compat/avatar';
+import { apiRequest } from '@/utils/api-request';
+import { LoadingSpinner } from '@/components/ui/loader';
+import type { AvatarFrame } from '@/types/compat/avatar';
 import type { FrameId, UserId } from '@shared/types/ids';
 import { toId, parseId } from '@shared/types/index';
 

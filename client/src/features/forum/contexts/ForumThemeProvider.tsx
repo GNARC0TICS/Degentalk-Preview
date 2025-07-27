@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useMemo, useState, useCallback, useEffect } from 'react';
 import type { ReactNode, ComponentType } from 'react';
-import type { LucideProps } from 'lucide-react';
-import { apiRequest } from '@app/utils/queryClient'; // Fetch utility
+import type { LucideProps, LucideIcon } from 'lucide-react';
+import { apiRequest } from '@/utils/queryClient'; // Fetch utility
 import {
 	Flame,
 	Target,
@@ -15,8 +15,6 @@ import {
 	MessageSquare,
 	Crown
 } from 'lucide-react';
-
-// LucideIcon is now imported from lucide-react
 
 // const ADMIN_CONFIGURABLE_THEMES_API_PATH = '/api/themes/config'; // Example API endpoint
 
@@ -38,11 +36,8 @@ const ICON_MAP: Record<string, LucideIcon> = {
 const UI_THEMES_ENDPOINT = '/api/ui/themes';
 
 // Use centralized CSS variable utilities
-import { setZoneAccentVariables } from '@app/styles/cssVariables';
-import { logger } from '@app/lib/logger';
-
-// Local alias for icon component type
-type LucideIcon = ComponentType<LucideProps>;
+import { setZoneAccentVariables } from '@/styles/cssVariables';
+import { logger } from '@/lib/logger';
 
 export interface ThemeSettings {
 	icon?: LucideIcon | string; // Allow string for emoji or SVG path

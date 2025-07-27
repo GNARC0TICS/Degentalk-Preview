@@ -6,7 +6,7 @@
  * and method binding in various scenarios
  */
 
-import { CacheStandard, CacheExtended, CacheRealtime } from '../server/src/core/cache/decorators.js';
+import { CacheStandard, CacheExtended, CacheRealtime } from '@server/src/core/cache/decorators.js';
 
 // Test class to validate decorator behavior
 class TestService {

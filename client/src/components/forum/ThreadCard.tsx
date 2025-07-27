@@ -1,6 +1,7 @@
 import React, { useState, memo } from 'react';
 import { Link } from 'react-router-dom';
 import { formatDistanceToNow } from 'date-fns';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
 	Clock,
 	MessageSquare,
@@ -9,32 +10,37 @@ import {
 	Bookmark,
 	Share2,
 	Crown,
-	Flame
+	Flame,
+	Heart,
+	Pin
 } from 'lucide-react';
 
-import { Card } from '@app/components/ui/card';
-import { Badge } from '@app/components/ui/badge';
-import { Button } from '@app/components/ui/button';
-import { Avatar, AvatarFallback, AvatarImage } from '@app/components/ui/avatar';
-import { OnlineIndicator, AvatarWithOnline } from '@app/components/common/OnlineIndicator';
-import { cn } from '@app/utils/utils';
-import { useBreakpoint } from '@app/hooks/useMediaQuery';
+import { Card } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { OnlineIndicator, AvatarWithOnline } from '@/components/common/OnlineIndicator';
+import { cn } from '@/utils/utils';
+import { useBreakpoint } from '@/hooks/useMediaQuery';
 import type { Thread } from '@shared/types/thread.types';
 import type { ThreadId } from '@shared/types/ids';
 import { toId, parseId } from '@shared/types/index';
-import { getForumTheme } from '@shared/config/forumThemes.config';
-import { useThreadActionsOptional } from '@app/features/forum/contexts/ThreadActionsContext';
-import QuickReplyInput from '@app/components/forum/QuickReplyInput';
-import { ButtonTooltip } from '@app/components/ui/tooltip-utils';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@app/components/ui/tooltip';
+// Theme is now applied via useTheme hook in RootLayout
+import { useThreadActionsOptional } from '@/features/forum/contexts/ThreadActionsContext';
+import QuickReplyInput from '@/components/forum/QuickReplyInput';
+import { ButtonTooltip } from '@/components/ui/tooltip-utils';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 export interface ThreadCardProps {
 	thread: Thread;
-	variant?: 'default' | 'compact' | 'featured' | undefined;
+	variant?: 'default' | 'compact' | 'featured' | 'mobile-optimized' | undefined;
 	showPreview?: boolean | undefined;
 	onTip?: ((threadId: ThreadId, amount: number) => void) | undefined;
 	onBookmark?: ((threadId: ThreadId) => void) | undefined;
+	onLike?: ((threadId: ThreadId) => void) | undefined;
+	onShare?: ((threadId: ThreadId) => void) | undefined;
 	className?: string;
+	enableAnimations?: boolean;
 }
 
 const ThreadCard = memo(
@@ -44,12 +50,17 @@ const ThreadCard = memo(
 		showPreview = true,
 		onTip,
 		onBookmark,
-		className
+		onLike,
+		onShare,
+		className,
+		enableAnimations = true
 	}: ThreadCardProps) => {
 		// If an actions provider exists, defer bookmark state to it
 		const actionsCtx = useThreadActionsOptional();
 
 		const [localBookmark, setLocalBookmark] = useState(thread.hasBookmarked ?? false);
+		const [isLiked, setIsLiked] = useState(false);
+		const [showActions, setShowActions] = useState(false);
 
 		// Sync local state when parent data updates (only when no provider)
 		React.useEffect(() => {
@@ -61,6 +72,7 @@ const ThreadCard = memo(
 		const isBookmarked = actionsCtx ? actionsCtx.isBookmarked : localBookmark;
 
 		const breakpoint = useBreakpoint();
+		const isMobileOptimized = variant === 'mobile-optimized' || (breakpoint.isMobile && variant === 'default');
 
 		const isHot = thread.isHot || (thread.hotScore && thread.hotScore > 10);
 		const timeAgo = formatDistanceToNow(new Date(thread.createdAt), { addSuffix: true });
@@ -69,6 +81,34 @@ const ThreadCard = memo(
 
 		const tipFn = onTip ?? actionsCtx?.tip;
 		const bookmarkFn = onBookmark ?? actionsCtx?.toggleBookmark;
+
+		// Animation variants for smooth interactions
+		const cardAnimationVariants = enableAnimations ? {
+			hidden: { opacity: 0, y: 20, scale: 0.95 },
+			visible: {
+				opacity: 1,
+				y: 0,
+				scale: 1,
+				transition: {
+					duration: 0.3,
+					ease: [0.25, 0.46, 0.45, 0.94]
+				}
+			},
+			hover: {
+				y: -2,
+				scale: 1.02,
+				transition: {
+					duration: 0.2,
+					ease: 'easeOut'
+				}
+			},
+			tap: {
+				scale: 0.98,
+				transition: {
+					duration: 0.1
+				}
+			}
+		} : {};
 
 		// Responsive spacing based on breakpoint
 		const getCardSpacing = () => {
@@ -88,18 +128,164 @@ const ThreadCard = memo(
 
 		const cardVariants = getCardSpacing();
 
-		// Resolve theme safely via shared config util
-		const zoneTheme = getForumTheme(thread.featuredForum.colorTheme);
-		const zoneThemeClass = zoneTheme.border ?? 'border-zinc-700/30 hover:border-zinc-600/60';
+		// Theme-based styling - uses CSS variables from theme system
+		const forumThemeClass = 'border-zinc-700/30 hover:border-zinc-600/60';
 
+		// Helper functions
+		const formatViewCount = (count: number) => {
+			if (count >= 1000000) return `${(count / 1000000).toFixed(1)}M`;
+			if (count >= 1000) return `${(count / 1000).toFixed(1)}K`;
+			return count.toString();
+		};
+
+		const getThreadStatusIcon = () => {
+			if (thread.isSticky) return <Pin className="w-3 h-3 text-yellow-400" />;
+			if (thread.isSolved) return <Crown className="w-3 h-3 text-emerald-400" />;
+			if (thread.firstPostLikeCount > 50) return <Flame className="w-3 h-3 text-orange-400" />;
+			return null;
+		};
+
+		// Enhanced touch-friendly action handlers
+		const handleLike = (e: React.MouseEvent) => {
+			e.preventDefault();
+			e.stopPropagation();
+			setIsLiked(!isLiked);
+			onLike?.(threadId);
+		};
+
+		const handleShare = (e: React.MouseEvent) => {
+			e.preventDefault();
+			e.stopPropagation();
+			onShare?.(threadId);
+		};
+
+		// Mobile-optimized layout
+		if (isMobileOptimized) {
+			return (
+				<motion.div
+					variants={cardAnimationVariants}
+					initial={enableAnimations ? "hidden" : undefined}
+					animate={enableAnimations ? "visible" : undefined}
+					whileHover={enableAnimations ? "hover" : undefined}
+					whileTap={enableAnimations ? "tap" : undefined}
+					className={cn(className)}
+				>
+					<Card className="bg-zinc-900/90 border-zinc-800/50 backdrop-blur-sm hover:border-zinc-700/50 transition-all duration-200">
+						<Link to={`/threads/${thread.slug}`}>
+							<div className="p-4 space-y-3">
+								{/* Header with user and metadata */}
+								<div className="flex items-center justify-between">
+									<div className="flex items-center gap-3 flex-1 min-w-0">
+										<Avatar className="w-8 h-8">
+											<AvatarImage src={thread.user.activeAvatarUrl} />
+											<AvatarFallback className="text-xs">
+												{thread.user.username.slice(0, 2).toUpperCase()}
+											</AvatarFallback>
+										</Avatar>
+										<div className="flex flex-col min-w-0 flex-1">
+											<span className="text-sm font-medium text-white truncate">
+												{thread.user.username}
+											</span>
+											<div className="flex items-center gap-2 text-xs text-zinc-400">
+												<Clock className="w-3 h-3" />
+												{timeAgo}
+											</div>
+										</div>
+									</div>
+									{getThreadStatusIcon()}
+								</div>
+
+								{/* Title with better typography for mobile */}
+								<h3 className="text-base font-semibold text-white leading-snug line-clamp-2">
+									{thread.title}
+								</h3>
+
+								{/* Mobile-optimized stats */}
+								<div className="flex items-center justify-between pt-2">
+									<div className="flex items-center gap-4 text-xs text-zinc-400">
+										<div className="flex items-center gap-1">
+											<Eye className="w-3 h-3" />
+											{formatViewCount(thread.viewCount)}
+										</div>
+										<div className="flex items-center gap-1">
+											<MessageSquare className="w-3 h-3" />
+											{thread.postCount}
+										</div>
+									</div>
+
+									{/* Touch-friendly action buttons */}
+									<div className="flex items-center gap-1">
+										{onLike && (
+											<motion.button
+												whileHover={{ scale: 1.1 }}
+												whileTap={{ scale: 0.9 }}
+												onClick={handleLike}
+												className={cn(
+													'flex items-center gap-1 px-2 py-1 rounded-full text-xs transition-colors',
+													isLiked
+														? 'bg-red-500/20 text-red-400'
+														: 'bg-zinc-800/50 text-zinc-400 hover:text-red-400'
+												)}
+											>
+												<Heart className={cn('w-3 h-3', isLiked && 'fill-current')} />
+												{thread.firstPostLikeCount}
+											</motion.button>
+										)}
+
+										<motion.button
+											whileHover={{ scale: 1.1 }}
+											whileTap={{ scale: 0.9 }}
+											onClick={(e) => {
+												e.preventDefault();
+												e.stopPropagation();
+												if (!actionsCtx) {
+													setLocalBookmark(!localBookmark);
+												}
+												bookmarkFn?.(threadId);
+											}}
+											className={cn(
+												'p-1.5 rounded-full transition-colors',
+												isBookmarked
+													? 'bg-blue-500/20 text-blue-400'
+													: 'bg-zinc-800/50 text-zinc-400 hover:text-blue-400'
+											)}
+										>
+											<Bookmark className={cn('w-3 h-3', isBookmarked && 'fill-current')} />
+										</motion.button>
+									</div>
+								</div>
+
+								{/* Forum indicator */}
+								{thread.featuredForum && (
+									<Badge variant="outline" className="text-xs">
+										{thread.featuredForum.name}
+									</Badge>
+								)}
+							</div>
+						</Link>
+					</Card>
+				</motion.div>
+			);
+		}
+
+		// Default enhanced layout for tablet/desktop
 		return (
-			<Link to={`/threads/${thread.slug}`}>
+			<motion.div
+				variants={cardAnimationVariants}
+				initial={enableAnimations ? "hidden" : undefined}
+				animate={enableAnimations ? "visible" : undefined}
+				whileHover={enableAnimations ? "hover" : undefined}
+				onHoverStart={() => setShowActions(true)}
+				onHoverEnd={() => setShowActions(false)}
+				className={cn(className)}
+			>
+				<Link to={`/threads/${thread.slug}`}>
 				<Card
 					className={cn(
 						'group relative cursor-pointer transition-colors duration-200',
 						'bg-zinc-900/40 backdrop-blur-sm border border-zinc-800/50',
 						'hover:bg-zinc-900/80',
-						zoneThemeClass,
+						forumThemeClass,
 						isHot && 'ring-1 ring-orange-500/30',
 						cardVariants[variant],
 						className
@@ -422,7 +608,8 @@ const ThreadCard = memo(
 						</div>
 					)}
 				</Card>
-			</Link>
+				</Link>
+			</motion.div>
 		);
 	}
 );

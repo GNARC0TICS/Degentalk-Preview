@@ -1,11 +1,11 @@
-import type { AdminId } from '../shared/types/ids';
+import type { AdminId } from '@shared/types/ids';
 
 /**
  * Seed script for user promotion pricing configuration
  * Sets up initial pricing for DGT-powered user advertisements
  */
 
-import { db } from '../../server/src/core/db';
+import { db } from '@server/src/core/db';
 import { 
   promotionPricingConfig, 
   announcementSlots,

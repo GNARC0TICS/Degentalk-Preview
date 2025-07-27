@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { useStripe, useElements, PaymentElement } from '@stripe/react-stripe-js';
-import { useToast } from '@app/hooks/use-toast';
+import { useToast } from '@/hooks/use-toast';
 import { DollarSign, Loader2 } from 'lucide-react';
-import { Button } from '@app/components/ui/button';
-import { Checkbox } from '@app/components/ui/checkbox';
-import { Label } from '@app/components/ui/label';
-import { Dialog, DialogContent, DialogTitle } from '@app/components/ui/dialog';
-import { logger } from '@app/lib/logger';
+import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Label } from '@/components/ui/label';
+import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
+import { logger } from '@/lib/logger';
 
 interface Package {
 	id?: string;

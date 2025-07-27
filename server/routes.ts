@@ -24,11 +24,12 @@ import whaleWatchRoutes from './src/domains/social/whale-watch.routes';
 import messageRoutes from './src/domains/messaging/message.routes';
 import vaultRoutes from './src/domains/engagement/vault/vault.routes';
 import ccpaymentWebhookRoutes from './src/domains/wallet/webhooks/ccpayment-webhook.routes';
-import { registerAnnouncementRoutes } from '@api/domains/admin/announcements/announcements.routes';
+import { registerAnnouncementRoutes } from './src/domains/admin/announcements/announcements.routes';
 import featureGatesRoutes from './src/domains/feature-gates/feature-gates.routes';
 import notificationRoutes from './src/domains/notifications/notification.routes';
 import preferencesRoutes from './src/domains/preferences/preferences.routes';
 import { adRoutes } from './src/domains/advertising/ad.routes';
+import themeRoutes from './src/routes/api/themes.routes';
 import { globalErrorHandler } from './src/core/errors';
 // Path routes removed - path system deprecated
 // TODO: Re-enable when sentry-server file is added
@@ -295,6 +296,7 @@ export async function registerRoutes(app: Express): Promise<void> {
 	apiRouter.use('/feature-gates', featureGatesRoutes);
 	apiRouter.use('/notifications', notificationRoutes);
 	apiRouter.use('/preferences', preferencesRoutes);
+	apiRouter.use('/themes', themeRoutes);
 	apiRouter.use('/x-auth', xAuthRoutes);
 	apiRouter.use('/share', xShareRoutes);
 	apiRouter.use('/gamification', gamificationRoutes);

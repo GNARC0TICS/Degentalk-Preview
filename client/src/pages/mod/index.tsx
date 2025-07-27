@@ -1,9 +1,9 @@
 import React from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@app/components/ui/card';
-import { Button } from '@app/components/ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@app/components/ui/tabs';
-import { Badge } from '@app/components/ui/badge';
-import { Avatar, AvatarFallback } from '@app/components/ui/avatar';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Badge } from '@/components/ui/badge';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import {
 	BarChart,
 	Flag,

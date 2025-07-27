@@ -18,23 +18,23 @@ import {
   CheckCircle
 } from 'lucide-react';
 
-import { apiRequest } from '@app/utils/queryClient';
-import { Container } from '@app/layout/primitives';
-import { Button } from '@app/components/ui/button';
-import { Card } from '@app/components/ui/card';
-import { Badge } from '@app/components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '@app/components/ui/avatar';
-import { Separator } from '@app/components/ui/separator';
-import { useToast } from '@app/hooks/use-toast';
-import { useCanonicalAuth } from '@app/features/auth/useCanonicalAuth';
-import { cn } from '@app/utils/utils';
+import { apiRequest } from '@/utils/queryClient';
+import { Container } from '@/layout/primitives';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Separator } from '@/components/ui/separator';
+import { useToast } from '@/hooks/use-toast';
+import { useCanonicalAuth } from '@/features/auth/useCanonicalAuth';
+import { cn } from '@/utils/utils';
 import type { PostId, ThreadId } from '@shared/types/ids';
 import { toPostId } from '@shared/utils/id';
-import PostCard from '@app/features/forum/components/PostCard';
-import { forumApi } from '@app/features/forum/services/forumApi';
-import ReplyForm from '@app/features/forum/components/ReplyForm';
-import { EditPostDialog } from '@app/features/forum/components/EditPostDialog';
-import { useDeletePost } from '@app/features/forum/hooks/useForumQueries';
+import PostCard from '@/features/forum/components/PostCard';
+import { forumApi } from '@/features/forum/services/forumApi';
+import ReplyForm from '@/features/forum/components/ReplyForm';
+import { EditPostDialog } from '@/features/forum/components/EditPostDialog';
+import { useDeletePost } from '@/features/forum/hooks/useForumQueries';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -44,8 +44,8 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from '@app/components/ui/alert-dialog';
-import type { PostWithUser } from '@app/types/compat/forum';
+} from '@/components/ui/alert-dialog';
+import type { PostWithUser } from '@/types/compat/forum';
 
 
 interface ThreadDetail {

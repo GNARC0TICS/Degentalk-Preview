@@ -12,7 +12,7 @@ import {
 } from '../services/permissions.service';
 import { postController } from '../controllers/post.controller';
 import { postValidation } from '../validation/post.validation';
-import { validateRequest } from '@api/middleware/validate-request';
+import { validateRequest } from '@middleware/validate-request';
 import { asyncHandler } from '@core/errors';
 
 const router: RouterType = Router();

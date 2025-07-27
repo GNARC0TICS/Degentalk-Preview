@@ -1,8 +1,8 @@
 import React from 'react';
 import DOMPurify from 'dompurify';
 import { SignatureTierLevel } from '@shared/signature/SignatureTierConfig';
-import { useUserCosmetics } from '@app/hooks/useUserCosmetics';
-import { cn } from '@app/utils/utils';
+import { useUserCosmetics } from '@/hooks/useUserCosmetics';
+import { cn } from '@/utils/utils';
 import type { UserId } from '@shared/types/ids';
 
 type SignatureRendererProps = {

@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { apiRequest } from '@app/utils/api-request';
+import { apiRequest } from '@/utils/api-request';
 import type { Thread } from '@shared/types/thread.types';
 import type { ContentResponse } from './use-content';
 

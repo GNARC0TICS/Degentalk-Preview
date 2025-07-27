@@ -4,7 +4,7 @@
  */
 
 import { Router } from 'express';
-import { asyncHandlerWithReporting } from '@server/lib/report-error';
+import { asyncHandlerWithReporting } from '../../lib/report-error';
 import { logger, LogAction } from '../core/logger';
 import { 
   ValidationError, 

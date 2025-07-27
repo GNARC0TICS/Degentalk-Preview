@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { IconRenderer } from '@app/components/icons/iconRenderer';
-import { Input } from '@app/components/ui/input';
+import { IconRenderer } from '@/components/icons/iconRenderer';
+import { Input } from '@/components/ui/input';
 
 interface SearchBoxProps {
 	className?: string;

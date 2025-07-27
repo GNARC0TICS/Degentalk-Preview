@@ -2,8 +2,8 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { useInView } from 'react-intersection-observer';
 import { useEffect } from 'react';
 import type { Thread } from '@shared/types/thread.types';
-import type { ContentTab } from '@app/hooks/use-content';
-import { api } from "@app/core/api";
+import type { ContentTab } from '@/hooks/use-content';
+import { api } from "@/core/api";
 
 interface UseInfiniteContentParams {
   tab: ContentTab;

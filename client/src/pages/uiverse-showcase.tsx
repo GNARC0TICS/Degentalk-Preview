@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { PumpButton, CopeButton, Red3DButton } from '@app/components/uiverse-clones/buttons';
-import { DegenLoader, SleepyLoader, RadarLoader } from '@app/components/uiverse-clones/loaders';
-// import { UiverseConfigProvider } from '@app/contexts/UiverseConfigContext';
-import { Wide } from '@app/layout/primitives/Wide';
+import { PumpButton, CopeButton, Red3DButton } from '@/components/uiverse-clones/buttons';
+import { DegenLoader, SleepyLoader, RadarLoader } from '@/components/uiverse-clones/loaders';
+// import { UiverseConfigProvider } from '@/contexts/UiverseConfigContext';
+import { Wide } from '@/layout/primitives/Wide';
 
 export default function UiverseShowcase() {
   const [showLoaders, setShowLoaders] = useState({

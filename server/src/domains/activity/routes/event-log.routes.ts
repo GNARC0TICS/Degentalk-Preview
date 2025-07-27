@@ -1,6 +1,6 @@
 import express from 'express';
 import { eventLogController } from '../controllers/event-log.controller';
-import { requireAuth, requireAdmin } from '@api/middleware/auth.unified';
+import { requireAuth, requireAdmin } from '@middleware/auth.unified';
 
 import { Router } from 'express'
 import type { Router as RouterType } from 'express';

@@ -1,11 +1,11 @@
 import React from 'react';
-import { useWallet } from '@app/hooks/use-wallet';
-import { WalletBalanceDisplay } from '@app/features/wallet/components/wallet-balance-display';
-import TransactionHistory from '@app/features/wallet/components/transaction-history';
-import { DepositButton } from '@app/features/wallet/components/deposit-button';
-import { WithdrawButton } from '@app/features/wallet/components/withdraw-button';
-import { BuyDgtButton } from '@app/features/wallet/components/buy-dgt-button';
-import { DgtTransfer } from '@app/features/wallet/components/dgt-transfer';
+import { useWallet } from '@/hooks/use-wallet';
+import { WalletBalanceDisplay } from '@/features/wallet/components/wallet-balance-display';
+import TransactionHistory from '@/features/wallet/components/transaction-history';
+import { DepositButton } from '@/features/wallet/components/deposit-button';
+import { WithdrawButton } from '@/features/wallet/components/withdraw-button';
+import { BuyDgtButton } from '@/features/wallet/components/buy-dgt-button';
+import { DgtTransfer } from '@/features/wallet/components/dgt-transfer';
 import { Link } from 'react-router-dom';
 
 const WalletPage: React.FC = () => {

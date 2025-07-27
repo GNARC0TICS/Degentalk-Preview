@@ -1,9 +1,9 @@
 import type { ReactNode } from 'react';
 import { createContext, useContext, useState } from 'react';
 import type { ShopItem } from './use-shop-items';
-import { apiRequest } from '@app/utils/api-request';
-import { useAuth } from '@app/hooks/use-auth';
-import { logger } from '@app/lib/logger';
+import { apiRequest } from '@/utils/api-request';
+import { useAuth } from '@/hooks/use-auth';
+import { logger } from '@/lib/logger';
 
 interface PurchaseModalContextType {
 	isOpen: boolean;

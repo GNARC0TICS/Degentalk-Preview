@@ -9,7 +9,7 @@ import { Router } from 'express'
 import type { Router as RouterType } from 'express';
 import { CCPaymentWebhookController } from './ccpayment-webhook.controller';
 import { asyncHandler } from '@core/errors';
-import { validateRequest } from '@api/middleware/validate-request';
+import { validateRequest } from '@middleware/validate-request';
 import { ccpaymentWebhookHeadersSchema } from './validation/webhook.validation';
 
 const ccPaymentWebhookController = new CCPaymentWebhookController();

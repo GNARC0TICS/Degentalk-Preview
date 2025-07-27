@@ -1,4 +1,4 @@
-import { publicConfig } from '@app/config/publicConfig';
+import { publicConfig } from '@/config/publicConfig';
 
 export const useConfig = () => {
 	return publicConfig;

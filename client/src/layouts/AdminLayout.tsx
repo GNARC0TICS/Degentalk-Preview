@@ -1,6 +1,6 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
-import ModularAdminLayout from '@app/features/admin/layout/admin-layout';
+import ModularAdminLayout from '@/features/admin/layout/admin-layout';
 
 /**
  * Admin Layout - Administrative section shell

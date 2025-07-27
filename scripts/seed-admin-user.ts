@@ -5,8 +5,8 @@
  * Creates a proper admin user for DEV_FORCE_AUTH
  */
 
-import '../server/config/loadEnv';
-import { db } from '../db';
+import '@server/config/loadEnv';
+import { db } from '@db';
 import * as schema from '../db/schema';
 import { eq } from 'drizzle-orm';
 import bcrypt from 'bcrypt';

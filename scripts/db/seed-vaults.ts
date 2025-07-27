@@ -1,4 +1,4 @@
-import { db } from '../db';
+import { db } from '@db';
 import { vaults, type InsertVault } from './utils/schema'; // Corrected import path
 import { logSeed } from './utils/seedUtils'; // Corrected import path
 

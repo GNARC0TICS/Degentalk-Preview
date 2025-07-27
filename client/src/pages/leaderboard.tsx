@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { LeaderboardWidget } from '@app/components/leaderboard';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@app/components/ui/tabs';
+import { LeaderboardWidget } from '@/components/leaderboard';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { motion } from 'framer-motion';
-import BackToHomeButton from '@app/components/common/BackToHomeButton';
+import BackToHomeButton from '@/components/common/BackToHomeButton';
 
 export default function LeaderboardPage() {
 	const [activeTab, setActiveTab] = useState<'xp' | 'reputation' | 'tips' | 'activity'>('xp');

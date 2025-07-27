@@ -1,10 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { cn } from '@app/utils/utils';
+import { cn } from '@/utils/utils';
 import { AtSign, MessageSquare, FileText, MessageCircle, Send } from 'lucide-react';
-import { Avatar, AvatarFallback, AvatarImage } from '@app/components/ui/avatar';
-import { Badge } from '@app/components/ui/badge';
-import { formatRelativeTime } from '@app/utils/utils';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
+import { formatRelativeTime } from '@/utils/utils';
 import type { Thread } from '@shared/types/thread.types';
 
 interface MentionContentItemProps {

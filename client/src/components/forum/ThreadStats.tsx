@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { IconRenderer } from '@app/components/icons/iconRenderer';
+import { IconRenderer } from '@/components/icons/iconRenderer';
 
 interface ThreadStatsProps {
 	viewCount: number | null | undefined;

@@ -1,12 +1,12 @@
 import React from 'react';
-import { Label } from '@app/components/ui/label';
+import { Label } from '@/components/ui/label';
 import {
 	Select,
 	SelectContent,
 	SelectItem,
 	SelectTrigger,
 	SelectValue
-} from '@app/components/ui/select';
+} from '@/components/ui/select';
 
 interface SettingsSelectOption {
 	value: string;

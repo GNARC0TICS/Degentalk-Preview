@@ -1,12 +1,12 @@
 import React from 'react';
 import { useState } from 'react';
-import { PlaygroundSection } from '@app/pages/dev';
-import { fontConfigs, fontCombinations, type FontConfig } from '@app/config/fonts.config';
-import { Card, CardHeader, CardTitle, CardContent } from '@app/components/ui/card';
-import { Button } from '@app/components/ui/button';
-import { Input } from '@app/components/ui/input';
-import { Badge } from '@app/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@app/components/ui/tabs';
+import { PlaygroundSection } from '@/pages/dev';
+import { fontConfigs, fontCombinations, type FontConfig } from '@/config/fonts.config';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Copy, Type, Palette, Code, Sparkles } from 'lucide-react';
 
 export function FontsSection() {

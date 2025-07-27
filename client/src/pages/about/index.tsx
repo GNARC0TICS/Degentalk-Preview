@@ -14,12 +14,12 @@ import {
   CheckCircle,
   Clock
 } from 'lucide-react';
-import { Card, CardHeader, CardContent, CardTitle } from '@app/components/ui/card';
-import { Badge } from '@app/components/ui/badge';
-import { Button } from '@app/components/ui/button';
-import { Progress } from '@app/components/ui/progress';
-import { useCanonicalAuth } from '@app/features/auth/useCanonicalAuth';
-import DailyTasksWidget from '@app/components/dashboard/DailyTasksWidget';
+import { Card, CardHeader, CardContent, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Progress } from '@/components/ui/progress';
+import { useCanonicalAuth } from '@/features/auth/useCanonicalAuth';
+import DailyTasksWidget from '@/components/dashboard/DailyTasksWidget';
 
 const AboutPage: React.FC = () => {
   const { user, isAuthenticated } = useCanonicalAuth();

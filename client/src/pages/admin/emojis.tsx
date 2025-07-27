@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@app/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@app/components/ui/tabs';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
 	Table,
 	TableBody,
@@ -8,7 +8,7 @@ import {
 	TableHead,
 	TableHeader,
 	TableRow
-} from '@app/components/ui/table';
+} from '@/components/ui/table';
 import {
 	Dialog,
 	DialogContent,
@@ -16,14 +16,14 @@ import {
 	DialogFooter,
 	DialogHeader,
 	DialogTitle
-} from '@app/components/ui/dialog';
+} from '@/components/ui/dialog';
 import {
 	Select,
 	SelectContent,
 	SelectItem,
 	SelectTrigger,
 	SelectValue
-} from '@app/components/ui/select';
+} from '@/components/ui/select';
 import {
 	Form,
 	FormControl,
@@ -32,21 +32,21 @@ import {
 	FormItem,
 	FormLabel,
 	FormMessage
-} from '@app/components/ui/form';
-import { Button } from '@app/components/ui/button';
-import { Input } from '@app/components/ui/input';
-import { Switch } from '@app/components/ui/switch';
+} from '@/components/ui/form';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Switch } from '@/components/ui/switch';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { Pencil, Trash, Plus, Image, Play } from 'lucide-react';
-import { useToast } from '@app/hooks/use-toast';
+import { useToast } from '@/hooks/use-toast';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiRequest } from '@app/utils/queryClient';
-import { AdminPageShell } from '@app/features/admin/layout/layout/AdminPageShell';
-import { MediaLibraryModal } from '@app/features/admin/media/media/MediaLibraryModal';
-import { mediaApiService } from '@app/features/admin/services/media-api.service';
-import { MediaAsset } from '@app/components/media/MediaAsset';
+import { apiRequest } from '@/utils/queryClient';
+import { AdminPageShell } from '@/features/admin/layout/layout/AdminPageShell';
+import { MediaLibraryModal } from '@/features/admin/media/media/MediaLibraryModal';
+import { mediaApiService } from '@/features/admin/services/media-api.service';
+import { MediaAsset } from '@/components/media/MediaAsset';
 import type { EmojiId } from '@shared/types/ids';
 
 // Type for emoji schema validation

@@ -6,18 +6,18 @@ import {
 	DialogFooter,
 	DialogHeader,
 	DialogTitle
-} from '@app/components/ui/dialog';
-import { Button } from '@app/components/ui/button';
-import { Input } from '@app/components/ui/input';
-import { Textarea } from '@app/components/ui/textarea';
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 // Select components were unused
-import { Avatar, AvatarFallback, AvatarImage } from '@app/components/ui/avatar';
-import { useMessages } from '@app/hooks/use-messages';
-import { useAsyncButton } from '@app/hooks/use-async-button';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { useMessages } from '@/hooks/use-messages';
+import { useAsyncButton } from '@/hooks/use-async-button';
 import { Loader2, Search, User } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
-import { useToast } from '@app/hooks/use-toast';
-import { getInitials } from '@app/utils/utils';
+import { useToast } from '@/hooks/use-toast';
+import { getInitials } from '@/utils/utils';
 
 interface User {
 	id: string;

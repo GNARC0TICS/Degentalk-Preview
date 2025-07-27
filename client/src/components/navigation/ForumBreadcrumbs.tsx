@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Home, ChevronRight, Map, Layers } from 'lucide-react';
-import { getForumSpacing } from '@app/utils/spacing-constants';
+import { getForumSpacing } from '@/utils/spacing-constants';
 
 export interface BreadcrumbItem {
 	label: string;

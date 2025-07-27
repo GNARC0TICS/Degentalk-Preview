@@ -1,7 +1,7 @@
 import React from 'react';
-import { Switch } from '@app/components/ui/switch';
-import { Label } from '@app/components/ui/label';
-import { cn } from '@app/utils/utils';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
+import { cn } from '@/utils/utils';
 
 interface AdminToggleProps {
 	label: string;

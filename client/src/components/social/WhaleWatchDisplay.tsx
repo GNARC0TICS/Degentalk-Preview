@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { apiRequest } from '@app/utils/queryClient';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@app/components/ui/card';
-import { Badge } from '@app/components/ui/badge';
-import { Button } from '@app/components/ui/button';
-import { Avatar, AvatarFallback, AvatarImage } from '@app/components/ui/avatar';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@app/components/ui/tabs';
-import { ScrollArea } from '@app/components/ui/scroll-area';
-import { Skeleton } from '@app/components/ui/skeleton';
+import { apiRequest } from '@/utils/queryClient';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Skeleton } from '@/components/ui/skeleton';
 import {
 	Eye,
 	Users,
@@ -20,7 +20,7 @@ import {
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { formatDistanceToNow } from 'date-fns';
-import { cn } from '@app/utils/utils';
+import { cn } from '@/utils/utils';
 
 interface FollowUser {
 	id: string;

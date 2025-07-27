@@ -1,6 +1,6 @@
 import type { User } from '@shared/types/user.types';
-import { Badge } from '@app/components/ui/badge';
-import { cn } from '@app/utils/utils';
+import { Badge } from '@/components/ui/badge';
+import { cn } from '@/utils/utils';
 
 type UserBadgeProps = {
 	user: Pick<User, 'forumStats' | 'role'> & {

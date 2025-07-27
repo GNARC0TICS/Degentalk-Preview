@@ -10,7 +10,7 @@ import type { UserId } from '@shared/types/ids';
 import type { Request, Response } from 'express';
 import { SignatureService } from './signature.service';
 import { z } from 'zod';
-import { validateRequest } from '@api/middleware/validate-request';
+import { validateRequest } from '@middleware/validate-request';
 import { getUserIdFromRequest } from '@core/utils/auth.helpers';
 import { isValidId } from '@shared/types';
 import { logger } from '@core/logger';

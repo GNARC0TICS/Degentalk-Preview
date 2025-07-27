@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Badge } from '@app/components/ui/badge';
-import type { Tag } from '@app/types/forum';
+import { Badge } from '@/components/ui/badge';
+import type { Tag } from '@/types/forum';
 
 interface TagBadgeProps {
 	tag: Tag;

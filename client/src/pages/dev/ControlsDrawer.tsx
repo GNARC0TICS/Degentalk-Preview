@@ -1,8 +1,8 @@
 import React from 'react';
-import { usePlaygroundControls } from '@app/stores/usePlaygroundControls';
+import { usePlaygroundControls } from '@/stores/usePlaygroundControls';
 import { X } from 'lucide-react';
-import { Input } from '@app/components/ui/input';
-import { Button } from '@app/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 
 export const ControlsDrawer: React.FC = () => {
 	const { isDrawerOpen, closeDrawer, selectedComponentId, props, updateProp } =

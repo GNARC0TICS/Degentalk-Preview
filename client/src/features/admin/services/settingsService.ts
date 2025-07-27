@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { adminApi } from '@app/features/admin/lib/adminApi';
-import type { SettingValue } from '@app/types/admin.types';
+import { adminApi } from '@/features/admin/lib/adminApi';
+import type { SettingValue } from '@/types/admin.types';
 
 // Query keys
 const SETTINGS_KEY = ['admin', 'settings'];

@@ -1,5 +1,5 @@
-import type { AdminId } from '../../shared/types/ids';
-import { db } from '../../../db';
+import type { AdminId } from '@shared/types/ids';
+import { db } from '@db';
 import { PgTransaction } from 'drizzle-orm/pg-core';
 
 export function logSeed(scriptName: string, message: string, error?: boolean) {

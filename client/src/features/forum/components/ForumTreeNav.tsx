@@ -10,12 +10,12 @@ import {
 	ChevronDown as DefaultChevronDown,
 	MessageCircle
 } from 'lucide-react';
-import { useForumStructure } from '@app/features/forum/contexts/ForumStructureContext';
-import { Badge } from '@app/components/ui/badge';
+import { useForumStructure } from '@/features/forum/contexts/ForumStructureContext';
+import { Badge } from '@/components/ui/badge';
 import { motion, AnimatePresence } from 'framer-motion';
-import { cn } from '@app/utils/utils';
-import { buildNavigationTree, type NavNode } from '@app/navigation/forumNav';
-import { useForumTheme } from '@app/features/forum/contexts/ForumThemeProvider'; // Import the theme hook
+import { cn } from '@/utils/utils';
+import { buildNavigationTree, type NavNode } from '@/navigation/forumNav';
+import { useForumTheme } from '@/features/forum/contexts/ForumThemeProvider'; // Import the theme hook
 
 interface ForumTreeNavProps {
 	className?: string;

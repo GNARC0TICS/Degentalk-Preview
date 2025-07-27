@@ -1,7 +1,7 @@
 #!/usr/bin/env tsx
 
-import '../server/config/loadEnv';
-import { db } from '../db';
+import '@server/config/loadEnv';
+import { db } from '@db';
 import { forumStructure, threads } from '../db/schema';
 import { eq, sql } from 'drizzle-orm';
 

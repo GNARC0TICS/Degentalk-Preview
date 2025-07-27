@@ -3,10 +3,10 @@
 import { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Bookmark } from 'lucide-react';
-import { cn } from '@app/utils/utils';
-import { apiRequest } from '@app/utils/queryClient';
-import { useAuth } from '@app/hooks/use-auth';
-import { useToast } from '@app/hooks/use-toast';
+import { cn } from '@/utils/utils';
+import { apiRequest } from '@/utils/queryClient';
+import { useAuth } from '@/hooks/use-auth';
+import { useToast } from '@/hooks/use-toast';
 import type { ThreadId } from '@shared/types/ids';
 
 interface BookmarkButtonProps {

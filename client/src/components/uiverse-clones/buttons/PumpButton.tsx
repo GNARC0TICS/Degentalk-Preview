@@ -1,5 +1,5 @@
 import React from 'react';
-import { cn } from '@app/utils/utils';
+import { cn } from '@/utils/utils';
 import './pump-button.css';
 
 interface PumpButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {

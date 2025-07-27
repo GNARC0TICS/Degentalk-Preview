@@ -1,15 +1,15 @@
 #!/usr/bin/env tsx
 
-import { db } from '../db';
+import { db } from '@db';
 import { users } from '../db/schema/user/users';
 import { eq } from 'drizzle-orm';
 import bcrypt from 'bcrypt';
-import { generateToken } from '../server/src/domains/auth/utils/jwt.utils';
+import { generateToken } from '@server/src/domains/auth/utils/jwt.utils';
 import { writeFileSync, readFileSync, mkdirSync, existsSync } from 'fs';
 import { dirname } from 'path';
 import chalk from 'chalk';
 import axios from 'axios';
-import type { UserId } from '../shared/types/ids';
+import type { UserId } from '@shared/types/ids';
 
 // Load environment
 import dotenv from 'dotenv';

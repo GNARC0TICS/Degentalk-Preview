@@ -13,6 +13,7 @@ export { useUserByUsername } from './use-user-by-username';
 // Feature-specific hooks
 export { useRainNotifications } from './use-rain-notifications';
 export { useDgtPurchase } from './useDgtPurchase'; // Fixed casing
+export { useCurrentForum } from './useCurrentForum';
 
 // Media hooks
 export { useImageUpload } from './use-image-upload';

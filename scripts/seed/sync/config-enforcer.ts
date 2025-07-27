@@ -1,7 +1,7 @@
-import { db } from '../../../db';
+import { db } from '@db';
 // import { logger } from '@api/core/logger'; // Logger not needed in seeding
 import { forumMap } from './config-stubs';
-import { economyConfig } from '../../../shared/economy/economy.config';
+import { economyConfig } from '@shared/economy/economy.config';
 import { featureFlags } from './config-stubs';
 import { themes } from './config-stubs';
 import * as schema from '../../../db/schema';

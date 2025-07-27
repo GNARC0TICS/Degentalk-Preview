@@ -1,23 +1,23 @@
 import React, { useState, useEffect } from 'react';
 // removed heavy server schema import
 import type { User } from '@shared/types/user.types';
-import { Button } from '@app/components/ui/button';
-import { Input } from '@app/components/ui/input';
-import { Switch } from '@app/components/ui/switch';
-import { Label } from '@app/components/ui/label';
-import { Card, CardContent } from '@app/components/ui/card';
-import { Separator } from '@app/components/ui/separator';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
+import { Card, CardContent } from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
 import { AlertCircle, Check, X } from 'lucide-react';
-import { Alert, AlertDescription } from '@app/components/ui/alert';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { PreferencesCard } from './PreferencesCard';
 import { PreferencesGroup } from './PreferencesGroup';
 import { PreferencesInput } from './PreferencesInput';
 import { PreferencesSelect } from './PreferencesSelect';
-import { useUserSettings } from '@app/hooks/preferences/useUserSettings';
+import { useUserSettings } from '@/hooks/preferences/useUserSettings';
 import {
 	useUpdateUserSettings,
 	useUpdatePassword
-} from '@app/hooks/preferences/useUpdateUserSettings';
+} from '@/hooks/preferences/useUpdateUserSettings';
 
 interface AccountPreferencesProps {
 	user: User;

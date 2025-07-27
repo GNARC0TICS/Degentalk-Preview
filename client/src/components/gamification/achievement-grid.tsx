@@ -5,15 +5,15 @@
  */
 
 import { useState, useMemo } from 'react';
-import { cn } from '@app/utils/utils';
+import { cn } from '@/utils/utils';
 import { AchievementCard } from './achievement-card';
-import { Card, CardContent, CardHeader, CardTitle } from '@app/components/ui/card';
-import { Button } from '@app/components/ui/button';
-import { Badge } from '@app/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@app/components/ui/tabs';
-import { Progress } from '@app/components/ui/progress';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Progress } from '@/components/ui/progress';
 import { Trophy, Filter, SortAsc, Sparkles, Target, CheckCircle2, Clock } from 'lucide-react';
-import type { UserAchievement } from '@app/features/gamification/services/gamification-api.service';
+import type { UserAchievement } from '@/features/gamification/services/gamification-api.service';
 
 interface AchievementGridProps {
 	achievements: UserAchievement[];

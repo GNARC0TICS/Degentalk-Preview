@@ -41,10 +41,12 @@ class ImportValidator {
   private setupPathMappings() {
     // Based on tsconfig.json path mappings
     this.pathMappings.set('@/', path.join(this.projectRoot, 'client/src/'));
-    this.pathMappings.set('@server/', path.join(this.projectRoot, 'server/src/'));
+    this.pathMappings.set('@server/', path.join(this.projectRoot, 'server/'));
     this.pathMappings.set('@shared/', path.join(this.projectRoot, 'shared/'));
     this.pathMappings.set('@db/', path.join(this.projectRoot, 'db/'));
     this.pathMappings.set('@scripts/', path.join(this.projectRoot, 'scripts/'));
+    this.pathMappings.set('@db', path.join(this.projectRoot, 'db/'));
+    this.pathMappings.set('@core/', path.join(this.projectRoot, 'server/src/core/'));
   }
 
   private resolveImportPath(importPath: string, fromFile: string): string | null {
@@ -123,6 +125,31 @@ class ImportValidator {
     return 'unknown';
   }
 
+  private checkBannedImports(importPath: string, filePath: string): string | null {
+    const context = this.getFileContext(filePath);
+    
+    // Check for banned patterns based on context
+    if (context === 'client') {
+      if (importPath.startsWith('@app/')) {
+        return 'Deprecated @app/ import - use @/ instead';
+      }
+      if (importPath.startsWith('@api/')) {
+        return 'Deprecated @api/ import - use @/ instead';
+      }
+    }
+    
+    if (context === 'server') {
+      if (importPath.startsWith('@api/')) {
+        return 'Deprecated @api/ import - use @/ instead';
+      }
+      if (importPath.startsWith('@server-core/')) {
+        return 'Deprecated @server-core/ import - use @core/ instead';
+      }
+    }
+    
+    return null;
+  }
+
   private extractImports(fileContent: string): Array<{ line: number; importPath: string }> {
     const imports: Array<{ line: number; importPath: string }> = [];
     const lines = fileContent.split('\n');
@@ -162,6 +189,18 @@ class ImportValidator {
       for (const { line, importPath } of imports) {
         // Skip node_modules
         if (!importPath.startsWith('.') && !importPath.includes('@')) continue;
+
+        // Check for banned imports
+        const bannedImport = this.checkBannedImports(importPath, filePath);
+        if (bannedImport) {
+          this.issues.push({
+            file: path.relative(this.projectRoot, filePath),
+            line,
+            importPath,
+            issue: bannedImport,
+            severity: 'error'
+          });
+        }
 
         const resolvedPath = this.resolveImportPath(importPath, filePath);
         

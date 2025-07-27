@@ -1,5 +1,5 @@
 import React from 'react';
-import type { EventLog } from '@app/features/activity/types/activity.types';
+import type { EventLog } from '@/features/activity/types/activity.types';
 
 interface ActivityItemProps {
 	activity: EventLog;

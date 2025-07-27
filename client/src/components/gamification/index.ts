@@ -35,4 +35,4 @@ export type {
 	LeaderboardEntry,
 	GamificationStats,
 	GamificationDashboard
-} from '@app/features/gamification/services/gamification-api.service';
+} from '@/features/gamification/services/gamification-api.service';

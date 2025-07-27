@@ -1,13 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Button } from '@app/components/ui/button';
-import { PumpButton } from '@app/components/uiverse-clones/buttons';
-import type { ButtonProps } from '@app/components/ui/button';
+import { Button } from '@/components/ui/button';
+import { PumpButton } from '@/components/uiverse-clones/buttons';
+import type { ButtonProps } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
-import { useAuth } from '@app/hooks/use-auth';
+import { useAuth } from '@/hooks/use-auth';
 import type { CategoryId } from '@shared/types/ids';
 
-// import { ROUTES } from '@app/constants/routes'; // ROUTES not used directly here
+// import { ROUTES } from '@/constants/routes'; // ROUTES not used directly here
 
 interface CreateThreadButtonProps extends ButtonProps {
 	forumSlug?: string;

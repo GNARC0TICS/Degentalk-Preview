@@ -8,7 +8,7 @@
 import { Router } from 'express'
 import type { Router as RouterType } from 'express';
 import { adminWalletController } from '../controllers/wallet.controller';
-import { requireAdmin } from '@api/middleware/auth.unified';
+import { requireAdmin } from '@middleware/auth.unified';
 
 const router: RouterType = Router();
 

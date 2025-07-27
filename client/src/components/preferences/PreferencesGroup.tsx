@@ -1,5 +1,5 @@
 import React from 'react';
-import { Separator } from '@app/components/ui/separator';
+import { Separator } from '@/components/ui/separator';
 
 interface SettingsGroupProps {
 	title?: string;

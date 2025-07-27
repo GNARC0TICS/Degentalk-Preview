@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button } from '@app/components/ui/button';
+import { Button } from '@/components/ui/button';
 import {
 	Wallet,
 	Bell,
@@ -14,10 +14,10 @@ import {
 	CheckCircle,
 	Award
 } from 'lucide-react';
-import { ScrollArea } from '@app/components/ui/scroll-area';
-import { cn } from '@app/utils/utils';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { cn } from '@/utils/utils';
 import { formatDistance } from 'date-fns';
-import { useNotifications } from '@app/hooks/use-notifications';
+import { useNotifications } from '@/hooks/use-notifications';
 
 interface NotificationPanelProps {}
 
@@ -35,8 +35,23 @@ const iconMap = {
 };
 
 export function NotificationPanel({}: NotificationPanelProps) {
-	const { isLoadingNotifications, notifications, notificationsError, refreshNotifications } =
-		useNotifications();
+	// TODO: Fix API endpoints - getPaginatedNotifications, messages, mentions, unread-count
+	// For now, use mock data to prevent component from failing
+	const mockNotifications = [
+		{
+			id: '1',
+			type: 'info' as const,
+			title: 'Notifications Coming Soon',
+			body: 'Notification system is being set up. Check back later!',
+			isRead: true,
+			createdAt: new Date().toISOString()
+		}
+	];
+
+	const isLoadingNotifications = false;
+	const notifications = mockNotifications;
+	const notificationsError = null;
+	const refreshNotifications = () => {};
 
 	const [isRefreshing, setIsRefreshing] = useState(false);
 

@@ -5,12 +5,12 @@
  */
 
 import React from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@app/components/ui/card';
-import { Badge } from '@app/components/ui/badge';
-import { Progress } from '@app/components/ui/progress';
-import { Alert, AlertDescription } from '@app/components/ui/alert';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { CheckCircle, AlertTriangle, XCircle, Heart, Clock, Lightbulb } from 'lucide-react';
-import type { SystemHealth } from '@app/features/admin/api/system-analytics.api';
+import type { SystemHealth } from '@/features/admin/api/system-analytics.api';
 
 interface SystemHealthCardProps {
 	health: Partial<SystemHealth>;

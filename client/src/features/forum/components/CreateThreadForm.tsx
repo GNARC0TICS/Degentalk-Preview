@@ -7,14 +7,14 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useNavigate } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { apiRequest } from '@app/utils/queryClient';
-import { useToast } from '@app/hooks/use-toast';
-import RichTextEditor from '@app/components/editor/rich-text-editor';
-import { useCanonicalAuth } from '@app/features/auth/useCanonicalAuth';
-import { usePrefixes, useCreateThread } from '@app/features/forum/hooks/useForumQueries';
-import type { CreateThreadParams } from '@app/features/forum/hooks/useForumQueries';
-import { PrefixBadge } from '@app/components/forum/prefix-badge';
-import { useDraft } from '@app/hooks/use-draft';
+import { apiRequest } from '@/utils/queryClient';
+import { useToast } from '@/hooks/use-toast';
+import RichTextEditor from '@/components/editor/rich-text-editor';
+import { useCanonicalAuth } from '@/features/auth/useCanonicalAuth';
+import { usePrefixes, useCreateThread } from '@/features/forum/hooks/useForumQueries';
+import type { CreateThreadParams } from '@/features/forum/hooks/useForumQueries';
+import { PrefixBadge } from '@/components/forum/prefix-badge';
+import { useDraft } from '@/hooks/use-draft';
 import { Clock, Save } from 'lucide-react';
 import {
 	Dialog,
@@ -23,7 +23,7 @@ import {
 	DialogFooter,
 	DialogHeader,
 	DialogTitle
-} from '@app/components/ui/dialog';
+} from '@/components/ui/dialog';
 import {
 	Form,
 	FormControl,
@@ -31,7 +31,7 @@ import {
 	FormItem,
 	FormLabel,
 	FormMessage
-} from '@app/components/ui/form';
+} from '@/components/ui/form';
 import {
 	Select,
 	SelectContent,
@@ -40,16 +40,16 @@ import {
 	SelectItem,
 	SelectTrigger,
 	SelectValue
-} from '@app/components/ui/select';
-import { Button } from '@app/components/ui/button';
-import { Input } from '@app/components/ui/input';
+} from '@/components/ui/select';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { Loader2, AlertTriangle } from 'lucide-react';
-import { Alert, AlertDescription } from '@app/components/ui/alert';
-import { TagInput } from '@app/components/forum/tag-input';
-import type { Tag, ThreadPrefix as Prefix } from '@app/types/forum';
-import { useForumStructure } from '@app/features/forum/contexts/ForumStructureContext';
-import type { MergedRules } from '@app/features/forum/contexts/ForumStructureContext';
-import { usePermission } from '@app/hooks/usePermission';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { TagInput } from '@/components/forum/tag-input';
+import type { Tag, ThreadPrefix as Prefix } from '@/types/forum';
+import { useForumStructure } from '@/features/forum/contexts/ForumStructureContext';
+import type { MergedRules } from '@/features/forum/contexts/ForumStructureContext';
+import { usePermission } from '@/hooks/usePermission';
 import type { DraftId, PrefixId } from '@shared/types/ids';
 import { isValidId, toId } from '@shared/utils/id';
 

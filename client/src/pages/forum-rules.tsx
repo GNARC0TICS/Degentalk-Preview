@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet';
 import { useQuery } from '@tanstack/react-query';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@app/components/ui/tabs';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
 	Card,
 	CardContent,
@@ -9,19 +9,19 @@ import {
 	CardFooter,
 	CardHeader,
 	CardTitle
-} from '@app/components/ui/card';
-import { Button } from '@app/components/ui/button';
-import { Checkbox } from '@app/components/ui/checkbox';
-import { Badge } from '@app/components/ui/badge';
-import { Alert, AlertDescription, AlertTitle } from '@app/components/ui/alert';
-import { Separator } from '@app/components/ui/separator';
+} from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Badge } from '@/components/ui/badge';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Separator } from '@/components/ui/separator';
 import { AlertCircle, AlertTriangle, Check, Info } from 'lucide-react';
-import { useToast } from '@app/hooks/use-toast';
-import { useAuth } from '@app/hooks/use-auth';
-import { apiRequest } from '@app/utils/queryClient';
-import { LoadingSpinner as Spinner } from '@app/components/ui/loader';
+import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/hooks/use-auth';
+import { apiRequest } from '@/utils/queryClient';
+import { LoadingSpinner as Spinner } from '@/components/ui/loader';
 import type { RuleId, UserId, EntityId } from '@shared/types/ids';
-import { logger } from '@app/lib/logger';
+import { logger } from '@/lib/logger';
 
 // Type definitions
 interface ForumRule {

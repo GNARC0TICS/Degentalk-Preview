@@ -1,34 +1,34 @@
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiRequest } from '@app/utils/api-request';
-import { useAuth } from '@app/hooks/use-auth';
-import { useWebSocket } from '@app/hooks/useWebSocket';
+import { apiRequest } from '@/utils/api-request';
+import { useAuth } from '@/hooks/use-auth';
+import { useWebSocket } from '@/hooks/useWebSocket';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { format, formatDistanceToNow } from 'date-fns';
 
 // UI Components
-import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@app/components/ui/card';
-import { Input } from '@app/components/ui/input';
-import { Button } from '@app/components/ui/button';
-import { Avatar, AvatarFallback, AvatarImage } from '@app/components/ui/avatar';
-import { Badge } from '@app/components/ui/badge';
-import { Skeleton } from '@app/components/ui/skeleton';
-import { ScrollArea } from '@app/components/ui/scroll-area';
-import { Separator } from '@app/components/ui/separator';
+import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
+import { Skeleton } from '@/components/ui/skeleton';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Separator } from '@/components/ui/separator';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '@app/components/ui/tooltip';
+} from '@/components/ui/tooltip';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@app/components/ui/dropdown-menu';
+} from '@/components/ui/dropdown-menu';
 import {
   Command,
   CommandDialog,
@@ -38,7 +38,7 @@ import {
   CommandItem,
   CommandList,
   CommandSeparator,
-} from '@app/components/ui/command';
+} from '@/components/ui/command';
 
 // Icons
 import {
@@ -70,10 +70,10 @@ import {
 import type { UserId, RoomId, MessageId } from '@shared/types/ids';
 
 // Components
-import RainButton from '@app/features/wallet/components/rain-button';
-import TipButton from '@app/features/wallet/components/tip-button';
+import RainButton from '@/features/wallet/components/rain-button';
+import TipButton from '@/features/wallet/components/tip-button';
 import { RainAnimation } from './RainAnimation';
-import { useToast } from '@app/hooks/use-toast';
+import { useToast } from '@/hooks/use-toast';
 
 interface ShoutboxUser {
   id: UserId;

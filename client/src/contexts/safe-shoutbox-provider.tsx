@@ -1,8 +1,8 @@
 import React, { ReactNode, useState, useEffect } from 'react';
 import { ShoutboxProvider } from './shoutbox-context';
 import { MockShoutboxProvider } from './mock-shoutbox-context';
-import { IS_PRODUCTION } from '@app/constants/env';
-import { logger } from '@app/lib/logger';
+import { IS_PRODUCTION } from '@/constants/env';
+import { logger } from '@/lib/logger';
 
 interface SafeShoutboxProviderProps {
 	children: ReactNode;

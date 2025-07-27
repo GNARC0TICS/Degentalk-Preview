@@ -10,7 +10,7 @@
  *   pnpm seed:enhanced --quick   # Quick mode (minimal data)
  */
 
-import '../../server/config/loadEnv';
+import '@server/config/loadEnv';
 import { runSeedOrchestration } from './orchestrator/seed-orchestrator';
 import chalk from 'chalk';
 

@@ -4,7 +4,7 @@
  */
 
 import React, { useState } from 'react';
-import { Button } from '@app/components/ui/button';
+import { Button } from '@/components/ui/button';
 
 export function ErrorBoundaryTest() {
   const [shouldThrow, setShouldThrow] = useState(false);

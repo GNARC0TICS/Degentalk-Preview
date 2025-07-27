@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import type { Router as RouterType } from 'express';
-import { requireAuth } from '@api/middleware/auth.unified';
+import { requireAuth } from '@middleware/auth.unified';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 import { logger } from '@core/logger';
 

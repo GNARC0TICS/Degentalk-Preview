@@ -1,12 +1,12 @@
 import React from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiRequest } from '@app/utils/queryClient';
-import { LoadingSpinner } from '@app/components/ui/loader';
-import { ErrorDisplay } from '@app/components/ui/error-display';
-import { Button } from '@app/components/ui/button';
-import { SafeTooltip } from '@app/components/ui/tooltip-utils';
-import { dictionaryApi } from '@app/features/dictionary/services/dictionaryApi';
+import { apiRequest } from '@/utils/queryClient';
+import { LoadingSpinner } from '@/components/ui/loader';
+import { ErrorDisplay } from '@/components/ui/error-display';
+import { Button } from '@/components/ui/button';
+import { SafeTooltip } from '@/components/ui/tooltip-utils';
+import { dictionaryApi } from '@/features/dictionary/services/dictionaryApi';
 import type { DictionaryEntryId } from '@shared/types/ids';
 import { dictionaryEntryIdToEntryId } from '@shared/utils/id-conversions';
 

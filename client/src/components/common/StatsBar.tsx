@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { brandConfig } from '@app/config/brand.config';
-import { cn } from '@app/utils/utils';
+import { brandConfig } from '@/config/brand.config';
+import { cn } from '@/utils/utils';
 
 export interface StatItem {
 	icon: React.ReactNode;

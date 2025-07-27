@@ -1,6 +1,6 @@
 import React from 'react';
 import { render as rtlRender, RenderOptions } from '@testing-library/react';
-import { RootProvider } from '@app/providers/root-provider';
+import { RootProvider } from '@/providers/root-provider';
 
 /**
  * AllProviders

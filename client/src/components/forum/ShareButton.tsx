@@ -1,6 +1,6 @@
 import type { ThreadId } from '@shared/types/ids';
 import React, { useState } from 'react';
-import { Button } from '@app/components/ui/button';
+import { Button } from '@/components/ui/button';
 import { Share2 } from 'lucide-react';
 
 interface ShareButtonProps {

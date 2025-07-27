@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { useAdminActivityFeed } from '@app/features/activity/hooks/useActivityFeed';
-import type { EventLog, EventLogFilters } from '@app/features/activity/services/activityApi';
+import { useAdminActivityFeed } from '@/features/activity/hooks/useActivityFeed';
+import type { EventLog, EventLogFilters } from '@/features/activity/services/activityApi';
 import { format } from 'date-fns';
 // TODO: Replace with actual auth hook when available
-// import { useAuth } from '@app/hooks/use-auth';
-import { AdminPageShell } from '@app/features/admin/layout/layout/AdminPageShell';
-import { Wide } from '@app/layout/primitives';
+// import { useAuth } from '@/hooks/use-auth';
+import { AdminPageShell } from '@/features/admin/layout/layout/AdminPageShell';
+import { Wide } from '@/layout/primitives';
 
 /**
  * Admin page for viewing all user activities

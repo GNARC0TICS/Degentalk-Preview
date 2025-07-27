@@ -1,9 +1,9 @@
 import React from 'react';
-import { cn } from '@app/utils/utils';
-import type { UserBadge } from '@app/hooks/useXP';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@app/components/ui/tooltip';
-import { Card, CardContent, CardHeader, CardTitle } from '@app/components/ui/card';
-import { Badge } from '@app/components/ui/badge';
+import { cn } from '@/utils/utils';
+import type { UserBadge } from '@/hooks/useXP';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { formatDistanceToNow } from 'date-fns';
 
 type BadgeShowcaseProps = {

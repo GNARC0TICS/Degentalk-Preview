@@ -1,19 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiRequest } from '@app/utils/queryClient';
-import { Button } from '@app/components/ui/button';
+import { apiRequest } from '@/utils/queryClient';
+import { Button } from '@/components/ui/button';
 import {
 	Select,
 	SelectContent,
 	SelectItem,
 	SelectTrigger,
 	SelectValue
-} from '@app/components/ui/select';
-import { useToast } from '@app/hooks/use-toast';
+} from '@/components/ui/select';
+import { useToast } from '@/hooks/use-toast';
 import { ArrowLeft, CheckCircle, XCircle, Gift } from 'lucide-react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@app/components/ui/tabs';
-import type { UserInventoryWithProduct, Product } from '@app/types/inventory';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import type { UserInventoryWithProduct, Product } from '@/types/inventory';
 import type { InventoryId } from '@shared/types/ids';
 
 export default function AdminUserInventoryPage() {

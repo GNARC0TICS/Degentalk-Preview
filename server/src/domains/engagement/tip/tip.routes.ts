@@ -9,9 +9,9 @@
 import express from 'express'
 import type { Router as RouterType } from 'express';
 import { tipController } from './tip.controller';
-import { authenticateJWT as requireAuth } from '@api/middleware/authenticate-jwt';
+import { authenticateJWT as requireAuth } from '@middleware/authenticate-jwt';
 import { isAdmin as requireAdmin } from '@domains/auth/middleware/auth.middleware';
-import { validateRequest } from '@api/middleware/validate-request';
+import { validateRequest } from '@middleware/validate-request';
 import { z } from 'zod';
 
 // Create the router

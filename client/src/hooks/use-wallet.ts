@@ -1,9 +1,9 @@
 import { useState, useMemo } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { walletApiService } from '@app/features/wallet/services/wallet-api.service';
-import { apiRequest } from '@app/utils/api-request';
-import { useToast } from '@app/hooks/use-toast';
-import { formatDgt, parseDgt, formatUsd } from '@app/utils/format';
+import { walletApiService } from '@/features/wallet/services/wallet-api.service';
+import { apiRequest } from '@/utils/api-request';
+import { useToast } from '@/hooks/use-toast';
+import { formatDgt, parseDgt, formatUsd } from '@/utils/format';
 
 // Import types from wallet API service
 import type {
@@ -11,9 +11,9 @@ import type {
 	CryptoBalance,
 	Transaction,
 	DepositAddress
-} from '@app/features/wallet/services/wallet-api.service';
+} from '@/features/wallet/services/wallet-api.service';
 import type { UserId } from '@shared/types/ids';
-import { logger } from '@app/lib/logger';
+import { logger } from '@/lib/logger';
 
 export function useWallet() {
 	const queryClient = useQueryClient();

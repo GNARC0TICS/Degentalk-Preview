@@ -1,9 +1,9 @@
-import { db } from '../../../db';
+import { db } from '@db';
 // import { logger } from '@api/core/logger'; // Logger not needed in seeding
 import * as schema from '../../../db/schema';
 import { eq, and, gte, lte, sql } from 'drizzle-orm';
-import type { UserId } from '../../../shared/types/ids';
-import { economyConfig } from '../../../shared/economy/economy.config';
+import type { UserId } from '@shared/types/ids';
+import { economyConfig } from '@shared/economy/economy.config';
 import { getSeedConfig } from '../config/seed.config';
 import { personas } from '../config/personas.config';
 import chalk from 'chalk';

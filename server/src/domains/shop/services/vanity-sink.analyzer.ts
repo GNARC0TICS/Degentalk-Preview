@@ -10,7 +10,7 @@ import { logger, LogAction } from '@core/logger';
 import { db } from '@db';
 import { transactions, userInventory, products } from '@schema';
 import { eq, and, gte, lte, desc, sql, inArray } from 'drizzle-orm';
-import { reportErrorServer } from '@server/lib/report-error';
+import { reportErrorServer } from '../../../../lib/report-error';
 import type {
 	VanitySinkMetrics,
 	VanitySinkEvent,

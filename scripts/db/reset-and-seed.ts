@@ -1,4 +1,4 @@
-import '../../server/config/loadEnv';
+import '@server/config/loadEnv';
 import { db } from '@degentalk/db';
 import { logSeed } from './utils/seedUtils';
 import { seedXpActions } from './seed-xp-actions';

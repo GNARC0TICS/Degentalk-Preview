@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import type { ActiveUser } from '@app/components/users/ActiveMembersWidget';
+import type { ActiveUser } from '@/components/users/ActiveMembersWidget';
 import { getActiveUsers } from '../services';
 
 /**

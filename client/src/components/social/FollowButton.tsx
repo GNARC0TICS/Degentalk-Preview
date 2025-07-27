@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { apiRequest } from '@app/utils/queryClient';
-import { Button } from '@app/components/ui/button';
+import { apiRequest } from '@/utils/queryClient';
+import { Button } from '@/components/ui/button';
 import { Eye, EyeOff, Loader2, UserPlus, UserCheck } from 'lucide-react';
-import { useToast } from '@app/hooks/use-toast';
-import { useAuth } from '@app/hooks/use-auth';
-import { cn } from '@app/utils/utils';
+import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/hooks/use-auth';
+import { cn } from '@/utils/utils';
 
 interface FollowButtonProps {
 	userId: string;

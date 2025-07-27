@@ -5,7 +5,7 @@
  * (dev/staging only, table assumed empty; no data preserved).
  */
 
-import { db } from '../../db';
+import { db } from '@db';
 import { sql } from 'drizzle-orm';
 import chalk from 'chalk';
 

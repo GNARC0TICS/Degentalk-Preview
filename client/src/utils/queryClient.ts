@@ -9,7 +9,7 @@ import {
 	apiPut,
 	apiPatch,
 	apiDelete
-} from '@app/utils/api-request';
+} from '@/utils/api-request';
 
 export { apiPost, apiPut, apiPatch, apiDelete };
 
@@ -93,7 +93,7 @@ function checkForXpGain(data: any) {
 }
 
 // Re-export the canonical QueryClient instance to avoid duplicate caches
-export { queryClient } from '@app/core/queryClient';
+export { queryClient } from '@/core/queryClient';
 
 // XP gain event listener setup
 export function setupXpGainListener(

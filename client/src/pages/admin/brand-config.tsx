@@ -1,8 +1,8 @@
 import React from 'react';
-import { Card, CardHeader, CardTitle, CardContent } from '@app/components/ui';
-import { VisualJsonTabs } from '@app/features/admin/components/VisualJsonTabs';
-import { useJsonConfig } from '@app/hooks/useJsonConfig';
-import { brandSchema, type BrandConfig } from '@app/schemas/brand.schema';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui';
+import { VisualJsonTabs } from '@/features/admin/components/VisualJsonTabs';
+import { useJsonConfig } from '@/hooks/useJsonConfig';
+import { brandSchema, type BrandConfig } from '@/schemas/brand.schema';
 
 // Temporary visual builder (Phase-1) – simply displays JSON preview. Enhance later.
 const BrandVisualBuilder: React.FC<{

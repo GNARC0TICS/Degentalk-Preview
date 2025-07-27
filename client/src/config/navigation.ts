@@ -1,5 +1,5 @@
 import React from 'react';
-import { IconRenderer } from '@app/components/icons/iconRenderer';
+import { IconRenderer } from '@/components/icons/iconRenderer';
 
 // Navigation item configuration interface
 export interface NavItemConfig {

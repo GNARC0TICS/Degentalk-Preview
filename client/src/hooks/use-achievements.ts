@@ -5,10 +5,10 @@
  */
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { achievementApi, type AchievementFilters, type Achievement } from '@app/utils/api/achievements';
+import { achievementApi, type AchievementFilters, type Achievement } from '@/utils/api/achievements';
 import { useAuth } from './use-auth';
 import { toast } from 'sonner';
-import type { ApiErrorData } from '@app/types/core.types';
+import type { ApiErrorData } from '@/types/core.types';
 import type { AchievementId } from '@shared/types/ids';
 
 /**

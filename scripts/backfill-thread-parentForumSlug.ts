@@ -59,7 +59,7 @@ import type { ConversationId } from 'shared/types/ids';
 import type { ReportId } from 'shared/types/ids';
 import type { ReporterId } from 'shared/types/ids';
 import type { AdminId } from 'shared/types/ids';
-import { db } from '../db'; // Adjust path to your Drizzle client
+import { db } from '@db'; // Adjust path to your Drizzle client
 import { threads } from '../db/schema/forum/threads'; // Adjust path
 import { forumCategories } from '../db/schema/forum/categories'; // Adjust path
 import { forumMap } from '@config/forumMap';

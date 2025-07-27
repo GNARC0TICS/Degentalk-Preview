@@ -1,15 +1,15 @@
 #!/usr/bin/env tsx
 
-import { db } from '../../db';
+import { db } from '@db';
 import { users } from '../../db/schema/user/users';
 import bcrypt from 'bcrypt';
 import { sql } from 'drizzle-orm';
-import { logger } from '../../server/src/core/logger';
-import { generateToken } from '../../server/src/domains/auth/utils/jwt.utils';
+import { logger } from '@server/src/core/logger';
+import { generateToken } from '@server/src/domains/auth/utils/jwt.utils';
 import { writeFileSync, mkdirSync } from 'fs';
 import { join, dirname } from 'path';
 import chalk from 'chalk';
-import type { UserId } from '../../shared/types/ids';
+import type { UserId } from '@shared/types/ids';
 
 // Load environment
 import dotenv from 'dotenv';

@@ -1,4 +1,4 @@
-import { RuntimeBrandConfig, BrandConfigUpdate } from '@app/types/compat/brand';
+import { RuntimeBrandConfig, BrandConfigUpdate } from '@/types/compat/brand';
 
 export const brandConfigApi = {
 	async getConfig(): Promise<RuntimeBrandConfig> {

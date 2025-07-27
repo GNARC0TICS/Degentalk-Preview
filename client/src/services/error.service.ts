@@ -4,7 +4,7 @@
  */
 
 import { toast } from 'sonner';
-import { captureException, trackEvent } from '@app/lib/sentry';
+import { captureException, trackEvent } from '@/lib/sentry';
 
 /**
  * Unified error reporter that logs locally and sends to Sentry

@@ -2,7 +2,7 @@ import { Router } from 'express'
 import type { Router as RouterType } from 'express';
 import { ProfileStatsController } from './profile-stats.controller';
 import { createCustomRateLimiter } from '@core/services/rate-limit.service';
-import { optionalAuth } from '@api/middleware/auth.unified';
+import { optionalAuth } from '@middleware/auth.unified';
 
 const router: RouterType = Router();
 

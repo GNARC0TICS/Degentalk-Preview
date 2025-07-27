@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
 // Assuming admin-layout.tsx is in pages/admin/
-import { Button } from '@app/components/ui/button';
+import { Button } from '@/components/ui/button';
 import { PlusCircle, Edit, Trash2 } from 'lucide-react';
-import { apiRequest } from '@app/utils/queryClient'; // As per api-client-pattern.mdc
+import { apiRequest } from '@/utils/queryClient'; // As per api-client-pattern.mdc
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
-import { AdminPageShell } from '@app/features/admin/layout/layout/AdminPageShell';
-import { AdminDataTable } from '@app/features/admin/components/common/AdminDataTable';
-import type { ColumnDef } from '@app/features/admin/layout/layout/EntityTable';
-import { Badge } from '@app/components/ui/badge';
+import { AdminPageShell } from '@/features/admin/layout/layout/AdminPageShell';
+import { AdminDataTable } from '@/features/admin/components/common/AdminDataTable';
+import type { ColumnDef } from '@/features/admin/layout/layout/EntityTable';
+import { Badge } from '@/components/ui/badge';
 import type { UserId } from '@shared/types/ids';
-import { logger } from '@app/lib/logger';
+import { logger } from '@/lib/logger';
 
 // Local Product shape (minimal) – avoids server schema coupling
 interface Product {

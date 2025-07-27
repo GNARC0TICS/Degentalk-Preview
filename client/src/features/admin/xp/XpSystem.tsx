@@ -13,27 +13,27 @@ import {
 	Users,
 	Timer
 } from 'lucide-react';
-import { useToast } from '@app/hooks/use-toast';
-import { Button } from '@app/components/ui/button';
-import { Badge as UiBadge } from '@app/components/ui/badge';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@app/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@app/components/ui/tabs';
-import { apiRequest } from '@app/utils/queryClient';
+import { useToast } from '@/hooks/use-toast';
+import { Button } from '@/components/ui/button';
+import { Badge as UiBadge } from '@/components/ui/badge';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { apiRequest } from '@/utils/queryClient';
 
-import { AdminPageShell } from '@app/features/admin/layout/layout/AdminPageShell';
-import { AdminDataTable } from '@app/features/admin/components/common/AdminDataTable';
+import { AdminPageShell } from '@/features/admin/layout/layout/AdminPageShell';
+import { AdminDataTable } from '@/features/admin/components/common/AdminDataTable';
 import {
 	LevelFormDialogComponent,
 	DeleteLevelConfirmationDialog
-} from '@app/features/admin/components/forms/xp/LevelFormDialogs';
-import type { Level, LevelFormData } from '@app/features/admin/components/forms/xp/LevelFormDialogs';
-import ProtectedAdminRoute from '@app/features/admin/components/protected-admin-route';
-import { useAdminModuleV2 } from '@app/hooks/use-admin-modules';
-import { useXpActions, useUpdateXpAction, type XpAction } from '@app/features/admin/services/xpActionsService';
+} from '@/features/admin/components/forms/xp/LevelFormDialogs';
+import type { Level, LevelFormData } from '@/features/admin/components/forms/xp/LevelFormDialogs';
+import ProtectedAdminRoute from '@/features/admin/components/protected-admin-route';
+import { useAdminModuleV2 } from '@/hooks/use-admin-modules';
+import { useXpActions, useUpdateXpAction, type XpAction } from '@/features/admin/services/xpActionsService';
 import {
 	useXpReputationSettings
 	// useUpdateXpReputationSettings
-} from '@app/features/admin/services/xpReputationService';
+} from '@/features/admin/services/xpReputationService';
 
 // API response structure
 interface LevelsApiResponse {

@@ -1,8 +1,8 @@
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@app/components/ui/card';
-import { Button } from '@app/components/ui/button';
-import { Badge } from '@app/components/ui/badge';
-import { useContentFeedState } from '@app/contexts/content-feed-context';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { useContentFeedState } from '@/contexts/content-feed-context';
 import {
 	TrendingUp,
 	Clock,
@@ -14,7 +14,7 @@ import {
 	Settings,
 	ChevronRight
 } from 'lucide-react';
-import { cn } from '@app/utils/utils';
+import { cn } from '@/utils/utils';
 
 interface NavigationItem {
 	id: string;

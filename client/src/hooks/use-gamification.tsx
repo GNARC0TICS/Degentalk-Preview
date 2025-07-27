@@ -9,9 +9,9 @@
  */
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { gamificationApi } from '@app/features/gamification/services/gamification-api.service';
-import { useAuth } from '@app/hooks/use-auth';
-import { useToast } from '@app/hooks/use-toast';
+import { gamificationApi } from '@/features/gamification/services/gamification-api.service';
+import { useAuth } from '@/hooks/use-auth';
+import { useToast } from '@/hooks/use-toast';
 import type { MissionId } from '@shared/types/ids';
 import { toId } from '@shared/types/index';
 

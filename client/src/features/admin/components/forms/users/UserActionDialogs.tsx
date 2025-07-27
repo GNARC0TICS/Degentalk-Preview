@@ -8,7 +8,7 @@ import {
 	AlertDialogFooter,
 	AlertDialogHeader,
 	AlertDialogTitle
-} from '@app/components/ui/alert-dialog';
+} from '@/components/ui/alert-dialog';
 import {
 	Dialog,
 	DialogContent,
@@ -16,16 +16,16 @@ import {
 	DialogTitle,
 	DialogDescription,
 	DialogFooter
-} from '@app/components/ui/dialog';
-import { Button } from '@app/components/ui/button';
-import { Label } from '@app/components/ui/label';
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
 import {
 	Select,
 	SelectContent,
 	SelectItem,
 	SelectTrigger,
 	SelectValue
-} from '@app/components/ui/select'; // Assuming Select is available
+} from '@/components/ui/select'; // Assuming Select is available
 import type { UserId } from '@shared/types/ids';
 
 // Define a basic User type for props, replace with actual User type

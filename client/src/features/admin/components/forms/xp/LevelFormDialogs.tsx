@@ -6,21 +6,21 @@ import {
 	DialogFooter,
 	DialogHeader,
 	DialogTitle
-} from '@app/components/ui/dialog';
-import { Input } from '@app/components/ui/input';
-import { Button } from '@app/components/ui/button';
-import { Label } from '@app/components/ui/label';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@app/components/ui/tabs';
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import {
 	Select,
 	SelectTrigger,
 	SelectContent,
 	SelectItem,
 	SelectValue
-} from '@app/components/ui/select';
-import { Textarea } from '@app/components/ui/textarea';
-import { TitleMediaInput } from '@app/features/admin/components/forms/xp/TitleMediaInput';
-import { UnlockMultiSelect } from '@app/features/admin/components/inputs/UnlockMultiSelect';
+} from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
+import { TitleMediaInput } from '@/features/admin/components/forms/xp/TitleMediaInput';
+import { UnlockMultiSelect } from '@/features/admin/components/inputs/UnlockMultiSelect';
 import type { LevelId } from '@shared/types/ids';
 
 // Assuming Level and LevelFormData types might be needed by the page as well

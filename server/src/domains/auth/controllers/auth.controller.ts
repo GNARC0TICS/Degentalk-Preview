@@ -13,7 +13,7 @@ import {
 	storeTempDevMetadata,
 	verifyEmailToken
 } from '@domains/auth/services/auth.service';
-import { isDevMode } from '@api/utils/environment';
+import { isDevMode } from '@utils/environment';
 import { walletService } from '@domains/wallet';
 import { walletConfig } from '@shared/config/wallet.config';
 import { UserTransformer } from '@domains/users/transformers/user.transformer';

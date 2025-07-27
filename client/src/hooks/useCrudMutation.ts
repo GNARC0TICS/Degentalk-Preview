@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import type { QueryKey } from '@tanstack/react-query'; // Type-only import
-import { useToast } from '@app/hooks/use-toast'; // Assuming this is your custom toast hook
+import { useToast } from '@/hooks/use-toast'; // Assuming this is your custom toast hook
 
 interface CrudMutationOptions<TData, TError, TVariables, TContext> {
 	mutationFn: (variables: TVariables) => Promise<TData>;

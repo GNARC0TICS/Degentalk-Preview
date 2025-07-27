@@ -1,6 +1,6 @@
 import React from 'react';
-import { FollowingList } from '@app/components/social/FollowingList';
-import type { ProfileData } from '@app/types/profile';
+import { FollowingList } from '@/components/social/FollowingList';
+import type { ProfileData } from '@/types/profile';
 
 interface WhaleWatchTabProps {
 	profile: ProfileData;

@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
-import { Dialog, DialogContent, DialogFooter, DialogHeader } from '@app/components/ui/dialog';
-import { Input } from '@app/components/ui/input';
-import { Textarea } from '@app/components/ui/textarea';
-import { Button } from '@app/components/ui/button';
+import { Dialog, DialogContent, DialogFooter, DialogHeader } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Button } from '@/components/ui/button';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { dictionaryApi } from '../services/dictionaryApi';
 import { z } from 'zod';
-import { generateSlug } from '@app/utils/generateSlug';
-import { useToast } from '@app/hooks/use-toast';
-import { Label } from '@app/components/ui/label';
+import { generateSlug } from '@/utils/generateSlug';
+import { useToast } from '@/hooks/use-toast';
+import { Label } from '@/components/ui/label';
 
 const FormSchema = z.object({
 	word: z.string().min(2).max(50),

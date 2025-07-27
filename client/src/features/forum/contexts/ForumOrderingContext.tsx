@@ -2,7 +2,7 @@ import React, { createContext, useContext, useMemo } from 'react';
 import type { ReactNode } from 'react';
 import { useForums } from './ForumStructureContext';
 import type { MergedForum } from './ForumStructureContext';
-import { featureFlags } from '@app/config/featureFlags';
+import { featureFlags } from '@/config/featureFlags';
 
 interface ForumOrderingContextValue {
 	orderedZones: MergedForum[];

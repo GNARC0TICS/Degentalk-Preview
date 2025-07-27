@@ -2,19 +2,19 @@ import React, { useState, memo, useCallback } from 'react';
 import { Navigate, useParams, useNavigate } from 'react-router-dom';
 import { Filter } from 'lucide-react';
 
-import { Button } from '@app/components/ui/button';
-import { useForumStructure } from '@app/features/forum/contexts/ForumStructureContext';
-import { useForumFilters } from '@app/hooks/useForumFilters';
-import { Wide } from '@app/layout/primitives';
-import { ThreadFilters } from '@app/components/forum/ThreadFilters';
+import { Button } from '@/components/ui/button';
+import { useForumStructure } from '@/features/forum/contexts/ForumStructureContext';
+import { useForumFilters } from '@/hooks/useForumFilters';
+import { Wide } from '@/layout/primitives';
+import { ThreadFilters } from '@/components/forum/ThreadFilters';
 import {
 	ForumBreadcrumbs,
 	createForumBreadcrumbs
-} from '@app/components/navigation/ForumBreadcrumbs';
-import ThreadList from '@app/features/forum/components/ThreadList';
-import { DynamicSidebar } from '@app/components/forum/sidebar';
-import { ForumHeader } from '@app/features/forum/components/ForumHeader';
-import { MyBBThreadList } from '@app/components/forum/MyBBThreadList';
+} from '@/components/navigation/ForumBreadcrumbs';
+import ThreadList from '@/features/forum/components/ThreadList';
+import { DynamicSidebar } from '@/components/forum/sidebar';
+import { ForumHeader } from '@/features/forum/components/ForumHeader';
+import { MyBBThreadList } from '@/components/forum/MyBBThreadList';
 import { ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import type { ForumId, StructureId, UserId, ThreadId } from '@shared/types/ids';

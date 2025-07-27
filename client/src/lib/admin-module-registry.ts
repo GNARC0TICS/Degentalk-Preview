@@ -1,6 +1,6 @@
 import { adminModulesV2, ADMIN_PERMISSIONS, AdminModuleV2 } from '../config/admin.config.js';
 import { enrichAdminModules } from './admin-module-transformer';
-import { logger } from '@app/lib/logger';
+import { logger } from '@/lib/logger';
 
 // Simple User interface for admin module registry
 interface User {

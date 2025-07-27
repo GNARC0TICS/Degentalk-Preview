@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { apiRequest } from '@app/utils/queryClient';
+import { apiRequest } from '@/utils/queryClient';
 
 // This should align with the DTO from the backend
 interface DgtAnalytics {

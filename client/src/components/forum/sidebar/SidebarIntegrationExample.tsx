@@ -11,9 +11,9 @@ import { DynamicSidebar } from './DynamicSidebar';
 import type { StructureId } from '@shared/types/ids';
 
 // BEFORE: Manual widget management
-// import { QuickStats } from '@app/components/forum/QuickStats';
-// import { HotTopics } from '@app/components/forum/HotTopics';
-// import { RecentActivity } from '@app/components/forum/RecentActivity';
+// import { QuickStats } from '@/components/forum/QuickStats';
+// import { HotTopics } from '@/components/forum/HotTopics';
+// import { RecentActivity } from '@/components/forum/RecentActivity';
 
 // const OldSidebar = ({ structureId }: { structureId?: number }) => (
 //   <aside className="space-y-6">

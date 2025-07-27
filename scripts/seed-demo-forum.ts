@@ -5,11 +5,11 @@
  * Creates realistic forum data for visual demo
  */
 
-import '../server/config/loadEnv';
-import { db } from '../db';
+import '@server/config/loadEnv';
+import { db } from '@db';
 import * as schema from '../db/schema';
 import { eq } from 'drizzle-orm';
-import type { UserId, ForumId, ThreadId } from '../shared/types/ids';
+import type { UserId, ForumId, ThreadId } from '@shared/types/ids';
 import chalk from 'chalk';
 
 async function seedDemoData() {

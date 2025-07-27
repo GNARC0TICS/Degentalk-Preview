@@ -1,9 +1,9 @@
 import React, { createContext, useContext, ReactNode, useState, useEffect } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { apiRequest } from '@app/utils/queryClient';
-import type { Transaction } from '@app/types/wallet';
-import type { WalletBalances } from '@app/types/wallet';
-import { logger } from '@app/lib/logger';
+import { apiRequest } from '@/utils/queryClient';
+import type { Transaction } from '@/types/wallet';
+import type { WalletBalances } from '@/types/wallet';
+import { logger } from '@/lib/logger';
 
 // Define the wallet context state type
 interface WalletContextType {

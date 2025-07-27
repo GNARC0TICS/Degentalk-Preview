@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import type { ShopItem } from '@app/hooks/use-shop-items';
-import { useShopItemOwnership } from '@app/hooks/use-shop-ownership';
-import { useAuth } from '@app/hooks/use-auth';
+import type { ShopItem } from '@/hooks/use-shop-items';
+import { useShopItemOwnership } from '@/hooks/use-shop-ownership';
+import { useAuth } from '@/hooks/use-auth';
 import {
 	BadgeCheck,
 	Lock,
@@ -14,13 +14,13 @@ import {
 	Star,
 	LogIn
 } from 'lucide-react';
-import { Badge } from '@app/components/ui/badge';
-import { Button } from '@app/components/ui/button';
-import { Card, CardContent, CardFooter } from '@app/components/ui/card';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@app/components/ui/tooltip';
-import { useToast } from '@app/hooks/use-toast';
-import { LoadingSpinner } from '@app/components/ui/loader';
-import { logger } from '@app/lib/logger';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardFooter } from '@/components/ui/card';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { useToast } from '@/hooks/use-toast';
+import { LoadingSpinner } from '@/components/ui/loader';
+import { logger } from '@/lib/logger';
 
 interface ShopItemCardProps {
 	item: ShopItem;

@@ -1,21 +1,21 @@
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { apiRequest } from '@app/utils/api-request';
-import { useAuth } from '@app/hooks/use-auth';
+import { apiRequest } from '@/utils/api-request';
+import { useAuth } from '@/hooks/use-auth';
 import { motion, AnimatePresence } from 'framer-motion';
 
 // UI Components
-import { Button } from '@app/components/ui/button';
-import { ScrollArea } from '@app/components/ui/scroll-area';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@app/components/ui/tabs';
+import { Button } from '@/components/ui/button';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '@app/components/ui/tooltip';
-import { Badge } from '@app/components/ui/badge';
-import { Skeleton } from '@app/components/ui/skeleton';
+} from '@/components/ui/tooltip';
+import { Badge } from '@/components/ui/badge';
+import { Skeleton } from '@/components/ui/skeleton';
 
 // Icons
 import { Smile, Lock, Sparkles, Star, Zap, Trophy, Diamond } from 'lucide-react';

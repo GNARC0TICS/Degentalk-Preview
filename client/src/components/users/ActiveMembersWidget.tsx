@@ -8,12 +8,12 @@ import {
 	CardTitle,
 	CardDescription,
 	CardFooter
-} from '@app/components/ui/card';
-import { Avatar, AvatarFallback, AvatarImage } from '@app/components/ui/avatar';
+} from '@/components/ui/card';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Users, Activity, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { createWidgetQueryKey } from '@app/hooks/widgetData';
-import { WidgetSkeleton } from '@app/components/ui/widget-skeleton';
+import { createWidgetQueryKey } from '@/hooks/widgetData';
+import { WidgetSkeleton } from '@/components/ui/widget-skeleton';
 import type { UserId } from '@shared/types/ids';
 
 export interface ActiveUser {

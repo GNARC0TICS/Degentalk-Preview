@@ -1,5 +1,5 @@
-import { useAuth } from '@app/hooks/use-auth';
-import type { CanonicalUser } from '@app/types/canonical.types';
+import { useAuth } from '@/hooks/use-auth';
+import type { CanonicalUser } from '@/types/canonical.types';
 import type { User } from '@shared/types/user.types';
 
 /**

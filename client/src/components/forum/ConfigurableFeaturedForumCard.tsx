@@ -15,15 +15,15 @@ import {
 	Target
 } from 'lucide-react';
 
-import { Card, CardContent, CardFooter, CardHeader } from '@app/components/ui/card';
-import { Badge } from '@app/components/ui/badge';
-import { Button } from '@app/components/ui/button';
-import { Avatar, AvatarFallback, AvatarImage } from '@app/components/ui/avatar';
-import { cn } from '@app/utils/utils';
-import { useUIConfig, buildResponsiveClasses } from '@app/contexts/UIConfigContext';
-import { SafeImage } from '@app/components/ui/safe-image';
-import { animationConfig } from '@app/config/animation.config';
-import { getForumTheme } from '@shared/config/forumThemes.config';
+import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { cn } from '@/utils/utils';
+import { useUIConfig, buildResponsiveClasses } from '@/contexts/UIConfigContext';
+import { SafeImage } from '@/components/ui/safe-image';
+import { animationConfig } from '@/config/animation.config';
+// Theme is now applied via useTheme hook in RootLayout
 import XpBoostBadge from './XpBoostBadge';
 
 export interface ConfigurableFeaturedForumCardProps {
@@ -94,8 +94,9 @@ const accentColorMap: Record<string, string> = {
 };
 
 const getForumThemeVars = (colorTheme: string) => {
-	const theme = getForumTheme(colorTheme);
-	const accentColor = accentColorMap[theme.accent] || '#a1a1aa';
+	// Theme is now handled by the theme system
+	// For now, return default theme vars
+	const accentColor = '#a1a1aa'; // Default zinc-400
 
 	return {
 		'--forum-accent': accentColor,
@@ -123,7 +124,8 @@ const ConfigurableFeaturedForumCard = memo(
 		const { cards } = components;
 
 		// Use consolidated theme configuration
-		const theme = getForumTheme(forum.colorTheme);
+		// Theme is handled by theme system
+		const theme = { icon: 'MessageSquare' }; // Default icon
 
 		// Map string icon names to React components
 		const iconMap: Record<string, React.ComponentType<any>> = {

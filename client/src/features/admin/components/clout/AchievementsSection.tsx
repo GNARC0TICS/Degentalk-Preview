@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@app/components/ui/card';
-import { Button } from '@app/components/ui/button';
-import { Badge } from '@app/components/ui/badge';
-import { Input } from '@app/components/ui/input';
-import { Textarea } from '@app/components/ui/textarea';
-import { Switch } from '@app/components/ui/switch';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Switch } from '@/components/ui/switch';
 import {
 	Table,
 	TableBody,
@@ -13,7 +13,7 @@ import {
 	TableHead,
 	TableHeader,
 	TableRow
-} from '@app/components/ui/table';
+} from '@/components/ui/table';
 import {
 	Dialog,
 	DialogContent,
@@ -21,7 +21,7 @@ import {
 	DialogFooter,
 	DialogHeader,
 	DialogTitle
-} from '@app/components/ui/dialog';
+} from '@/components/ui/dialog';
 import {
 	Form,
 	FormControl,
@@ -30,14 +30,14 @@ import {
 	FormItem,
 	FormLabel,
 	FormMessage
-} from '@app/components/ui/form';
+} from '@/components/ui/form';
 import {
 	Select,
 	SelectContent,
 	SelectItem,
 	SelectTrigger,
 	SelectValue
-} from '@app/components/ui/select';
+} from '@/components/ui/select';
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -45,7 +45,7 @@ import {
 	DropdownMenuLabel,
 	DropdownMenuSeparator,
 	DropdownMenuTrigger
-} from '@app/components/ui/dropdown-menu';
+} from '@/components/ui/dropdown-menu';
 import {
 	Trophy,
 	Plus,
@@ -61,8 +61,8 @@ import {
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { useToast } from '@app/hooks/use-toast';
-import { apiRequest } from '@app/utils/api-request';
+import { useToast } from '@/hooks/use-toast';
+import { apiRequest } from '@/utils/api-request';
 import type { ReputationAchievement } from '@shared/types/entities/reputation.types';
 import type { AchievementId } from '@shared/types/ids';
 

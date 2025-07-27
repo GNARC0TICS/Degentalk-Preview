@@ -19,30 +19,30 @@ import {
 	Star
 } from 'lucide-react';
 
-import { Button } from '@app/components/ui/button';
-import { Badge } from '@app/components/ui/badge';
-import { Input } from '@app/components/ui/input';
-import { Label } from '@app/components/ui/label';
-import { Switch } from '@app/components/ui/switch';
-import { Slider } from '@app/components/ui/slider';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
+import { Slider } from '@/components/ui/slider';
 import {
 	Select,
 	SelectContent,
 	SelectItem,
 	SelectTrigger,
 	SelectValue
-} from '@app/components/ui/select';
-import { Popover, PopoverContent, PopoverTrigger } from '@app/components/ui/popover';
+} from '@/components/ui/select';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import {
 	Command,
 	CommandEmpty,
 	CommandGroup,
 	CommandInput,
 	CommandItem
-} from '@app/components/ui/command';
-import { cn } from '@app/utils/utils';
-import { useBreakpoint } from '@app/hooks/useMediaQuery';
-import { useLocalStorage } from '@app/hooks/use-local-storage';
+} from '@/components/ui/command';
+import { cn } from '@/utils/utils';
+import { useBreakpoint } from '@/hooks/useMediaQuery';
+import { useLocalStorage } from '@/hooks/use-local-storage';
 import type { PrefixId, EntityId } from '@shared/types/ids';
 
 export interface ThreadFiltersState {

@@ -6,7 +6,7 @@
  */
 
 import type { ReactNode } from 'react';
-import { cn } from '@app/utils/utils';
+import { cn } from '@/utils/utils';
 
 interface AdminThemeProviderProps {
 	children: ReactNode;

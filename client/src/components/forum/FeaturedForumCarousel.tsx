@@ -1,12 +1,12 @@
 import React from 'react';
-import { cn } from '@app/utils/utils';
+import { cn } from '@/utils/utils';
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-} from '@app/components/ui/carousel';
+} from '@/components/ui/carousel';
 import { ConfigurableFeaturedForumCard, type ConfigurableFeaturedForumCardProps } from './ConfigurableFeaturedForumCard';
 import Autoplay from 'embla-carousel-autoplay';
 

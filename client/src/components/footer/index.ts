@@ -14,5 +14,5 @@ export {
 	getResourcesSection,
 	getCommunitySection,
 	getLegalSection
-} from '@app/config/footer-navigation';
-export type { FooterNavigationSection, FooterLink } from '@app/config/footer-navigation';
+} from '@/config/footer-navigation';
+export type { FooterNavigationSection, FooterLink } from '@/config/footer-navigation';

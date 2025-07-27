@@ -1,14 +1,14 @@
 import React from 'react';
 import type { User } from '@shared/types/user.types';
-import { useUserReferrals } from '@app/features/users/hooks/useUserReferrals';
+import { useUserReferrals } from '@/features/users/hooks/useUserReferrals';
 import { PreferencesCard } from './PreferencesCard';
 import { PreferencesGroup } from './PreferencesGroup';
-import { Button } from '@app/components/ui/button';
-import { Input } from '@app/components/ui/input';
-import { Avatar, AvatarFallback, AvatarImage } from '@app/components/ui/avatar';
-import { Separator } from '@app/components/ui/separator';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Separator } from '@/components/ui/separator';
 import { Clipboard, Share2, Users, Link, User as UserIcon } from 'lucide-react';
-import { Skeleton } from '@app/components/ui/skeleton';
+import { Skeleton } from '@/components/ui/skeleton';
 import { formatDistanceToNow } from 'date-fns';
 
 interface ReferralPreferencesProps {

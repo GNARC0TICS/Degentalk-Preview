@@ -6,7 +6,7 @@
  */
 
 import type { ReactNode } from 'react';
-import ModularAdminLayout from '@app/features/admin/components/ModularAdminLayout';
+import ModularAdminLayout from '@/features/admin/components/ModularAdminLayout';
 
 interface AdminLayoutProps {
 	children: ReactNode;

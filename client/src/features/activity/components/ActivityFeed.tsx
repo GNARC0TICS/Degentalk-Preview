@@ -1,5 +1,5 @@
 import React from 'react';
-import { useActivityFeed } from '@app/features/activity/hooks/useActivityFeed';
+import { useActivityFeed } from '@/features/activity/hooks/useActivityFeed';
 import { ActivityItem } from './index';
 
 interface ActivityFeedProps {

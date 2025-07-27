@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { ArrowUpRight, Check, Lock } from 'lucide-react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Button } from '@app/components/ui/button';
-import { PumpButton } from '@app/components/uiverse-clones/buttons';
-import { Input } from '@app/components/ui/input';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@app/components/ui/tabs';
-import { Badge } from '@app/components/ui/badge';
-import { useToast } from '@app/hooks/use-toast';
-import { useWallet } from '@app/hooks/use-wallet';
-import { walletApiService } from '@app/features/wallet/services/wallet-api.service';
+import { Button } from '@/components/ui/button';
+import { PumpButton } from '@/components/uiverse-clones/buttons';
+import { Input } from '@/components/ui/input';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Badge } from '@/components/ui/badge';
+import { useToast } from '@/hooks/use-toast';
+import { useWallet } from '@/hooks/use-wallet';
+import { walletApiService } from '@/features/wallet/services/wallet-api.service';
 
 export interface WithdrawButtonProps {
 	variant?: 'default' | 'small';

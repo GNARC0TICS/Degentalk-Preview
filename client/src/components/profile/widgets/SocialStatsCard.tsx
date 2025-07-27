@@ -1,6 +1,6 @@
 import React from 'react';
 import { Users, UserPlus, UserCheck, MessageCircle } from 'lucide-react';
-import { cn } from '@app/utils/utils';
+import { cn } from '@/utils/utils';
 
 interface SocialStatsCardProps {
 	followersCount: number;

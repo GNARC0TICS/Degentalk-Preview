@@ -20,7 +20,7 @@ import {
 	DropdownMenuLabel,
 	DropdownMenuSeparator,
 	DropdownMenuTrigger
-} from '@app/components/ui/dropdown-menu';
+} from '@/components/ui/dropdown-menu';
 import {
 	Dialog,
 	DialogContent,
@@ -28,17 +28,17 @@ import {
 	DialogFooter,
 	DialogHeader,
 	DialogTitle
-} from '@app/components/ui/dialog';
-import { Button } from '@app/components/ui/button';
-import { Textarea } from '@app/components/ui/textarea';
-import { Label } from '@app/components/ui/label';
-import { Badge } from '@app/components/ui/badge';
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
+import { Badge } from '@/components/ui/badge';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiRequest } from '@app/utils/queryClient';
-import { useToast } from '@app/hooks/use-toast';
-import { useAuth } from '@app/hooks/use-auth';
-import { cn } from '@app/utils/utils';
-import { useSolveThread, useUnsolveThread } from '@app/features/forum/hooks/useForumQueries';
+import { apiRequest } from '@/utils/queryClient';
+import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/hooks/use-auth';
+import { cn } from '@/utils/utils';
+import { useSolveThread, useUnsolveThread } from '@/features/forum/hooks/useForumQueries';
 import type { ThreadId, PostId } from '@shared/types/ids';
 import { parseId, toId } from '@shared/types/index';
 

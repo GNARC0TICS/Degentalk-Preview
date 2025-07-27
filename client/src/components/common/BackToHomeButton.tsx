@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { Button } from '@app/components/ui/button';
+import { Button } from '@/components/ui/button';
 import { ChevronLeft, Home } from 'lucide-react';
 
 export function BackToHomeButton() {

@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { forumApi } from '@app/features/forum/services/forumApi';
-import { useForumStructure } from '@app/features/forum/contexts/ForumStructureContext';
-import type { MergedFeaturedForum } from '@app/features/forum/contexts/ForumStructureContext'; // Use MergedFeaturedForum as type-only import
+import { forumApi } from '@/features/forum/services/forumApi';
+import { useForumStructure } from '@/features/forum/contexts/ForumStructureContext';
+import type { MergedFeaturedForum } from '@/features/forum/contexts/ForumStructureContext'; // Use MergedFeaturedForum as type-only import
 import type { Thread } from '@shared/types/thread.types';
-import type { CanonicalPost } from '@app/types/canonical.types';
+import type { CanonicalPost } from '@/types/canonical.types';
 
 interface UseThreadFeaturedForumParams {
 	page?: number;

@@ -10,6 +10,8 @@
 import fs from 'fs';
 import path from 'path';
 import { createWriteStream, WriteStream } from 'fs';
+import { getLoggerConfig } from './logger-config';
+import { loggerControl } from './logger-control';
 
 // Log levels
 export enum LogLevel {
@@ -197,6 +199,33 @@ export function log(options: {
 
 	// Use action as namespace if no namespace is provided
 	const logNamespace = namespace || (action ? action : 'APP');
+
+	// Apply development mode filtering
+	const baseConfig = getLoggerConfig();
+	const loggerConfig = loggerControl.applyToConfig(baseConfig);
+	
+	// Check minimum level with overrides
+	const minLevel = loggerConfig.minLevel || config.minLevel;
+	if (levels.indexOf(level) < levels.indexOf(minLevel)) {
+		return;
+	}
+	
+	// Check if category is suppressed
+	if (loggerConfig.suppressCategories?.includes(logNamespace)) {
+		return;
+	}
+	
+	// Check if message matches suppression patterns
+	if (loggerConfig.suppressPatterns?.some(pattern => pattern.test(message))) {
+		return;
+	}
+	
+	// Check if we're only showing specific categories
+	if (loggerConfig.onlyShowCategories && 
+	    loggerConfig.onlyShowCategories.length > 0 && 
+	    !loggerConfig.onlyShowCategories.includes(logNamespace)) {
+		return;
+	}
 
 	const formattedMessage = formatLogMessage(level, logNamespace, message);
 

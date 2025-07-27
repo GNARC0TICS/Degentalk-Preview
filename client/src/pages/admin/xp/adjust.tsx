@@ -14,10 +14,10 @@ import {
 	BellOff,
 	Target
 } from 'lucide-react';
-import { useToast } from '@app/hooks/use-toast';
-import { Input } from '@app/components/ui/input';
-import { Button } from '@app/components/ui/button';
-import { Badge } from '@app/components/ui/badge';
+import { useToast } from '@/hooks/use-toast';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import {
 	Table,
 	TableBody,
@@ -25,7 +25,7 @@ import {
 	TableHead,
 	TableHeader,
 	TableRow
-} from '@app/components/ui/table';
+} from '@/components/ui/table';
 import {
 	Dialog,
 	DialogContent,
@@ -33,7 +33,7 @@ import {
 	DialogFooter,
 	DialogHeader,
 	DialogTitle
-} from '@app/components/ui/dialog';
+} from '@/components/ui/dialog';
 // Select components were unused
 import {
 	Card,
@@ -42,18 +42,18 @@ import {
 	CardHeader,
 	CardTitle
 	// CardFooter was unused
-} from '@app/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@app/components/ui/tabs';
-import { Label } from '@app/components/ui/label';
-import { Textarea } from '@app/components/ui/textarea';
-import { RadioGroup, RadioGroupItem } from '@app/components/ui/radio-group';
-import { Checkbox } from '@app/components/ui/checkbox';
-import { Avatar, AvatarFallback, AvatarImage } from '@app/components/ui/avatar';
-import { useDebounce } from '@app/hooks/use-debounce';
-import { apiRequest } from '@app/utils/queryClient';
+} from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { useDebounce } from '@/hooks/use-debounce';
+import { apiRequest } from '@/utils/queryClient';
 import { getLevelForXp, getXpForLevel } from '@shared/economy/reward-calculator';
-import { XP_EASTER_EGGS } from '@app/config/easter-eggs.config';
-import { BankruptcyEffect } from '@app/features/admin/effects/BankruptcyEffect';
+import { XP_EASTER_EGGS } from '@/config/easter-eggs.config';
+import { BankruptcyEffect } from '@/features/admin/effects/BankruptcyEffect';
 
 // Types
 interface User {

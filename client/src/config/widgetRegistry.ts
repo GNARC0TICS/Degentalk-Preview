@@ -1,5 +1,5 @@
 import React from 'react';
-import type { SlotId } from '@app/stores/useLayoutStore';
+import type { SlotId } from '@/stores/useLayoutStore';
 import type { LucideIcon } from 'lucide-react';
 
 export interface WidgetMetadata {
@@ -45,7 +45,7 @@ export const widgetRegistry: Record<string, WidgetConfig> = {
 	// Profile & User Widgets
 	profileCard: {
 		component: () =>
-			import('@/components/profile/ProfileCard').then((module) => ({ default: module.default })),
+			import('@/components/shared/ProfileCard').then((module) => ({ default: module.default })),
 		metadata: {
 			id: 'profileCard',
 			name: 'Profile Card',
@@ -279,7 +279,7 @@ export const widgetRegistry: Record<string, WidgetConfig> = {
 		}
 	},
 
-	// Notifications
+	// Notifications - TODO: Fix API endpoints (getPaginatedNotifications, messages, mentions, unread-count)
 	notificationCenter: {
 		component: () =>
 			import('@/components/notifications/NotificationPanel').then((module) => ({

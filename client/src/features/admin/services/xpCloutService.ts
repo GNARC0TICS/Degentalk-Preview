@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { adminApi } from '@app/features/admin/lib/adminApi';
-import type { InsertXpReputationSettings } from '@app/types/compat/economy';
+import { adminApi } from '@/features/admin/lib/adminApi';
+import type { InsertXpReputationSettings } from '@/types/compat/economy';
 
 const XP_REPUTATION_KEY = ['admin', 'xp-reputation-settings'];
 

@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Badge } from '@app/components/ui/badge';
-import { Button } from '@app/components/ui/button';
-import { LoadingSpinner } from '@app/components/ui/loader';
-import { WhisperButton } from '@app/components/messages/WhisperButton';
-import { WhisperModal } from '@app/components/messages/WhisperModal';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { LoadingSpinner } from '@/components/ui/loader';
+import { WhisperButton } from '@/components/messages/WhisperButton';
+import { WhisperModal } from '@/components/messages/WhisperModal';
 import {
 	Settings,
 	UserCheck,
@@ -16,17 +16,17 @@ import {
 	Globe,
 	MessageCircle
 } from 'lucide-react';
-import { cn, formatNumber, formatCurrency, formatRelativeTime } from '@app/utils/utils';
-import { useToast } from '@app/hooks/use-toast';
-import { apiRequest } from '@app/utils/queryClient';
-import { useAuth } from '@app/hooks/use-auth';
-import type { ProfileData } from '@app/types/profile';
-import { useIdentityDisplay } from '@app/hooks/useIdentityDisplay';
-import { AvatarFrame } from '@app/components/identity/AvatarFrame';
-import { UserName } from '@app/components/users/Username';
-import { LevelBadge } from '@app/features/gamification/components/LevelBadge';
-import { FollowButton } from '@app/components/social/FollowButton';
-import { getAvatarUrl } from '@app/utils/avatar';
+import { cn, formatNumber, formatCurrency, formatRelativeTime } from '@/utils/utils';
+import { useToast } from '@/hooks/use-toast';
+import { apiRequest } from '@/utils/queryClient';
+import { useAuth } from '@/hooks/use-auth';
+import type { ProfileData } from '@/types/profile';
+import { useIdentityDisplay } from '@/hooks/useIdentityDisplay';
+import { AvatarFrame } from '@/components/identity/AvatarFrame';
+import { UserName } from '@/components/users/Username';
+import { LevelBadge } from '@/features/gamification/components/LevelBadge';
+import { FollowButton } from '@/components/social/FollowButton';
+import { getAvatarUrl } from '@/utils/avatar';
 
 interface Props {
 	profile: ProfileData;

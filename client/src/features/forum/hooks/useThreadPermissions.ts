@@ -5,10 +5,10 @@
  * based on forum rules, user role, and ownership.
  */
 
-import { useAuth } from '@app/hooks/use-auth';
-import { useForumStructure, type MergedForum } from '@app/features/forum/contexts/ForumStructureContext';
+import { useAuth } from '@/hooks/use-auth';
+import { useForumStructure, type MergedForum } from '@/features/forum/contexts/ForumStructureContext';
 import type { Thread } from '@shared/types/thread.types';
-import type { ResolvedZone } from '@app/types/thread.types';
+import type { ResolvedZone } from '@/types/thread.types';
 import type { User } from '@shared/types/user.types';
 import { toId, generateId } from '@shared/utils/id';
 import type { ThreadId, UserId } from '@shared/types/ids';

@@ -11,14 +11,14 @@ import {
 	Activity,
 	Settings
 } from 'lucide-react';
-import { Button } from '@app/components/ui/button';
+import { Button } from '@/components/ui/button';
 import {
 	Accordion,
 	AccordionContent,
 	AccordionItem,
 	AccordionTrigger
-} from '@app/components/ui/accordion';
-import { cn } from '@app/utils/utils';
+} from '@/components/ui/accordion';
+import { cn } from '@/utils/utils';
 
 export function ModSidebar() {
 	const location = useLocation();

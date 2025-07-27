@@ -1,5 +1,5 @@
 import React from 'react';
-import { cn } from '@app/utils/utils';
+import { cn } from '@/utils/utils';
 
 interface StickyRegionProps extends React.HTMLAttributes<HTMLDivElement> {
 	top?: number; // top offset in px

@@ -1,7 +1,7 @@
 #!/usr/bin/env tsx
 import 'dotenv/config';
-import { forumStructureService } from '../../server/src/domains/forum/services/structure.service';
-import { logger } from '../../server/src/core/logger';
+import { forumStructureService } from '@server/src/domains/forum/services/structure.service';
+import { logger } from '@server/src/core/logger';
 
 async function runSync() {
 	const isDryRun = process.argv.includes('--dry-run');

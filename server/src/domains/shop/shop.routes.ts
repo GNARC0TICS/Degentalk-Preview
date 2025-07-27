@@ -2,7 +2,7 @@ import type { UserId } from '@shared/types/ids';
 import { userService } from '@core/services/user.service';
 import { Router } from 'express'
 import type { Router as RouterType } from 'express';
-import { shopItems } from '@api/utils/shop-utils';
+import { shopItems } from '@utils/shop-utils';
 import { db } from '@db';
 import { products, userInventory, transactions } from '@schema';
 import { eq, isNull, or, and, gte, lte } from 'drizzle-orm';
@@ -17,7 +17,7 @@ import { vanitySinkAnalyzer } from './services/vanity-sink.analyzer';
 import type { DgtAmount, UserId, ItemId, OrderId } from '@shared/types/ids';
 import type { EntityId } from '@shared/types/ids';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
-import { validateRequest } from '@api/middleware/validate-request';
+import { validateRequest } from '@middleware/validate-request';
 import { shopValidation } from './validation/shop.validation';
 
 const router: RouterType = Router();

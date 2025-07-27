@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { MessageSquare, Pin, Lock, CheckCircle, Eye, Calendar } from 'lucide-react';
 import type { Thread } from '@shared/types/thread.types';
 import { formatDistanceToNow } from 'date-fns';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@app/components/ui/tooltip';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface MyBBThreadListProps {
 	threads: Thread[];

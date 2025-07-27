@@ -7,11 +7,11 @@
 
 import { useState, useEffect } from 'react';
 import type { ReactNode } from 'react';
-import { Sheet, SheetContent } from '@app/components/ui/sheet';
-import { useMediaQuery } from '@app/hooks/use-media-query';
+import { Sheet, SheetContent } from '@/components/ui/sheet';
+import { useMediaQuery } from '@/hooks/use-media-query';
 import ModularAdminSidebar from './ModularAdminSidebar';
 import AdminThemeProvider from './AdminThemeProvider';
-import { cn } from '@app/utils/utils';
+import { cn } from '@/utils/utils';
 
 interface ModularAdminLayoutProps {
 	children: ReactNode;

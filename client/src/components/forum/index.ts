@@ -71,4 +71,4 @@ export { default as CryptoEngagementBar } from './enhanced/CryptoEngagementBar';
 
 // =================== TYPE EXPORTS ===================
 // Re-export important types that might be needed
-export type { ThreadCardComponentProps } from '@app/types/forum';
+export type { ThreadCardComponentProps } from '@/types/forum';

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { cn } from '@app/utils/utils';
+import { cn } from '@/utils/utils';
 import {
 	MessageSquare,
 	Eye,
@@ -16,12 +16,12 @@ import {
 	Coins
 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
-import { Badge } from '@app/components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '@app/components/ui/avatar';
-import { Skeleton } from '@app/components/ui/skeleton';
+import { Badge } from '@/components/ui/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Skeleton } from '@/components/ui/skeleton';
 import type { Thread } from '@shared/types/thread.types';
-import theme from '@app/config/theme.config';
-import { MentionContentItem } from '@app/components/mentions/MentionContentItem';
+import theme from '@/config/theme.config';
+import { MentionContentItem } from '@/components/mentions/MentionContentItem';
 
 export interface ContentFeedProps {
 	items: Thread[];

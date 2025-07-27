@@ -1,6 +1,6 @@
 import React from 'react';
-import { PlaygroundSection } from '@app/pages/dev';
-import { Button } from '@app/components/ui/button';
+import { PlaygroundSection } from '@/pages/dev';
+import { Button } from '@/components/ui/button';
 import { Rocket, Trophy, MessageSquare, Zap, Lock, DollarSign, Wallet } from 'lucide-react';
 
 export const ButtonsSection: React.FC = () => (

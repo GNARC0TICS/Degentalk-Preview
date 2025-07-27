@@ -3,7 +3,7 @@ import { Router } from 'express'
 import type { Router as RouterType } from 'express';
 import type { EntityId } from '@shared/types/ids';
 import { FollowsService } from './follows.service';
-import { requireAuth } from '@server/middleware/auth';
+import { requireAuth } from '@middleware/auth';
 import { z } from 'zod';
 import { logger } from '@core/logger';
 import { UserTransformer } from '@domains/users/transformers/user.transformer';

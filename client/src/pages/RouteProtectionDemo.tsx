@@ -1,5 +1,5 @@
 import React from 'react';
-import { useAuth } from '@app/hooks/use-auth';
+import { useAuth } from '@/hooks/use-auth';
 import {
 	RequireAuth,
 	RequireAdmin,
@@ -8,12 +8,12 @@ import {
 	RequireDev,
 	useRouteProtection,
 	useRequireAdmin
-} from '@app/components/auth';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@app/components/ui/card';
-import { Button } from '@app/components/ui/button';
-import { Badge } from '@app/components/ui/badge';
-import { hasRoleAtLeast } from '@app/utils/roles';
-import type { Role } from '@app/utils/roles';
+} from '@/components/auth';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { hasRoleAtLeast } from '@/utils/roles';
+import type { Role } from '@/utils/roles';
 
 export default function RouteProtectionDemo() {
 	const { user } = useAuth();

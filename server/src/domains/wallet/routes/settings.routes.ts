@@ -8,12 +8,12 @@ import { Router, type Request, type Response } from 'express'
 import type { Router as RouterType } from 'express';
 import { settingsService } from '@core/services/settings.service';
 import { logger } from '@core/logger';
-import { send } from '@api/utils/response';
+import { send } from '@utils/response';
 import { isAuthenticated } from '@domains/auth/middleware/auth.middleware';
-import { getUser } from '@api/utils/request-user';
+import { getUser } from '@utils/request-user';
 import { hasPermission } from '@shared/lib/auth/permissions';
 import { WalletError, ErrorCodes } from '@core/errors';
-import { validateRequest } from '@api/middleware/validate-request';
+import { validateRequest } from '@middleware/validate-request';
 import { z } from 'zod';
 import { toAdminWalletSettings } from '../transformers/wallet-settings.transformer';
 

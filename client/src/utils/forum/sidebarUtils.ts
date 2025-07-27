@@ -1,4 +1,4 @@
-import { sidebarWidgets, type WidgetType } from '@app/config/sidebarWidgets.config';
+import { sidebarWidgets, type WidgetType } from '@/config/sidebarWidgets.config';
 import type { StructureId } from '@shared/types/ids';
 
 export type { WidgetType };

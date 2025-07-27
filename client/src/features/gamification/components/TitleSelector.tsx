@@ -1,6 +1,6 @@
 import React from 'react';
-import { cn } from '@app/utils/utils';
-import type { UserTitle } from '@app/hooks/useXP';
+import { cn } from '@/utils/utils';
+import type { UserTitle } from '@/hooks/useXP';
 import type { TitleId } from '@shared/types/ids';
 import { Check, ChevronDown, Crown, Info } from 'lucide-react';
 import {
@@ -10,12 +10,12 @@ import {
 	DropdownMenuLabel,
 	DropdownMenuSeparator,
 	DropdownMenuTrigger
-} from '@app/components/ui/dropdown-menu';
-import { Button } from '@app/components/ui/button';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@app/components/ui/tooltip';
-import { Card, CardContent, CardHeader, CardTitle } from '@app/components/ui/card';
-import { Badge } from '@app/components/ui/badge';
-import { ScrollArea } from '@app/components/ui/scroll-area';
+} from '@/components/ui/dropdown-menu';
+import { Button } from '@/components/ui/button';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 type TitleSelectorProps = {
 	titles: UserTitle[];

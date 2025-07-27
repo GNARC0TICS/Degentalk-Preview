@@ -4,16 +4,16 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { Grid3X3, List, Columns, MoreHorizontal, Filter, SortAsc } from 'lucide-react';
 
-import { Button } from '@app/components/ui/button';
+import { Button } from '@/components/ui/button';
 import {
 	Select,
 	SelectContent,
 	SelectItem,
 	SelectTrigger,
 	SelectValue
-} from '@app/components/ui/select';
-import { cn } from '@app/utils/utils';
-import { useBreakpoint } from '@app/hooks/useMediaQuery';
+} from '@/components/ui/select';
+import { cn } from '@/utils/utils';
+import { useBreakpoint } from '@/hooks/useMediaQuery';
 
 export interface AdaptiveForumGridProps<T> {
 	items: T[];

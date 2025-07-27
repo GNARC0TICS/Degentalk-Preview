@@ -10,7 +10,7 @@ import { logger } from '@core/logger';
 import { sessionTrackingService } from '../services/session-tracking.service';
 import { redisCacheService } from '@core/cache/redis.service';
 import { getUser } from '@core/utils/auth.helpers';
-import { send } from '@api/utils/response';
+import { send } from '@utils/response';
 import { PlatformAnalyticsService } from '../services/platform.service';
 
 export class AnalyticsController {

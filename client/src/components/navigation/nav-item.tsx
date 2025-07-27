@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { cn } from '@app/utils/utils';
+import { cn } from '@/utils/utils';
 
 export interface NavItemProps {
 	/** Icon component to display */

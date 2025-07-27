@@ -1,5 +1,5 @@
 import { z, ZodError, ZodSchema } from 'zod';
-import { logger } from '@app/lib/logger';
+import { logger } from '@/lib/logger';
 
 export class ApiValidationError extends Error {
   constructor(

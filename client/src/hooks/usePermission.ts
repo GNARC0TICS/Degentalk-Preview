@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
-import { useAuth } from '@app/hooks/use-auth';
-import type { MergedForum } from '@app/features/forum/contexts/ForumStructureContext';
+import { useAuth } from '@/hooks/use-auth';
+import type { MergedForum } from '@/features/forum/contexts/ForumStructureContext';
 
 export interface PermissionResult {
 	/** Can the current user create new threads in this forum? */

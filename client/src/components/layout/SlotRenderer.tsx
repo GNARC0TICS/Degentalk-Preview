@@ -1,4 +1,4 @@
-import { useLayoutStore, type SlotId } from '@app/stores/useLayoutStore';
+import { useLayoutStore, type SlotId } from '@/stores/useLayoutStore';
 import { WidgetFrame } from './WidgetFrame';
 
 interface SlotRendererProps {

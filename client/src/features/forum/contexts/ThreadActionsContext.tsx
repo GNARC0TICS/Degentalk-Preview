@@ -1,8 +1,8 @@
 import React, { createContext, useContext, useState, useCallback } from 'react';
-import { useToast } from '@app/hooks/use-toast';
-import { useTip } from '@app/hooks/use-tip';
-import { useCreatePost } from '@app/features/forum/hooks/useForumQueries';
-import { useBookmarkThread, useRemoveBookmark } from '@app/features/forum/hooks/useForumQueries';
+import { useToast } from '@/hooks/use-toast';
+import { useTip } from '@/hooks/use-tip';
+import { useCreatePost } from '@/features/forum/hooks/useForumQueries';
+import { useBookmarkThread, useRemoveBookmark } from '@/features/forum/hooks/useForumQueries';
 import type { Thread } from '@shared/types/thread.types';
 import { useQueryClient } from '@tanstack/react-query';
 import type { UserId, ThreadId } from '@shared/types/ids';

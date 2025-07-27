@@ -12,7 +12,7 @@ export {
   requireModerator as isAdminOrModerator,
   optionalAuth as isAuthenticatedOptional,
   authenticate as requireAuth
-} from '@api/middleware/auth.unified';
+} from '@middleware/auth.unified';
 
 // Additional domain-specific auth utilities can be added here if needed
 

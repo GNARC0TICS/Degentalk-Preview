@@ -104,7 +104,7 @@ export class PlatformAnalyticsService {
 					slug: threads.slug,
 					createdAt: threads.createdAt,
 					userId: threads.userId,
-					categoryId: threads.categoryId
+					categoryId: threads.structureId
 				})
 				.from(threads)
 				.where(eq(threads.isDeleted, false)) // Use boolean literal for boolean column
@@ -131,7 +131,7 @@ export class PlatformAnalyticsService {
 					slug: threads.slug,
 					createdAt: threads.createdAt,
 					userId: threads.userId,
-					categoryId: threads.categoryId
+					categoryId: threads.structureId
 				})
 				.from(threads)
 				.where(eq(threads.isDeleted, false))

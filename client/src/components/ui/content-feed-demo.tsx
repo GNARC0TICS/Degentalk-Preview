@@ -1,6 +1,6 @@
 import React from 'react';
-import { ContentArea } from '@app/components/ui/content-area';
-import { PerformanceMonitor } from '@app/components/ui/performance-monitor';
+import { ContentArea } from '@/components/ui/content-area';
+import { PerformanceMonitor } from '@/components/ui/performance-monitor';
 
 export function ContentFeedDemo() {
   return (

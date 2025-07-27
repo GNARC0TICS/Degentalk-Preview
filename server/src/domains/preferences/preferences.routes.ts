@@ -7,8 +7,8 @@ import { userService } from '@core/services/user.service';
  */
 
 import express from 'express';
-import { authenticate } from '@api/middleware/authenticate';
-import { validateRequest } from '@api/middleware/validate-request';
+import { authenticate } from '@middleware/authenticate';
+import { validateRequest } from '@middleware/validate-request';
 import { preferencesValidation } from './validation/preferences.validation';
 import {
 	getAllPreferences,

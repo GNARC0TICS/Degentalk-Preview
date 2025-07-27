@@ -1,13 +1,13 @@
 import { Link } from 'react-router-dom';
 import { MessageSquare, CornerDownRight, Lock, Shield, Star, Crown, Flame } from 'lucide-react';
-import type { MergedForum } from '@app/features/forum/contexts/ForumStructureContext';
+import type { MergedForum } from '@/features/forum/contexts/ForumStructureContext';
 import { useState, useEffect } from 'react';
-import { StatChip } from '@app/components/ui/stat-chip';
-import { Badge } from '@app/components/ui/badge';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@app/components/ui/tooltip';
-import { usePermission } from '@app/hooks/usePermission';
-import { CARD_STYLES } from '@app/utils/card-constants';
-import { useCanonicalAuth } from '@app/features/auth/useCanonicalAuth';
+import { StatChip } from '@/components/ui/stat-chip';
+import { Badge } from '@/components/ui/badge';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { usePermission } from '@/hooks/usePermission';
+import { CARD_STYLES } from '@/utils/card-constants';
+import { useCanonicalAuth } from '@/features/auth/useCanonicalAuth';
 
 interface ForumListItemProps {
 	forum: MergedForum;

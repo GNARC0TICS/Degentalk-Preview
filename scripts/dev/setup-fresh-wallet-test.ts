@@ -7,7 +7,7 @@
  * for testing the complete signup → wallet creation flow
  */
 
-import { db } from '../db';
+import { db } from '@db';
 import { users, ccpaymentUsers, transactions } from '../db/schema';
 import { eq } from 'drizzle-orm';
 import bcrypt from 'bcrypt';

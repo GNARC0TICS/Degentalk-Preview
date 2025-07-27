@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@app/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import {
 	Table,
 	TableBody,
@@ -8,7 +8,7 @@ import {
 	TableHead,
 	TableHeader,
 	TableRow
-} from '@app/components/ui/table';
+} from '@/components/ui/table';
 import {
 	Dialog,
 	DialogContent,
@@ -16,7 +16,7 @@ import {
 	DialogFooter,
 	DialogHeader,
 	DialogTitle
-} from '@app/components/ui/dialog';
+} from '@/components/ui/dialog';
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -24,7 +24,7 @@ import {
 	DropdownMenuLabel,
 	DropdownMenuSeparator,
 	DropdownMenuTrigger
-} from '@app/components/ui/dropdown-menu';
+} from '@/components/ui/dropdown-menu';
 import {
 	Form,
 	FormControl,
@@ -33,19 +33,19 @@ import {
 	FormItem,
 	FormLabel,
 	FormMessage
-} from '@app/components/ui/form';
+} from '@/components/ui/form';
 import {
 	Select,
 	SelectContent,
 	SelectItem,
 	SelectTrigger,
 	SelectValue
-} from '@app/components/ui/select';
-import { Input } from '@app/components/ui/input';
-import { Button } from '@app/components/ui/button';
-import { Badge } from '@app/components/ui/badge';
-import { Textarea } from '@app/components/ui/textarea';
-import { Separator } from '@app/components/ui/separator';
+} from '@/components/ui/select';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Textarea } from '@/components/ui/textarea';
+import { Separator } from '@/components/ui/separator';
 import {
 	MoreHorizontal,
 	Search,
@@ -63,11 +63,11 @@ import {
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { AdminPageShell } from '@app/features/admin/layout/layout/AdminPageShell';
-import { Alert, AlertDescription, AlertTitle } from '@app/components/ui/alert';
-import { apiRequest } from '@app/utils/queryClient';
+import { AdminPageShell } from '@/features/admin/layout/layout/AdminPageShell';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { apiRequest } from '@/utils/queryClient';
 import type { ContentId, UserId } from '@shared/types/ids';
-import { logger } from '@app/lib/logger';
+import { logger } from '@/lib/logger';
 
 // Types for reports
 interface ReportedContent {

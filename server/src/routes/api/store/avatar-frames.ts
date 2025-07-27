@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { avatarFrameStoreService } from '@domains/cosmetics/avatarFrameStore.service';
-import { requireAuth } from '@api/middleware/auth.unified';
+import { requireAuth } from '@middleware/auth.unified';
 import { frameEquipService } from '@domains/cosmetics/frameEquip.service';
 import { dgtService } from '@domains/wallet/services/dgtService';
 import { userService } from '@core/services/user.service';

@@ -12,6 +12,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 6. **Event-Driven Architecture** - Cross-domain communication ONLY via EventBus, NO direct service imports between domains.
 7. **Forum terminology** - Use "forum" not "zone". Legacy "zone" references are being phased out.
 8. **CODEBASE IS LOCKED DOWN** - NO new files without explicit approval (see File Creation Whitelisting below).
+9. **IMPORT ALIASES ARE STANDARDIZED** - Use ONLY approved import aliases (see Import Alias Rules). Old patterns like `@app/` are BANNED.
+10. **DATABASE MIGRATIONS** - Must use DATABASE_URL environment variable. Run with: `export DATABASE_URL="..." && pnpm db:migrate`
 
 ## File Creation Whitelisting Process
 
@@ -63,6 +65,35 @@ degentalk/
 ├── shared/          # Shared types & utilities
 └── scripts/         # Tooling & maintenance scripts
 ```
+
+### Import Alias Rules (STRICTLY ENFORCED)
+**Client imports:**
+- ✅ Use `@/` for all client imports: `import { Button } from '@/components/ui/button'`
+- ❌ NEVER use `@app/` (deprecated)
+- ❌ NEVER use relative imports except for same-directory files
+
+**Server imports (NO @/ - use explicit paths):**
+- ✅ Use `@core/` for core utilities: `import { logger } from '@core/logger'`
+- ✅ Use `@domains/` for business logic: `import { userService } from '@domains/users/user.service'`
+- ✅ Use `@middleware/` for middleware: `import { authenticate } from '@middleware/auth'`
+- ✅ Use `@utils/` for utilities: `import { isDevMode } from '@utils/environment'`
+- ✅ Use `@lib/` for lib code: `import { reportError } from '@lib/report-error'`
+- ❌ NEVER use `@/` in server code (ambiguous)
+- ❌ NEVER use `@api/`, `@server/`, `@server-core/` (all deprecated)
+
+**Shared imports:**
+- ✅ Use `@shared/` from any workspace: `import type { UserId } from '@shared/types/ids'`
+- ✅ Add `.js` extension in shared files: `import { toId } from './ids.js'`
+
+**Database imports:**
+- ✅ Use `@db` for schema: `import { users } from '@db'`
+- ✅ Use `@schema` for schema: `import { users } from '@schema'`
+
+**Scripts imports:**
+- ✅ Use `@db/` for database: `import { db } from '@db'`
+- ✅ Use `@shared/` for shared types: `import { UserId } from '@shared/types/ids'`
+- ✅ Use `@server/` for server code: `import { logger } from '@server/src/core/logger'`
+- ❌ NEVER use relative paths to reach outside scripts directory
 
 ### Domain-Driven Backend (`server/src/domains/`)
 Each domain follows strict patterns:
@@ -136,6 +167,49 @@ When working over SSH:
    - Window 3: Git/scripts
 3. Hot-reload is automatic (Vite + nodemon)
 
+## Logging System
+
+### Quick Start
+```bash
+# Normal dev mode (auto-suppresses noisy logs)
+pnpm dev
+
+# Verbose logging for debugging
+VERBOSE_LOGS=true pnpm dev
+```
+
+### Runtime Log Control (Dev Mode)
+Access `loggerControl` in the server console:
+```javascript
+// Show only specific categories
+loggerControl.showOnly('AUTH', 'ERROR', 'DATABASE');
+
+// Suppress additional categories
+loggerControl.suppress('WebSocket', 'Cache');
+
+// Change minimum log level
+loggerControl.setMinLevel('WARN');
+
+// Reset to defaults
+loggerControl.reset();
+```
+
+### Auto-Suppressed Categories in Dev
+- WebSocket connections/disconnections
+- Rate limiting status messages
+- Cache hit/miss logs
+- Environment loading details
+- Scheduled task completions
+- Dev authentication queries
+
+### Best Practices
+1. Use consistent namespaces: `logger.info('MyFeature', 'message')`
+2. Include structured data: `logger.error('API', 'Request failed', { userId, error })`
+3. Use appropriate levels: DEBUG < INFO < WARN < ERROR < CRITICAL
+4. Add new suppressions to `server/src/core/logger-config.ts`
+
+See `docs/LOGGING.md` for complete documentation.
+
 ## Common Pitfalls
 
 1. **Import Boundaries**: Client can't import server, server can't import client
@@ -143,6 +217,47 @@ When working over SSH:
 3. **Forum Config**: Edit `forum-map.config.ts` then sync, don't modify DB directly
 4. **User Types**: Use CanonicalUser everywhere, transform legacy data
 5. **ID Comparisons**: Use `isValidId()`, not numeric comparisons
+
+## Database Migration Best Practices
+
+### Migration Types & When to Use
+
+1. **Schema Migrations** (Drizzle)
+   - For: Table structure changes, new columns, constraints
+   - Command: `export DATABASE_URL="..." && pnpm db:migrate`
+   - Location: Auto-generated in `db/migrations/postgres/`
+
+2. **Data Migrations** (Custom Scripts)
+   - For: Bulk data updates, transformations, backfills
+   - Location: `server/src/domains/*/migrations/` or `scripts/migrations/`
+   - Run: `tsx path/to/migration.ts`
+
+3. **Config-to-DB Migrations** (One-time)
+   - For: Moving static config to database (like theme migration)
+   - Example: `server/src/domains/themes/migrations/consolidate-themes.ts`
+
+### Migration Workflow
+
+```bash
+# 1. Make schema changes in db/schema/*.ts
+# 2. Generate migration
+cd db && pnpm drizzle-kit generate
+
+# 3. Review generated migration
+cat migrations/postgres/0XXX_*.sql
+
+# 4. Apply migration
+export DATABASE_URL="..." && pnpm db:migrate
+
+# 5. For data migrations
+tsx server/src/domains/[domain]/migrations/[migration].ts
+```
+
+### Important Notes
+- **Always backup** before running migrations in production
+- **Test locally** first with a development database
+- **Never use db:push** - it bypasses migrations and hangs with Neon
+- **Check for duplicates** in schema files before generating migrations
 
 ## Test File Conventions
 

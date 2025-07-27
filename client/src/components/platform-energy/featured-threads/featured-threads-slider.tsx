@@ -7,13 +7,13 @@ import {
 	CardFooter,
 	CardHeader,
 	CardTitle
-} from '@app/components/ui/card';
-import { Avatar, AvatarFallback, AvatarImage } from '@app/components/ui/avatar';
-import { Skeleton } from '@app/components/ui/skeleton';
-import { Badge } from '@app/components/ui/badge';
+} from '@/components/ui/card';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Badge } from '@/components/ui/badge';
 import { format } from 'date-fns';
 import { MessageSquare, Eye, BookmarkIcon } from 'lucide-react';
-import { getInitials } from '@app/utils/utils';
+import { getInitials } from '@/utils/utils';
 
 export type FeaturedThread = {
 	thread_id: string;

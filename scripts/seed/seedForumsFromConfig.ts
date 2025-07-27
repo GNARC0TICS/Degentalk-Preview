@@ -4,7 +4,7 @@
  * Populates forum_structure table with zones and forums from config
  */
 
-import { db } from '../../db';
+import { db } from '@db';
 import { forumStructure } from '../../db/schema/forum/structure';
 import { forumMap } from '@config/forumMap';
 import type { RootForum as Zone, Forum } from '@config/forumMap';

@@ -33,11 +33,11 @@ export class AdminForumService {
 			// Get thread counts for each category
 			const threadCountsResult = await db
 				.select({
-					categoryId: threads.categoryId,
+					categoryId: threads.structureId,
 					threadCount: count()
 				})
 				.from(threads)
-				.groupBy(threads.categoryId);
+				.groupBy(threads.structureId);
 
 			const countMap = new Map<number, number>();
 			threadCountsResult.forEach((row) => {
@@ -68,7 +68,7 @@ export class AdminForumService {
 			const [threadCountResult] = await db
 				.select({ count: count() })
 				.from(threads)
-				.where(eq(threads.categoryId, id));
+				.where(eq(threads.structureId, id));
 
 			return {
 				...category,
@@ -222,7 +222,7 @@ export class AdminForumService {
 			const [threadCount] = await db
 				.select({ count: count() })
 				.from(threads)
-				.where(eq(threads.categoryId, id));
+				.where(eq(threads.structureId, id));
 
 			if (Number(threadCount?.count) > 0) {
 				throw AdminError.validation('Cannot delete category with threads');
@@ -549,7 +549,7 @@ export class AdminForumService {
 			const threadCount = await db
 				.select({ count: sql<number>`count(*)` })
 				.from(threads)
-				.where(eq(threads.categoryId, id));
+				.where(eq(threads.structureId, id));
 
 			if (threadCount[0].count > 0) {
 				throw new Error('Cannot delete forum with threads');

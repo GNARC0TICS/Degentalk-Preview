@@ -1,24 +1,24 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Pencil, Trash2, Plus } from 'lucide-react';
-import { Button } from '@app/components/ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@app/components/ui/dialog';
-import { Input } from '@app/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
 import {
 	Select,
 	SelectContent,
 	SelectItem,
 	SelectTrigger,
 	SelectValue
-} from '@app/components/ui/select';
-import { AdminPageShell } from '@app/features/admin/layout/layout/AdminPageShell';
-import { AdminDataTable } from '@app/features/admin/components/common/AdminDataTable';
-import type { ColumnDef } from '@app/features/admin/layout/layout/EntityTable';
+} from '@/components/ui/select';
+import { AdminPageShell } from '@/features/admin/layout/layout/AdminPageShell';
+import { AdminDataTable } from '@/features/admin/components/common/AdminDataTable';
+import type { ColumnDef } from '@/features/admin/layout/layout/EntityTable';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { AdminAccessSelector } from '@app/features/admin/components/inputs/AdminAccessSelector';
-import { AdminToggle } from '@app/features/admin/components/inputs/AdminToggle';
+import { AdminAccessSelector } from '@/features/admin/components/inputs/AdminAccessSelector';
+import { AdminToggle } from '@/features/admin/components/inputs/AdminToggle';
 import type { ForumId, CategoryId, UserId } from '@shared/types/ids';
 
 const EntitySchema = z.object({

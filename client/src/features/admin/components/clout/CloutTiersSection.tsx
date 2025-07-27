@@ -1,10 +1,10 @@
 import React from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@app/components/ui/card';
-import { Badge } from '@app/components/ui/badge';
-import { Button } from '@app/components/ui/button';
-import { Progress } from '@app/components/ui/progress';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Progress } from '@/components/ui/progress';
 import { Crown, Sparkles, Zap, Star } from 'lucide-react';
-import type { ReputationTier } from '@app/pages/admin/reputation';
+import type { ReputationTier } from '@/pages/admin/reputation';
 
 interface ReputationTiersSectionProps {
 	tiers: ReputationTier[];

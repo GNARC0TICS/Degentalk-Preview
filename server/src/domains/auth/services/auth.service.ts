@@ -5,11 +5,11 @@ import { promisify } from 'util';
 import { featureFlags, users } from '@db/schema';
 import { db } from '@core/db';
 import { eq, count } from 'drizzle-orm';
-import { isDevMode } from '@api/utils/environment';
+import { isDevMode } from '@utils/environment';
 import { logger } from '@core/logger';
 import { v4 as uuidv4 } from 'uuid';
 import bcrypt from 'bcrypt';
-import { createServiceReporter } from '@server/lib/report-error';
+import { createServiceReporter } from '../../../../lib/report-error';
 
 // Create service-specific error reporter
 const reportError = createServiceReporter('AuthService');

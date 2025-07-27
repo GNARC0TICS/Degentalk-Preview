@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Textarea } from '@app/components/ui/textarea';
-import { Button } from '@app/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@app/components/ui/card';
+import { Textarea } from '@/components/ui/textarea';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Loader2, CheckCircle2, AlertTriangle, RotateCcw, Save } from 'lucide-react';
-import { useToast } from '@app/hooks/use-toast';
-import { AdminPageShell } from '@app/features/admin/layout/layout/AdminPageShell';
-import { Alert, AlertDescription, AlertTitle } from '@app/components/ui/alert';
-import { apiRequest } from '@app/utils/queryClient';
+import { useToast } from '@/hooks/use-toast';
+import { AdminPageShell } from '@/features/admin/layout/layout/AdminPageShell';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { apiRequest } from '@/utils/queryClient';
 
 interface EconomyConfigResponse {
 	config: Record<string, any>;

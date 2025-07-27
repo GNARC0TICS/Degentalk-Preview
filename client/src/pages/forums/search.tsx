@@ -7,11 +7,11 @@ import {
 	BreadcrumbLink,
 	BreadcrumbPage,
 	BreadcrumbSeparator
-} from '@app/components/ui/breadcrumb'; // Corrected import path
-import { Input } from '@app/components/ui/input';
-import { Button } from '@app/components/ui/button';
+} from '@/components/ui/breadcrumb'; // Corrected import path
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 import { Search } from 'lucide-react';
-import { Wide } from '@app/layout/primitives';
+import { Wide } from '@/layout/primitives';
 
 // Placeholder for search results type
 type SearchResult = {

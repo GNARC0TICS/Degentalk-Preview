@@ -25,7 +25,7 @@ import {
 	Link2,
 	Info
 } from 'lucide-react';
-import { Button } from '@app/components/ui/button';
+import { Button } from '@/components/ui/button';
 import {
 	Dialog,
 	DialogContent,
@@ -33,7 +33,7 @@ import {
 	DialogFooter,
 	DialogHeader,
 	DialogTitle
-} from '@app/components/ui/dialog';
+} from '@/components/ui/dialog';
 import {
 	Form,
 	FormControl,
@@ -42,19 +42,19 @@ import {
 	FormItem,
 	FormLabel,
 	FormMessage
-} from '@app/components/ui/form';
-import { Input } from '@app/components/ui/input';
-import { Textarea } from '@app/components/ui/textarea';
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import {
 	Select,
 	SelectContent,
 	SelectItem,
 	SelectTrigger,
 	SelectValue
-} from '@app/components/ui/select';
-import { Switch } from '@app/components/ui/switch';
-import { Popover, PopoverContent, PopoverTrigger } from '@app/components/ui/popover';
-import { Calendar as CalendarComponent } from '@app/components/ui/calendar';
+} from '@/components/ui/select';
+import { Switch } from '@/components/ui/switch';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Calendar as CalendarComponent } from '@/components/ui/calendar';
 import {
 	Table,
 	TableBody,
@@ -62,13 +62,13 @@ import {
 	TableHead,
 	TableHeader,
 	TableRow
-} from '@app/components/ui/table';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@app/components/ui/card';
-import { Badge } from '@app/components/ui/badge';
-import { Tabs, TabsList, TabsTrigger } from '@app/components/ui/tabs';
-import { useToast } from '@app/hooks/use-toast';
-import { apiRequest } from '@app/utils/queryClient';
-import { AdminPageShell } from '@app/features/admin/layout/layout/AdminPageShell';
+} from '@/components/ui/table';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useToast } from '@/hooks/use-toast';
+import { apiRequest } from '@/utils/queryClient';
+import { AdminPageShell } from '@/features/admin/layout/layout/AdminPageShell';
 
 // Define the Announcement type
 interface Announcement {

@@ -1,7 +1,7 @@
 import React from 'react';
-import { TableCell, TableRow } from '@app/components/ui/table';
-import { Button } from '@app/components/ui/button';
-import { Badge } from '@app/components/ui/badge';
+import { TableCell, TableRow } from '@/components/ui/table';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { Pencil, Trash2 } from 'lucide-react';
 import type { XpAction } from '../services/xpActionsService';
 

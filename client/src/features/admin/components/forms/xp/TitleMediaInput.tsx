@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { Button } from '@app/components/ui/button';
+import { Button } from '@/components/ui/button';
 import { Upload } from 'lucide-react';
-import { MediaAsset } from '@app/components/media/MediaAsset';
-import { MediaPickerModal } from '@app/features/admin/media/media/MediaPickerModal';
+import { MediaAsset } from '@/components/media/MediaAsset';
+import { MediaPickerModal } from '@/features/admin/media/media/MediaPickerModal';
 import type { EntityId } from '@shared/types/ids';
 
 interface Props {

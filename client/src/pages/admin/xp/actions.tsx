@@ -5,12 +5,12 @@ import {
 	useUpdateXpAction,
 	useDeleteXpAction,
 	type XpAction
-} from '@app/features/admin/services/xpActionsService';
-import { XpActionRow } from '@app/features/admin/components/XpActionRow';
+} from '@/features/admin/services/xpActionsService';
+import { XpActionRow } from '@/features/admin/components/XpActionRow';
 import {
 	XpActionFormDialog,
 	type XpActionFormData
-} from '@app/features/admin/components/forms/xp/XpActionFormDialog';
+} from '@/features/admin/components/forms/xp/XpActionFormDialog';
 import {
 	Table,
 	TableBody,
@@ -18,11 +18,11 @@ import {
 	TableHeader,
 	TableRow,
 	TableCaption
-} from '@app/components/ui/table';
-import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@app/components/ui/card';
-import { Button } from '@app/components/ui/button';
+} from '@/components/ui/table';
+import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { Plus, Loader2 } from 'lucide-react';
-import { Alert, AlertDescription } from '@app/components/ui/alert';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import {
 	Dialog,
 	DialogContent,
@@ -30,7 +30,7 @@ import {
 	DialogFooter,
 	DialogHeader,
 	DialogTitle
-} from '@app/components/ui/dialog';
+} from '@/components/ui/dialog';
 
 export default function XpActionsAdminPage() {
 	const [isFormOpen, setIsFormOpen] = useState(false);

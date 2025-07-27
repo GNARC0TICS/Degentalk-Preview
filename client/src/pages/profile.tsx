@@ -1,16 +1,16 @@
 import React from 'react';
 import { ArrowLeft, MessageSquare, Calendar, Award, Zap, Loader2 } from 'lucide-react';
-import { Button } from '@app/components/ui/button';
-import { Card } from '@app/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
 import { formatDistanceToNow } from 'date-fns';
-import { Wide } from '@app/layout/primitives';
+import { Wide } from '@/layout/primitives';
 import { Link, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { useAuth } from '@app/hooks/use-auth';
-import { UserTitles } from '@app/components/profile/UserTitles';
-import { formatRelativeTime } from '@app/utils/utils';
-import { apiRequest } from '@app/lib/api';
-import type { ProfileData } from '@app/types/profile';
+import { useAuth } from '@/hooks/use-auth';
+import { UserTitles } from '@/components/profile/UserTitles';
+import { formatRelativeTime } from '@/utils/utils';
+import { apiRequest } from '@/lib/api';
+import type { ProfileData } from '@/types/profile';
 import type { Thread } from '@shared/types/thread.types';
 
 // Demo user profile data (fallback for dev)

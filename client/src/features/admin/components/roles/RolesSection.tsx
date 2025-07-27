@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@app/components/ui/card';
-import { Button } from '@app/components/ui/button';
-import { Badge } from '@app/components/ui/badge';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import {
 	Table,
 	TableBody,
@@ -10,7 +10,7 @@ import {
 	TableHead,
 	TableHeader,
 	TableRow
-} from '@app/components/ui/table';
+} from '@/components/ui/table';
 import {
 	Dialog,
 	DialogContent,
@@ -18,7 +18,7 @@ import {
 	DialogFooter,
 	DialogHeader,
 	DialogTitle
-} from '@app/components/ui/dialog';
+} from '@/components/ui/dialog';
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -26,7 +26,7 @@ import {
 	DropdownMenuLabel,
 	DropdownMenuSeparator,
 	DropdownMenuTrigger
-} from '@app/components/ui/dropdown-menu';
+} from '@/components/ui/dropdown-menu';
 import {
 	Plus,
 	MoreHorizontal,
@@ -39,12 +39,12 @@ import {
 	ChevronRight,
 	ChevronDown
 } from 'lucide-react';
-import { useToast } from '@app/hooks/use-toast';
-import { apiRequest } from '@app/utils/api-request';
+import { useToast } from '@/hooks/use-toast';
+import { apiRequest } from '@/utils/api-request';
 import { RoleForm } from './RoleForm';
 import { PermissionsEditor } from '../permissions/PermissionsEditor';
-import type { Role, Permission } from '@app/types/admin.types';
-import type { AdminTitle as Title } from '@app/types/admin-title.types';
+import type { Role, Permission } from '@/types/admin.types';
+import type { AdminTitle as Title } from '@/types/admin-title.types';
 
 interface RolesSectionProps {
 	roles: Role[];

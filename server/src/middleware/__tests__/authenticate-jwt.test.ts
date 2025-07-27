@@ -3,10 +3,10 @@ import type { Response, NextFunction } from 'express';
 import { authenticateJWT } from '../authenticate-jwt';
 import * as jwtUtils from '@domains/auth/utils/jwt.utils';
 import { userService } from '@core/services/user.service';
-import type { AuthenticatedRequest } from '@api/types/auth.types';
+import type { AuthenticatedRequest } from '../../types/auth.types';
 
 // Mock dependencies
-vi.mock('@server/domains/auth/utils/jwt.utils');
+vi.mock('@domains/auth/utils/jwt.utils');
 vi.mock('@core/services/user.service');
 vi.mock('@core/logger', () => ({
 	logger: {

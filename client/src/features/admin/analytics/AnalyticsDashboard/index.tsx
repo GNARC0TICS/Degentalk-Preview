@@ -1,8 +1,8 @@
 import React from 'react';
-import { Skeleton } from '@app/components/ui/skeleton';
+import { Skeleton } from '@/components/ui/skeleton';
 import { useQuery } from '@tanstack/react-query';
-import { apiRequest } from '@app/utils/queryClient';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@app/components/ui/card';
+import { apiRequest } from '@/utils/queryClient';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Loader2 } from 'lucide-react';
 
 // Add stats data interface

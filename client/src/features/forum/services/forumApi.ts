@@ -5,7 +5,7 @@
  * of interaction with the forum backend endpoints.
  */
 
-import { apiRequest } from '@app/utils/api-request';
+import { apiRequest } from '@/utils/api-request';
 import { isValidUUID } from '@shared/utils/id-validation';
 import type {
 	ThreadWithUser,
@@ -13,8 +13,8 @@ import type {
 	ForumTag,
 	ThreadPrefix,
 	ThreadWithPostsAndUser
-} from '@app/types/compat/forum';
-import type { ApiErrorData } from '@app/types/core.types';
+} from '@/types/compat/forum';
+import type { ApiErrorData } from '@/types/core.types';
 import type {
 	ReportId,
 	ForumId,
@@ -24,7 +24,7 @@ import type {
 	ThreadId,
 	PostId
 } from '@shared/types/ids';
-import type { CanonicalPost } from '@app/types/canonical.types';
+import type { CanonicalPost } from '@/types/canonical.types';
 
 export interface ThreadSearchParams {
 	structureId?: ForumId;

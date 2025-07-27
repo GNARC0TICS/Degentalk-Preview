@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiRequest } from '@app/utils/queryClient';
-import { frameRarityConfig } from '@app/config/frames.config';
-import { FramedAvatar } from '@app/components/users/framed-avatar';
-import { Button } from '@app/components/ui/button';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@app/components/ui/card';
-import { Badge } from '@app/components/ui/badge';
-import { useToast } from '@app/hooks/use-toast';
-import { LoadingSpinner } from '@app/components/ui/loader';
+import { apiRequest } from '@/utils/queryClient';
+import { frameRarityConfig } from '@/config/frames.config';
+import { FramedAvatar } from '@/components/users/framed-avatar';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { useToast } from '@/hooks/use-toast';
+import { LoadingSpinner } from '@/components/ui/loader';
 import { Coins, Check, Sparkles } from 'lucide-react';
 import type { FrameId } from '@shared/types/ids';
 

@@ -3,7 +3,7 @@
  * This file demonstrates the pattern for integrating Sentry error reporting
  */
 
-import { reportErrorServer } from '@server/lib/report-error';
+import { reportErrorServer } from '../../../../lib/report-error';
 import { LogAction } from '@core/logger';
 import type { Request } from 'express';
 

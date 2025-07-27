@@ -6,21 +6,21 @@
 
 import React, { useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@app/components/ui/card';
-import { Button } from '@app/components/ui/button';
-import { Badge } from '@app/components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '@app/components/ui/avatar';
-import { Input } from '@app/components/ui/input';
-import { Label } from '@app/components/ui/label';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
 	Select,
 	SelectContent,
 	SelectItem,
 	SelectTrigger,
 	SelectValue
-} from '@app/components/ui/select';
-import { Separator } from '@app/components/ui/separator';
-import { Alert, AlertDescription } from '@app/components/ui/alert';
+} from '@/components/ui/select';
+import { Separator } from '@/components/ui/separator';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import {
 	History,
 	Shield,
@@ -46,7 +46,7 @@ import {
 	Settings
 } from 'lucide-react';
 import { toast } from 'sonner';
-import { apiRequest } from '@app/utils/queryClient';
+import { apiRequest } from '@/utils/queryClient';
 import type { ReportId, ContentId, UserId } from '@shared/types/ids';
 
 // Types

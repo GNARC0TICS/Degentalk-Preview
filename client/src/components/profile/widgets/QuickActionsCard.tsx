@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { UserPlus, MessageCircle, DollarSign, Heart, Share2, Flag } from 'lucide-react';
-import { Button } from '@app/components/ui/button';
-import { cn } from '@app/utils/utils';
-import { useAuth } from '@app/hooks/use-auth';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/utils/utils';
+import { useAuth } from '@/hooks/use-auth';
 import { toast } from 'sonner';
 
 interface QuickActionsCardProps {

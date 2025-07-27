@@ -6,7 +6,7 @@ import {
 	DialogFooter,
 	DialogHeader,
 	DialogTitle
-} from '@app/components/ui/dialog';
+} from '@/components/ui/dialog';
 import {
 	Form,
 	FormField,
@@ -14,10 +14,10 @@ import {
 	FormLabel,
 	FormControl,
 	FormMessage
-} from '@app/components/ui/form';
-import { Input } from '@app/components/ui/input';
-import { Button } from '@app/components/ui/button';
-import { Switch } from '@app/components/ui/switch';
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Switch } from '@/components/ui/switch';
 import type { UseFormReturn } from 'react-hook-form';
 import { z } from 'zod';
 

@@ -1,5 +1,5 @@
 import { useQueries } from '@tanstack/react-query';
-import { apiRequest } from '@app/utils/api-request';
+import { apiRequest } from '@/utils/api-request';
 
 export interface FeaturedForumStats {
 	todaysPosts: number;

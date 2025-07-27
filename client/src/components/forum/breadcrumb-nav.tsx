@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { ChevronRight, Home, Layers, FolderOpen } from 'lucide-react';
-import { ROUTES } from '@app/constants/routes';
+import { ROUTES } from '@/constants/routes';
 
 export interface BreadcrumbItem {
 	label: string;

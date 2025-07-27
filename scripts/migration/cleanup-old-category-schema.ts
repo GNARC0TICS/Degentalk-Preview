@@ -1,4 +1,4 @@
-import type { AdminId } from '../shared/types/ids';
+import type { AdminId } from '@shared/types/ids';
 #!/usr/bin/env tsx
 
 /**
@@ -8,7 +8,7 @@ import type { AdminId } from '../shared/types/ids';
  * as the single source of truth. Safe for development environment.
  */
 
-import { db } from '../../db';
+import { db } from '@db';
 import { sql } from 'drizzle-orm';
 import chalk from 'chalk';
 

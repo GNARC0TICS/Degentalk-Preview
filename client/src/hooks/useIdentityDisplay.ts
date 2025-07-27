@@ -1,5 +1,5 @@
-import { useUserCosmetics } from '@app/hooks/useUserCosmetics';
-import { useUserXP } from '@app/hooks/useUserXP';
+import { useUserCosmetics } from '@/hooks/useUserCosmetics';
+import { useUserXP } from '@/hooks/useUserXP';
 import type { UserId, RoleId } from '@shared/types/ids';
 import { parseId, toId } from '@shared/types/index';
 

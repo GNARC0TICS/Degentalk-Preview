@@ -2,7 +2,7 @@
 // This file lives entirely in client/ space, satisfying import-boundary rules.
 
 import type { Thread } from '@shared/types/thread.types';
-import type { CanonicalPost } from '@app/types/canonical.types';
+import type { CanonicalPost } from '@/types/canonical.types';
 
 // -----------------------------------------------------------------------------
 // Legacy Thread / Post aliases (read-only, will be removed Q4-2025)
@@ -21,4 +21,4 @@ export interface ThreadWithPostsAndUser {
 export interface ThreadWithPostsAndUserStructure extends ThreadWithPostsAndUser {}
 
 // ThreadPrefix & ForumTag already live in thread.types
-export { ThreadPrefix, ThreadTag as ForumTag } from '@app/types/thread.types';
+export { ThreadPrefix, ThreadTag as ForumTag } from '@/types/thread.types';

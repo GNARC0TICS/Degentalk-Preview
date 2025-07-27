@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useXP, type UserTitle } from '@app/hooks/useXP';
-import { XPProgressBar } from '@app/features/gamification/components/XPProgressBar';
-import { XPHistoryLog } from '@app/features/gamification/components/XPHistoryLog';
-import { BadgeShowcase } from '@app/features/gamification/components/BadgeShowcase';
-import { TitleSelector } from '@app/features/gamification/components/TitleSelector';
-import { LevelUpNotification } from '@app/features/gamification/components/LevelUpNotification';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@app/components/ui/tabs';
-import { Card } from '@app/components/ui/card';
+import { useXP, type UserTitle } from '@/hooks/useXP';
+import { XPProgressBar } from '@/features/gamification/components/XPProgressBar';
+import { XPHistoryLog } from '@/features/gamification/components/XPHistoryLog';
+import { BadgeShowcase } from '@/features/gamification/components/BadgeShowcase';
+import { TitleSelector } from '@/features/gamification/components/TitleSelector';
+import { LevelUpNotification } from '@/features/gamification/components/LevelUpNotification';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Card } from '@/components/ui/card';
 
 type XPProfileSectionProps = {
 	userId?: string;

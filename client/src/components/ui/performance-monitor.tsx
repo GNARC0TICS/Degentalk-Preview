@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { cn } from '@app/utils/utils';
+import { cn } from '@/utils/utils';
 import { Activity, Zap, Database, Clock } from 'lucide-react';
 
 interface PerformanceMetrics {

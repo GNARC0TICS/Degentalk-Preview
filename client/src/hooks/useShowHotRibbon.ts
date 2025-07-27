@@ -1,4 +1,4 @@
-import { featureFlags } from '@app/config/featureFlags';
+import { featureFlags } from '@/config/featureFlags';
 
 /**
  * Hook to determine if the "HOT" ribbon should be shown

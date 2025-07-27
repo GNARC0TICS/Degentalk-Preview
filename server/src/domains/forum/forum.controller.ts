@@ -10,7 +10,7 @@ import {
 	sendSuccessResponse,
 	sendErrorResponse
 } from '@core/utils/transformer.helpers';
-// import { isAuthenticated } from '@api/src/domains/auth/middleware/auth.middleware"; // Removed as unused
+// import { isAuthenticated } from '@/src/domains/auth/middleware/auth.middleware"; // Removed as unused
 
 // TODO: @syncSchema threads
 // TODO: @syncSchema posts

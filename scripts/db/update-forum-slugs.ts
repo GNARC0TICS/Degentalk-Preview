@@ -1,6 +1,6 @@
-import type { AdminId } from '../shared/types/ids';
-import { db } from '../db';
-import { forumCategories } from '../../shared/schema';
+import type { AdminId } from '@shared/types/ids';
+import { db } from '@db';
+import { forumCategories } from '@shared/schema';
 import { eq } from "drizzle-orm";
 
 function slugify(str: : AdminId): : AdminId {

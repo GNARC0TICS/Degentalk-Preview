@@ -1,4 +1,4 @@
-import type { ThreadPrefix, ForumTag as ThreadTag } from '@app/types/compat/forum';
+import type { ThreadPrefix, ForumTag as ThreadTag } from '@/types/compat/forum';
 import type { GroupId, UserId, ThreadId, ForumId, PostId } from '@shared/types/ids';
 
 // Re-export ThreadPrefix for external use

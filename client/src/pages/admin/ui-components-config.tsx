@@ -19,9 +19,9 @@ import {
 	Switch,
 	Separator,
 	Badge
-} from '@app/components/ui';
-import { useUIConfig } from '@app/contexts/UIConfigContext';
-import { useToast } from '@app/hooks/use-toast';
+} from '@/components/ui';
+import { useUIConfig } from '@/contexts/UIConfigContext';
+import { useToast } from '@/hooks/use-toast';
 import {
 	Settings,
 	Palette,
@@ -33,8 +33,8 @@ import {
 	Upload,
 	Eye
 } from 'lucide-react';
-import LoadingIndicator from '@app/components/ui/LoadingIndicator';
-import { default as FeaturedForumCard } from '@app/components/forum/FeaturedForumCard';
+import LoadingIndicator from '@/components/ui/LoadingIndicator';
+import { default as FeaturedForumCard } from '@/components/forum/FeaturedForumCard';
 
 // Sample data for previews
 const sampleFeaturedForum = {

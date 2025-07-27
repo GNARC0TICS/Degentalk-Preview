@@ -5,7 +5,7 @@ import { forumMap } from '@config/forumMap';
 import type { RootForum as Zone } from '@config/forumMap';
 import type { ForumId, GroupId } from '@shared/types/ids';
 import { toId, parseId } from '@shared/types/index';
-import { logger } from '@app/lib/logger';
+import { logger } from '@/lib/logger';
 
 // ===========================================================
 // ForumStructureContext v2.0  🛠️  (2025-06-16)
@@ -186,32 +186,21 @@ export interface MergedForum {
 	rules: MergedRules;
 	threadCount: number;
 	postCount: number;
-	parentForumId?: ForumId | null;
 	canHaveThreads?: boolean;
 	isPopular?: boolean;
 	lastActivityAt?: string;
-}
-
-export interface MergedForum {
-	id: string;
-	slug: string;
-	name: string;
-	description?: string | null;
-	type: 'forum';
-	isFeatured: boolean;
-	position: number;
-	forums: MergedForum[];
-	theme: MergedTheme;
+	// Zone-specific properties
+	isFeatured?: boolean;
+	position?: number;
+	forums?: MergedForum[];
 	icon?: string | null;
-	features: string[] | Record<string, unknown>;
-	customComponents: string[];
-	staffOnly: boolean;
+	features?: string[] | Record<string, unknown>;
+	customComponents?: string[];
+	staffOnly?: boolean;
 	hasXpBoost?: boolean;
 	boostMultiplier?: number;
 	xpChallenges?: PluginData['xpChallenges'];
 	zoneBadges?: PluginData['zoneBadges'];
-	threadCount: number;
-	postCount: number;
 	updatedAt?: string;
 	categories?: never[];
 }

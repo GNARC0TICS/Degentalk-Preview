@@ -1,7 +1,7 @@
 import React from 'react';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
-import { logger } from '@app/lib/logger';
+import { logger } from '@/lib/logger';
 
 // Load the Stripe publishable key from environment variables
 const stripePublicKey = import.meta.env.VITE_STRIPE_PUBLIC_KEY;

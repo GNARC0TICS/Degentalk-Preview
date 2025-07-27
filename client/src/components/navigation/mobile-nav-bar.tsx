@@ -12,8 +12,8 @@ import {
 } from 'lucide-react';
 import { NavItem } from './nav-item';
 import type { NavItemProps } from './nav-item';
-import { cn } from '@app/utils/utils';
-import { useAuth } from '@app/hooks/use-auth';
+import { cn } from '@/utils/utils';
+import { useAuth } from '@/hooks/use-auth';
 
 export interface MobileNavBarProps {
 	/** Custom navigation items (optional - will use defaults if not provided) */

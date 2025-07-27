@@ -7,7 +7,7 @@
 
 import { Router } from 'express'
 import type { Router as RouterType } from 'express';
-import { authenticateJWT } from '@api/middleware/authenticate-jwt';
+import { authenticateJWT } from '@middleware/authenticate-jwt';
 import * as xpController from './xp.controller';
 import dailyBonusRoutes from './routes/daily-bonus.routes';
 

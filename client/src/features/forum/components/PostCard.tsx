@@ -1,10 +1,10 @@
 import React from 'react';
 import DOMPurify from 'dompurify';
 import { Link } from 'react-router-dom';
-import { Card, CardContent, CardFooter, CardHeader } from '@app/components/ui/card';
-import { ProfileCard } from '@app/components/shared/ProfileCard';
-import { Button } from '@app/components/ui/button';
-import { Badge } from '@app/components/ui/badge';
+import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
+import { ProfileCard } from '@/components/shared/ProfileCard';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { formatDistanceToNow } from 'date-fns';
 import {
 	Heart,
@@ -17,23 +17,23 @@ import {
 	LogIn,
 	MoreHorizontal
 } from 'lucide-react';
-import type { PostWithUser } from '@app/types/compat/forum';
+import type { PostWithUser } from '@/types/compat/forum';
 import type { PostId } from '@shared/types/ids';
-import { SolveBadge } from '@app/components/forum/SolveBadge';
-import { SignatureRenderer } from '@app/components/forum/SignatureRenderer';
-import { useCanonicalAuth } from '@app/features/auth/useCanonicalAuth';
-import { ButtonTooltip } from '@app/components/ui/tooltip-utils';
-import { ModeratorActions } from '@app/components/forum/ModeratorActions';
-import TipButton from '@app/features/wallet/components/tip-button';
-import { cn } from '@app/utils/utils';
-import { useBreakpoint } from '@app/hooks/useMediaQuery';
-import { getAdaptiveConfig } from '@app/utils/adaptiveSpacing';
+import { SolveBadge } from '@/components/forum/SolveBadge';
+import { SignatureRenderer } from '@/components/forum/SignatureRenderer';
+import { useCanonicalAuth } from '@/features/auth/useCanonicalAuth';
+import { ButtonTooltip } from '@/components/ui/tooltip-utils';
+import { ModeratorActions } from '@/components/forum/ModeratorActions';
+import TipButton from '@/features/wallet/components/tip-button';
+import { cn } from '@/utils/utils';
+import { useBreakpoint } from '@/hooks/useMediaQuery';
+import { getAdaptiveConfig } from '@/utils/adaptiveSpacing';
 import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
 	DropdownMenuTrigger
-} from '@app/components/ui/dropdown-menu';
+} from '@/components/ui/dropdown-menu';
 
 interface PostCardProps {
 	post: PostWithUser;

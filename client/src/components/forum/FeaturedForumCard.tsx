@@ -21,16 +21,16 @@ import {
 	Moon
 } from 'lucide-react';
 
-import { Card, CardContent, CardFooter, CardHeader } from '@app/components/ui/card';
-import { Badge } from '@app/components/ui/badge';
-import { Button } from '@app/components/ui/button';
-import { Avatar, AvatarFallback, AvatarImage } from '@app/components/ui/avatar';
-import { cn } from '@app/utils/utils';
-import { CARD_STYLES } from '@app/utils/card-constants';
-import { useShowHotRibbon } from '@app/hooks/useShowHotRibbon';
-import { SafeImage } from '@app/components/ui/safe-image';
-import { animationConfig } from '@app/config/animation.config';
-import { getForumTheme, getFallbackForumTheme } from '@shared/config/forumThemes.config';
+import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { cn } from '@/utils/utils';
+import { CARD_STYLES } from '@/utils/card-constants';
+import { useShowHotRibbon } from '@/hooks/useShowHotRibbon';
+import { SafeImage } from '@/components/ui/safe-image';
+import { animationConfig } from '@/config/animation.config';
+// Theme is now applied via useTheme hook in RootLayout
 import XpBoostBadge from './XpBoostBadge';
 
 export interface FeaturedForumCardProps {
@@ -143,11 +143,17 @@ const FeaturedForumCardPure = memo(
 	}: FeaturedForumCardProps) => {
 		const derivedForum = forum;
 
-		// Use consolidated theme configuration
-		// Apply fallback theme if no banner image is provided
-		const theme = forum.bannerImage
-			? getForumTheme(forum.colorTheme)
-			: getFallbackForumTheme(forum.id);
+		// Theme configuration is now handled by the theme system
+		// Default theme values for forum cards
+		const theme = {
+			gradient: 'from-zinc-900/30 via-zinc-800/20 to-zinc-700/10',
+			accent: 'text-zinc-400',
+			border: 'border-zinc-500/30 hover:border-zinc-500/60',
+			glow: 'shadow-zinc-500/20',
+			icon: 'MessageSquare',
+			glowIntensity: 'medium' as const,
+			rarityOverlay: 'common' as const
+		};
 
 		// Map string icon names to React components
 		const iconMap: Record<string, React.ComponentType<any>> = {

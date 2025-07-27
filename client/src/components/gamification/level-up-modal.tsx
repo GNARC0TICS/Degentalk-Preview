@@ -5,16 +5,16 @@
  */
 
 import { useEffect } from 'react';
-import { cn } from '@app/utils/utils';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@app/components/ui/dialog';
-import { Button } from '@app/components/ui/button';
-import { Badge } from '@app/components/ui/badge';
+import { cn } from '@/utils/utils';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { LevelDisplay } from './level-display';
-import { formatNumber } from '@app/utils/utils';
+import { formatNumber } from '@/utils/utils';
 import { Sparkles, Trophy, Gift, ArrowRight, Zap, Star } from 'lucide-react';
 import { motion } from 'framer-motion';
 import confetti from 'canvas-confetti';
-import type { LevelInfo } from '@app/features/gamification/services/gamification-api.service';
+import type { LevelInfo } from '@/features/gamification/services/gamification-api.service';
 import { type BadgeId, type TitleId } from '@shared/types/ids';
 
 interface LevelUpModalProps {

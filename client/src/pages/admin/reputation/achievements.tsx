@@ -1,8 +1,8 @@
-import { useReputationAchievements } from '@app/features/admin/services/reputationAchievementsService';
-import { Table, TableHead, TableHeader, TableRow, TableBody } from '@app/components/ui/table';
-import { Card, CardHeader, CardTitle, CardContent } from '@app/components/ui/card';
-import { Switch } from '@app/components/ui/switch';
-import { useToggleAchievement } from '@app/features/admin/services/reputationAchievementsService';
+import { useReputationAchievements } from '@/features/admin/services/reputationAchievementsService';
+import { Table, TableHead, TableHeader, TableRow, TableBody } from '@/components/ui/table';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Switch } from '@/components/ui/switch';
+import { useToggleAchievement } from '@/features/admin/services/reputationAchievementsService';
 
 export default function ReputationAchievementsAdminPage() {
 	const { data, isLoading, error } = useReputationAchievements();

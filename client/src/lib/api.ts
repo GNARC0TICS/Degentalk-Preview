@@ -1,4 +1,4 @@
-import { logger } from '@app/lib/logger';
+import { logger } from '@/lib/logger';
 
 interface ApiRequestOptions {
   url: string;

@@ -1,12 +1,12 @@
-import { useAuth, type MockRole } from '@app/hooks/use-auth';
+import { useAuth, type MockRole } from '@/hooks/use-auth';
 import {
 	Select,
 	SelectContent,
 	SelectItem,
 	SelectTrigger,
 	SelectValue
-} from '@app/components/ui/select';
-import { Badge } from '@app/components/ui/badge';
+} from '@/components/ui/select';
+import { Badge } from '@/components/ui/badge';
 
 export function DevRoleSwitcher() {
 	const { isDevMode, currentMockRole, setMockRole } = useAuth();

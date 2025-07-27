@@ -3,9 +3,9 @@ import { Link } from 'react-router-dom';
 import { Flame, MessageSquare, Eye, ChevronRight } from 'lucide-react';
 import { SidebarWidgetCard } from './SidebarWidgetCard';
 import { WidgetSkeleton } from './WidgetSkeleton';
-import { useHotThreads } from '@app/features/forum/hooks/useForumStats';
+import { useHotThreads } from '@/features/forum/hooks/useForumStats';
 import { formatDistanceToNow } from 'date-fns';
-import { cn } from '@app/utils/utils';
+import { cn } from '@/utils/utils';
 import { type StructureId } from '@shared/types/ids';
 
 interface HotTopicsWidgetProps {

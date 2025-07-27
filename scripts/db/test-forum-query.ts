@@ -1,4 +1,4 @@
-import { db } from '../../db';
+import { db } from '@db';
 import { forumCategories, threads, posts } from '../db/schema';
 import { sql, eq, and, asc } from 'drizzle-orm';
 

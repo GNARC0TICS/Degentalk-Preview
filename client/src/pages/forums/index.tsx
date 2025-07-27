@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MessageSquare, Users, TrendingUp, Clock, Star } from 'lucide-react';
-import { Card, CardContent } from '@app/components/ui/card';
-import { Container } from '@app/layout/primitives';
-import { useForumStructure } from '@app/features/forum/contexts/ForumStructureContext';
-import { Button } from '@app/components/ui/button';
-import { cn } from '@app/utils/utils';
+import { Card, CardContent } from '@/components/ui/card';
+import { Container } from '@/layout/primitives';
+import { useForumStructure } from '@/features/forum/contexts/ForumStructureContext';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/utils/utils';
 
 // Theme color utility function
 const getForumThemeClass = (theme?: string, prefix = 'bg') => {

@@ -12,13 +12,13 @@ import {
 	Maximize2
 } from 'lucide-react';
 
-import { Button } from '@app/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger } from '@app/components/ui/sheet';
-import { cn } from '@app/utils/utils';
-import { useBreakpoint } from '@app/hooks/useMediaQuery';
+import { Button } from '@/components/ui/button';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { cn } from '@/utils/utils';
+import { useBreakpoint } from '@/hooks/useMediaQuery';
 
-import MobileForumNavigation from '@app/components/forum/enhanced/MobileForumNavigation';
-import ForumTreeNav from '@app/features/forum/components/ForumTreeNav';
+import MobileForumNavigation from '@/components/forum/enhanced/MobileForumNavigation';
+import ForumTreeNav from '@/features/forum/components/ForumTreeNav';
 
 export interface ResponsiveForumLayoutProps {
 	children: React.ReactNode;

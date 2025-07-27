@@ -1,9 +1,9 @@
 import React from 'react';
-import { useUserInventory } from '@app/hooks/useUserInventory';
-import type { ProfileData } from '@app/types/profile';
-import { Skeleton } from '@app/components/ui/skeleton';
-import { Badge as UIBadge } from '@app/components/ui/badge';
-import { rarityColorMap } from '@app/config/rarity.config';
+import { useUserInventory } from '@/hooks/useUserInventory';
+import type { ProfileData } from '@/types/profile';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Badge as UIBadge } from '@/components/ui/badge';
+import { rarityColorMap } from '@/config/rarity.config';
 
 interface Props {
 	profile: ProfileData;

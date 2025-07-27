@@ -367,7 +367,7 @@ export class StickerController {
 			}
 
 			// Import upload service
-			const { uploadService } = await import('@server/domains/uploads/upload.service');
+			const { uploadService } = await import('@/domains/uploads/upload.service');
 
 			// Create presigned upload URL
 			const result = await uploadService.createPresignedUploadUrl({
@@ -425,7 +425,7 @@ export class StickerController {
 			}
 
 			// Import upload service
-			const { uploadService } = await import('@server/domains/uploads/upload.service');
+			const { uploadService } = await import('@/domains/uploads/upload.service');
 
 			// Confirm upload
 			const result = await uploadService.confirmUpload(adminId, {
@@ -509,7 +509,7 @@ export class StickerController {
 			}
 
 			// Import upload service
-			const { uploadService } = await import('@server/domains/uploads/upload.service');
+			const { uploadService } = await import('@/domains/uploads/upload.service');
 
 			// Delete file from storage
 			const result = await uploadService.deleteFile(

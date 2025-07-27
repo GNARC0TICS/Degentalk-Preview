@@ -1,20 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import type { User } from '@shared/types/user.types';
-import { Button } from '@app/components/ui/button';
-import { Input } from '@app/components/ui/input';
-import { Textarea } from '@app/components/ui/textarea';
-import { Switch } from '@app/components/ui/switch';
-import { Label } from '@app/components/ui/label';
-import { Avatar, AvatarFallback, AvatarImage } from '@app/components/ui/avatar';
-import { Card, CardContent } from '@app/components/ui/card';
-import { Separator } from '@app/components/ui/separator';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Card, CardContent } from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
 import { UploadCloud } from 'lucide-react';
 import { PreferencesCard } from './PreferencesCard';
 import { PreferencesGroup } from './PreferencesGroup';
 import { PreferencesInput } from './PreferencesInput';
 import { PreferencesTextarea } from './PreferencesTextarea';
-import { useUserSettings } from '@app/hooks/preferences/useUserSettings';
-import { useUpdateUserSettings } from '@app/hooks/preferences/useUpdateUserSettings';
+import { useUserSettings } from '@/hooks/preferences/useUserSettings';
+import { useUpdateUserSettings } from '@/hooks/preferences/useUpdateUserSettings';
 
 interface ProfilePreferencesProps {
 	user: User;

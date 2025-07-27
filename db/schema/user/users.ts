@@ -81,7 +81,6 @@ export const users = pgTable(
 		dgtWalletBalance: integer('dgt_wallet_balance').notNull().default(0),
 		// Enhanced profile metrics
 		dgtBalance: bigint('dgt_balance', { mode: 'number' }).notNull().default(0),
-		reputation: integer('reputation').notNull().default(0),
 		totalPosts: integer('total_posts').notNull().default(0),
 		totalThreads: integer('total_threads').notNull().default(0),
 		totalLikes: integer('total_likes').notNull().default(0),

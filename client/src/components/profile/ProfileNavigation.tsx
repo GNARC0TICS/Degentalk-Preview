@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Home, Trophy, ShoppingBag, Users, Sparkles, Eye, Bell, Gift } from 'lucide-react';
-import { Tabs, TabsList, TabsTrigger } from '@app/components/ui/tabs';
-import { cn } from '@app/utils/utils';
-import { useAuth } from '@app/hooks/use-auth';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { cn } from '@/utils/utils';
+import { useAuth } from '@/hooks/use-auth';
 
 interface ProfileNavigationProps {
 	activeTab: string;

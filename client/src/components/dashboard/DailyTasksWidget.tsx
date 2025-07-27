@@ -1,8 +1,8 @@
 import React from 'react';
-import { useDailyTasks } from '@app/hooks/useDailyTasks';
+import { useDailyTasks } from '@/hooks/useDailyTasks';
 import { CheckCircle, Lock, Flame } from 'lucide-react';
-import { Progress } from '@app/components/ui/progress';
-import { Card, CardHeader, CardContent, CardTitle } from '@app/components/ui/card';
+import { Progress } from '@/components/ui/progress';
+import { Card, CardHeader, CardContent, CardTitle } from '@/components/ui/card';
 
 export default function DailyTasksWidget() {
 	const { tasks, stats, completeTask } = useDailyTasks();

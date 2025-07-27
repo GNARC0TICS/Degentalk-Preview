@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { cn } from '@app/utils/utils';
+import { cn } from '@/utils/utils';
 import { Flame, Clock, Users, Newspaper, User, AtSign } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
-import type { ContentTab } from '@app/hooks/use-content';
-import theme from '@app/config/theme.config';
+import type { ContentTab } from '@/hooks/use-content';
+import theme from '@/config/theme.config';
 
 export interface TabConfig {
 	id: ContentTab;

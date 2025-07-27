@@ -5,8 +5,8 @@
  */
 
 import React from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@app/components/ui/card';
-import { Badge } from '@app/components/ui/badge';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import {
 	Users,
 	Activity,
@@ -17,7 +17,7 @@ import {
 	TrendingUp,
 	Clock
 } from 'lucide-react';
-import type { RealtimeAnalytics } from '@app/features/admin/api/system-analytics.api';
+import type { RealtimeAnalytics } from '@/features/admin/api/system-analytics.api';
 
 interface RealtimeMetricsCardProps {
 	realtime: Partial<RealtimeAnalytics>;

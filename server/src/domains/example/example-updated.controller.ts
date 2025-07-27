@@ -4,7 +4,7 @@
  */
 
 import { Router } from 'express';
-import { asyncHandlerWithReporting } from '../../lib/report-error';
+import { asyncHandlerWithReporting } from '../../../lib/report-error';
 import { ValidationError, NotFoundError } from '../../middleware/centralized-error-handler.middleware';
 import { isAuthenticated } from '../../middleware/auth.middleware';
 import { validateRequest } from '../../middleware/validate-request.middleware';

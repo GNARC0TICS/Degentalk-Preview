@@ -3,7 +3,7 @@ import type { LucideIcon } from 'lucide-react';
 import Player from 'react-lottie-player';
 import { iconMap, type IconKey } from './iconMap.config';
 import type { Theme } from './types';
-import { logger } from '@app/lib/logger';
+import { logger } from '@/lib/logger';
 
 export interface IconRendererProps extends React.SVGProps<SVGSVGElement> {
 	icon: IconKey;

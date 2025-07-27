@@ -1,6 +1,6 @@
 import React from 'react';
-import { SiteHeader } from '@app/components/header';
-import { SiteFooter } from '@app/components/footer';
+import { SiteHeader } from '@/components/header';
+import { SiteFooter } from '@/components/footer';
 
 interface SiteLayoutWrapperProps {
 	children: React.ReactNode;

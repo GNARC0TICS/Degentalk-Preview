@@ -1,8 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { apiRequest } from '@app/utils/api-request';
-import { useToast } from '@app/hooks/use-toast';
+import { apiRequest } from '@/utils/api-request';
+import { useToast } from '@/hooks/use-toast';
 import type { TipId, UserId } from '@shared/types/ids';
-import { logger } from '@app/lib/logger';
+import { logger } from '@/lib/logger';
 
 export interface TipParams {
 	toUserId: UserId;

@@ -22,20 +22,20 @@ import {
   Clock,
   Users
 } from 'lucide-react';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@app/components/ui/card';
-import { Avatar, AvatarFallback, AvatarImage } from '@app/components/ui/avatar';
-import { Button } from '@app/components/ui/button';
-import { Skeleton } from '@app/components/ui/skeleton';
-import { Badge } from '@app/components/ui/badge';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Badge } from '@/components/ui/badge';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue
-} from '@app/components/ui/select';
-import { cn } from '@app/utils/utils';
-import { formatNumber } from '@app/utils/utils';
+} from '@/components/ui/select';
+import { cn } from '@/utils/utils';
+import { formatNumber } from '@/utils/utils';
 import type { UserId } from '@shared/types/ids';
 import { leaderboardTheme, getRankStyle, getMetricColor, getSizeConfig } from './leaderboard-theme';
 

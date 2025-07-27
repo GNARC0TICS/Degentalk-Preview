@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@app/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@app/components/ui/tabs';
-import { Button } from '@app/components/ui/button';
-import { Badge } from '@app/components/ui/badge';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { Crown, Trophy, Zap, TrendingUp, Users, Award, Plus, Settings } from 'lucide-react';
-import { AdminPageShell } from '@app/features/admin/layout/layout/AdminPageShell';
-import { apiRequest } from '@app/utils/queryClient';
-import { ReputationTiersSection } from '@app/features/admin/reputation/ReputationTiersSection';
-import { AchievementsSection } from '@app/features/admin/reputation/AchievementsSection';
-import { ReputationGrantsSection } from '@app/features/admin/reputation/ReputationGrantsSection';
-import { ReputationLogsSection } from '@app/features/admin/reputation/ReputationLogsSection';
+import { AdminPageShell } from '@/features/admin/layout/layout/AdminPageShell';
+import { apiRequest } from '@/utils/queryClient';
+import { ReputationTiersSection } from '@/features/admin/reputation/ReputationTiersSection';
+import { AchievementsSection } from '@/features/admin/reputation/AchievementsSection';
+import { ReputationGrantsSection } from '@/features/admin/reputation/ReputationGrantsSection';
+import { ReputationLogsSection } from '@/features/admin/reputation/ReputationLogsSection';
 import { type AchievementId } from '@shared/types/ids';
 import type { ReputationAchievement } from '@shared/types/entities/reputation.types';
 

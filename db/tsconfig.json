@@ -1,13 +1,36 @@
 {
-	"extends": "../tsconfig.base.json",
 	"compilerOptions": {
-		"types": [],
-		"composite": true,
-		"outDir": "./dist",
+		"target": "ES2022",
 		"module": "ESNext",
 		"moduleResolution": "bundler",
-		"tsBuildInfoFile": "./.tscache/.tsbuildinfo"
+		"lib": ["ES2022"],
+		"types": ["node"],
+		"composite": true,
+		"outDir": "./dist",
+		"rootDir": ".",
+		"baseUrl": ".",
+		"paths": {
+			"@schema": ["./schema/index.ts"],
+			"@schema/*": ["./schema/*"],
+			"@shared/*": ["../shared/*"]
+		},
+		"esModuleInterop": true,
+		"skipLibCheck": true,
+		"strict": false,
+		"resolveJsonModule": true,
+		"allowSyntheticDefaultImports": true,
+		"tsBuildInfoFile": "./.tscache/.tsbuildinfo",
+		"noEmit": true
 	},
-	"include": ["./**/*.ts"],
-	"exclude": ["node_modules", "dist", "**/*.test.ts", "**/*.spec.ts"]
+	"include": [
+		"./**/*.ts",
+		"../drizzle.config.ts"
+	],
+	"exclude": [
+		"node_modules", 
+		"dist", 
+		"**/*.test.ts", 
+		"**/*.spec.ts",
+		".tscache"
+	]
 }

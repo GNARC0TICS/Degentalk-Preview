@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { widgetRegistry, type WidgetMetadata, type WidgetId } from '@app/config/widgetRegistry';
-import { useLayoutStore, type SlotId } from '@app/stores/useLayoutStore';
-import { Button } from '@app/components/ui/button';
-import { Input } from '@app/components/ui/input';
+import { widgetRegistry, type WidgetMetadata, type WidgetId } from '@/config/widgetRegistry';
+import { useLayoutStore, type SlotId } from '@/stores/useLayoutStore';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import {
 	Dialog,
 	DialogContent,
@@ -10,12 +10,12 @@ import {
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger
-} from '@app/components/ui/dialog';
-import { Badge } from '@app/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@app/components/ui/tabs';
-import { ScrollArea } from '@app/components/ui/scroll-area';
+} from '@/components/ui/dialog';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { Plus, Search, X } from 'lucide-react';
-import { cn } from '@app/utils/utils';
+import { cn } from '@/utils/utils';
 import { v4 as uuidv4 } from 'uuid';
 
 interface WidgetGalleryProps {

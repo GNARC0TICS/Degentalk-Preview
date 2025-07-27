@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { CoinsIcon, CloudRain, Gift, X, DollarSign } from 'lucide-react';
-import { Card } from '@app/components/ui/card';
+import { Card } from '@/components/ui/card';
 
 export interface RainNotificationProps {
 	type: 'rain' | 'tip';

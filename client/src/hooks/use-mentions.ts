@@ -1,6 +1,6 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiRequest } from '@app/utils/api-request';
+import { apiRequest } from '@/utils/api-request';
 
 interface MentionUser {
 	id: string;

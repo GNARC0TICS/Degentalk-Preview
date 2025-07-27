@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronDown, Filter, X, Save, RotateCcw } from 'lucide-react';
-import { Button } from '@app/components/ui/button';
+import { Button } from '@/components/ui/button';
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -8,7 +8,7 @@ import {
 	DropdownMenuLabel,
 	DropdownMenuSeparator,
 	DropdownMenuTrigger
-} from '@app/components/ui/dropdown-menu';
+} from '@/components/ui/dropdown-menu';
 import {
 	Sheet,
 	SheetContent,
@@ -17,20 +17,20 @@ import {
 	SheetTitle,
 	SheetTrigger,
 	SheetFooter
-} from '@app/components/ui/sheet';
-import { Badge } from '@app/components/ui/badge';
-import { Input } from '@app/components/ui/input';
+} from '@/components/ui/sheet';
+import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
 import {
 	Command,
 	CommandEmpty,
 	CommandGroup,
 	CommandInput,
 	CommandItem
-} from '@app/components/ui/command';
-import { Popover, PopoverContent, PopoverTrigger } from '@app/components/ui/popover';
-import { useLocalStorage } from '@app/hooks/use-local-storage';
-import { cn } from '@app/utils/utils';
-import type { Tag } from '@app/types/forum';
+} from '@/components/ui/command';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { useLocalStorage } from '@/hooks/use-local-storage';
+import { cn } from '@/utils/utils';
+import type { Tag } from '@/types/forum';
 import type { TagId, PrefixId, ThreadId } from '@shared/types/ids';
 import { createTagId, createPrefixId } from '@shared/src/utils/ids';
 

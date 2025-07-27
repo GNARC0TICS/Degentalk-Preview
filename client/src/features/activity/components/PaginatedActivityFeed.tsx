@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { useActivityFeed } from '@app/features/activity/hooks/useActivityFeed';
-import type { EventLogFilters } from '@app/features/activity/types/activity.types';
+import { useActivityFeed } from '@/features/activity/hooks/useActivityFeed';
+import type { EventLogFilters } from '@/features/activity/types/activity.types';
 import { ActivityItem } from './index';
 
 interface PaginatedActivityFeedProps {

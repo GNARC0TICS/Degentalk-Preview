@@ -1,7 +1,7 @@
 import React from 'react';
-import type { DgtPackage } from '@app/hooks/use-dgt-packages';
-import { Button } from '@app/components/ui/button';
-import { PumpButton } from '@app/components/uiverse-clones/buttons';
+import type { DgtPackage } from '@/hooks/use-dgt-packages';
+import { Button } from '@/components/ui/button';
+import { PumpButton } from '@/components/uiverse-clones/buttons';
 import { Coins } from 'lucide-react';
 
 interface Props {

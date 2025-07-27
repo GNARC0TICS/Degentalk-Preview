@@ -1,19 +1,19 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiRequest } from '@app/utils/queryClient';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@app/components/ui/card';
-import { Button } from '@app/components/ui/button';
-import { Switch } from '@app/components/ui/switch';
-import { Label } from '@app/components/ui/label';
-import { Separator } from '@app/components/ui/separator';
-import { Badge } from '@app/components/ui/badge';
+import { apiRequest } from '@/utils/queryClient';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
+import { Separator } from '@/components/ui/separator';
+import { Badge } from '@/components/ui/badge';
 import {
 	Select,
 	SelectContent,
 	SelectItem,
 	SelectTrigger,
 	SelectValue
-} from '@app/components/ui/select';
+} from '@/components/ui/select';
 import {
 	MessageSquare,
 	Users,
@@ -32,7 +32,7 @@ import {
 	CheckCircle,
 	Loader2
 } from 'lucide-react';
-import { useToast } from '@app/hooks/use-toast';
+import { useToast } from '@/hooks/use-toast';
 import { PreferencesCard } from './PreferencesCard';
 import { PreferencesGroup } from './PreferencesGroup';
 import { PreferencesToggle } from './PreferencesToggle';

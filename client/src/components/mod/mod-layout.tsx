@@ -2,18 +2,18 @@ import React, { ReactNode, useState, Fragment } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Search, ExternalLink, Bell, Menu, X, ChevronRight, Home } from 'lucide-react';
 import { ModSidebar } from './mod-sidebar';
-import { Button } from '@app/components/ui/button';
-import { Input } from '@app/components/ui/input';
-import { Sheet, SheetContent, SheetTrigger } from '@app/components/ui/sheet';
-import { Avatar, AvatarFallback } from '@app/components/ui/avatar';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import {
 	Breadcrumb,
 	BreadcrumbItem,
 	BreadcrumbLink,
 	BreadcrumbList,
 	BreadcrumbSeparator
-} from '@app/components/ui/breadcrumb';
-import { Badge } from '@app/components/ui/badge';
+} from '@/components/ui/breadcrumb';
+import { Badge } from '@/components/ui/badge';
 
 interface ModLayoutProps {
 	children: ReactNode;

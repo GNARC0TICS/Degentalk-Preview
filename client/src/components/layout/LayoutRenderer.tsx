@@ -1,5 +1,5 @@
-import { useLayoutStore, type SlotId } from '@app/stores/useLayoutStore';
-import { pageSlotMap } from '@app/config/pageSlotMap';
+import { useLayoutStore, type SlotId } from '@/stores/useLayoutStore';
+import { pageSlotMap } from '@/config/pageSlotMap';
 import { SlotRenderer } from './SlotRenderer';
 
 export const LayoutRenderer = ({ page }: { page: 'home' | 'forum' | 'profile' }) => {

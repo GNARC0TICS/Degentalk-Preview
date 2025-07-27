@@ -1,5 +1,5 @@
-import '../../../server/config/loadEnv';
-import { db } from '../../../db';
+import '@server/config/loadEnv';
+import { db } from '@db';
 import chalk from 'chalk';
 import ora from 'ora';
 import { getSeedConfig } from '../config/seed.config';
@@ -13,7 +13,7 @@ import { TemporalSimulator } from '../engines/temporal-simulator';
 import { ContentGenerator } from '../generators/content-generator';
 import { UserGenerator } from '../generators/user-generator';
 import { EconomySimulator } from '../generators/economy-simulator';
-import type { UserId } from '../../../shared/types/ids';
+import type { UserId } from '@shared/types/ids';
 
 export class SeedOrchestrator {
 	private config = getSeedConfig();

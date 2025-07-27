@@ -8,12 +8,12 @@ import {
 	FormItem,
 	FormLabel,
 	FormMessage
-} from '@app/components/ui/form';
-import { Textarea } from '@app/components/ui/textarea';
-import { Button } from '@app/components/ui/button';
-import { apiRequest, queryClient } from '@app/utils/queryClient';
-import { useCanonicalAuth } from '@app/features/auth/useCanonicalAuth';
-import { useToast } from '@app/hooks/use-toast';
+} from '@/components/ui/form';
+import { Textarea } from '@/components/ui/textarea';
+import { Button } from '@/components/ui/button';
+import { apiRequest, queryClient } from '@/utils/queryClient';
+import { useCanonicalAuth } from '@/features/auth/useCanonicalAuth';
+import { useToast } from '@/hooks/use-toast';
 import type { ThreadId, PostId } from '@shared/types/ids';
 import { useMutation } from '@tanstack/react-query';
 

@@ -1,6 +1,6 @@
 import React from 'react';
-import ForumPageView from '@app/components/forum/ForumPage';
-import { ErrorBoundary } from '@app/components/errors/ErrorBoundary';
+import ForumPageView from '@/components/forum/ForumPage';
+import { ErrorBoundary } from '@/components/errors/ErrorBoundary';
 
 /**
  * Forum Route Page

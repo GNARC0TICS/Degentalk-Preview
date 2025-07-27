@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { z } from 'zod';
-import { authenticate } from '@api/middleware/auth';
-import { validateRequest } from '@api/middleware/validate-request';
+import { authenticate } from '@middleware/auth';
+import { validateRequest } from '@middleware/validate-request';
 import { dailyBonusService } from '../services/daily-bonus.service';
 import { asyncHandler } from '@core/errors';
 import { logger } from '@core/logger';

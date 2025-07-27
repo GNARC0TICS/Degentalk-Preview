@@ -5,7 +5,7 @@
  * Ensures consistent response handling across all API endpoints
  */
 
-import type { StandardApiResponse, PaginatedResponse } from '@app/types/canonical.types';
+import type { StandardApiResponse, PaginatedResponse } from '@/types/canonical.types';
 
 /**
  * Type guard to check if response follows standard format

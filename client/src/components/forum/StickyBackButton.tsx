@@ -3,9 +3,9 @@ import { useLocation } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-import { Button } from '@app/components/ui/button';
-import { cn } from '@app/utils/utils';
-import { useBreakpoint } from '@app/hooks/useMediaQuery';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/utils/utils';
+import { useBreakpoint } from '@/hooks/useMediaQuery';
 
 interface StickyBackButtonProps {
 	/** Custom back URL, defaults to browser history */

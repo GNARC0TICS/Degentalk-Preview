@@ -1,5 +1,5 @@
 import React from 'react';
-import { cn } from '@app/utils/utils';
+import { cn } from '@/utils/utils';
 
 interface CopeButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   size?: 'sm' | 'md' | 'lg';

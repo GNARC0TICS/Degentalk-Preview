@@ -3,8 +3,8 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useNavigate, Navigate } from 'react-router-dom';
-import { useAuth } from '@app/hooks/use-auth';
-import { Button } from '@app/components/ui/button';
+import { useAuth } from '@/hooks/use-auth';
+import { Button } from '@/components/ui/button';
 import {
 	Card,
 	CardContent,
@@ -12,9 +12,9 @@ import {
 	CardFooter,
 	CardHeader,
 	CardTitle
-} from '@app/components/ui/card';
-import { Input } from '@app/components/ui/input';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@app/components/ui/tabs';
+} from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
 	Form,
 	FormControl,
@@ -22,9 +22,9 @@ import {
 	FormItem,
 	FormLabel,
 	FormMessage
-} from '@app/components/ui/form';
+} from '@/components/ui/form';
 import { Loader2 } from 'lucide-react';
-import useSearchParams from '@app/hooks/useSearchParams';
+import useSearchParams from '@/hooks/useSearchParams';
 
 // Login schema
 const loginSchema = z.object({

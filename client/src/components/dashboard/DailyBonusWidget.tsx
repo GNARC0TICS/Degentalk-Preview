@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
-import { useDailyBonus } from '@app/hooks/useDailyBonus';
+import { useDailyBonus } from '@/hooks/useDailyBonus';
 import { CheckCircle, Gift, Flame, Clock } from 'lucide-react';
-import { Card, CardHeader, CardContent, CardTitle } from '@app/components/ui/card';
-import { Button } from '@app/components/ui/button';
-import { Badge } from '@app/components/ui/badge';
+import { Card, CardHeader, CardContent, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { motion, AnimatePresence } from 'framer-motion';
 
 /**

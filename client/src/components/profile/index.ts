@@ -1,5 +1,5 @@
 // ProfileCard has been moved to components/shared/ProfileCard
-// Please update imports to use: import { ProfileCard } from '@app/components/shared';
+// Please update imports to use: import { ProfileCard } from '@/components/shared';
 export { UserProfileRenderer } from './UserProfileRenderer';
 
 export { default as FriendsTab } from './FriendsTab';

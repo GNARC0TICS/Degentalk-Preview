@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Skull, Zap, AlertTriangle } from 'lucide-react';
-import { REPUTATION_EASTER_EGGS, type ObliterationMessage } from '@app/config/easter-eggs.config';
+import { REPUTATION_EASTER_EGGS, type ObliterationMessage } from '@/config/easter-eggs.config';
 
 interface ReputationObliterationEffectProps {
 	isOpen: boolean;

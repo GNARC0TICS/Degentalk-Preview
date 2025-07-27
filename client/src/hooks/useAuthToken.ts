@@ -6,7 +6,7 @@ import {
 	hasAuthToken,
 	isTokenExpired,
 	decodeToken
-} from '@app/utils/auth-token';
+} from '@/utils/auth-token';
 
 interface UseAuthTokenReturn {
 	token: string | null;

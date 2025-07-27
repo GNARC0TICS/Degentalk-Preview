@@ -1,23 +1,23 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { mediaApiService, type MediaItem } from '@app/features/admin/services/media-api.service';
+import { mediaApiService, type MediaItem } from '@/features/admin/services/media-api.service';
 import {
 	animationPackApiService,
 	type PackPayload
-} from '@app/features/admin/services/animation-pack-api.service';
-import { AdminPageShell } from '@app/features/admin/layout/layout/AdminPageShell';
+} from '@/features/admin/services/animation-pack-api.service';
+import { AdminPageShell } from '@/features/admin/layout/layout/AdminPageShell';
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
-import { Button } from '@app/components/ui/button';
-import { Input } from '@app/components/ui/input';
-import { Textarea } from '@app/components/ui/textarea';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import {
 	Select,
 	SelectItem,
 	SelectTrigger,
 	SelectContent,
 	SelectValue
-} from '@app/components/ui/select';
-import { useToast } from '@app/hooks/use-toast';
+} from '@/components/ui/select';
+import { useToast } from '@/hooks/use-toast';
 
 const rarityOptions = [
 	{ value: 'cope', label: 'Cope' },

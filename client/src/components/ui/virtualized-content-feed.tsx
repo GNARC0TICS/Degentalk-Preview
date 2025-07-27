@@ -1,10 +1,10 @@
 import React, { useRef, useCallback, useEffect, useState } from 'react';
 import { VariableSizeList as List } from 'react-window';
-import { cn } from '@app/utils/utils';
+import { cn } from '@/utils/utils';
 import { ChevronUp } from 'lucide-react';
 import type { Thread } from '@shared/types/thread.types';
 import { ContentFeedProps, ContentFeed } from './content-feed';
-import theme from '@app/config/theme.config';
+import theme from '@/config/theme.config';
 
 interface VirtualizedContentFeedProps extends Omit<ContentFeedProps, 'items'> {
   items: Thread[];

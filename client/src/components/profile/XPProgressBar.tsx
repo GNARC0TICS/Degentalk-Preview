@@ -1,7 +1,7 @@
 import React from 'react';
-import { cn } from '@app/utils/utils';
-import { Progress } from '@app/components/ui/progress';
-import { formatNumber } from '@app/utils/utils';
+import { cn } from '@/utils/utils';
+import { Progress } from '@/components/ui/progress';
+import { formatNumber } from '@/utils/utils';
 
 type XPProgressBarProps = {
 	level: number;

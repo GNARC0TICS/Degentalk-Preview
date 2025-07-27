@@ -1,11 +1,11 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
-import { IconRenderer } from '@app/components/icons/iconRenderer';
-import { Button } from '@app/components/ui/button';
-import { Avatar, AvatarFallback } from '@app/components/ui/avatar';
+import { IconRenderer } from '@/components/icons/iconRenderer';
+import { Button } from '@/components/ui/button';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { NavLink } from './NavLink';
 import { SearchBox } from './SearchBox';
-import { primaryNavigation, filterNavItems } from '@app/config/navigation';
+import { primaryNavigation, filterNavItems } from '@/config/navigation';
 import { useHeader } from './HeaderContext';
 
 interface MobileNavProps {

@@ -7,24 +7,24 @@ import {
 	TableHead,
 	TableHeader,
 	TableRow
-} from '@app/components/ui/table';
+} from '@/components/ui/table';
 import {
 	Dialog,
 	DialogContent,
 	DialogHeader,
 	DialogTitle,
 	DialogFooter
-} from '@app/components/ui/dialog';
-import { Input } from '@app/components/ui/input';
-import { Button } from '@app/components/ui/button';
-import { Badge } from '@app/components/ui/badge';
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { Plus, Pencil, Trash2 } from 'lucide-react';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { AdminPageShell } from '@app/features/admin/layout/layout/AdminPageShell';
-import { NumericAccessSelector } from '@app/features/admin/components/inputs/NumericAccessSelector';
-import { cn } from '@app/utils/utils';
+import { AdminPageShell } from '@/features/admin/layout/layout/AdminPageShell';
+import { NumericAccessSelector } from '@/features/admin/components/inputs/NumericAccessSelector';
+import { cn } from '@/utils/utils';
 
 interface Rarity {
 	id: string;

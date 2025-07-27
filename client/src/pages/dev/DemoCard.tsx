@@ -1,5 +1,5 @@
 import React from 'react';
-import { usePlaygroundControls } from '@app/stores/usePlaygroundControls';
+import { usePlaygroundControls } from '@/stores/usePlaygroundControls';
 
 interface DemoCardProps<T extends Record<string, any>> {
 	id: string;

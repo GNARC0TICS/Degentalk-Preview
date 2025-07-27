@@ -359,6 +359,70 @@ Database schema is managed through Drizzle ORM:
 - **Development Bypass** - No authentication required
 - **Comprehensive Logging** - Clear startup and error messages
 
+## 📐 Code Standards & Import Conventions
+
+### Import Alias Rules (Enforced by Git Hooks)
+
+The codebase uses standardized import aliases to maintain consistency and prevent circular dependencies.
+
+#### Client-side imports (`client/src/*`)
+```typescript
+// ✅ CORRECT
+import { Button } from '@/components/ui/button';
+import { useAuth } from '@/hooks/use-auth';
+import type { UserId } from '@shared/types/ids';
+
+// ❌ WRONG - Old patterns (will be rejected)
+import { Button } from '@app/components/ui/button';  // @app is BANNED
+import { Button } from '../../../components/ui/button';  // Avoid relative paths
+```
+
+#### Server-side imports (`server/src/*`)
+```typescript
+// ✅ CORRECT - Use explicit paths
+import { userService } from '@domains/users/user.service';
+import { logger } from '@core/logger';
+import { authenticate } from '@middleware/auth';
+import { isDevMode } from '@utils/environment';
+import { reportError } from '@lib/report-error';
+import { db } from '@db';
+
+// ❌ WRONG - Old patterns (will be rejected)
+import { userService } from '@/domains/users/user.service';  // @/ is BANNED in server
+import { userService } from '@api/domains/users/user.service';  // @api is BANNED
+import { logger } from '@server-core/logger';  // @server-core is BANNED
+```
+
+#### Shared imports (from any workspace)
+```typescript
+// ✅ CORRECT
+import type { ForumId, UserId } from '@shared/types/ids';
+
+// Note: In shared files, use .js extension for relative imports
+import { toId } from './ids.js';
+```
+
+#### Scripts imports (`scripts/*`)
+```typescript
+// ✅ CORRECT
+import { db } from '@db';
+import { UserId } from '@shared/types/ids';
+import { logger } from '@server/src/core/logger';
+
+// ❌ WRONG - Relative paths outside scripts
+import { db } from '../db';  // Use @db instead
+import { UserId } from '../shared/types/ids';  // Use @shared instead
+```
+
+### Import Migration (Completed July 2025)
+
+The codebase has been migrated from legacy import patterns:
+- `@app/*` → `@/*` (client)
+- `@api/*`, `@server/*` → `@/*` (server)
+- `@server-core/*` → `@core/*` (server)
+
+Git hooks will automatically reject commits with old import patterns.
+
 ## 🔧 Configuration
 
 ### Environment Variables

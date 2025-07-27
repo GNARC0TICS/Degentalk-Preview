@@ -9,19 +9,19 @@
  * - Leaderboard rank
  */
 
-import { cn } from '@app/utils/utils';
+import { cn } from '@/utils/utils';
 import { useNavigate } from 'react-router-dom';
-import { Card, CardContent, CardHeader, CardTitle } from '@app/components/ui/card';
-import { Progress } from '@app/components/ui/progress';
-import { Badge } from '@app/components/ui/badge';
-import { Button } from '@app/components/ui/button';
-import { Separator } from '@app/components/ui/separator';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
 import { LevelDisplay } from './level-display';
-import { formatNumber } from '@app/utils/utils';
+import { formatNumber } from '@/utils/utils';
 import { TrendingUp, Trophy, Target, Flame, ChevronRight, Sparkles, Zap, Gift } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useLocation } from 'react-router-dom';
-import type { UserProgression } from '@app/features/gamification/services/gamification-api.service';
+import type { UserProgression } from '@/features/gamification/services/gamification-api.service';
 
 interface ProgressionCardProps {
 	progression: UserProgression;

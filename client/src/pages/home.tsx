@@ -1,26 +1,26 @@
 // Removed Link (no longer needed after zone grid removal)
 // Import context and hook
-import { useForumStructure } from '@app/features/forum/contexts/ForumStructureContext';
-import type { MergedFeaturedForum, MergedForum } from '@app/features/forum/contexts/ForumStructureContext';
+import { useForumStructure } from '@/features/forum/contexts/ForumStructureContext';
+import type { MergedFeaturedForum, MergedForum } from '@/features/forum/contexts/ForumStructureContext';
 
 // Import components
-import { HeroSection } from '@app/components/layout/hero-section';
-import { AnnouncementTicker } from '@app/components/layout/announcement-ticker';
-import { ResponsiveLayoutWrapper } from '@app/components/layout/ResponsiveLayoutWrapper';
-import { FeaturedForumCarousel } from '@app/components/forum/FeaturedForumCarousel';
-import { Wide } from '@app/layout/primitives/Wide';
-import { HomeContentArea } from '@app/components/ui/content-area';
-import { ContentFeedProvider } from '@app/contexts/content-feed-context';
-import { getForumSpacing } from '@app/utils/spacing-constants';
-import { useActiveUsers } from '@app/features/users/hooks';
-import { useFeaturedForumStatsMap } from '@app/hooks/useFeaturedForumStats';
-import { getMomentumLabel } from '@app/utils/forum';
-import HomePageSkeleton from '@app/components/skeletons/HomePageSkeleton';
+import { HeroSection } from '@/components/layout/hero-section';
+import { AnnouncementTicker } from '@/components/layout/announcement-ticker';
+import { ResponsiveLayoutWrapper } from '@/components/layout/ResponsiveLayoutWrapper';
+import { FeaturedForumCarousel } from '@/components/forum/FeaturedForumCarousel';
+import { Wide } from '@/layout/primitives/Wide';
+import { HomeContentArea } from '@/components/ui/content-area';
+import { ContentFeedProvider } from '@/contexts/content-feed-context';
+import { getForumSpacing } from '@/utils/spacing-constants';
+import { useActiveUsers } from '@/features/users/hooks';
+import { useFeaturedForumStatsMap } from '@/hooks/useFeaturedForumStats';
+import { getMomentumLabel } from '@/utils/forum';
+import HomePageSkeleton from '@/components/skeletons/HomePageSkeleton';
 
 // Removed grid-related UI imports (Skeleton, Button, icons)
 
-import type { ConfigurableFeaturedForumCardProps } from '@app/components/forum/ConfigurableFeaturedForumCard';
-import { ErrorBoundary } from '@app/components/errors/ErrorBoundary';
+import type { ConfigurableFeaturedForumCardProps } from '@/components/forum/ConfigurableFeaturedForumCard';
+import { ErrorBoundary } from '@/components/errors/ErrorBoundary';
 
 function HomePage() {
 	// Get forum structure from context

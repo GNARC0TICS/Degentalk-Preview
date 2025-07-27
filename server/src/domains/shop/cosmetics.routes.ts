@@ -17,7 +17,7 @@ import { userInventory, transactions } from '@schema';
 import { eq, and, inArray } from 'drizzle-orm';
 import { CosmeticsTransformer } from './transformers/cosmetics.transformer';
 import { vanitySinkAnalyzer } from './services/vanity-sink.analyzer';
-import { validateRequest } from '@api/middleware/validate-request';
+import { validateRequest } from '@middleware/validate-request';
 import { shopValidation } from './validation/shop.validation';
 import type { UserId, ItemId } from '@shared/types/ids';
 

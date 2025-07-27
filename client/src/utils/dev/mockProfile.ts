@@ -1,4 +1,4 @@
-import type { ProfileData } from '@app/types/profile';
+import type { ProfileData } from '@/types/profile';
 import type { BadgeId, FrameId, TitleId } from '@shared/types/ids';
 import { toUserId } from '@shared/utils/id';
 

@@ -9,7 +9,7 @@ import { db } from '@db';
 import { products } from '@db/schema';
 import { logger, LogAction } from '@core/logger';
 import slugify from 'slugify';
-import { reportErrorServer } from '@server/lib/report-error';
+import { reportErrorServer } from '../../../../lib/report-error';
 
 // Mock shop items for when database items can't be fetched
 export const mockShopItems = [

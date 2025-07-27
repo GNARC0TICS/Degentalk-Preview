@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiRequest } from '@app/utils/queryClient';
-import { Badge } from '@app/components/ui/badge';
-import { Button } from '@app/components/ui/button';
-import { Avatar, AvatarFallback, AvatarImage } from '@app/components/ui/avatar';
-import { Card, CardContent, CardHeader, CardTitle } from '@app/components/ui/card';
-import { Skeleton } from '@app/components/ui/skeleton';
-import { ScrollArea } from '@app/components/ui/scroll-area';
+import { apiRequest } from '@/utils/queryClient';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import {
 	Bell,
 	BellOff,
@@ -20,7 +20,7 @@ import {
 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { Link } from 'react-router-dom';
-import { cn } from '@app/utils/utils';
+import { cn } from '@/utils/utils';
 import type { MentionId } from '@shared/types/ids';
 
 interface MentionNotification {

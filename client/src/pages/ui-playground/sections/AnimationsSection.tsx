@@ -1,5 +1,5 @@
 import React from 'react';
-import { PlaygroundSection } from '@app/pages/dev';
+import { PlaygroundSection } from '@/pages/dev';
 import ButtonPulseDemo from '../animations/ButtonPulseDemo';
 import CardFlipDemo from '../animations/CardFlipDemo';
 import FadeInListDemo from '../animations/FadeInListDemo';
