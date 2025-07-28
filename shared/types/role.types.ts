@@ -30,7 +30,7 @@ export type Role = RoleName;
 /**
  * Simplified role union for components that only need basic roles
  */
-export type BasicRole = 'user' | 'moderator' | 'admin';
+export type BasicRole = 'user' | 'moderator' | 'admin' | 'owner';
 
 /**
  * Role hierarchy values (higher number = more permissions)

@@ -178,6 +178,20 @@ export interface Thread {
 }
 
 /**
+ * Thread with Mention Context
+ * Used when threads are displayed in mention notifications/feeds
+ */
+export interface MentionThread extends Thread {
+  isRead?: boolean;
+  metadata?: {
+    mentionId?: number;
+    mentionType?: 'thread' | 'post' | 'shoutbox' | 'whisper';
+    originalThreadId?: string;
+    originalPostId?: string;
+  };
+}
+
+/**
  * Thread List Item
  * Lightweight version for lists and feeds
  */

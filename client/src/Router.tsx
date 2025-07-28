@@ -65,11 +65,15 @@ export const router = createBrowserRouter([
       // Forum Routes
       { path: 'forums', element: <ForumsIndexPage /> },
       { path: 'forums/:forumSlug', element: <ForumRoutePage /> },
-      { path: 'forums/:forumSlug/:subforumSlug', element: <ForumRoutePage /> },
       
-      // Thread Routes
+      // Thread Routes (hierarchical) - MUST come before subforum routes to avoid conflicts
       { path: 'threads/create', element: <ProtectedRoute><CreateThreadPage /></ProtectedRoute> },
+      { path: 'forums/:forumSlug/:threadSlug', element: <ThreadDetailPage /> },
+      // Legacy flat thread routing for backward compatibility
       { path: 'threads/:slug', element: <ThreadDetailPage /> },
+      
+      // Subforum Routes - MUST come after thread routes
+      { path: 'forums/:forumSlug/:subforumSlug', element: <ForumRoutePage /> },
 
       // Protected Forum Routes
       { 

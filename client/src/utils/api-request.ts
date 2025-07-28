@@ -3,18 +3,20 @@
  * Supports both object-based config and legacy string URL
  */
 
-import { extractApiData, isStandardApiResponse } from './api-response';
+import { extractApiData } from './api-response';
 import { getAuthToken } from './auth-token';
+import type { ApiError as SharedApiError, ApiErrorCode } from '@shared/types/api.types';
 
 export interface ApiError extends Error {
 	status?: number | undefined;
-	data?: any | undefined;
+	code?: ApiErrorCode;
+	details?: Record<string, unknown>;
 }
 
-export interface ApiRequestConfig {
+export interface ApiRequestConfig<TData = unknown> {
 	url: string;
 	method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
-	data?: any | undefined;
+	data?: TData | undefined;
 	params?: Record<string, string | number | boolean | undefined | string[]> | undefined;
 	headers?: Record<string, string> | undefined;
 }
@@ -25,10 +27,10 @@ export interface ApiRequestConfig {
  * @returns The JSON response (automatically unwrapped from standard format)
  * @throws ApiError if the request fails
  */
-export async function apiRequest<T = unknown>(config: ApiRequestConfig): Promise<T>;
+export async function apiRequest<T = unknown, TData = unknown>(config: ApiRequestConfig<TData>): Promise<T>;
 export async function apiRequest<T = unknown>(url: string, options: RequestInit): Promise<T>;
-export async function apiRequest<T = unknown>(
-	configOrUrl: ApiRequestConfig | string,
+export async function apiRequest<T = unknown, TData = unknown>(
+	configOrUrl: ApiRequestConfig<TData> | string,
 	options: RequestInit = {}
 ): Promise<T> {
 	// Handle both object config and legacy string URL
@@ -86,9 +88,10 @@ export async function apiRequest<T = unknown>(
 		const data = await response.json();
 
 		if (!response.ok) {
-			const error = new Error(data.message || 'API request failed') as ApiError;
+			const error = new Error(data.message || data.error?.message || 'API request failed') as ApiError;
 			error.status = response.status;
-			error.data = data;
+			error.code = data.error?.code;
+			error.details = data.error?.details;
 			throw error;
 		}
 

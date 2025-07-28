@@ -18,11 +18,11 @@ import {
 } from '@/components/ui/select';
 import { useReportPost } from '@/features/forum/hooks/useForumQueries';
 import { Loader2, AlertTriangle } from 'lucide-react';
-import type { PostWithUser } from '@/types/compat/forum';
+import type { Post } from '@shared/types/post.types';
 import { postIdToContentId } from '@shared/utils/id-conversions';
 
 interface ReportPostDialogProps {
-	post: PostWithUser | null;
+	post: Post | null;
 	isOpen: boolean;
 	onClose: () => void;
 }
@@ -89,7 +89,7 @@ export function ReportPostDialog({ post, isOpen, onClose }: ReportPostDialogProp
 				<div className="space-y-4">
 					<div className="text-sm text-zinc-400">
 						You are reporting a post by{' '}
-						<span className="font-medium text-zinc-200">{post.user.username}</span>
+						<span className="font-medium text-zinc-200">{post.user?.username || 'Unknown'}</span>
 					</div>
 
 					<div>

@@ -19,10 +19,10 @@ import {
 	AlertTriangle
 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
-import type { ThreadWithPostsAndUser } from '@/types/compat/forum';
+import type { Thread } from '@shared/types/thread.types';
 
 interface ThreadSidebarProps {
-	thread: ThreadWithPostsAndUser['thread'];
+	thread: Thread;
 	postCount?: number;
 	canModerate?: boolean;
 	canEdit?: boolean;

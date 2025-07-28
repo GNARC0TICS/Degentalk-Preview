@@ -12,6 +12,7 @@ import {
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { createInsertSchema } from 'drizzle-zod';
+import type { UnlockRequirements } from '@shared/types/entities/title.types';
 export const titles = pgTable('titles', {
 	id: uuid('id').primaryKey().defaultRandom(),
 	name: varchar('name', { length: 100 }).notNull(),
@@ -48,6 +49,26 @@ export const titles = pgTable('titles', {
 	unlockConditions: jsonb('unlock_conditions'),
 	shopPrice: doublePrecision('shop_price'),
 	shopCurrency: varchar('shop_currency', { length: 10 }),
+	
+	// NEW: Enhanced classification and unlock system
+	displayText: varchar('display_text', { length: 100 }), // What actually shows in UI
+	category: varchar('category', { length: 50 }).notNull().default('custom'),
+	unlockType: varchar('unlock_type', { length: 20 }).notNull().default('manual'),
+	minLevel: integer('min_level'),
+	effects: jsonb('effects').$type<string[]>().default([]),
+	unlockRequirements: jsonb('unlock_requirements').$type<UnlockRequirements>(),
+	
+	// NEW: Availability and lifecycle
+	isActive: boolean('is_active').notNull().default(true),
+	startDate: timestamp('start_date'),
+	endDate: timestamp('end_date'),
+	maxSupply: integer('max_supply'),
+	currentSupply: integer('current_supply').default(0),
+	
+	// NEW: Organization
+	sortOrder: integer('sort_order').default(0),
+	updatedAt: timestamp('updated_at').defaultNow().notNull(),
+	
 	createdAt: timestamp('created_at')
 		.notNull()
 		.default(sql`CURRENT_TIMESTAMP`)

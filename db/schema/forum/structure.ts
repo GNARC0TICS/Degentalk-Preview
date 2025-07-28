@@ -48,6 +48,9 @@ export const forumStructure = pgTable('forum_structure', {
 	color: text('color').notNull().default('gray'),
 	icon: text('icon').notNull().default('hash'),
 	colorTheme: text('color_theme'),
+	// Featured forum flag and theme preset
+	isFeatured: boolean('is_featured').notNull().default(false),
+	themePreset: text('theme_preset'), // 'trading', 'casino', 'community', etc.
 	// Forum-specific features
 	tippingEnabled: boolean('tipping_enabled').notNull().default(false),
 	xpMultiplier: real('xp_multiplier').notNull().default(1.0),

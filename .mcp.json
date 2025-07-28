@@ -19,7 +19,9 @@
         "-e",
         "DATABASE_URL=${DATABASE_URL}"
       ],
-      "env": {}
+      "env": {
+        "DATABASE_URL": "postgresql://neondb_owner:npg_eZTUNmt3h5YE@ep-steep-field-a4mgmi29-pooler.us-east-1.aws.neon.tech/neondb?sslmode=require"
+      }
     },
     "eslint": {
       "type": "stdio",
@@ -54,7 +56,10 @@
         "@neondatabase/mcp-server-neon",
         "start",
         "${NEON_API_KEY}"
-      ]
+      ],
+      "env": {
+        "NEON_API_KEY": "napi_64010heeqqly1w5t5eg1dpjposfjcqpdg0lu4bc7yvnci0vh7qyivoo04i3j036x"
+      }
     },
     "BraveSearch": {
       "type": "stdio",

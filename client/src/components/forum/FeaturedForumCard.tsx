@@ -356,7 +356,7 @@ const FeaturedForumCardPure = memo(
 										<h3
 											className={cn(
 												'font-bold text-white group-hover:text-[var(--zone-accent)] transition-colors',
-												layout === 'compact' ? 'text-lg mb-0.5' : 'text-xl mb-1'
+												layout === 'compact' ? 'text-sm mb-0.5' : 'text-base mb-1'
 											)}
 										>
 											{derivedForum.name}
@@ -364,7 +364,7 @@ const FeaturedForumCardPure = memo(
 										<p
 											className={cn(
 												'text-zinc-400 line-clamp-1 leading-tight',
-												layout === 'compact' ? 'text-xs' : 'text-sm'
+												'text-xs'
 											)}
 										>
 											{derivedForum.description}
@@ -394,7 +394,7 @@ const FeaturedForumCardPure = memo(
 												<Users className="w-2.5 h-2.5" />
 												<span className="text-xs">Active</span>
 											</div>
-											<div className="text-sm font-semibold text-white mt-0.5">
+											<div className="text-xs font-semibold text-white mt-0.5">
 												{derivedForum.stats.activeUsers}
 											</div>
 										</motion.div>
@@ -412,7 +412,7 @@ const FeaturedForumCardPure = memo(
 												<MessageSquare className="w-2.5 h-2.5" />
 												<span className="text-xs">Subforums</span>
 											</div>
-											<div className="text-sm font-semibold text-white mt-0.5">
+											<div className="text-xs font-semibold text-white mt-0.5">
 												{derivedForum.forums?.length ?? 0}
 											</div>
 										</motion.div>
@@ -430,7 +430,7 @@ const FeaturedForumCardPure = memo(
 												<Activity className="w-2.5 h-2.5" />
 												<span className="text-xs">Posts</span>
 											</div>
-											<div className="text-sm font-semibold text-white mt-0.5">
+											<div className="text-xs font-semibold text-white mt-0.5">
 												{derivedForum.forums?.reduce((sum, f) => sum + (f.threadCount || 0), 0)}
 											</div>
 										</motion.div>
@@ -439,7 +439,7 @@ const FeaturedForumCardPure = memo(
 
 							{/* Activity Momentum */}
 							{forum.activity && (
-								<div className="flex items-center justify-between text-sm">
+								<div className="flex items-center justify-between text-xs">
 									<div className="flex items-center gap-2">
 										{forum.activity.momentum === 'rising' && (
 											<div className="flex items-center gap-1 text-emerald-400">
@@ -500,7 +500,7 @@ const FeaturedForumCardPure = memo(
 														key={forumItem.id}
 														className="flex items-center justify-between p-2 rounded bg-zinc-800/40 hover:bg-zinc-800/60 transition-colors"
 													>
-														<span className="text-sm text-zinc-300 truncate">{forumItem.name}</span>
+														<span className="text-xs text-zinc-300 truncate">{forumItem.name}</span>
 														<div className="flex items-center gap-1 text-xs text-zinc-500">
 															<MessageSquare className="w-3 h-3" />
 															<span>{forumItem.threadCount ?? 0}</span>

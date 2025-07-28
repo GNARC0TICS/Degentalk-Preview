@@ -52,6 +52,7 @@
 		"db:migrate:apply": "pnpm --filter @degentalk/db migrate:apply",
 		"db:studio": "pnpm --filter @degentalk/db studio",
 		"db:push": "pnpm --filter @degentalk/db push",
+		"db:push:force": "pnpm --filter @degentalk/db push:force",
 		"db:drop": "pnpm --filter @degentalk/db drop",
 		"seed:all": "pnpm --filter @degentalk/scripts seed:all",
 		"seed:users": "pnpm --filter @degentalk/scripts seed:users",

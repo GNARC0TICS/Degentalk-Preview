@@ -14,6 +14,7 @@ export interface User {
   // Profile
   displayName?: string;
   avatarUrl?: string;
+  activeAvatarUrl?: string; // Current avatar with frame applied
   bannerUrl?: string;
   bio?: string;
   signature?: string;
@@ -52,6 +53,17 @@ export interface User {
     threads: number;
     likes: number;
     tips: number;
+  };
+  
+  // Forum-specific stats (for compatibility)
+  forumStats?: {
+    level: number;
+    xp: number;
+    reputation: number;
+    totalPosts: number;
+    totalThreads: number;
+    totalLikes: number;
+    totalTips: number;
   };
   
   // Social

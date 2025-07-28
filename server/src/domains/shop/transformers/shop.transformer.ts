@@ -57,6 +57,7 @@ export class ShopTransformer {
 			discountPercentage: this.calculateDiscountPercentage(dbItem.price, dbItem.originalPrice),
 
 			// Visual metadata
+			imageUrl: dbItem.imageUrl,
 			previewUrl: dbItem.previewUrl || this.generatePreviewUrl(dbItem),
 			thumbnailUrl: dbItem.thumbnailUrl || this.generateThumbnailUrl(dbItem),
 			rarityColor: this.getRarityColor(dbItem.rarity),

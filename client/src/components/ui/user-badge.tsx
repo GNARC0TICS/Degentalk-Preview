@@ -3,7 +3,7 @@ import { Badge } from '@/components/ui/badge';
 import { cn } from '@/utils/utils';
 
 type UserBadgeProps = {
-	user: Pick<User, 'forumStats' | 'role'> & {
+	user: Pick<User, 'level' | 'role'> & {
 		isVerified?: boolean;
 		isBanned?: boolean;
 	};
@@ -41,7 +41,7 @@ export function UserBadge({ user, className, size = 'md', showLevel = true }: Us
 	if (showLevel) {
 		return (
 			<Badge variant="secondary" className={cn(sizeClasses[size], className)}>
-				Level {user.forumStats?.level || 1}
+				Level {user.level || 1}
 			</Badge>
 		);
 	}

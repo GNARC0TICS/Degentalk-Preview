@@ -5,16 +5,16 @@ import { AtSign, MessageSquare, FileText, MessageCircle, Send } from 'lucide-rea
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { formatRelativeTime } from '@/utils/utils';
-import type { Thread } from '@shared/types/thread.types';
+import type { MentionThread } from '@shared/types';
 
 interface MentionContentItemProps {
-	item: Thread;
+	item: MentionThread;
 	isCompact?: boolean;
 	onMarkAsRead?: (mentionId: number) => void;
 }
 
 export function MentionContentItem({ item, isCompact = false, onMarkAsRead }: MentionContentItemProps) {
-	const metadata = item.metadata as any;
+	const metadata = item.metadata;
 	const mentionType = metadata?.mentionType || 'post';
 	const mentionId = metadata?.mentionId;
 

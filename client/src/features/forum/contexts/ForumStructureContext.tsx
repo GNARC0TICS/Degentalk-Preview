@@ -77,7 +77,7 @@ const PluginDataSchema = z
 	})
 	.passthrough();
 
-const ApiEntitySchema = z
+const ApiEntitySchema: z.ZodSchema<any> = z.lazy(() => z
 	.object({
 		id: z.string(),
 		slug: z.string().min(1),
@@ -132,13 +132,20 @@ const ApiEntitySchema = z
 		isPopular: z.boolean().optional().nullable(),
 		lastActivityAt: z.union([z.string(), z.date()]).optional().nullable(),
 		lastPostAt: z.union([z.string(), z.date()]).optional().nullable(),
-		parentForumSlug: z.string().optional().nullable()
+		parentForumSlug: z.string().optional().nullable(),
+		isFeatured: z.boolean().optional().nullable(),
+		themePreset: z.string().optional().nullable(),
+		// Support for hierarchical structure
+		children: z.array(z.lazy(() => ApiEntitySchema)).optional()
 	})
-	.passthrough();
+	.passthrough());
 
 const ForumStructureApiResponseSchema = z.object({
-	zones: z.array(ApiEntitySchema),
-	forums: z.array(ApiEntitySchema)
+	forums: z.array(ApiEntitySchema),
+	featured: z.array(ApiEntitySchema),
+	general: z.array(ApiEntitySchema),
+	// Legacy support
+	zones: z.array(ApiEntitySchema).optional()
 });
 
 // ---------------- Types --------------------
@@ -191,6 +198,7 @@ export interface MergedForum {
 	lastActivityAt?: string;
 	// Zone-specific properties
 	isFeatured?: boolean;
+	themePreset?: string;
 	position?: number;
 	forums?: MergedForum[];
 	icon?: string | null;
@@ -203,29 +211,45 @@ export interface MergedForum {
 	zoneBadges?: PluginData['zoneBadges'];
 	updatedAt?: string;
 	categories?: never[];
+	// Permission and activity properties
+	hasNewPosts?: boolean;
+	requiresVip?: boolean;
+	requiresModerator?: boolean;
+	lastPost?: {
+		id: string;
+		title: string;
+		authorName: string;
+		authorId: string;
+		createdAt: string;
+		threadSlug?: string;
+		threadTitle?: string;
+	} | null;
 }
 
 export interface ForumStructureContextType {
-	zones: MergedForum[];
-	forums: Record<string, MergedForum>;
-	forumsById: Record<string, MergedForum>;
-	primaryZones: MergedForum[];
-	generalZones: MergedForum[];
-	getZone: (slug: string) => MergedForum | undefined;
-	getZoneById: (id: string) => MergedForum | undefined;
+	topLevelForums: MergedForum[]; // All top-level forums (was zones)
+	forumsBySlug: Record<string, MergedForum>; // All forums indexed by slug (was forums)
+	forumsById: Record<string, MergedForum>; // All forums indexed by ID
+	featuredForums: MergedForum[]; // Featured top-level forums (was primaryZones)
+	generalForums: MergedForum[]; // Non-featured top-level forums (was generalZones)
+	getTopLevelForum: (slug: string) => MergedForum | undefined; // was getZone
+	getTopLevelForumById: (id: string) => MergedForum | undefined; // was getZoneById
 	getForum: (slug: string) => MergedForum | undefined;
 	getForumById: (id: string) => MergedForum | undefined;
-	getParentZone: (forumSlug: string) => MergedForum | undefined;
+	getParentForum: (forumSlug: string) => MergedForum | undefined; // was getParentZone
 	getThreadContext: (structureId: string) => {
 		forum: MergedForum | undefined;
-		zone: MergedForum | undefined;
+		parentForum: MergedForum | undefined; // was zone
 	};
-	isFeaturedZone: (slug: string) => boolean;
-	isGeneralZone: (slug: string) => boolean;
-	getForumsByType: (type: 'primary' | 'general') => MergedForum[];
+	isFeaturedForum: (slug: string) => boolean; // was isFeaturedZone
+	isGeneralForum: (slug: string) => boolean; // was isGeneralZone
+	getForumsByType: (type: 'featured' | 'general') => MergedForum[]; // updated type values
 	isLoading: boolean;
 	error: Error | null;
 	isUsingFallback: boolean;
+	// Legacy compatibility - will be removed
+	zones: MergedForum[]; // @deprecated - use topLevelForums
+	forums: Record<string, MergedForum>; // @deprecated - use forumsBySlug
 }
 
 // ---------------- Helper builders ----------
@@ -275,7 +299,6 @@ function makeMergedForum(api: ApiEntity, parentForumId: ForumId): MergedForum {
 		rules: buildRules(api),
 		threadCount: api.threadCount ?? 0,
 		postCount: api.postCount ?? 0,
-		parentForumId: null,
 		canHaveThreads: true,
 		isPopular: api.isPopular ?? false,
 		lastActivityAt:
@@ -286,88 +309,87 @@ function makeMergedForum(api: ApiEntity, parentForumId: ForumId): MergedForum {
 }
 
 function processApiData(resp: ForumStructureApiResponse) {
-	const zones: MergedForum[] = [];
-	const forums: Record<string, MergedForum> = {};
+	const topLevelForums: MergedForum[] = [];
+	const forumsBySlug: Record<string, MergedForum> = {};
 	const forumsById: Record<string, MergedForum> = {};
-	const zoneById = new Map<string, MergedForum>();
+	const topLevelForumById = new Map<string, MergedForum>();
 	const forumById = new Map<string, MergedForum>();
-	const handled = new Set<string>();
 
-	// Process top-level forums as zones (since zone type was removed)
-	// Also handle legacy resp.zones if they exist
-	const zonesData = resp.zones && resp.zones.length > 0 
-		? resp.zones 
-		: resp.forums.filter(f => !f.parentId);
-	const childForums = resp.forums.filter(f => f.parentId);
-
-	// Zones first (top-level forums)
-	// Create a map of slug to config for easy lookup
-	const configBySlug = Object.fromEntries(
-		forumMap.forums.map(f => [f.slug, f])
-	);
-
-	zonesData.forEach((z) => {
-		const zone: MergedForum = {
-			id: z.id,
-			slug: z.slug,
-			name: z.name,
-			description: z.description,
+	// Process all forums first
+	const allApiForums = resp.forums || [];
+	
+	// Filter to get only top-level forums (no parentId)
+	const apiTopLevelForums = allApiForums.filter(f => !f.parentId);
+	
+	// Helper to process forum and its children recursively
+	const processForumRecursive = (apiEntity: ApiEntity, parentId: ForumId | null = null) => {
+		const forum: MergedForum = {
+			id: parseId<'ForumId'>(apiEntity.id) || toId<'ForumId'>(apiEntity.id),
+			slug: apiEntity.slug,
+			name: apiEntity.name,
+			description: apiEntity.description,
 			type: 'forum',
-			isFeatured: configBySlug[z.slug]?.isFeatured || z.pluginData?.isFeatured === true,
-			position: z.position ?? 0,
+			parentId: apiEntity.parentId,
+			parentForumId: parentId,
+			isSubforum: parentId !== null,
+			subforums: [],
+			isVip: apiEntity.isVip ?? false,
+			isLocked: apiEntity.isLocked ?? false,
+			isHidden: apiEntity.isHidden ?? false,
+			minXp: apiEntity.minXp ?? 0,
+			xpMultiplier: apiEntity.xpMultiplier ?? 1,
+			theme: buildTheme(apiEntity),
+			rules: buildRules(apiEntity),
+			threadCount: apiEntity.threadCount ?? 0,
+			postCount: apiEntity.postCount ?? 0,
+			canHaveThreads: true,
+			isPopular: apiEntity.isPopular ?? false,
+			lastActivityAt: apiEntity.lastActivityAt || apiEntity.lastPostAt
+				? String(apiEntity.lastActivityAt || apiEntity.lastPostAt)
+				: undefined,
+			isFeatured: apiEntity.isFeatured || false,
+			themePreset: apiEntity.themePreset || undefined,
+			position: apiEntity.position ?? 0,
 			forums: [],
-			theme: buildTheme(z),
-			icon: z.icon,
-			features: z.pluginData?.features || [],
-			customComponents: z.pluginData?.customComponents || [],
-			staffOnly: z.pluginData?.staffOnly || false,
-			hasXpBoost: (z.xpMultiplier ?? 1) > 1,
-			boostMultiplier: z.xpMultiplier ?? 1,
-			xpChallenges: z.pluginData?.xpChallenges,
-			zoneBadges: z.pluginData?.zoneBadges,
-			threadCount: z.threadCount ?? 0,
-			postCount: z.postCount ?? 0,
-			updatedAt: z.updatedAt ? String(z.updatedAt) : undefined,
-			categories: []
+			icon: apiEntity.icon,
+			features: (apiEntity.pluginData as any)?.features || [],
+			customComponents: (apiEntity.pluginData as any)?.customComponents || [],
+			staffOnly: (apiEntity.pluginData as any)?.staffOnly || false
 		};
-		zones.push(zone);
-		zoneById.set(zone.id, zone);
-	});
-
-	// Forums tier 1 (child forums)
-	childForums.forEach((f) => {
-		if (f.parentId && zoneById.has(f.parentId)) {
-			const m = makeMergedForum(f, f.parentId as unknown as ForumId);
-			forums[m.slug] = m;
-			forumsById[m.id] = m;
-			forumById.set(m.id, m);
-			zoneById.get(f.parentId)!.forums.push(m);
-			handled.add(m.id);
+		
+		// Process children if they exist
+		if (apiEntity.children && Array.isArray(apiEntity.children)) {
+			apiEntity.children.forEach(child => {
+				const childForum = processForumRecursive(child, forum.id);
+				forum.forums.push(childForum);
+				forum.subforums.push(childForum);
+			});
 		}
+		
+		// Register in lookups
+		forumsBySlug[forum.slug] = forum;
+		forumsById[forum.id] = forum;
+		forumById.set(forum.id, forum);
+		
+		return forum;
+	};
+	
+	// Process all top-level forums and their children
+	apiTopLevelForums.forEach(topLevel => {
+		const processed = processForumRecursive(topLevel);
+		topLevelForums.push(processed);
+		topLevelForumById.set(processed.id, processed);
 	});
 
-	// Subforums
-	childForums.forEach((f) => {
-		if (!handled.has(f.id) && f.parentId && forumById.has(f.parentId)) {
-			const parent = forumById.get(f.parentId)!;
-			const sub = makeMergedForum(f, parent.parentForumId!);
-			sub.isSubforum = true;
-			forums[sub.slug] = sub;
-			forumsById[sub.id] = sub;
-			forumById.set(sub.id, sub);
-			parent.subforums.push(sub);
-		}
-	});
-
-	return { zones, forums, forumsById };
+	return { topLevelForums, forumsBySlug, forumsById };
 }
 
-function fallbackStructure(staticZones: Zone[]) {
-	const zones: MergedForum[] = [];
-	const forums: Record<string, MergedForum> = {};
+function fallbackStructure(staticForums: Zone[]) {
+	const topLevelForums: MergedForum[] = [];
+	const forumsBySlug: Record<string, MergedForum> = {};
 	const forumsById: Record<string, MergedForum> = {};
 
-	staticZones.forEach((z) => {
+	staticForums.forEach((z) => {
 		const zoneIdNum = FALLBACK_ZONE_ID();
 		const zoneId = toId<'ForumId'>(`550e8400-e29b-41d4-a716-${String(zoneIdNum).padStart(12, '0')}`);
 		const mz: MergedForum = {
@@ -430,12 +452,11 @@ function fallbackStructure(staticZones: Zone[]) {
 				},
 				threadCount: 0,
 				postCount: 0,
-				parentForumId: null,
 				canHaveThreads: true,
 				isPopular: false,
 				lastActivityAt: undefined
 			};
-			forums[mf.slug] = mf;
+			forumsBySlug[mf.slug] = mf;
 			forumsById[forumId] = mf;
 			mz.forums.push(mf);
 
@@ -478,22 +499,21 @@ function fallbackStructure(staticZones: Zone[]) {
 						},
 						threadCount: 0,
 						postCount: 0,
-						parentForumId: null,
 						canHaveThreads: true,
 						isPopular: false,
 						lastActivityAt: undefined
 					};
-					forums[sub.slug] = sub;
+					forumsBySlug[sub.slug] = sub;
 					forumsById[subforumId] = sub;
 					mf.subforums.push(sub);
 				});
 			}
 		});
 
-		zones.push(mz);
+		topLevelForums.push(mz);
 	});
 
-	return { zones, forums, forumsById };
+	return { topLevelForums, forumsBySlug, forumsById };
 }
 
 // ---------------- Context ------------------
@@ -514,7 +534,9 @@ export const ForumStructureProvider = ({ children }: { children: ReactNode }) =>
 					// Don't throw - let fallback handle it
 					return;
 				}
-				const data = await resp.json();
+				const response = await resp.json();
+				// Extract the data from the API response wrapper
+				const data = response.data || response;
 				setRaw(data);
 			} catch (e: unknown) {
 				logger.info('ForumStructureContext', '[ForumStructureContext] API unavailable - using fallback forum structure');
@@ -525,7 +547,7 @@ export const ForumStructureProvider = ({ children }: { children: ReactNode }) =>
 		})();
 	}, []);
 
-	const { zones, forums, forumsById, isUsingFallback, parseError } = useMemo(() => {
+	const { topLevelForums, forumsBySlug, forumsById, isUsingFallback, parseError } = useMemo(() => {
 		if (raw) {
 			// If backend already returns the flat object shape
 			try {
@@ -567,44 +589,48 @@ export const ForumStructureProvider = ({ children }: { children: ReactNode }) =>
 		};
 	}, [raw]);
 
-	const primaryZones = useMemo(() => zones.filter((z) => z.isFeatured), [zones]);
-	const generalZones = useMemo(() => zones.filter((z) => !z.isFeatured), [zones]);
+	const featuredForums = useMemo(() => topLevelForums.filter((f) => f.isFeatured), [topLevelForums]);
+	const generalForums = useMemo(() => topLevelForums.filter((f) => !f.isFeatured), [topLevelForums]);
 
 	const value = useMemo<ForumStructureContextType>(
 		() => ({
-			zones,
-			forums,
+			// New naming
+			topLevelForums,
+			forumsBySlug,
 			forumsById,
-			primaryZones,
-			generalZones,
-			getZone: (s) => zones.find((z) => z.slug === s),
-			getZoneById: (id) => zones.find((z) => z.id === id),
-			getForum: (s) => forums[s],
+			featuredForums,
+			generalForums,
+			getTopLevelForum: (s) => topLevelForums.find((f) => f.slug === s),
+			getTopLevelForumById: (id) => topLevelForums.find((f) => f.id === id),
+			getForum: (s) => forumsBySlug[s],
 			getForumById: (id) => forumsById[id],
-			getParentZone: (forumSlug) => {
-				const f = forums[forumSlug];
+			getParentForum: (forumSlug) => {
+				const f = forumsBySlug[forumSlug];
 				if (!f) return undefined;
-				return zones.find((z) => z.id === f.parentForumId);
+				return topLevelForums.find((tf) => tf.id === f.parentForumId);
 			},
 			getThreadContext: (structureId) => {
 				const forum = forumsById[structureId];
-				if (!forum) return { forum: undefined, zone: undefined };
-				const zone = zones.find((z) => z.id === forum.parentForumId);
-				return { forum, zone };
+				if (!forum) return { forum: undefined, parentForum: undefined };
+				const parentForum = topLevelForums.find((f) => f.id === forum.parentForumId);
+				return { forum, parentForum };
 			},
-			isFeaturedZone: (s) => primaryZones.some((z) => z.slug === s),
-			isGeneralZone: (s) => generalZones.some((z) => z.slug === s),
-			getForumsByType: (t) => (t === 'primary' ? primaryZones : generalZones),
+			isFeaturedForum: (s) => featuredForums.some((f) => f.slug === s),
+			isGeneralForum: (s) => generalForums.some((f) => f.slug === s),
+			getForumsByType: (t) => (t === 'featured' ? featuredForums : generalForums),
 			isLoading,
 			error: null, // Always return null error when we have fallback data
-			isUsingFallback
+			isUsingFallback,
+			// Legacy compatibility - @deprecated
+			zones: topLevelForums,
+			forums: forumsBySlug
 		}),
 		[
-			zones,
-			forums,
+			topLevelForums,
+			forumsBySlug,
 			forumsById,
-			primaryZones,
-			generalZones,
+			featuredForums,
+			generalForums,
 			isLoading,
 			netErr,
 			parseError,

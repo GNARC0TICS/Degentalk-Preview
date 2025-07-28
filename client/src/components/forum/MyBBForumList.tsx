@@ -11,16 +11,23 @@ interface MyBBForumListProps {
 	categoryColor?: string;
 }
 
-export function MyBBForumList({ forums, categoryName, categoryColor }: MyBBForumListProps) {
+export function MyBBForumList({ forums, categoryName, categoryColor = 'blue' }: MyBBForumListProps) {
 	return (
 		<div className="mybb-forum-category mb-6">
-			{/* Category Header */}
-			<div className="mybb-category-header">
-				{categoryName}
+			{/* Category Header with gradient */}
+			<div className={`mybb-category-header mybb-category-${categoryColor}`}>
+				<div className="mybb-category-title">{categoryName}</div>
 			</div>
 			
 			{/* Forum Table */}
 			<table className="mybb-forum-table">
+				<colgroup>
+					<col style={{ width: '5%' }} />
+					<col style={{ width: '50%' }} />
+					<col style={{ width: '10%' }} />
+					<col style={{ width: '10%' }} />
+					<col style={{ width: '25%' }} />
+				</colgroup>
 				<tbody>
 					{forums.map((forum, index) => (
 						<ForumRow key={forum.id} forum={forum} isEven={index % 2 === 0} />
@@ -47,34 +54,36 @@ function ForumRow({ forum, isEven }: { forum: MergedForum; isEven: boolean }) {
 	return (
 		<tr className={`mybb-forum-row ${isEven ? 'even' : 'odd'} ${isSticky ? 'sticky' : ''}`}>
 			{/* Status Icon */}
-			<td width="30" className="text-center">
-				<div className={`mybb-status-icon ${forum.threadCount > 0 ? 'mybb-status-new' : 'mybb-status-old'}`}>
-					{!canPost ? (
-						<Lock className="w-5 h-5 text-zinc-500" aria-label={reason} />
-					) : (
-						<MessageSquare className="w-5 h-5 text-blue-500" />
-					)}
+			<td className="mybb-icon-cell">
+				<div className={`mybb-forum-icon ${forum.threadCount > 0 ? 'mybb-icon-new' : 'mybb-icon-old'} ${!canPost ? 'mybb-icon-locked' : ''}`}>
+					<div className="mybb-icon-inner">
+						{!canPost ? (
+							<Lock className="w-4 h-4 text-zinc-600" />
+						) : (
+							<MessageSquare className="w-4 h-4 text-zinc-300" />
+						)}
+					</div>
 				</div>
 			</td>
 			
 			{/* Forum Info */}
-			<td>
-				<div className="flex flex-col">
-					<Link to={`/forums/${forum.slug}`} className="font-semibold text-blue-400 hover:text-blue-300 text-sm">
+			<td className="mybb-forum-info">
+				<div className="mybb-forum-details">
+					<Link to={`/forums/${forum.slug}`} className="mybb-forum-title">
 						{forum.name}
 					</Link>
 					{forum.description && (
-						<div className="text-xs text-zinc-500 mt-1">{forum.description}</div>
+						<div className="mybb-forum-description">{forum.description}</div>
 					)}
-					{forum.subforums && forum.subforums.length > 0 && (
+					{forum.forums && forum.forums.length > 0 && (
 						<div className="mybb-subforum-list">
-							<span className="text-zinc-500">Subforums: </span>
-							{forum.subforums.map((sub, i) => (
+							<span className="mybb-subforum-label">Sub-forums: </span>
+							{forum.forums.map((sub, i) => (
 								<React.Fragment key={sub.id}>
-									<Link to={`/forums/${forum.slug}/${sub.slug}`} className="mybb-subforum-link">
+									<Link to={`/forums/${sub.slug}`} className="mybb-subforum-link">
 										{sub.name}
 									</Link>
-									{i < forum.subforums.length - 1 && ', '}
+									{i < forum.forums.length - 1 && ', '}
 								</React.Fragment>
 							))}
 						</div>
@@ -83,36 +92,40 @@ function ForumRow({ forum, isEven }: { forum: MergedForum; isEven: boolean }) {
 			</td>
 			
 			{/* Thread Count */}
-			<td className="mybb-stats">
-				<span className="mybb-stats-number">{forum.threadCount}</span>
-				<span className="text-xs">Threads</span>
+			<td className="mybb-stats-cell">
+				<div className="mybb-stats">
+					<span className="mybb-stats-number">{forum.threadCount || 0}</span>
+				</div>
 			</td>
 			
 			{/* Post Count */}
-			<td className="mybb-stats">
-				<span className="mybb-stats-number">{forum.postCount}</span>
-				<span className="text-xs">Posts</span>
+			<td className="mybb-stats-cell">
+				<div className="mybb-stats">
+					<span className="mybb-stats-number">{forum.postCount || 0}</span>
+				</div>
 			</td>
 			
 			{/* Last Post */}
-			<td width="200" className="mybb-lastpost">
-				{forum.threadCount > 0 ? (
-					<div>
-						<div className="truncate">
-							<Link to={`/threads/${lastPost.threadTitle.toLowerCase().replace(/\s+/g, '-')}`} className="text-blue-400 hover:underline text-xs">
-								{lastPost.threadTitle}
-							</Link>
-						</div>
-						<div className="mybb-lastpost-time">
-							by <span className="mybb-lastpost-user">{lastPost.user}</span>
-						</div>
-						<div className="mybb-lastpost-time">
-							{formatDistanceToNow(lastPost.time, { addSuffix: true })}
-						</div>
-					</div>
-				) : (
-					<span className="text-zinc-500 text-xs">No posts</span>
-				)}
+			<td className="mybb-lastpost-cell">
+				<div className="mybb-lastpost">
+					{forum.threadCount > 0 ? (
+						<>
+							<div className="mybb-lastpost-title">
+								<Link to={forum.slug ? `/forums/${forum.slug}/${lastPost.threadTitle.toLowerCase().replace(/\s+/g, '-')}` : `/threads/${lastPost.threadTitle.toLowerCase().replace(/\s+/g, '-')}`} className="mybb-lastpost-link">
+									{lastPost.threadTitle}
+								</Link>
+							</div>
+							<div className="mybb-lastpost-info">
+								{formatDistanceToNow(lastPost.time, { addSuffix: true })}
+							</div>
+							<div className="mybb-lastpost-by">
+								by <Link to={`/profile/${lastPost.user}`} className="mybb-lastpost-user">{lastPost.user}</Link>
+							</div>
+						</>
+					) : (
+						<span className="mybb-no-posts">No posts</span>
+					)}
+				</div>
 			</td>
 		</tr>
 	);

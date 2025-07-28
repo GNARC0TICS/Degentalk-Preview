@@ -67,7 +67,7 @@ export type {
 	ForumPrefix,
 	ForumRule,
 	ForumStats,
-	Post,
+	Post as CorePost,
 	PostMetadata,
 	PostReaction,
 	ThreadView,
@@ -78,6 +78,14 @@ export type {
 	PostWithAuthor,
 	ForumHierarchy
 } from './forum-core.types.js';
+
+// Post Types (display-ready with populated user data)
+export type {
+	Post,
+	PostAuthor,
+	CreatePostInput,
+	UpdatePostInput
+} from './post.types.js';
 
 // Economy types
 export type {
@@ -144,6 +152,7 @@ export type {
 	ThreadTag,
 	ThreadPermissions,
 	ThreadListItem,
+	MentionThread,
 	CreateThreadInput,
 	UpdateThreadInput,
 	ThreadSearchParams,

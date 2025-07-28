@@ -102,7 +102,7 @@ function HotThreads({ className = '', limit = 5, variant = 'widget' }: HotThread
 	// Render individual thread item
 	const renderThreadItem = (thread: ThreadResponse, index: number) => (
 		<div key={thread.thread_id}>
-			<Link to={`/threads/${thread.slug}`}>
+			<Link to={thread.category_slug ? `/forums/${thread.category_slug}/${thread.slug}` : `/threads/${thread.slug}`}>
 				<div className="border-b border-zinc-800/60 last:border-b-0 p-4 hover:bg-zinc-800/40 transition-all duration-200 cursor-pointer group">
 					<div className="space-y-3">
 						{/* Thread title */}

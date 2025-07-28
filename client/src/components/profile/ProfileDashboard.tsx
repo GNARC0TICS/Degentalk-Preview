@@ -153,7 +153,6 @@ function renderWidget(
 			return (
 				<ReputationCard
 					reputation={extendedStats.reputation}
-					reputation={extendedStats.reputation}
 					dailyXpGained={extendedStats.dailyXpGained}
 					lastXpGainDate={extendedStats.lastXpGainDate}
 					level={extendedStats.level}

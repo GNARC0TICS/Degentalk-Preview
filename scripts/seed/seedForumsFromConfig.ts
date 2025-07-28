@@ -4,27 +4,29 @@
  * Populates forum_structure table with zones and forums from config
  */
 
-import { db } from '@db';
-import { forumStructure } from '../../db/schema/forum/structure';
-import { forumMap } from '@config/forumMap';
-import type { RootForum as Zone, Forum } from '@config/forumMap';
+import { db } from '../../db/index.js';
+import { forumStructure } from '../../db/schema/forum/structure.js';
+import { forumMap } from '../../shared/config/forum-map.config.js';
+import type { RootForum as Zone, Forum } from '../../shared/config/forum-map.config.js';
 import { eq } from 'drizzle-orm';
 
 interface DbStructure {
-  id?: number;
+  id?: string;
   name: string;
   slug: string;
   description: string | null;
-  type: 'zone' | 'forum';
-  parentId: number | null;
+  type: 'forum'; // Updated: no more 'zone' type
+  parentId: string | null;
   parentForumSlug: string | null;
-  sortOrder: number;
+  position: number; // Updated: renamed from sortOrder
   isLocked: boolean;
   tippingEnabled: boolean;
   xpMultiplier: number;
   color: string;
   icon: string;
   colorTheme: string | null;
+  isFeatured: boolean; // Added: featured forum flag
+  themePreset: string | null; // Added: theme preset
   pluginData: any;
   createdAt: Date;
   updatedAt: Date;
@@ -40,48 +42,58 @@ export async function seedForumsFromConfig() {
     
     const insertedStructures: DbStructure[] = [];
     
-    // Process each zone from config
-    for (const [zoneIndex, zone] of forumMap.forums.entries()) {
-      console.log(`📁 Processing zone: ${zone.name} (${zone.slug})`);
+    // Process each top-level forum from config
+    for (const [forumIndex, forum] of forumMap.forums.entries()) {
+      console.log(`🏛️ Processing top-level forum: ${forum.name} (${forum.slug})`);
       
-      // Insert zone
-      const zoneData: Omit<DbStructure, 'id'> = {
-        name: zone.name,
-        slug: zone.slug,
-        description: zone.description || null,
-        type: 'zone',
+      // Insert top-level forum
+      const forumData: Omit<DbStructure, 'id'> = {
+        name: forum.name,
+        slug: forum.slug,
+        description: forum.description || null,
+        type: 'forum',
         parentId: null,
         parentForumSlug: null,
-        sortOrder: zone.position || zoneIndex,
+        position: forum.position || forumIndex,
         isLocked: false,
-        tippingEnabled: false,
-        xpMultiplier: 1,
-        color: zone.theme.color || '#9CA3AF',
-        icon: zone.theme.icon || '📁',
-        colorTheme: zone.theme.colorTheme || null,
+        tippingEnabled: forum.defaultRules?.tippingEnabled || false,
+        xpMultiplier: forum.defaultRules?.xpMultiplier || 1,
+        color: forum.theme.color || '#9CA3AF',
+        icon: forum.theme.icon || '📁',
+        colorTheme: forum.theme.colorTheme || null,
+        isFeatured: forum.isFeatured || false, // Set from config
+        themePreset: forum.theme.colorTheme || null, // Use colorTheme as preset
         pluginData: {
-          configDescription: zone.description,
-          configZoneType: zone.type,
-          originalTheme: zone.theme,
-          bannerImage: zone.theme.bannerImage,
-          landingComponent: zone.theme.landingComponent
+          configDescription: forum.description,
+          originalTheme: forum.theme,
+          bannerImage: forum.theme.bannerImage,
+          landingComponent: forum.theme.landingComponent,
+          isFeatured: forum.isFeatured || false // Also store in pluginData for compatibility
         },
         createdAt: new Date(),
         updatedAt: new Date()
       };
       
-      const [insertedZone] = await db.insert(forumStructure).values(zoneData).returning();
-      insertedStructures.push(insertedZone);
-      console.log(`  ✅ Zone inserted: ${zone.name} (ID: ${insertedZone.id})`);
+      const [insertedForum] = await db.insert(forumStructure).values(forumData).returning();
+      insertedStructures.push(insertedForum);
       
-      // Process forums in this zone
-      await processForums(zone.forums, insertedZone.id, zone.slug, insertedStructures);
+      if (forum.isFeatured) {
+        console.log(`  ✨ Featured forum inserted: ${forum.name} (ID: ${insertedForum.id})`);
+      } else {
+        console.log(`  📁 Regular forum inserted: ${forum.name} (ID: ${insertedForum.id})`);
+      }
+      
+      // Process subforums in this top-level forum
+      if (forum.forums && forum.forums.length > 0) {
+        await processForums(forum.forums, insertedForum.id, forum.slug, insertedStructures);
+      }
     }
     
     console.log(`🎉 Successfully seeded ${insertedStructures.length} forum structures`);
     console.log('📊 Summary:');
-    console.log(`  - Zones: ${insertedStructures.filter(s => s.type === 'zone').length}`);
-    console.log(`  - Forums: ${insertedStructures.filter(s => s.type === 'forum').length}`);
+    console.log(`  - Featured forums: ${insertedStructures.filter(s => s.isFeatured).length}`);
+    console.log(`  - Regular forums: ${insertedStructures.filter(s => !s.isFeatured && !s.parentId).length}`);
+    console.log(`  - Subforums: ${insertedStructures.filter(s => s.parentId).length}`);
     
   } catch (error) {
     console.error('❌ Seeding failed:', error);
@@ -91,15 +103,12 @@ export async function seedForumsFromConfig() {
 
 async function processForums(
   forums: Forum[], 
-  parentId: number, 
+  parentId: string, 
   parentSlug: string, 
   insertedStructures: DbStructure[]
 ) {
   for (const [forumIndex, forum] of forums.entries()) {
-    console.log(`  📝 Processing forum: ${forum.name} (${forum.slug})`);
-    
-    // Determine parent forum slug (for subforums)
-    const isSubforum = parentSlug !== parentSlug; // Will be true for subforums
+    console.log(`  📝 Processing subforum: ${forum.name} (${forum.slug})`);
     
     const forumData: Omit<DbStructure, 'id'> = {
       name: forum.name,
@@ -107,20 +116,23 @@ async function processForums(
       description: forum.description || null,
       type: 'forum',
       parentId: parentId,
-      parentForumSlug: isSubforum ? parentSlug : null,
-      sortOrder: forum.position || forumIndex,
+      parentForumSlug: parentSlug,
+      position: forum.position || forumIndex,
       isLocked: !forum.rules.allowPosting,
       tippingEnabled: forum.rules.tippingEnabled,
       xpMultiplier: forum.rules.xpMultiplier || 1,
       color: forum.themeOverride?.color || '#9CA3AF',
       icon: forum.themeOverride?.icon || '📄',
       colorTheme: forum.themeOverride?.colorTheme || null,
+      isFeatured: false, // Subforums are never featured
+      themePreset: null, // Subforums don't have theme presets
       pluginData: {
         rules: forum.rules,
         themeOverride: forum.themeOverride || null,
         availablePrefixes: forum.rules.availablePrefixes || [],
         customComponent: forum.rules.customComponent || null,
-        customRules: forum.rules.customRules || {}
+        customRules: forum.rules.customRules || {},
+        isFeatured: false // Ensure subforums are not featured
       },
       createdAt: new Date(),
       updatedAt: new Date()
@@ -128,11 +140,11 @@ async function processForums(
     
     const [insertedForum] = await db.insert(forumStructure).values(forumData).returning();
     insertedStructures.push(insertedForum);
-    console.log(`    ✅ Forum inserted: ${forum.name} (ID: ${insertedForum.id})`);
+    console.log(`    ✅ Subforum inserted: ${forum.name} (ID: ${insertedForum.id})`);
     
-    // Process subforums if they exist
+    // Process nested subforums if they exist
     if (forum.forums && forum.forums.length > 0) {
-      console.log(`    📁 Processing ${forum.forums.length} subforums...`);
+      console.log(`    📁 Processing ${forum.forums.length} nested subforums...`);
       await processForums(forum.forums, insertedForum.id, forum.slug, insertedStructures);
     }
   }

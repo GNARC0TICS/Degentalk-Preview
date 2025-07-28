@@ -238,7 +238,9 @@ function generateInsights(
 		}
 	}
 
-	// Path XP insights
+	// Path XP insights - commented out as pathXp no longer exists in ExtendedProfileStats
+	// TODO: Re-implement when path-based XP system is restored
+	/*
 	if (stats.pathXp && Object.keys(stats.pathXp).length > 0) {
 		const topPath = Object.entries(stats.pathXp).sort(([, a], [, b]) => b - a)[0];
 
@@ -253,6 +255,7 @@ function generateInsights(
 			});
 		}
 	}
+	*/
 
 	return insights;
 }

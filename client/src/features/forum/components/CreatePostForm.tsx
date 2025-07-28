@@ -12,7 +12,7 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { apiRequest, queryClient } from '@/utils/queryClient';
-import { useCanonicalAuth } from '@/features/auth/useCanonicalAuth';
+import { useAuth } from '@/hooks/use-auth';
 import { useToast } from '@/hooks/use-toast';
 import type { ThreadId, PostId } from '@shared/types/ids';
 import { useMutation } from '@tanstack/react-query';
@@ -30,7 +30,7 @@ type CreatePostFormProps = {
 
 export function CreatePostForm({ threadId, replyToPostId, onSuccess }: CreatePostFormProps) {
 	const { toast } = useToast();
-	const { user } = useCanonicalAuth();
+	const { user } = useAuth();
 
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),

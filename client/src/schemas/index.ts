@@ -11,11 +11,14 @@ export * from './api';
 export * from './shared/response.schema';
 export * from './shared/helpers';
 
-// Re-export commonly used types
+// Re-export shared API types
 export type {
-  StandardApiResponse,
-  PaginatedResponse
-} from './shared/response.schema';
+  ApiResponse,
+  ApiSuccess,
+  ApiError,
+  PaginationMeta,
+  FilterMeta
+} from '@shared/types/api.types';
 
 export {
   validateApiResponse,

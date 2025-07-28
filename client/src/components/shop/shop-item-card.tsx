@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import type { ShopItem } from '@/hooks/use-shop-items';
 import { useShopItemOwnership } from '@/hooks/use-shop-ownership';
 import { useAuth } from '@/hooks/use-auth';
+import { UserTitle } from '@/components/ui/user-title';
+import type { Title } from '@shared/types/entities/title.types';
 import {
 	BadgeCheck,
 	Lock,
@@ -44,8 +46,9 @@ export function ShopItemCard({ item, onPurchaseClick }: ShopItemCardProps) {
 	const rarityClasses = {
 		common: 'border-zinc-700 hover:border-zinc-600',
 		rare: 'border-blue-900/50 hover:border-blue-800',
+		epic: 'border-purple-900/50 hover:border-purple-800',
 		legendary: 'border-amber-900/50 hover:border-amber-800/80'
-	}[item.rarity];
+	}[item.rarity] || 'border-zinc-700 hover:border-zinc-600';
 
 	// If item is locked, show XP requirement
 	const isLocked = item.isLocked && item.requiredXP;
@@ -86,9 +89,18 @@ export function ShopItemCard({ item, onPurchaseClick }: ShopItemCardProps) {
 			className={`bg-zinc-900 ${rarityClasses} transition-all duration-200 hover:shadow-lg hover:shadow-emerald-900/10 overflow-hidden flex flex-col`}
 		>
 			<div className="pt-4 px-4 relative">
-				{/* Item Image or Placeholder */}
+				{/* Item Image, Title Preview, or Placeholder */}
 				<div className="w-full aspect-square bg-black/50 rounded-md overflow-hidden mb-4 flex items-center justify-center">
-					{item.imageUrl ? (
+					{item.category === 'titles' ? (
+						// Title preview
+						<div className="flex flex-col items-center justify-center gap-3 p-4">
+							<div className="text-xs text-zinc-400 uppercase tracking-wide">Preview</div>
+							<UserTitle 
+								title={item as unknown as Title}
+								className="transform scale-110"
+							/>
+						</div>
+					) : item.imageUrl ? (
 						<img src={item.imageUrl} alt={item.name} className="w-full h-full object-cover" />
 					) : (
 						<ShoppingCart className="h-12 w-12 text-zinc-700" />
@@ -101,6 +113,7 @@ export function ShopItemCard({ item, onPurchaseClick }: ShopItemCardProps) {
             absolute top-6 right-6 uppercase text-[10px]
             ${item.rarity === 'common' ? 'bg-zinc-800 hover:bg-zinc-700' : ''}
             ${item.rarity === 'rare' ? 'bg-blue-900 hover:bg-blue-800' : ''}
+            ${item.rarity === 'epic' ? 'bg-purple-900 hover:bg-purple-800' : ''}
             ${item.rarity === 'legendary' ? 'bg-amber-900 hover:bg-amber-800' : ''}
           `}
 				>
@@ -136,7 +149,7 @@ export function ShopItemCard({ item, onPurchaseClick }: ShopItemCardProps) {
 				<div className="flex items-center gap-4">
 					<div className="flex items-center text-emerald-500 font-medium">
 						<Coins className="h-4 w-4 mr-1" />
-						<span>{item.priceDGT}</span>
+						<span>{item.price || item.priceDGT}</span>
 					</div>
 					{typeof item.priceUSDT === 'number' && (
 						<div className="text-blue-500 text-xs flex items-center">

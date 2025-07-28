@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { apiRequest } from '@/utils/api-request';
-import type { Thread } from '@shared/types/thread.types';
+import type { MentionThread } from '@shared/types/thread.types';
+import type { UserId, ForumId, StructureId } from '@shared/types/ids';
 import type { ContentResponse } from './use-content';
 
 interface Mention {
@@ -48,8 +49,8 @@ export function useContentMentions(page = 1, limit = 20) {
 			}
 
 			// Transform mentions into thread-like format for display
-			const items: Thread[] = response.mentions.map((mention) => ({
-				// Basic thread properties
+			const items: MentionThread[] = response.mentions.map((mention) => ({
+				// Basic thread properties (required by Thread type)
 				id: mention.threadId || mention.postId || `mention-${mention.id}`,
 				title: `${mention.mentioningUser.username} mentioned you`,
 				slug: '',
@@ -61,44 +62,53 @@ export function useContentMentions(page = 1, limit = 20) {
 				updatedAt: mention.createdAt,
 				
 				// User info - use mentioning user
-				userId: mention.mentioningUser.id,
+				userId: mention.mentioningUser.id as UserId,
 				user: {
-					id: mention.mentioningUser.id,
+					id: mention.mentioningUser.id as UserId,
 					username: mention.mentioningUser.username,
 					avatarUrl: mention.mentioningUser.avatarUrl,
 					activeAvatarUrl: mention.mentioningUser.activeAvatarUrl,
-					role: null,
-					level: null,
+					role: 'user' as const, // Default role
+					level: 1,
 					createdAt: new Date().toISOString()
 				},
 				
-				// Forum info - null for mentions
-				forumId: null,
-				forum: null,
-				
-				// Stats - minimal for mentions
-				viewCount: 0,
-				replyCount: 0,
-				lastReplyAt: null,
-				lastReplyUserId: null,
-				lastReplyUser: null,
-				
-				// Flags
-				isPinned: false,
+				// Required Thread fields
+				isSticky: false,
 				isLocked: false,
 				isHidden: false,
-				isFeatured: false,
 				isSolved: false,
-				isRead: mention.isRead,
+				viewCount: 0,
+				postCount: 0,
+				firstPostLikeCount: 0,
+				structureId: 'mention-context' as StructureId, // Placeholder for mentions
 				
-				// Additional metadata
+				// Structure information (required)
+				structure: {
+					id: 'mention-context' as StructureId,
+					name: 'Mentions',
+					slug: 'mentions',
+					type: 'forum' as const
+				},
+				
+				// Featured forum (required)
+				featuredForum: {
+					id: 'mentions' as ForumId,
+					name: 'Mentions',
+					slug: 'mentions',
+					colorTheme: 'blue'
+				},
+				
+				// Tags and categorization
 				tags: [],
+				
+				// MentionThread specific fields
+				isRead: mention.isRead,
 				metadata: {
 					mentionId: mention.id,
 					mentionType: mention.type,
 					originalThreadId: mention.threadId,
-					originalPostId: mention.postId,
-					originalMessageId: mention.messageId
+					originalPostId: mention.postId
 				}
 			}));
 

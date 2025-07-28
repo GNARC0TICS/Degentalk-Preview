@@ -15,8 +15,11 @@ import {
   Edit,
   Trash,
   Lock,
-  CheckCircle
+  CheckCircle,
+  Monitor,
+  Layout
 } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 import { apiRequest } from '@/utils/queryClient';
 import { Container } from '@/layout/primitives';
@@ -26,7 +29,7 @@ import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
-import { useCanonicalAuth } from '@/features/auth/useCanonicalAuth';
+import { useAuth } from '@/hooks/use-auth';
 import { cn } from '@/utils/utils';
 import type { PostId, ThreadId } from '@shared/types/ids';
 import { toPostId } from '@shared/utils/id';
@@ -45,7 +48,12 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import type { PostWithUser } from '@/types/compat/forum';
+import type { Post } from '@shared/types/post.types';
+import { MyBBPostCard } from '@/components/forum/MyBBPostCard';
+import { MyBBBreadcrumb } from '@/components/forum/MyBBBreadcrumb';
+import { MyBBReplyForm } from '@/components/forum/MyBBReplyForm';
+import { Switch } from '@/components/ui/switch';
+import { useForumViewTheme } from '@/contexts/ForumViewThemeContext';
 
 
 interface ThreadDetail {
@@ -83,27 +91,34 @@ interface ThreadDetail {
 }
 
 export default function ThreadDetailPage() {
-  const { slug } = useParams<{ slug: string }>();
+  const { slug, threadSlug, forumSlug } = useParams<{ slug?: string; threadSlug?: string; forumSlug?: string }>();
+  // Use hierarchical slug if available, otherwise fall back to flat slug
+  const actualSlug = threadSlug || slug;
   const navigate = useNavigate();
-  const { user } = useCanonicalAuth();
+  const { user } = useAuth();
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
   // Edit/Delete state
-  const [editingPost, setEditingPost] = useState<PostWithUser | null>(null);
+  const [editingPost, setEditingPost] = useState<Post | null>(null);
   const [deletingPostId, setDeletingPostId] = useState<PostId | null>(null);
   const deletePost = useDeletePost();
+  
+  // Use global theme context
+  const { viewTheme, setViewTheme } = useForumViewTheme();
 
   // Fetch thread data
   const { data: thread, isLoading, error } = useQuery<ThreadDetail>({
-    queryKey: ['thread', slug],
+    queryKey: ['thread', actualSlug],
     queryFn: async () => {
+      if (!actualSlug) throw new Error('No thread slug provided');
       const response = await apiRequest<ThreadDetail>({
-        url: `/api/forum/threads/slug/${slug}`,
+        url: `/api/forum/threads/slug/${actualSlug}`,
         method: 'GET'
       });
       return response;
-    }
+    },
+    enabled: !!actualSlug
   });
 
   // Fetch posts for this thread
@@ -153,10 +168,10 @@ export default function ThreadDetailPage() {
   };
 
   // Check if user can edit/delete post
-  const canEditPost = (post: PostWithUser): boolean => {
-    if (!user) return false;
+  const canEditPost = (post: Post): boolean => {
+    if (!user || !post.user) return false;
     // User can edit their own posts
-    if (post.user.id === user.id) return true;
+    if (post.user?.id === user.id) return true;
     // Moderators/admins can edit any post
     if (user.role === 'admin' || user.role === 'moderator') return true;
     return false;
@@ -190,21 +205,79 @@ export default function ThreadDetailPage() {
     );
   }
 
-  // Get forum info
-  const forumSlug = thread?.forum?.slug || thread?.category?.slug || 'forums';
+  // Get forum info (use forumSlug from params if available, otherwise get from thread data)
+  const currentForumSlug = forumSlug || thread?.forum?.slug || thread?.category?.slug || 'forums';
   const forumName = thread?.forum?.name || thread?.category?.name || 'Forums';
+
+  // Breadcrumb items
+  const breadcrumbItems = [
+    { label: 'Forums', href: '/forums' },
+    { label: forumName, href: `/forums/${currentForumSlug}` },
+    { label: thread.title }
+  ];
 
   return (
     <Container className="py-8">
-      {/* Breadcrumbs */}
-      <div className="flex items-center gap-2 text-sm text-zinc-400 mb-6">
-        <Link to="/forums" className="hover:text-white">Forums</Link>
-        <ChevronRight className="w-4 h-4" />
-        <Link to={`/forums/${forumSlug}`} className="hover:text-white">
-          {forumName}
-        </Link>
-        <ChevronRight className="w-4 h-4" />
-        <span className="text-zinc-200">{thread.title}</span>
+      {/* Header with Theme Toggle */}
+      <div className="flex justify-between items-center mb-6">
+        {/* Breadcrumbs */}
+        <div className="flex-1">
+          <AnimatePresence mode="wait">
+            {viewTheme === 'modern' ? (
+              <motion.div
+                key="modern-breadcrumb"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              >
+                <div className="flex items-center gap-2 text-sm text-zinc-400">
+                  <Link to="/forums" className="hover:text-white">Forums</Link>
+                  <ChevronRight className="w-4 h-4" />
+                  <Link to={`/forums/${currentForumSlug}`} className="hover:text-white">
+                    {forumName}
+                  </Link>
+                  <ChevronRight className="w-4 h-4" />
+                  <span className="text-zinc-200">{thread.title}</span>
+                </div>
+              </motion.div>
+            ) : (
+              <motion.div
+                key="classic-breadcrumb"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              >
+                <MyBBBreadcrumb items={breadcrumbItems} />
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+        
+        {/* Theme Toggle */}
+        <motion.div
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          className="flex items-center gap-3 bg-zinc-900/50 rounded-lg px-3 py-2 border border-zinc-800"
+        >
+          <div className="flex items-center gap-2">
+            <Monitor className={cn("w-4 h-4", viewTheme === 'modern' && "text-blue-500")} />
+            <span className={cn("text-xs font-medium", viewTheme === 'modern' ? "text-blue-500" : "text-zinc-500")}>
+              Modern
+            </span>
+          </div>
+          <Switch
+            checked={viewTheme === 'classic'}
+            onCheckedChange={(checked) => setViewTheme(checked ? 'classic' : 'modern')}
+            className="data-[state=checked]:bg-amber-600"
+            aria-label="Toggle between Modern and Classic theme"
+          />
+          <div className="flex items-center gap-2">
+            <Layout className={cn("w-4 h-4", viewTheme === 'classic' && "text-amber-500")} />
+            <span className={cn("text-xs font-medium", viewTheme === 'classic' ? "text-amber-500" : "text-zinc-500")}>
+              Classic
+            </span>
+          </div>
+        </motion.div>
       </div>
 
       {/* Thread Header */}
@@ -229,8 +302,8 @@ export default function ThreadDetailPage() {
                   </Badge>
                 )}
               </div>
-              <h1 className="text-2xl font-bold text-white mb-2">{thread.title}</h1>
-              <div className="flex items-center gap-4 text-sm text-zinc-400">
+              <h1 className="text-xl font-bold text-white mb-2">{thread.title}</h1>
+              <div className="flex items-center gap-4 text-xs text-zinc-400">
                 <div className="flex items-center gap-1">
                   <MessageSquare className="w-4 h-4" />
                   <span>{thread.postCount} replies</span>
@@ -274,65 +347,178 @@ export default function ThreadDetailPage() {
       </Card>
 
       {/* Posts */}
-      <div className="space-y-4">
-        {postsLoading ? (
-          <Card className="bg-zinc-900/50 border-zinc-800">
-            <div className="p-6">
-              <div className="animate-pulse space-y-4">
-                <div className="h-4 bg-zinc-800 rounded w-3/4" />
-                <div className="h-4 bg-zinc-800 rounded w-1/2" />
-                <div className="h-20 bg-zinc-800 rounded" />
+      <AnimatePresence mode="wait">
+        {viewTheme === 'modern' ? (
+          /* Modern View */
+          <motion.div
+            key="modern-posts"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3 }}
+            className="space-y-4"
+          >
+            {postsLoading ? (
+              <Card className="bg-zinc-900/50 border-zinc-800">
+                <div className="p-6">
+                  <div className="animate-pulse space-y-4">
+                    <div className="h-4 bg-zinc-800 rounded w-3/4" />
+                    <div className="h-4 bg-zinc-800 rounded w-1/2" />
+                    <div className="h-20 bg-zinc-800 rounded" />
+                  </div>
+                </div>
+              </Card>
+            ) : postsData?.posts && postsData.posts.length > 0 ? (
+              postsData.posts.map((post, index) => (
+                <PostCard
+                  key={post.id}
+                  post={post}
+                  isEditable={canEditPost(post)}
+                  isFirst={index === 0}
+                  onEdit={handleEditPost}
+                  onDelete={handleDeletePost}
+                  onLike={(postId, hasLiked) => {
+                    toast({
+                      title: 'Coming soon',
+                      description: 'Like functionality will be implemented soon'
+                    });
+                  }}
+                  onReply={(postId) => {
+                    toast({
+                      title: 'Coming soon',
+                      description: 'Reply quote functionality will be implemented soon'
+                    });
+                  }}
+                  onReport={(postId) => {
+                    toast({
+                      title: 'Coming soon', 
+                      description: 'Report functionality will be implemented soon'
+                    });
+                  }}
+                />
+              ))
+            ) : (
+              <Card className="bg-zinc-900/50 border-zinc-800">
+                <div className="p-6 text-center text-zinc-400">
+                  No posts yet. Be the first to contribute!
+                </div>
+              </Card>
+            )}
+          </motion.div>
+        ) : (
+          /* Classic MyBB View */
+          <motion.div
+            key="classic-posts"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3 }}
+            className="mybb-classic"
+          >
+            {/* Classic Thread Header */}
+            <div className="mybb-thread-header mb-4">
+              <div className="mybb-category-header mybb-category-blue">
+                <div className="mybb-category-title">{thread.title}</div>
+              </div>
+              <div className="mybb-thread-info">
+                <div className="flex items-center gap-4 text-xs text-zinc-400 p-3">
+                  <div className="flex items-center gap-1">
+                    <MessageSquare className="w-4 h-4" />
+                    <span>{thread.postCount} replies</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Eye className="w-4 h-4" />
+                    <span>{thread.viewCount} views</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Clock className="w-4 h-4" />
+                    <span>Started {formatDistanceToNow(new Date(thread.createdAt), { addSuffix: true })}</span>
+                  </div>
+                </div>
               </div>
             </div>
-          </Card>
-        ) : postsData?.posts && postsData.posts.length > 0 ? (
-          postsData.posts.map((post, index) => (
-            <PostCard
-              key={post.id}
-              post={post}
-              isEditable={canEditPost(post)}
-              isFirst={index === 0}
-              onEdit={handleEditPost}
-              onDelete={handleDeletePost}
-              onLike={(postId, hasLiked) => {
-                // TODO: Implement like functionality
-                toast({
-                  title: 'Coming soon',
-                  description: 'Like functionality will be implemented soon'
-                });
-              }}
-              onReply={(postId) => {
-                // TODO: Implement reply quote functionality
-                toast({
-                  title: 'Coming soon',
-                  description: 'Reply quote functionality will be implemented soon'
-                });
-              }}
-              onReport={(postId) => {
-                // TODO: Implement report functionality
-                toast({
-                  title: 'Coming soon', 
-                  description: 'Report functionality will be implemented soon'
-                });
-              }}
-            />
-          ))
-        ) : (
-          <Card className="bg-zinc-900/50 border-zinc-800">
-            <div className="p-6 text-center text-zinc-400">
-              No posts yet. Be the first to contribute!
-            </div>
-          </Card>
+
+            {/* Classic Posts */}
+            {postsLoading ? (
+              <div className="mybb-post">
+                <div className="p-6">
+                  <div className="animate-pulse space-y-4">
+                    <div className="h-4 bg-zinc-800 rounded w-3/4" />
+                    <div className="h-4 bg-zinc-800 rounded w-1/2" />
+                    <div className="h-20 bg-zinc-800 rounded" />
+                  </div>
+                </div>
+              </div>
+            ) : postsData?.posts && postsData.posts.length > 0 ? (
+              postsData.posts.map((post, index) => (
+                <MyBBPostCard
+                  key={post.id}
+                  post={post}
+                  isFirst={index === 0}
+                  isEditable={canEditPost(post)}
+                  onEdit={handleEditPost}
+                  onDelete={handleDeletePost}
+                  onLike={(postId, hasLiked) => {
+                    toast({
+                      title: 'Coming soon',
+                      description: 'Like functionality will be implemented soon'
+                    });
+                  }}
+                  onQuote={(postId) => {
+                    toast({
+                      title: 'Coming soon',
+                      description: 'Reply quote functionality will be implemented soon'
+                    });
+                  }}
+                  onReport={(postId) => {
+                    toast({
+                      title: 'Coming soon', 
+                      description: 'Report functionality will be implemented soon'
+                    });
+                  }}
+                />
+              ))
+            ) : (
+              <div className="mybb-post">
+                <div className="p-6 text-center text-zinc-400">
+                  No posts yet. Be the first to contribute!
+                </div>
+              </div>
+            )}
+          </motion.div>
         )}
-      </div>
+      </AnimatePresence>
 
       {/* Reply Box */}
       {!thread.isLocked && user && (
         <div className="mt-6">
-          <ReplyForm
-            threadId={thread.id}
-            onSubmit={handleReplySubmit}
-          />
+          <AnimatePresence mode="wait">
+            {viewTheme === 'modern' ? (
+              <motion.div
+                key="modern-reply"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              >
+                <ReplyForm
+                  threadId={thread.id}
+                  onSubmit={handleReplySubmit}
+                />
+              </motion.div>
+            ) : (
+              <motion.div
+                key="classic-reply"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              >
+                <MyBBReplyForm
+                  threadId={thread.id}
+                  onSubmit={handleReplySubmit}
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       )}
 

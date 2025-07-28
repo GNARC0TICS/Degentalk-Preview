@@ -13,8 +13,16 @@ import { useToast } from '@/hooks/use-toast';
 import { useMutation } from '@tanstack/react-query';
 import { apiRequest } from '@/utils/api-request';
 import { LoadingSpinner } from '@/components/ui/loader';
-import type { AvatarFrame } from '@/types/compat/avatar';
 import type { FrameId, UserId } from '@shared/types/ids';
+
+// Simple avatar frame type matching API response
+interface AvatarFrame {
+	id: FrameId;
+	name: string;
+	imageUrl: string;
+	rarity?: string;
+	animated?: boolean;
+}
 import { toId, parseId } from '@shared/types/index';
 
 interface Props {

@@ -3,7 +3,7 @@ import { useInView } from 'react-intersection-observer';
 import { useEffect } from 'react';
 import type { Thread } from '@shared/types/thread.types';
 import type { ContentTab } from '@/hooks/use-content';
-import { api } from "@/core/api";
+import { apiRequest } from '@/utils/api-request';
 
 interface UseInfiniteContentParams {
   tab: ContentTab;
@@ -14,7 +14,7 @@ interface UseInfiniteContentParams {
 
 interface ContentPage {
   items: Thread[];
-  nextCursor?: string | null;
+  nextCursor?: number | null;
   hasMore: boolean;
   total: number;
 }
@@ -25,16 +25,26 @@ export function useInfiniteContent({
   pageSize = 20,
   enabled = true
 }: UseInfiniteContentParams) {
-  const fetchContent = async ({ pageParam }: { pageParam?: string }) => {
+  const fetchContent = async ({ pageParam = 1 }: { pageParam?: number }) => {
     const params = new URLSearchParams({
-      tab,
+      page: pageParam.toString(),
       limit: pageSize.toString(),
-      ...(pageParam && { cursor: pageParam }),
       ...(forumId && { forumId })
     });
 
-    const response = await api.get<ContentPage>(`/api/threads?${params}`);
-    return response.data;
+    const response = await apiRequest<{ threads: Thread[], pagination: any }>({
+      url: `/api/forum/threads?${params}`,
+      method: 'GET'
+    });
+    
+    // Transform the response to match expected ContentPage format
+    return {
+      items: response.threads || [],
+      nextCursor: response.pagination?.page < response.pagination?.totalPages ? 
+        response.pagination.page + 1 : null,
+      hasMore: response.pagination?.page < response.pagination?.totalPages,
+      total: response.pagination?.totalThreads || 0
+    } as ContentPage;
   };
 
   const {

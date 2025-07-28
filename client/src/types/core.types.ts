@@ -3,54 +3,15 @@
  * Foundation types used across the entire application
  */
 
-// Base error handling types
-export interface ApiErrorResponse {
-	message: string;
-	code?: string;
-	details?: Record<string, unknown> | undefined;
-	status?: number | undefined;
-	timestamp?: string;
-}
-
-export interface ApiErrorData {
-	message: string;
-	code?: string;
-	details?: Record<string, unknown> | undefined;
-	field?: string;
-}
-
-// Timing and performance metadata
-export interface TimingMetadata {
-	_timing?:
-		| {
-				duration: number;
-				requestId?: string;
-				cacheHit?: boolean | undefined;
-		  }
-		| undefined;
-}
-
-// Standardized API response wrapper
-export interface StandardApiResponse<T> {
-	data: T;
-	success: boolean;
-	message?: string;
-	errors?: ApiErrorData[] | undefined;
-	meta?:
-		| ({
-				timestamp: string;
-				requestId?: string;
-				pagination?:
-					| {
-							page: number;
-							limit: number;
-							total: number;
-							totalPages: number;
-					  }
-					| undefined;
-		  } & TimingMetadata)
-		| undefined;
-}
+// Re-export shared API types
+export type {
+	ApiResponse,
+	ApiSuccess,
+	ApiError,
+	PaginationMeta,
+	FilterMeta,
+	ApiErrorCode
+} from '@shared/types/api.types';
 
 // Test utilities
 export interface TestUser {
@@ -109,17 +70,6 @@ export interface PaginationParams {
 	sortOrder?: 'asc' | 'desc' | undefined;
 }
 
-export interface PaginatedResponse<T> {
-	items: T[];
-	pagination: {
-		page: number;
-		limit: number;
-		total: number;
-		totalPages: number;
-		hasNext: boolean;
-		hasPrev: boolean;
-	};
-}
 
 // Search and filtering
 export interface SearchParams {

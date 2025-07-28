@@ -5,7 +5,7 @@
  */
 
 import { db } from '@db';
-import { products, avatarFrames } from '@db/schema';
+import { products, avatarFrames, productCategories } from '@db/schema';
 import { defaultFrames } from '@shared/config/default-frames.config';
 import { eq, and } from 'drizzle-orm';
 import { v5 as uuidv5 } from 'uuid';
@@ -16,18 +16,53 @@ const logger = {
 	error: (...args: any[]) => console.error('[ERROR]', ...args),
 	warn: (...args: any[]) => console.warn('[WARN]', ...args)
 };
-import type { FrameId, ProductId } from '@shared/types/ids';
+import type { FrameId, ProductId, ProductCategoryId } from '@shared/types/ids';
 
 // Namespace UUID for generating deterministic UUIDs from string IDs
 const FRAME_NAMESPACE = '6ba7b810-9dad-11d1-80b4-00c04fd430c8';
+const CATEGORY_NAMESPACE = '6ba7b810-9dad-11d1-80b4-00c04fd430c9';
 
 // Convert string frame ID to UUID
 function frameIdToUuid(frameId: string): string {
 	return uuidv5(frameId, FRAME_NAMESPACE);
 }
 
+// Convert string category slug to UUID
+function categorySlugToUuid(slug: string): string {
+	return uuidv5(slug, CATEGORY_NAMESPACE);
+}
+
+async function ensureCosmeticsCategory(): Promise<string> {
+	const categoryUuid = categorySlugToUuid('cosmetics');
+	
+	// Check if cosmetics category exists
+	const [existingCategory] = await db
+		.select()
+		.from(productCategories)
+		.where(eq(productCategories.slug, 'cosmetics'))
+		.limit(1);
+	
+	if (!existingCategory) {
+		// Create cosmetics category
+		await db.insert(productCategories).values({
+			id: categoryUuid,
+			name: 'Cosmetics',
+			slug: 'cosmetics',
+			description: 'Avatar frames, badges, and other cosmetic items',
+			position: 1,
+			isActive: true
+		});
+		logger.info('EnsureFrames', 'Created cosmetics category');
+	}
+	
+	return categoryUuid;
+}
+
 async function ensureDefaultFrames() {
   logger.info('EnsureFrames', 'Checking default avatar frames...');
+  
+  // Ensure cosmetics category exists
+  const cosmeticsCategoryId = await ensureCosmeticsCategory();
   
   let createdCount = 0;
   let existingCount = 0;
@@ -47,7 +82,7 @@ async function ensureDefaultFrames() {
       if (!existingFrame) {
         // Create frame in database
         await db.insert(avatarFrames).values({
-          id: frameUuid,
+          id: frameUuid as FrameId,
           name: frame.name,
           imageUrl: frame.imageUrl,
           rarity: frame.rarity,
@@ -60,7 +95,7 @@ async function ensureDefaultFrames() {
       const [existingProduct] = await db
         .select()
         .from(products)
-        .where(eq(products.frameId, frameUuid))
+        .where(eq(products.frameId, frameUuid as FrameId))
         .limit(1);
 
       if (!existingProduct) {
@@ -69,10 +104,11 @@ async function ensureDefaultFrames() {
         await db.insert(products).values({
           id: productUuid as ProductId,
           name: frame.name,
+          slug: frame.id.replace('default-', ''), // Convert 'default-bronze' to 'bronze'
           description: frame.description || `${frame.name} avatar frame`,
-          categoryId: 'cosmetics', // Assuming this category exists
+          categoryId: cosmeticsCategoryId as ProductCategoryId,
           price: frame.price,
-          frameId: frameUuid,
+          frameId: frameUuid as FrameId,
           status: 'published',
           createdAt: new Date(),
           updatedAt: new Date()

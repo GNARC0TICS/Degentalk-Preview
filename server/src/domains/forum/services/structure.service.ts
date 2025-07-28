@@ -9,7 +9,7 @@ import { db } from '@db';
 import { logger } from '@core/logger';
 import { forumStructure, threads, posts } from '@schema';
 import { sql, desc, eq, count, isNull, and, inArray, gt } from 'drizzle-orm';
-import type { ForumStructureWithStats } from '@shared/types/forum.types';
+import type { PublicForumStructure } from '../types';
 import type { StructureId } from '@shared/types/ids';
 import { forumMap, type RootForum as Zone, type Forum } from '@config/forumMap';
 
@@ -17,14 +17,14 @@ import { forumMap, type RootForum as Zone, type Forum } from '@config/forumMap';
 const CACHE_DURATION_MS = 30 * 1000; // 30 seconds
 let structureCache: {
 	timestamp: number;
-	data: ForumStructureWithStats[];
+	data: PublicForumStructure[];
 } | null = null;
 
 export class ForumStructureService {
 	/**
 	 * Get all forum structures with statistics
 	 */
-	async getStructuresWithStats(): Promise<ForumStructureWithStats[]> {
+	async getStructuresWithStats(): Promise<PublicForumStructure[]> {
 		try {
 			// Check cache first
 			if (structureCache && Date.now() - structureCache.timestamp < CACHE_DURATION_MS) {
@@ -34,7 +34,7 @@ export class ForumStructureService {
 
 			logger.info('ForumStructureService', 'Fetching forum structures with stats from database');
 
-			// Query with stats calculation - FILTER OUT HIDDEN FORUMS BY DEFAULT
+			// Query with stats calculation - simple subqueries for child counts
 			const structuresWithStats = await db
 				.select({
 					id: forumStructure.id,
@@ -53,13 +53,29 @@ export class ForumStructureService {
 					color: forumStructure.color,
 					icon: forumStructure.icon,
 					colorTheme: forumStructure.colorTheme,
+					isFeatured: forumStructure.isFeatured,
+					themePreset: forumStructure.themePreset,
 					tippingEnabled: forumStructure.tippingEnabled,
 					xpMultiplier: forumStructure.xpMultiplier,
 					pluginData: forumStructure.pluginData,
 					createdAt: forumStructure.createdAt,
 					updatedAt: forumStructure.updatedAt,
-					threadCount: sql<number>`COALESCE(${count(threads.id)}, 0)`,
-					postCount: sql<number>`COALESCE(SUM(${threads.postCount}), 0)`,
+					// Direct counts
+					directThreadCount: sql<number>`COALESCE(COUNT(DISTINCT ${threads.id}), 0)`,
+					directPostCount: sql<number>`COALESCE(SUM(${threads.postCount}), 0)`,
+					// Child forum counts using simple subqueries
+					childThreadCount: sql<number>`(
+						SELECT COALESCE(COUNT(*), 0) 
+						FROM ${threads} t 
+						JOIN ${forumStructure} fs ON t.structure_id = fs.id 
+						WHERE fs.parent_id = ${forumStructure.id}
+					)`,
+					childPostCount: sql<number>`(
+						SELECT COALESCE(SUM(t.post_count), 0) 
+						FROM ${threads} t 
+						JOIN ${forumStructure} fs ON t.structure_id = fs.id 
+						WHERE fs.parent_id = ${forumStructure.id}
+					)`,
 					lastPostAt: sql<Date | null>`MAX(${posts.createdAt})`
 				})
 				.from(forumStructure)
@@ -69,13 +85,40 @@ export class ForumStructureService {
 				.groupBy(forumStructure.id)
 				.orderBy(forumStructure.position, forumStructure.name);
 
-			// Transform to domain model
-			const structures: ForumStructureWithStats[] = structuresWithStats.map((item) => ({
-				...item,
-				canHaveThreads: item.type === 'forum', // All forums can have threads
-				isZone: item.parentId === null,
-				canonical: item.parentId === null, // Zones are canonical in the hierarchy
-				childStructures: [], // Will be populated in tree methods
+			// Transform to domain model maintaining hierarchy
+			const structures: PublicForumStructure[] = structuresWithStats.map((item) => ({
+				id: item.id,
+				name: item.name,
+				slug: item.slug,
+				description: item.description,
+				type: item.type,
+				position: item.position,
+				parentId: item.parentId,
+				parentForumSlug: item.parentForumSlug,
+				isVip: item.isVip,
+				isLocked: item.isLocked,
+				isHidden: item.isHidden,
+				minXp: item.minXp,
+				minGroupIdRequired: item.minGroupIdRequired,
+				color: item.color,
+				icon: item.icon,
+				colorTheme: item.colorTheme,
+				isFeatured: item.isFeatured || false,
+				themePreset: item.themePreset || null,
+				tippingEnabled: item.tippingEnabled,
+				xpMultiplier: item.xpMultiplier,
+				pluginData: item.pluginData,
+				createdAt: item.createdAt,
+				updatedAt: item.updatedAt,
+				// Combine direct + child counts
+				threadCount: Number(item.directThreadCount) + Number(item.childThreadCount),
+				postCount: Number(item.directPostCount) + Number(item.childPostCount),
+				lastPostAt: item.lastPostAt,
+				// Determine if forum can have threads (leaf forums only)
+				canHaveThreads: true, // Will be updated after hierarchy is built
+				isZone: item.parentId === null && item.type === 'zone',
+				canonical: item.parentId === null,
+				childStructures: [], // Will be populated below
 				// Plugin data parsing for additional properties
 				isPrimary: item.parentId === null && (item.pluginData as any)?.configZoneType === 'primary',
 				features: (item.pluginData as any)?.features || [],
@@ -83,58 +126,49 @@ export class ForumStructureService {
 				staffOnly: (item.pluginData as any)?.staffOnly || false
 			}));
 
-			// Aggregate counts for top-level forums (top-level forums aggregate child forum threads)
-			const zones = structures.filter((s) => s.parentId === null);
-			const forums = structures.filter((s) => s.type === 'forum');
-
-			// Calculate aggregated counts for top-level forums
-			zones.forEach((zone) => {
-				let totalThreads = 0;
-				let totalPosts = 0;
-				let latestPostDate: Date | null = null;
-
-				// Find all child forums (direct children)
-				const childForums = forums.filter((f) => f.parentId === zone.id);
-
-				childForums.forEach((forum) => {
-					// Add forum's counts
-					totalThreads += Number(forum.threadCount) || 0;
-					totalPosts += Number(forum.postCount) || 0;
-
-					// Track latest post
-					if (forum.lastPostAt && (!latestPostDate || forum.lastPostAt > latestPostDate)) {
-						latestPostDate = forum.lastPostAt;
+			// Build hierarchy and determine which forums can have threads
+			const structureMap = new Map(structures.map(s => [s.id, s]));
+			const rootStructures: PublicForumStructure[] = [];
+			
+			structures.forEach(structure => {
+				if (structure.parentId) {
+					const parent = structureMap.get(structure.parentId);
+					if (parent) {
+						parent.childStructures = parent.childStructures || [];
+						parent.childStructures.push(structure);
 					}
-
-					// Also include subforums (forums that have this forum as parent)
-					const subforums = forums.filter((sf) => sf.parentId === forum.id);
-					subforums.forEach((subforum) => {
-						totalThreads += Number(subforum.threadCount) || 0;
-						totalPosts += Number(subforum.postCount) || 0;
-
-						if (subforum.lastPostAt && (!latestPostDate || subforum.lastPostAt > latestPostDate)) {
-							latestPostDate = subforum.lastPostAt;
-						}
-					});
-				});
-
-				// Update zone with aggregated counts
-				zone.threadCount = totalThreads;
-				zone.postCount = totalPosts;
-				zone.lastPostAt = latestPostDate;
+				} else {
+					rootStructures.push(structure);
+				}
+			});
+			
+			// Mark parent forums as not being able to have threads
+			structures.forEach(structure => {
+				if (structure.childStructures && structure.childStructures.length > 0) {
+					structure.canHaveThreads = false;
+				}
+			});
+			
+			// Sort by featured status first, then position
+			rootStructures.sort((a, b) => {
+				// Featured forums come first
+				if (a.isFeatured && !b.isFeatured) return -1;
+				if (!a.isFeatured && b.isFeatured) return 1;
+				// Then sort by position
+				return a.position - b.position;
 			});
 
-			// Update cache
+			// Update cache with ALL structures for tree building
 			structureCache = {
 				timestamp: Date.now(),
-				data: structures
+				data: structures // Cache all structures, not just root
 			};
 
 			logger.info(
 				'ForumStructureService',
-				`Successfully fetched ${structures.length} forum structures with aggregated zone counts`
+				`Successfully fetched ${structures.length} forum structures with aggregated counts`
 			);
-			return structures;
+			return structures; // Return all structures, not just root
 		} catch (error) {
 			logger.error('ForumStructureService', 'Error fetching structures with stats', { error });
 			throw error;
@@ -149,7 +183,7 @@ export class ForumStructureService {
 			includeHidden?: boolean;
 			includeEmptyStats?: boolean;
 		} = {}
-	): Promise<ForumStructureWithStats[]> {
+	): Promise<PublicForumStructure[]> {
 		try {
 			const { includeHidden = false } = options;
 
@@ -167,8 +201,8 @@ export class ForumStructureService {
 
 			// Recursive tree building
 			const buildTree = (
-				parentStructures: ForumStructureWithStats[]
-			): ForumStructureWithStats[] => {
+				parentStructures: PublicForumStructure[]
+			): PublicForumStructure[] => {
 				return parentStructures.map((parent) => ({
 					...parent,
 					childStructures: buildTree(
@@ -187,7 +221,7 @@ export class ForumStructureService {
 	/**
 	 * Get forum structure by slug
 	 */
-	async getStructureBySlug(slug: string): Promise<ForumStructureWithStats | null> {
+	async getStructureBySlug(slug: string): Promise<PublicForumStructure | null> {
 		try {
 			const [structure] = await db
 				.select({
@@ -475,7 +509,7 @@ export class ForumStructureService {
 	/**
 	 * Force refresh structures from database (bypass cache)
 	 */
-	async forceRefresh(): Promise<ForumStructureWithStats[]> {
+	async forceRefresh(): Promise<PublicForumStructure[]> {
 		this.clearCache();
 		return await this.getStructuresWithStats();
 	}
@@ -520,7 +554,8 @@ export class ForumStructureService {
 			}
 		});
 
-		return await db.transaction(async (tx) => {
+		try {
+			return await db.transaction(async (tx) => {
 			// 2. Get all existing structures from the DB
 			const dbStructures = await tx.select().from(forumStructure);
 			const dbStructuresMap = new Map(dbStructures.map((s) => [s.slug, s]));
@@ -610,7 +645,7 @@ export class ForumStructureService {
 			if (dryRun) {
 				logger.info('Dry run finished. No changes were made.');
 				// In a dry run, we must rollback to not commit any potential changes.
-				tx.rollback();
+				throw new Error('DRY_RUN_ROLLBACK');
 			} else {
 				this.clearCache();
 			}
@@ -618,6 +653,13 @@ export class ForumStructureService {
 			logger.info('ForumStructureService', 'Forum config sync finished.', results);
 			return results;
 		});
+		} catch (error: any) {
+			if (error.message === 'DRY_RUN_ROLLBACK') {
+				// This is expected for dry runs
+				return results;
+			}
+			throw error;
+		}
 	}
 }
 

@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { usePermission } from '@/hooks/usePermission';
 import { CARD_STYLES } from '@/utils/card-constants';
-import { useCanonicalAuth } from '@/features/auth/useCanonicalAuth';
+import { useAuth } from "@/hooks/use-auth";
 
 interface ForumListItemProps {
 	forum: MergedForum;
@@ -28,7 +28,7 @@ export function ForumListItem({
 	const [prevPostCount, setPrevPostCount] = useState(forum.postCount || 0);
 	const [isAnimating, setIsAnimating] = useState(false);
 
-	const { user } = useCanonicalAuth();
+	const { user } = useAuth();
 	const { canPost, reason } = usePermission(forum);
 
 	// Check if counts have changed to trigger animations

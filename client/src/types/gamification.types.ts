@@ -4,7 +4,7 @@
  */
 
 import type { UserId } from '@shared/types/ids';
-import type { StandardApiResponse } from './core.types';
+import type { ApiSuccess } from '@shared/types/api.types';
 
 // Achievement System
 export interface Achievement {
@@ -213,13 +213,13 @@ export interface UserGamificationStats {
 }
 
 // API Response Types
-export type AchievementListResponse = StandardApiResponse<Achievement[]>;
-export type UserAchievementResponse = StandardApiResponse<UserAchievement[]>;
-export type MissionListResponse = StandardApiResponse<Mission[]>;
-export type MissionProgressResponse = StandardApiResponse<MissionProgress[]>;
-export type LeaderboardResponse = StandardApiResponse<Leaderboard>;
-export type GamificationOverviewResponse = StandardApiResponse<GamificationOverview>;
-export type UserStatsResponse = StandardApiResponse<UserGamificationStats>;
+export type AchievementListResponse = ApiSuccess<Achievement[]>;
+export type UserAchievementResponse = ApiSuccess<UserAchievement[]>;
+export type MissionListResponse = ApiSuccess<Mission[]>;
+export type MissionProgressResponse = ApiSuccess<MissionProgress[]>;
+export type LeaderboardResponse = ApiSuccess<Leaderboard>;
+export type GamificationOverviewResponse = ApiSuccess<GamificationOverview>;
+export type UserStatsResponse = ApiSuccess<UserGamificationStats>;
 
 // Form and Request Types
 export interface CreateAchievementRequest {

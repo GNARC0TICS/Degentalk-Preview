@@ -9,21 +9,21 @@ import { db } from '@db';
 import { logger } from '@core/logger';
 import { forumStructure, threads, posts, users as usersTable } from '@schema';
 import { sql, desc, eq, count, isNull } from 'drizzle-orm';
-import type { ForumCategoryWithStats } from '@shared/types/forum.types';
+import type { PublicForumStructure } from '../types';
 import type { CategoryId } from '@shared/types/ids';
 
 // Simple in-memory cache for categories
 const CACHE_DURATION_MS = 30 * 1000; // 30 seconds
 let categoriesCache: {
 	timestamp: number;
-	data: ForumCategoryWithStats[];
+	data: PublicForumStructure[];
 } | null = null;
 
 export class CategoryService {
 	/**
 	 * Get all categories with forum statistics
 	 */
-	async getCategoriesWithStats(): Promise<ForumCategoryWithStats[]> {
+	async getCategoriesWithStats(): Promise<PublicForumStructure[]> {
 		try {
 			// Check cache first
 			if (categoriesCache && Date.now() - categoriesCache.timestamp < CACHE_DURATION_MS) {

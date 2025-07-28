@@ -21,9 +21,14 @@
       "@shared/*": ["../shared/*"],
       "@config/forumMap": ["../shared/config/forum-map.config.ts"],
       "@config/forumEconomy": ["../shared/config/forum-economy.config.ts"],
+      "@db": ["../db/index.ts"],
       "@db/*": ["../db/*"],
+      "@schema": ["../db/schema/index.ts"],
+      "@schema/*": ["../db/schema/*"],
       "@server/*": ["../server/src/*"],
-      "@core/*": ["../server/src/core/*"]
+      "@core/*": ["../server/src/core/*"],
+      "@domains/*": ["../server/src/domains/*"],
+      "@utils/*": ["../server/src/utils/*"]
     }
   },
   "include": ["./**/*.ts"],

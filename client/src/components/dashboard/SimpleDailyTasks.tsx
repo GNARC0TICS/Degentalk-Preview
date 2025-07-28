@@ -3,7 +3,7 @@ import { CheckCircle, Lock, Flame, MessageSquare, Heart, Users, TrendingUp } fro
 import { Progress } from '@/components/ui/progress';
 import { Card, CardHeader, CardContent, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { useCanonicalAuth } from '@/features/auth/useCanonicalAuth';
+import { useAuth } from '@/hooks/use-auth';
 import { useDailyBonus } from '@/hooks/useDailyBonus';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -23,7 +23,7 @@ interface SimpleTask {
  * Shows daily login bonus + basic engagement prompts
  */
 export default function SimpleDailyTasks() {
-  const { user } = useCanonicalAuth();
+  const { user } = useAuth();
   const { streak, bonusData } = useDailyBonus();
   
   // Simple engagement tasks (not tracked, just suggestions)

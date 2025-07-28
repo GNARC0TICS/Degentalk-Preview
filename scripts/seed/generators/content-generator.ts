@@ -137,32 +137,25 @@ export class ContentGenerator {
 			const title = this.generateThreadTitle(persona, threadType);
 
 			// Determine special states
-			const isPinned = Math.random() < this.config.content.threads.specialStates.pinned;
+			const isSticky = Math.random() < this.config.content.threads.specialStates.pinned;
 			const isLocked = Math.random() < this.config.content.threads.specialStates.locked;
 			const isSolved = threadType === 'question' && Math.random() < this.config.content.threads.specialStates.solved;
 
 			const [thread] = await db.insert(schema.threads).values({
-				forumId,
-				authorId: author.id,
+				structureId: forumId,
+				userId: author.id,
 				title,
-				threadType,
-				isPinned,
+				slug: title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''),
+				isSticky,
 				isLocked,
-				isSolved,
-				metadata: {
-					generatedBy: 'seeder',
-					persona: author.personaId
-				}
+				isSolved
 			}).returning();
 
 			// Create initial post
 			await db.insert(schema.posts).values({
 				threadId: thread.id,
-				authorId: author.id,
-				content: this.generatePostContent(persona, threadType, true),
-				metadata: {
-					isOriginalPost: true
-				}
+				userId: author.id,
+				content: this.generatePostContent(persona, threadType, true)
 			});
 
 			return thread;
@@ -214,10 +207,9 @@ export class ContentGenerator {
 
 			const [post] = await db.insert(schema.posts).values({
 				threadId,
-				authorId: author.id,
+				userId: author.id,
 				content: finalContent,
-				isEdited,
-				metadata
+				isEdited
 			}).returning();
 
 			// Add mentions if needed

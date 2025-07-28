@@ -60,42 +60,11 @@ export interface ForumTag {
 	createdAt: Date; // Assuming timestamp maps to Date
 }
 
-export interface ForumCategoryWithStats extends ForumStructureNode {
-	threadCount: number;
-	postCount: number;
-	lastThread?: ThreadWithUser;
-	parentId: string | null;
-	pluginData: Record<string, unknown>;
-	minXp: number;
-	type: string;
-	colorTheme: string | null;
-	icon: string;
-	isHidden: boolean;
-	canHaveThreads: boolean;
-	childForums?: ForumCategoryWithStats[];
-	isZone?: boolean; // Added to reflect usage in routes
-	canonical?: boolean; // Added to reflect usage in routes
-	// Fields added by forumService.getForumStructure for zones
-	isPrimary?: boolean;
-	features?: string[];
-	customComponents?: string[];
-	staffOnly?: boolean;
-}
+// @deprecated - Use PublicForumStructure from server/src/domains/forum/types instead
+// This type has been consolidated into PublicForumStructure for consistency
 
-// New interface using forum structure
-export interface ForumStructureWithStats extends ForumStructureNode {
-	threadCount: number;
-	postCount: number;
-	lastThread?: ThreadWithUser;
-	canHaveThreads: boolean;
-	childStructures?: ForumStructureWithStats[];
-	isZone?: boolean;
-	canonical?: boolean;
-	isPrimary?: boolean;
-	features?: string[];
-	customComponents?: string[];
-	staffOnly?: boolean;
-}
+// @deprecated - Use PublicForumStructure from server/src/domains/forum/types instead
+// This type has been consolidated into PublicForumStructure for consistency
 
 // Define and export ThreadPrefix type
 export type ThreadPrefix = typeof threadPrefixes.$inferSelect;

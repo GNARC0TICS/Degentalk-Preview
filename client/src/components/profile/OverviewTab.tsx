@@ -32,7 +32,6 @@ const OverviewTab: React.FC<Props> = ({ profile }) => {
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 						<ReputationCard
 							reputation={extendedStats.reputation}
-							reputation={extendedStats.reputation}
 							dailyXpGained={extendedStats.dailyXpGained}
 							lastXpGainDate={extendedStats.lastXpGainDate}
 							level={extendedStats.level}

@@ -7,6 +7,7 @@
 
 import { apiRequest } from '@/utils/api-request';
 import type { AchievementId } from '@shared/types/ids';
+import type { ApiSuccess, PaginationMeta } from '@shared/types/api.types';
 
 export interface UserAchievement {
 	id: AchievementId;
@@ -73,15 +74,16 @@ export interface AchievementFilters {
 	completed?: boolean;
 }
 
-export interface PaginatedResponse<T> {
-	data: T[];
-	pagination: {
-		page: number;
-		limit: number;
-		total: number;
-		pages: number;
-	};
-}
+// Use shared API types for pagination
+export type PaginatedAchievementsResponse = ApiSuccess<{
+	achievements: Achievement[];
+	pagination: PaginationMeta;
+}>;
+
+export type PaginatedCompletionsResponse = ApiSuccess<{
+	completions: any[];
+	pagination: PaginationMeta;
+}>;
 
 export const achievementApi = {
 	/**
@@ -98,7 +100,7 @@ export const achievementApi = {
 	 * Get all available achievements
 	 */
 	getAchievements: (filters?: AchievementFilters & { page?: number; limit?: number }) =>
-		apiRequest<PaginatedResponse<Achievement>>({
+		apiRequest<PaginatedAchievementsResponse>({
 			url: '/api/achievements',
 			method: 'GET',
 			params: filters as Record<string, string | number | boolean | undefined>
@@ -126,7 +128,7 @@ export const achievementApi = {
 	 * Get achievement completions (admin)
 	 */
 	getAchievementCompletions: (id: AchievementId, page = 1, limit = 50) =>
-		apiRequest<PaginatedResponse<any>>({
+		apiRequest<PaginatedCompletionsResponse>({
 			url: `/api/achievements/${id}/completions`,
 			method: 'GET',
 			params: { page: String(page), limit: String(limit) }

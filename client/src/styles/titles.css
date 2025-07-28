@@ -1,0 +1,363 @@
+/* DegenTalk User Title System CSS */
+/* Base component styles */
+.user-title {
+    touch-action: manipulation;
+    display: inline-block;
+    outline: none;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 0.85em;
+    font-weight: 600;
+    box-sizing: border-box;
+    border: none;
+    border-radius: 0.3em;
+    height: 2em;
+    line-height: 1.8em;
+    text-transform: uppercase;
+    padding: 0 0.8em;
+    cursor: default;
+    transition: all 0.2s ease-in-out;
+    background-size: 100% 100%;
+    background-position: center;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+}
+
+/* Hover effect for interactive titles */
+.user-title.clickable {
+    cursor: pointer;
+}
+
+.user-title.clickable:hover {
+    background-size: 150% 150%;
+}
+
+/* Paper/Cardboard tier - for noobs */
+.user-title.paper {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 
+                0 1px 2px rgba(139, 119, 101, 0.3),
+                inset 0 -1px 3px 0 rgba(201, 182, 156, 0.4),
+                inset 0 1px 1px 0 rgba(255, 248, 240, 0.8);
+    background-image: linear-gradient(
+        160deg,
+        #d4c5b9,
+        #e8ddd3,
+        #f5f0e8,
+        #e0d5c7,
+        #c8b9a6
+    );
+    border: 1px solid #b8a593;
+    color: #5c4f41;
+    text-shadow: 0 1px 1px rgba(255, 248, 240, 0.6);
+}
+
+.user-title.paper:hover {
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.12), 
+                0 2px 4px rgba(139, 119, 101, 0.4),
+                inset 0 -1px 3px 0 rgba(201, 182, 156, 0.5),
+                inset 0 1px 1px 0 rgba(255, 248, 240, 0.9);
+}
+
+/* Bronze tier */
+.user-title.bronze {
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 
+                0 3px 6px rgba(140, 77, 48, 0.4),
+                inset 0 -2px 5px 1px rgba(124, 57, 32, 1),
+                inset 0 -1px 1px 3px rgba(205, 127, 50, 1);
+    background-image: linear-gradient(
+        160deg,
+        #7c3920,
+        #a05b3d,
+        #cd7f32,
+        #b8633c,
+        #8c4226
+    );
+    border: 1px solid #6b3420;
+    color: #f4e4d4;
+    text-shadow: 0 2px 2px rgba(140, 77, 48, 0.8);
+}
+
+.user-title.bronze:hover {
+    box-shadow: 0 5px 12px rgba(0, 0, 0, 0.2), 
+                0 4px 8px rgba(140, 77, 48, 0.5),
+                inset 0 -2px 5px 1px rgba(124, 57, 32, 1),
+                inset 0 -1px 1px 3px rgba(205, 127, 50, 1);
+}
+
+/* Silver tier */
+.user-title.silver {
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 
+                0 3px 6px rgba(119, 119, 119, 0.4),
+                inset 0 -2px 5px 1px rgba(105, 105, 105, 1),
+                inset 0 -1px 1px 3px rgba(224, 224, 224, 1);
+    background-image: linear-gradient(
+        160deg,
+        #8b8b8b,
+        #a8a8a8,
+        #e0e0e0,
+        #b8b8b8,
+        #949494
+    );
+    border: 1px solid #7a7a7a;
+    color: #2c2c2c;
+    text-shadow: 0 2px 2px rgba(224, 224, 224, 0.8);
+}
+
+.user-title.silver:hover {
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.2), 
+                0 4px 8px rgba(119, 119, 119, 0.5),
+                inset 0 -2px 5px 1px rgba(105, 105, 105, 1),
+                inset 0 -1px 1px 3px rgba(240, 240, 240, 1);
+}
+
+/* Gold tier - original styles */
+.user-title.gold {
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 
+                0 3px 6px rgba(110, 80, 20, 0.4),
+                inset 0 -2px 5px 1px rgba(139, 66, 8, 1),
+                inset 0 -1px 1px 3px rgba(250, 227, 133, 1);
+    background-image: linear-gradient(
+        160deg,
+        #a54e07,
+        #b47e11,
+        #fef1a2,
+        #bc881b,
+        #a54e07
+    );
+    border: 1px solid #a55d07;
+    color: rgb(120, 50, 5);
+    text-shadow: 0 2px 2px rgba(250, 227, 133, 1);
+}
+
+.user-title.gold:hover {
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 
+                0 6px 6px rgba(0, 0, 0, 0.23),
+                inset 0 -2px 5px 1px #b17d10, 
+                inset 0 -1px 1px 3px rgba(250, 227, 133, 1);
+    border: 1px solid rgba(165, 93, 7, 0.6);
+    color: rgba(120, 50, 5, 0.8);
+}
+
+/* Platinum tier - for true degens */
+.user-title.platinum {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2), 
+                0 4px 8px rgba(229, 228, 226, 0.5),
+                inset 0 -2px 6px 1px rgba(168, 168, 168, 0.8),
+                inset 0 -1px 2px 3px rgba(255, 255, 255, 0.9);
+    background-image: linear-gradient(
+        160deg,
+        #b8b8b8,
+        #d4d4d4,
+        #ffffff,
+        #e5e4e2,
+        #c0c0c0
+    );
+    border: 1px solid #a8a8a8;
+    color: #1a1a1a;
+    text-shadow: 0 2px 2px rgba(255, 255, 255, 0.9);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Shimmer effect for platinum */
+.user-title.platinum::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+        45deg,
+        transparent 30%,
+        rgba(255, 255, 255, 0.5) 50%,
+        transparent 70%
+    );
+    transform: rotate(45deg) translateX(-100%);
+    transition: transform 0.6s;
+}
+
+.user-title.platinum:hover::before {
+    transform: rotate(45deg) translateX(100%);
+}
+
+.user-title.platinum:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15), 
+                0 6px 12px rgba(229, 228, 226, 0.6),
+                inset 0 -2px 6px 1px rgba(168, 168, 168, 0.9),
+                inset 0 -1px 2px 3px rgba(255, 255, 255, 1);
+}
+
+/* Diamond tier - whale status */
+.user-title.diamond {
+    box-shadow: 0 4px 12px rgba(147, 197, 253, 0.3), 
+                0 4px 8px rgba(59, 130, 246, 0.2),
+                inset 0 -2px 4px 1px rgba(37, 99, 235, 0.3),
+                inset 0 -1px 2px 2px rgba(219, 234, 254, 0.8);
+    background-image: linear-gradient(
+        160deg,
+        #93c5fd,
+        #dbeafe,
+        #ffffff,
+        #bfdbfe,
+        #60a5fa
+    );
+    border: 1px solid #3b82f6;
+    color: #1e3a8a;
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.9);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Rainbow shimmer for diamond */
+.user-title.diamond::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+        45deg,
+        transparent 20%,
+        rgba(147, 197, 253, 0.4) 30%,
+        rgba(196, 181, 253, 0.4) 40%,
+        rgba(251, 191, 36, 0.4) 50%,
+        rgba(147, 197, 253, 0.4) 60%,
+        transparent 80%
+    );
+    transform: rotate(45deg) translateX(-100%);
+    transition: transform 0.8s;
+}
+
+.user-title.diamond:hover::before {
+    transform: rotate(45deg) translateX(100%);
+}
+
+/* Special badges */
+.user-title.mod {
+    background-image: linear-gradient(
+        160deg,
+        #dc2626,
+        #ef4444,
+        #fca5a5,
+        #f87171,
+        #dc2626
+    );
+    box-shadow: 0 3px 6px rgba(220, 38, 38, 0.3),
+                inset 0 -2px 4px 1px rgba(185, 28, 28, 0.8),
+                inset 0 -1px 1px 2px rgba(254, 202, 202, 0.8);
+    border: 1px solid #b91c1c;
+    color: #ffffff;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+.user-title.whale {
+    background-image: linear-gradient(
+        160deg,
+        #4c1d95,
+        #6d28d9,
+        #a78bfa,
+        #7c3aed,
+        #5b21b6
+    );
+    box-shadow: 0 4px 8px rgba(109, 40, 217, 0.3),
+                inset 0 -2px 4px 1px rgba(76, 29, 149, 0.8),
+                inset 0 -1px 1px 2px rgba(196, 181, 253, 0.8);
+    border: 1px solid #5b21b6;
+    color: #ffffff;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+    animation: whale-glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes whale-glow {
+    from {
+        box-shadow: 0 4px 8px rgba(109, 40, 217, 0.3),
+                    inset 0 -2px 4px 1px rgba(76, 29, 149, 0.8),
+                    inset 0 -1px 1px 2px rgba(196, 181, 253, 0.8);
+    }
+    to {
+        box-shadow: 0 4px 16px rgba(109, 40, 217, 0.6),
+                    0 0 20px rgba(167, 139, 250, 0.4),
+                    inset 0 -2px 4px 1px rgba(76, 29, 149, 0.8),
+                    inset 0 -1px 1px 2px rgba(196, 181, 253, 0.8);
+    }
+}
+
+/* Custom title effects using CSS variables for database-driven styles */
+.user-title.custom {
+    background-image: linear-gradient(
+        160deg,
+        var(--title-gradient-start, #e5e7eb),
+        var(--title-gradient-end, #f3f4f6)
+    );
+    color: var(--title-text-color, #374151);
+    border: 1px solid var(--title-border-color, #d1d5db);
+    text-shadow: var(--title-text-shadow, none);
+    box-shadow: var(--title-box-shadow, 0 1px 2px rgba(0, 0, 0, 0.1));
+    border-radius: var(--title-border-radius, 0.3em);
+    font-size: var(--title-font-size, 0.85em);
+    font-weight: var(--title-font-weight, 600);
+    font-family: var(--title-font-family, inherit);
+}
+
+.user-title.custom:hover {
+    box-shadow: var(--title-hover-box-shadow, 0 2px 4px rgba(0, 0, 0, 0.15));
+}
+
+/* Glow effect class */
+.user-title.glow {
+    animation: title-glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes title-glow {
+    from {
+        filter: drop-shadow(0 0 2px var(--title-glow-color, #3b82f6));
+    }
+    to {
+        filter: drop-shadow(0 0 8px var(--title-glow-color, #3b82f6)) 
+                drop-shadow(0 0 12px var(--title-glow-color, #3b82f6));
+    }
+}
+
+/* Shimmer effect class */
+.user-title.shimmer {
+    position: relative;
+    overflow: hidden;
+}
+
+.user-title.shimmer::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+        45deg,
+        transparent 30%,
+        rgba(255, 255, 255, 0.3) 50%,
+        transparent 70%
+    );
+    transform: rotate(45deg) translateX(-100%);
+    transition: transform 0.6s;
+}
+
+.user-title.shimmer:hover::before {
+    transform: rotate(45deg) translateX(100%);
+}
+
+/* Pulse effect class */
+.user-title.pulse {
+    animation: title-pulse 2s ease-in-out infinite;
+}
+
+@keyframes title-pulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.05);
+        opacity: 0.9;
+    }
+}

@@ -94,12 +94,12 @@ function ThreadRow({ thread, isEven, forumSlug, getPrefixClass }: ThreadRowProps
 								{prefix.name}
 							</span>
 						)}
-						<Link to={`/threads/${thread.slug}`} className="mybb-thread-title">
+						<Link to={thread.forum?.slug ? `/forums/${thread.forum.slug}/${thread.slug}` : `/threads/${thread.slug}`} className="mybb-thread-title">
 							{thread.title}
 						</Link>
 					</div>
 					<div className="text-xs text-zinc-500 mt-1">
-						Started by {thread.user.username}
+						Started by {thread.user?.username || 'Unknown'}
 						{thread.user.isOnline && <span className="mybb-online-indicator" title="Online" />}
 						, {formatDistanceToNow(new Date(thread.createdAt), { addSuffix: true })}
 					</div>
@@ -123,12 +123,12 @@ function ThreadRow({ thread, isEven, forumSlug, getPrefixClass }: ThreadRowProps
 				{thread.lastPostAt ? (
 					<div>
 						<div className="truncate">
-							<Link to={`/threads/${thread.slug}#latest`} className="text-blue-400 hover:underline text-xs">
+							<Link to={`${thread.forum?.slug ? `/forums/${thread.forum.slug}/${thread.slug}` : `/threads/${thread.slug}`}#latest`} className="text-blue-400 hover:underline text-xs">
 								Last reply
 							</Link>
 						</div>
 						<div className="mybb-lastpost-time">
-							by <span className="mybb-lastpost-user">{thread.user.username}</span>
+							by <span className="mybb-lastpost-user">{thread.user?.username || 'Unknown'}</span>
 						</div>
 						<div className="mybb-lastpost-time">
 							{formatDistanceToNow(new Date(thread.lastPostAt), { addSuffix: true })}

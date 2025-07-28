@@ -231,7 +231,7 @@ export function ContentArea({
 			<div className="mx-auto w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center mb-4">
 				<AlertCircle className="h-8 w-8 text-red-400" />
 			</div>
-			<h3 className="text-lg font-semibold text-red-300 mb-2">Something went wrong</h3>
+			<h3 className="text-base font-semibold text-red-300 mb-2">Something went wrong</h3>
 			<p className="text-sm text-zinc-400 mb-6 max-w-md mx-auto">
 				{error.message.includes('Failed to fetch')
 					? 'Unable to connect to the server. Check your connection and try again.'
@@ -361,7 +361,7 @@ export function ContentArea({
 								onLoadMore={() => infiniteContentHook.fetchNextPage()}
 								hasMore={infiniteContentHook.hasNextPage}
 								isLoadingMore={infiniteContentHook.isFetchingNextPage}
-								loadMoreRef={infiniteContentHook.loadMoreRef}
+								loadMoreRef={undefined} // TODO: Convert callback ref to RefObject
 							/>
 						) : (
 							<>

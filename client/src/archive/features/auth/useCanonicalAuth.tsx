@@ -25,7 +25,7 @@ function toCanonicalUser(user: User | null): CanonicalUser | null {
       totalTips: 0,
     },
     isOnline: true, // User is online if authenticated
-    lastSeenAt: user.lastActiveAt || undefined,
+    lastSeenAt: user.lastSeen || undefined,
     joinedAt: user.createdAt,
     isAdmin: user.isAdmin || false,
     isModerator: user.isModerator || false,

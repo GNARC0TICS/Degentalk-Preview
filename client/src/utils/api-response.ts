@@ -1,36 +1,41 @@
 /**
  * API Response Standardization
  *
- * Implements the StandardApiResponse<T> wrapper from canonical.types.ts
+ * Implements consistent response handling using shared API types
  * Ensures consistent response handling across all API endpoints
  */
 
-import type { StandardApiResponse, PaginatedResponse } from '@/types/canonical.types';
+import type { ApiResponse, ApiSuccess, ApiError, PaginationMeta } from '@shared/types/api.types';
 
 /**
- * Type guard to check if response follows standard format
+ * Type guard to check if response is an API success response
  */
-export function isStandardApiResponse<T>(response: any): response is StandardApiResponse<T> {
+export function isApiSuccessResponse<T>(response: unknown): response is ApiSuccess<T> {
 	return (
-		response &&
+		response !== null &&
 		typeof response === 'object' &&
 		'success' in response &&
-		typeof response.success === 'boolean'
+		(response as Record<string, unknown>).success === true &&
+		'data' in response
 	);
 }
+
 
 /**
  * Extract data from standard API response
  * Handles both wrapped and unwrapped responses for backward compatibility
  */
-export function extractApiData<T>(response: any): T {
+export function extractApiData<T>(response: unknown): T {
 	// Standard wrapped response
-	if (isStandardApiResponse<T>(response)) {
-		if (response.success && response.data !== undefined) {
-			return response.data;
-		} else {
-			throw new Error(response.error?.message || 'API request failed');
-		}
+	if (isApiSuccessResponse<T>(response)) {
+		return response.data;
+	}
+	
+	// Check for error response
+	if (response && typeof response === 'object' && 'success' in response && 
+		(response as Record<string, unknown>).success === false) {
+		const errorResponse = response as ApiError;
+		throw new Error(errorResponse.error.message);
 	}
 
 	// Direct data response (legacy)
@@ -44,20 +49,18 @@ export function createStandardResponse<T>(
 	data: T,
 	options?:
 		| {
-				meta?: StandardApiResponse<T>['meta'] | undefined;
-				requestId?: string;
+				message?: string;
+				meta?: PaginationMeta;
 		  }
 		| undefined
-): StandardApiResponse<T> {
+): ApiSuccess<T> {
 	return {
 		success: true,
 		data,
-		meta: {
-			timestamp: new Date().toISOString(),
-			requestId: options?.requestId || generateRequestId(),
-			...options?.meta
-		}
-	};
+		...(options?.message && { message: options.message }),
+		timestamp: new Date().toISOString(),
+		...(options?.meta && { meta: options.meta })
+	} as ApiSuccess<T>;
 }
 
 /**
@@ -67,23 +70,19 @@ export function createErrorResponse(
 	error: {
 		code: string;
 		message: string;
-		details?: Record<string, any> | undefined;
+		details?: Record<string, unknown> | undefined;
 	},
 	options?:
 		| {
 				requestId?: string;
 		  }
 		| undefined
-): StandardApiResponse<null> {
+): ApiError {
 	return {
 		success: false,
-		data: null,
-		meta: {
-			timestamp: new Date().toISOString(),
-			requestId: options?.requestId || generateRequestId()
-		},
-		error
-	};
+		error,
+		timestamp: new Date().toISOString()
+	} as ApiError;
 }
 
 /**
@@ -91,8 +90,8 @@ export function createErrorResponse(
  */
 export function createPaginatedResponse<T>(
 	items: T[],
-	pagination: PaginatedResponse<T>['pagination']
-): StandardApiResponse<PaginatedResponse<T>> {
+	pagination: PaginationMeta
+): ApiSuccess<{ items: T[]; pagination: PaginationMeta }> {
 	return createStandardResponse(
 		{
 			items,
@@ -103,10 +102,7 @@ export function createPaginatedResponse<T>(
 			}
 		},
 		{
-			meta: {
-				pagination,
-				timestamp: new Date().toISOString()
-			}
+			meta: pagination
 		}
 	);
 }
@@ -114,15 +110,20 @@ export function createPaginatedResponse<T>(
 /**
  * Enhanced apiRequest wrapper that handles standard responses
  */
-export async function standardApiRequest<T>(request: () => Promise<any>): Promise<T> {
+export async function standardApiRequest<T>(request: () => Promise<unknown>): Promise<T> {
 	try {
 		const response = await request();
 		return extractApiData<T>(response);
-	} catch (error: any) {
+	} catch (error) {
 		// Re-throw with enhanced error information
-		if (error?.response?.data && isStandardApiResponse(error.response.data)) {
-			const apiError = error.response.data as StandardApiResponse<null>;
-			throw new Error(apiError.error?.message || 'API request failed');
+		if (error && typeof error === 'object' && 'response' in error) {
+			const errorResponse = (error as { response?: { data?: unknown } }).response;
+			if (errorResponse?.data && typeof errorResponse.data === 'object' && 
+				'success' in errorResponse.data && 
+				(errorResponse.data as Record<string, unknown>).success === false) {
+				const apiError = errorResponse.data as ApiError;
+				throw new Error(apiError.error.message);
+			}
 		}
 		throw error;
 	}
@@ -131,7 +132,7 @@ export async function standardApiRequest<T>(request: () => Promise<any>): Promis
 /**
  * Type-safe response handler for React Query
  */
-export function createQueryFn<T>(apiCall: () => Promise<any>): () => Promise<T> {
+export function createQueryFn<T>(apiCall: () => Promise<unknown>): () => Promise<T> {
 	return async () => {
 		return standardApiRequest<T>(apiCall);
 	};
@@ -142,11 +143,11 @@ export function createQueryFn<T>(apiCall: () => Promise<any>): () => Promise<T> 
  * Converts various response formats to standard format
  */
 export function transformLegacyResponse<T>(
-	response: any,
-	dataExtractor?: (raw: any) => T
-): StandardApiResponse<T> {
+	response: unknown,
+	dataExtractor?: (raw: unknown) => T
+): ApiSuccess<T> {
 	// Already standard format
-	if (isStandardApiResponse<T>(response)) {
+	if (isApiSuccessResponse<T>(response)) {
 		return response;
 	}
 
@@ -159,24 +160,16 @@ export function transformLegacyResponse<T>(
 /**
  * Batch response handler for multiple API calls
  */
-export async function batchApiRequests<T extends Record<string, any>>(requests: {
-	[K in keyof T]: () => Promise<any>;
-}): Promise<StandardApiResponse<T>> {
-	try {
-		const entries = Object.entries(requests) as [keyof T, () => Promise<any>][];
-		const results = await Promise.all(
-			entries.map(async ([key, request]) => [key, await standardApiRequest(request)])
-		);
+export async function batchApiRequests<T extends Record<string, unknown>>(requests: {
+	[K in keyof T]: () => Promise<unknown>;
+}): Promise<ApiSuccess<T>> {
+	const entries = Object.entries(requests) as [keyof T, () => Promise<unknown>][];
+	const results = await Promise.all(
+		entries.map(async ([key, request]) => [key, await standardApiRequest(request)])
+	);
 
-		const data = Object.fromEntries(results) as T;
-		return createStandardResponse(data);
-	} catch (error: any) {
-		return createErrorResponse({
-			code: 'BATCH_REQUEST_FAILED',
-			message: error.message || 'Batch request failed',
-			details: { error }
-		});
-	}
+	const data = Object.fromEntries(results) as T;
+	return createStandardResponse(data);
 }
 
 // =============================================================================
@@ -200,7 +193,7 @@ export function withTiming<T>(
 
 		// Add timing metadata if result is an object
 		if (typeof result === 'object' && result !== null) {
-			(result as any)._timing = { duration };
+			(result as T & { _timing?: { duration: number } })._timing = { duration };
 		}
 
 		return result as T & { _timing?: { duration: number } };
@@ -225,12 +218,15 @@ export async function withRetry<T>(
 	for (let attempt = 0; attempt <= retries; attempt++) {
 		try {
 			return await request();
-		} catch (error: any) {
-			lastError = error;
+		} catch (error) {
+			lastError = error instanceof Error ? error : new Error(String(error));
 
 			// Don't retry on client errors (4xx)
-			if (error?.response?.status >= 400 && error?.response?.status < 500) {
-				throw error;
+			if (error && typeof error === 'object' && 'response' in error) {
+				const status = (error as { response?: { status?: number } }).response?.status;
+				if (status !== undefined && status >= 400 && status < 500) {
+					throw error;
+				}
 			}
 
 			// Wait before retrying (except on last attempt)

@@ -18,11 +18,11 @@ import { Card, CardHeader, CardContent, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { useCanonicalAuth } from '@/features/auth/useCanonicalAuth';
+import { useAuth } from '@/hooks/use-auth';
 import DailyTasksWidget from '@/components/dashboard/DailyTasksWidget';
 
 const AboutPage: React.FC = () => {
-  const { user, isAuthenticated } = useCanonicalAuth();
+  const { user, isAuthenticated } = useAuth();
 
   const fadeIn = {
     initial: { opacity: 0, y: 20 },

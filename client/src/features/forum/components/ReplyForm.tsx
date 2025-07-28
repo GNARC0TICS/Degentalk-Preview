@@ -4,19 +4,19 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { RichTextEditor } from '@/components/editor/rich-text-editor';
 import { LoadingSpinner } from '@/components/ui/loader';
-import { useCanonicalAuth } from '@/features/auth/useCanonicalAuth';
+import { useAuth } from '@/hooks/use-auth';
 import { useNavigate } from 'react-router-dom';
 import { X, CornerDownRight } from 'lucide-react';
 import { cn } from '@/utils/utils';
 import { useBreakpoint } from '@/hooks/useMediaQuery';
 import { getAdaptiveConfig } from '@/utils/adaptiveSpacing';
-import type { PostWithUser } from '@/types/compat/forum';
+import type { Post } from '@shared/types/post.types';
 import type { ThreadId, PostId } from '@shared/types/ids';
 
 interface ReplyFormProps {
 	threadId: ThreadId;
 	replyToId?: PostId | null;
-	replyToPost?: PostWithUser | null;
+	replyToPost?: Post | null;
 	onSubmit: (content: string, editorState?: Record<string, unknown>) => Promise<void>;
 	showRichEditor?: boolean;
 	placeholder?: string;
@@ -36,7 +36,7 @@ export function ReplyForm({
 	onCancel,
 	includeQuote = false
 }: ReplyFormProps) {
-	const { user, isAuthenticated } = useCanonicalAuth();
+	const { user, isAuthenticated } = useAuth();
 	const navigate = useNavigate();
 	const [content, setContent] = useState('');
 	const [editorContent, setEditorContent] = useState<string>('');

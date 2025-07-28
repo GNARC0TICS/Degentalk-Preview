@@ -19,8 +19,12 @@ import {
 import { eq, desc } from 'drizzle-orm';
 import { logger } from '@core/logger';
 import { dgtService } from '@domains/wallet/services/dgtService';
+import { TitlesService } from '@domains/gamification/titles.service';
 import { PgTransaction } from 'drizzle-orm/pg-core';
 import type { UserId } from '@shared/types/ids';
+
+// Initialize titles service
+const titlesService = new TitlesService();
 
 // Re-export event types from the main events file
 import { XpGainEvent, XpLossEvent, LevelUpEvent } from '../xp.events';
@@ -233,6 +237,17 @@ export async function handleLevelUp(
 					rewards.badge = badge.name;
 				}
 			}
+		}
+
+		// NEW: Check and grant level-based titles using new title system
+		try {
+			const grantedTitles = await titlesService.checkAndGrantLevelTitles(userId, newLevel);
+			if (grantedTitles.length > 0) {
+				logger.info('XP_EVENTS', `Granted ${grantedTitles.length} level-based titles to user ${userId} for reaching level ${newLevel}`);
+			}
+		} catch (error) {
+			logger.error('XP_EVENTS', `Failed to grant level-based titles for user ${userId}:`, error);
+			// Don't throw - level up should continue even if title granting fails
 		}
 
 		// Create notification for user

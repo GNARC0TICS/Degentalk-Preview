@@ -58,7 +58,7 @@ export const primaryNavigation: NavItemConfig[] = [
 	{
 		label: 'About',
 		href: '/about',
-		icon: React.createElement(IconRenderer, { icon: 'info', size: 16, className: 'h-4 w-4' }),
+		icon: React.createElement(IconRenderer, { icon: 'document', size: 16, className: 'h-4 w-4' }),
 		analyticsLabel: 'nav_about'
 	},
 	{
@@ -101,7 +101,7 @@ export const createUserMenuItems = (
 		label: 'About',
 		href: '/about',
 		icon: React.createElement(IconRenderer, {
-			icon: 'info',
+			icon: 'document',
 			size: 16,
 			className: 'mr-2 h-4 w-4'
 		}),

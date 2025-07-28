@@ -89,7 +89,10 @@ export async function registerRoutes(app: Express): Promise<void> {
 	app.use(securityHeaders);
 	app.use(corsMiddleware);
 	app.use(originValidation);
-	app.use('/api/', rateLimiters.general);
+	// Only apply rate limiting if enabled
+	if (process.env.RATE_LIMIT_ENABLED === 'true') {
+		app.use('/api/', rateLimiters.general);
+	}
 	app.use(securityAuditLogger);
 	app.use(apiResponseSecurity);
 	app.use(developmentSecurityWarning);

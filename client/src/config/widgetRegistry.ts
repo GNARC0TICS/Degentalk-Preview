@@ -45,7 +45,7 @@ export const widgetRegistry: Record<string, WidgetConfig> = {
 	// Profile & User Widgets
 	profileCard: {
 		component: () =>
-			import('@/components/shared/ProfileCard').then((module) => ({ default: module.default })),
+			import('@/components/shared/ProfileCard').then((module) => ({ default: module.ProfileCard || module.default })),
 		metadata: {
 			id: 'profileCard',
 			name: 'Profile Card',
@@ -209,7 +209,7 @@ export const widgetRegistry: Record<string, WidgetConfig> = {
 	platformStats: {
 		component: () =>
 			import('@/components/platform-energy/stats/platform-stats-widget').then((module) => ({
-				default: module.PlatformStatsWidget
+				default: module.PlatformStatsWidget || module.default
 			})),
 		metadata: {
 			id: 'platformStats',
@@ -227,7 +227,7 @@ export const widgetRegistry: Record<string, WidgetConfig> = {
 	recentActivity: {
 		component: () =>
 			import('@/components/forum/RecentActivity').then((module) => ({
-				default: module.RecentActivity
+				default: module.RecentActivity || module.default
 			})),
 		metadata: {
 			id: 'recentActivity',
@@ -246,7 +246,7 @@ export const widgetRegistry: Record<string, WidgetConfig> = {
 		component: () =>
 			import('@/components/platform-energy/featured-threads/featured-threads-slider').then(
 				(module) => ({
-					default: module.FeaturedThreadsSlider
+					default: module.FeaturedThreadsSlider || module.default
 				})
 			),
 		metadata: {
@@ -283,7 +283,7 @@ export const widgetRegistry: Record<string, WidgetConfig> = {
 	notificationCenter: {
 		component: () =>
 			import('@/components/notifications/NotificationPanel').then((module) => ({
-				default: module.NotificationPanel
+				default: module.NotificationPanel || module.default
 			})),
 		metadata: {
 			id: 'notificationCenter',

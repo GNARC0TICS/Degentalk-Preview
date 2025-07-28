@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import useSearchParams from '@/hooks/useSearchParams';
-import { useCanonicalAuth } from '@/features/auth/useCanonicalAuth';
+import { useAuth } from '@/hooks/use-auth';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { ProfilePreferences } from '@/components/preferences/profile-preferences';
@@ -19,7 +19,7 @@ import { Container } from '@/components/ui/Container';
  * This page is protected and only accessible to logged-in users.
  */
 function PreferencesPage() {
-	const { user, isLoading } = useCanonicalAuth();
+	const { user, isLoading } = useAuth();
 	const [activeTab, setActiveTab] = useState('profile');
 	const searchParams = useSearchParams();
 

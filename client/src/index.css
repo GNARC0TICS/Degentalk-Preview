@@ -5,6 +5,8 @@
 @import './styles/animations.css';
 @import './styles/content-feed.css';
 @import './styles/underline-links.css';
+@import './styles/mybb-classic.css';
+@import './styles/titles.css';
 
 @tailwind base;
 @tailwind components;

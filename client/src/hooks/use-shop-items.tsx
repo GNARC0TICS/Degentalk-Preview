@@ -7,11 +7,20 @@ export interface ShopItem {
 	id: string;
 	name: string;
 	description: string;
-	category: ItemCategory;
-	priceDGT: number;
-	priceUSDT: number;
-	rarity: 'common' | 'rare' | 'legendary';
+	category: string; // Changed from ItemCategory to string to match API
+	price: number; // This is the DGT price from API
+	priceDGT?: number; // Keep for backward compatibility
+	priceUSDT?: number;
+	rarity: 'common' | 'rare' | 'epic' | 'legendary'; // Added 'epic'
 	imageUrl?: string;
+	previewUrl?: string;
+	thumbnailUrl?: string;
+	rarityColor?: string;
+	rarityGlow?: string;
+	isAvailable?: boolean;
+	isLimited?: boolean;
+	popularityScore?: number;
+	tags?: string[];
 	isOwned?: boolean;
 	isEquipped?: boolean;
 	isLocked?: boolean;
@@ -30,14 +39,31 @@ export interface ShopItem {
 	promotionLabel?: string | null;
 }
 
+// Shop API response interface
+interface ShopItemsResponse {
+	items: ShopItem[];
+	total: number;
+	page: number;
+	limit: number;
+	totalPages: number;
+	filters: {
+		category: string;
+		sort: string;
+	};
+	user: {
+		isAuthenticated: boolean;
+		dgtBalance?: number;
+	};
+}
+
 /**
  * @hook useShopItems
  * Fetches a list of shop items, optionally filtered by category.
  * Handles loading, error, and data states using TanStack Query.
  */
-export function useShopItems(category?: ItemCategory) {
+export function useShopItems(category?: string) {
 	const {
-		data: items = [],
+		data,
 		isLoading,
 		isError,
 		error,
@@ -45,7 +71,7 @@ export function useShopItems(category?: ItemCategory) {
 	} = useQuery({
 		queryKey: ['shopItems', category],
 		queryFn: async () => {
-			return await apiRequest<ShopItem[]>({
+			return await apiRequest<ShopItemsResponse>({
 				url: '/api/shop/items',
 				method: 'GET',
 				params: category ? { category } : undefined
@@ -55,7 +81,7 @@ export function useShopItems(category?: ItemCategory) {
 	});
 
 	return {
-		items,
+		items: data?.items || [],
 		isLoading,
 		isError,
 		error,

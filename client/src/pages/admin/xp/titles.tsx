@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import type { MediaId } from '@shared/types/ids';
-import { Plus, Pencil, Trash2, ArrowUpDown, Search } from 'lucide-react';
+import type { MediaId, TitleId, UserId } from '@shared/types/ids';
+import { Plus, Pencil, Trash2, ArrowUpDown, Search, TestTube, UserCheck } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -125,6 +125,10 @@ export default function TitleManagementPage() {
 	const [page, setPage] = useState(1);
 	const pageSize = 10;
 
+	// Testing state
+	const [testUserId, setTestUserId] = useState('');
+	const [testTitleId, setTestTitleId] = useState('');
+
 	// Fetch titles
 	const {
 		data: titlesData,
@@ -210,6 +214,55 @@ export default function TitleManagementPage() {
 			toast({
 				title: 'Error',
 				description: `Failed to delete title: ${error.message}`,
+				variant: 'destructive'
+			});
+		}
+	});
+
+	// Testing mutations
+	const grantTitleMutation = useMutation({
+		mutationFn: async ({ userId, titleId }: { userId: UserId; titleId: TitleId }) => {
+			return apiRequest({ 
+				method: 'POST', 
+				url: `/api/admin/gamification/titles/grant`, 
+				data: { userId, titleId, reason: 'Admin test grant' }
+			});
+		},
+		onSuccess: () => {
+			toast({
+				title: 'Title granted',
+				description: 'The title has been granted to the user successfully',
+				variant: 'default'
+			});
+		},
+		onError: (error) => {
+			toast({
+				title: 'Error',
+				description: `Failed to grant title: ${error.message}`,
+				variant: 'destructive'
+			});
+		}
+	});
+
+	const equipTitleMutation = useMutation({
+		mutationFn: async ({ userId, titleId }: { userId: UserId; titleId: TitleId }) => {
+			return apiRequest({ 
+				method: 'POST', 
+				url: `/api/admin/gamification/titles/equip`, 
+				data: { userId, titleId }
+			});
+		},
+		onSuccess: () => {
+			toast({
+				title: 'Title equipped',
+				description: 'The title has been equipped for the user successfully',
+				variant: 'default'
+			});
+		},
+		onError: (error) => {
+			toast({
+				title: 'Error',
+				description: `Failed to equip title: ${error.message}`,
 				variant: 'destructive'
 			});
 		}
@@ -695,6 +748,7 @@ export default function TitleManagementPage() {
 						<TabsList>
 							<TabsTrigger value="all-titles">All Titles</TabsTrigger>
 							<TabsTrigger value="statistics">Statistics</TabsTrigger>
+							<TabsTrigger value="testing">Testing</TabsTrigger>
 						</TabsList>
 
 						<TabsContent value="all-titles" className="space-y-4">
@@ -795,6 +849,90 @@ export default function TitleManagementPage() {
 											<span className="text-muted-foreground">
 												Title distribution chart will be displayed here
 											</span>
+										</div>
+									</div>
+								</CardContent>
+							</Card>
+						</TabsContent>
+
+						<TabsContent value="testing" className="space-y-4">
+							<Card>
+								<CardHeader>
+									<CardTitle className="flex items-center gap-2">
+										<TestTube className="h-5 w-5" />
+										Title System Testing
+									</CardTitle>
+								</CardHeader>
+								<CardContent className="space-y-6">
+									<div className="grid gap-4">
+										<div className="grid gap-2">
+											<Label htmlFor="test-user-id">User ID</Label>
+											<Input
+												id="test-user-id"
+												value={testUserId}
+												onChange={(e) => setTestUserId(e.target.value)}
+												placeholder="Enter user ID to test with..."
+											/>
+										</div>
+
+										<div className="grid gap-2">
+											<Label htmlFor="test-title-id">Title ID</Label>
+											<Select value={testTitleId} onValueChange={setTestTitleId}>
+												<SelectTrigger>
+													<SelectValue placeholder="Select a title to test..." />
+												</SelectTrigger>
+												<SelectContent>
+													{titlesData?.titles?.map((title: Title) => (
+														<SelectItem key={title.id} value={title.id}>
+															<div className="flex items-center gap-2">
+																{title.icon && <span>{title.icon}</span>}
+																<span style={{ color: title.color }}>
+																	{title.name}
+																</span>
+																<span className="text-xs text-muted-foreground">
+																	({title.rarity})
+																</span>
+															</div>
+														</SelectItem>
+													))}
+												</SelectContent>
+											</Select>
+										</div>
+
+										<div className="flex gap-2">
+											<Button
+												onClick={() => grantTitleMutation.mutate({ 
+													userId: testUserId as UserId, 
+													titleId: testTitleId as TitleId 
+												})}
+												disabled={!testUserId || !testTitleId || grantTitleMutation.isPending}
+												className="flex-1"
+											>
+												{grantTitleMutation.isPending ? 'Granting...' : 'Grant Title'}
+											</Button>
+											<Button
+												onClick={() => equipTitleMutation.mutate({ 
+													userId: testUserId as UserId, 
+													titleId: testTitleId as TitleId 
+												})}
+												disabled={!testUserId || !testTitleId || equipTitleMutation.isPending}
+												variant="outline"
+												className="flex-1"
+											>
+												{equipTitleMutation.isPending ? 'Equipping...' : 'Equip Title'}
+											</Button>
+										</div>
+									</div>
+
+									<div className="border-t pt-4">
+										<h3 className="text-sm font-medium mb-3 text-muted-foreground">
+											Testing Instructions
+										</h3>
+										<div className="space-y-2 text-sm text-muted-foreground">
+											<p>• <strong>Grant Title:</strong> Awards the selected title to the specified user</p>
+											<p>• <strong>Equip Title:</strong> Sets the selected title as the user's active title</p>
+											<p>• Make sure the user exists before testing</p>
+											<p>• Check the browser console for detailed API responses</p>
 										</div>
 									</div>
 								</CardContent>

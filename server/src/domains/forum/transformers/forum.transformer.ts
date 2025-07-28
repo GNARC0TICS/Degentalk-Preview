@@ -284,6 +284,8 @@ export class ForumTransformer {
 			color: dbForum.color || undefined,
 			icon: dbForum.icon || undefined,
 			colorTheme: dbForum.colorTheme || undefined,
+			isFeatured: dbForum.isFeatured || false,
+			themePreset: dbForum.themePreset || undefined,
 			threadCount: dbForum.threadCount || 0,
 			postCount: dbForum.postCount || 0,
 			lastPostAt: dbForum.lastPostAt || undefined,
@@ -292,8 +294,8 @@ export class ForumTransformer {
 			tippingEnabled: dbForum.tippingEnabled || false,
 
 			// Child forums/zones (recursively transformed)
-			children: dbForum.children
-				? dbForum.children.map((child: any) => this.toPublicForumStructure(child))
+			children: dbForum.childStructures
+				? dbForum.childStructures.map((child: any) => this.toPublicForumStructure(child))
 				: undefined
 		};
 	}

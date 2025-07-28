@@ -1,7 +1,7 @@
 import React from 'react';
 import { apiRequest } from '@/utils/api-request';
 import { useQuery } from '@tanstack/react-query';
-import { useCanonicalAuth } from '@/features/auth/useCanonicalAuth';
+import { useAuth } from '@/hooks/use-auth';
 import { logger } from '@/lib/logger';
 import { 
   ShopOwnershipResponse, 
@@ -15,7 +15,7 @@ import {
  * Hook to check if the current user owns a specific shop item
  */
 export function useShopItemOwnership(itemId: string | null) {
-	const { user } = useCanonicalAuth();
+	const { user } = useAuth();
 	const isAuthenticated = !!user;
 
 	const { data, isLoading, error, refetch } = useQuery<ShopOwnershipResponse>({
@@ -51,7 +51,7 @@ export function useShopItemOwnership(itemId: string | null) {
  * Hook to get user's inventory items
  */
 export function useUserInventory() {
-	const { user } = useCanonicalAuth();
+	const { user } = useAuth();
 	const isAuthenticated = !!user;
 
 	const { data, isLoading, error, refetch } = useQuery<UserInventoryResponse>({

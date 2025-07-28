@@ -10,9 +10,9 @@ import { logger } from '@core/logger';
 import { forumStructure, threads, threadPrefixes, tags } from '@schema';
 import { sql, desc, asc, and, eq, inArray } from 'drizzle-orm';
 import type {
-	ForumStructureWithStats,
 	ThreadWithPostsAndUser
 } from '@shared/types/forum.types';
+import type { PublicForumStructure } from './types';
 // Import specialized services
 import { forumStructureService } from './services/structure.service';
 import { threadService } from './services/thread.service';
@@ -109,8 +109,8 @@ export const forumService = {
 	 * Get complete forum structure with zones and forums
 	 */
 	async getForumStructure(): Promise<{
-		zones: ForumStructureWithStats[];
-		forums: ForumStructureWithStats[];
+		zones: PublicForumStructure[];
+		forums: PublicForumStructure[];
 	}> {
 		try {
 			// Delegate to the new structure service
@@ -127,7 +127,7 @@ export const forumService = {
 	/**
 	 * Get structures with statistics - delegates to StructureService
 	 */
-	async getStructuresWithStats(includeCounts: boolean = true): Promise<ForumStructureWithStats[]> {
+	async getStructuresWithStats(includeCounts: boolean = true): Promise<PublicForumStructure[]> {
 		return forumStructureService.getStructuresWithStats();
 	},
 
@@ -141,7 +141,7 @@ export const forumService = {
 	/**
 	 * Get forum by slug - delegates to StructureService
 	 */
-	async getForumBySlug(slug: string): Promise<ForumStructureWithStats | null> {
+	async getForumBySlug(slug: string): Promise<PublicForumStructure | null> {
 		return forumStructureService.getStructureBySlug(slug);
 	},
 
@@ -155,14 +155,14 @@ export const forumService = {
 	/**
 	 * Get categories with stats - delegates to StructureService
 	 */
-	async getCategoriesWithStats(): Promise<ForumStructureWithStats[]> {
+	async getCategoriesWithStats(): Promise<PublicForumStructure[]> {
 		return forumStructureService.getStructuresWithStats();
 	},
 
 	/**
 	 * Get forum with topics by slug
 	 */
-	async getForumBySlugWithTopics(slug: string): Promise<{ forum: ForumStructureWithStats | null }> {
+	async getForumBySlugWithTopics(slug: string): Promise<{ forum: PublicForumStructure | null }> {
 		const forum = await this.getCategoryBySlug(slug);
 		return { forum };
 	},
@@ -171,7 +171,7 @@ export const forumService = {
 	 * Get forum and sub-forums by slug
 	 */
 	async getForumAndItsSubForumsBySlug(slug: string): Promise<{
-		forum: ForumStructureWithStats | null;
+		forum: PublicForumStructure | null;
 	}> {
 		const forum = await this.getForumBySlug(slug);
 		return { forum };
@@ -180,7 +180,7 @@ export const forumService = {
 	/**
 	 * Get category by ID from structure
 	 */
-	async getCategoryById(id: StructureId): Promise<ForumStructureWithStats | null> {
+	async getCategoryById(id: StructureId): Promise<PublicForumStructure | null> {
 		const { zones } = await this.getForumStructure();
 		for (const zone of zones) {
 			for (const parentForum of zone.childForums || []) {
@@ -201,7 +201,7 @@ export const forumService = {
 	/**
 	 * Get structures by parent ID
 	 */
-	async getForumsByParentId(parentId: StructureId): Promise<ForumStructureWithStats[]> {
+	async getForumsByParentId(parentId: StructureId): Promise<PublicForumStructure[]> {
 		const parentStructure = await this.getCategoryById(parentId);
 		return parentStructure?.childForums || [];
 	},

@@ -19,12 +19,12 @@ import { formatDistanceToNow } from 'date-fns';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Skeleton } from '@/components/ui/skeleton';
-import type { Thread } from '@shared/types/thread.types';
+import type { Thread, MentionThread } from '@shared/types';
 import theme from '@/config/theme.config';
 import { MentionContentItem } from '@/components/mentions/MentionContentItem';
 
 export interface ContentFeedProps {
-	items: Thread[];
+	items: (Thread | MentionThread)[];
 	isLoading?: boolean;
 	error?: Error | null;
 	className?: string;
@@ -155,7 +155,7 @@ function ContentItem({ item, showCategory = true }: { item: Thread; showCategory
 							<div className="flex-1 min-w-0">
 								<h3
 									className={cn(
-										'text-zinc-100 line-clamp-2 font-medium',
+										'text-sm text-zinc-100 line-clamp-2 font-medium',
 										isHovered && 'text-white'
 									)}
 								>
@@ -277,14 +277,14 @@ function ContentItem({ item, showCategory = true }: { item: Thread; showCategory
 						<div className="flex items-center justify-between">
 							<div className="flex items-center gap-2 text-xs" style={{ color: theme.components.feed.typography.stats.color }}>
 								<span className="flex items-center gap-1">
-									<span>💬</span>
+									<MessageSquare className="h-3 w-3" />
 									<span style={{ fontWeight: theme.components.feed.typography.stats.weight }}>
 										{item.postCount} {item.postCount === 1 ? 'reply' : 'replies'}
 									</span>
 								</span>
 								<span className="text-zinc-600">·</span>
 								<span className="flex items-center gap-1">
-									<span>👁️</span>
+									<Eye className="h-3 w-3" />
 									<span style={{ fontWeight: theme.components.feed.typography.stats.weight }}>
 										{item.viewCount.toLocaleString()} {item.viewCount === 1 ? 'view' : 'views'}
 									</span>
@@ -293,7 +293,7 @@ function ContentItem({ item, showCategory = true }: { item: Thread; showCategory
 									<>
 										<span className="text-zinc-600">·</span>
 										<span className="flex items-center gap-1">
-											<span>💰</span>
+											<Coins className="h-3 w-3" />
 											<span style={{ fontWeight: theme.components.feed.typography.stats.weight }}>
 												{item.totalTips.toLocaleString()} DGT tipped
 											</span>
@@ -304,7 +304,7 @@ function ContentItem({ item, showCategory = true }: { item: Thread; showCategory
 
 							<div className="flex items-center gap-2">
 								{/* Category tag */}
-								{showCategory && item.zone && (
+								{showCategory && item.featuredForum && (
 									<Link to={`/forums/${item.featuredForum.slug}`}>
 										<span
 											className={cn(
@@ -416,10 +416,10 @@ export function ContentFeed({
 			>
 				{items.map((item, index) => {
 					// Check if this is a mention item
-					const isMention = item.metadata?.mentionId != null;
+					const isMention = 'metadata' in item && item.metadata?.mentionId != null;
 					
 					if (isMention) {
-						return <MentionContentItem key={item.id || `mention-${index}`} item={item} />;
+						return <MentionContentItem key={item.id || `mention-${index}`} item={item as MentionThread} />;
 					}
 					
 					return <ContentItem key={item.id} item={item} showCategory={showCategory} />;

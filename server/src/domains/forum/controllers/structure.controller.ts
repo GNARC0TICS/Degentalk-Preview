@@ -7,12 +7,21 @@ import { ForumTransformer } from '@domains/forum/transformers/forum.transformer'
 class ForumStructureController {
 	async getStructure(req: Request, res: Response) {
 		try {
-			const structures = await forumStructureService.getStructuresWithStats();
-			const zones = structures.filter((s) => s.parentId === null);
-			const forums = structures.filter((s) => s.type === 'forum');
+			// Get hierarchical forum structure
+			const tree = await forumStructureService.getStructureTree();
+			
+			// Transform for public consumption
+			const transformedTree = tree.map((f) => ForumTransformer.toPublicForumStructure(f));
+			
+			// Separate featured and general top-level forums
+			const featuredForums = transformedTree.filter((f) => f.isFeatured === true);
+			const generalForums = transformedTree.filter((f) => f.isFeatured !== true);
+			
 			return sendSuccessResponse(res, {
-				zones: zones.map((z) => ForumTransformer.toPublicForumStructure(z)),
-				forums: forums.map((f) => ForumTransformer.toPublicForumStructure(f))
+				zones: transformedTree, // For backward compatibility
+				forums: transformedTree, // Hierarchical structure with children
+				featured: featuredForums, // Top-level featured forums with children
+				general: generalForums   // Top-level general forums with children
 			});
 		} catch (error) {
 			logger.error('ForumStructureController', 'Error in getStructure', { error });

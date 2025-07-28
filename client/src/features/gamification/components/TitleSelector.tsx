@@ -2,6 +2,8 @@ import React from 'react';
 import { cn } from '@/utils/utils';
 import type { UserTitle } from '@/hooks/useXP';
 import type { TitleId } from '@shared/types/ids';
+import type { Title } from '@shared/types/entities/title.types';
+import { UserTitle as UserTitleDisplay } from '@/components/ui/user-title';
 import { Check, ChevronDown, Crown, Info } from 'lucide-react';
 import {
 	DropdownMenu,
@@ -125,9 +127,7 @@ export function TitleSelector({
 					<Button variant="outline" className="flex items-center justify-between w-full">
 						<div className="flex items-center">
 							{equippedTitle ? (
-								<span className={cn('font-medium', getTitleColorClass(equippedTitle.rarity))}>
-									{equippedTitle.name}
-								</span>
+								<UserTitleDisplay title={equippedTitle as unknown as Title} />
 							) : (
 								<span className="text-zinc-400">Select a title</span>
 							)}
@@ -143,16 +143,14 @@ export function TitleSelector({
 							<DropdownMenuItem
 								key={title.id}
 								className={cn(
-									'flex items-center justify-between cursor-pointer',
+									'flex items-center justify-between cursor-pointer py-2',
 									title.isEquipped && 'bg-zinc-800'
 								)}
 								onClick={() => onEquipTitle(title)}
 							>
-								<div className="flex items-center">
-									<span className={cn('font-medium', getTitleColorClass(title.rarity))}>
-										{title.name}
-									</span>
-									<span className={cn('ml-2 text-xs', getRarityColor(title.rarity))}>
+								<div className="flex items-center gap-2">
+									<UserTitleDisplay title={title as unknown as Title} className="scale-90" />
+									<span className={cn('text-xs', getRarityColor(title.rarity))}>
 										({formatRarity(title.rarity)})
 									</span>
 								</div>
@@ -195,12 +193,8 @@ export function TitleSelector({
 
 						{equippedTitle ? (
 							<div className="flex items-center justify-between">
-								<div className="flex items-center gap-2">
-									<span
-										className={cn('font-medium text-lg', getTitleColorClass(equippedTitle.rarity))}
-									>
-										{equippedTitle.name}
-									</span>
+								<div className="flex items-center gap-3">
+									<UserTitleDisplay title={equippedTitle as unknown as Title} />
 									<Badge
 										variant="outline"
 										className={cn(
@@ -230,10 +224,8 @@ export function TitleSelector({
 									)}
 									onClick={() => onEquipTitle(title)}
 								>
-									<div className="flex items-center gap-2">
-										<span className={cn('font-medium', getTitleColorClass(title.rarity))}>
-											{title.name}
-										</span>
+									<div className="flex items-center gap-3">
+										<UserTitleDisplay title={title as unknown as Title} className="scale-90" />
 										<Badge
 											variant="outline"
 											className={cn(

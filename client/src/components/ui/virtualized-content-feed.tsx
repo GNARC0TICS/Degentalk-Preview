@@ -180,6 +180,7 @@ export function VirtualizedContentFeed({
       <List
         ref={listRef}
         height={containerHeight}
+        width="100%"
         itemCount={itemCount}
         itemSize={getItemSize}
         onScroll={handleScroll}
@@ -210,7 +211,7 @@ export function VirtualizedContentFeed({
         </button>
       )}
 
-      <style jsx>{`
+      <style>{`
         @keyframes fade-in {
           from {
             opacity: 0;

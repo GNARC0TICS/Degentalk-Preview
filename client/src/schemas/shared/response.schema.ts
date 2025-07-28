@@ -1,98 +1,71 @@
 import { z } from 'zod';
 
 /**
- * Standard API Response Schema
- * Matches the backend's consistent response format
+ * API Success Response Schema
+ * Matches the shared API types from @shared/types/api.types
  */
-export const StandardApiResponseSchema = <T extends z.ZodTypeAny>(dataSchema: T) =>
+export const ApiSuccessSchema = <T extends z.ZodTypeAny>(dataSchema: T) =>
   z.object({
-    success: z.boolean(),
+    success: z.literal(true),
     data: dataSchema,
     message: z.string().optional(),
-    errors: z
-      .array(
-        z.object({
-          message: z.string(),
-          code: z.string().optional(),
-          field: z.string().optional(),
-          details: z.record(z.unknown()).optional()
-        })
-      )
-      .optional(),
+    timestamp: z.string(),
     meta: z
-      .object({
-        timestamp: z.string(),
-        requestId: z.string().optional(),
-        pagination: z
-          .object({
-            page: z.number(),
-            limit: z.number(),
-            total: z.number(),
-            totalPages: z.number(),
-            hasNext: z.boolean(),
-            hasPrev: z.boolean()
-          })
-          .optional(),
-        _timing: z
-          .object({
-            duration: z.number(),
-            requestId: z.string().optional(),
-            cacheHit: z.boolean().optional()
-          })
-          .optional()
-      })
+      .union([
+        z.object({
+          page: z.number(),
+          limit: z.number(),
+          total: z.number(),
+          totalPages: z.number(),
+          hasNext: z.boolean(),
+          hasPrev: z.boolean()
+        }),
+        z.object({
+          appliedFilters: z.record(z.unknown()),
+          availableFilters: z.array(z.string()),
+          resultCount: z.number()
+        })
+      ])
       .optional()
   });
 
 /**
- * Paginated Response Schema
+ * API Error Response Schema
  */
-export const PaginatedResponseSchema = <T extends z.ZodTypeAny>(itemSchema: T) =>
-  z.object({
-    items: z.array(itemSchema),
-    pagination: z.object({
-      page: z.number(),
-      limit: z.number(),
-      total: z.number(),
-      totalPages: z.number(),
-      hasNext: z.boolean(),
-      hasPrev: z.boolean()
-    })
-  });
+export const ApiErrorSchema = z.object({
+  success: z.literal(false),
+  error: z.object({
+    code: z.string(),
+    message: z.string(),
+    details: z.record(z.unknown()).optional(),
+    field: z.string().optional()
+  }),
+  timestamp: z.string()
+});
 
-// Type helpers
-export type StandardApiResponse<T> = {
-  success: boolean;
-  data: T;
-  message?: string;
-  errors?: Array<{
-    message: string;
-    code?: string;
-    field?: string;
-    details?: Record<string, unknown>;
-  }>;
-  meta?: {
-    timestamp: string;
-    requestId?: string;
-    pagination?: {
-      page: number;
-      limit: number;
-      total: number;
-      totalPages: number;
-      hasNext: boolean;
-      hasPrev: boolean;
-    };
-  };
-};
+/**
+ * API Response Schema (Union of Success and Error)
+ */
+export const ApiResponseSchema = <T extends z.ZodTypeAny>(dataSchema: T) =>
+  z.union([ApiSuccessSchema(dataSchema), ApiErrorSchema]);
 
-export type PaginatedResponse<T> = {
-  items: T[];
-  pagination: {
-    page: number;
-    limit: number;
-    total: number;
-    totalPages: number;
-    hasNext: boolean;
-    hasPrev: boolean;
-  };
-};
+/**
+ * Pagination Metadata Schema
+ */
+export const PaginationMetaSchema = z.object({
+  page: z.number(),
+  limit: z.number(),
+  total: z.number(),
+  totalPages: z.number(),
+  hasNext: z.boolean(),
+  hasPrev: z.boolean()
+});
+
+/**
+ * Filter Metadata Schema
+ */
+export const FilterMetaSchema = z.object({
+  appliedFilters: z.record(z.unknown()),
+  availableFilters: z.array(z.string()),
+  resultCount: z.number()
+});

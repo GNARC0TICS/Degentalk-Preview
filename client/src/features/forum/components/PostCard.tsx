@@ -17,11 +17,11 @@ import {
 	LogIn,
 	MoreHorizontal
 } from 'lucide-react';
-import type { PostWithUser } from '@/types/compat/forum';
+import type { Post } from '@shared/types/post.types';
 import type { PostId } from '@shared/types/ids';
 import { SolveBadge } from '@/components/forum/SolveBadge';
 import { SignatureRenderer } from '@/components/forum/SignatureRenderer';
-import { useCanonicalAuth } from '@/features/auth/useCanonicalAuth';
+import { useAuth } from "@/hooks/use-auth";
 import { ButtonTooltip } from '@/components/ui/tooltip-utils';
 import { ModeratorActions } from '@/components/forum/ModeratorActions';
 import TipButton from '@/features/wallet/components/tip-button';
@@ -36,7 +36,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 
 interface PostCardProps {
-	post: PostWithUser;
+	post: Post;
 	isEditable?: boolean;
 	isThreadSolved?: boolean;
 	isSolution?: boolean;
@@ -66,7 +66,7 @@ export function PostCard({
 	parentForumTheme = null,
 	tippingEnabled = false
 }: PostCardProps) {
-	const { user: currentUser } = useCanonicalAuth();
+	const { user: currentUser } = useAuth();
 	const breakpoint = useBreakpoint();
 
 	// Get adaptive spacing configuration
@@ -101,7 +101,7 @@ export function PostCard({
 			>
 				{/* Enhanced Author Profile Sidebar */}
 				<ProfileCard
-					username={post.user.username}
+					username={post.user?.username || 'Unknown'}
 					variant={breakpoint.isMobile ? 'compact' : 'sidebar'}
 					showStats={!breakpoint.isMobile} // Hide detailed stats on mobile
 					showJoinDate={!breakpoint.isMobile}
@@ -164,11 +164,11 @@ export function PostCard({
 						</div>
 
 						{/* User Signature - Hide on mobile to save space */}
-						{post.user.signature && !breakpoint.isMobile && (
+						{post.user?.signature && !breakpoint.isMobile && (
 							<div className="mt-4 pt-3 border-t border-zinc-800/50">
 								<SignatureRenderer
-									signature={post.user.signature}
-									username={post.user.username}
+									signature={post.user?.signature}
+									username={post.user?.username || 'Unknown'}
 									maxHeight={80}
 									className="text-xs"
 								/>
@@ -268,11 +268,12 @@ export function PostCard({
 							{/* Tip Button - Always show if enabled and not mobile, or if mobile but more space-efficient */}
 							{tippingEnabled &&
 								currentUser &&
-								post.user.id !== currentUser.id &&
+								post.user &&
+								post.user?.id !== currentUser.id &&
 								!breakpoint.isMobile && (
 									<TipButton
-										recipientId={post.user.id}
-										recipientName={post.user.username}
+										recipientId={post.user?.id}
+										recipientName={post.user?.username || 'Unknown'}
 										buttonText="Tip"
 										buttonVariant="ghost"
 										buttonSize="sm"
@@ -298,11 +299,11 @@ export function PostCard({
 								</DropdownMenuTrigger>
 								<DropdownMenuContent align="end" className="w-48">
 									{/* Tip Button in mobile dropdown */}
-									{tippingEnabled && currentUser && post.user.id !== currentUser.id && (
+									{tippingEnabled && currentUser && post.user?.id !== currentUser.id && (
 										<DropdownMenuItem asChild>
 											<TipButton
-												recipientId={post.user.id}
-												recipientName={post.user.username}
+												recipientId={post.user?.id}
+												recipientName={post.user?.username || 'Unknown'}
 												buttonText="Tip User"
 												buttonVariant="ghost"
 												className="w-full justify-start text-zinc-400"
@@ -406,8 +407,8 @@ export function PostCard({
 									itemId={post.id}
 									itemData={{
 										isHidden: post.isHidden,
-										userId: post.user.id.toString(),
-										username: post.user.username
+										userId: post.user?.id?.toString() || 'unknown',
+										username: post.user?.username || 'Unknown'
 									}}
 								/>
 							</div>

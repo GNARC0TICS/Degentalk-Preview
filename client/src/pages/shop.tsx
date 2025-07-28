@@ -29,9 +29,9 @@ import {
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 
-const categories: Array<{ id: ItemCategory | 'all'; label: string; icon?: React.ElementType }> = [
+const categories: Array<{ id: string; label: string; icon?: React.ElementType }> = [
 	{ id: 'all', label: 'All Items', icon: ShoppingCart },
-	{ id: 'frames', label: 'Frames', icon: Sparkles },
+	{ id: 'cosmetics', label: 'Cosmetics', icon: Sparkles },
 	{ id: 'titles', label: 'Titles', icon: TrendingUp },
 	{ id: 'badges', label: 'Badges', icon: Sparkles },
 	{ id: 'colors', label: 'Colors', icon: Sparkles },
@@ -43,12 +43,12 @@ const categories: Array<{ id: ItemCategory | 'all'; label: string; icon?: React.
 
 export default function ShopPage() {
 	// State
-	const [selectedCategory, setSelectedCategory] = useState<ItemCategory | 'all'>('all');
+	const [selectedCategory, setSelectedCategory] = useState<string>('all');
 	const [searchQuery, setSearchQuery] = useState('');
 
 	// Hooks
 	const { items, isLoading, isError, error, refetch } = useShopItems(
-		selectedCategory !== 'all' ? (selectedCategory as ItemCategory) : undefined
+		selectedCategory !== 'all' ? selectedCategory : undefined
 	);
 
 	// Placeholder function for wallet actions

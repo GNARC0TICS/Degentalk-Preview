@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## ⚠️ CRITICAL REMINDERS
 
-1. **NEVER run `pnpm db:push`** - It will hang forever with Neon. Use `pnpm db:migrate` instead.
+1. **NEVER run `pnpm db:push`** - It will hang forever with Neon. Use `pnpm db:push:force` or direct SQL scripts instead.
 2. **Scripts workspace exists at root** - Don't assume it's deleted if imports fail.
 3. **Use migration workflow** for all database schema changes.
 4. **TypeScript Hooks are ACTIVE** - Code quality checks run automatically. Use `SKIP_HOOKS=1 git commit` for emergencies.
@@ -13,7 +13,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 7. **Forum terminology** - Use "forum" not "zone". Legacy "zone" references are being phased out.
 8. **CODEBASE IS LOCKED DOWN** - NO new files without explicit approval (see File Creation Whitelisting below).
 9. **IMPORT ALIASES ARE STANDARDIZED** - Use ONLY approved import aliases (see Import Alias Rules). Old patterns like `@app/` are BANNED.
-10. **DATABASE MIGRATIONS** - Must use DATABASE_URL environment variable. Run with: `export DATABASE_URL="..." && pnpm db:migrate`
+10. **DATABASE MIGRATIONS** - Must use DIRECT_DATABASE_URL for schema operations. Regular DATABASE_URL uses pooler which times out.
 
 ## File Creation Whitelisting Process
 
@@ -40,6 +40,7 @@ pnpm dev:server            # Server only
 
 # Database
 pnpm db:migrate            # Run migrations (NOT db:push!)
+pnpm db:push:force         # Force push schema changes (bypasses prompts)
 pnpm db:studio             # Open Drizzle Studio
 pnpm db:sync:forums        # Sync forum config to database
 
@@ -110,9 +111,10 @@ Each domain follows strict patterns:
 - **IDs**: Using branded types (ForumId, ThreadId, etc.)
 
 ### User Model
-- **CanonicalUser** is the single source of truth
-- Always use `useCanonicalAuth()` hook, never `useAuth()`
-- Transform at boundaries: DB → CanonicalUser → API
+- **User from @shared/types/user.types** is the single source of truth
+- Always use `useAuth()` hook, never `useCanonicalAuth()`
+- CanonicalUser is deprecated and being phased out
+- Transform at boundaries: DB → User → API
 
 ## TypeScript Hooks System
 
@@ -210,13 +212,73 @@ loggerControl.reset();
 
 See `docs/LOGGING.md` for complete documentation.
 
+## Type System Rules - ZERO TOLERANCE POLICY
+
+### 🚨 MANDATORY: All Types Come From @shared/types
+**This is the ONLY source of truth for all business types. No exceptions.**
+
+```typescript
+// ✅ CORRECT - The ONLY way to import types
+import type { User } from '@shared/types/user.types';
+import type { Thread } from '@shared/types/thread.types';
+import type { Post } from '@shared/types/post.types';
+import type { Forum } from '@shared/types/forum-core.types';
+import type { ApiResponse, ApiSuccess, ApiError } from '@shared/types/api.types';
+import type { UserId, ThreadId, PostId } from '@shared/types/ids';
+```
+
+### ❌ BANNED: Legacy/Local Type Definitions
+```typescript
+// NEVER create local versions of shared types
+interface User { ... }  // BANNED - use @shared/types/user.types
+type Post = { ... }     // BANNED - use @shared/types/post.types
+
+// NEVER import from deprecated locations
+import { CanonicalUser } from '@/types/canonical.types';  // DELETED
+import { PostWithUser } from '@/types/compat/...';        // DELETED
+import { StandardApiResponse } from '...';                // DELETED
+
+// NEVER create "compatibility" or "canonical" types
+export type MyCanonicalType = ...  // BANNED
+export type CompatUser = User       // BANNED - use User directly
+```
+
+### 📋 Type Import Checklist
+1. **Need a user type?** → `import type { User } from '@shared/types/user.types'`
+2. **Need a thread type?** → `import type { Thread } from '@shared/types/thread.types'`
+3. **Need an ID type?** → `import type { UserId, ThreadId } from '@shared/types/ids'`
+4. **Type doesn't exist in shared?** → It probably does, check thoroughly
+5. **Really doesn't exist?** → Add it to shared/types, never create local versions
+
+### 🎯 API Response Patterns
+```typescript
+// Use shared API types
+import type { ApiResponse } from '@shared/types/api.types';
+import { extractApiData } from '@/utils/api-response';
+
+// For endpoints returning extra data beyond base types
+interface ProfileResponse {
+  user: User;           // Core type from shared
+  nextLevelXp: number;  // Extra computed field
+  badges: Badge[];      // Related data
+}
+```
+
+### ⚠️ Zero Tolerance Violations
+Creating any of these will fail code review:
+- Local type definitions that duplicate shared types
+- "Canonical" or "Compat" type names
+- Type aliases that just rename shared types
+- Import from `/types/canonical.types` or `/types/compat/`
+
 ## Common Pitfalls
 
 1. **Import Boundaries**: Client can't import server, server can't import client
 2. **Database Access**: Only in repositories, never in services
 3. **Forum Config**: Edit `forum-map.config.ts` then sync, don't modify DB directly
-4. **User Types**: Use CanonicalUser everywhere, transform legacy data
+4. **User Types**: Use User from @shared/types, not CanonicalUser
 5. **ID Comparisons**: Use `isValidId()`, not numeric comparisons
+6. **API Types**: Use ApiResponse from @shared/types, not StandardApiResponse
 
 ## Database Migration Best Practices
 
@@ -258,6 +320,59 @@ tsx server/src/domains/[domain]/migrations/[migration].ts
 - **Test locally** first with a development database
 - **Never use db:push** - it bypasses migrations and hangs with Neon
 - **Check for duplicates** in schema files before generating migrations
+
+## Neon Database Migration Workflow - CRITICAL
+
+### The Problem
+Neon uses connection pooling by default. When Drizzle tries to introspect the schema (especially with 179+ tables), it hangs indefinitely because:
+1. The pooler has connection timeouts
+2. Drizzle's schema introspection is very slow on large databases
+3. Interactive prompts block automated workflows
+
+### The Solution
+Use DIRECT_DATABASE_URL (without pooler) for all schema operations:
+
+```bash
+# In .env file, you should have:
+DATABASE_URL=postgresql://user:pass@host-pooler.neon.tech/db  # For app (pooled)
+DIRECT_DATABASE_URL=postgresql://user:pass@host.neon.tech/db   # For migrations (direct)
+```
+
+### Recommended Approaches
+
+#### Option 1: Force Push (Quick)
+```bash
+pnpm db:push:force  # Uses --force flag to skip prompts
+```
+
+#### Option 2: Direct SQL Script (Fastest)
+```typescript
+// scripts/apply-schema-changes.ts
+import { Client } from 'pg';
+
+const client = new Client({
+  connectionString: process.env.DIRECT_DATABASE_URL,
+  ssl: { rejectUnauthorized: false }
+});
+
+await client.connect();
+await client.query('ALTER TABLE titles ADD COLUMN IF NOT EXISTS ...');
+await client.end();
+```
+
+#### Option 3: Generate Migration (Safest)
+```bash
+# Generate migration file
+cd db && pnpm drizzle-kit generate
+
+# Apply using direct connection
+pnpm db:migrate:apply
+```
+
+### What NOT to Do
+- ❌ Never use `pnpm db:push` without --force
+- ❌ Never use pooled connections for schema changes
+- ❌ Never wait for Drizzle to "pull schema" on 179 tables
 
 ## Test File Conventions
 

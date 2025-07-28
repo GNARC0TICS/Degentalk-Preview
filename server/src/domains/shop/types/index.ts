@@ -37,6 +37,7 @@ export interface PublicShopItem {
 	discountPercentage?: number;
 
 	// Visual metadata
+	imageUrl?: string;
 	previewUrl?: string;
 	thumbnailUrl?: string;
 	rarityColor: string;

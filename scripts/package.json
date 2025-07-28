@@ -10,6 +10,7 @@
     "seed:dev-wallet": "npx dotenv-cli -e ../env.local -- tsx -r tsconfig-paths/register db/seed-dev-wallet.ts",
     "seed:dev-subscriptions": "npx dotenv-cli -e ../env.local -- tsx -r tsconfig-paths/register db/seed-dev-subscriptions.ts",
     "seed:achievements": "npx dotenv-cli -e ../env.local -- tsx -r tsconfig-paths/register db/seed-achievements.ts",
+    "seed:threads": "npx dotenv-cli -e ../env.local -- tsx -r tsconfig-paths/register db/seed-threads.ts",
     "sync:forums": "npx dotenv-cli -e ../env.local -- tsx -r tsconfig-paths/register dev/syncForumsToDB.ts",
     "sync:check-forum-config": "npx dotenv-cli -e ../env.local -- tsx ops/check-forum-config-sync.ts",
     "init:xp": "npx dotenv-cli -e ../env.local -- tsx -r tsconfig-paths/register db/initialize-xp-system.ts",

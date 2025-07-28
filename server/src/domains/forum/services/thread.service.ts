@@ -206,7 +206,16 @@ export class ThreadService {
 
 			// Filter by structureId if provided
 			if (structureId) {
-				whereConditions.push(eq(threads.structureId, structureId));
+				// Check if this forum has children - if so, include threads from children too
+				const childStructureIds = await this.getChildStructureIds(structureId);
+				if (childStructureIds.length > 0) {
+					// Include threads from parent and all children
+					const allStructureIds = [structureId, ...childStructureIds];
+					whereConditions.push(inArray(threads.structureId, allStructureIds));
+				} else {
+					// Just this forum
+					whereConditions.push(eq(threads.structureId, structureId));
+				}
 			}
 
 			// Filter by userId if provided
@@ -924,6 +933,23 @@ export class ThreadService {
 	}
 
 	/**
+	 * Get all child structure IDs for a given parent structure
+	 */
+	private async getChildStructureIds(parentId: StructureId): Promise<StructureId[]> {
+		try {
+			const children = await db
+				.select({ id: forumStructure.id })
+				.from(forumStructure)
+				.where(eq(forumStructure.parentId, parentId));
+			
+			return children.map(child => child.id);
+		} catch (error) {
+			logger.error('ThreadService', 'Error getting child structure IDs', { parentId, error });
+			return [];
+		}
+	}
+
+	/**
 	 * Get zone information for a given structure ID with caching
 	 * Traverses up the hierarchy to find the top-level zone
 	 */
@@ -1056,6 +1082,37 @@ export class ThreadService {
 			});
 			// Fallback: return empty excerpts for all threads
 			return threadIds.map((threadId) => ({ threadId, excerpt: null }));
+		}
+	}
+
+	/**
+	 * Get all child structure IDs for a given parent structure
+	 * Used to aggregate threads from subforums when viewing parent forum
+	 */
+	private async getChildStructureIds(parentId: StructureId): Promise<StructureId[]> {
+		try {
+			// Use recursive CTE to get all descendant forum IDs
+			const result = await db.execute(sql`
+				WITH RECURSIVE forum_tree AS (
+					-- Start with direct children
+					SELECT id
+					FROM forum_structure
+					WHERE parent_id = ${parentId}
+					
+					UNION ALL
+					
+					-- Recursively get children of children
+					SELECT fs.id
+					FROM forum_structure fs
+					INNER JOIN forum_tree ft ON fs.parent_id = ft.id
+				)
+				SELECT id FROM forum_tree
+			`);
+
+			return result.rows.map((row: any) => row.id as StructureId);
+		} catch (error) {
+			logger.error('ThreadService', 'Error fetching child structure IDs', { parentId, error });
+			return [];
 		}
 	}
 

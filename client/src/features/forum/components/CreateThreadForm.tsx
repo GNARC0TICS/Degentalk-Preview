@@ -10,7 +10,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiRequest } from '@/utils/queryClient';
 import { useToast } from '@/hooks/use-toast';
 import RichTextEditor from '@/components/editor/rich-text-editor';
-import { useCanonicalAuth } from '@/features/auth/useCanonicalAuth';
+import { useAuth } from "@/hooks/use-auth";
 import { usePrefixes, useCreateThread } from '@/features/forum/hooks/useForumQueries';
 import type { CreateThreadParams } from '@/features/forum/hooks/useForumQueries';
 import { PrefixBadge } from '@/components/forum/prefix-badge';
@@ -98,7 +98,7 @@ export function CreateThreadForm({
 }: CreateThreadFormProps) {
 	const { toast } = useToast();
 	const navigate = useNavigate();
-	const { user } = useCanonicalAuth();
+	const { user } = useAuth();
 	const [editorContent, setEditorContent] = useState('');
 	const [editorState, setEditorState] = useState<Record<string, unknown> | null>(null);
 	const [hasActiveDraft, setHasActiveDraft] = useState(false);

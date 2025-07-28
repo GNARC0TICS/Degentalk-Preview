@@ -8,12 +8,11 @@
 import { apiRequest } from '@/utils/api-request';
 import { isValidUUID } from '@shared/utils/id-validation';
 import type {
-	ThreadWithUser,
-	PostWithUser,
-	ForumTag,
-	ThreadPrefix,
-	ThreadWithPostsAndUser
-} from '@/types/compat/forum';
+	Thread,
+	ThreadTag,
+	ThreadPrefix
+} from '@shared/types/thread.types';
+import type { Post } from '@shared/types/post.types';
 import type { ApiErrorData } from '@/types/core.types';
 import type {
 	ReportId,
@@ -24,7 +23,6 @@ import type {
 	ThreadId,
 	PostId
 } from '@shared/types/ids';
-import type { CanonicalPost } from '@/types/canonical.types';
 
 export interface ThreadSearchParams {
 	structureId?: ForumId;
@@ -272,7 +270,7 @@ export const forumApi = {
 			limit?: number;
 		}
 	): Promise<{
-		posts: CanonicalPost[];
+		posts: Post[];
 		pagination: {
 			page: number;
 			limit: number;
@@ -281,7 +279,7 @@ export const forumApi = {
 		};
 	}> => {
 		const response = await apiRequest<{
-			posts: CanonicalPost[];
+			posts: Post[];
 			pagination: {
 				page: number;
 				limit: number;
@@ -314,8 +312,8 @@ export const forumApi = {
 		content: string;
 		replyToPostId?: PostId;
 		editorState?: Record<string, unknown>;
-	}): Promise<PostWithUser> => {
-		const directResult = await apiRequest<PostWithUser>({
+	}): Promise<Post> => {
+		const directResult = await apiRequest<Post>({
 			url: '/api/forum/posts',
 			method: 'POST',
 			data
@@ -331,11 +329,11 @@ export const forumApi = {
 		}
 	): Promise<{
 		message: string;
-		post: PostWithUser;
+		post: Post;
 	}> => {
 		const directResult = await apiRequest<{
 			message: string;
-			post: PostWithUser;
+			post: Post;
 		}>({
 			url: `/api/forum/posts/${postId}`,
 			method: 'PUT',

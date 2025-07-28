@@ -10,8 +10,9 @@ import { useAuth } from '@/hooks/use-auth';
 import { UserTitles } from '@/components/profile/UserTitles';
 import { formatRelativeTime } from '@/utils/utils';
 import { apiRequest } from '@/lib/api';
-import type { ProfileData } from '@/types/profile';
+import type { User } from '@shared/types/user.types';
 import type { Thread } from '@shared/types/thread.types';
+import type { BadgeId, TitleId, ProductId, UserId, FrameId } from '@shared/types/ids';
 
 // Demo user profile data (fallback for dev)
 const demoUser = {
@@ -60,14 +61,113 @@ export default function ProfilePage() {
   const targetUsername = routeUsername || currentUser?.username;
   const isOwnProfile = !routeUsername || (currentUser?.username === routeUsername);
   
+  // Define the profile response shape
+  interface ProfileResponse {
+    // Core user data
+    id: UserId;
+    username: string;
+    email: string;
+    role: 'user' | 'moderator' | 'admin' | 'owner';
+    avatarUrl: string | null;
+    activeAvatarUrl: string | null;
+    bio: string | null;
+    signature: string | null;
+    joinedAt: string;
+    lastActiveAt: string | null;
+    dgtBalance: number;
+    level: number;
+    xp: number;
+    reputation: number;
+    
+    // Forum stats
+    forumStats: {
+      level: number;
+      xp: number;
+      reputation: number;
+      totalPosts: number;
+      totalThreads: number;
+      totalLikes: number;
+      totalTips: number;
+    };
+    
+    // Extra computed fields
+    nextLevelXp: number;
+    totalPosts: number;
+    totalThreads: number;
+    totalLikes: number;
+    totalTips: number;
+    
+    // Cosmetics
+    bannerUrl: string | null;
+    activeFrameId: FrameId | null;
+    activeFrame: any | null;
+    activeTitleId: TitleId | null;
+    activeTitle: any | null;
+    activeBadgeId: BadgeId | null;
+    activeBadge: any | null;
+    
+    // Collections
+    badges: Array<{
+      id: BadgeId;
+      name: string;
+      description: string | null;
+      iconUrl: string;
+      rarity: string;
+    }>;
+    
+    titles: Array<{
+      id: TitleId;
+      name: string;
+      description: string | null;
+      iconUrl: string | null;
+      rarity: string;
+    }>;
+    
+    inventory: Array<{
+      id: string;
+      userId: UserId;
+      productId: ProductId;
+      isEquipped: boolean;
+      productName: string;
+      productType: string;
+      imageUrl: string;
+      rarity: string;
+    }>;
+    
+    // Social
+    relationships: {
+      friends: Array<{
+        id: string;
+        username: string;
+        avatarUrl: string | null;
+      }>;
+      friendRequestsSent: number;
+      friendRequestsReceived: number;
+    };
+    
+    // Additional stats
+    stats: {
+      threadViewCount: number;
+      posterRank: number | null;
+      tipperRank: number | null;
+      likerRank: number | null;
+    };
+    
+    // Social handles
+    discordHandle?: string | null;
+    twitterHandle?: string | null;
+    telegramHandle?: string | null;
+    website?: string | null;
+  }
+
   // Fetch profile data
-  const { data: profile, isLoading, error } = useQuery<ProfileData>({
+  const { data: profile, isLoading, error } = useQuery<ProfileResponse>({
     queryKey: ['profile', targetUsername],
     queryFn: async () => {
       if (!targetUsername) throw new Error('No username provided');
       
       try {
-        const response = await apiRequest<ProfileData>({
+        const response = await apiRequest<ProfileResponse>({
           url: `/api/profile/${targetUsername}`,
           method: 'GET'
         });
@@ -76,29 +176,62 @@ export default function ProfilePage() {
         // Fallback to demo data in dev mode
         if (import.meta.env.DEV) {
           return {
-            id: 1,
+            id: 1 as UserId,
             username: targetUsername,
-            displayName: targetUsername,
+            email: 'demo@example.com',
+            role: 'user' as const,
             bio: demoUser.bio,
             avatarUrl: null,
             activeAvatarUrl: null,
             bannerUrl: null,
-            isOnline: true,
+            signature: null,
             joinedAt: demoUser.joinedAt.toISOString(),
-            stats: demoUser.stats,
-            titles: [],
-            activeTitleId: null,
-            badges: demoUser.badges.map((b, i) => ({ id: i, ...b })),
+            lastActiveAt: new Date().toISOString(),
+            dgtBalance: 0,
+            level: demoUser.stats.level,
+            xp: demoUser.stats.xp,
+            reputation: demoUser.stats.reputation,
             forumStats: {
+              level: demoUser.stats.level,
+              xp: demoUser.stats.xp,
+              reputation: demoUser.stats.reputation,
               totalPosts: demoUser.stats.posts,
               totalThreads: demoUser.stats.threads,
               totalLikes: demoUser.stats.likes,
-              reputation: demoUser.stats.reputation
+              totalTips: 0
             },
-            level: demoUser.stats.level,
-            xp: demoUser.stats.xp,
-            nextLevelXp: demoUser.stats.nextLevelXp
-          } as ProfileData;
+            nextLevelXp: demoUser.stats.nextLevelXp,
+            totalPosts: demoUser.stats.posts,
+            totalThreads: demoUser.stats.threads,
+            totalLikes: demoUser.stats.likes,
+            totalTips: 0,
+            activeFrameId: null,
+            activeFrame: null,
+            activeTitleId: null,
+            activeTitle: null,
+            activeBadgeId: null,
+            activeBadge: null,
+            badges: demoUser.badges.map((b, i) => ({ 
+              id: i as BadgeId, 
+              name: b.name,
+              description: null,
+              iconUrl: b.icon,
+              rarity: 'common'
+            })),
+            titles: [],
+            inventory: [],
+            relationships: {
+              friends: [],
+              friendRequestsSent: 0,
+              friendRequestsReceived: 0
+            },
+            stats: {
+              threadViewCount: 0,
+              posterRank: null,
+              tipperRank: null,
+              likerRank: null
+            }
+          } as ProfileResponse;
         }
         throw err;
       }
@@ -172,21 +305,20 @@ export default function ProfilePage() {
     );
   }
   
-  // Use profile data with fallbacks
+  // Use profile data directly - it already has all the fields we need
   const user = {
-    ...demoUser,
     ...profile,
     stats: {
-      posts: profile.forumStats?.totalPosts || 0,
-      threads: profile.forumStats?.totalThreads || 0,
-      likes: profile.forumStats?.totalLikes || 0,
-      reputation: profile.forumStats?.reputation || 0,
-      level: profile.level || 1,
-      xp: profile.xp || 0,
-      nextLevelXp: profile.nextLevelXp || 1000
+      posts: profile.forumStats.totalPosts,
+      threads: profile.forumStats.totalThreads,
+      likes: profile.forumStats.totalLikes,
+      reputation: profile.forumStats.reputation,
+      level: profile.level,
+      xp: profile.xp,
+      nextLevelXp: profile.nextLevelXp
     },
     joinedAt: new Date(profile.joinedAt),
-    badges: profile.badges || demoUser.badges
+    badges: profile.badges
   };
 
   return (
@@ -290,7 +422,7 @@ export default function ProfilePage() {
                 {user.badges.length > 0 ? (
                   user.badges.map((badge, i) => (
                     <div key={badge.id || i} className="flex items-center gap-2">
-                      <span className="text-xl">{badge.icon}</span>
+                      <span className="text-xl">{badge.iconUrl}</span>
                       <span className="text-sm text-zinc-300">{badge.name}</span>
                     </div>
                   ))

@@ -1,5 +1,9 @@
 import React from 'react';
 import { Users, MessageSquare, Clock, TrendingUp } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { OnlineUsersDisplay } from './OnlineUsersDisplay';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface ForumStats {
 	totalThreads: number;
@@ -11,66 +15,123 @@ interface ForumStats {
 
 interface MyBBStatsProps {
 	stats: ForumStats;
+	onlineUsersList?: string[];
 }
 
-export function MyBBStats({ stats }: MyBBStatsProps) {
+export function MyBBStats({ stats, onlineUsersList }: MyBBStatsProps) {
 	return (
-		<div className="mybb-whos-online mt-8">
-			<div className="flex items-center justify-between mb-3">
-				<h3 className="font-semibold text-sm flex items-center gap-2">
-					<Users className="w-4 h-4" />
-					Forum Statistics
-				</h3>
+		<div className="mybb-board-statistics">
+			{/* Board Statistics Header */}
+			<div className="mybb-category-header mybb-category-green">
+				<div className="mybb-category-title">Board Statistics</div>
 			</div>
 			
-			<div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-				<div>
-					<div className="text-gray-600">Total Threads</div>
-					<div className="font-semibold">{stats.totalThreads.toLocaleString()}</div>
+			{/* Statistics Content */}
+			<div className="mybb-stats-content">
+				{/* Who's Online Section */}
+				<div className="mybb-whos-online-section">
+					<div className="mybb-stats-label">Who's Online</div>
+					<div className="mybb-stats-text">
+						<span className="mybb-online-count">{stats.onlineUsers} user{stats.onlineUsers !== 1 ? 's' : ''} active</span> in the past 15 minutes ({onlineUsersList?.length || 1} member{(onlineUsersList?.length || 1) !== 1 ? 's' : ''}, 0 of whom are invisible, and {Math.max(0, stats.onlineUsers - (onlineUsersList?.length || 1))} guest{Math.max(0, stats.onlineUsers - (onlineUsersList?.length || 1)) !== 1 ? 's' : ''}).
+					</div>
+					
+					{onlineUsersList && onlineUsersList.length > 0 && (
+						<>
+							{/* Avatar row - Classic style */}
+							<div className="mybb-online-avatars">
+								<TooltipProvider>
+									<div className="flex -space-x-2 mb-2">
+										{onlineUsersList.slice(0, 8).map((username, idx) => (
+											<Tooltip key={idx}>
+												<TooltipTrigger asChild>
+													<Link
+														to={`/users/${username}`}
+														className="relative"
+													>
+														<Avatar className="w-6 h-6 border-2 border-zinc-800">
+															<AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${username}`} />
+															<AvatarFallback className="bg-zinc-700 text-[10px]">
+																{username[0]}
+															</AvatarFallback>
+														</Avatar>
+													</Link>
+												</TooltipTrigger>
+												<TooltipContent>
+													<p className="text-xs">{username}</p>
+												</TooltipContent>
+											</Tooltip>
+									))}
+										{onlineUsersList.length > 8 && (
+											<div className="w-6 h-6 rounded-full bg-zinc-700 border-2 border-zinc-800 flex items-center justify-center">
+												<span className="text-[10px] text-zinc-400">+{onlineUsersList.length - 8}</span>
+											</div>
+										)}
+									</div>
+								</TooltipProvider>
+							</div>
+							
+							{/* Text list with commas */}
+							<div className="mybb-online-list">
+								{onlineUsersList.map((username, idx) => (
+									<span key={idx}>
+										<Link
+											to={`/users/${username}`}
+											className="mybb-username"
+										>
+											{username}
+										</Link>
+										{idx < onlineUsersList.length - 1 && <span className="text-zinc-500">, </span>}
+									</span>
+								))}
+							</div>
+						</>
+					)}
 				</div>
-				<div>
-					<div className="text-gray-600">Total Posts</div>
-					<div className="font-semibold">{stats.totalPosts.toLocaleString()}</div>
-				</div>
-				<div>
-					<div className="text-gray-600">Total Members</div>
-					<div className="font-semibold">{stats.totalMembers.toLocaleString()}</div>
-				</div>
-				<div>
-					<div className="text-gray-600">Users Online</div>
-					<div className="font-semibold text-green-600">{stats.onlineUsers}</div>
+				
+				{/* Board Statistics Section */}
+				<div className="mybb-board-stats-section">
+					<div className="mybb-stats-label">Board Statistics</div>
+					<div className="mybb-stats-text">
+						Our members have made a total of <strong>{stats.totalPosts.toLocaleString()} posts</strong> in <strong>{stats.totalThreads.toLocaleString()} threads</strong>.
+					</div>
+					<div className="mybb-stats-text">
+						We currently have <strong>{stats.totalMembers.toLocaleString()} members</strong> registered.
+					</div>
+					{stats.newestMember && (
+						<div className="mybb-stats-text">
+							Please welcome our newest member, <a href="#" className="mybb-username">{stats.newestMember}</a>
+						</div>
+					)}
+					<div className="mybb-stats-text">
+						The most users online at one time was <strong>1</strong> on Yesterday at 06:24 PM
+					</div>
 				</div>
 			</div>
-			
-			{stats.newestMember && (
-				<div className="mt-3 text-sm text-gray-600">
-					Welcome to our newest member, <span className="font-semibold text-blue-600">{stats.newestMember}</span>!
-				</div>
-			)}
 		</div>
 	);
 }
 
 export function MyBBLegend() {
 	return (
-		<div className="mybb-legend">
-			<div className="font-semibold text-sm mb-2">Forum Legend</div>
-			<div className="flex flex-wrap gap-4 text-xs">
+		<div className="mybb-forum-legend">
+			<div className="mybb-legend-row">
 				<div className="mybb-legend-item">
-					<MessageSquare className="inline w-4 h-4 text-blue-500 mr-1" />
-					New Posts
+					<div className="mybb-forum-icon mybb-icon-new mybb-icon-small">
+						<MessageSquare className="w-3 h-3 text-white" />
+					</div>
+					<span>Forum Contains New Posts</span>
 				</div>
 				<div className="mybb-legend-item">
-					<MessageSquare className="inline w-4 h-4 text-gray-400 mr-1" />
-					No New Posts
+					<div className="mybb-forum-icon mybb-icon-old mybb-icon-small">
+						<MessageSquare className="w-3 h-3 text-zinc-500" />
+					</div>
+					<span>Forum Contains No New Posts</span>
 				</div>
 				<div className="mybb-legend-item">
-					<TrendingUp className="inline w-4 h-4 text-red-500 mr-1" />
-					Hot Topic
-				</div>
-				<div className="mybb-legend-item">
-					<Clock className="inline w-4 h-4 text-amber-500 mr-1" />
-					Recently Active
+					<div className="mybb-forum-icon mybb-icon-locked mybb-icon-small">
+						<Clock className="w-3 h-3 text-red-400" />
+					</div>
+					<span>Forum is Locked</span>
 				</div>
 			</div>
 		</div>

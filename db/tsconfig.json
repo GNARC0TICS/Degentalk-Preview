@@ -19,8 +19,7 @@
 		"strict": false,
 		"resolveJsonModule": true,
 		"allowSyntheticDefaultImports": true,
-		"tsBuildInfoFile": "./.tscache/.tsbuildinfo",
-		"noEmit": true
+		"tsBuildInfoFile": "./.tscache/.tsbuildinfo"
 	},
 	"include": [
 		"./**/*.ts",

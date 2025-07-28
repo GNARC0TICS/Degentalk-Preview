@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiRequest } from '@/utils/api-request';
-import { useCanonicalAuth } from '@/features/auth/useCanonicalAuth';
+import { useAuth } from '@/hooks/use-auth';
 import { toast } from 'sonner';
 
 interface DailyBonusResponse {
@@ -15,7 +15,7 @@ interface StreakResponse {
 }
 
 export function useDailyBonus() {
-  const { user, isAuthenticated } = useCanonicalAuth();
+  const { user, isAuthenticated } = useAuth();
   const queryClient = useQueryClient();
 
   // Get current streak

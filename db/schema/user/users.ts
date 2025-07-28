@@ -18,11 +18,16 @@ import { titles } from '../economy/titles';
 import { badges } from '../economy/badges';
 import { avatarFrames } from './avatarFrames';
 import { posts } from '../forum/posts';
-// import { userGroups } from "./userGroups"; // Placeholder for future import
-// import { titles } from "../economy/titles"; // Placeholder for future import
-// import { badges } from "../economy/badges"; // Placeholder for future import
-// import { avatarFrames } from "./avatarFrames"; // Placeholder for future import
-// import { uiThemes } from '../admin/themes'; // For future profile theme support
+
+/**
+ * User's equipped cosmetics
+ */
+export interface UserEquipped {
+	titleId?: string;
+	badgeId?: string;
+	frameId?: string;
+	backgroundId?: string;
+}
 export const users = pgTable(
 	'users',
 	{
@@ -75,6 +80,10 @@ export const users = pgTable(
 		xp: bigint('xp', { mode: 'number' }).notNull().default(0),
 		level: integer('level').notNull().default(1),
 		reputation: integer('reputation').notNull().default(0),
+		// NEW: Consolidated equipped cosmetics
+		equipped: jsonb('equipped').$type<UserEquipped>().default({}),
+		
+		// DEPRECATED: Keep for migration compatibility, remove after migration
 		activeTitleId: uuid('active_title_id').references(() => titles.id, { onDelete: 'set null' }),
 		activeBadgeId: uuid('active_badge_id').references(() => badges.id, { onDelete: 'set null' }),
 		dgtPoints: integer('dgt_points').notNull().default(0),

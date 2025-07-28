@@ -7,6 +7,7 @@
 import { adminApi } from '@/features/admin/lib/adminApi';
 import { apiRequest } from '@/utils/api-request';
 import type { PackId, StickerId } from '@shared/types/ids';
+import type { ApiSuccess, PaginationMeta } from '@shared/types/api.types';
 
 // Types
 export interface Sticker {
@@ -141,21 +142,16 @@ export interface ListStickerPacksParams {
 	sortOrder?: 'asc' | 'desc';
 }
 
-export interface PaginatedResponse<T> {
-	success: boolean;
-	data: {
-		stickers?: T[];
-		packs?: T[];
-		pagination: {
-			page: number;
-			limit: number;
-			totalCount: number;
-			totalPages: number;
-			hasNext: boolean;
-			hasPrev: boolean;
-		};
-	};
-}
+// Use shared API types for pagination
+export type PaginatedStickersResponse = ApiSuccess<{
+	stickers: Sticker[];
+	pagination: PaginationMeta;
+}>;
+
+export type PaginatedStickerPacksResponse = ApiSuccess<{
+	packs: StickerPack[];
+	pagination: PaginationMeta;
+}>;
 
 export interface ApiResponse<T> {
 	success: boolean;
@@ -190,7 +186,7 @@ export class StickerApiService {
 	/**
 	 * Get all stickers with filtering and pagination
 	 */
-	async getStickers(params: ListStickersParams = {}): Promise<PaginatedResponse<Sticker>> {
+	async getStickers(params: ListStickersParams = {}): Promise<PaginatedStickersResponse> {
 		// Convert params to strings for apiRequest
 		const stringParams: Record<string, string> = {};
 		Object.entries(params).forEach(([key, value]) => {
@@ -199,7 +195,7 @@ export class StickerApiService {
 			}
 		});
 
-		return apiRequest<PaginatedResponse<Sticker>>({
+		return apiRequest<PaginatedStickersResponse>({
 			url: `${this.baseUrl}/stickers`,
 			method: 'GET',
 			params: Object.keys(stringParams).length > 0 ? stringParams : undefined
@@ -273,7 +269,7 @@ export class StickerApiService {
 	 */
 	async getStickerPacks(
 		params: ListStickerPacksParams = {}
-	): Promise<PaginatedResponse<StickerPack>> {
+	): Promise<PaginatedStickerPacksResponse> {
 		// Convert params to strings for apiRequest
 		const stringParams: Record<string, string> = {};
 		Object.entries(params).forEach(([key, value]) => {
@@ -282,7 +278,7 @@ export class StickerApiService {
 			}
 		});
 
-		return apiRequest<PaginatedResponse<StickerPack>>({
+		return apiRequest<PaginatedStickerPacksResponse>({
 			url: `${this.baseUrl}/sticker-packs`,
 			method: 'GET',
 			params: Object.keys(stringParams).length > 0 ? stringParams : undefined

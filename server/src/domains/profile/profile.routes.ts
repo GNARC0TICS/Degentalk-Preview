@@ -19,7 +19,9 @@ import {
 	userRelationships,
 	avatarFrames,
 	userTitles,
-	userBadges
+	userBadges,
+	titles,
+	badges
 } from '@schema';
 import { eq, and, sql, desc, not, or, count, gt, isNull } from 'drizzle-orm';
 import signatureRoutes from './signature.routes'; // Import signature routes
@@ -52,14 +54,35 @@ router.get('/:username', async (req: Request, res: Response) => {
 
 		const userId = user.id;
 
-		// Fetch user's inventory (simplified)
-		const inventory = await db.select().from(userInventory).where(eq(userInventory.userId, userId));
+		// Fetch user's inventory with product data
+		const inventoryRecords = await db
+			.select({
+				inventory: userInventory,
+				product: products
+			})
+			.from(userInventory)
+			.innerJoin(products, eq(userInventory.productId, products.id))
+			.where(eq(userInventory.userId, userId));
 
-		// Fetch user's badges (simplified)
-		const badges = await db.select().from(userBadges).where(eq(userBadges.userId, userId));
+		// Fetch user's badges with badge data
+		const userBadgeRecords = await db
+			.select({
+				userBadge: userBadges,
+				badge: badges
+			})
+			.from(userBadges)
+			.innerJoin(badges, eq(userBadges.badgeId, badges.id))
+			.where(eq(userBadges.userId, userId));
 
-		// Fetch user's titles (simplified)
-		const titles = await db.select().from(userTitles).where(eq(userTitles.userId, userId));
+		// Fetch user's titles with title data
+		const userTitleRecords = await db
+			.select({
+				userTitle: userTitles,
+				title: titles
+			})
+			.from(userTitles)
+			.innerJoin(titles, eq(userTitles.titleId, titles.id))
+			.where(eq(userTitles.userId, userId));
 
 		// Get thread count
 		const threadCountResult = await db
@@ -104,11 +127,12 @@ router.get('/:username', async (req: Request, res: Response) => {
 		const tipperRank = 1;
 		const likerRank = 1;
 
-		// Assemble profile data
+		// Assemble profile data following the User type structure with forumStats
 		const profileData = {
 			id: user.id,
 			username: user.username,
 			avatarUrl: user.avatarUrl,
+			activeAvatarUrl: user.avatarUrl, // TODO: Apply frame if activeFrameId exists
 			role: user.role,
 			bio: user.bio,
 			signature: user.signature,
@@ -120,6 +144,17 @@ router.get('/:username', async (req: Request, res: Response) => {
 			website: user.website,
 			telegramHandle: user.telegramHandle,
 			dgtBalance: user.dgtWalletBalance,
+			// Add forumStats to match User type structure
+			forumStats: {
+				level: user.level,
+				xp: user.xp,
+				reputation: user.reputation,
+				totalPosts,
+				totalThreads,
+				totalLikes,
+				totalTips
+			},
+			// Keep flat properties for backward compatibility
 			totalPosts,
 			totalThreads,
 			totalLikes,
@@ -132,19 +167,22 @@ router.get('/:username', async (req: Request, res: Response) => {
 			activeFrameId: user.activeFrameId,
 			activeFrame: user.activeFrame,
 			activeTitleId: user.activeTitleId,
-			activeTitle: user.activeTitle,
+			activeTitle: user.activeTitleId ? 
+				userTitleRecords.find(r => r.title.id === user.activeTitleId)?.title || null : 
+				null,
 			activeBadgeId: user.activeBadgeId,
 			activeBadge: user.activeBadge,
-			badges: badges.map((b) => b.badge),
-			titles: titles.map((t) => t.title),
-			inventory: inventory.map((item) => ({
-				id: item.id,
-				productId: item.productId,
-				isEquipped: item.equipped,
-				productName: item.product.name,
-				productType: item.product.category || 'unknown', // Assuming category for productType
-				imageUrl: item.product.imageUrl || '',
-				rarity: item.product.pluginReward?.rarity || 'common'
+			badges: userBadgeRecords.map((record) => record.badge),
+			titles: userTitleRecords.map((record) => record.title),
+			inventory: inventoryRecords.map((record) => ({
+				id: record.inventory.id,
+				userId: user.id,
+				productId: record.inventory.productId,
+				isEquipped: record.inventory.equipped,
+				productName: record.product.name,
+				productType: record.product.category || 'unknown',
+				imageUrl: record.product.imageUrl || '',
+				rarity: record.product.pluginReward?.rarity || 'common'
 			})),
 			relationships: {
 				friends: [], // TODO: Implement friend relationships

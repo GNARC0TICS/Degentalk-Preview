@@ -12,14 +12,14 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Quote, Eye, EyeOff } from 'lucide-react';
 import { cn } from '@/utils/utils';
-import type { PostWithUser } from '@/types/compat/forum';
+import type { Post } from '@shared/types/post.types';
 import type { PostId } from '@shared/types/ids';
 
 interface QuotePostModalProps {
 	isOpen: boolean;
 	onOpenChange: (open: boolean) => void;
 	onConfirm: (quotedContent: string, replyContent: string) => void;
-	post: PostWithUser | null;
+	post: Post | null;
 	isSubmitting?: boolean;
 }
 
@@ -60,7 +60,7 @@ export const QuotePostModal: React.FC<QuotePostModalProps> = ({
 
 	const quotedContent = formatQuoteBBCode(
 		selectedText || post.content,
-		post.user.username,
+		post.user?.username || 'Unknown',
 		post.id
 	);
 
@@ -108,7 +108,7 @@ export const QuotePostModal: React.FC<QuotePostModalProps> = ({
 				<div className="flex-1 overflow-y-auto space-y-4 py-4">
 					{/* Original post content for selection */}
 					<div className="space-y-2">
-						<Label>Original Post by {post.user.username}</Label>
+						<Label>Original Post by {post.user?.username || 'Unknown'}</Label>
 						<div className="p-3 bg-zinc-800 rounded-md border border-zinc-700">
 							<Textarea
 								value={selectedText}

@@ -199,26 +199,60 @@ export interface ModerationPost extends AuthenticatedPost {
 	ipHash?: string; // Anonymized IP
 }
 
-// Forum structure types
+// Forum structure types - Single source of truth
+// Compatible with ForumStructureWithStats from db/types
 export interface PublicForumStructure {
+	// Core fields
 	id: ForumId;
 	name: string;
 	slug: string;
 	description?: string;
-	type: 'category' | 'forum' | 'subforum';
+	type: 'zone' | 'category' | 'forum' | 'subforum' | string;
 	position: number;
+	
+	// Appearance
 	color?: string;
 	icon?: string;
 	colorTheme?: string;
+	isFeatured?: boolean;
+	themePreset?: string;
+	
+	// Statistics
 	threadCount: number;
 	postCount: number;
 	lastPostAt?: Date;
+	lastThread?: any; // ThreadWithUser
+	
+	// Access control
 	isVip: boolean;
+	isLocked?: boolean;
+	isHidden?: boolean;
 	minXp: number;
+	minGroupIdRequired?: number | null;
+	
+	// Features
 	tippingEnabled: boolean;
-
-	// Child forums
+	xpMultiplier?: number;
+	
+	// Hierarchy - supporting both naming conventions
+	parentId?: string | null;
+	parentForumSlug?: string | null;
 	children?: PublicForumStructure[];
+	childStructures?: PublicForumStructure[]; // Alias for children
+	
+	// Metadata
+	pluginData?: any;
+	createdAt?: Date;
+	updatedAt?: Date;
+	
+	// Computed/derived fields - all from ForumStructureWithStats
+	canHaveThreads?: boolean;
+	isZone?: boolean;
+	canonical?: boolean;
+	isPrimary?: boolean;
+	features?: any[];
+	customComponents?: any[];
+	staffOnly?: boolean;
 }
 
 // Authenticated forum structure with permissions

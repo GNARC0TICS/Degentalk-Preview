@@ -171,7 +171,7 @@ const ThreadCard = memo(
 					className={cn(className)}
 				>
 					<Card className="bg-zinc-900/90 border-zinc-800/50 backdrop-blur-sm hover:border-zinc-700/50 transition-all duration-200">
-						<Link to={`/threads/${thread.slug}`}>
+						<Link to={thread.forum?.slug ? `/forums/${thread.forum.slug}/${thread.slug}` : `/threads/${thread.slug}`}>
 							<div className="p-4 space-y-3">
 								{/* Header with user and metadata */}
 								<div className="flex items-center justify-between">
@@ -279,7 +279,7 @@ const ThreadCard = memo(
 				onHoverEnd={() => setShowActions(false)}
 				className={cn(className)}
 			>
-				<Link to={`/threads/${thread.slug}`}>
+				<Link to={thread.forum?.slug ? `/forums/${thread.forum.slug}/${thread.slug}` : `/threads/${thread.slug}`}>
 				<Card
 					className={cn(
 						'group relative cursor-pointer transition-colors duration-200',
@@ -438,7 +438,7 @@ const ThreadCard = memo(
 						<h3
 							className={cn(
 								'font-semibold text-white leading-tight line-clamp-2 group-hover:text-emerald-400 transition-colors',
-								breakpoint.isMobile ? 'text-base' : 'text-lg'
+								breakpoint.isMobile ? 'text-sm' : 'text-base'
 							)}
 						>
 							{thread.title}

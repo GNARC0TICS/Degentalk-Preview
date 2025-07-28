@@ -2,17 +2,12 @@ import React from 'react';
 import { cn } from '@/utils/utils';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Badge } from '@/components/ui/badge';
-import { rarityBorderMap, rarityColorMap } from '@/config/rarity.config';
+import { UserTitle } from '@/components/ui/user-title';
 import type { TitleId } from '@shared/types/ids';
+import type { Title } from '@shared/types/entities/title.types';
 
 type UserTitlesProps = {
-	titles: Array<{
-		id: TitleId;
-		name: string;
-		description?: string | null;
-		iconUrl?: string | null;
-		rarity?: string;
-	}>;
+	titles: Title[];
 	activeTitleId?: TitleId | null;
 	onSelectTitle?: (titleId: TitleId) => void;
 	className?: string;
@@ -61,70 +56,61 @@ export function UserTitles({
 }
 
 type TitleItemProps = {
-	title: {
-		id: TitleId;
-		name: string;
-		description?: string | null;
-		iconUrl?: string | null;
-		rarity?: string;
-	};
+	title: Title;
 	isActive?: boolean;
 	onClick?: () => void;
 	interactive?: boolean;
 };
 
 function TitleItem({ title, isActive = false, onClick, interactive = false }: TitleItemProps) {
-	const rarityKey = (title.rarity?.toLowerCase() || 'common') as keyof typeof rarityBorderMap;
-	const colorClasses = cn(
-		rarityBorderMap[rarityKey] || rarityBorderMap.common,
-		rarityColorMap[rarityKey] ? rarityColorMap[rarityKey].replace('text-', '') : ''
-	);
-
 	return (
 		<TooltipProvider>
 			<Tooltip delayDuration={300}>
 				<TooltipTrigger asChild>
 					<div
 						className={cn(
-							'relative px-3 py-2 rounded-md border transition-all duration-200 flex items-center',
-							colorClasses,
-							isActive && 'ring-2 ring-indigo-500',
-							interactive && 'cursor-pointer hover:brightness-110'
+							'relative px-3 py-3 rounded-md border border-zinc-700 bg-zinc-800/50 transition-all duration-200 flex items-center gap-3',
+							isActive && 'ring-2 ring-indigo-500 bg-zinc-800',
+							interactive && 'cursor-pointer hover:bg-zinc-800'
 						)}
 						onClick={onClick}
 					>
-						{/* Title Icon (if available) */}
-						{title.iconUrl && (
-							<div className="w-8 h-8 mr-3 flex-shrink-0">
-								<img
-									src={title.iconUrl}
-									alt=""
-									className="w-full h-full object-contain"
-									onError={(e) => {
-										e.currentTarget.style.display = 'none';
-									}}
-								/>
-							</div>
-						)}
+						{/* Title Preview */}
+						<div className="flex-shrink-0">
+							<UserTitle 
+								title={title}
+								className="scale-90"
+							/>
+						</div>
 
-						{/* Title Name */}
-						<div className="flex-grow">
-							<p className="font-semibold">{title.name}</p>
+						{/* Title Info */}
+						<div className="flex-grow min-w-0">
+							<p className="font-medium text-sm text-zinc-200 truncate">{title.name}</p>
+							{title.description && (
+								<p className="text-xs text-zinc-400 truncate">{title.description}</p>
+							)}
 						</div>
 
 						{/* Active Indicator */}
 						{isActive && (
-							<Badge className="ml-2 bg-indigo-600 text-white text-[10px]">ACTIVE</Badge>
+							<Badge className="ml-2 bg-indigo-600 text-white text-[10px] flex-shrink-0">
+								EQUIPPED
+							</Badge>
 						)}
 					</div>
 				</TooltipTrigger>
 				<TooltipContent side="top" className="bg-zinc-800 border-zinc-700 text-white">
-					<div className="p-1">
-						<p className="font-semibold text-sm">{title.name}</p>
+					<div className="p-2 max-w-xs">
+						<div className="mb-2">
+							<UserTitle title={title} />
+						</div>
 						{title.description && (
-							<p className="text-xs text-slate-300 mt-1">{title.description}</p>
+							<p className="text-xs text-slate-300 mb-1">{title.description}</p>
 						)}
-						{title.rarity && <p className="text-[10px] mt-1 capitalize">{title.rarity} Rarity</p>}
+						<div className="flex items-center gap-2 text-[10px] text-slate-400">
+							{title.rarity && <span className="capitalize">{title.rarity}</span>}
+							{title.category && <span className="capitalize">{title.category}</span>}
+						</div>
 					</div>
 				</TooltipContent>
 			</Tooltip>

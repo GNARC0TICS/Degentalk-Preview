@@ -110,9 +110,13 @@ export function getStaticBreadcrumbs(entity: ForumEntityBase): BreadcrumbItem[] 
 }
 
 /**
- * Thread URL generator
+ * Thread URL generator - uses hierarchical forum structure
  */
-export function getThreadUrl(thread: { id: string; slug?: string }): string {
+export function getThreadUrl(thread: { id: string; slug?: string; forum?: { slug: string } }): string {
+	if (thread.forum?.slug) {
+		return `/forums/${thread.forum.slug}/${thread.slug || thread.id}`;
+	}
+	// Fallback to flat structure for backward compatibility
 	return `/threads/${thread.slug || thread.id}`;
 }
 
