@@ -46,6 +46,7 @@
 			"@middleware/*": ["src/middleware/*"],
 			"@utils/*": ["src/utils/*"],
 			"@lib/*": ["lib/*"],
+			"@lib/report-error": ["lib/report-error.ts"],
 			
 			// OLD paths (temporary - for transition)
 			"@config/*": ["../config/*"],
@@ -67,7 +68,6 @@
 			"@db/types/*": ["../db/types/*"],
 			"@db/schema/core/enums": ["../db/schema/core/enums/index.ts"],
 			"@degentalk/db/types": ["../db/types/index.ts"],
-			"@lib/*": ["../lib/*"],
 			"@forum-sdk/*": ["../forum-sdk/*"]
 		}
 	}

@@ -47,7 +47,6 @@ class RedisCacheService {
       }
 
       this.redis = new Redis(redisUrl, {
-        retryDelayOnFailover: 100,
         maxRetriesPerRequest: 3,
         lazyConnect: true,
         keepAlive: 30000,

@@ -145,7 +145,7 @@ class StampedeProtection {
     
     if (keysToDelete.length > 0) {
       keysToDelete.forEach(key => this.pendingRequests.delete(key));
-      logger.warn(`Stampede protection: Cleaned up ${keysToDelete.length} timed out requests`);
+      logger.warn('StampedeProtection', `Cleaned up ${keysToDelete.length} timed out requests`);
     }
   }
 

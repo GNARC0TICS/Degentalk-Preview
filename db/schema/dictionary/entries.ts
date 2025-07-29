@@ -30,22 +30,22 @@ export const dictionaryEntries = pgTable('dictionary_entries', {
 		.notNull()
 		.default(sql`CURRENT_TIMESTAMP`)
 });
-// @ts-ignore - drizzle-zod type inference issue with cross-workspace builds
-export const insertDictionaryEntrySchema = createInsertSchema(dictionaryEntries, {
+// Create insert schema with custom validations
+const baseInsertSchema = createInsertSchema(dictionaryEntries, {
 	word: z.string().min(2).max(50),
 	definition: z.string().min(20).max(5000),
 	usageExample: z.string().optional(),
 	tags: z.array(z.string()).max(5).optional()
-}).omit({
-	id: true,
-	status: true,
-	approverId: true,
-	upvoteCount: true,
-	viewCount: true,
-	featured: true,
-	metaDescription: true,
-	createdAt: true,
-	updatedAt: true
+});
+
+// Use pick instead of omit to avoid type issues
+export const insertDictionaryEntrySchema = baseInsertSchema.pick({
+	slug: true,
+	word: true,
+	definition: true,
+	usageExample: true,
+	tags: true,
+	authorId: true
 });
 export type DictionaryEntry = typeof dictionaryEntries.$inferSelect;
 export type NewDictionaryEntry = z.infer<typeof insertDictionaryEntrySchema>;

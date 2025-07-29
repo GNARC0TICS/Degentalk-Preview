@@ -13,6 +13,7 @@ import { CosmeticsTransformer } from '@domains/shop/transformers/cosmetics.trans
 import { logger } from '@core/logger';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 import { validateAndConvertId } from '@core/helpers/validate-controller-ids';
+import { toFrameId } from '@shared/utils/id';
 
 const router: Router = Router();
 
@@ -41,10 +42,11 @@ router.post('/:id/purchase', requireAuth, async (req, res) => {
 	const userId = String(authUser.id);
 	
 	// Validate frame ID
-	const frameId = validateAndConvertId(req.params.id, 'Frame');
-	if (!frameId) {
+	const frameIdString = req.params.id;
+	if (!frameIdString || !validateAndConvertId(frameIdString, 'Frame')) {
 		return sendErrorResponse(res, 'Invalid frame ID format', 400);
 	}
+	const frameId = toFrameId(frameIdString);
 
 	try {
 		// Fetch frame product with price

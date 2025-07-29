@@ -145,7 +145,7 @@ export async function requireAdmin(req: Request, res: Response, next: NextFuncti
   
   // Development mode admin bypass
   if (isDevelopment && allowDevAdmin && user.username === 'DevUser') {
-    logger.warn('Development admin bypass used');
+    logger.warn('AUTH', 'Development admin bypass used');
     req.user = { ...user, role: 'admin' };
     return next();
   }

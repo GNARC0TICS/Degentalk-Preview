@@ -33,7 +33,7 @@ import {
 import { isDevMode } from '../../utils/environment';
 import { logger } from '@core/logger';
 import { getUser } from '@core/utils/auth.helpers';
-import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
+import { sendSuccess } from '@utils/api-responses';
 
 const router: RouterType = Router();
 
@@ -237,7 +237,7 @@ router.post(
 
 // Test endpoint for unauthenticated responses
 router.get('/test-unauthenticated', (req, res) => {
-	sendSuccessResponse(res, { authenticated: false });
+	sendSuccess(res, { authenticated: false });
 });
 
 // Dev mode auth switching endpoint

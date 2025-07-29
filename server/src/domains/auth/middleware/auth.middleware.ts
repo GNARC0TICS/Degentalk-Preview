@@ -5,6 +5,9 @@
  * All auth logic is now consolidated in the main middleware layer.
  */
 
+import { sendSuccess, sendError } from '@utils/api-responses';
+import { ApiErrorCode } from '@shared/types/api.types';
+
 export {
   requireAuth as isAuthenticated,
   requireAdmin as isAdmin,
@@ -19,12 +22,12 @@ export {
 // Dev mode auth handler
 export const devModeAuthHandler = async (req: any, res: any) => {
   if (process.env.NODE_ENV !== 'development') {
-    return res.status(403).json({ error: 'Dev mode only' });
+    return sendError(res, ApiErrorCode.FORBIDDEN, 'Dev mode only', 403);
   }
   
   const { role } = req.query;
   if (!role || !['user', 'moderator', 'admin'].includes(role)) {
-    return res.status(400).json({ error: 'Invalid role' });
+    return sendError(res, ApiErrorCode.VALIDATION_ERROR, 'Invalid role', 400);
   }
   
   // In dev mode, allow role switching
@@ -32,5 +35,5 @@ export const devModeAuthHandler = async (req: any, res: any) => {
     req.session.devRole = role;
   }
   
-  res.json({ success: true, role });
+  sendSuccess(res, { role }, `Switched to ${role} role`);
 };

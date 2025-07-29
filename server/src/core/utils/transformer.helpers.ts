@@ -3,6 +3,9 @@
  */
 
 import { logger } from '../logger';
+import type { Response } from 'express';
+import { sendSuccess, sendError, sendPaginated, errorResponses } from '@utils/api-responses';
+import { ApiErrorCode } from '@shared/types/api.types';
 
 // Transform a list of items using a transformer function
 export function toPublicList<T, R>(items: T[], transformer: (item: T) => R): R[] {
@@ -91,45 +94,58 @@ export interface ApiResponse<T> {
 }
 
 // Response helpers to eliminate raw res.json() calls
-export function sendSuccessResponse<T>(res: any, data: T, message?: string): void {
-	res.status(200).json({
-		success: true,
-		data,
-		message
-	});
+// DEPRECATED: Use sendSuccess from @utils/api-responses instead
+export function sendSuccessResponse<T>(res: Response, data: T, message?: string, status = 200): Response {
+	return sendSuccess(res, data, message, status);
 }
 
-export function sendErrorResponse(res: any, message: string, status = 500): void {
-	res.status(status).json({
-		success: false,
-		error: message
-	});
+// DEPRECATED: Use sendError from @utils/api-responses instead
+export function sendErrorResponse(res: Response, message: string, status = 400, details?: Record<string, unknown>): Response {
+	// Map common HTTP status codes to error codes
+	let errorCode: ApiErrorCode;
+	switch (status) {
+		case 401:
+			errorCode = ApiErrorCode.UNAUTHORIZED;
+			break;
+		case 403:
+			errorCode = ApiErrorCode.FORBIDDEN;
+			break;
+		case 404:
+			errorCode = ApiErrorCode.NOT_FOUND;
+			break;
+		case 409:
+			errorCode = ApiErrorCode.ALREADY_EXISTS;
+			break;
+		case 422:
+		case 400:
+			errorCode = ApiErrorCode.VALIDATION_ERROR;
+			break;
+		case 500:
+		default:
+			errorCode = ApiErrorCode.INTERNAL_ERROR;
+			break;
+	}
+	return sendError(res, errorCode, message, status, details);
 }
 
+// DEPRECATED: Use sendTransformed from @utils/api-responses instead
 export function sendTransformedResponse<T, R>(
-	res: any,
+	res: Response,
 	data: T,
 	transformer: (item: T) => R,
 	message?: string
-): void {
-	res.status(200).json({
-		success: true,
-		data: transformer(data),
-		message
-	});
+): Response {
+	return sendSuccess(res, transformer(data), message);
 }
 
+// DEPRECATED: Use sendTransformedList from @utils/api-responses instead
 export function sendTransformedListResponse<T, R>(
-	res: any,
+	res: Response,
 	data: T[],
 	transformer: (item: T) => R,
 	message?: string
-): void {
-	res.status(200).json({
-		success: true,
-		data: data.map(transformer),
-		message
-	});
+): Response {
+	return sendSuccess(res, data.map(transformer), message);
 }
 
 // Re-export common response helpers

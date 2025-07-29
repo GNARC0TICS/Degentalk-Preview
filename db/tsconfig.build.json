@@ -11,16 +11,20 @@
 		"skipLibCheck": true,
 		"strict": false,
 		"module": "ES2022",
-		"moduleResolution": "node"
+		"moduleResolution": "bundler"
 	},
 	"include": [
-		"**/*.ts"
+		"index.ts",
+		"schema/**/*.ts",
+		"types/**/*.ts",
+		"enums/**/*.ts"
 	],
 	"exclude": [
 		"node_modules",
 		"dist",
 		"**/*.test.ts",
 		"**/*.spec.ts",
-		"migrations/**/*"
+		"migrations/**/*",
+		"../shared/**/*"
 	]
 }

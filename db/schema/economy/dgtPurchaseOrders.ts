@@ -39,19 +39,20 @@ export const dgtPurchaseOrders = pgTable(
 		createdAtIdx: index('idx_dgt_purchase_orders_created_at').on(table.createdAt)
 	})
 );
-// @ts-ignore - drizzle-zod type inference issue with cross-workspace builds
-export const insertDgtPurchaseOrderSchema = createInsertSchema(dgtPurchaseOrders, {
+// Create insert schema with custom validations
+const baseInsertDgtPurchaseOrderSchema = createInsertSchema(dgtPurchaseOrders, {
 	dgtAmountRequested: z.number().min(1),
 	cryptoAmountExpected: z.number().min(0.00000001),
 	cryptoCurrencyExpected: z.string().min(1).max(10),
 	ccpaymentReference: z.string().min(1).max(255)
-}).omit({
-	id: true,
-	userId: true,
-	status: true,
-	metadata: true,
-	createdAt: true,
-	updatedAt: true
+});
+
+// Use pick instead of omit to avoid type issues
+export const insertDgtPurchaseOrderSchema = baseInsertDgtPurchaseOrderSchema.pick({
+	dgtAmountRequested: true,
+	cryptoAmountExpected: true,
+	cryptoCurrencyExpected: true,
+	ccpaymentReference: true
 });
 export type DgtPurchaseOrder = typeof dgtPurchaseOrders.$inferSelect;
 export type InsertDgtPurchaseOrder = z.infer<typeof insertDgtPurchaseOrderSchema>;

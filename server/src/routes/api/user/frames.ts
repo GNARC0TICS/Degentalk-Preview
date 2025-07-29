@@ -5,6 +5,7 @@ import { frameEquipService } from '@domains/cosmetics/frameEquip.service';
 import { userService } from '@core/services/user.service';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 import { validateAndConvertId } from '@core/helpers/validate-controller-ids';
+import { toFrameId } from '@shared/utils/id';
 import { db } from '@db';
 import { userOwnedFrames, avatarFrames } from '@schema';
 import { eq } from 'drizzle-orm';
@@ -61,10 +62,11 @@ router.post('/:id/equip', isAuthenticated, async (req, res) => {
 	const userId = String(authUser.id);
 	
 	// Validate frame ID
-	const frameId = validateAndConvertId(req.params.id, 'Frame');
-	if (!frameId) {
+	const frameIdString = req.params.id;
+	if (!frameIdString || !validateAndConvertId(frameIdString, 'Frame')) {
 		return sendErrorResponse(res, 'Invalid frame ID format', 400);
 	}
+	const frameId = toFrameId(frameIdString);
 
 	try {
 		await frameEquipService.equipFrame(userId, frameId);

@@ -16,6 +16,7 @@ import { ShopTransformer } from './transformers/shop.transformer';
 import { vanitySinkAnalyzer } from './services/vanity-sink.analyzer';
 import type { DgtAmount, UserId, ItemId, OrderId } from '@shared/types/ids';
 import type { EntityId } from '@shared/types/ids';
+import { toDgtAmount } from '@shared/types/economy';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 import { validateRequest } from '@middleware/validate-request';
 import { shopValidation } from './validation/shop.validation';
@@ -339,7 +340,7 @@ router.post(
 					itemId,
 					itemName: item.name,
 					category: item.category,
-					price: price as DgtAmount,
+					price: toDgtAmount(price),
 					source: 'shop_purchase',
 					ipAddress: req.ip,
 					userAgent: req.get('User-Agent')
@@ -347,7 +348,7 @@ router.post(
 
 				// Deduct DGT via centralized service
 				const transactionResult = await dgtService.processShopPurchase(
-					userId,
+					userId as UserId,
 					dgtAmountRequired,
 					item.id,
 					item.name
@@ -381,7 +382,7 @@ router.post(
 					userId: userId as UserId,
 					orderId: `shop_${Date.now()}` as OrderId,
 					itemId: itemId as ItemId,
-					dgtAmount: price as DgtAmount,
+					dgtAmount: toDgtAmount(price),
 					itemCategory: item.category as any,
 					metadata: {
 						purchaseSource: 'web_shop',
@@ -417,7 +418,7 @@ router.post(
 					inventoryId: inventoryItem.id,
 					transaction: transformedTransaction,
 					vanityMetrics: {
-						dgtBurned: price as DgtAmount,
+						dgtBurned: toDgtAmount(price),
 						category: item.category,
 						contributesToDeflation: true
 					}
@@ -462,9 +463,9 @@ router.get(
 
 			// Filter by equipped status if specified
 			if (equipped === 'true') {
-				inventoryQuery = inventoryQuery.where(eq(userInventory.isEquipped, true));
+				inventoryQuery = inventoryQuery.where(eq(userInventory.equipped, true));
 			} else if (equipped === 'false') {
-				inventoryQuery = inventoryQuery.where(eq(userInventory.isEquipped, false));
+				inventoryQuery = inventoryQuery.where(eq(userInventory.equipped, false));
 			}
 
 			const inventory = await inventoryQuery;

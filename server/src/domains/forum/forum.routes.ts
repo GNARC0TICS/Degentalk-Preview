@@ -27,7 +27,7 @@ import { threadService } from './services/thread.service';
 import { asyncHandler } from '@core/errors';
 import type { StructureId } from '@shared/types/ids';
 import { ForumTransformer } from './transformers/forum.transformer';
-import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
+import { sendSuccess, errorResponses } from '@utils/api-responses';
 
 // Import specialized route modules
 import threadRoutes from './routes/thread.routes';
@@ -99,10 +99,10 @@ router.get(
 				.orderBy(desc(users.lastSeenAt))
 				.limit(20);
 
-			sendSuccessResponse(res, activeMembers);
+			sendSuccess(res, activeMembers);
 		} catch (error) {
 			logger.error('Forum', 'Error fetching active members', { error });
-			sendErrorResponse(res, 'Failed to fetch active members', 500);
+			errorResponses.internalError(res, 'Failed to fetch active members');
 		}
 	})
 );
@@ -128,10 +128,10 @@ router.get(
 				.where(eq(forumStructure.isFeatured, true))
 				.orderBy(asc(forumStructure.position));
 
-			sendSuccessResponse(res, featuredForums);
+			sendSuccess(res, featuredForums);
 		} catch (error) {
 			logger.error('Forum', 'Error fetching featured forum stats', { error });
-			sendErrorResponse(res, 'Failed to fetch featured forum stats', 500);
+			errorResponses.internalError(res, 'Failed to fetch featured forum stats');
 		}
 	})
 );
@@ -140,7 +140,7 @@ router.get(
 router.get(
 	'/health',
 	asyncHandler((req: Request, res: Response) => {
-		sendSuccessResponse(res, {
+		sendSuccess(res, {
 			message: 'Forum API is healthy',
 			timestamp: new Date().toISOString()
 		});

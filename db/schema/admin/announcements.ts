@@ -43,13 +43,23 @@ export const announcements = pgTable(
 		createdAtIdx: index('idx_announcements_created_at').on(table.createdAt)
 	})
 );
-// @ts-ignore - drizzle-zod type inference issue with cross-workspace builds
-export const insertAnnouncementSchema = createInsertSchema(announcements, {
+// Create insert schema with custom validations
+const baseInsertAnnouncementSchema = createInsertSchema(announcements, {
 	content: z.string().min(1, 'Content is required'),
 	isActive: z.boolean().default(true),
 	visibleTo: z.array(z.string()).default(['all']),
 	priority: z.number().default(0),
 	tickerMode: z.boolean().default(true)
-}).omit({ id: true, createdAt: true, updatedAt: true }); // createdBy will be set by system
+});
+
+// Use pick to select fields (createdBy will be set by system)
+export const insertAnnouncementSchema = baseInsertAnnouncementSchema.pick({
+	content: true,
+	createdBy: true,
+	isActive: true,
+	visibleTo: true,
+	priority: true,
+	tickerMode: true
+});
 export type Announcement = typeof announcements.$inferSelect;
 export type InsertAnnouncement = z.infer<typeof insertAnnouncementSchema>;

@@ -39,8 +39,10 @@ export interface User {
   
   // Timestamps
   createdAt: Date | string;
+  updatedAt?: Date | string;
   lastSeen: Date | string;
   joinedAt: Date | string;
+  lastLoginAt?: Date | string;
   
   // Cosmetics
   activeFrameId?: FrameId;
@@ -78,6 +80,31 @@ export interface User {
   isAdmin?: boolean;
   isModerator?: boolean;
   isOnline?: boolean;
+  
+  // Legacy/compatibility properties
+  profileImage?: string; // Alias for avatarUrl
+  avatar?: string; // Alias for avatarUrl
+  
+  // Additional properties
+  permissions?: string[];
+  pluginData?: Record<string, any>;
+  settings?: UserSettings;
+  preferences?: UserPreferences;
+}
+
+// User settings type
+export interface UserSettings {
+  // Add specific settings as needed
+  notifications?: boolean;
+  darkMode?: boolean;
+  language?: string;
+}
+
+// User preferences type  
+export interface UserPreferences {
+  // Add specific preferences as needed
+  emailNotifications?: boolean;
+  pushNotifications?: boolean;
 }
 
 // Simple DTOs for specific contexts

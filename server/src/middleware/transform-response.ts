@@ -46,7 +46,7 @@ const safeTransformUser = (data: any) => {
 		return safeTransformRecord(data, ['password', 'salt', 'internal_notes']);
 	} catch (error) {
 		if (error instanceof IdValidationError) {
-			logger.error('Invalid ID in user transformation', { error: error.message });
+			logger.error('TRANSFORM', 'Invalid ID in user transformation', { error: error.message });
 			throw error;
 		}
 		throw error;
@@ -58,7 +58,7 @@ const safeTransformThread = (data: any) => {
 		return safeTransformRecord(data);
 	} catch (error) {
 		if (error instanceof IdValidationError) {
-			logger.error('Invalid ID in thread transformation', { error: error.message });
+			logger.error('TRANSFORM', 'Invalid ID in thread transformation', { error: error.message });
 			throw error;
 		}
 		throw error;
@@ -70,7 +70,7 @@ const safeTransformPost = (data: any) => {
 		return safeTransformRecord(data);
 	} catch (error) {
 		if (error instanceof IdValidationError) {
-			logger.error('Invalid ID in post transformation', { error: error.message });
+			logger.error('TRANSFORM', 'Invalid ID in post transformation', { error: error.message });
 			throw error;
 		}
 		throw error;
@@ -82,7 +82,7 @@ const safeTransformWallet = (data: any) => {
 		return safeTransformRecord(data, ['private_key', 'seed']);
 	} catch (error) {
 		if (error instanceof IdValidationError) {
-			logger.error('Invalid ID in wallet transformation', { error: error.message });
+			logger.error('TRANSFORM', 'Invalid ID in wallet transformation', { error: error.message });
 			throw error;
 		}
 		throw error;
@@ -94,7 +94,7 @@ const safeTransformTransaction = (data: any) => {
 		return safeTransformRecord(data);
 	} catch (error) {
 		if (error instanceof IdValidationError) {
-			logger.error('Invalid ID in transaction transformation', { error: error.message });
+			logger.error('TRANSFORM', 'Invalid ID in transaction transformation', { error: error.message });
 			throw error;
 		}
 		throw error;
@@ -106,7 +106,7 @@ const safeTransformMessage = (data: any) => {
 		return safeTransformRecord(data, ['ipAddress', 'editorState']);
 	} catch (error) {
 		if (error instanceof IdValidationError) {
-			logger.error('Invalid ID in message transformation', { error: error.message });
+			logger.error('TRANSFORM', 'Invalid ID in message transformation', { error: error.message });
 			throw error;
 		}
 		throw error;
@@ -130,7 +130,7 @@ const safeTransformConversation = (data: any) => {
 		return transformed;
 	} catch (error) {
 		if (error instanceof IdValidationError) {
-			logger.error('Invalid ID in conversation transformation', { error: error.message });
+			logger.error('TRANSFORM', 'Invalid ID in conversation transformation', { error: error.message });
 			throw error;
 		}
 		throw error;
@@ -196,7 +196,7 @@ function autoTransformData(data: any): any {
 			return transformUnknownObject(data);
 		} catch (error) {
 			if (error instanceof IdValidationError) {
-				logger.error('Invalid ID detected in auto-transform', { 
+				logger.error('TRANSFORM', 'Invalid ID detected in auto-transform', { 
 					error: error.message,
 					dataType: data.constructor.name 
 				});
@@ -272,7 +272,7 @@ function transformUnknownObject(obj: any): any {
 			}
 			// Log if it looks like it should be a UUID but isn't valid
 			if (stringId.length > 20 && !tryConvertId(stringId, 'Generic')) {
-				logger.warn('Potential invalid UUID in generic id field', { id: stringId });
+				logger.warn('TRANSFORM', 'Potential invalid UUID in generic id field', { id: stringId });
 			}
 			return stringId;
 		}
@@ -287,7 +287,7 @@ function transformUnknownObject(obj: any): any {
 			} else {
 				// Log the validation failure but keep the original value
 				// This prevents API breakage while still tracking security issues
-				logger.warn(`Invalid ID in field ${field}, keeping original value`, {
+				logger.warn('TRANSFORM', `Invalid ID in field ${field}, keeping original value`, {
 					field,
 					value: transformed[field],
 					objectType: obj.constructor?.name

@@ -1,19 +1,22 @@
+"use strict";
 /**
  * Logger Type Definitions
  *
  * Shared types for the logging system to avoid circular dependencies
  */
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.LogAction = exports.LogLevel = void 0;
 // Log levels
-export var LogLevel;
+var LogLevel;
 (function (LogLevel) {
     LogLevel["DEBUG"] = "DEBUG";
     LogLevel["INFO"] = "INFO";
     LogLevel["WARN"] = "WARN";
     LogLevel["ERROR"] = "ERROR";
     LogLevel["CRITICAL"] = "CRITICAL";
-})(LogLevel || (LogLevel = {}));
+})(LogLevel || (exports.LogLevel = LogLevel = {}));
 // Log action categories for better filtering and analysis
-export var LogAction;
+var LogAction;
 (function (LogAction) {
     // System actions
     LogAction["SYSTEM_STARTUP"] = "SYSTEM_STARTUP";
@@ -46,4 +49,6 @@ export var LogAction;
     LogAction["ERROR_CAUGHT"] = "ERROR_CAUGHT";
     LogAction["ERROR_HANDLED"] = "ERROR_HANDLED";
     LogAction["ERROR_CRITICAL"] = "ERROR_CRITICAL";
-})(LogAction || (LogAction = {}));
+    // General actions
+    LogAction["FAILURE"] = "FAILURE";
+})(LogAction || (exports.LogAction = LogAction = {}));

@@ -10,7 +10,7 @@ import { db } from '@db';
 import { transactions, users, airdropSettings, airdropRecords } from '@schema';
 import { eq, and, gt, sql, desc, between } from 'drizzle-orm';
 import { logger } from '@core/logger';
-import { WalletError, ErrorCodes as WalletErrorCodes } from '@core/errors';
+import { WalletError, ErrorCodes } from '@core/errors';
 import { dgtService } from '../../wallet/services/dgtService';
 import { v4 as uuidv4 } from 'uuid';
 import type { AdminUserId, AirdropId, ActionId, UserId } from '@shared/types/ids';
@@ -77,8 +77,7 @@ export class AirdropService {
 			if (currency !== 'DGT') {
 				throw new WalletError(
 					'Only DGT airdrops are supported at this time',
-					400,
-					WalletErrorCodes.INVALID_PARAMETERS
+					ErrorCodes.BAD_REQUEST
 				);
 			}
 
@@ -95,7 +94,7 @@ export class AirdropService {
 					.limit(1);
 
 				if (!admin) {
-					throw new WalletError('Admin user not found', 404, WalletErrorCodes.USER_NOT_FOUND);
+					throw new WalletError('Admin user not found', ErrorCodes.USER_NOT_FOUND);
 				}
 
 				// Check if user is actually an admin
@@ -103,8 +102,7 @@ export class AirdropService {
 				if (!(await canUser(admin as any, 'canViewAdminPanel'))) {
 					throw new WalletError(
 						'Only administrators can initiate airdrops',
-						403,
-						WalletErrorCodes.PERMISSION_DENIED
+						ErrorCodes.FORBIDDEN
 					);
 				}
 
@@ -112,8 +110,7 @@ export class AirdropService {
 				if (admin.dgtWalletBalance < amount) {
 					throw new WalletError(
 						'Insufficient DGT balance',
-						400,
-						WalletErrorCodes.INSUFFICIENT_FUNDS,
+						ErrorCodes.WALLET_INSUFFICIENT_FUNDS,
 						{ required: amount, available: admin.dgtWalletBalance }
 					);
 				}
@@ -125,8 +122,7 @@ export class AirdropService {
 			if (recipientIds.length === 0) {
 				throw new WalletError(
 					'No eligible recipients found for airdrop',
-					400,
-					WalletErrorCodes.INVALID_PARAMETERS
+					ErrorCodes.BAD_REQUEST
 				);
 			}
 
@@ -137,8 +133,7 @@ export class AirdropService {
 			if (perUserAmount <= 0) {
 				throw new WalletError(
 					'Airdrop amount too small for the number of recipients',
-					400,
-					WalletErrorCodes.INVALID_AMOUNT,
+					ErrorCodes.BAD_REQUEST,
 					{ recipients: recipientCount, minAmount: recipientCount }
 				);
 			}
@@ -250,8 +245,7 @@ export class AirdropService {
 
 			throw new WalletError(
 				`Failed to process airdrop: ${error.message}`,
-				500,
-				WalletErrorCodes.TRANSACTION_FAILED,
+				ErrorCodes.WALLET_TRANSACTION_FAILED,
 				{ originalError: error.message }
 			);
 		}
@@ -366,8 +360,7 @@ export class AirdropService {
 			default:
 				throw new WalletError(
 					`Invalid target type: ${target}`,
-					400,
-					WalletErrorCodes.INVALID_PARAMETERS
+					ErrorCodes.BAD_REQUEST
 				);
 		}
 	}
@@ -404,8 +397,7 @@ export class AirdropService {
 			logger.error('AirdropService', `Error getting airdrop history: ${error.message}`);
 			throw new WalletError(
 				`Failed to get airdrop history: ${error.message}`,
-				500,
-				WalletErrorCodes.SYSTEM_ERROR
+				ErrorCodes.INTERNAL_ERROR
 			);
 		}
 	}
@@ -422,7 +414,7 @@ export class AirdropService {
 				.limit(1);
 
 			if (!airdrop) {
-				throw new WalletError('Airdrop not found', 404, WalletErrorCodes.TRANSACTION_NOT_FOUND);
+				throw new WalletError('Airdrop not found', ErrorCodes.NOT_FOUND);
 			}
 
 			// Get transaction details
@@ -446,8 +438,7 @@ export class AirdropService {
 			logger.error('AirdropService', `Error getting airdrop details: ${error.message}`);
 			throw new WalletError(
 				`Failed to get airdrop details: ${error.message}`,
-				500,
-				WalletErrorCodes.SYSTEM_ERROR
+				ErrorCodes.INTERNAL_ERROR
 			);
 		}
 	}

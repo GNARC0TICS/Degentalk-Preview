@@ -13,7 +13,7 @@ const envSchema = z.object({
 	// Application Environment
 	NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
 	APP_ENV: z.enum(['development', 'staging', 'production']).default('development'),
-	PORT: z.string().transform(Number).default(5001),
+	PORT: z.string().transform(Number).default('5001'),
 
 	// Database Configuration (Required)
 	DATABASE_URL: z.string().min(1, 'DATABASE_URL is required'),
@@ -23,8 +23,8 @@ const envSchema = z.object({
 	SESSION_SECRET: z.string().min(32, 'SESSION_SECRET must be at least 32 characters'),
 
 	// Development Authentication (Only in development)
-	DEV_FORCE_AUTH: z.string().transform(Boolean).default(false),
-	DEV_BYPASS_PASSWORD: z.string().transform(Boolean).default(false),
+	DEV_FORCE_AUTH: z.string().transform(Boolean).default('false'),
+	DEV_BYPASS_PASSWORD: z.string().transform(Boolean).default('false'),
 
 	// External Services
 	STRIPE_SECRET_KEY: z.string().optional(),
@@ -36,10 +36,10 @@ const envSchema = z.object({
 	REDIS_URL: z.string().optional(),
 
 	// Rate Limiting
-	RATE_LIMIT_ENABLED: z.string().transform(Boolean).default(true),
+	RATE_LIMIT_ENABLED: z.string().transform(Boolean).default('true'),
 	RATE_LIMIT_REDIS_URL: z.string().optional(),
-	API_RATE_LIMIT: z.string().transform(Number).default(100),
-	API_RATE_WINDOW: z.string().transform(Number).default(900000), // 15 minutes
+	API_RATE_LIMIT: z.string().transform(Number).default('100'),
+	API_RATE_WINDOW: z.string().transform(Number).default('900000'), // 15 minutes
 
 	// CORS Configuration
 	ALLOWED_ORIGINS: z.string().optional(),
@@ -49,7 +49,7 @@ const envSchema = z.object({
 	SENTRY_DSN: z.string().optional(),
 
 	// Feature Flags
-	FEATURE_WALLET: z.string().transform(Boolean).default(true)
+	FEATURE_WALLET: z.string().transform(Boolean).default('true')
 });
 
 export type EnvironmentConfig = z.infer<typeof envSchema>;
@@ -66,7 +66,7 @@ function validateEnvironment(): EnvironmentConfig {
 
 		return parsed;
 	} catch (error) {
-		logger.error('Environment validation failed:', error);
+		logger.error('Environment', 'Validation failed:', error);
 		process.exit(1);
 	}
 }
@@ -186,7 +186,7 @@ export const getRateLimitConfig = () => ({
 });
 
 // Log configuration on startup (without secrets)
-logger.info('Environment configuration loaded:', {
+logger.info('Environment', 'Configuration loaded:', {
 	NODE_ENV: env.NODE_ENV,
 	APP_ENV: env.APP_ENV,
 	PORT: env.PORT,

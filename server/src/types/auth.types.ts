@@ -40,7 +40,21 @@ export interface JWTPayload {
 declare global {
 	// eslint-disable-next-line @typescript-eslint/no-namespace
 	namespace Express {
-		interface User extends User {}
+		// Use the User type from this file, not extending itself
+		interface User {
+			id: UserId;
+			username: string;
+			email: string;
+			role: string;
+			xp: number;
+			level: number;
+			isActive: boolean;
+			createdAt: Date;
+			// Optional fields that may come from session
+			groupId?: GroupId;
+			isBanned?: boolean;
+			isVerified?: boolean;
+		}
 		
 		interface Request {
 			user?: User;

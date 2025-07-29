@@ -213,7 +213,7 @@ class SupabaseStorageService implements IStorageService {
 
 	getPublicUrl(bucket: string, relativePath: string): string {
 		if (!supabase) {
-			logger.error('Supabase not configured, cannot get public URL.');
+			logger.error('Storage', 'Supabase not configured, cannot get public URL.');
 			// Return a non-functional placeholder or throw, depending on desired strictness
 			return `error://storage_not_configured/${bucket}/${relativePath}`;
 		}
@@ -222,7 +222,7 @@ class SupabaseStorageService implements IStorageService {
 		if (!data || !data.publicUrl) {
 			// This can happen if the object doesn't exist or bucket isn't public
 			// For robustness, construct a predictable URL, assuming public access is set up
-			logger.warn(
+			logger.warn('Storage',
 				`Could not retrieve public URL directly for ${bucket}/${relativePath}. Constructing fallback.`
 			);
 			return `${supabaseUrl}/storage/v1/object/public/${bucket}/${relativePath}`;
@@ -232,7 +232,7 @@ class SupabaseStorageService implements IStorageService {
 
 	async verifyFileExists(bucket: string, relativePath: string): Promise<boolean> {
 		if (!supabaseUrl || !supabaseServiceKey) {
-			logger.error('Supabase creds not set, cannot verify file.');
+			logger.error('Storage', 'Supabase creds not set, cannot verify file.');
 			return false; // Or throw
 		}
 		try {
@@ -263,7 +263,7 @@ class SupabaseStorageService implements IStorageService {
 	 */
 	async deleteFile(bucket: string, relativePath: string): Promise<boolean> {
 		if (!supabaseUrl || !supabaseServiceKey) {
-			logger.error('Supabase creds not set, cannot delete file.');
+			logger.error('Storage', 'Supabase creds not set, cannot delete file.');
 			throw new DegenUploadError(
 				'Storage service misconfigured for file deletion. Check your environment setup.',
 				500
@@ -274,7 +274,7 @@ class SupabaseStorageService implements IStorageService {
 			const { error } = await supabase.storage.from(bucket).remove([relativePath]);
 
 			if (error) {
-				logger.error(`Error deleting file ${bucket}/${relativePath}:`, error);
+				logger.error('Storage', `Error deleting file ${bucket}/${relativePath}:`, error);
 				throw new DegenUploadError(
 					`Failed to delete file ${relativePath} from ${bucket}. Storage service error: ${error.message}`,
 					500
@@ -284,7 +284,7 @@ class SupabaseStorageService implements IStorageService {
 			// Verify deletion
 			const stillExists = await this.verifyFileExists(bucket, relativePath);
 			if (stillExists) {
-				logger.warn(`File ${bucket}/${relativePath} still exists after deletion attempt`);
+				logger.warn('Storage', `File ${bucket}/${relativePath} still exists after deletion attempt`);
 				return false;
 			}
 
@@ -304,7 +304,7 @@ class SupabaseStorageService implements IStorageService {
 // Simple fallback storage service for when Supabase is not configured
 class FallbackStorageService implements IStorageService {
 	async getPresignedUploadUrl(params: GetPresignedUploadUrlParams): Promise<PresignedUrlInfo> {
-		logger.warn('⚠️ STORAGE: Using fallback storage service - uploads will not work');
+		logger.warn('Storage', 'Using fallback storage service - uploads will not work');
 		throw new DegenUploadError(
 			'File uploads are not configured. Please configure Supabase or another storage provider.',
 			503
@@ -335,7 +335,7 @@ class GoogleCloudStorageService implements IStorageService {
 	constructor() {
 		// Initialize GCS client here using GOOGLE_APPLICATION_CREDENTIALS or other auth
 		// eslint-disable-next-line no-console
-		logger.warn(
+		logger.warn('Storage',
 			'GCS_STORAGE_SERVICE: Initialized (STUB). Implement actual GCS logic if switching providers.'
 		);
 	}
@@ -345,7 +345,7 @@ class GoogleCloudStorageService implements IStorageService {
 		// TODO: Implement GCS presigned URL generation
 		// Example: const [url] = await storage.bucket(bucket).file(relativePath).getSignedUrl({ action: 'write', expires: '03-17-2025', contentType: fileType });
 		// eslint-disable-next-line no-console
-		logger.info(
+		logger.info('Storage',
 			`GCS_STORAGE_SERVICE: STUB - getPresignedUploadUrl for ${bucket}/${relativePath} (type: ${fileType}, size: ${fileSize})`
 		);
 		if (bucket === 'gcs_error_test_bucket') {

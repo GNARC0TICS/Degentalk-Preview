@@ -29,7 +29,7 @@ import { isAuthenticated } from '@domains/auth/middleware/auth.middleware';
 import { profileService } from './profile.service';
 import { referralsService } from './referrals.service';
 import { logger } from '@core/logger';
-import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
+import { sendSuccess, errorResponses } from '@utils/api-responses';
 
 const router: RouterType = Router();
 
@@ -42,14 +42,14 @@ router.get('/:username', async (req: Request, res: Response) => {
 		const { username } = req.params;
 
 		if (!username) {
-			return sendErrorResponse(res, 'Username is required', 400);
+			return errorResponses.validationError(res, 'Username is required');
 		}
 
 		// Fetch user data using simple select (avoiding relational issues)
 		const [user] = await db.select().from(users).where(eq(users.username, username));
 
 		if (!user) {
-			return sendErrorResponse(res, 'User not found', 404);
+			return errorResponses.notFound(res, 'User not found');
 		}
 
 		const userId = user.id;
@@ -197,10 +197,10 @@ router.get('/:username', async (req: Request, res: Response) => {
 			}
 		};
 
-		return sendSuccessResponse(res, profileData);
+		return sendSuccess(res, profileData);
 	} catch (error) {
 		logger.error('Error fetching profile:', error);
-		return sendErrorResponse(res, 'Error fetching profile data', 500);
+		return errorResponses.internalError(res, 'Error fetching profile data');
 	}
 });
 

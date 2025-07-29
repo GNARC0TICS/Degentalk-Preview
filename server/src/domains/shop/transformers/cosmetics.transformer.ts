@@ -9,7 +9,8 @@
 import type { UserId } from '@shared/types/ids';
 import type { PublicCosmetic, OwnedCosmetic, AdminCosmetic } from '../types';
 
-import type { ItemId, DgtAmount, ItemRarity } from '@shared/types/ids';
+import type { ItemId, DgtAmount } from '@shared/types/ids';
+import { toDgtAmount } from '@shared/types/economy';
 
 import { ShopTransformer } from './shop.transformer';
 
@@ -158,7 +159,7 @@ export class CosmeticsTransformer {
 			emoji_pack: 'emoji_pack',
 			theme: 'theme'
 		};
-		return typeMap[type as keyof typeof typeMap] || 'badge';
+		return (typeMap[type as keyof typeof typeMap] || 'badge') as any;
 	}
 
 	private static generatePreviewUrl(dbCosmetic: any): string {
@@ -380,11 +381,11 @@ export class CosmeticsTransformer {
 
 	private static sanitizeDgtAmount(amount: any): DgtAmount {
 		const parsed = parseFloat(amount?.toString() || '0');
-		return (isNaN(parsed) ? 0 : Math.max(0, parsed)) as DgtAmount;
+		return toDgtAmount(isNaN(parsed) ? 0 : Math.max(0, parsed));
 	}
 
 	private static calculateAverageSalePrice(analytics: any): DgtAmount {
-		if (!analytics?.totalSales || analytics.totalSales === 0) return 0 as DgtAmount;
+		if (!analytics?.totalSales || analytics.totalSales === 0) return toDgtAmount(0);
 		return this.sanitizeDgtAmount(analytics.totalRevenue / analytics.totalSales);
 	}
 

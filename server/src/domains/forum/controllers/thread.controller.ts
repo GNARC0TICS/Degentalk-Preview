@@ -1,7 +1,7 @@
 import type { Request, Response } from 'express';
 import { z } from 'zod';
 import { logger } from '@core/logger';
-import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
+import { sendSuccess, sendPaginated, errorResponses } from '@utils/api-responses';
 import { getUser } from '@core/utils/auth.helpers';
 import { threadService } from '@domains/forum/services/thread.service';
 import { ThreadTransformer } from '@domains/forum/transformers/thread.transformer';
@@ -33,15 +33,13 @@ class ThreadController {
 			user ? ThreadTransformer.toSlim(thread) : ThreadTransformer.toPublic(thread)
 		);
 
-		return sendSuccessResponse(res, {
-			threads: transformedThreads,
-			pagination: {
-				page,
-				limit: limit,
-				totalThreads: result.total,
-				totalPages: result.totalPages
-			}
-		});
+		return sendPaginated(
+			res,
+			transformedThreads,
+			page,
+			limit,
+			result.total
+		);
 	}
 
 	async getThreadById(req: Request, res: Response) {
@@ -49,7 +47,7 @@ class ThreadController {
 		const thread = await threadService.getThreadById(threadId);
 
 		if (!thread) {
-			return sendErrorResponse(res, 'Thread not found', 404);
+			return errorResponses.notFound(res, 'Thread not found');
 		}
 
 		const user = getUser(req);
@@ -57,7 +55,7 @@ class ThreadController {
 			? ThreadTransformer.toAuthenticated(thread, user)
 			: ThreadTransformer.toPublic(thread);
 
-		return sendSuccessResponse(res, transformedThread);
+		return sendSuccess(res, transformedThread);
 	}
 
 	async getThreadBySlug(req: Request, res: Response) {
@@ -65,7 +63,7 @@ class ThreadController {
 		const thread = await threadService.getThreadBySlug(slug);
 
 		if (!thread) {
-			return sendErrorResponse(res, 'Thread not found', 404);
+			return errorResponses.notFound(res, 'Thread not found');
 		}
 
 		await threadService.incrementViewCount(thread.id);
@@ -75,7 +73,7 @@ class ThreadController {
 			? ThreadTransformer.toAuthenticated(thread, user)
 			: ThreadTransformer.toPublic(thread);
 
-		return sendSuccessResponse(res, transformedThread);
+		return sendSuccess(res, transformedThread);
 	}
 
 	async createThread(req: Request, res: Response) {
@@ -90,7 +88,7 @@ class ThreadController {
 			.limit(1);
 
 		if (!structure) {
-			return sendErrorResponse(res, 'Forum not found', 404);
+			return errorResponses.notFound(res, 'Forum not found');
 		}
 
 		const newThread = await threadService.createThread({
@@ -100,7 +98,7 @@ class ThreadController {
 		});
 
 		// Return just the slug for the client to navigate
-		return sendSuccessResponse(res, { slug: newThread.slug }, 201);
+		return sendSuccess(res, { slug: newThread.slug }, undefined, 201);
 	}
 
 	async updateThreadSolvedStatus(req: Request, res: Response) {
@@ -113,7 +111,7 @@ class ThreadController {
 		});
 
 		if (!updatedThread) {
-			return sendErrorResponse(res, 'Thread not found', 404);
+			return errorResponses.notFound(res, 'Thread not found');
 		}
 
 		const user = getUser(req);
@@ -121,7 +119,7 @@ class ThreadController {
 			? ForumTransformer.toAuthenticatedThread(updatedThread, user)
 			: ForumTransformer.toPublicThread(updatedThread);
 
-		return sendSuccessResponse(res, transformedThread);
+		return sendSuccess(res, transformedThread);
 	}
 
 	async addTagsToThread(req: Request, res: Response) {
@@ -130,7 +128,7 @@ class ThreadController {
 		const userId = getUser(req)?.id as UserId;
 
 		const updatedThread = await threadService.addTagsToThread(threadId, tags, userId);
-		return sendSuccessResponse(res, updatedThread);
+		return sendSuccess(res, updatedThread);
 	}
 
 	async removeTagFromThread(req: Request, res: Response) {
@@ -138,28 +136,28 @@ class ThreadController {
 		const userId = getUser(req)?.id as UserId;
 
 		const updatedThread = await threadService.removeTagFromThread(threadId, tagId, userId);
-		return sendSuccessResponse(res, updatedThread);
+		return sendSuccess(res, updatedThread);
 	}
 
 	async toggleThreadFeature(req: Request, res: Response) {
 		const { threadId } = req.params as { threadId: ThreadId };
 		const featured = req.method === 'POST';
 		const updatedThread = await threadService.toggleThreadFeature(threadId, featured);
-		return sendSuccessResponse(res, updatedThread);
+		return sendSuccess(res, updatedThread);
 	}
 
 	async toggleThreadLock(req: Request, res: Response) {
 		const { threadId } = req.params as { threadId: ThreadId };
 		const locked = req.method === 'POST';
 		const updatedThread = await threadService.toggleThreadLock(threadId, locked);
-		return sendSuccessResponse(res, updatedThread);
+		return sendSuccess(res, updatedThread);
 	}
 
 	async toggleThreadPin(req: Request, res: Response) {
 		const { threadId } = req.params as { threadId: ThreadId };
 		const pinned = req.method === 'POST';
 		const updatedThread = await threadService.toggleThreadPin(threadId, pinned);
-		return sendSuccessResponse(res, updatedThread);
+		return sendSuccess(res, updatedThread);
 	}
 
 	async getThreadPosts(req: Request, res: Response) {
@@ -175,15 +173,13 @@ class ThreadController {
 			sortBy: sortBy as any
 		});
 
-		return sendSuccessResponse(res, {
-			posts: result.posts,
-			pagination: {
-				page,
-				limit,
-				totalPosts: result.total,
-				totalPages: result.totalPages
-			}
-		});
+		return sendPaginated(
+			res,
+			result.posts,
+			page,
+			limit,
+			result.total
+		);
 	}
 }
 

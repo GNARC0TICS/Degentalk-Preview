@@ -17,7 +17,8 @@ import { isDevMode } from '@utils/environment';
 import { walletService } from '@domains/wallet';
 import { walletConfig } from '@shared/config/wallet.config';
 import { UserTransformer } from '@domains/users/transformers/user.transformer';
-import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
+import { sendSuccess, sendError, errorResponses } from '@utils/api-responses';
+import { ApiErrorCode } from '@shared/types/api.types';
 import { generateToken } from '../utils/jwt.utils';
 
 type User = typeof users.$inferSelect;
@@ -43,7 +44,7 @@ export async function register(req: Request, res: Response, next: NextFunction) 
 		// Check if username already exists
 		const [existingUser] = await db.select().from(users).where(eq(users.username, userData.username));
 		if (existingUser) {
-			return sendErrorResponse(res, 'Username already exists', 400);
+			return errorResponses.alreadyExists(res, 'Username already exists');
 		}
 
 		// Store temporary dev metadata if beta tools are enabled
@@ -110,13 +111,10 @@ export async function register(req: Request, res: Response, next: NextFunction) 
 
 		// In dev mode, we skip verification
 		if (isDevMode()) {
-			return sendSuccessResponse(
+			return sendSuccess(
 				res,
-				{
-					message: 'Registration successful in development mode. User is automatically activated.',
-					devMode: true
-				},
-				'',
+				{ devMode: true },
+				'Registration successful in development mode. User is automatically activated.',
 				201
 			);
 		}
@@ -132,17 +130,15 @@ export async function register(req: Request, res: Response, next: NextFunction) 
 			token: verificationToken
 		});
 
-		sendSuccessResponse(
+		sendSuccess(
 			res,
-			{
-				message: 'Registration successful. Please check your email to verify your account.'
-			},
-			'',
+			null,
+			'Registration successful. Please check your email to verify your account.',
 			201
 		);
 	} catch (err) {
 		if (err instanceof z.ZodError) {
-			return sendErrorResponse(res, 'Validation error', 400, { errors: err.errors });
+			return errorResponses.validationError(res, 'Validation error', { errors: err.errors });
 		}
 		next(err);
 	}
@@ -163,7 +159,7 @@ export function login(req: Request, res: Response, next: NextFunction) {
 		}
 		if (!user) {
 			logger.warn('Authentication failed', { message: info?.message || 'No user returned' });
-			return sendErrorResponse(res, info?.message || 'Authentication failed', 401);
+			return errorResponses.unauthorized(res, info?.message || 'Authentication failed');
 		}
 
 		logger.info('User authenticated', { username: user.username, userId: user.id });
@@ -214,20 +210,20 @@ export function login(req: Request, res: Response, next: NextFunction) {
 					const payload = JSON.parse(Buffer.from(tokenParts[1], 'base64').toString());
 					const expiresAt = payload.exp ? new Date(payload.exp * 1000).toISOString() : null;
 					
-					sendSuccessResponse(res, {
+					sendSuccess(res, {
 						user: userResponse,
 						token,
 						expiresAt
 					});
 				} catch {
 					// If decoding fails, just send token without expiration
-					sendSuccessResponse(res, {
+					sendSuccess(res, {
 						user: userResponse,
 						token
 					});
 				}
 			} else {
-				sendSuccessResponse(res, {
+				sendSuccess(res, {
 					user: userResponse,
 					token
 				});
@@ -242,7 +238,7 @@ export function login(req: Request, res: Response, next: NextFunction) {
 export function logout(req: Request, res: Response, next: NextFunction) {
 	req.logout((err) => {
 		if (err) return next(err);
-		res.sendStatus(200);
+		sendSuccess(res, null, 'Logged out successfully');
 	});
 }
 
@@ -250,7 +246,7 @@ export function logout(req: Request, res: Response, next: NextFunction) {
  * Get current user profile
  */
 export function getCurrentUser(req: Request, res: Response) {
-	if (!req.isAuthenticated()) return sendErrorResponse(res, 'Unauthorized', 401);
+	if (!req.isAuthenticated()) return errorResponses.unauthorized(res);
 
 	// Remove password from response
 	const userResponse = { ...(userService.getUserFromRequest(req) as any) };
@@ -261,7 +257,7 @@ export function getCurrentUser(req: Request, res: Response) {
 	userResponse.isModerator = ['moderator', 'moderator'].includes(userResponse.role);
 	userResponse.isSuperAdmin = userResponse.role === 'super_admin';
 
-	sendSuccessResponse(res, UserTransformer.toAuthenticatedSelf(userResponse));
+	sendSuccess(res, UserTransformer.toAuthenticatedSelf(userResponse));
 }
 
 /**
@@ -277,8 +273,9 @@ export async function verifyEmail(req: Request, res: Response, next: NextFunctio
 		const isValid = await verifyEmailToken(token);
 
 		if (!isValid) {
-			return sendErrorResponse(
+			return sendError(
 				res,
+				ApiErrorCode.VALIDATION_ERROR,
 				'Invalid or expired verification token. Please request a new one.',
 				400
 			);
@@ -288,9 +285,7 @@ export async function verifyEmail(req: Request, res: Response, next: NextFunctio
 		const userId = isValid.userId;
 		await db.update(users).set({ isActive: true }).where(eq(users.id, userId));
 
-		return sendSuccessResponse(res, {
-			message: 'Email verified successfully. You can now log in to your account.'
-		});
+		return sendSuccess(res, null, 'Email verified successfully. You can now log in to your account.');
 	} catch (err) {
 		next(err);
 	}
@@ -309,15 +304,21 @@ export async function resendVerification(req: Request, res: Response, next: Next
 		const [user] = await db.select().from(users).where(eq(users.email, email));
 		if (!user) {
 			// For security reasons, don't reveal if email exists or not
-			return sendSuccessResponse(res, {
-				message:
-					'If your email exists in our system, you will receive a verification email shortly.'
-			});
+			return sendSuccess(
+				res,
+				null,
+				'If your email exists in our system, you will receive a verification email shortly.'
+			);
 		}
 
 		// Check if account is already active
 		if (user.isActive) {
-			return sendErrorResponse(res, 'This account is already active. Please try logging in.', 400);
+			return sendError(
+				res,
+				ApiErrorCode.VALIDATION_ERROR,
+				'This account is already active. Please try logging in.',
+				400
+			);
 		}
 
 		// Generate new verification token
@@ -332,9 +333,11 @@ export async function resendVerification(req: Request, res: Response, next: Next
 			token: verificationToken
 		});
 
-		sendSuccessResponse(res, {
-			message: 'If your email exists in our system, you will receive a verification email shortly.'
-		});
+		sendSuccess(
+			res,
+			null,
+			'If your email exists in our system, you will receive a verification email shortly.'
+		);
 	} catch (err) {
 		next(err);
 	}

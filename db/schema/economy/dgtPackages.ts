@@ -39,8 +39,8 @@ export const dgtPackages = pgTable(
 		featuredIdx: index('idx_dgt_packages_featured').on(table.isFeatured)
 	})
 );
-// @ts-ignore - drizzle-zod type inference issue with cross-workspace builds
-export const insertDgtPackageSchema = createInsertSchema(dgtPackages, {
+// Create insert schema with custom validations
+const baseInsertDgtPackageSchema = createInsertSchema(dgtPackages, {
 	name: z.string().min(1).max(100),
 	description: z.string().optional(),
 	dgtAmount: z.number().min(1),
@@ -50,10 +50,19 @@ export const insertDgtPackageSchema = createInsertSchema(dgtPackages, {
 	imageUrl: z.string().optional(),
 	isActive: z.boolean().default(true),
 	sortOrder: z.number().default(0)
-}).omit({
-	id: true,
-	createdAt: true,
-	updatedAt: true
+});
+
+// Use pick instead of omit to avoid type issues
+export const insertDgtPackageSchema = baseInsertDgtPackageSchema.pick({
+	name: true,
+	description: true,
+	dgtAmount: true,
+	usdPrice: true,
+	discountPercentage: true,
+	isFeatured: true,
+	imageUrl: true,
+	isActive: true,
+	sortOrder: true
 });
 export type DgtPackage = typeof dgtPackages.$inferSelect;
 export type InsertDgtPackage = z.infer<typeof insertDgtPackageSchema>;
