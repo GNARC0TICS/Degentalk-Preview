@@ -1,3 +1,35 @@
+// ---------------------------------------------------------------------------
+// PERFORMANCE: pre-compile common import usage patterns once
+// ---------------------------------------------------------------------------
+const COMMON_IMPORT_PATTERNS = [
+  {
+    usage: /\bisValidId\s*\(/g,
+    import: "import { isValidId } from '@shared/utils/id';",
+    name: 'isValidId',
+  },
+  {
+    usage: /\blogger\./g,
+    import: "import { logger } from '@/lib/logger';",
+    name: 'logger',
+  },
+  {
+    usage: /\bUserId\b/g,
+    import: "import type { UserId } from '@shared/types/ids';",
+    name: 'UserId',
+  },
+  {
+    usage: /\bForumId\b/g,
+    import: "import type { ForumId } from '@shared/types/ids';",
+    name: 'ForumId',
+  },
+];
+
+function hasImport(content, pattern) {
+  const importName = pattern.name;
+  const importRegex = new RegExp(`import(?:\\s+type)?\\s+\\{[^}]*\\b${importName}\\b[^}]*\\}`, 'm');
+  return importRegex.test(content);
+}
+
 module.exports = {
   name: 'validate-imports',
   description: 'Enforce import conventions for DegenTalk',
@@ -153,44 +185,20 @@ module.exports = {
     return null;
   },
   
+  // now uses module-scope COMMON_IMPORT_PATTERNS
+  
   checkMissingImports(content, errors) {
-    const commonPatterns = [
-      {
-        usage: /\bisValidId\s*\(/g,
-        import: "import { isValidId } from '@shared/utils/id';",
-        name: 'isValidId'
-      },
-      {
-        usage: /\blogger\./g,
-        import: "import { logger } from '@/lib/logger';",
-        name: 'logger'
-      },
-      {
-        usage: /\bUserId\b/g,
-        import: "import type { UserId } from '@shared/types/ids';",
-        name: 'UserId'
-      },
-      {
-        usage: /\bForumId\b/g,
-        import: "import type { ForumId } from '@shared/types/ids';",
-        name: 'ForumId'
-      }
-    ];
-    
-    commonPatterns.forEach(pattern => {
-      if (pattern.usage.test(content) && !content.includes(pattern.name)) {
-        // Check if import is missing
-        if (!content.includes(pattern.import.split(' from ')[0].replace('import { ', '').replace('import type { ', ''))) {
-          errors.push({
-            line: 1,
-            message: `Missing import for ${pattern.name}`,
-            severity: 'warning',
-            code: 'missing-import',
-            fix: {
-              import: pattern.import
-            }
-          });
-        }
+    COMMON_IMPORT_PATTERNS.forEach((pattern) => {
+      if (pattern.usage.test(content) && !hasImport(content, pattern)) {
+        errors.push({
+          line: 1,
+          message: `Missing import for ${pattern.name}`,
+          severity: 'warning',
+          code: 'missing-import',
+          fix: {
+            import: pattern.import,
+          },
+        });
       }
     });
   },

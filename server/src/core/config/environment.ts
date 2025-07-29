@@ -89,7 +89,7 @@ function validateSecurityRequirements(config: EnvironmentConfig): void {
 
 		// Validate Redis is configured for production rate limiting
 		if (config.RATE_LIMIT_ENABLED && !config.REDIS_URL) {
-			logger.warn(
+			logger.warn('Environment',
 				'Redis not configured - using in-memory rate limiting (not recommended for production)'
 			);
 		}
@@ -103,17 +103,17 @@ function validateSecurityRequirements(config: EnvironmentConfig): void {
 	// Development warnings
 	if (config.NODE_ENV === 'development') {
 		if (config.SESSION_SECRET === 'sonnet-forum-secret') {
-			logger.warn('Using default session secret in development - consider setting SESSION_SECRET');
+			logger.warn('Environment', 'Using default session secret in development - consider setting SESSION_SECRET');
 		}
 
 		if (config.DEV_BYPASS_PASSWORD) {
-			logger.warn('Password bypass is enabled - development only!');
+			logger.warn('Environment', 'Password bypass is enabled - development only!');
 		}
 	}
 
 	// Database URL validation
 	if (config.DATABASE_URL.includes('localhost') && config.NODE_ENV === 'production') {
-		logger.warn('Using localhost database in production environment');
+		logger.warn('Environment', 'Using localhost database in production environment');
 	}
 }
 

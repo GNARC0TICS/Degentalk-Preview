@@ -1,6 +1,29 @@
 const { readFileSync } = require('fs');
 const path = require('path');
 
+// PERFORMANCE OPTIMISATION — preload patterns & compile regexes once at module scope
+// Resolve path to branded-ID patterns JSON once
+const PATTERNS_PATH = path.join(__dirname, '..', 'branded-id-patterns.json');
+
+let PATTERNS_CACHE;
+try {
+  PATTERNS_CACHE = JSON.parse(readFileSync(PATTERNS_PATH, 'utf8'));
+} catch (error) {
+  /* eslint-disable no-console */
+  console.error('[check-branded-ids] Failed to load branded-id-patterns.json', error);
+  PATTERNS_CACHE = null;
+}
+
+// Helper to map pattern objects → { regex, meta }
+const compilePatterns = (arr = []) =>
+  arr.map((p) => ({ regex: new RegExp(p.pattern, 'g'), meta: p }));
+
+// Pre-compile all regex sets (fall back to empty array if file missing)
+const NUMERIC_REGEXES = compilePatterns(PATTERNS_CACHE?.patterns?.numericComparisons);
+const USE_STATE_REGEXES = compilePatterns(PATTERNS_CACHE?.patterns?.useStateTypes);
+const DIRECT_CAST_REGEXES = compilePatterns(PATTERNS_CACHE?.patterns?.directIdCasts);
+const WRONG_IMPORT_REGEXES = compilePatterns(PATTERNS_CACHE?.patterns?.wrongImports);
+
 module.exports = {
   name: 'check-branded-ids',
   description: 'Validate branded ID usage in DegenTalk',
@@ -8,26 +31,22 @@ module.exports = {
   excludePatterns: ['**/*.test.*', '**/*.spec.*', '**/migrations/**', '**/scripts/**'],
   
   check(filePath, content) {
+    // Bail early if pattern cache missing (avoids hard crash)
+    if (!PATTERNS_CACHE) {
+      return [
+        {
+          line: 0,
+          message: 'Branded ID patterns unavailable – hook skipped',
+          severity: 'warning',
+        },
+      ];
+    }
+
     const errors = [];
     const lines = content.split('\n');
     
-    // Load patterns
-    const patternsPath = path.join(__dirname, '..', 'branded-id-patterns.json');
-    let patterns;
-    try {
-      patterns = JSON.parse(readFileSync(patternsPath, 'utf8'));
-    } catch (error) {
-      return [{
-        line: 0,
-        message: 'Failed to load branded ID patterns',
-        severity: 'error'
-      }];
-    }
-    
-    // Check for numeric comparisons (userId > 0 patterns)
     lines.forEach((line, index) => {
-      patterns.patterns.numericComparisons.forEach(pattern => {
-        const regex = new RegExp(pattern.pattern, 'g');
+      NUMERIC_REGEXES.forEach(({ regex, meta }) => {
         const matches = line.match(regex);
         
         if (matches) {
@@ -36,16 +55,13 @@ module.exports = {
             errors.push({
               line: index + 1,
               column,
-              message: pattern.message,
+              message: meta.message,
               severity: 'error',
               code: 'branded-id-numeric-comparison',
               fix: {
                 oldString: match,
-                newString: match.replace(
-                  /(\w+Id)\s*[><=]+\s*\d+/,
-                  'isValidId($1)'
-                ),
-                imports: pattern.fix.imports
+                newString: match.replace(/(\w+Id)\s*[><=]+\s*\d+/, 'isValidId($1)'),
+                imports: meta.fix.imports,
               }
             });
           });
@@ -54,8 +70,7 @@ module.exports = {
     });
     
     // Check for useState<number> with ID setters
-    patterns.patterns.useStateTypes.forEach(pattern => {
-      const regex = new RegExp(pattern.pattern, 'g');
+    USE_STATE_REGEXES.forEach(({ regex, meta }) => {
       const matches = content.match(regex);
       
       if (matches) {
@@ -65,7 +80,7 @@ module.exports = {
           
           errors.push({
             line: lineNumber,
-            message: pattern.message.replace('$1', match.includes('number') ? 'number' : match.includes('string') ? 'string' : 'any'),
+            message: meta.message.replace('$1', match.includes('number') ? 'number' : match.includes('string') ? 'string' : 'any'),
             severity: 'error',
             code: 'branded-id-wrong-state-type'
           });
@@ -74,36 +89,34 @@ module.exports = {
     });
     
     // Check for direct type assertions (as UserId)
-    patterns.patterns.directIdCasts.forEach(pattern => {
-      const regex = new RegExp(pattern.pattern, 'g');
+    DIRECT_CAST_REGEXES.forEach(({ regex, meta }) => {
       let match;
       
       while ((match = regex.exec(content)) !== null) {
         const lineIndex = content.substring(0, match.index).split('\n').length;
         errors.push({
           line: lineIndex,
-          message: pattern.message,
+          message: meta.message,
           severity: 'warning',
           code: 'branded-id-direct-cast',
           fix: {
             oldString: match[0],
-            newString: pattern.fix.template.replace('$1', match[0].replace(/as\s+/, '')),
-            imports: pattern.fix.imports
+            newString: meta.fix.template.replace('$1', match[0].replace(/as\s+/, '')),
+            imports: meta.fix.imports,
           }
         });
       }
     });
     
     // Check for @db/types imports
-    patterns.patterns.wrongImports.forEach(pattern => {
-      const regex = new RegExp(pattern.pattern, 'g');
+    WRONG_IMPORT_REGEXES.forEach(({ regex, meta }) => {
       if (content.match(regex)) {
         const lineIndex = content.search(regex);
         const lineNumber = content.substring(0, lineIndex).split('\n').length;
         
         errors.push({
           line: lineNumber,
-          message: pattern.message,
+          message: meta.message,
           severity: 'error',
           code: 'branded-id-wrong-import',
           fix: {

@@ -15,6 +15,7 @@ module.exports = {
   name: 'enforce-repository-pattern',
   check(content, filePath) {
     const errors = [];
+    const warnings = [];
     
     // Only check service files
     if (!DOMAIN_SERVICE_PATTERN.test(filePath)) {
@@ -41,6 +42,6 @@ module.exports = {
       }
     });
     
-    return { errors, warnings: [] };
+    return { errors, warnings };
   }
 };

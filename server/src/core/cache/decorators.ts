@@ -47,7 +47,7 @@ function logCacheOperation(operation: CacheOperation): void {
     
     const cleaned = beforeLength - cacheOperations.length;
     if (cleaned > 0 && process.env.NODE_ENV === 'development') {
-      logger.debug('CACHE_CLEANUP', `Cleaned ${cleaned} old cache operations`);
+      logger.debug('Cache', 'CACHE_CLEANUP', `Cleaned ${cleaned} old cache operations`);
     }
   }
   
@@ -102,7 +102,7 @@ function createCacheDecorator(policy: 'realtime' | 'standard' | 'extended', poli
       const ttl = (policies[policy] as any)[policyKey];
       
       if (typeof ttl !== 'number') {
-        logger.warn(`Invalid cache policy: ${policy}.${policyKey}, falling back to original method`);
+        logger.warn('Cache', `Invalid cache policy: ${policy}.${policyKey}, falling back to original method`);
         return await originalMethod.apply(this, args);
       }
       

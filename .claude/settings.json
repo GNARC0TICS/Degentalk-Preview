@@ -1,4 +1,108 @@
 {
+  "cleanupPeriodDays": 90,
+  "env": {
+    "DEGENTALK_ROOT": "/home/developer/Degentalk-BETA",
+    "PROJECT_ROOT": "/home/developer/Degentalk-BETA"
+  },
+  "includeCoAuthoredBy": true,
+  "permissions": {
+    "allow": [
+      "Bash(cd *)",
+      "Bash(pwd)",
+      "Bash(ls *)",
+      "Bash(cat *)",
+      "Bash(head *)",
+      "Bash(tail *)",
+      "Bash(echo *)",
+      "Bash(which *)",
+      "Bash(node *)",
+      "Bash(npx *)",
+      "Bash(pnpm dev*)",
+      "Bash(pnpm build*)",
+      "Bash(pnpm typecheck*)",
+      "Bash(pnpm lint*)",
+      "Bash(pnpm test*)",
+      "Bash(pnpm validate*)",
+      "Bash(pnpm seed*)",
+      "Bash(pnpm db:migrate*)",
+      "Bash(pnpm db:studio)",
+      "Bash(pnpm db:sync*)",
+      "Bash(git status)",
+      "Bash(git diff*)",
+      "Bash(git log*)",
+      "Bash(git branch*)",
+      "Bash(git checkout *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(mkdir -p *)",
+      "Bash(touch *)",
+      "Bash(grep -r *)",
+      "Bash(rg *)",
+      "Bash(find . -name *)",
+      "Bash(wc -l *)",
+      "Bash(tsx *)",
+      "Bash(tsc *)",
+      "Bash(bash scripts/*)",
+      "mcp__sequential-thinking__sequentialthinking",
+      "mcp__degentalk-fs__*",
+      "mcp__puppeteer__*",
+      "Task",
+      "Read",
+      "Write",
+      "Edit",
+      "MultiEdit",
+      "Grep",
+      "Glob",
+      "LS",
+      "WebFetch",
+      "WebSearch",
+      "TodoWrite",
+      "NotebookRead",
+      "NotebookEdit"
+    ],
+    "deny": [
+      "Bash(rm -rf *)",
+      "Bash(rm -r *)",
+      "Bash(rmdir *)",
+      "Bash(mv /* *)",
+      "Bash(chmod 777 *)",
+      "Bash(chmod -R *)",
+      "Bash(chown *)",
+      "Bash(sudo *)",
+      "Bash(kill *)",
+      "Bash(killall *)",
+      "Bash(curl *)",
+      "Bash(wget *)",
+      "Bash(apt *)",
+      "Bash(npm *)",
+      "Bash(yarn *)",
+      "Bash(pip *)",
+      "Bash(> /dev/*)",
+      "Bash(dd *)",
+      "Bash(format *)",
+      "Bash(fdisk *)",
+      "Bash(git push*)",
+      "Bash(git reset --hard*)",
+      "Bash(git clean -fd*)",
+      "Bash(pnpm db:push*)",
+      "Bash(pnpm install*)",
+      "Bash(pnpm add*)",
+      "Bash(pnpm remove*)",
+      "Bash(source *)",
+      "Bash(. *)",
+      "Bash(eval *)",
+      "Bash(exec *)"
+    ]
+  },
+  "enabledMcpjsonServers": [
+    "degentalk-fs",
+    "postgres",
+    "eslint",
+    "filesystem",
+    "puppeteer",
+    "fetch",
+    "sequential-thinking"
+  ],
   "hooks": {
     "PreToolUse": [
       {
@@ -27,6 +131,34 @@
           {
             "type": "command",
             "command": "node /home/developer/Degentalk-BETA/tools/claude-hooks/run-checks.cjs --mode pre-edit --file \"{filePath}\" --hook validate-imports --autofix"
+          },
+          {
+            "type": "command",
+            "command": "node /home/developer/Degentalk-BETA/tools/claude-hooks/run-checks.cjs --mode pre-edit --file \"{filePath}\" --hook prevent-duplicate-directories"
+          },
+          {
+            "type": "command",
+            "command": "node /home/developer/Degentalk-BETA/tools/claude-hooks/run-checks.cjs --mode pre-edit --file \"{filePath}\" --hook check-id-conversions"
+          },
+          {
+            "type": "command",
+            "command": "node /home/developer/Degentalk-BETA/tools/claude-hooks/run-checks.cjs --mode pre-edit --file \"{filePath}\" --hook check-api-request-signature"
+          },
+          {
+            "type": "command",
+            "command": "node /home/developer/Degentalk-BETA/tools/claude-hooks/run-checks.cjs --mode pre-edit --file \"{filePath}\" --hook production-readiness"
+          },
+          {
+            "type": "command",
+            "command": "node /home/developer/Degentalk-BETA/tools/claude-hooks/run-checks.cjs --mode pre-edit --file \"{filePath}\" --hook performance-checks"
+          },
+          {
+            "type": "command",
+            "command": "node /home/developer/Degentalk-BETA/tools/claude-hooks/run-checks.cjs --mode pre-edit --file \"{filePath}\" --hook check-tooltip-usage"
+          },
+          {
+            "type": "command",
+            "command": "node /home/developer/Degentalk-BETA/tools/claude-hooks/run-checks.cjs --mode pre-edit --file \"{filePath}\" --hook no-duplicate-layout-components"
           }
         ]
       },
@@ -36,19 +168,10 @@
           {
             "type": "command",
             "command": "node /home/developer/Degentalk-BETA/tools/claude-hooks/run-checks.cjs --mode pre-edit --file \"{filePath}\" --hook security-checks"
-          }
-        ]
-      },
-      {
-        "matcher": "Create",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node /home/developer/Degentalk-BETA/tools/claude-hooks/run-checks.cjs --mode pre-create --file \"{filePath}\" --hook enforce-test-file-placement"
           },
           {
             "type": "command",
-            "command": "node /home/developer/Degentalk-BETA/tools/claude-hooks/run-checks.cjs --mode pre-create --file \"{filePath}\" --hook prevent-duplicate-directories"
+            "command": "node /home/developer/Degentalk-BETA/tools/claude-hooks/run-checks.cjs --mode pre-create --file \"{filePath}\" --hook enforce-test-file-placement"
           }
         ]
       }
@@ -60,6 +183,21 @@
           {
             "type": "command",
             "command": "node /home/developer/Degentalk-BETA/tools/claude-hooks/run-checks.cjs --mode post-edit --file \"{filePath}\" --hook cleanup-debug-artifacts"
+          },
+          {
+            "type": "command",
+            "command": "node /home/developer/Degentalk-BETA/tools/claude-hooks/run-checks.cjs --mode session-end --file \"{filePath}\" --hook final-cleanup-reminder"
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "matcher": "startup|resume|clear",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cat /home/developer/Degentalk-BETA/CLAUDE.md"
           }
         ]
       }

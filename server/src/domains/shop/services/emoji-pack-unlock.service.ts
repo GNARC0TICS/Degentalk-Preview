@@ -3,7 +3,7 @@ import { userEmojiPacks } from '@schema';
 import { eq, and } from 'drizzle-orm';
 import { logger, LogAction } from '@core/logger';
 import type { EmojiPackId, UserId } from '@shared/types/ids';
-import { reportErrorServer } from '../../../../lib/report-error';
+import { reportErrorServer } from "@lib/report-error";
 
 interface UnlockEmojiPackParams {
 	userId: UserId;

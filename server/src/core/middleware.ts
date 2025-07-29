@@ -1,3 +1,3 @@
 export * from './rate-limiter';
 export * from './wallet-validators';
-export * from './wallet-error-handler';
+// export * from './wallet-error-handler'; // File doesn't exist yet

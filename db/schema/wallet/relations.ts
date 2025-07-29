@@ -4,11 +4,11 @@
  * Auto-generated Drizzle relations for type-safe joins
  */
 import { relations } from 'drizzle-orm';
-import { ccpaymentUsers } from './ccpaymentUsers';
-import { cryptoWallets } from './cryptoWallets';
-import { depositRecords } from './depositRecords';
-import { internalTransfers } from './internalTransfers';
-import { supportedTokens } from './supportedTokens';
-import { swapRecords } from './swapRecords';
-import { webhookEvents } from './webhookEvents';
-import { withdrawalRecords } from './withdrawalRecords';
+import { ccpaymentUsers } from './ccpayment-users';
+import { cryptoWallets } from './crypto-wallets';
+import { depositRecords } from './deposit-records';
+import { internalTransfers } from './internal-transfers';
+import { supportedTokens } from './supported-tokens';
+import { swapRecords } from './swap-records';
+import { webhookEvents } from './webhook-events';
+import { withdrawalRecords } from './withdrawal-records';

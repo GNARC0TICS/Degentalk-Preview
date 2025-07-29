@@ -102,7 +102,11 @@
 		"hooks:enable": "git config --unset core.hooksPath",
 		"db:sync:forums": "tsx -r tsconfig-paths/register scripts/db/sync-forum-config.ts",
 		"claude": "claude",
-		"run:prompt": "ts-node tools/runClaude.ts"
+		"run:prompt": "ts-node tools/runClaude.ts",
+		"unfuck:baseline": "bash scripts/unfuck-baseline.sh",
+		"unfuck:status": "bash scripts/unfuck-status.sh",
+		"unfuck:build": "bash scripts/unfuck-build.sh",
+		"unfuck:lint-autofix": "bash scripts/unfuck-lint-autofix.sh"
 	},
 	"devDependencies": {
 		"@anthropic-ai/claude-code": "^1.0.62",
@@ -112,7 +116,7 @@
 		"@tailwindcss/typography": "^0.5.15",
 		"@types/dompurify": "^3.2.0",
 		"@types/jsonwebtoken": "^9.0.9",
-		"@types/node": "^20.19.0",
+		"@types/node": "^20.19.7",
 		"@types/react": "^18.3.20",
 		"@types/uuid": "^10.0.0",
 		"@types/ws": "^8.5.13",

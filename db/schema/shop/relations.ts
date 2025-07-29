@@ -14,7 +14,7 @@ import { productCategories } from './productCategories';
 import { productMedia } from './productMedia';
 import { products } from './products';
 import { rarities } from './rarities';
-import { signatureItems } from './signatureItems';
+import { signatureShopItems } from './signatureItems';
 import { userInventory } from './userInventory';
 import { userSignatureItems } from './userSignatureItems';
 import { users } from '../user/users';

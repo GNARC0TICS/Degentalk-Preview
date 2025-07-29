@@ -5,7 +5,7 @@
  */
 
 import type { MergedRules } from '@app/contexts/ForumStructureContext';
-import { logger } from '../../server/src/core/logger';
+import { logger } from "@core/logger";
 
 // This function is deprecated - use ForumStructureContext instead
 export function getForumRules(forumSlug: string): MergedRules | undefined {

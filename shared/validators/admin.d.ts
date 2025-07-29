@@ -17,14 +17,14 @@ export declare const AdminPaginationQuery: z.ZodObject<{
     search?: string;
     sortOrder?: "asc" | "desc";
     page?: number;
-    pageSize?: number;
     sortBy?: string;
+    pageSize?: number;
 }, {
     search?: string;
     sortOrder?: "asc" | "desc";
     page?: number;
-    pageSize?: number;
     sortBy?: string;
+    pageSize?: number;
 }>;
 /**
  * User schemas
@@ -39,22 +39,22 @@ export declare const AdminUserCreateSchema: z.ZodObject<{
     isBanned: z.ZodBoolean;
     role: z.ZodEnum<["user", "moderator", "admin"]>;
 }, "strip", z.ZodTypeAny, {
-    username?: string;
     email?: string;
-    bio?: string;
+    role?: "user" | "admin" | "moderator";
     isActive?: boolean;
+    username?: string;
+    bio?: string;
     isVerified?: boolean;
     isBanned?: boolean;
-    role?: "user" | "admin" | "moderator";
     groupId?: string;
 }, {
-    username?: string;
     email?: string;
-    bio?: string;
+    role?: "user" | "admin" | "moderator";
     isActive?: boolean;
+    username?: string;
+    bio?: string;
     isVerified?: boolean;
     isBanned?: boolean;
-    role?: "user" | "admin" | "moderator";
     groupId?: string;
 }>;
 export declare const AdminUserUpdateSchema: z.ZodObject<{
@@ -67,22 +67,22 @@ export declare const AdminUserUpdateSchema: z.ZodObject<{
     isBanned: z.ZodOptional<z.ZodBoolean>;
     role: z.ZodOptional<z.ZodEnum<["user", "moderator", "admin"]>>;
 }, "strip", z.ZodTypeAny, {
-    username?: string;
     email?: string;
-    bio?: string;
+    role?: "user" | "admin" | "moderator";
     isActive?: boolean;
+    username?: string;
+    bio?: string;
     isVerified?: boolean;
     isBanned?: boolean;
-    role?: "user" | "admin" | "moderator";
     groupId?: string;
 }, {
-    username?: string;
     email?: string;
-    bio?: string;
+    role?: "user" | "admin" | "moderator";
     isActive?: boolean;
+    username?: string;
+    bio?: string;
     isVerified?: boolean;
     isBanned?: boolean;
-    role?: "user" | "admin" | "moderator";
     groupId?: string;
 }>;
 /**
@@ -98,16 +98,16 @@ export declare const AdminCategoryCreateSchema: z.ZodObject<{
     parentId: z.ZodNullable<z.ZodString>;
 }, "strip", z.ZodTypeAny, {
     name?: string;
-    slug?: string;
     description?: string;
+    slug?: string;
     parentId?: string;
     position?: number;
     isVip?: boolean;
     isLocked?: boolean;
 }, {
     name?: string;
-    slug?: string;
     description?: string;
+    slug?: string;
     parentId?: string;
     position?: number;
     isVip?: boolean;
@@ -123,16 +123,16 @@ export declare const AdminCategoryUpdateSchema: z.ZodObject<{
     parentId: z.ZodOptional<z.ZodNullable<z.ZodString>>;
 }, "strip", z.ZodTypeAny, {
     name?: string;
-    slug?: string;
     description?: string;
+    slug?: string;
     parentId?: string;
     position?: number;
     isVip?: boolean;
     isLocked?: boolean;
 }, {
     name?: string;
-    slug?: string;
     description?: string;
+    slug?: string;
     parentId?: string;
     position?: number;
     isVip?: boolean;
@@ -220,15 +220,15 @@ export declare const AdminUserBody: z.ZodObject<{
     role: z.ZodString;
     isActive: z.ZodOptional<z.ZodBoolean>;
 }, "strip", z.ZodTypeAny, {
-    username?: string;
     email?: string;
-    isActive?: boolean;
     role?: string;
+    isActive?: boolean;
+    username?: string;
 }, {
-    username?: string;
     email?: string;
-    isActive?: boolean;
     role?: string;
+    isActive?: boolean;
+    username?: string;
 }>;
 export declare const AdminUserGroupBody: z.ZodObject<{
     name: z.ZodString;
@@ -323,12 +323,12 @@ export declare const TitleCreateInput: z.ZodObject<{
     description: z.ZodOptional<z.ZodString>;
 }, "strip", z.ZodTypeAny, {
     name?: string;
-    imageUrl?: string;
     description?: string;
+    imageUrl?: string;
 }, {
     name?: string;
-    imageUrl?: string;
     description?: string;
+    imageUrl?: string;
 }>;
 export declare const PermissionUpdateInput: z.ZodObject<{
     name: z.ZodString;
@@ -346,14 +346,14 @@ export declare const XpActionCreateSchema: z.ZodObject<{
     amount: z.ZodNumber;
     icon: z.ZodOptional<z.ZodString>;
 }, "strip", z.ZodTypeAny, {
+    key?: string;
     icon?: string;
     amount?: number;
-    key?: string;
     label?: string;
 }, {
+    key?: string;
     icon?: string;
     amount?: number;
-    key?: string;
     label?: string;
 }>;
 export type XpActionCreateInput = z.infer<typeof XpActionCreateSchema>;
@@ -365,16 +365,16 @@ export declare const XpActionUpdateSchema: z.ZodObject<{
 } & {
     id: z.ZodString;
 }, "strip", z.ZodTypeAny, {
+    key?: string;
     id?: string;
     icon?: string;
     amount?: number;
-    key?: string;
     label?: string;
 }, {
+    key?: string;
     id?: string;
     icon?: string;
     amount?: number;
-    key?: string;
     label?: string;
 }>;
 export type XpActionUpdateInput = z.infer<typeof XpActionUpdateSchema>;
@@ -395,12 +395,12 @@ export declare const PermissionGroupUpdateSchema: z.ZodObject<{
 } & {
     id: z.ZodString;
 }, "strip", z.ZodTypeAny, {
-    id?: string;
     name?: string;
+    id?: string;
     permissions?: string[];
 }, {
-    id?: string;
     name?: string;
+    id?: string;
     permissions?: string[];
 }>;
 export type PermissionGroupUpdateInput = z.infer<typeof PermissionGroupUpdateSchema>;
@@ -408,10 +408,10 @@ export declare const AdminToggleSchema: z.ZodObject<{
     key: z.ZodString;
     value: z.ZodUnion<[z.ZodBoolean, z.ZodString, z.ZodNumber]>;
 }, "strip", z.ZodTypeAny, {
-    value?: string | number | boolean;
     key?: string;
+    value?: string | number | boolean;
 }, {
-    value?: string | number | boolean;
     key?: string;
+    value?: string | number | boolean;
 }>;
 export type AdminToggleInput = z.infer<typeof AdminToggleSchema>;

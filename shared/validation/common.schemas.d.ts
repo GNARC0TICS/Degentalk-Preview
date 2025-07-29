@@ -28,13 +28,13 @@ export declare const paginationSchema: z.ZodObject<{
     limit: z.ZodDefault<z.ZodNumber>;
     offset: z.ZodOptional<z.ZodNumber>;
 }, "strip", z.ZodTypeAny, {
-    page?: number;
-    limit?: number;
     offset?: number;
+    limit?: number;
+    page?: number;
 }, {
-    page?: number;
-    limit?: number;
     offset?: number;
+    limit?: number;
+    page?: number;
 }>;
 export declare const sortSchema: z.ZodObject<{
     sortBy: z.ZodOptional<z.ZodString>;
@@ -86,15 +86,15 @@ export declare const fileUploadSchema: z.ZodObject<{
     type: z.ZodEnum<["image/jpeg", "image/png", "image/gif", "image/webp", "application/pdf", "text/plain", "application/json"]>;
     data: z.ZodString;
 }, "strip", z.ZodTypeAny, {
-    type?: "text/plain" | "application/json" | "image/jpeg" | "image/png" | "image/gif" | "image/webp" | "application/pdf";
     data?: string;
-    size?: number;
     filename?: string;
+    type?: "text/plain" | "application/json" | "image/jpeg" | "image/png" | "image/gif" | "image/webp" | "application/pdf";
+    size?: number;
 }, {
-    type?: "text/plain" | "application/json" | "image/jpeg" | "image/png" | "image/gif" | "image/webp" | "application/pdf";
     data?: string;
-    size?: number;
     filename?: string;
+    type?: "text/plain" | "application/json" | "image/jpeg" | "image/png" | "image/gif" | "image/webp" | "application/pdf";
+    size?: number;
 }>;
 export declare const successResponseSchema: z.ZodObject<{
     success: z.ZodLiteral<true>;
@@ -105,28 +105,28 @@ export declare const successResponseSchema: z.ZodObject<{
             limit: z.ZodDefault<z.ZodNumber>;
             offset: z.ZodOptional<z.ZodNumber>;
         }, "strip", z.ZodTypeAny, {
-            page?: number;
-            limit?: number;
             offset?: number;
+            limit?: number;
+            page?: number;
         }, {
-            page?: number;
-            limit?: number;
             offset?: number;
+            limit?: number;
+            page?: number;
         }>>;
         timestamp: z.ZodOptional<z.ZodString>;
     }, "strip", z.ZodTypeAny, {
         timestamp?: string;
         pagination?: {
-            page?: number;
-            limit?: number;
             offset?: number;
+            limit?: number;
+            page?: number;
         };
     }, {
         timestamp?: string;
         pagination?: {
-            page?: number;
-            limit?: number;
             offset?: number;
+            limit?: number;
+            page?: number;
         };
     }>>;
 }, "strip", z.ZodTypeAny, {
@@ -134,9 +134,9 @@ export declare const successResponseSchema: z.ZodObject<{
     meta?: {
         timestamp?: string;
         pagination?: {
-            page?: number;
-            limit?: number;
             offset?: number;
+            limit?: number;
+            page?: number;
         };
     };
     success?: true;
@@ -145,9 +145,9 @@ export declare const successResponseSchema: z.ZodObject<{
     meta?: {
         timestamp?: string;
         pagination?: {
-            page?: number;
-            limit?: number;
             offset?: number;
+            limit?: number;
+            page?: number;
         };
     };
     success?: true;
@@ -159,16 +159,16 @@ export declare const errorResponseSchema: z.ZodObject<{
     details: z.ZodOptional<z.ZodAny>;
     timestamp: z.ZodOptional<z.ZodString>;
 }, "strip", z.ZodTypeAny, {
-    code?: string;
-    timestamp?: string;
-    details?: any;
     error?: string;
+    code?: string;
+    details?: any;
+    timestamp?: string;
     success?: false;
 }, {
-    code?: string;
-    timestamp?: string;
-    details?: any;
     error?: string;
+    code?: string;
+    details?: any;
+    timestamp?: string;
     success?: false;
 }>;
 export declare const featureGateSchema: z.ZodObject<{
@@ -180,17 +180,17 @@ export declare const featureGateSchema: z.ZodObject<{
     devOnly: z.ZodOptional<z.ZodBoolean>;
     rolloutPercentage: z.ZodOptional<z.ZodNumber>;
 }, "strip", z.ZodTypeAny, {
-    id?: string;
     name?: string;
     description?: string;
+    id?: string;
     minLevel?: number;
     enabled?: boolean;
     rolloutPercentage?: number;
     devOnly?: boolean;
 }, {
-    id?: string;
     name?: string;
     description?: string;
+    id?: string;
     minLevel?: number;
     enabled?: boolean;
     rolloutPercentage?: number;
@@ -201,12 +201,12 @@ export declare const configCreateSchema: z.ZodObject<{
     value: z.ZodAny;
     reason: z.ZodString;
 }, "strip", z.ZodTypeAny, {
-    value?: any;
     reason?: string;
+    value?: any;
     field?: string;
 }, {
-    value?: any;
     reason?: string;
+    value?: any;
     field?: string;
 }>;
 export declare const configUpdateSchema: z.ZodObject<{
@@ -214,12 +214,12 @@ export declare const configUpdateSchema: z.ZodObject<{
     value: z.ZodOptional<z.ZodAny>;
     reason: z.ZodOptional<z.ZodString>;
 }, "strip", z.ZodTypeAny, {
-    value?: any;
     reason?: string;
+    value?: any;
     field?: string;
 }, {
-    value?: any;
     reason?: string;
+    value?: any;
     field?: string;
 }>;
 export declare const dgtAmountSchema: z.ZodNumber;
@@ -254,10 +254,10 @@ export declare const durationSchema: z.ZodObject<{
     unit: z.ZodEnum<["seconds", "minutes", "hours", "days", "weeks", "months"]>;
 }, "strip", z.ZodTypeAny, {
     value?: number;
-    unit?: "days" | "months" | "weeks" | "hours" | "minutes" | "seconds";
+    unit?: "days" | "hours" | "weeks" | "minutes" | "seconds" | "months";
 }, {
     value?: number;
-    unit?: "days" | "months" | "weeks" | "hours" | "minutes" | "seconds";
+    unit?: "days" | "hours" | "weeks" | "minutes" | "seconds" | "months";
 }>;
 export declare const coordinatesSchema: z.ZodObject<{
     latitude: z.ZodNumber;
@@ -280,14 +280,14 @@ export declare const userCreateSchema: z.ZodObject<{
     role: z.ZodOptional<z.ZodEnum<["user", "moderator", "admin"]>>;
 }, "strip", z.ZodTypeAny, {
     password?: string;
-    username?: string;
     email?: string;
     role?: "user" | "admin" | "moderator";
+    username?: string;
 }, {
     password?: string;
-    username?: string;
     email?: string;
     role?: "user" | "admin" | "moderator";
+    username?: string;
 }>;
 export declare const userUpdateSchema: z.ZodObject<Omit<{
     username: z.ZodOptional<z.ZodString>;
@@ -295,13 +295,13 @@ export declare const userUpdateSchema: z.ZodObject<Omit<{
     password: z.ZodOptional<z.ZodString>;
     role: z.ZodOptional<z.ZodOptional<z.ZodEnum<["user", "moderator", "admin"]>>>;
 }, "password">, "strip", z.ZodTypeAny, {
-    username?: string;
     email?: string;
     role?: "user" | "admin" | "moderator";
+    username?: string;
 }, {
-    username?: string;
     email?: string;
     role?: "user" | "admin" | "moderator";
+    username?: string;
 }>;
 export declare const threadCreateSchema: z.ZodObject<{
     title: z.ZodString;
@@ -346,19 +346,19 @@ export declare const paginatedQuerySchema: z.ZodObject<{
     query: z.ZodOptional<z.ZodString>;
     filters: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodAny>>;
 }, "strip", z.ZodTypeAny, {
-    sortOrder?: "asc" | "desc";
     query?: string;
-    page?: number;
-    limit?: number;
     offset?: number;
+    limit?: number;
+    sortOrder?: "asc" | "desc";
+    page?: number;
     sortBy?: string;
     filters?: Record<string, any>;
 }, {
-    sortOrder?: "asc" | "desc";
     query?: string;
-    page?: number;
-    limit?: number;
     offset?: number;
+    limit?: number;
+    sortOrder?: "asc" | "desc";
+    page?: number;
     sortBy?: string;
     filters?: Record<string, any>;
 }>;
@@ -373,19 +373,19 @@ export declare const apiQuerySchema: z.ZodObject<{
     query: z.ZodOptional<z.ZodString>;
     filters: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodAny>>;
 }, "strip", z.ZodTypeAny, {
-    sortOrder?: "asc" | "desc";
     query?: string;
-    page?: number;
-    limit?: number;
     offset?: number;
+    limit?: number;
+    sortOrder?: "asc" | "desc";
+    page?: number;
     sortBy?: string;
     filters?: Record<string, any>;
 }, {
-    sortOrder?: "asc" | "desc";
     query?: string;
-    page?: number;
-    limit?: number;
     offset?: number;
+    limit?: number;
+    sortOrder?: "asc" | "desc";
+    page?: number;
     sortBy?: string;
     filters?: Record<string, any>;
 }>;
@@ -406,8 +406,8 @@ export declare const slugParamSchema: z.ZodObject<{
 export declare function validateId(id: unknown): string;
 export declare function validateEmail(emailValue: unknown): string;
 export declare function validatePagination(query: unknown): {
-    page?: number;
-    limit?: number;
     offset?: number;
+    limit?: number;
+    page?: number;
 };
 export declare function sanitizeInput(input: unknown): string;

@@ -6,8 +6,8 @@
 import { relations } from 'drizzle-orm';
 import { achievementEvents } from './achievementEvents';
 import { achievements } from './achievements';
-import { leaderboardHistory } from './leaderboardHistory';
-import { platformStatistics } from './platformStatistics';
+// import { leaderboardHistory } from './leaderboardHistory'; // File doesn't exist yet
+// import { platformStatistics } from './platformStatistics'; // File doesn't exist yet
 import { userAchievements } from './userAchievements';
 import { users } from '../user/users';
 export const achievementsRelations = relations(achievements, ({ one, many }) => ({

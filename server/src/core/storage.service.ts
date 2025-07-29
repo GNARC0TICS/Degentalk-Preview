@@ -13,12 +13,12 @@ let supabase: SupabaseClient | null = null;
 if (supabaseUrl && supabaseServiceKey) {
 	try {
 		supabase = createClient(supabaseUrl, supabaseServiceKey);
-		logger.info('✅ STORAGE SERVICE: Supabase client initialized');
+		logger.info('StorageService', '✅ STORAGE SERVICE: Supabase client initialized');
 	} catch (error) {
-		logger.error('❌ STORAGE SERVICE: Failed to initialize Supabase client:', error);
+		logger.error('StorageService', '❌ STORAGE SERVICE: Failed to initialize Supabase client:', error);
 	}
 } else {
-	logger.warn(
+	logger.warn('StorageService',
 		'⚠️ STORAGE SERVICE: SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY is missing. Using fallback storage service.'
 	);
 }

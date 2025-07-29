@@ -43,41 +43,41 @@ export declare const XpMultiplierSchema: z.ZodObject<{
             start?: string;
         }>]>;
     }, "strip", z.ZodTypeAny, {
+        type?: "time" | "level" | "role" | "event" | "streak";
         value?: string | number | {
             end?: string;
             start?: string;
         };
-        type?: "level" | "role" | "event" | "streak" | "time";
     }, {
+        type?: "time" | "level" | "role" | "event" | "streak";
         value?: string | number | {
             end?: string;
             start?: string;
         };
-        type?: "level" | "role" | "event" | "streak" | "time";
     }>>;
     stackable: z.ZodDefault<z.ZodBoolean>;
     maxStack: z.ZodDefault<z.ZodNumber>;
 }, "strip", z.ZodTypeAny, {
-    value?: number;
     source?: string;
+    value?: number;
     condition?: {
+        type?: "time" | "level" | "role" | "event" | "streak";
         value?: string | number | {
             end?: string;
             start?: string;
         };
-        type?: "level" | "role" | "event" | "streak" | "time";
     };
     stackable?: boolean;
     maxStack?: number;
 }, {
-    value?: number;
     source?: string;
+    value?: number;
     condition?: {
+        type?: "time" | "level" | "role" | "event" | "streak";
         value?: string | number | {
             end?: string;
             start?: string;
         };
-        type?: "level" | "role" | "event" | "streak" | "time";
     };
     stackable?: boolean;
     maxStack?: number;
@@ -117,13 +117,13 @@ export declare const LevelFormulaSchema: z.ZodDiscriminatedUnion<"type", [z.ZodO
 }, "strip", z.ZodTypeAny, {
     type?: "exponential";
     offset?: number;
-    multiplier?: number;
     base?: number;
+    multiplier?: number;
 }, {
     type?: "exponential";
     offset?: number;
-    multiplier?: number;
     base?: number;
+    multiplier?: number;
 }>, z.ZodObject<{
     type: z.ZodLiteral<"custom">;
     thresholds: z.ZodArray<z.ZodNumber, "many">;
@@ -144,18 +144,18 @@ export declare const LevelMilestoneSchema: z.ZodObject<{
         title: z.ZodOptional<z.ZodString>;
         badge: z.ZodOptional<z.ZodString>;
     }, "strip", z.ZodTypeAny, {
-        xp?: number;
-        title?: string;
         badge?: string;
-        unlocks?: string[];
+        title?: string;
         items?: string[];
+        xp?: number;
+        unlocks?: string[];
         dgt?: number;
     }, {
-        xp?: number;
-        title?: string;
         badge?: string;
-        unlocks?: string[];
+        title?: string;
         items?: string[];
+        xp?: number;
+        unlocks?: string[];
         dgt?: number;
     }>;
     announcement: z.ZodOptional<z.ZodObject<{
@@ -173,33 +173,33 @@ export declare const LevelMilestoneSchema: z.ZodObject<{
     }>>;
 }, "strip", z.ZodTypeAny, {
     level?: number;
+    rewards?: {
+        badge?: string;
+        title?: string;
+        items?: string[];
+        xp?: number;
+        unlocks?: string[];
+        dgt?: number;
+    };
     announcement?: {
         message?: string;
         type?: "info" | "success" | "celebration";
         enabled?: boolean;
-    };
-    rewards?: {
-        xp?: number;
-        title?: string;
-        badge?: string;
-        unlocks?: string[];
-        items?: string[];
-        dgt?: number;
     };
 }, {
     level?: number;
+    rewards?: {
+        badge?: string;
+        title?: string;
+        items?: string[];
+        xp?: number;
+        unlocks?: string[];
+        dgt?: number;
+    };
     announcement?: {
         message?: string;
         type?: "info" | "success" | "celebration";
         enabled?: boolean;
-    };
-    rewards?: {
-        xp?: number;
-        title?: string;
-        badge?: string;
-        unlocks?: string[];
-        items?: string[];
-        dgt?: number;
     };
 }>;
 export declare const XpConfigSchema: z.ZodObject<{
@@ -420,14 +420,6 @@ export declare const XpConfigSchema: z.ZodObject<{
             cooldown?: number;
             dailyCap?: number;
         };
-        tip_sent?: {
-            requiredLevel?: number;
-            requiredRole?: string;
-            base?: number;
-            multiplierEligible?: boolean;
-            cooldown?: number;
-            dailyCap?: number;
-        };
         post?: {
             requiredLevel?: number;
             requiredRole?: string;
@@ -444,7 +436,7 @@ export declare const XpConfigSchema: z.ZodObject<{
             cooldown?: number;
             dailyCap?: number;
         };
-        referral?: {
+        tip_sent?: {
             requiredLevel?: number;
             requiredRole?: string;
             base?: number;
@@ -460,6 +452,14 @@ export declare const XpConfigSchema: z.ZodObject<{
             cooldown?: number;
             dailyCap?: number;
         };
+        upvote?: {
+            requiredLevel?: number;
+            requiredRole?: string;
+            base?: number;
+            multiplierEligible?: boolean;
+            cooldown?: number;
+            dailyCap?: number;
+        };
         daily_login?: {
             requiredLevel?: number;
             requiredRole?: string;
@@ -468,7 +468,7 @@ export declare const XpConfigSchema: z.ZodObject<{
             cooldown?: number;
             dailyCap?: number;
         };
-        upvote?: {
+        referral?: {
             requiredLevel?: number;
             requiredRole?: string;
             base?: number;
@@ -493,14 +493,6 @@ export declare const XpConfigSchema: z.ZodObject<{
             cooldown?: number;
             dailyCap?: number;
         };
-        tip_sent?: {
-            requiredLevel?: number;
-            requiredRole?: string;
-            base?: number;
-            multiplierEligible?: boolean;
-            cooldown?: number;
-            dailyCap?: number;
-        };
         post?: {
             requiredLevel?: number;
             requiredRole?: string;
@@ -517,7 +509,7 @@ export declare const XpConfigSchema: z.ZodObject<{
             cooldown?: number;
             dailyCap?: number;
         };
-        referral?: {
+        tip_sent?: {
             requiredLevel?: number;
             requiredRole?: string;
             base?: number;
@@ -533,6 +525,14 @@ export declare const XpConfigSchema: z.ZodObject<{
             cooldown?: number;
             dailyCap?: number;
         };
+        upvote?: {
+            requiredLevel?: number;
+            requiredRole?: string;
+            base?: number;
+            multiplierEligible?: boolean;
+            cooldown?: number;
+            dailyCap?: number;
+        };
         daily_login?: {
             requiredLevel?: number;
             requiredRole?: string;
@@ -541,7 +541,7 @@ export declare const XpConfigSchema: z.ZodObject<{
             cooldown?: number;
             dailyCap?: number;
         };
-        upvote?: {
+        referral?: {
             requiredLevel?: number;
             requiredRole?: string;
             base?: number;
@@ -569,41 +569,41 @@ export declare const XpConfigSchema: z.ZodObject<{
                     start?: string;
                 }>]>;
             }, "strip", z.ZodTypeAny, {
+                type?: "time" | "level" | "role" | "event" | "streak";
                 value?: string | number | {
                     end?: string;
                     start?: string;
                 };
-                type?: "level" | "role" | "event" | "streak" | "time";
             }, {
+                type?: "time" | "level" | "role" | "event" | "streak";
                 value?: string | number | {
                     end?: string;
                     start?: string;
                 };
-                type?: "level" | "role" | "event" | "streak" | "time";
             }>>;
             stackable: z.ZodDefault<z.ZodBoolean>;
             maxStack: z.ZodDefault<z.ZodNumber>;
         }, "strip", z.ZodTypeAny, {
-            value?: number;
             source?: string;
+            value?: number;
             condition?: {
+                type?: "time" | "level" | "role" | "event" | "streak";
                 value?: string | number | {
                     end?: string;
                     start?: string;
                 };
-                type?: "level" | "role" | "event" | "streak" | "time";
             };
             stackable?: boolean;
             maxStack?: number;
         }, {
-            value?: number;
             source?: string;
+            value?: number;
             condition?: {
+                type?: "time" | "level" | "role" | "event" | "streak";
                 value?: string | number | {
                     end?: string;
                     start?: string;
                 };
-                type?: "level" | "role" | "event" | "streak" | "time";
             };
             stackable?: boolean;
             maxStack?: number;
@@ -614,38 +614,38 @@ export declare const XpConfigSchema: z.ZodObject<{
         enabled?: boolean;
         stacking?: "additive" | "multiplicative";
         sources?: {
-            value?: number;
             source?: string;
+            value?: number;
             condition?: {
+                type?: "time" | "level" | "role" | "event" | "streak";
                 value?: string | number | {
                     end?: string;
                     start?: string;
                 };
-                type?: "level" | "role" | "event" | "streak" | "time";
             };
             stackable?: boolean;
             maxStack?: number;
         }[];
         globalCap?: number;
-        calculation?: "product" | "sum" | "highest";
+        calculation?: "product" | "highest" | "sum";
     }, {
         enabled?: boolean;
         stacking?: "additive" | "multiplicative";
         sources?: {
-            value?: number;
             source?: string;
+            value?: number;
             condition?: {
+                type?: "time" | "level" | "role" | "event" | "streak";
                 value?: string | number | {
                     end?: string;
                     start?: string;
                 };
-                type?: "level" | "role" | "event" | "streak" | "time";
             };
             stackable?: boolean;
             maxStack?: number;
         }[];
         globalCap?: number;
-        calculation?: "product" | "sum" | "highest";
+        calculation?: "product" | "highest" | "sum";
     }>;
     levels: z.ZodObject<{
         maxLevel: z.ZodDefault<z.ZodNumber>;
@@ -684,13 +684,13 @@ export declare const XpConfigSchema: z.ZodObject<{
         }, "strip", z.ZodTypeAny, {
             type?: "exponential";
             offset?: number;
-            multiplier?: number;
             base?: number;
+            multiplier?: number;
         }, {
             type?: "exponential";
             offset?: number;
-            multiplier?: number;
             base?: number;
+            multiplier?: number;
         }>, z.ZodObject<{
             type: z.ZodLiteral<"custom">;
             thresholds: z.ZodArray<z.ZodNumber, "many">;
@@ -711,18 +711,18 @@ export declare const XpConfigSchema: z.ZodObject<{
                 title: z.ZodOptional<z.ZodString>;
                 badge: z.ZodOptional<z.ZodString>;
             }, "strip", z.ZodTypeAny, {
-                xp?: number;
-                title?: string;
                 badge?: string;
-                unlocks?: string[];
+                title?: string;
                 items?: string[];
+                xp?: number;
+                unlocks?: string[];
                 dgt?: number;
             }, {
-                xp?: number;
-                title?: string;
                 badge?: string;
-                unlocks?: string[];
+                title?: string;
                 items?: string[];
+                xp?: number;
+                unlocks?: string[];
                 dgt?: number;
             }>;
             announcement: z.ZodOptional<z.ZodObject<{
@@ -740,33 +740,33 @@ export declare const XpConfigSchema: z.ZodObject<{
             }>>;
         }, "strip", z.ZodTypeAny, {
             level?: number;
+            rewards?: {
+                badge?: string;
+                title?: string;
+                items?: string[];
+                xp?: number;
+                unlocks?: string[];
+                dgt?: number;
+            };
             announcement?: {
                 message?: string;
                 type?: "info" | "success" | "celebration";
                 enabled?: boolean;
-            };
-            rewards?: {
-                xp?: number;
-                title?: string;
-                badge?: string;
-                unlocks?: string[];
-                items?: string[];
-                dgt?: number;
             };
         }, {
             level?: number;
+            rewards?: {
+                badge?: string;
+                title?: string;
+                items?: string[];
+                xp?: number;
+                unlocks?: string[];
+                dgt?: number;
+            };
             announcement?: {
                 message?: string;
                 type?: "info" | "success" | "celebration";
                 enabled?: boolean;
-            };
-            rewards?: {
-                xp?: number;
-                title?: string;
-                badge?: string;
-                unlocks?: string[];
-                items?: string[];
-                dgt?: number;
             };
         }>, "many">;
         prestigeEnabled: z.ZodDefault<z.ZodBoolean>;
@@ -785,26 +785,26 @@ export declare const XpConfigSchema: z.ZodObject<{
         } | {
             type?: "exponential";
             offset?: number;
-            multiplier?: number;
             base?: number;
+            multiplier?: number;
         } | {
             type?: "custom";
             thresholds?: number[];
         };
         milestones?: {
             level?: number;
+            rewards?: {
+                badge?: string;
+                title?: string;
+                items?: string[];
+                xp?: number;
+                unlocks?: string[];
+                dgt?: number;
+            };
             announcement?: {
                 message?: string;
                 type?: "info" | "success" | "celebration";
                 enabled?: boolean;
-            };
-            rewards?: {
-                xp?: number;
-                title?: string;
-                badge?: string;
-                unlocks?: string[];
-                items?: string[];
-                dgt?: number;
             };
         }[];
         prestigeEnabled?: boolean;
@@ -823,26 +823,26 @@ export declare const XpConfigSchema: z.ZodObject<{
         } | {
             type?: "exponential";
             offset?: number;
-            multiplier?: number;
             base?: number;
+            multiplier?: number;
         } | {
             type?: "custom";
             thresholds?: number[];
         };
         milestones?: {
             level?: number;
+            rewards?: {
+                badge?: string;
+                title?: string;
+                items?: string[];
+                xp?: number;
+                unlocks?: string[];
+                dgt?: number;
+            };
             announcement?: {
                 message?: string;
                 type?: "info" | "success" | "celebration";
                 enabled?: boolean;
-            };
-            rewards?: {
-                xp?: number;
-                title?: string;
-                badge?: string;
-                unlocks?: string[];
-                items?: string[];
-                dgt?: number;
             };
         }[];
         prestigeEnabled?: boolean;
@@ -904,15 +904,15 @@ export declare const XpConfigSchema: z.ZodObject<{
     }, "strip", z.ZodTypeAny, {
         minLevel?: number;
         enabled?: boolean;
-        protected?: string[];
         inactivityDays?: number;
         rate?: number;
+        protected?: string[];
     }, {
         minLevel?: number;
         enabled?: boolean;
-        protected?: string[];
         inactivityDays?: number;
         rate?: number;
+        protected?: string[];
     }>>;
     boosts: z.ZodOptional<z.ZodObject<{
         weekend: z.ZodObject<{
@@ -921,12 +921,12 @@ export declare const XpConfigSchema: z.ZodObject<{
             days: z.ZodDefault<z.ZodArray<z.ZodNumber, "many">>;
         }, "strip", z.ZodTypeAny, {
             enabled?: boolean;
-            days?: number[];
             multiplier?: number;
+            days?: number[];
         }, {
             enabled?: boolean;
-            days?: number[];
             multiplier?: number;
+            days?: number[];
         }>;
         happyHour: z.ZodObject<{
             enabled: z.ZodDefault<z.ZodBoolean>;
@@ -966,27 +966,27 @@ export declare const XpConfigSchema: z.ZodObject<{
             name?: string;
             startDate?: string;
             endDate?: string;
-            announcement?: string;
             multiplier?: number;
+            announcement?: string;
         }, {
             name?: string;
             startDate?: string;
             endDate?: string;
-            announcement?: string;
             multiplier?: number;
+            announcement?: string;
         }>, "many">>;
     }, "strip", z.ZodTypeAny, {
         events?: {
             name?: string;
             startDate?: string;
             endDate?: string;
-            announcement?: string;
             multiplier?: number;
+            announcement?: string;
         }[];
         weekend?: {
             enabled?: boolean;
-            days?: number[];
             multiplier?: number;
+            days?: number[];
         };
         happyHour?: {
             enabled?: boolean;
@@ -1001,13 +1001,13 @@ export declare const XpConfigSchema: z.ZodObject<{
             name?: string;
             startDate?: string;
             endDate?: string;
-            announcement?: string;
             multiplier?: number;
+            announcement?: string;
         }[];
         weekend?: {
             enabled?: boolean;
-            days?: number[];
             multiplier?: number;
+            days?: number[];
         };
         happyHour?: {
             enabled?: boolean;
@@ -1036,14 +1036,6 @@ export declare const XpConfigSchema: z.ZodObject<{
             cooldown?: number;
             dailyCap?: number;
         };
-        tip_sent?: {
-            requiredLevel?: number;
-            requiredRole?: string;
-            base?: number;
-            multiplierEligible?: boolean;
-            cooldown?: number;
-            dailyCap?: number;
-        };
         post?: {
             requiredLevel?: number;
             requiredRole?: string;
@@ -1060,7 +1052,7 @@ export declare const XpConfigSchema: z.ZodObject<{
             cooldown?: number;
             dailyCap?: number;
         };
-        referral?: {
+        tip_sent?: {
             requiredLevel?: number;
             requiredRole?: string;
             base?: number;
@@ -1076,14 +1068,6 @@ export declare const XpConfigSchema: z.ZodObject<{
             cooldown?: number;
             dailyCap?: number;
         };
-        daily_login?: {
-            requiredLevel?: number;
-            requiredRole?: string;
-            base?: number;
-            multiplierEligible?: boolean;
-            cooldown?: number;
-            dailyCap?: number;
-        };
         upvote?: {
             requiredLevel?: number;
             requiredRole?: string;
@@ -1092,7 +1076,24 @@ export declare const XpConfigSchema: z.ZodObject<{
             cooldown?: number;
             dailyCap?: number;
         };
+        daily_login?: {
+            requiredLevel?: number;
+            requiredRole?: string;
+            base?: number;
+            multiplierEligible?: boolean;
+            cooldown?: number;
+            dailyCap?: number;
+        };
+        referral?: {
+            requiredLevel?: number;
+            requiredRole?: string;
+            base?: number;
+            multiplierEligible?: boolean;
+            cooldown?: number;
+            dailyCap?: number;
+        };
     };
+    version?: string;
     levels?: {
         maxLevel?: number;
         formula?: {
@@ -1107,26 +1108,26 @@ export declare const XpConfigSchema: z.ZodObject<{
         } | {
             type?: "exponential";
             offset?: number;
-            multiplier?: number;
             base?: number;
+            multiplier?: number;
         } | {
             type?: "custom";
             thresholds?: number[];
         };
         milestones?: {
             level?: number;
+            rewards?: {
+                badge?: string;
+                title?: string;
+                items?: string[];
+                xp?: number;
+                unlocks?: string[];
+                dgt?: number;
+            };
             announcement?: {
                 message?: string;
                 type?: "info" | "success" | "celebration";
                 enabled?: boolean;
-            };
-            rewards?: {
-                xp?: number;
-                title?: string;
-                badge?: string;
-                unlocks?: string[];
-                items?: string[];
-                dgt?: number;
             };
         }[];
         prestigeEnabled?: boolean;
@@ -1145,19 +1146,44 @@ export declare const XpConfigSchema: z.ZodObject<{
             resetOnMiss?: boolean;
         };
     };
-    version?: string;
+    multipliers?: {
+        enabled?: boolean;
+        stacking?: "additive" | "multiplicative";
+        sources?: {
+            source?: string;
+            value?: number;
+            condition?: {
+                type?: "time" | "level" | "role" | "event" | "streak";
+                value?: string | number | {
+                    end?: string;
+                    start?: string;
+                };
+            };
+            stackable?: boolean;
+            maxStack?: number;
+        }[];
+        globalCap?: number;
+        calculation?: "product" | "highest" | "sum";
+    };
+    decay?: {
+        minLevel?: number;
+        enabled?: boolean;
+        inactivityDays?: number;
+        rate?: number;
+        protected?: string[];
+    };
     boosts?: {
         events?: {
             name?: string;
             startDate?: string;
             endDate?: string;
-            announcement?: string;
             multiplier?: number;
+            announcement?: string;
         }[];
         weekend?: {
             enabled?: boolean;
-            days?: number[];
             multiplier?: number;
+            days?: number[];
         };
         happyHour?: {
             enabled?: boolean;
@@ -1167,32 +1193,6 @@ export declare const XpConfigSchema: z.ZodObject<{
                 start?: number;
             }[];
         };
-    };
-    multipliers?: {
-        enabled?: boolean;
-        stacking?: "additive" | "multiplicative";
-        sources?: {
-            value?: number;
-            source?: string;
-            condition?: {
-                value?: string | number | {
-                    end?: string;
-                    start?: string;
-                };
-                type?: "level" | "role" | "event" | "streak" | "time";
-            };
-            stackable?: boolean;
-            maxStack?: number;
-        }[];
-        globalCap?: number;
-        calculation?: "product" | "sum" | "highest";
-    };
-    decay?: {
-        minLevel?: number;
-        enabled?: boolean;
-        protected?: string[];
-        inactivityDays?: number;
-        rate?: number;
     };
 }, {
     actions?: {
@@ -1212,14 +1212,6 @@ export declare const XpConfigSchema: z.ZodObject<{
             cooldown?: number;
             dailyCap?: number;
         };
-        tip_sent?: {
-            requiredLevel?: number;
-            requiredRole?: string;
-            base?: number;
-            multiplierEligible?: boolean;
-            cooldown?: number;
-            dailyCap?: number;
-        };
         post?: {
             requiredLevel?: number;
             requiredRole?: string;
@@ -1236,7 +1228,7 @@ export declare const XpConfigSchema: z.ZodObject<{
             cooldown?: number;
             dailyCap?: number;
         };
-        referral?: {
+        tip_sent?: {
             requiredLevel?: number;
             requiredRole?: string;
             base?: number;
@@ -1252,14 +1244,6 @@ export declare const XpConfigSchema: z.ZodObject<{
             cooldown?: number;
             dailyCap?: number;
         };
-        daily_login?: {
-            requiredLevel?: number;
-            requiredRole?: string;
-            base?: number;
-            multiplierEligible?: boolean;
-            cooldown?: number;
-            dailyCap?: number;
-        };
         upvote?: {
             requiredLevel?: number;
             requiredRole?: string;
@@ -1268,7 +1252,24 @@ export declare const XpConfigSchema: z.ZodObject<{
             cooldown?: number;
             dailyCap?: number;
         };
+        daily_login?: {
+            requiredLevel?: number;
+            requiredRole?: string;
+            base?: number;
+            multiplierEligible?: boolean;
+            cooldown?: number;
+            dailyCap?: number;
+        };
+        referral?: {
+            requiredLevel?: number;
+            requiredRole?: string;
+            base?: number;
+            multiplierEligible?: boolean;
+            cooldown?: number;
+            dailyCap?: number;
+        };
     };
+    version?: string;
     levels?: {
         maxLevel?: number;
         formula?: {
@@ -1283,26 +1284,26 @@ export declare const XpConfigSchema: z.ZodObject<{
         } | {
             type?: "exponential";
             offset?: number;
-            multiplier?: number;
             base?: number;
+            multiplier?: number;
         } | {
             type?: "custom";
             thresholds?: number[];
         };
         milestones?: {
             level?: number;
+            rewards?: {
+                badge?: string;
+                title?: string;
+                items?: string[];
+                xp?: number;
+                unlocks?: string[];
+                dgt?: number;
+            };
             announcement?: {
                 message?: string;
                 type?: "info" | "success" | "celebration";
                 enabled?: boolean;
-            };
-            rewards?: {
-                xp?: number;
-                title?: string;
-                badge?: string;
-                unlocks?: string[];
-                items?: string[];
-                dgt?: number;
             };
         }[];
         prestigeEnabled?: boolean;
@@ -1321,19 +1322,44 @@ export declare const XpConfigSchema: z.ZodObject<{
             resetOnMiss?: boolean;
         };
     };
-    version?: string;
+    multipliers?: {
+        enabled?: boolean;
+        stacking?: "additive" | "multiplicative";
+        sources?: {
+            source?: string;
+            value?: number;
+            condition?: {
+                type?: "time" | "level" | "role" | "event" | "streak";
+                value?: string | number | {
+                    end?: string;
+                    start?: string;
+                };
+            };
+            stackable?: boolean;
+            maxStack?: number;
+        }[];
+        globalCap?: number;
+        calculation?: "product" | "highest" | "sum";
+    };
+    decay?: {
+        minLevel?: number;
+        enabled?: boolean;
+        inactivityDays?: number;
+        rate?: number;
+        protected?: string[];
+    };
     boosts?: {
         events?: {
             name?: string;
             startDate?: string;
             endDate?: string;
-            announcement?: string;
             multiplier?: number;
+            announcement?: string;
         }[];
         weekend?: {
             enabled?: boolean;
-            days?: number[];
             multiplier?: number;
+            days?: number[];
         };
         happyHour?: {
             enabled?: boolean;
@@ -1343,32 +1369,6 @@ export declare const XpConfigSchema: z.ZodObject<{
                 start?: number;
             }[];
         };
-    };
-    multipliers?: {
-        enabled?: boolean;
-        stacking?: "additive" | "multiplicative";
-        sources?: {
-            value?: number;
-            source?: string;
-            condition?: {
-                value?: string | number | {
-                    end?: string;
-                    start?: string;
-                };
-                type?: "level" | "role" | "event" | "streak" | "time";
-            };
-            stackable?: boolean;
-            maxStack?: number;
-        }[];
-        globalCap?: number;
-        calculation?: "product" | "sum" | "highest";
-    };
-    decay?: {
-        minLevel?: number;
-        enabled?: boolean;
-        protected?: string[];
-        inactivityDays?: number;
-        rate?: number;
     };
 }>;
 export type XpConfig = z.infer<typeof XpConfigSchema>;

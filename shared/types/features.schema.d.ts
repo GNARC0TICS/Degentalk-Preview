@@ -50,47 +50,47 @@ export declare const FeatureFlagSchema: z.ZodObject<{
         events?: string[];
     }>>;
 }, "strip", z.ZodTypeAny, {
-    id?: string;
     name?: string;
     description?: string;
-    category?: "admin" | "premium" | "beta" | "core" | "experimental";
     override?: {
         enabled?: boolean;
         environments?: Record<string, boolean>;
     };
+    id?: string;
+    category?: "admin" | "premium" | "core" | "experimental" | "beta";
     metadata?: {
         createdAt?: string;
         updatedAt?: string;
         owner?: string;
         jiraTicket?: string;
     };
+    rollout?: any;
+    dependencies?: string[];
     metrics?: {
         track?: boolean;
         events?: string[];
     };
-    rollout?: any;
-    dependencies?: string[];
 }, {
-    id?: string;
     name?: string;
     description?: string;
-    category?: "admin" | "premium" | "beta" | "core" | "experimental";
     override?: {
         enabled?: boolean;
         environments?: Record<string, boolean>;
     };
+    id?: string;
+    category?: "admin" | "premium" | "core" | "experimental" | "beta";
     metadata?: {
         createdAt?: string;
         updatedAt?: string;
         owner?: string;
         jiraTicket?: string;
     };
+    rollout?: any;
+    dependencies?: string[];
     metrics?: {
         track?: boolean;
         events?: string[];
     };
-    rollout?: any;
-    dependencies?: string[];
 }>;
 export declare const PermissionSchema: z.ZodObject<{
     id: z.ZodString;
@@ -103,33 +103,33 @@ export declare const PermissionSchema: z.ZodObject<{
         value: z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean, z.ZodArray<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean]>, "many">]>;
     }, "strip", z.ZodTypeAny, {
         value?: string | number | boolean | (string | number | boolean)[];
+        operator?: "equals" | "in" | "not_equals" | "contains" | "greater_than" | "less_than" | "not_in";
         field?: string;
-        operator?: "equals" | "not_equals" | "greater_than" | "less_than" | "in" | "contains" | "not_in";
     }, {
         value?: string | number | boolean | (string | number | boolean)[];
+        operator?: "equals" | "in" | "not_equals" | "contains" | "greater_than" | "less_than" | "not_in";
         field?: string;
-        operator?: "equals" | "not_equals" | "greater_than" | "less_than" | "in" | "contains" | "not_in";
     }>, "many">>;
 }, "strip", z.ZodTypeAny, {
-    id?: string;
     name?: string;
-    action?: "update" | "create" | "*" | "execute" | "delete" | "read";
+    resource?: string;
+    id?: string;
+    action?: "read" | "update" | "delete" | "execute" | "create" | "*";
     conditions?: {
         value?: string | number | boolean | (string | number | boolean)[];
+        operator?: "equals" | "in" | "not_equals" | "contains" | "greater_than" | "less_than" | "not_in";
         field?: string;
-        operator?: "equals" | "not_equals" | "greater_than" | "less_than" | "in" | "contains" | "not_in";
     }[];
-    resource?: string;
 }, {
-    id?: string;
     name?: string;
-    action?: "update" | "create" | "*" | "execute" | "delete" | "read";
+    resource?: string;
+    id?: string;
+    action?: "read" | "update" | "delete" | "execute" | "create" | "*";
     conditions?: {
         value?: string | number | boolean | (string | number | boolean)[];
+        operator?: "equals" | "in" | "not_equals" | "contains" | "greater_than" | "less_than" | "not_in";
         field?: string;
-        operator?: "equals" | "not_equals" | "greater_than" | "less_than" | "in" | "contains" | "not_in";
     }[];
-    resource?: string;
 }>;
 export declare const RoleSchema: z.ZodObject<{
     id: z.ZodString;
@@ -172,11 +172,12 @@ export declare const RoleSchema: z.ZodObject<{
         specialEffects?: string[];
     }>>;
 }, "strip", z.ZodTypeAny, {
-    id?: string;
     name?: string;
     description?: string;
+    id?: string;
     permissions?: string[];
     level?: number;
+    features?: string[];
     limits?: {
         postsPerDay?: number;
         threadsPerDay?: number;
@@ -184,19 +185,19 @@ export declare const RoleSchema: z.ZodObject<{
         uploadSizeMB?: number;
         apiRequestsPerHour?: number;
     };
-    features?: string[];
+    inherits?: string[];
     cosmetics?: {
         nameColor?: string;
         badgeIcon?: string;
         specialEffects?: string[];
     };
-    inherits?: string[];
 }, {
-    id?: string;
     name?: string;
     description?: string;
+    id?: string;
     permissions?: string[];
     level?: number;
+    features?: string[];
     limits?: {
         postsPerDay?: number;
         threadsPerDay?: number;
@@ -204,13 +205,12 @@ export declare const RoleSchema: z.ZodObject<{
         uploadSizeMB?: number;
         apiRequestsPerHour?: number;
     };
-    features?: string[];
+    inherits?: string[];
     cosmetics?: {
         nameColor?: string;
         badgeIcon?: string;
         specialEffects?: string[];
     };
-    inherits?: string[];
 }>;
 export declare const AccessRuleSchema: z.ZodObject<{
     id: z.ZodString;
@@ -220,39 +220,39 @@ export declare const AccessRuleSchema: z.ZodObject<{
         operator: z.ZodEnum<["gte", "lte", "equals", "includes", "excludes"]>;
         value: z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodArray<z.ZodString, "many">]>;
     }, "strip", z.ZodTypeAny, {
-        value?: string | number | string[];
         type?: "custom" | "level" | "role" | "permission";
-        operator?: "includes" | "equals" | "gte" | "lte" | "excludes";
+        value?: string | number | string[];
+        operator?: "equals" | "includes" | "gte" | "lte" | "excludes";
     }, {
-        value?: string | number | string[];
         type?: "custom" | "level" | "role" | "permission";
-        operator?: "includes" | "equals" | "gte" | "lte" | "excludes";
+        value?: string | number | string[];
+        operator?: "equals" | "includes" | "gte" | "lte" | "excludes";
     }>, "many">;
     action: z.ZodEnum<["allow", "deny"]>;
     priority: z.ZodDefault<z.ZodNumber>;
     message: z.ZodOptional<z.ZodString>;
 }, "strip", z.ZodTypeAny, {
     message?: string;
+    resource?: string;
     id?: string;
     action?: "allow" | "deny";
     priority?: number;
     conditions?: {
-        value?: string | number | string[];
         type?: "custom" | "level" | "role" | "permission";
-        operator?: "includes" | "equals" | "gte" | "lte" | "excludes";
+        value?: string | number | string[];
+        operator?: "equals" | "includes" | "gte" | "lte" | "excludes";
     }[];
-    resource?: string;
 }, {
     message?: string;
+    resource?: string;
     id?: string;
     action?: "allow" | "deny";
     priority?: number;
     conditions?: {
-        value?: string | number | string[];
         type?: "custom" | "level" | "role" | "permission";
-        operator?: "includes" | "equals" | "gte" | "lte" | "excludes";
+        value?: string | number | string[];
+        operator?: "equals" | "includes" | "gte" | "lte" | "excludes";
     }[];
-    resource?: string;
 }>;
 export declare const ForumAccessSchema: z.ZodObject<{
     forumId: z.ZodString;
@@ -262,13 +262,13 @@ export declare const ForumAccessSchema: z.ZodObject<{
         requiredRoles: z.ZodDefault<z.ZodArray<z.ZodString, "many">>;
         blockedRoles: z.ZodDefault<z.ZodArray<z.ZodString, "many">>;
     }, "strip", z.ZodTypeAny, {
-        minLevel?: number;
         public?: boolean;
+        minLevel?: number;
         requiredRoles?: string[];
         blockedRoles?: string[];
     }, {
-        minLevel?: number;
         public?: boolean;
+        minLevel?: number;
         requiredRoles?: string[];
         blockedRoles?: string[];
     }>;
@@ -295,13 +295,19 @@ export declare const ForumAccessSchema: z.ZodObject<{
         requiredRoles: z.ZodDefault<z.ZodArray<z.ZodString, "many">>;
         actions: z.ZodDefault<z.ZodArray<z.ZodEnum<["pin", "lock", "delete", "move", "edit"]>, "many">>;
     }, "strip", z.ZodTypeAny, {
-        actions?: ("delete" | "move" | "lock" | "pin" | "edit")[];
+        actions?: ("delete" | "lock" | "pin" | "move" | "edit")[];
         requiredRoles?: string[];
     }, {
-        actions?: ("delete" | "move" | "lock" | "pin" | "edit")[];
+        actions?: ("delete" | "lock" | "pin" | "move" | "edit")[];
         requiredRoles?: string[];
     }>;
 }, "strip", z.ZodTypeAny, {
+    view?: {
+        public?: boolean;
+        minLevel?: number;
+        requiredRoles?: string[];
+        blockedRoles?: string[];
+    };
     post?: {
         minLevel?: number;
         enabled?: boolean;
@@ -309,18 +315,18 @@ export declare const ForumAccessSchema: z.ZodObject<{
         requiredRoles?: string[];
         requireEmailVerified?: boolean;
     };
-    moderate?: {
-        actions?: ("delete" | "move" | "lock" | "pin" | "edit")[];
-        requiredRoles?: string[];
-    };
     forumId?: string;
-    view?: {
-        minLevel?: number;
-        public?: boolean;
+    moderate?: {
+        actions?: ("delete" | "lock" | "pin" | "move" | "edit")[];
         requiredRoles?: string[];
-        blockedRoles?: string[];
     };
 }, {
+    view?: {
+        public?: boolean;
+        minLevel?: number;
+        requiredRoles?: string[];
+        blockedRoles?: string[];
+    };
     post?: {
         minLevel?: number;
         enabled?: boolean;
@@ -328,16 +334,10 @@ export declare const ForumAccessSchema: z.ZodObject<{
         requiredRoles?: string[];
         requireEmailVerified?: boolean;
     };
-    moderate?: {
-        actions?: ("delete" | "move" | "lock" | "pin" | "edit")[];
-        requiredRoles?: string[];
-    };
     forumId?: string;
-    view?: {
-        minLevel?: number;
-        public?: boolean;
+    moderate?: {
+        actions?: ("delete" | "lock" | "pin" | "move" | "edit")[];
         requiredRoles?: string[];
-        blockedRoles?: string[];
     };
 }>;
 export declare const FeaturesConfigSchema: z.ZodObject<{
@@ -386,47 +386,47 @@ export declare const FeaturesConfigSchema: z.ZodObject<{
             events?: string[];
         }>>;
     }, "strip", z.ZodTypeAny, {
-        id?: string;
         name?: string;
         description?: string;
-        category?: "admin" | "premium" | "beta" | "core" | "experimental";
         override?: {
             enabled?: boolean;
             environments?: Record<string, boolean>;
         };
+        id?: string;
+        category?: "admin" | "premium" | "core" | "experimental" | "beta";
         metadata?: {
             createdAt?: string;
             updatedAt?: string;
             owner?: string;
             jiraTicket?: string;
         };
+        rollout?: any;
+        dependencies?: string[];
         metrics?: {
             track?: boolean;
             events?: string[];
         };
-        rollout?: any;
-        dependencies?: string[];
     }, {
-        id?: string;
         name?: string;
         description?: string;
-        category?: "admin" | "premium" | "beta" | "core" | "experimental";
         override?: {
             enabled?: boolean;
             environments?: Record<string, boolean>;
         };
+        id?: string;
+        category?: "admin" | "premium" | "core" | "experimental" | "beta";
         metadata?: {
             createdAt?: string;
             updatedAt?: string;
             owner?: string;
             jiraTicket?: string;
         };
+        rollout?: any;
+        dependencies?: string[];
         metrics?: {
             track?: boolean;
             events?: string[];
         };
-        rollout?: any;
-        dependencies?: string[];
     }>, "many">>;
     permissions: z.ZodDefault<z.ZodArray<z.ZodObject<{
         id: z.ZodString;
@@ -439,33 +439,33 @@ export declare const FeaturesConfigSchema: z.ZodObject<{
             value: z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean, z.ZodArray<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean]>, "many">]>;
         }, "strip", z.ZodTypeAny, {
             value?: string | number | boolean | (string | number | boolean)[];
+            operator?: "equals" | "in" | "not_equals" | "contains" | "greater_than" | "less_than" | "not_in";
             field?: string;
-            operator?: "equals" | "not_equals" | "greater_than" | "less_than" | "in" | "contains" | "not_in";
         }, {
             value?: string | number | boolean | (string | number | boolean)[];
+            operator?: "equals" | "in" | "not_equals" | "contains" | "greater_than" | "less_than" | "not_in";
             field?: string;
-            operator?: "equals" | "not_equals" | "greater_than" | "less_than" | "in" | "contains" | "not_in";
         }>, "many">>;
     }, "strip", z.ZodTypeAny, {
-        id?: string;
         name?: string;
-        action?: "update" | "create" | "*" | "execute" | "delete" | "read";
+        resource?: string;
+        id?: string;
+        action?: "read" | "update" | "delete" | "execute" | "create" | "*";
         conditions?: {
             value?: string | number | boolean | (string | number | boolean)[];
+            operator?: "equals" | "in" | "not_equals" | "contains" | "greater_than" | "less_than" | "not_in";
             field?: string;
-            operator?: "equals" | "not_equals" | "greater_than" | "less_than" | "in" | "contains" | "not_in";
         }[];
-        resource?: string;
     }, {
-        id?: string;
         name?: string;
-        action?: "update" | "create" | "*" | "execute" | "delete" | "read";
+        resource?: string;
+        id?: string;
+        action?: "read" | "update" | "delete" | "execute" | "create" | "*";
         conditions?: {
             value?: string | number | boolean | (string | number | boolean)[];
+            operator?: "equals" | "in" | "not_equals" | "contains" | "greater_than" | "less_than" | "not_in";
             field?: string;
-            operator?: "equals" | "not_equals" | "greater_than" | "less_than" | "in" | "contains" | "not_in";
         }[];
-        resource?: string;
     }>, "many">>;
     roles: z.ZodDefault<z.ZodArray<z.ZodObject<{
         id: z.ZodString;
@@ -508,11 +508,12 @@ export declare const FeaturesConfigSchema: z.ZodObject<{
             specialEffects?: string[];
         }>>;
     }, "strip", z.ZodTypeAny, {
-        id?: string;
         name?: string;
         description?: string;
+        id?: string;
         permissions?: string[];
         level?: number;
+        features?: string[];
         limits?: {
             postsPerDay?: number;
             threadsPerDay?: number;
@@ -520,19 +521,19 @@ export declare const FeaturesConfigSchema: z.ZodObject<{
             uploadSizeMB?: number;
             apiRequestsPerHour?: number;
         };
-        features?: string[];
+        inherits?: string[];
         cosmetics?: {
             nameColor?: string;
             badgeIcon?: string;
             specialEffects?: string[];
         };
-        inherits?: string[];
     }, {
-        id?: string;
         name?: string;
         description?: string;
+        id?: string;
         permissions?: string[];
         level?: number;
+        features?: string[];
         limits?: {
             postsPerDay?: number;
             threadsPerDay?: number;
@@ -540,13 +541,12 @@ export declare const FeaturesConfigSchema: z.ZodObject<{
             uploadSizeMB?: number;
             apiRequestsPerHour?: number;
         };
-        features?: string[];
+        inherits?: string[];
         cosmetics?: {
             nameColor?: string;
             badgeIcon?: string;
             specialEffects?: string[];
         };
-        inherits?: string[];
     }>, "many">>;
     access: z.ZodObject<{
         rules: z.ZodDefault<z.ZodArray<z.ZodObject<{
@@ -557,39 +557,39 @@ export declare const FeaturesConfigSchema: z.ZodObject<{
                 operator: z.ZodEnum<["gte", "lte", "equals", "includes", "excludes"]>;
                 value: z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodArray<z.ZodString, "many">]>;
             }, "strip", z.ZodTypeAny, {
-                value?: string | number | string[];
                 type?: "custom" | "level" | "role" | "permission";
-                operator?: "includes" | "equals" | "gte" | "lte" | "excludes";
+                value?: string | number | string[];
+                operator?: "equals" | "includes" | "gte" | "lte" | "excludes";
             }, {
-                value?: string | number | string[];
                 type?: "custom" | "level" | "role" | "permission";
-                operator?: "includes" | "equals" | "gte" | "lte" | "excludes";
+                value?: string | number | string[];
+                operator?: "equals" | "includes" | "gte" | "lte" | "excludes";
             }>, "many">;
             action: z.ZodEnum<["allow", "deny"]>;
             priority: z.ZodDefault<z.ZodNumber>;
             message: z.ZodOptional<z.ZodString>;
         }, "strip", z.ZodTypeAny, {
             message?: string;
+            resource?: string;
             id?: string;
             action?: "allow" | "deny";
             priority?: number;
             conditions?: {
-                value?: string | number | string[];
                 type?: "custom" | "level" | "role" | "permission";
-                operator?: "includes" | "equals" | "gte" | "lte" | "excludes";
+                value?: string | number | string[];
+                operator?: "equals" | "includes" | "gte" | "lte" | "excludes";
             }[];
-            resource?: string;
         }, {
             message?: string;
+            resource?: string;
             id?: string;
             action?: "allow" | "deny";
             priority?: number;
             conditions?: {
-                value?: string | number | string[];
                 type?: "custom" | "level" | "role" | "permission";
-                operator?: "includes" | "equals" | "gte" | "lte" | "excludes";
+                value?: string | number | string[];
+                operator?: "equals" | "includes" | "gte" | "lte" | "excludes";
             }[];
-            resource?: string;
         }>, "many">>;
         forums: z.ZodDefault<z.ZodArray<z.ZodObject<{
             forumId: z.ZodString;
@@ -599,13 +599,13 @@ export declare const FeaturesConfigSchema: z.ZodObject<{
                 requiredRoles: z.ZodDefault<z.ZodArray<z.ZodString, "many">>;
                 blockedRoles: z.ZodDefault<z.ZodArray<z.ZodString, "many">>;
             }, "strip", z.ZodTypeAny, {
-                minLevel?: number;
                 public?: boolean;
+                minLevel?: number;
                 requiredRoles?: string[];
                 blockedRoles?: string[];
             }, {
-                minLevel?: number;
                 public?: boolean;
+                minLevel?: number;
                 requiredRoles?: string[];
                 blockedRoles?: string[];
             }>;
@@ -632,13 +632,19 @@ export declare const FeaturesConfigSchema: z.ZodObject<{
                 requiredRoles: z.ZodDefault<z.ZodArray<z.ZodString, "many">>;
                 actions: z.ZodDefault<z.ZodArray<z.ZodEnum<["pin", "lock", "delete", "move", "edit"]>, "many">>;
             }, "strip", z.ZodTypeAny, {
-                actions?: ("delete" | "move" | "lock" | "pin" | "edit")[];
+                actions?: ("delete" | "lock" | "pin" | "move" | "edit")[];
                 requiredRoles?: string[];
             }, {
-                actions?: ("delete" | "move" | "lock" | "pin" | "edit")[];
+                actions?: ("delete" | "lock" | "pin" | "move" | "edit")[];
                 requiredRoles?: string[];
             }>;
         }, "strip", z.ZodTypeAny, {
+            view?: {
+                public?: boolean;
+                minLevel?: number;
+                requiredRoles?: string[];
+                blockedRoles?: string[];
+            };
             post?: {
                 minLevel?: number;
                 enabled?: boolean;
@@ -646,18 +652,18 @@ export declare const FeaturesConfigSchema: z.ZodObject<{
                 requiredRoles?: string[];
                 requireEmailVerified?: boolean;
             };
-            moderate?: {
-                actions?: ("delete" | "move" | "lock" | "pin" | "edit")[];
-                requiredRoles?: string[];
-            };
             forumId?: string;
-            view?: {
-                minLevel?: number;
-                public?: boolean;
+            moderate?: {
+                actions?: ("delete" | "lock" | "pin" | "move" | "edit")[];
                 requiredRoles?: string[];
-                blockedRoles?: string[];
             };
         }, {
+            view?: {
+                public?: boolean;
+                minLevel?: number;
+                requiredRoles?: string[];
+                blockedRoles?: string[];
+            };
             post?: {
                 minLevel?: number;
                 enabled?: boolean;
@@ -665,33 +671,33 @@ export declare const FeaturesConfigSchema: z.ZodObject<{
                 requiredRoles?: string[];
                 requireEmailVerified?: boolean;
             };
-            moderate?: {
-                actions?: ("delete" | "move" | "lock" | "pin" | "edit")[];
-                requiredRoles?: string[];
-            };
             forumId?: string;
-            view?: {
-                minLevel?: number;
-                public?: boolean;
+            moderate?: {
+                actions?: ("delete" | "lock" | "pin" | "move" | "edit")[];
                 requiredRoles?: string[];
-                blockedRoles?: string[];
             };
         }>, "many">>;
         defaultPolicy: z.ZodDefault<z.ZodEnum<["allow", "deny"]>>;
     }, "strip", z.ZodTypeAny, {
         rules?: {
             message?: string;
+            resource?: string;
             id?: string;
             action?: "allow" | "deny";
             priority?: number;
             conditions?: {
-                value?: string | number | string[];
                 type?: "custom" | "level" | "role" | "permission";
-                operator?: "includes" | "equals" | "gte" | "lte" | "excludes";
+                value?: string | number | string[];
+                operator?: "equals" | "includes" | "gte" | "lte" | "excludes";
             }[];
-            resource?: string;
         }[];
         forums?: {
+            view?: {
+                public?: boolean;
+                minLevel?: number;
+                requiredRoles?: string[];
+                blockedRoles?: string[];
+            };
             post?: {
                 minLevel?: number;
                 enabled?: boolean;
@@ -699,33 +705,33 @@ export declare const FeaturesConfigSchema: z.ZodObject<{
                 requiredRoles?: string[];
                 requireEmailVerified?: boolean;
             };
-            moderate?: {
-                actions?: ("delete" | "move" | "lock" | "pin" | "edit")[];
-                requiredRoles?: string[];
-            };
             forumId?: string;
-            view?: {
-                minLevel?: number;
-                public?: boolean;
+            moderate?: {
+                actions?: ("delete" | "lock" | "pin" | "move" | "edit")[];
                 requiredRoles?: string[];
-                blockedRoles?: string[];
             };
         }[];
         defaultPolicy?: "allow" | "deny";
     }, {
         rules?: {
             message?: string;
+            resource?: string;
             id?: string;
             action?: "allow" | "deny";
             priority?: number;
             conditions?: {
-                value?: string | number | string[];
                 type?: "custom" | "level" | "role" | "permission";
-                operator?: "includes" | "equals" | "gte" | "lte" | "excludes";
+                value?: string | number | string[];
+                operator?: "equals" | "includes" | "gte" | "lte" | "excludes";
             }[];
-            resource?: string;
         }[];
         forums?: {
+            view?: {
+                public?: boolean;
+                minLevel?: number;
+                requiredRoles?: string[];
+                blockedRoles?: string[];
+            };
             post?: {
                 minLevel?: number;
                 enabled?: boolean;
@@ -733,16 +739,10 @@ export declare const FeaturesConfigSchema: z.ZodObject<{
                 requiredRoles?: string[];
                 requireEmailVerified?: boolean;
             };
-            moderate?: {
-                actions?: ("delete" | "move" | "lock" | "pin" | "edit")[];
-                requiredRoles?: string[];
-            };
             forumId?: string;
-            view?: {
-                minLevel?: number;
-                public?: boolean;
+            moderate?: {
+                actions?: ("delete" | "lock" | "pin" | "move" | "edit")[];
                 requiredRoles?: string[];
-                blockedRoles?: string[];
             };
         }[];
         defaultPolicy?: "allow" | "deny";
@@ -783,37 +783,37 @@ export declare const FeaturesConfigSchema: z.ZodObject<{
             message: z.ZodOptional<z.ZodString>;
         }, "strip", z.ZodTypeAny, {
             message?: string;
+            resource?: string;
             limit?: number;
             window?: number;
-            resource?: string;
-            keyBy?: "userId" | "ip" | "combined";
+            keyBy?: "ip" | "userId" | "combined";
             skipRoles?: string[];
         }, {
             message?: string;
+            resource?: string;
             limit?: number;
             window?: number;
-            resource?: string;
-            keyBy?: "userId" | "ip" | "combined";
+            keyBy?: "ip" | "userId" | "combined";
             skipRoles?: string[];
         }>, "many">>;
     }, "strip", z.ZodTypeAny, {
         enabled?: boolean;
         rules?: {
             message?: string;
+            resource?: string;
             limit?: number;
             window?: number;
-            resource?: string;
-            keyBy?: "userId" | "ip" | "combined";
+            keyBy?: "ip" | "userId" | "combined";
             skipRoles?: string[];
         }[];
     }, {
         enabled?: boolean;
         rules?: {
             message?: string;
+            resource?: string;
             limit?: number;
             window?: number;
-            resource?: string;
-            keyBy?: "userId" | "ip" | "combined";
+            keyBy?: "ip" | "userId" | "combined";
             skipRoles?: string[];
         }[];
     }>;
@@ -835,11 +835,12 @@ export declare const FeaturesConfigSchema: z.ZodObject<{
     }>;
 }, "strip", z.ZodTypeAny, {
     roles?: {
-        id?: string;
         name?: string;
         description?: string;
+        id?: string;
         permissions?: string[];
         level?: number;
+        features?: string[];
         limits?: {
             postsPerDay?: number;
             threadsPerDay?: number;
@@ -847,48 +848,47 @@ export declare const FeaturesConfigSchema: z.ZodObject<{
             uploadSizeMB?: number;
             apiRequestsPerHour?: number;
         };
-        features?: string[];
+        inherits?: string[];
         cosmetics?: {
             nameColor?: string;
             badgeIcon?: string;
             specialEffects?: string[];
         };
-        inherits?: string[];
     }[];
     permissions?: {
-        id?: string;
         name?: string;
-        action?: "update" | "create" | "*" | "execute" | "delete" | "read";
+        resource?: string;
+        id?: string;
+        action?: "read" | "update" | "delete" | "execute" | "create" | "*";
         conditions?: {
             value?: string | number | boolean | (string | number | boolean)[];
+            operator?: "equals" | "in" | "not_equals" | "contains" | "greater_than" | "less_than" | "not_in";
             field?: string;
-            operator?: "equals" | "not_equals" | "greater_than" | "less_than" | "in" | "contains" | "not_in";
         }[];
-        resource?: string;
     }[];
+    version?: string;
     flags?: {
-        id?: string;
         name?: string;
         description?: string;
-        category?: "admin" | "premium" | "beta" | "core" | "experimental";
         override?: {
             enabled?: boolean;
             environments?: Record<string, boolean>;
         };
+        id?: string;
+        category?: "admin" | "premium" | "core" | "experimental" | "beta";
         metadata?: {
             createdAt?: string;
             updatedAt?: string;
             owner?: string;
             jiraTicket?: string;
         };
+        rollout?: any;
+        dependencies?: string[];
         metrics?: {
             track?: boolean;
             events?: string[];
         };
-        rollout?: any;
-        dependencies?: string[];
     }[];
-    version?: string;
     experimental?: {
         enabled?: boolean;
         features?: string[];
@@ -898,17 +898,23 @@ export declare const FeaturesConfigSchema: z.ZodObject<{
     access?: {
         rules?: {
             message?: string;
+            resource?: string;
             id?: string;
             action?: "allow" | "deny";
             priority?: number;
             conditions?: {
-                value?: string | number | string[];
                 type?: "custom" | "level" | "role" | "permission";
-                operator?: "includes" | "equals" | "gte" | "lte" | "excludes";
+                value?: string | number | string[];
+                operator?: "equals" | "includes" | "gte" | "lte" | "excludes";
             }[];
-            resource?: string;
         }[];
         forums?: {
+            view?: {
+                public?: boolean;
+                minLevel?: number;
+                requiredRoles?: string[];
+                blockedRoles?: string[];
+            };
             post?: {
                 minLevel?: number;
                 enabled?: boolean;
@@ -916,16 +922,10 @@ export declare const FeaturesConfigSchema: z.ZodObject<{
                 requiredRoles?: string[];
                 requireEmailVerified?: boolean;
             };
-            moderate?: {
-                actions?: ("delete" | "move" | "lock" | "pin" | "edit")[];
-                requiredRoles?: string[];
-            };
             forumId?: string;
-            view?: {
-                minLevel?: number;
-                public?: boolean;
+            moderate?: {
+                actions?: ("delete" | "lock" | "pin" | "move" | "edit")[];
                 requiredRoles?: string[];
-                blockedRoles?: string[];
             };
         }[];
         defaultPolicy?: "allow" | "deny";
@@ -943,20 +943,21 @@ export declare const FeaturesConfigSchema: z.ZodObject<{
         enabled?: boolean;
         rules?: {
             message?: string;
+            resource?: string;
             limit?: number;
             window?: number;
-            resource?: string;
-            keyBy?: "userId" | "ip" | "combined";
+            keyBy?: "ip" | "userId" | "combined";
             skipRoles?: string[];
         }[];
     };
 }, {
     roles?: {
-        id?: string;
         name?: string;
         description?: string;
+        id?: string;
         permissions?: string[];
         level?: number;
+        features?: string[];
         limits?: {
             postsPerDay?: number;
             threadsPerDay?: number;
@@ -964,48 +965,47 @@ export declare const FeaturesConfigSchema: z.ZodObject<{
             uploadSizeMB?: number;
             apiRequestsPerHour?: number;
         };
-        features?: string[];
+        inherits?: string[];
         cosmetics?: {
             nameColor?: string;
             badgeIcon?: string;
             specialEffects?: string[];
         };
-        inherits?: string[];
     }[];
     permissions?: {
-        id?: string;
         name?: string;
-        action?: "update" | "create" | "*" | "execute" | "delete" | "read";
+        resource?: string;
+        id?: string;
+        action?: "read" | "update" | "delete" | "execute" | "create" | "*";
         conditions?: {
             value?: string | number | boolean | (string | number | boolean)[];
+            operator?: "equals" | "in" | "not_equals" | "contains" | "greater_than" | "less_than" | "not_in";
             field?: string;
-            operator?: "equals" | "not_equals" | "greater_than" | "less_than" | "in" | "contains" | "not_in";
         }[];
-        resource?: string;
     }[];
+    version?: string;
     flags?: {
-        id?: string;
         name?: string;
         description?: string;
-        category?: "admin" | "premium" | "beta" | "core" | "experimental";
         override?: {
             enabled?: boolean;
             environments?: Record<string, boolean>;
         };
+        id?: string;
+        category?: "admin" | "premium" | "core" | "experimental" | "beta";
         metadata?: {
             createdAt?: string;
             updatedAt?: string;
             owner?: string;
             jiraTicket?: string;
         };
+        rollout?: any;
+        dependencies?: string[];
         metrics?: {
             track?: boolean;
             events?: string[];
         };
-        rollout?: any;
-        dependencies?: string[];
     }[];
-    version?: string;
     experimental?: {
         enabled?: boolean;
         features?: string[];
@@ -1015,17 +1015,23 @@ export declare const FeaturesConfigSchema: z.ZodObject<{
     access?: {
         rules?: {
             message?: string;
+            resource?: string;
             id?: string;
             action?: "allow" | "deny";
             priority?: number;
             conditions?: {
-                value?: string | number | string[];
                 type?: "custom" | "level" | "role" | "permission";
-                operator?: "includes" | "equals" | "gte" | "lte" | "excludes";
+                value?: string | number | string[];
+                operator?: "equals" | "includes" | "gte" | "lte" | "excludes";
             }[];
-            resource?: string;
         }[];
         forums?: {
+            view?: {
+                public?: boolean;
+                minLevel?: number;
+                requiredRoles?: string[];
+                blockedRoles?: string[];
+            };
             post?: {
                 minLevel?: number;
                 enabled?: boolean;
@@ -1033,16 +1039,10 @@ export declare const FeaturesConfigSchema: z.ZodObject<{
                 requiredRoles?: string[];
                 requireEmailVerified?: boolean;
             };
-            moderate?: {
-                actions?: ("delete" | "move" | "lock" | "pin" | "edit")[];
-                requiredRoles?: string[];
-            };
             forumId?: string;
-            view?: {
-                minLevel?: number;
-                public?: boolean;
+            moderate?: {
+                actions?: ("delete" | "lock" | "pin" | "move" | "edit")[];
                 requiredRoles?: string[];
-                blockedRoles?: string[];
             };
         }[];
         defaultPolicy?: "allow" | "deny";
@@ -1060,10 +1060,10 @@ export declare const FeaturesConfigSchema: z.ZodObject<{
         enabled?: boolean;
         rules?: {
             message?: string;
+            resource?: string;
             limit?: number;
             window?: number;
-            resource?: string;
-            keyBy?: "userId" | "ip" | "combined";
+            keyBy?: "ip" | "userId" | "combined";
             skipRoles?: string[];
         }[];
     };

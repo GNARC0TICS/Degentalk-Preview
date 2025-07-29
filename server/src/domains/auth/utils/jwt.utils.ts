@@ -1,4 +1,4 @@
-import jwt from 'jsonwebtoken';
+import * as jwt from 'jsonwebtoken';
 import type { UserId } from '@shared/types/ids';
 import { logger } from '@core/logger';
 
@@ -18,10 +18,10 @@ if (!JWT_SECRET) {
 export function generateToken(userId: UserId): string {
 	try {
 		const token = jwt.sign({ userId }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
-		logger.debug('JWT generated', { userId });
+		logger.debug('Auth', 'JWT generated', { userId });
 		return token;
 	} catch (error) {
-		logger.error('Error generating JWT', { error, userId });
+		logger.error('Auth', 'Error generating JWT', { error, userId });
 		throw new Error('Failed to generate authentication token');
 	}
 }
@@ -31,7 +31,7 @@ export function verifyToken(token: string): JWTPayload | null {
 		const decoded = jwt.verify(token, JWT_SECRET) as JWTPayload;
 		return decoded;
 	} catch (error) {
-		logger.debug('JWT verification failed', { error });
+		logger.debug('Auth', 'JWT verification failed', { error });
 		return null;
 	}
 }

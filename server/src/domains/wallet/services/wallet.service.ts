@@ -26,7 +26,7 @@ import { fromDbCryptoWallet } from '@shared/types/wallet.transformer';
 
 import { logger, LogAction } from '@core/logger';
 import { WalletError, ErrorCodes } from '@core/errors';
-import { reportErrorServer } from '../../../../lib/report-error';
+import { reportErrorServer } from "@lib/report-error";
 
 // Import adapters
 import { ccpaymentAdapter } from '../adapters/ccpayment.adapter';

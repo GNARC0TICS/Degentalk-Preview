@@ -43,12 +43,20 @@ export const announcements = pgTable(
 		createdAtIdx: index('idx_announcements_created_at').on(table.createdAt)
 	})
 );
-export const insertAnnouncementSchema = createInsertSchema(announcements, {
+// Define insert schema without using .omit() to avoid cross-workspace type issues
+export const insertAnnouncementSchema = z.object({
 	content: z.string().min(1, 'Content is required'),
+	icon: z.string().optional(),
+	type: z.string().optional(),
 	isActive: z.boolean().default(true),
-	visibleTo: z.array(z.string()).default(['all']),
+	createdBy: z.string().uuid().optional(),
+	expiresAt: z.date().optional(),
 	priority: z.number().default(0),
-	tickerMode: z.boolean().default(true)
-}).omit({ id: true, createdAt: true, updatedAt: true }); // createdBy will be set by system
+	visibleTo: z.array(z.string()).default(['all']),
+	tickerMode: z.boolean().default(true),
+	link: z.string().optional(),
+	bgColor: z.string().optional(),
+	textColor: z.string().optional()
+});
 export type Announcement = typeof announcements.$inferSelect;
 export type InsertAnnouncement = z.infer<typeof insertAnnouncementSchema>;

@@ -18,39 +18,39 @@ export declare const EconomyConfigSchema: z.ZodObject<{
             dgt: z.ZodNumber;
             xp: z.ZodNumber;
         }, "strip", z.ZodTypeAny, {
-            xp: number;
-            dgt: number;
+            xp?: number;
+            dgt?: number;
         }, {
-            xp: number;
-            dgt: number;
+            xp?: number;
+            dgt?: number;
         }>;
         referrer: z.ZodObject<{
             dgt: z.ZodNumber;
             xp: z.ZodNumber;
         }, "strip", z.ZodTypeAny, {
-            xp: number;
-            dgt: number;
+            xp?: number;
+            dgt?: number;
         }, {
-            xp: number;
-            dgt: number;
+            xp?: number;
+            dgt?: number;
         }>;
     }, "strip", z.ZodTypeAny, {
-        referrer: {
-            xp: number;
-            dgt: number;
+        referrer?: {
+            xp?: number;
+            dgt?: number;
         };
-        referee: {
-            xp: number;
-            dgt: number;
+        referee?: {
+            xp?: number;
+            dgt?: number;
         };
     }, {
-        referrer: {
-            xp: number;
-            dgt: number;
+        referrer?: {
+            xp?: number;
+            dgt?: number;
         };
-        referee: {
-            xp: number;
-            dgt: number;
+        referee?: {
+            xp?: number;
+            dgt?: number;
         };
     }>;
     rainSettings: z.ZodObject<{
@@ -58,13 +58,13 @@ export declare const EconomyConfigSchema: z.ZodObject<{
         maxRecipients: z.ZodNumber;
         cooldownSeconds: z.ZodNumber;
     }, "strip", z.ZodTypeAny, {
-        cooldownSeconds: number;
-        maxRecipients: number;
-        minAmount: number;
+        cooldownSeconds?: number;
+        maxRecipients?: number;
+        minAmount?: number;
     }, {
-        cooldownSeconds: number;
-        maxRecipients: number;
-        minAmount: number;
+        cooldownSeconds?: number;
+        maxRecipients?: number;
+        minAmount?: number;
     }>;
     xpMultiplierLimits: z.ZodObject<{
         maxTotalMultiplier: z.ZodNumber;
@@ -73,85 +73,85 @@ export declare const EconomyConfigSchema: z.ZodObject<{
         stackingRule: z.ZodEnum<["additive", "multiplicative", "best_of", "weighted_average"]>;
         enforcementMode: z.ZodEnum<["strict", "warn", "log_only"]>;
     }, "strip", z.ZodTypeAny, {
-        maxTotalMultiplier: number;
-        maxRoleMultiplier: number;
-        maxForumMultiplier: number;
-        stackingRule: "additive" | "multiplicative" | "best_of" | "weighted_average";
-        enforcementMode: "warn" | "strict" | "log_only";
+        maxTotalMultiplier?: number;
+        maxRoleMultiplier?: number;
+        maxForumMultiplier?: number;
+        stackingRule?: "additive" | "multiplicative" | "best_of" | "weighted_average";
+        enforcementMode?: "strict" | "warn" | "log_only";
     }, {
-        maxTotalMultiplier: number;
-        maxRoleMultiplier: number;
-        maxForumMultiplier: number;
-        stackingRule: "additive" | "multiplicative" | "best_of" | "weighted_average";
-        enforcementMode: "warn" | "strict" | "log_only";
+        maxTotalMultiplier?: number;
+        maxRoleMultiplier?: number;
+        maxForumMultiplier?: number;
+        stackingRule?: "additive" | "multiplicative" | "best_of" | "weighted_average";
+        enforcementMode?: "strict" | "warn" | "log_only";
     }>;
 }, "strict", z.ZodTypeAny, {
-    rainSettings: {
-        cooldownSeconds: number;
-        maxRecipients: number;
-        minAmount: number;
+    rainSettings?: {
+        cooldownSeconds?: number;
+        maxRecipients?: number;
+        minAmount?: number;
     };
-    MAX_XP_PER_DAY: number;
-    MAX_TIP_XP_PER_DAY: number;
-    DGT_TO_USD: number;
-    XP_PER_DGT: number;
-    MIN_TIP_DGT: number;
-    TIP_FEE_PERCENTAGE: number;
-    FAUCET_REWARD_XP: number;
-    FAUCET_REWARD_DGT: number;
-    MIN_WITHDRAWAL_DGT: number;
-    DAILY_LOGIN_BONUS_XP: number;
-    levelXPMap: Record<string, number>;
-    referralRewards: {
-        referrer: {
-            xp: number;
-            dgt: number;
+    DGT_TO_USD?: number;
+    XP_PER_DGT?: number;
+    MAX_XP_PER_DAY?: number;
+    MAX_TIP_XP_PER_DAY?: number;
+    MIN_TIP_DGT?: number;
+    TIP_FEE_PERCENTAGE?: number;
+    FAUCET_REWARD_XP?: number;
+    FAUCET_REWARD_DGT?: number;
+    MIN_WITHDRAWAL_DGT?: number;
+    DAILY_LOGIN_BONUS_XP?: number;
+    levelXPMap?: Record<string, number>;
+    referralRewards?: {
+        referrer?: {
+            xp?: number;
+            dgt?: number;
         };
-        referee: {
-            xp: number;
-            dgt: number;
+        referee?: {
+            xp?: number;
+            dgt?: number;
         };
     };
-    xpMultiplierLimits: {
-        maxTotalMultiplier: number;
-        maxRoleMultiplier: number;
-        maxForumMultiplier: number;
-        stackingRule: "additive" | "multiplicative" | "best_of" | "weighted_average";
-        enforcementMode: "warn" | "strict" | "log_only";
+    xpMultiplierLimits?: {
+        maxTotalMultiplier?: number;
+        maxRoleMultiplier?: number;
+        maxForumMultiplier?: number;
+        stackingRule?: "additive" | "multiplicative" | "best_of" | "weighted_average";
+        enforcementMode?: "strict" | "warn" | "log_only";
     };
 }, {
-    rainSettings: {
-        cooldownSeconds: number;
-        maxRecipients: number;
-        minAmount: number;
+    rainSettings?: {
+        cooldownSeconds?: number;
+        maxRecipients?: number;
+        minAmount?: number;
     };
-    MAX_XP_PER_DAY: number;
-    MAX_TIP_XP_PER_DAY: number;
-    DGT_TO_USD: number;
-    XP_PER_DGT: number;
-    MIN_TIP_DGT: number;
-    TIP_FEE_PERCENTAGE: number;
-    FAUCET_REWARD_XP: number;
-    FAUCET_REWARD_DGT: number;
-    MIN_WITHDRAWAL_DGT: number;
-    DAILY_LOGIN_BONUS_XP: number;
-    levelXPMap: Record<string, number>;
-    referralRewards: {
-        referrer: {
-            xp: number;
-            dgt: number;
+    DGT_TO_USD?: number;
+    XP_PER_DGT?: number;
+    MAX_XP_PER_DAY?: number;
+    MAX_TIP_XP_PER_DAY?: number;
+    MIN_TIP_DGT?: number;
+    TIP_FEE_PERCENTAGE?: number;
+    FAUCET_REWARD_XP?: number;
+    FAUCET_REWARD_DGT?: number;
+    MIN_WITHDRAWAL_DGT?: number;
+    DAILY_LOGIN_BONUS_XP?: number;
+    levelXPMap?: Record<string, number>;
+    referralRewards?: {
+        referrer?: {
+            xp?: number;
+            dgt?: number;
         };
-        referee: {
-            xp: number;
-            dgt: number;
+        referee?: {
+            xp?: number;
+            dgt?: number;
         };
     };
-    xpMultiplierLimits: {
-        maxTotalMultiplier: number;
-        maxRoleMultiplier: number;
-        maxForumMultiplier: number;
-        stackingRule: "additive" | "multiplicative" | "best_of" | "weighted_average";
-        enforcementMode: "warn" | "strict" | "log_only";
+    xpMultiplierLimits?: {
+        maxTotalMultiplier?: number;
+        maxRoleMultiplier?: number;
+        maxForumMultiplier?: number;
+        stackingRule?: "additive" | "multiplicative" | "best_of" | "weighted_average";
+        enforcementMode?: "strict" | "warn" | "log_only";
     };
 }>;
 export declare const economyConfig: {

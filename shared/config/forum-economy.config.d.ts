@@ -6,13 +6,13 @@ export declare const forumEconomySchema: z.ZodObject<{
         likeReceived: z.ZodNumber;
         dailyCap: z.ZodNumber;
     }, "strip", z.ZodTypeAny, {
-        reply?: number;
         dailyCap?: number;
+        reply?: number;
         createThread?: number;
         likeReceived?: number;
     }, {
-        reply?: number;
         dailyCap?: number;
+        reply?: number;
         createThread?: number;
         likeReceived?: number;
     }>;
@@ -21,13 +21,13 @@ export declare const forumEconomySchema: z.ZodObject<{
         max: z.ZodNumber;
         currency: z.ZodString;
     }, "strip", z.ZodTypeAny, {
-        currency?: string;
         max?: number;
         min?: number;
+        currency?: string;
     }, {
-        currency?: string;
         max?: number;
         min?: number;
+        currency?: string;
     }>;
     uploads: z.ZodObject<{
         maxAvatarSizeMB: z.ZodNumber;
@@ -51,43 +51,43 @@ export declare const forumEconomySchema: z.ZodObject<{
     }>;
 }, "strip", z.ZodTypeAny, {
     xp?: {
-        reply?: number;
         dailyCap?: number;
+        reply?: number;
         createThread?: number;
         likeReceived?: number;
     };
-    themes?: {
-        defaultZoneColor?: string;
-        fallbackBannerUrl?: string;
-    };
     tipping?: {
-        currency?: string;
         max?: number;
         min?: number;
+        currency?: string;
     };
     uploads?: {
         maxAvatarSizeMB?: number;
         allowedTypes?: string[];
+    };
+    themes?: {
+        defaultZoneColor?: string;
+        fallbackBannerUrl?: string;
     };
 }, {
     xp?: {
-        reply?: number;
         dailyCap?: number;
+        reply?: number;
         createThread?: number;
         likeReceived?: number;
     };
-    themes?: {
-        defaultZoneColor?: string;
-        fallbackBannerUrl?: string;
-    };
     tipping?: {
-        currency?: string;
         max?: number;
         min?: number;
+        currency?: string;
     };
     uploads?: {
         maxAvatarSizeMB?: number;
         allowedTypes?: string[];
+    };
+    themes?: {
+        defaultZoneColor?: string;
+        fallbackBannerUrl?: string;
     };
 }>;
 export type ForumEconomyConfig = z.infer<typeof forumEconomySchema>;

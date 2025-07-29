@@ -18,7 +18,7 @@ import type {
 import { logger, LogAction } from '@core/logger';
 import { DegenAchievementEvaluators } from './evaluators/degen-evaluators';
 import type { AchievementId, UserId } from '@shared/types/ids';
-import { reportErrorServer } from '../../../../lib/report-error';
+import { reportErrorServer } from "@lib/report-error";
 
 export interface AchievementFilters {
 	category?: AchievementCategory;

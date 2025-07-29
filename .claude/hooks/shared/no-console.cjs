@@ -1,3 +1,9 @@
+// ---------------------------------------------------------------------------
+// PERFORMANCE: compile regexes once at module scope
+// ---------------------------------------------------------------------------
+const CONSOLE_METHOD_REGEX = /console\.(log|error|warn|info|debug|trace|table|time|timeEnd)/g;
+const CONSOLE_VAR_REGEX = /const\s+(\w+)\s*=\s*console\.(log|error|warn|info|debug)/g;
+
 module.exports = {
   name: 'no-console',
   description: 'Replace console.* with logger.*',
@@ -22,10 +28,10 @@ module.exports = {
     
     lines.forEach((line, index) => {
       // Match console.method patterns
-      const consoleRegex = /console\.(log|error|warn|info|debug|trace|table|time|timeEnd)/g;
       let match;
       
-      while ((match = consoleRegex.exec(line)) !== null) {
+      CONSOLE_METHOD_REGEX.lastIndex = 0; // reset stateful regex
+      while ((match = CONSOLE_METHOD_REGEX.exec(line)) !== null) {
         const method = match[1];
         const column = match.index;
         
@@ -57,8 +63,8 @@ module.exports = {
       }
       
       // Also check for console methods used as variables
-      const consoleVarRegex = /const\s+(\w+)\s*=\s*console\.(log|error|warn|info|debug)/g;
-      while ((match = consoleVarRegex.exec(line)) !== null) {
+      CONSOLE_VAR_REGEX.lastIndex = 0;
+      while ((match = CONSOLE_VAR_REGEX.exec(line)) !== null) {
         const varName = match[1];
         const method = match[2];
         const column = match.index;

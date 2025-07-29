@@ -50,7 +50,7 @@ class StampedeProtection {
       } else {
         // Existing request timed out, remove it
         this.pendingRequests.delete(key);
-        logger.warn(`Stampede protection: Request ${key} timed out after ${age}ms`);
+        logger.warn('StampedeProtection', `Request ${key} timed out after ${age}ms`);
       }
     }
 
@@ -77,7 +77,7 @@ class StampedeProtection {
       // Clean up successful request
       const pending = this.pendingRequests.get(key);
       if (pending && pending.requestCount > 1) {
-        logger.debug(`Stampede protection: Request ${key} served ${pending.requestCount} callers`);
+        logger.debug('StampedeProtection', `Request ${key} served ${pending.requestCount} callers`);
       }
       
       this.pendingRequests.delete(key);

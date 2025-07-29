@@ -54,7 +54,7 @@ importers:
         specifier: ^9.0.9
         version: 9.0.10
       '@types/node':
-        specifier: ^20.19.0
+        specifier: ^20.19.7
         version: 20.19.7
       '@types/react':
         specifier: ^18.3.20
@@ -94,7 +94,7 @@ importers:
         version: 0.44.2(@neondatabase/serverless@0.10.4)(@types/pg@8.15.4)(gel@2.1.1)(mysql2@3.14.2)(pg@8.16.3)
       drizzle-zod:
         specifier: ^0.7.0
-        version: 0.7.1(drizzle-orm@0.44.2(@neondatabase/serverless@0.10.4)(@types/pg@8.15.4)(gel@2.1.1)(mysql2@3.14.2)(pg@8.16.3))(zod@3.25.76)
+        version: 0.7.0(drizzle-orm@0.44.2(@neondatabase/serverless@0.10.4)(@types/pg@8.15.4)(gel@2.1.1)(mysql2@3.14.2)(pg@8.16.3))(zod@3.25.76)
       eslint:
         specifier: ^8.57.0
         version: 8.57.1
@@ -557,7 +557,7 @@ importers:
         version: 0.44.2(@neondatabase/serverless@0.10.4)(@types/pg@8.15.4)(gel@2.1.1)(mysql2@3.14.2)(pg@8.16.3)
       drizzle-zod:
         specifier: ^0.7.0
-        version: 0.7.1(drizzle-orm@0.44.2(@neondatabase/serverless@0.10.4)(@types/pg@8.15.4)(gel@2.1.1)(mysql2@3.14.2)(pg@8.16.3))(zod@3.25.76)
+        version: 0.7.0(drizzle-orm@0.44.2(@neondatabase/serverless@0.10.4)(@types/pg@8.15.4)(gel@2.1.1)(mysql2@3.14.2)(pg@8.16.3))(zod@3.25.76)
       pg:
         specifier: ^8.11.0
         version: 8.16.3
@@ -856,8 +856,8 @@ importers:
         specifier: 0.44.2
         version: 0.44.2(@neondatabase/serverless@0.10.4)(@types/pg@8.15.4)(gel@2.1.1)(mysql2@3.14.2)(pg@8.16.3)
       drizzle-zod:
-        specifier: ^0.7.0
-        version: 0.7.1(drizzle-orm@0.44.2(@neondatabase/serverless@0.10.4)(@types/pg@8.15.4)(gel@2.1.1)(mysql2@3.14.2)(pg@8.16.3))(zod@3.25.76)
+        specifier: ^0.8.2
+        version: 0.8.2(drizzle-orm@0.44.2(@neondatabase/serverless@0.10.4)(@types/pg@8.15.4)(gel@2.1.1)(mysql2@3.14.2)(pg@8.16.3))(zod@3.25.76)
       next:
         specifier: ^15.3.3
         version: 15.4.1(@playwright/test@1.54.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -1085,6 +1085,10 @@ packages:
 
   '@babel/runtime@7.27.6':
     resolution: {integrity: sha512-vbavdySgbTTrmFE+EsiqUTzlOr5bzlnJtUv9PynGCAKvfQqjIXbvFdumPM/GxMDfyuGMJaJAU6TO4zc1Jf1i8Q==}
+    engines: {node: '>=6.9.0'}
+
+  '@babel/runtime@7.28.2':
+    resolution: {integrity: sha512-KHp2IflsnGywDjBWDkR9iEqiWSpc8GIi0lgTT3mOElT0PP1tG26P4tmFI2YvAdzgq9RGyoHZQEIEdZy6Ec5xCA==}
     engines: {node: '>=6.9.0'}
 
   '@babel/template@7.27.2':
@@ -3767,11 +3771,17 @@ packages:
       sqlite3:
         optional: true
 
-  drizzle-zod@0.7.1:
-    resolution: {integrity: sha512-nZzALOdz44/AL2U005UlmMqaQ1qe5JfanvLujiTHiiT8+vZJTBFhj3pY4Vk+L6UWyKFfNmLhk602Hn4kCTynKQ==}
+  drizzle-zod@0.7.0:
+    resolution: {integrity: sha512-xgCRYYVEzRkeXTS33GSMgoowe3vKsMNBjSI+cwG1oLQVEhAWWbqtb/AAMlm7tkmV4fG/uJjEmWzdzlEmTgWOoQ==}
     peerDependencies:
       drizzle-orm: 0.44.2
       zod: '>=3.0.0'
+
+  drizzle-zod@0.8.2:
+    resolution: {integrity: sha512-9Do/16OjFFNrQDZgvMtxtDDwKWbFOxUAIwNPKX98SfxrP8H18vhN1BvNXbhelLcdgCE7GEaXDJqBjMExSkhpkA==}
+    peerDependencies:
+      drizzle-orm: 0.44.2
+      zod: ^3.25.1
 
   dunder-proto@1.0.1:
     resolution: {integrity: sha512-KIN/nDJBQRcXw0MLVhZE9iQHmG68qAVIBg9CqmUYjmQIhgij9U5MFvrqkUL5FbtyyzZuOeOt0zdeRe4UY7ct+A==}
@@ -6556,6 +6566,8 @@ snapshots:
 
   '@babel/runtime@7.27.6': {}
 
+  '@babel/runtime@7.28.2': {}
+
   '@babel/template@7.27.2':
     dependencies:
       '@babel/code-frame': 7.27.1
@@ -7890,7 +7902,7 @@ snapshots:
   '@testing-library/dom@10.4.0':
     dependencies:
       '@babel/code-frame': 7.27.1
-      '@babel/runtime': 7.27.6
+      '@babel/runtime': 7.28.2
       '@types/aria-query': 5.0.4
       aria-query: 5.3.0
       chalk: 4.1.2
@@ -9118,7 +9130,12 @@ snapshots:
       mysql2: 3.14.2
       pg: 8.16.3
 
-  drizzle-zod@0.7.1(drizzle-orm@0.44.2(@neondatabase/serverless@0.10.4)(@types/pg@8.15.4)(gel@2.1.1)(mysql2@3.14.2)(pg@8.16.3))(zod@3.25.76):
+  drizzle-zod@0.7.0(drizzle-orm@0.44.2(@neondatabase/serverless@0.10.4)(@types/pg@8.15.4)(gel@2.1.1)(mysql2@3.14.2)(pg@8.16.3))(zod@3.25.76):
+    dependencies:
+      drizzle-orm: 0.44.2(@neondatabase/serverless@0.10.4)(@types/pg@8.15.4)(gel@2.1.1)(mysql2@3.14.2)(pg@8.16.3)
+      zod: 3.25.76
+
+  drizzle-zod@0.8.2(drizzle-orm@0.44.2(@neondatabase/serverless@0.10.4)(@types/pg@8.15.4)(gel@2.1.1)(mysql2@3.14.2)(pg@8.16.3))(zod@3.25.76):
     dependencies:
       drizzle-orm: 0.44.2(@neondatabase/serverless@0.10.4)(@types/pg@8.15.4)(gel@2.1.1)(mysql2@3.14.2)(pg@8.16.3)
       zod: 3.25.76

@@ -17,16 +17,16 @@ export declare const CurrencyConfigSchema: z.ZodObject<{
     symbol?: "DGT";
     name?: string;
     decimals?: number;
-    minAmount?: number;
     displayDecimals?: number;
+    minAmount?: number;
     maxAmount?: number;
     dustThreshold?: number;
 }, {
     symbol?: "DGT";
     name?: string;
     decimals?: number;
-    minAmount?: number;
     displayDecimals?: number;
+    minAmount?: number;
     maxAmount?: number;
     dustThreshold?: number;
 }>;
@@ -40,29 +40,29 @@ export declare const FeeConfigSchema: z.ZodObject<{
             threshold: z.ZodNumber;
             fee: z.ZodNumber;
         }, "strip", z.ZodTypeAny, {
-            fee?: number;
             threshold?: number;
+            fee?: number;
         }, {
-            fee?: number;
             threshold?: number;
+            fee?: number;
         }>, "many">>;
     }, "strip", z.ZodTypeAny, {
-        value?: number;
         type?: "fixed" | "percentage" | "tiered";
         max?: number;
         min?: number;
+        value?: number;
         tiers?: {
-            fee?: number;
             threshold?: number;
+            fee?: number;
         }[];
     }, {
-        value?: number;
         type?: "fixed" | "percentage" | "tiered";
         max?: number;
         min?: number;
+        value?: number;
         tiers?: {
-            fee?: number;
             threshold?: number;
+            fee?: number;
         }[];
     }>;
     transaction: z.ZodObject<{
@@ -105,13 +105,13 @@ export declare const FeeConfigSchema: z.ZodObject<{
         rate?: number;
     };
     withdrawal?: {
-        value?: number;
         type?: "fixed" | "percentage" | "tiered";
         max?: number;
         min?: number;
+        value?: number;
         tiers?: {
-            fee?: number;
             threshold?: number;
+            fee?: number;
         }[];
     };
     trading?: {
@@ -128,13 +128,13 @@ export declare const FeeConfigSchema: z.ZodObject<{
         rate?: number;
     };
     withdrawal?: {
-        value?: number;
         type?: "fixed" | "percentage" | "tiered";
         max?: number;
         min?: number;
+        value?: number;
         tiers?: {
-            fee?: number;
             threshold?: number;
+            fee?: number;
         }[];
     };
     trading?: {
@@ -163,9 +163,9 @@ export declare const WalletLimitsSchema: z.ZodObject<{
         minAccountAge: z.ZodDefault<z.ZodNumber>;
     }, "strip", z.ZodTypeAny, {
         daily?: number;
+        cooldown?: number;
         weekly?: number;
         monthly?: number;
-        cooldown?: number;
         perTransaction?: {
             max?: number;
             min?: number;
@@ -175,9 +175,9 @@ export declare const WalletLimitsSchema: z.ZodObject<{
         minAccountAge?: number;
     }, {
         daily?: number;
+        cooldown?: number;
         weekly?: number;
         monthly?: number;
-        cooldown?: number;
         perTransaction?: {
             max?: number;
             min?: number;
@@ -251,9 +251,9 @@ export declare const WalletLimitsSchema: z.ZodObject<{
 }, "strip", z.ZodTypeAny, {
     withdrawal?: {
         daily?: number;
+        cooldown?: number;
         weekly?: number;
         monthly?: number;
-        cooldown?: number;
         perTransaction?: {
             max?: number;
             min?: number;
@@ -281,9 +281,9 @@ export declare const WalletLimitsSchema: z.ZodObject<{
 }, {
     withdrawal?: {
         daily?: number;
+        cooldown?: number;
         weekly?: number;
         monthly?: number;
-        cooldown?: number;
         perTransaction?: {
             max?: number;
             min?: number;
@@ -327,21 +327,21 @@ export declare const DistributionConfigSchema: z.ZodObject<{
             resetMonthly?: boolean;
         }>;
     }, "strip", z.ZodTypeAny, {
-        minLevel?: number;
         lifetime?: {
             max?: number;
             resetMonthly?: boolean;
         };
+        minLevel?: number;
         amount?: number;
         enabled?: boolean;
         cooldown?: number;
         requireCaptcha?: boolean;
     }, {
-        minLevel?: number;
         lifetime?: {
             max?: number;
             resetMonthly?: boolean;
         };
+        minLevel?: number;
         amount?: number;
         enabled?: boolean;
         cooldown?: number;
@@ -415,8 +415,8 @@ export declare const DistributionConfigSchema: z.ZodObject<{
         }>;
     }, "strip", z.ZodTypeAny, {
         enabled?: boolean;
-        frequency?: "daily" | "event" | "weekly" | "monthly";
-        distribution?: "random" | "equal" | "weighted";
+        frequency?: "event" | "daily" | "weekly" | "monthly";
+        distribution?: "equal" | "weighted" | "random";
         eligibility?: {
             minLevel?: number;
             minActivity?: number;
@@ -424,8 +424,8 @@ export declare const DistributionConfigSchema: z.ZodObject<{
         };
     }, {
         enabled?: boolean;
-        frequency?: "daily" | "event" | "weekly" | "monthly";
-        distribution?: "random" | "equal" | "weighted";
+        frequency?: "event" | "daily" | "weekly" | "monthly";
+        distribution?: "equal" | "weighted" | "random";
         eligibility?: {
             minLevel?: number;
             minActivity?: number;
@@ -513,29 +513,6 @@ export declare const DistributionConfigSchema: z.ZodObject<{
         };
     }>;
 }, "strip", z.ZodTypeAny, {
-    referral?: {
-        enabled?: boolean;
-        referrer?: number;
-        requirements?: {
-            minLevel?: number;
-            emailVerified?: boolean;
-        };
-        tiered?: {
-            level?: number;
-            bonus?: number;
-        }[];
-        referee?: number;
-    };
-    airdrops?: {
-        enabled?: boolean;
-        frequency?: "daily" | "event" | "weekly" | "monthly";
-        distribution?: "random" | "equal" | "weighted";
-        eligibility?: {
-            minLevel?: number;
-            minActivity?: number;
-            excludeBanned?: boolean;
-        };
-    };
     rewards?: {
         achievements?: {
             enabled?: boolean;
@@ -552,41 +529,41 @@ export declare const DistributionConfigSchema: z.ZodObject<{
             };
         };
     };
+    referral?: {
+        enabled?: boolean;
+        referrer?: number;
+        requirements?: {
+            minLevel?: number;
+            emailVerified?: boolean;
+        };
+        tiered?: {
+            level?: number;
+            bonus?: number;
+        }[];
+        referee?: number;
+    };
     faucet?: {
-        minLevel?: number;
         lifetime?: {
             max?: number;
             resetMonthly?: boolean;
         };
+        minLevel?: number;
         amount?: number;
         enabled?: boolean;
         cooldown?: number;
         requireCaptcha?: boolean;
+    };
+    airdrops?: {
+        enabled?: boolean;
+        frequency?: "event" | "daily" | "weekly" | "monthly";
+        distribution?: "equal" | "weighted" | "random";
+        eligibility?: {
+            minLevel?: number;
+            minActivity?: number;
+            excludeBanned?: boolean;
+        };
     };
 }, {
-    referral?: {
-        enabled?: boolean;
-        referrer?: number;
-        requirements?: {
-            minLevel?: number;
-            emailVerified?: boolean;
-        };
-        tiered?: {
-            level?: number;
-            bonus?: number;
-        }[];
-        referee?: number;
-    };
-    airdrops?: {
-        enabled?: boolean;
-        frequency?: "daily" | "event" | "weekly" | "monthly";
-        distribution?: "random" | "equal" | "weighted";
-        eligibility?: {
-            minLevel?: number;
-            minActivity?: number;
-            excludeBanned?: boolean;
-        };
-    };
     rewards?: {
         achievements?: {
             enabled?: boolean;
@@ -603,16 +580,39 @@ export declare const DistributionConfigSchema: z.ZodObject<{
             };
         };
     };
+    referral?: {
+        enabled?: boolean;
+        referrer?: number;
+        requirements?: {
+            minLevel?: number;
+            emailVerified?: boolean;
+        };
+        tiered?: {
+            level?: number;
+            bonus?: number;
+        }[];
+        referee?: number;
+    };
     faucet?: {
-        minLevel?: number;
         lifetime?: {
             max?: number;
             resetMonthly?: boolean;
         };
+        minLevel?: number;
         amount?: number;
         enabled?: boolean;
         cooldown?: number;
         requireCaptcha?: boolean;
+    };
+    airdrops?: {
+        enabled?: boolean;
+        frequency?: "event" | "daily" | "weekly" | "monthly";
+        distribution?: "equal" | "weighted" | "random";
+        eligibility?: {
+            minLevel?: number;
+            minActivity?: number;
+            excludeBanned?: boolean;
+        };
     };
 }>;
 export declare const StakingConfigSchema: z.ZodObject<{
@@ -627,12 +627,12 @@ export declare const StakingConfigSchema: z.ZodObject<{
     }, "strip", z.ZodTypeAny, {
         days?: number;
         apr?: number;
-        compounding?: "daily" | "none" | "weekly" | "monthly";
+        compounding?: "none" | "daily" | "weekly" | "monthly";
         earlyWithdrawalPenalty?: number;
     }, {
         days?: number;
         apr?: number;
-        compounding?: "daily" | "none" | "weekly" | "monthly";
+        compounding?: "none" | "daily" | "weekly" | "monthly";
         earlyWithdrawalPenalty?: number;
     }>, "many">>;
     rewards: z.ZodObject<{
@@ -664,7 +664,7 @@ export declare const StakingConfigSchema: z.ZodObject<{
             loyalty?: number;
         }>;
     }, "strip", z.ZodTypeAny, {
-        frequency?: "daily" | "block" | "weekly" | "monthly";
+        frequency?: "daily" | "weekly" | "monthly" | "block";
         bonus?: {
             amount?: {
                 threshold?: number;
@@ -674,7 +674,7 @@ export declare const StakingConfigSchema: z.ZodObject<{
         };
         distribution?: "linear" | "compound";
     }, {
-        frequency?: "daily" | "block" | "weekly" | "monthly";
+        frequency?: "daily" | "weekly" | "monthly" | "block";
         bonus?: {
             amount?: {
                 threshold?: number;
@@ -686,9 +686,8 @@ export declare const StakingConfigSchema: z.ZodObject<{
     }>;
 }, "strip", z.ZodTypeAny, {
     enabled?: boolean;
-    minAmount?: number;
     rewards?: {
-        frequency?: "daily" | "block" | "weekly" | "monthly";
+        frequency?: "daily" | "weekly" | "monthly" | "block";
         bonus?: {
             amount?: {
                 threshold?: number;
@@ -698,18 +697,18 @@ export declare const StakingConfigSchema: z.ZodObject<{
         };
         distribution?: "linear" | "compound";
     };
+    minAmount?: number;
     maxAmount?: number;
     lockPeriods?: {
         days?: number;
         apr?: number;
-        compounding?: "daily" | "none" | "weekly" | "monthly";
+        compounding?: "none" | "daily" | "weekly" | "monthly";
         earlyWithdrawalPenalty?: number;
     }[];
 }, {
     enabled?: boolean;
-    minAmount?: number;
     rewards?: {
-        frequency?: "daily" | "block" | "weekly" | "monthly";
+        frequency?: "daily" | "weekly" | "monthly" | "block";
         bonus?: {
             amount?: {
                 threshold?: number;
@@ -719,11 +718,12 @@ export declare const StakingConfigSchema: z.ZodObject<{
         };
         distribution?: "linear" | "compound";
     };
+    minAmount?: number;
     maxAmount?: number;
     lockPeriods?: {
         days?: number;
         apr?: number;
-        compounding?: "daily" | "none" | "weekly" | "monthly";
+        compounding?: "none" | "daily" | "weekly" | "monthly";
         earlyWithdrawalPenalty?: number;
     }[];
 }>;
@@ -745,16 +745,16 @@ export declare const ShopPricingSchema: z.ZodObject<{
             min?: number;
         }>;
     }, "strip", z.ZodTypeAny, {
-        enabled?: boolean;
         algorithm?: "supply_demand" | "rarity_based" | "time_decay";
+        enabled?: boolean;
         updateFrequency?: number;
         bounds?: {
             max?: number;
             min?: number;
         };
     }, {
-        enabled?: boolean;
         algorithm?: "supply_demand" | "rarity_based" | "time_decay";
+        enabled?: boolean;
         updateFrequency?: number;
         bounds?: {
             max?: number;
@@ -794,7 +794,6 @@ export declare const ShopPricingSchema: z.ZodObject<{
                 categories?: string[];
             }>, "many">>;
         }, "strip", z.ZodTypeAny, {
-            enabled?: boolean;
             events?: {
                 name?: string;
                 startDate?: string;
@@ -802,8 +801,8 @@ export declare const ShopPricingSchema: z.ZodObject<{
                 discount?: number;
                 categories?: string[];
             }[];
+            enabled?: boolean;
         }, {
-            enabled?: boolean;
             events?: {
                 name?: string;
                 startDate?: string;
@@ -811,6 +810,7 @@ export declare const ShopPricingSchema: z.ZodObject<{
                 discount?: number;
                 categories?: string[];
             }[];
+            enabled?: boolean;
         }>;
         vip: z.ZodObject<{
             enabled: z.ZodDefault<z.ZodBoolean>;
@@ -850,7 +850,6 @@ export declare const ShopPricingSchema: z.ZodObject<{
             quantity?: number;
         }[];
         seasonal?: {
-            enabled?: boolean;
             events?: {
                 name?: string;
                 startDate?: string;
@@ -858,6 +857,7 @@ export declare const ShopPricingSchema: z.ZodObject<{
                 discount?: number;
                 categories?: string[];
             }[];
+            enabled?: boolean;
         };
     }, {
         vip?: {
@@ -872,7 +872,6 @@ export declare const ShopPricingSchema: z.ZodObject<{
             quantity?: number;
         }[];
         seasonal?: {
-            enabled?: boolean;
             events?: {
                 name?: string;
                 startDate?: string;
@@ -880,14 +879,15 @@ export declare const ShopPricingSchema: z.ZodObject<{
                 discount?: number;
                 categories?: string[];
             }[];
+            enabled?: boolean;
         };
     }>;
 }, "strip", z.ZodTypeAny, {
     currency?: "DGT" | "USD" | "BOTH";
     exchangeRate?: number;
     dynamicPricing?: {
-        enabled?: boolean;
         algorithm?: "supply_demand" | "rarity_based" | "time_decay";
+        enabled?: boolean;
         updateFrequency?: number;
         bounds?: {
             max?: number;
@@ -907,7 +907,6 @@ export declare const ShopPricingSchema: z.ZodObject<{
             quantity?: number;
         }[];
         seasonal?: {
-            enabled?: boolean;
             events?: {
                 name?: string;
                 startDate?: string;
@@ -915,14 +914,15 @@ export declare const ShopPricingSchema: z.ZodObject<{
                 discount?: number;
                 categories?: string[];
             }[];
+            enabled?: boolean;
         };
     };
 }, {
     currency?: "DGT" | "USD" | "BOTH";
     exchangeRate?: number;
     dynamicPricing?: {
-        enabled?: boolean;
         algorithm?: "supply_demand" | "rarity_based" | "time_decay";
+        enabled?: boolean;
         updateFrequency?: number;
         bounds?: {
             max?: number;
@@ -942,7 +942,6 @@ export declare const ShopPricingSchema: z.ZodObject<{
             quantity?: number;
         }[];
         seasonal?: {
-            enabled?: boolean;
             events?: {
                 name?: string;
                 startDate?: string;
@@ -950,6 +949,7 @@ export declare const ShopPricingSchema: z.ZodObject<{
                 discount?: number;
                 categories?: string[];
             }[];
+            enabled?: boolean;
         };
     };
 }>;
@@ -967,16 +967,16 @@ export declare const EconomyConfigSchema: z.ZodObject<{
         symbol?: "DGT";
         name?: string;
         decimals?: number;
-        minAmount?: number;
         displayDecimals?: number;
+        minAmount?: number;
         maxAmount?: number;
         dustThreshold?: number;
     }, {
         symbol?: "DGT";
         name?: string;
         decimals?: number;
-        minAmount?: number;
         displayDecimals?: number;
+        minAmount?: number;
         maxAmount?: number;
         dustThreshold?: number;
     }>;
@@ -990,29 +990,29 @@ export declare const EconomyConfigSchema: z.ZodObject<{
                 threshold: z.ZodNumber;
                 fee: z.ZodNumber;
             }, "strip", z.ZodTypeAny, {
-                fee?: number;
                 threshold?: number;
+                fee?: number;
             }, {
-                fee?: number;
                 threshold?: number;
+                fee?: number;
             }>, "many">>;
         }, "strip", z.ZodTypeAny, {
-            value?: number;
             type?: "fixed" | "percentage" | "tiered";
             max?: number;
             min?: number;
+            value?: number;
             tiers?: {
-                fee?: number;
                 threshold?: number;
+                fee?: number;
             }[];
         }, {
-            value?: number;
             type?: "fixed" | "percentage" | "tiered";
             max?: number;
             min?: number;
+            value?: number;
             tiers?: {
-                fee?: number;
                 threshold?: number;
+                fee?: number;
             }[];
         }>;
         transaction: z.ZodObject<{
@@ -1055,13 +1055,13 @@ export declare const EconomyConfigSchema: z.ZodObject<{
             rate?: number;
         };
         withdrawal?: {
-            value?: number;
             type?: "fixed" | "percentage" | "tiered";
             max?: number;
             min?: number;
+            value?: number;
             tiers?: {
-                fee?: number;
                 threshold?: number;
+                fee?: number;
             }[];
         };
         trading?: {
@@ -1078,13 +1078,13 @@ export declare const EconomyConfigSchema: z.ZodObject<{
             rate?: number;
         };
         withdrawal?: {
-            value?: number;
             type?: "fixed" | "percentage" | "tiered";
             max?: number;
             min?: number;
+            value?: number;
             tiers?: {
-                fee?: number;
                 threshold?: number;
+                fee?: number;
             }[];
         };
         trading?: {
@@ -1113,9 +1113,9 @@ export declare const EconomyConfigSchema: z.ZodObject<{
             minAccountAge: z.ZodDefault<z.ZodNumber>;
         }, "strip", z.ZodTypeAny, {
             daily?: number;
+            cooldown?: number;
             weekly?: number;
             monthly?: number;
-            cooldown?: number;
             perTransaction?: {
                 max?: number;
                 min?: number;
@@ -1125,9 +1125,9 @@ export declare const EconomyConfigSchema: z.ZodObject<{
             minAccountAge?: number;
         }, {
             daily?: number;
+            cooldown?: number;
             weekly?: number;
             monthly?: number;
-            cooldown?: number;
             perTransaction?: {
                 max?: number;
                 min?: number;
@@ -1201,9 +1201,9 @@ export declare const EconomyConfigSchema: z.ZodObject<{
     }, "strip", z.ZodTypeAny, {
         withdrawal?: {
             daily?: number;
+            cooldown?: number;
             weekly?: number;
             monthly?: number;
-            cooldown?: number;
             perTransaction?: {
                 max?: number;
                 min?: number;
@@ -1231,9 +1231,9 @@ export declare const EconomyConfigSchema: z.ZodObject<{
     }, {
         withdrawal?: {
             daily?: number;
+            cooldown?: number;
             weekly?: number;
             monthly?: number;
-            cooldown?: number;
             perTransaction?: {
                 max?: number;
                 min?: number;
@@ -1277,21 +1277,21 @@ export declare const EconomyConfigSchema: z.ZodObject<{
                 resetMonthly?: boolean;
             }>;
         }, "strip", z.ZodTypeAny, {
-            minLevel?: number;
             lifetime?: {
                 max?: number;
                 resetMonthly?: boolean;
             };
+            minLevel?: number;
             amount?: number;
             enabled?: boolean;
             cooldown?: number;
             requireCaptcha?: boolean;
         }, {
-            minLevel?: number;
             lifetime?: {
                 max?: number;
                 resetMonthly?: boolean;
             };
+            minLevel?: number;
             amount?: number;
             enabled?: boolean;
             cooldown?: number;
@@ -1365,8 +1365,8 @@ export declare const EconomyConfigSchema: z.ZodObject<{
             }>;
         }, "strip", z.ZodTypeAny, {
             enabled?: boolean;
-            frequency?: "daily" | "event" | "weekly" | "monthly";
-            distribution?: "random" | "equal" | "weighted";
+            frequency?: "event" | "daily" | "weekly" | "monthly";
+            distribution?: "equal" | "weighted" | "random";
             eligibility?: {
                 minLevel?: number;
                 minActivity?: number;
@@ -1374,8 +1374,8 @@ export declare const EconomyConfigSchema: z.ZodObject<{
             };
         }, {
             enabled?: boolean;
-            frequency?: "daily" | "event" | "weekly" | "monthly";
-            distribution?: "random" | "equal" | "weighted";
+            frequency?: "event" | "daily" | "weekly" | "monthly";
+            distribution?: "equal" | "weighted" | "random";
             eligibility?: {
                 minLevel?: number;
                 minActivity?: number;
@@ -1463,29 +1463,6 @@ export declare const EconomyConfigSchema: z.ZodObject<{
             };
         }>;
     }, "strip", z.ZodTypeAny, {
-        referral?: {
-            enabled?: boolean;
-            referrer?: number;
-            requirements?: {
-                minLevel?: number;
-                emailVerified?: boolean;
-            };
-            tiered?: {
-                level?: number;
-                bonus?: number;
-            }[];
-            referee?: number;
-        };
-        airdrops?: {
-            enabled?: boolean;
-            frequency?: "daily" | "event" | "weekly" | "monthly";
-            distribution?: "random" | "equal" | "weighted";
-            eligibility?: {
-                minLevel?: number;
-                minActivity?: number;
-                excludeBanned?: boolean;
-            };
-        };
         rewards?: {
             achievements?: {
                 enabled?: boolean;
@@ -1502,41 +1479,41 @@ export declare const EconomyConfigSchema: z.ZodObject<{
                 };
             };
         };
+        referral?: {
+            enabled?: boolean;
+            referrer?: number;
+            requirements?: {
+                minLevel?: number;
+                emailVerified?: boolean;
+            };
+            tiered?: {
+                level?: number;
+                bonus?: number;
+            }[];
+            referee?: number;
+        };
         faucet?: {
-            minLevel?: number;
             lifetime?: {
                 max?: number;
                 resetMonthly?: boolean;
             };
+            minLevel?: number;
             amount?: number;
             enabled?: boolean;
             cooldown?: number;
             requireCaptcha?: boolean;
+        };
+        airdrops?: {
+            enabled?: boolean;
+            frequency?: "event" | "daily" | "weekly" | "monthly";
+            distribution?: "equal" | "weighted" | "random";
+            eligibility?: {
+                minLevel?: number;
+                minActivity?: number;
+                excludeBanned?: boolean;
+            };
         };
     }, {
-        referral?: {
-            enabled?: boolean;
-            referrer?: number;
-            requirements?: {
-                minLevel?: number;
-                emailVerified?: boolean;
-            };
-            tiered?: {
-                level?: number;
-                bonus?: number;
-            }[];
-            referee?: number;
-        };
-        airdrops?: {
-            enabled?: boolean;
-            frequency?: "daily" | "event" | "weekly" | "monthly";
-            distribution?: "random" | "equal" | "weighted";
-            eligibility?: {
-                minLevel?: number;
-                minActivity?: number;
-                excludeBanned?: boolean;
-            };
-        };
         rewards?: {
             achievements?: {
                 enabled?: boolean;
@@ -1553,16 +1530,39 @@ export declare const EconomyConfigSchema: z.ZodObject<{
                 };
             };
         };
+        referral?: {
+            enabled?: boolean;
+            referrer?: number;
+            requirements?: {
+                minLevel?: number;
+                emailVerified?: boolean;
+            };
+            tiered?: {
+                level?: number;
+                bonus?: number;
+            }[];
+            referee?: number;
+        };
         faucet?: {
-            minLevel?: number;
             lifetime?: {
                 max?: number;
                 resetMonthly?: boolean;
             };
+            minLevel?: number;
             amount?: number;
             enabled?: boolean;
             cooldown?: number;
             requireCaptcha?: boolean;
+        };
+        airdrops?: {
+            enabled?: boolean;
+            frequency?: "event" | "daily" | "weekly" | "monthly";
+            distribution?: "equal" | "weighted" | "random";
+            eligibility?: {
+                minLevel?: number;
+                minActivity?: number;
+                excludeBanned?: boolean;
+            };
         };
     }>;
     staking: z.ZodObject<{
@@ -1577,12 +1577,12 @@ export declare const EconomyConfigSchema: z.ZodObject<{
         }, "strip", z.ZodTypeAny, {
             days?: number;
             apr?: number;
-            compounding?: "daily" | "none" | "weekly" | "monthly";
+            compounding?: "none" | "daily" | "weekly" | "monthly";
             earlyWithdrawalPenalty?: number;
         }, {
             days?: number;
             apr?: number;
-            compounding?: "daily" | "none" | "weekly" | "monthly";
+            compounding?: "none" | "daily" | "weekly" | "monthly";
             earlyWithdrawalPenalty?: number;
         }>, "many">>;
         rewards: z.ZodObject<{
@@ -1614,7 +1614,7 @@ export declare const EconomyConfigSchema: z.ZodObject<{
                 loyalty?: number;
             }>;
         }, "strip", z.ZodTypeAny, {
-            frequency?: "daily" | "block" | "weekly" | "monthly";
+            frequency?: "daily" | "weekly" | "monthly" | "block";
             bonus?: {
                 amount?: {
                     threshold?: number;
@@ -1624,7 +1624,7 @@ export declare const EconomyConfigSchema: z.ZodObject<{
             };
             distribution?: "linear" | "compound";
         }, {
-            frequency?: "daily" | "block" | "weekly" | "monthly";
+            frequency?: "daily" | "weekly" | "monthly" | "block";
             bonus?: {
                 amount?: {
                     threshold?: number;
@@ -1636,9 +1636,8 @@ export declare const EconomyConfigSchema: z.ZodObject<{
         }>;
     }, "strip", z.ZodTypeAny, {
         enabled?: boolean;
-        minAmount?: number;
         rewards?: {
-            frequency?: "daily" | "block" | "weekly" | "monthly";
+            frequency?: "daily" | "weekly" | "monthly" | "block";
             bonus?: {
                 amount?: {
                     threshold?: number;
@@ -1648,18 +1647,18 @@ export declare const EconomyConfigSchema: z.ZodObject<{
             };
             distribution?: "linear" | "compound";
         };
+        minAmount?: number;
         maxAmount?: number;
         lockPeriods?: {
             days?: number;
             apr?: number;
-            compounding?: "daily" | "none" | "weekly" | "monthly";
+            compounding?: "none" | "daily" | "weekly" | "monthly";
             earlyWithdrawalPenalty?: number;
         }[];
     }, {
         enabled?: boolean;
-        minAmount?: number;
         rewards?: {
-            frequency?: "daily" | "block" | "weekly" | "monthly";
+            frequency?: "daily" | "weekly" | "monthly" | "block";
             bonus?: {
                 amount?: {
                     threshold?: number;
@@ -1669,11 +1668,12 @@ export declare const EconomyConfigSchema: z.ZodObject<{
             };
             distribution?: "linear" | "compound";
         };
+        minAmount?: number;
         maxAmount?: number;
         lockPeriods?: {
             days?: number;
             apr?: number;
-            compounding?: "daily" | "none" | "weekly" | "monthly";
+            compounding?: "none" | "daily" | "weekly" | "monthly";
             earlyWithdrawalPenalty?: number;
         }[];
     }>;
@@ -1695,16 +1695,16 @@ export declare const EconomyConfigSchema: z.ZodObject<{
                 min?: number;
             }>;
         }, "strip", z.ZodTypeAny, {
-            enabled?: boolean;
             algorithm?: "supply_demand" | "rarity_based" | "time_decay";
+            enabled?: boolean;
             updateFrequency?: number;
             bounds?: {
                 max?: number;
                 min?: number;
             };
         }, {
-            enabled?: boolean;
             algorithm?: "supply_demand" | "rarity_based" | "time_decay";
+            enabled?: boolean;
             updateFrequency?: number;
             bounds?: {
                 max?: number;
@@ -1744,7 +1744,6 @@ export declare const EconomyConfigSchema: z.ZodObject<{
                     categories?: string[];
                 }>, "many">>;
             }, "strip", z.ZodTypeAny, {
-                enabled?: boolean;
                 events?: {
                     name?: string;
                     startDate?: string;
@@ -1752,8 +1751,8 @@ export declare const EconomyConfigSchema: z.ZodObject<{
                     discount?: number;
                     categories?: string[];
                 }[];
+                enabled?: boolean;
             }, {
-                enabled?: boolean;
                 events?: {
                     name?: string;
                     startDate?: string;
@@ -1761,6 +1760,7 @@ export declare const EconomyConfigSchema: z.ZodObject<{
                     discount?: number;
                     categories?: string[];
                 }[];
+                enabled?: boolean;
             }>;
             vip: z.ZodObject<{
                 enabled: z.ZodDefault<z.ZodBoolean>;
@@ -1800,7 +1800,6 @@ export declare const EconomyConfigSchema: z.ZodObject<{
                 quantity?: number;
             }[];
             seasonal?: {
-                enabled?: boolean;
                 events?: {
                     name?: string;
                     startDate?: string;
@@ -1808,6 +1807,7 @@ export declare const EconomyConfigSchema: z.ZodObject<{
                     discount?: number;
                     categories?: string[];
                 }[];
+                enabled?: boolean;
             };
         }, {
             vip?: {
@@ -1822,7 +1822,6 @@ export declare const EconomyConfigSchema: z.ZodObject<{
                 quantity?: number;
             }[];
             seasonal?: {
-                enabled?: boolean;
                 events?: {
                     name?: string;
                     startDate?: string;
@@ -1830,14 +1829,15 @@ export declare const EconomyConfigSchema: z.ZodObject<{
                     discount?: number;
                     categories?: string[];
                 }[];
+                enabled?: boolean;
             };
         }>;
     }, "strip", z.ZodTypeAny, {
         currency?: "DGT" | "USD" | "BOTH";
         exchangeRate?: number;
         dynamicPricing?: {
-            enabled?: boolean;
             algorithm?: "supply_demand" | "rarity_based" | "time_decay";
+            enabled?: boolean;
             updateFrequency?: number;
             bounds?: {
                 max?: number;
@@ -1857,7 +1857,6 @@ export declare const EconomyConfigSchema: z.ZodObject<{
                 quantity?: number;
             }[];
             seasonal?: {
-                enabled?: boolean;
                 events?: {
                     name?: string;
                     startDate?: string;
@@ -1865,14 +1864,15 @@ export declare const EconomyConfigSchema: z.ZodObject<{
                     discount?: number;
                     categories?: string[];
                 }[];
+                enabled?: boolean;
             };
         };
     }, {
         currency?: "DGT" | "USD" | "BOTH";
         exchangeRate?: number;
         dynamicPricing?: {
-            enabled?: boolean;
             algorithm?: "supply_demand" | "rarity_based" | "time_decay";
+            enabled?: boolean;
             updateFrequency?: number;
             bounds?: {
                 max?: number;
@@ -1892,7 +1892,6 @@ export declare const EconomyConfigSchema: z.ZodObject<{
                 quantity?: number;
             }[];
             seasonal?: {
-                enabled?: boolean;
                 events?: {
                     name?: string;
                     startDate?: string;
@@ -1900,6 +1899,7 @@ export declare const EconomyConfigSchema: z.ZodObject<{
                     discount?: number;
                     categories?: string[];
                 }[];
+                enabled?: boolean;
             };
         };
     }>;
@@ -2060,12 +2060,13 @@ export declare const EconomyConfigSchema: z.ZodObject<{
         tradingDisabled?: boolean;
     }>;
 }, "strip", z.ZodTypeAny, {
+    version?: string;
     shop?: {
         currency?: "DGT" | "USD" | "BOTH";
         exchangeRate?: number;
         dynamicPricing?: {
-            enabled?: boolean;
             algorithm?: "supply_demand" | "rarity_based" | "time_decay";
+            enabled?: boolean;
             updateFrequency?: number;
             bounds?: {
                 max?: number;
@@ -2085,7 +2086,6 @@ export declare const EconomyConfigSchema: z.ZodObject<{
                 quantity?: number;
             }[];
             seasonal?: {
-                enabled?: boolean;
                 events?: {
                     name?: string;
                     startDate?: string;
@@ -2093,6 +2093,7 @@ export declare const EconomyConfigSchema: z.ZodObject<{
                     discount?: number;
                     categories?: string[];
                 }[];
+                enabled?: boolean;
             };
         };
     };
@@ -2100,18 +2101,17 @@ export declare const EconomyConfigSchema: z.ZodObject<{
         symbol?: "DGT";
         name?: string;
         decimals?: number;
-        minAmount?: number;
         displayDecimals?: number;
+        minAmount?: number;
         maxAmount?: number;
         dustThreshold?: number;
     };
-    version?: string;
     limits?: {
         withdrawal?: {
             daily?: number;
+            cooldown?: number;
             weekly?: number;
             monthly?: number;
-            cooldown?: number;
             perTransaction?: {
                 max?: number;
                 min?: number;
@@ -2138,29 +2138,6 @@ export declare const EconomyConfigSchema: z.ZodObject<{
         };
     };
     distribution?: {
-        referral?: {
-            enabled?: boolean;
-            referrer?: number;
-            requirements?: {
-                minLevel?: number;
-                emailVerified?: boolean;
-            };
-            tiered?: {
-                level?: number;
-                bonus?: number;
-            }[];
-            referee?: number;
-        };
-        airdrops?: {
-            enabled?: boolean;
-            frequency?: "daily" | "event" | "weekly" | "monthly";
-            distribution?: "random" | "equal" | "weighted";
-            eligibility?: {
-                minLevel?: number;
-                minActivity?: number;
-                excludeBanned?: boolean;
-            };
-        };
         rewards?: {
             achievements?: {
                 enabled?: boolean;
@@ -2177,16 +2154,39 @@ export declare const EconomyConfigSchema: z.ZodObject<{
                 };
             };
         };
+        referral?: {
+            enabled?: boolean;
+            referrer?: number;
+            requirements?: {
+                minLevel?: number;
+                emailVerified?: boolean;
+            };
+            tiered?: {
+                level?: number;
+                bonus?: number;
+            }[];
+            referee?: number;
+        };
         faucet?: {
-            minLevel?: number;
             lifetime?: {
                 max?: number;
                 resetMonthly?: boolean;
             };
+            minLevel?: number;
             amount?: number;
             enabled?: boolean;
             cooldown?: number;
             requireCaptcha?: boolean;
+        };
+        airdrops?: {
+            enabled?: boolean;
+            frequency?: "event" | "daily" | "weekly" | "monthly";
+            distribution?: "equal" | "weighted" | "random";
+            eligibility?: {
+                minLevel?: number;
+                minActivity?: number;
+                excludeBanned?: boolean;
+            };
         };
     };
     fees?: {
@@ -2199,13 +2199,13 @@ export declare const EconomyConfigSchema: z.ZodObject<{
             rate?: number;
         };
         withdrawal?: {
-            value?: number;
             type?: "fixed" | "percentage" | "tiered";
             max?: number;
             min?: number;
+            value?: number;
             tiers?: {
-                fee?: number;
                 threshold?: number;
+                fee?: number;
             }[];
         };
         trading?: {
@@ -2215,9 +2215,8 @@ export declare const EconomyConfigSchema: z.ZodObject<{
     };
     staking?: {
         enabled?: boolean;
-        minAmount?: number;
         rewards?: {
-            frequency?: "daily" | "block" | "weekly" | "monthly";
+            frequency?: "daily" | "weekly" | "monthly" | "block";
             bonus?: {
                 amount?: {
                     threshold?: number;
@@ -2227,11 +2226,12 @@ export declare const EconomyConfigSchema: z.ZodObject<{
             };
             distribution?: "linear" | "compound";
         };
+        minAmount?: number;
         maxAmount?: number;
         lockPeriods?: {
             days?: number;
             apr?: number;
-            compounding?: "daily" | "none" | "weekly" | "monthly";
+            compounding?: "none" | "daily" | "weekly" | "monthly";
             earlyWithdrawalPenalty?: number;
         }[];
     };
@@ -2270,12 +2270,13 @@ export declare const EconomyConfigSchema: z.ZodObject<{
         tradingDisabled?: boolean;
     };
 }, {
+    version?: string;
     shop?: {
         currency?: "DGT" | "USD" | "BOTH";
         exchangeRate?: number;
         dynamicPricing?: {
-            enabled?: boolean;
             algorithm?: "supply_demand" | "rarity_based" | "time_decay";
+            enabled?: boolean;
             updateFrequency?: number;
             bounds?: {
                 max?: number;
@@ -2295,7 +2296,6 @@ export declare const EconomyConfigSchema: z.ZodObject<{
                 quantity?: number;
             }[];
             seasonal?: {
-                enabled?: boolean;
                 events?: {
                     name?: string;
                     startDate?: string;
@@ -2303,6 +2303,7 @@ export declare const EconomyConfigSchema: z.ZodObject<{
                     discount?: number;
                     categories?: string[];
                 }[];
+                enabled?: boolean;
             };
         };
     };
@@ -2310,18 +2311,17 @@ export declare const EconomyConfigSchema: z.ZodObject<{
         symbol?: "DGT";
         name?: string;
         decimals?: number;
-        minAmount?: number;
         displayDecimals?: number;
+        minAmount?: number;
         maxAmount?: number;
         dustThreshold?: number;
     };
-    version?: string;
     limits?: {
         withdrawal?: {
             daily?: number;
+            cooldown?: number;
             weekly?: number;
             monthly?: number;
-            cooldown?: number;
             perTransaction?: {
                 max?: number;
                 min?: number;
@@ -2348,29 +2348,6 @@ export declare const EconomyConfigSchema: z.ZodObject<{
         };
     };
     distribution?: {
-        referral?: {
-            enabled?: boolean;
-            referrer?: number;
-            requirements?: {
-                minLevel?: number;
-                emailVerified?: boolean;
-            };
-            tiered?: {
-                level?: number;
-                bonus?: number;
-            }[];
-            referee?: number;
-        };
-        airdrops?: {
-            enabled?: boolean;
-            frequency?: "daily" | "event" | "weekly" | "monthly";
-            distribution?: "random" | "equal" | "weighted";
-            eligibility?: {
-                minLevel?: number;
-                minActivity?: number;
-                excludeBanned?: boolean;
-            };
-        };
         rewards?: {
             achievements?: {
                 enabled?: boolean;
@@ -2387,16 +2364,39 @@ export declare const EconomyConfigSchema: z.ZodObject<{
                 };
             };
         };
+        referral?: {
+            enabled?: boolean;
+            referrer?: number;
+            requirements?: {
+                minLevel?: number;
+                emailVerified?: boolean;
+            };
+            tiered?: {
+                level?: number;
+                bonus?: number;
+            }[];
+            referee?: number;
+        };
         faucet?: {
-            minLevel?: number;
             lifetime?: {
                 max?: number;
                 resetMonthly?: boolean;
             };
+            minLevel?: number;
             amount?: number;
             enabled?: boolean;
             cooldown?: number;
             requireCaptcha?: boolean;
+        };
+        airdrops?: {
+            enabled?: boolean;
+            frequency?: "event" | "daily" | "weekly" | "monthly";
+            distribution?: "equal" | "weighted" | "random";
+            eligibility?: {
+                minLevel?: number;
+                minActivity?: number;
+                excludeBanned?: boolean;
+            };
         };
     };
     fees?: {
@@ -2409,13 +2409,13 @@ export declare const EconomyConfigSchema: z.ZodObject<{
             rate?: number;
         };
         withdrawal?: {
-            value?: number;
             type?: "fixed" | "percentage" | "tiered";
             max?: number;
             min?: number;
+            value?: number;
             tiers?: {
-                fee?: number;
                 threshold?: number;
+                fee?: number;
             }[];
         };
         trading?: {
@@ -2425,9 +2425,8 @@ export declare const EconomyConfigSchema: z.ZodObject<{
     };
     staking?: {
         enabled?: boolean;
-        minAmount?: number;
         rewards?: {
-            frequency?: "daily" | "block" | "weekly" | "monthly";
+            frequency?: "daily" | "weekly" | "monthly" | "block";
             bonus?: {
                 amount?: {
                     threshold?: number;
@@ -2437,11 +2436,12 @@ export declare const EconomyConfigSchema: z.ZodObject<{
             };
             distribution?: "linear" | "compound";
         };
+        minAmount?: number;
         maxAmount?: number;
         lockPeriods?: {
             days?: number;
             apr?: number;
-            compounding?: "daily" | "none" | "weekly" | "monthly";
+            compounding?: "none" | "daily" | "weekly" | "monthly";
             earlyWithdrawalPenalty?: number;
         }[];
     };

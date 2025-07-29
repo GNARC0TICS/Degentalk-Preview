@@ -236,12 +236,12 @@ export const invalidateCache = {
   
   // Emergency invalidation
   async clearAll(reason: string = 'emergency cache clear'): Promise<void> {
-    logger.warn(`Emergency cache clear triggered: ${reason}`);
+    logger.warn('Cache', `Emergency cache clear triggered: ${reason}`);
     try {
       await redisCacheService.flushAll();
       logInvalidation('*', reason, true, '*');
     } catch (error) {
-      logger.error('Emergency cache clear failed:', error);
+      logger.error('Cache', 'Emergency cache clear failed:', error);
       logInvalidation('*', reason, false, '*');
     }
   }

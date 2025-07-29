@@ -31,7 +31,7 @@ const AdjustUserXpSchema = z.object({
 // Import service (this will need to be moved/created)
 async function getXpAdminService() {
 	try {
-		const service = await import('../../sub-domains/xp/xp.service');
+		const service = await import('@domains/gamification/admin/xp.service');
 		return service.xpAdminService;
 	} catch {
 		// Temporary fallback - will be properly implemented

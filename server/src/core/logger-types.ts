@@ -51,7 +51,10 @@ export enum LogAction {
 	// Error actions
 	ERROR_CAUGHT = 'ERROR_CAUGHT',
 	ERROR_HANDLED = 'ERROR_HANDLED',
-	ERROR_CRITICAL = 'ERROR_CRITICAL'
+	ERROR_CRITICAL = 'ERROR_CRITICAL',
+	
+	// General actions
+	FAILURE = 'FAILURE'
 }
 
 // Logger configuration interface

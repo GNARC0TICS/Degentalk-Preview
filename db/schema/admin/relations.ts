@@ -20,7 +20,8 @@ import { shoutboxConfig } from './shoutboxConfig';
 import { siteSettings } from './siteSettings';
 import { siteTemplates } from './templates';
 import { adminThemes } from './themes';
-import { uiThemes, uiQuotes } from './uiConfig';
+import { uiQuotes } from './uiConfig';
+import { uiThemes } from './uiThemes';
 import { users } from '../user/users';
 export const announcementsRelations = relations(announcements, ({ one, many }) => ({
 	createdBy: one(users, {
@@ -35,20 +36,8 @@ export const auditLogsRelations = relations(auditLogs, ({ one, many }) => ({
 	})
 }));
 export const adminBackupsRelations = relations(adminBackups, ({ one, many }) => ({
-	lastBackup: one(adminBackups, {
-		fields: [adminBackups.lastBackupId],
-		references: [adminBackups.id]
-	}),
-	updatedBy: one(users, {
-		fields: [adminBackups.updatedBy],
-		references: [users.id]
-	}),
-	preRestoreBackup: one(adminBackups, {
-		fields: [adminBackups.preRestoreBackupId],
-		references: [adminBackups.id]
-	}),
-	approvedBy: one(users, {
-		fields: [adminBackups.approvedBy],
+	createdBy: one(users, {
+		fields: [adminBackups.createdBy],
 		references: [users.id]
 	})
 }));
