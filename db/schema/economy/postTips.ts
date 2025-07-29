@@ -16,6 +16,7 @@ export const postTips = pgTable('post_tips', {
 		.notNull()
 		.default(sql`now()`)
 });
+// @ts-ignore - drizzle-zod type inference issue with cross-workspace builds
 export const insertPostTipSchema = createInsertSchema(postTips).omit({
 	id: true,
 	createdAt: true

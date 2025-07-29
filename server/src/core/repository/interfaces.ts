@@ -5,7 +5,8 @@
  * Defines contracts for all domain repositories with proper typing
  */
 
-import type { User, ForumCategory, Thread, Post, Transaction } from '@schema';
+import type { User, Thread, Post, Transaction } from '@schema';
+import type { ForumCategory } from '@domains/forum/types';
 import type { PaginatedResult, QueryOptions } from './base-repository';
 import type { CategoryId, AuthorId, EntityId, UserId, ThreadId, PostId } from '@shared/types/ids';
 

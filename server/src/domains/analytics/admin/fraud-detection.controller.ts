@@ -50,7 +50,8 @@ export class FraudDetectionController {
 	async getFraudAlerts(req: Request, res: Response) {
 		const boundary = new AdminOperationBoundary({
 			operation: 'GET_FRAUD_ALERTS',
-			entityType: 'fraud_detection'
+			entityType: 'fraud_detection',
+			timestamp: new Date()
 		});
 
 		return boundary.execute(async () => {
@@ -84,7 +85,8 @@ export class FraudDetectionController {
 	async getFraudMetrics(req: Request, res: Response) {
 		const boundary = new AdminOperationBoundary({
 			operation: 'GET_FRAUD_METRICS',
-			entityType: 'fraud_detection'
+			entityType: 'fraud_detection',
+			timestamp: new Date()
 		});
 
 		return boundary.execute(async () => {
@@ -108,7 +110,8 @@ export class FraudDetectionController {
 	async analyzeUser(req: Request, res: Response) {
 		const boundary = new AdminOperationBoundary({
 			operation: 'ANALYZE_USER_FRAUD',
-			entityType: 'fraud_detection'
+			entityType: 'fraud_detection',
+			timestamp: new Date()
 		});
 
 		return boundary.execute(async () => {
@@ -137,7 +140,8 @@ export class FraudDetectionController {
 	async resolveAlert(req: Request, res: Response) {
 		const boundary = new AdminOperationBoundary({
 			operation: 'RESOLVE_FRAUD_ALERT',
-			entityType: 'fraud_detection'
+			entityType: 'fraud_detection',
+			timestamp: new Date()
 		});
 
 		return boundary.execute(async () => {
@@ -175,7 +179,8 @@ export class FraudDetectionController {
 	async runFraudScan(req: Request, res: Response) {
 		const boundary = new AdminOperationBoundary({
 			operation: 'RUN_FRAUD_SCAN',
-			entityType: 'fraud_detection'
+			entityType: 'fraud_detection',
+			timestamp: new Date()
 		});
 
 		return boundary.execute(async () => {
@@ -205,7 +210,8 @@ export class FraudDetectionController {
 	async getSettings(req: Request, res: Response) {
 		const boundary = new AdminOperationBoundary({
 			operation: 'GET_FRAUD_SETTINGS',
-			entityType: 'fraud_detection'
+			entityType: 'fraud_detection',
+			timestamp: new Date()
 		});
 
 		return boundary.execute(async () => {
@@ -229,7 +235,8 @@ export class FraudDetectionController {
 	async updateSettings(req: Request, res: Response) {
 		const boundary = new AdminOperationBoundary({
 			operation: 'UPDATE_FRAUD_SETTINGS',
-			entityType: 'fraud_detection'
+			entityType: 'fraud_detection',
+			timestamp: new Date()
 		});
 
 		return boundary.execute(async () => {
@@ -260,7 +267,8 @@ export class FraudDetectionController {
 	async getSuspiciousUsers(req: Request, res: Response) {
 		const boundary = new AdminOperationBoundary({
 			operation: 'GET_SUSPICIOUS_USERS',
-			entityType: 'fraud_detection'
+			entityType: 'fraud_detection',
+			timestamp: new Date()
 		});
 
 		return boundary.execute(async () => {
@@ -293,7 +301,8 @@ export class FraudDetectionController {
 	async getDashboard(req: Request, res: Response) {
 		const boundary = new AdminOperationBoundary({
 			operation: 'GET_FRAUD_DASHBOARD',
-			entityType: 'fraud_detection'
+			entityType: 'fraud_detection',
+			timestamp: new Date()
 		});
 
 		return boundary.execute(async () => {

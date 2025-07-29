@@ -39,7 +39,8 @@ export class EmailTemplateController {
 	async getAllTemplates(req: Request, res: Response) {
 		const boundary = new AdminOperationBoundary({
 			operation: 'FETCH_EMAIL_TEMPLATES',
-			entityType: 'emailTemplate'
+			entityType: 'emailTemplate',
+			timestamp: new Date()
 		});
 
 		return boundary.execute(async () => {
@@ -79,7 +80,8 @@ export class EmailTemplateController {
 	async getTemplate(req: Request, res: Response) {
 		const boundary = new AdminOperationBoundary({
 			operation: 'FETCH_EMAIL_TEMPLATE',
-			entityType: 'emailTemplate'
+			entityType: 'emailTemplate',
+			timestamp: new Date()
 		});
 
 		return boundary.execute(async () => {
@@ -99,7 +101,8 @@ export class EmailTemplateController {
 	async createTemplate(req: Request, res: Response) {
 		const boundary = new AdminOperationBoundary({
 			operation: 'CREATE_EMAIL_TEMPLATE',
-			entityType: 'emailTemplate'
+			entityType: 'emailTemplate',
+			timestamp: new Date()
 		});
 
 		return boundary.execute(async () => {
@@ -123,7 +126,8 @@ export class EmailTemplateController {
 	async updateTemplate(req: Request, res: Response) {
 		const boundary = new AdminOperationBoundary({
 			operation: 'EMAIL_TEMPLATE_OPERATION',
-			entityType: 'emailTemplate'
+			entityType: 'emailTemplate',
+			timestamp: new Date()
 		});
 		return boundary.execute(async () => {
 			const { id } = req.params;
@@ -158,7 +162,8 @@ export class EmailTemplateController {
 	async deleteTemplate(req: Request, res: Response) {
 		const boundary = new AdminOperationBoundary({
 			operation: 'EMAIL_TEMPLATE_OPERATION',
-			entityType: 'emailTemplate'
+			entityType: 'emailTemplate',
+			timestamp: new Date()
 		});
 		return boundary.execute(async () => {
 			const { id } = req.params;
@@ -186,7 +191,8 @@ export class EmailTemplateController {
 	async previewTemplate(req: Request, res: Response) {
 		const boundary = new AdminOperationBoundary({
 			operation: 'EMAIL_TEMPLATE_OPERATION',
-			entityType: 'emailTemplate'
+			entityType: 'emailTemplate',
+			timestamp: new Date()
 		});
 		return boundary.execute(async () => {
 			const { variables, templateId, templateKey } = previewTemplateSchema.parse(req.body);
@@ -209,7 +215,8 @@ export class EmailTemplateController {
 	async getTemplateVersions(req: Request, res: Response) {
 		const boundary = new AdminOperationBoundary({
 			operation: 'EMAIL_TEMPLATE_OPERATION',
-			entityType: 'emailTemplate'
+			entityType: 'emailTemplate',
+			timestamp: new Date()
 		});
 		return boundary.execute(async () => {
 			const { id } = req.params;
@@ -232,7 +239,8 @@ export class EmailTemplateController {
 	async restoreVersion(req: Request, res: Response) {
 		const boundary = new AdminOperationBoundary({
 			operation: 'EMAIL_TEMPLATE_OPERATION',
-			entityType: 'emailTemplate'
+			entityType: 'emailTemplate',
+			timestamp: new Date()
 		});
 		return boundary.execute(async () => {
 			const { id, versionId } = req.params;
@@ -269,7 +277,8 @@ export class EmailTemplateController {
 	async getTemplateStats(req: Request, res: Response) {
 		const boundary = new AdminOperationBoundary({
 			operation: 'EMAIL_TEMPLATE_OPERATION',
-			entityType: 'emailTemplate'
+			entityType: 'emailTemplate',
+			timestamp: new Date()
 		});
 		return boundary.execute(async () => {
 			const { id } = req.params;
@@ -294,7 +303,8 @@ export class EmailTemplateController {
 	async sendEmail(req: Request, res: Response) {
 		const boundary = new AdminOperationBoundary({
 			operation: 'EMAIL_TEMPLATE_OPERATION',
-			entityType: 'emailTemplate'
+			entityType: 'emailTemplate',
+			timestamp: new Date()
 		});
 		return boundary.execute(async () => {
 			const emailData = sendEmailSchema.parse(req.body);
@@ -317,7 +327,8 @@ export class EmailTemplateController {
 	async getCategories(req: Request, res: Response) {
 		const boundary = new AdminOperationBoundary({
 			operation: 'EMAIL_TEMPLATE_OPERATION',
-			entityType: 'emailTemplate'
+			entityType: 'emailTemplate',
+			timestamp: new Date()
 		});
 		return boundary.execute(async () => {
 			const categories = [

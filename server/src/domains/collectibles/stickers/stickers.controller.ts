@@ -46,7 +46,8 @@ export class StickerController {
 	async getStickers(req: Request, res: Response) {
 		const boundary = new AdminOperationBoundary({
 			operation: 'LIST_STICKERS',
-			entityType: 'sticker'
+			entityType: 'sticker',
+			timestamp: new Date()
 		});
 
 		return boundary.execute(async () => {
@@ -64,7 +65,8 @@ export class StickerController {
 	async getSticker(req: Request, res: Response) {
 		const boundary = new AdminOperationBoundary({
 			operation: 'GET_STICKER',
-			entityType: 'sticker'
+			entityType: 'sticker',
+			timestamp: new Date()
 		});
 
 		return boundary.execute(async () => {
@@ -82,7 +84,8 @@ export class StickerController {
 	async createSticker(req: Request, res: Response) {
 		const boundary = new AdminOperationBoundary({
 			operation: 'CREATE_STICKER',
-			entityType: 'sticker'
+			entityType: 'sticker',
+			timestamp: new Date()
 		});
 
 		return boundary.execute(async () => {
@@ -106,7 +109,8 @@ export class StickerController {
 	async updateSticker(req: Request, res: Response) {
 		const boundary = new AdminOperationBoundary({
 			operation: 'UPDATE_STICKER',
-			entityType: 'sticker'
+			entityType: 'sticker',
+			timestamp: new Date()
 		});
 
 		return boundary.execute(async () => {
@@ -131,7 +135,8 @@ export class StickerController {
 	async deleteSticker(req: Request, res: Response) {
 		const boundary = new AdminOperationBoundary({
 			operation: 'DELETE_STICKER',
-			entityType: 'sticker'
+			entityType: 'sticker',
+			timestamp: new Date()
 		});
 
 		return boundary.execute(async () => {
@@ -155,7 +160,8 @@ export class StickerController {
 	async bulkDeleteStickers(req: Request, res: Response) {
 		const boundary = new AdminOperationBoundary({
 			operation: 'BULK_DELETE_STICKERS',
-			entityType: 'sticker'
+			entityType: 'sticker',
+			timestamp: new Date()
 		});
 
 		return boundary.execute(async () => {
@@ -181,7 +187,8 @@ export class StickerController {
 	async getStickerPacks(req: Request, res: Response) {
 		const boundary = new AdminOperationBoundary({
 			operation: 'LIST_STICKER_PACKS',
-			entityType: 'stickerPack'
+			entityType: 'stickerPack',
+			timestamp: new Date()
 		});
 
 		return boundary.execute(async () => {
@@ -199,7 +206,8 @@ export class StickerController {
 	async getStickerPack(req: Request, res: Response) {
 		const boundary = new AdminOperationBoundary({
 			operation: 'GET_STICKER_PACK',
-			entityType: 'stickerPack'
+			entityType: 'stickerPack',
+			timestamp: new Date()
 		});
 
 		return boundary.execute(async () => {
@@ -217,7 +225,8 @@ export class StickerController {
 	async createStickerPack(req: Request, res: Response) {
 		const boundary = new AdminOperationBoundary({
 			operation: 'CREATE_STICKER_PACK',
-			entityType: 'stickerPack'
+			entityType: 'stickerPack',
+			timestamp: new Date()
 		});
 
 		return boundary.execute(async () => {
@@ -241,7 +250,8 @@ export class StickerController {
 	async updateStickerPack(req: Request, res: Response) {
 		const boundary = new AdminOperationBoundary({
 			operation: 'UPDATE_STICKER_PACK',
-			entityType: 'stickerPack'
+			entityType: 'stickerPack',
+			timestamp: new Date()
 		});
 
 		return boundary.execute(async () => {
@@ -266,7 +276,8 @@ export class StickerController {
 	async deleteStickerPack(req: Request, res: Response) {
 		const boundary = new AdminOperationBoundary({
 			operation: 'DELETE_STICKER_PACK',
-			entityType: 'stickerPack'
+			entityType: 'stickerPack',
+			timestamp: new Date()
 		});
 
 		return boundary.execute(async () => {
@@ -292,7 +303,8 @@ export class StickerController {
 	async getStickerCategories(req: Request, res: Response) {
 		const boundary = new AdminOperationBoundary({
 			operation: 'GET_STICKER_CATEGORIES',
-			entityType: 'sticker'
+			entityType: 'sticker',
+			timestamp: new Date()
 		});
 
 		return boundary.execute(async () => {
@@ -309,7 +321,8 @@ export class StickerController {
 	async trackStickerUsage(req: Request, res: Response) {
 		const boundary = new AdminOperationBoundary({
 			operation: 'TRACK_STICKER_USAGE',
-			entityType: 'sticker'
+			entityType: 'sticker',
+			timestamp: new Date()
 		});
 
 		return boundary.execute(async () => {
@@ -339,7 +352,8 @@ export class StickerController {
 	async uploadStickerFile(req: Request, res: Response) {
 		const boundary = new AdminOperationBoundary({
 			operation: 'UPLOAD_STICKER_FILE',
-			entityType: 'sticker'
+			entityType: 'sticker',
+			timestamp: new Date()
 		});
 
 		return boundary.execute(async () => {
@@ -400,7 +414,8 @@ export class StickerController {
 	async confirmStickerUpload(req: Request, res: Response) {
 		const boundary = new AdminOperationBoundary({
 			operation: 'CONFIRM_STICKER_UPLOAD',
-			entityType: 'sticker'
+			entityType: 'sticker',
+			timestamp: new Date()
 		});
 
 		return boundary.execute(async () => {
@@ -484,7 +499,8 @@ export class StickerController {
 	async deleteStickerFile(req: Request, res: Response) {
 		const boundary = new AdminOperationBoundary({
 			operation: 'DELETE_STICKER_FILE',
-			entityType: 'sticker'
+			entityType: 'sticker',
+			timestamp: new Date()
 		});
 
 		return boundary.execute(async () => {

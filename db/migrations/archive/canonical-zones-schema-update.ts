@@ -1,6 +1,6 @@
 import { sql } from "drizzle-orm";
 import { db } from "../db";
-import { logger } from "../../server/src/core/logger";
+// Logger import removed - migrations should use console for logging
 
 /**
  * ForumFusion - Add Canonical Zone Fields Migration

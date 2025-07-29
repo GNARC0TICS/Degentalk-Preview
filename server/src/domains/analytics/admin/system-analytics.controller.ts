@@ -26,7 +26,8 @@ export class SystemAnalyticsController {
 	async getPlatformStats(req: Request, res: Response) {
 		const boundary = new AdminOperationBoundary({
 			operation: 'GET_PLATFORM_STATS',
-			entityType: 'platform_analytics'
+			entityType: 'platform_analytics',
+			timestamp: new Date()
 		});
 
 		return boundary.execute(async () => {
@@ -50,7 +51,8 @@ export class SystemAnalyticsController {
 	async getSystemMetrics(req: Request, res: Response) {
 		const boundary = new AdminOperationBoundary({
 			operation: 'GET_SYSTEM_METRICS',
-			entityType: 'system_analytics'
+			entityType: 'system_analytics',
+			timestamp: new Date()
 		});
 
 		return boundary.execute(async () => {
@@ -84,7 +86,8 @@ export class SystemAnalyticsController {
 	async getPerformanceHeatmap(req: Request, res: Response) {
 		const boundary = new AdminOperationBoundary({
 			operation: 'GET_PERFORMANCE_HEATMAP',
-			entityType: 'system_analytics'
+			entityType: 'system_analytics',
+			timestamp: new Date()
 		});
 
 		return boundary.execute(async () => {
@@ -122,7 +125,8 @@ export class SystemAnalyticsController {
 	async getSystemHealth(req: Request, res: Response) {
 		const boundary = new AdminOperationBoundary({
 			operation: 'GET_SYSTEM_HEALTH',
-			entityType: 'system_analytics'
+			entityType: 'system_analytics',
+			timestamp: new Date()
 		});
 
 		return boundary.execute(async () => {
@@ -162,7 +166,8 @@ export class SystemAnalyticsController {
 	async getRealtimeAnalytics(req: Request, res: Response) {
 		const boundary = new AdminOperationBoundary({
 			operation: 'GET_REALTIME_ANALYTICS',
-			entityType: 'system_analytics'
+			entityType: 'system_analytics',
+			timestamp: new Date()
 		});
 
 		return boundary.execute(async () => {
@@ -214,7 +219,8 @@ export class SystemAnalyticsController {
 	async getCacheStats(req: Request, res: Response) {
 		const boundary = new AdminOperationBoundary({
 			operation: 'GET_CACHE_STATS',
-			entityType: 'system_analytics'
+			entityType: 'system_analytics',
+			timestamp: new Date()
 		});
 
 		return boundary.execute(async () => {
@@ -240,7 +246,8 @@ export class SystemAnalyticsController {
 	async performCacheOperation(req: Request, res: Response) {
 		const boundary = new AdminOperationBoundary({
 			operation: 'CACHE_OPERATION',
-			entityType: 'system_analytics'
+			entityType: 'system_analytics',
+			timestamp: new Date()
 		});
 
 		return boundary.execute(async () => {
@@ -323,7 +330,8 @@ export class SystemAnalyticsController {
 	async getSystemOverview(req: Request, res: Response) {
 		const boundary = new AdminOperationBoundary({
 			operation: 'GET_SYSTEM_OVERVIEW',
-			entityType: 'system_analytics'
+			entityType: 'system_analytics',
+			timestamp: new Date()
 		});
 
 		return boundary.execute(async () => {
@@ -385,7 +393,8 @@ export class SystemAnalyticsController {
 	async getDatabaseStats(req: Request, res: Response) {
 		const boundary = new AdminOperationBoundary({
 			operation: 'GET_DATABASE_STATS',
-			entityType: 'system_analytics'
+			entityType: 'system_analytics',
+			timestamp: new Date()
 		});
 
 		return boundary.execute(async () => {

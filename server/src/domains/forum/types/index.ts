@@ -360,6 +360,10 @@ export interface ForumPaginationMeta {
 	hasPrev: boolean;
 }
 
+// Type aliases for backward compatibility
+export type ForumCategoryWithStats = PublicForumStructure;
+export type ForumCategory = PublicForumStructure;
+
 // Type guards
 export const isPublicThreadSafe = (data: any): data is PublicThread => {
 	return (

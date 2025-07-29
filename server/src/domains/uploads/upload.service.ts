@@ -217,8 +217,8 @@ export class UploadService {
 		} else {
 			// Original security validation for user uploads
 			if (!relativePath.startsWith(`users/${userId}/`)) {
-				logger.error(
-					`UploadService: User ${userId} attempted to confirm upload for unauthorized path ${relativePath}`
+				logger.error('UploadService',
+					`User ${userId} attempted to confirm upload for unauthorized path ${relativePath}`
 				);
 				throw new DegenUploadError(
 					`Unauthorized upload path confirmation. You can only confirm uploads within your own user directory.`,
@@ -232,7 +232,7 @@ export class UploadService {
 			const fileExists = await storageService.fileExists(bucketName, relativePath);
 
 			if (!fileExists) {
-				logger.warn(`UploadService: Confirmation failed for non-existent file: ${relativePath}`);
+				logger.warn('UploadService', `Confirmation failed for non-existent file: ${relativePath}`);
 				throw new DegenUploadError(
 					`Upload confirmation failed. The file at path ${relativePath} does not exist in our system. Did it get rugged?`,
 					404
@@ -252,7 +252,7 @@ export class UploadService {
 				const profileUpdateResult = await profileService.updateMediaUrl(mediaUpdateParams);
 
 				if (!profileUpdateResult.success) {
-					logger.error(
+					logger.error('UploadService',
 						`Failed to update profile for user ${userId} after upload confirmation: ${profileUpdateResult.message}`
 					);
 					// Even if profile update fails, the file is uploaded. Return a partial success with a warning.
@@ -265,7 +265,7 @@ export class UploadService {
 				}
 			}
 
-			logger.info(`UploadService: Upload confirmed successfully for ${relativePath}`);
+			logger.info('UploadService', `Upload confirmed successfully for ${relativePath}`);
 			return {
 				success: true,
 				message: 'Upload confirmed successfully.',
@@ -276,7 +276,7 @@ export class UploadService {
 			if (error instanceof DegenUploadError) {
 				throw error;
 			}
-			logger.error(`UploadService: Unexpected error confirming upload for ${relativePath}:`, error);
+			logger.error('UploadService', `Unexpected error confirming upload for ${relativePath}:`, error);
 			throw new DegenUploadError(
 				`An unexpected error occurred during upload confirmation. The server might be having a moment.`,
 				500
@@ -306,7 +306,7 @@ export class UploadService {
 			const deleted = await storageService.deleteFile(bucketName, relativePath);
 
 			if (deleted) {
-				logger.info(
+				logger.info('UploadService',
 					`UploadService: Admin ${adminId} successfully deleted file ${bucketName}/${relativePath}`
 				);
 				return {

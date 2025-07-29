@@ -41,7 +41,8 @@ export class BackupRestoreController {
 	async getBackups(req: Request, res: Response) {
 		const boundary = new AdminOperationBoundary({
 			operation: 'LIST_BACKUPS',
-			entityType: 'backup'
+			entityType: 'backup',
+			timestamp: new Date()
 		});
 
 		return boundary.execute(async () => {
@@ -59,7 +60,8 @@ export class BackupRestoreController {
 	async getBackup(req: Request, res: Response) {
 		const boundary = new AdminOperationBoundary({
 			operation: 'GET_BACKUP',
-			entityType: 'backup'
+			entityType: 'backup',
+			timestamp: new Date()
 		});
 
 		return boundary.execute(async () => {
@@ -77,7 +79,8 @@ export class BackupRestoreController {
 	async createBackup(req: Request, res: Response) {
 		const boundary = new AdminOperationBoundary({
 			operation: 'CREATE_BACKUP',
-			entityType: 'backup'
+			entityType: 'backup',
+			timestamp: new Date()
 		});
 
 		return boundary.execute(async () => {
@@ -101,7 +104,8 @@ export class BackupRestoreController {
 	async deleteBackup(req: Request, res: Response) {
 		const boundary = new AdminOperationBoundary({
 			operation: 'DELETE_BACKUP',
-			entityType: 'backup'
+			entityType: 'backup',
+			timestamp: new Date()
 		});
 
 		return boundary.execute(async () => {
@@ -125,7 +129,8 @@ export class BackupRestoreController {
 	async getBackupProgress(req: Request, res: Response) {
 		const boundary = new AdminOperationBoundary({
 			operation: 'GET_BACKUP_PROGRESS',
-			entityType: 'backup'
+			entityType: 'backup',
+			timestamp: new Date()
 		});
 
 		return boundary.execute(async () => {
@@ -175,7 +180,8 @@ export class BackupRestoreController {
 	async getStorageStats(req: Request, res: Response) {
 		const boundary = new AdminOperationBoundary({
 			operation: 'GET_STORAGE_STATS',
-			entityType: 'backup'
+			entityType: 'backup',
+			timestamp: new Date()
 		});
 
 		return boundary.execute(async () => {
@@ -194,7 +200,8 @@ export class BackupRestoreController {
 	async getRestoreOperations(req: Request, res: Response) {
 		const boundary = new AdminOperationBoundary({
 			operation: 'LIST_RESTORE_OPERATIONS',
-			entityType: 'restore'
+			entityType: 'restore',
+			timestamp: new Date()
 		});
 
 		return boundary.execute(async () => {
@@ -212,7 +219,8 @@ export class BackupRestoreController {
 	async getRestoreOperation(req: Request, res: Response) {
 		const boundary = new AdminOperationBoundary({
 			operation: 'GET_RESTORE_OPERATION',
-			entityType: 'restore'
+			entityType: 'restore',
+			timestamp: new Date()
 		});
 
 		return boundary.execute(async () => {
@@ -230,7 +238,8 @@ export class BackupRestoreController {
 	async validateRestore(req: Request, res: Response) {
 		const boundary = new AdminOperationBoundary({
 			operation: 'VALIDATE_RESTORE',
-			entityType: 'restore'
+			entityType: 'restore',
+			timestamp: new Date()
 		});
 
 		return boundary.execute(async () => {
@@ -248,7 +257,8 @@ export class BackupRestoreController {
 	async createRestoreOperation(req: Request, res: Response) {
 		const boundary = new AdminOperationBoundary({
 			operation: 'CREATE_RESTORE_OPERATION',
-			entityType: 'restore'
+			entityType: 'restore',
+			timestamp: new Date()
 		});
 
 		return boundary.execute(async () => {
@@ -272,7 +282,8 @@ export class BackupRestoreController {
 	async cancelRestoreOperation(req: Request, res: Response) {
 		const boundary = new AdminOperationBoundary({
 			operation: 'CANCEL_RESTORE_OPERATION',
-			entityType: 'restore'
+			entityType: 'restore',
+			timestamp: new Date()
 		});
 
 		return boundary.execute(async () => {
@@ -296,7 +307,8 @@ export class BackupRestoreController {
 	async getRestoreProgress(req: Request, res: Response) {
 		const boundary = new AdminOperationBoundary({
 			operation: 'GET_RESTORE_PROGRESS',
-			entityType: 'restore'
+			entityType: 'restore',
+			timestamp: new Date()
 		});
 
 		return boundary.execute(async () => {
@@ -316,7 +328,8 @@ export class BackupRestoreController {
 	async getSchedules(req: Request, res: Response) {
 		const boundary = new AdminOperationBoundary({
 			operation: 'LIST_BACKUP_SCHEDULES',
-			entityType: 'backupSchedule'
+			entityType: 'backupSchedule',
+			timestamp: new Date()
 		});
 
 		return boundary.execute(async () => {
@@ -334,7 +347,8 @@ export class BackupRestoreController {
 	async getSchedule(req: Request, res: Response) {
 		const boundary = new AdminOperationBoundary({
 			operation: 'GET_BACKUP_SCHEDULE',
-			entityType: 'backupSchedule'
+			entityType: 'backupSchedule',
+			timestamp: new Date()
 		});
 
 		return boundary.execute(async () => {
@@ -352,7 +366,8 @@ export class BackupRestoreController {
 	async createSchedule(req: Request, res: Response) {
 		const boundary = new AdminOperationBoundary({
 			operation: 'CREATE_BACKUP_SCHEDULE',
-			entityType: 'backupSchedule'
+			entityType: 'backupSchedule',
+			timestamp: new Date()
 		});
 
 		return boundary.execute(async () => {
@@ -376,7 +391,8 @@ export class BackupRestoreController {
 	async updateSchedule(req: Request, res: Response) {
 		const boundary = new AdminOperationBoundary({
 			operation: 'UPDATE_BACKUP_SCHEDULE',
-			entityType: 'backupSchedule'
+			entityType: 'backupSchedule',
+			timestamp: new Date()
 		});
 
 		return boundary.execute(async () => {
@@ -401,7 +417,8 @@ export class BackupRestoreController {
 	async deleteSchedule(req: Request, res: Response) {
 		const boundary = new AdminOperationBoundary({
 			operation: 'DELETE_BACKUP_SCHEDULE',
-			entityType: 'backupSchedule'
+			entityType: 'backupSchedule',
+			timestamp: new Date()
 		});
 
 		return boundary.execute(async () => {
@@ -425,7 +442,8 @@ export class BackupRestoreController {
 	async triggerSchedule(req: Request, res: Response) {
 		const boundary = new AdminOperationBoundary({
 			operation: 'TRIGGER_BACKUP_SCHEDULE',
-			entityType: 'backupSchedule'
+			entityType: 'backupSchedule',
+			timestamp: new Date()
 		});
 
 		return boundary.execute(async () => {
@@ -451,7 +469,8 @@ export class BackupRestoreController {
 	async getSchedulerStatus(req: Request, res: Response) {
 		const boundary = new AdminOperationBoundary({
 			operation: 'GET_SCHEDULER_STATUS',
-			entityType: 'backupSchedule'
+			entityType: 'backupSchedule',
+			timestamp: new Date()
 		});
 
 		return boundary.execute(async () => {
@@ -468,7 +487,8 @@ export class BackupRestoreController {
 	async startScheduler(req: Request, res: Response) {
 		const boundary = new AdminOperationBoundary({
 			operation: 'START_BACKUP_SCHEDULER',
-			entityType: 'backupSchedule'
+			entityType: 'backupSchedule',
+			timestamp: new Date()
 		});
 
 		return boundary.execute(async () => {
@@ -485,7 +505,8 @@ export class BackupRestoreController {
 	async stopScheduler(req: Request, res: Response) {
 		const boundary = new AdminOperationBoundary({
 			operation: 'STOP_BACKUP_SCHEDULER',
-			entityType: 'backupSchedule'
+			entityType: 'backupSchedule',
+			timestamp: new Date()
 		});
 
 		return boundary.execute(async () => {
@@ -504,7 +525,8 @@ export class BackupRestoreController {
 	async getSystemHealth(req: Request, res: Response) {
 		const boundary = new AdminOperationBoundary({
 			operation: 'GET_BACKUP_SYSTEM_HEALTH',
-			entityType: 'backup'
+			entityType: 'backup',
+			timestamp: new Date()
 		});
 
 		return boundary.execute(async () => {
