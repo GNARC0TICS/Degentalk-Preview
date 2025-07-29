@@ -34,33 +34,33 @@ export async function initializeDevAuth() {
 		return;
 	}
 
-	logger.info('[DevAuth] Initializing development authentication...');
+	logger.info('DevAuth', '[DevAuth] Initializing development authentication...');
 
 	try {
 		// Check if we have valid cached tokens
 		const validCache = await checkTokenCache();
 		if (validCache) {
-			logger.info('[DevAuth] Using cached tokens from .cache/dev-tokens.json');
+			logger.info('DevAuth', '[DevAuth] Using cached tokens from .cache/dev-tokens.json');
 			logTokenSummary();
 			return;
 		}
 
 		// Auto-login default users
-		logger.info('[DevAuth] Generating new tokens for test users...');
+		logger.info('DevAuth', '[DevAuth] Generating new tokens for test users...');
 		const tokens = await loginDefaultUsers();
 
 		if (tokens.length > 0) {
 			// Save to cache
 			saveTokenCache(tokens);
-			logger.info(`[DevAuth] ✅ ${tokens.length} test users auto-logged in`);
-			logger.info('[DevAuth] Tokens saved to .cache/dev-tokens.json');
+			logger.info('DevAuth', `[DevAuth] ✅ ${tokens.length} test users auto-logged in`);
+			logger.info('DevAuth', '[DevAuth] Tokens saved to .cache/dev-tokens.json');
 			logTokenSummary();
 		} else {
-			logger.warn('[DevAuth] No test users found. Run "pnpm seed:users:tokens" first.');
+			logger.warn('DevAuth', '[DevAuth] No test users found. Run "pnpm seed:users:tokens" first.');
 		}
 
 	} catch (error) {
-		logger.error('[DevAuth] Failed to initialize dev auth', { error });
+		logger.error('DevAuth', '[DevAuth] Failed to initialize dev auth', { error });
 	}
 }
 
@@ -88,12 +88,12 @@ async function checkTokenCache(): Promise<boolean> {
 
 async function loginDefaultUsers(): Promise<TokenCacheEntry[]> {
 	// Fetch default test users from database
-	logger.info('[DevAuth] About to query database for users', { users: DEFAULT_USERS });
+	logger.info('DevAuth', '[DevAuth] About to query database for users', { users: DEFAULT_USERS });
 	const testUsers = await db
 		.select()
 		.from(users)
 		.where(inArray(users.username, DEFAULT_USERS));
-	logger.info('[DevAuth] Database query completed', { foundUsers: testUsers.length });
+	logger.info('DevAuth', '[DevAuth] Database query completed', { foundUsers: testUsers.length });
 
 	const tokens: TokenCacheEntry[] = [];
 
