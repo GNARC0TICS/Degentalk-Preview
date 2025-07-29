@@ -1,4 +1,4 @@
-import { db } from '@core/db';
+import { db } from '@db';
 import { eventLogs } from '@schema/system/event_logs';
 import { users } from '@schema/user/users';
 import { eq, and, gte, lte, desc, inArray } from 'drizzle-orm';

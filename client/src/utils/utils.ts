@@ -102,24 +102,3 @@ export function isLightColor(color: string): boolean {
 	// Consider colors with brightness > 155 as light
 	return brightness > 155;
 }
-
-// Format date nicely
-export function formatDate(dateString: string): string {
-	if (!dateString) return '—';
-
-	try {
-		const date = new Date(dateString);
-		// Check if date is valid
-		if (isNaN(date.getTime())) {
-			return 'Invalid Date';
-		}
-		return new Intl.DateTimeFormat('en-US', {
-			year: 'numeric',
-			month: 'short',
-			day: 'numeric'
-		}).format(date);
-	} catch (e) {
-		logger.error('Utils', 'Error formatting date:', { data: [dateString, e] });
-		return 'Invalid Date';
-	}
-}

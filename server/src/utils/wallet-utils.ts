@@ -1,8 +1,8 @@
-import { db } from '../db';
+import { db } from '@db';
 import { sql } from 'drizzle-orm';
 import { users, transactions } from '@schema';
 import { eq } from 'drizzle-orm';
-import { logger, LogLevel, LogAction } from '../src/core/logger';
+import { logger, LogLevel, LogAction } from '@core/logger';
 import { TransactionId } from '@shared/types/ids';
 
 /**

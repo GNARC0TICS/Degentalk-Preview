@@ -21,7 +21,7 @@ import {
 import crypto from 'crypto';
 import { z } from 'zod';
 import { isAuthenticated } from '@domains/auth/middleware/auth.middleware';
-import { db } from '@core/db';
+import { db } from '@db';
 import { asyncHandler } from '@core/errors'; // Assuming asyncHandler is in core errors
 import { getUserIdFromRequest } from '@core/utils/auth.helpers';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';

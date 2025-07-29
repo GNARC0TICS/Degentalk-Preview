@@ -1,5 +1,5 @@
 import { eq, and, sql, desc, asc, gte, lte, isNull } from 'drizzle-orm';
-import { db } from '@core/db';
+import { db } from '@db';
 import {
 	userPromotions,
 	announcementSlots,

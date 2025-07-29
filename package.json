@@ -100,9 +100,12 @@
 		"commit:no-hooks": "./scripts/commit-no-hooks.sh",
 		"hooks:disable": "git config core.hooksPath /dev/null",
 		"hooks:enable": "git config --unset core.hooksPath",
-		"db:sync:forums": "tsx -r tsconfig-paths/register scripts/db/sync-forum-config.ts"
+		"db:sync:forums": "tsx -r tsconfig-paths/register scripts/db/sync-forum-config.ts",
+		"claude": "claude",
+		"run:prompt": "ts-node tools/runClaude.ts"
 	},
 	"devDependencies": {
+		"@anthropic-ai/claude-code": "^1.0.62",
 		"@faker-js/faker": "^9.8.0",
 		"@paralleldrive/cuid2": "^2.2.2",
 		"@tailwindcss/container-queries": "^0.1.1",

@@ -1,6 +1,6 @@
-import { db } from '../db';
+import { db } from '@db';
 import { sql } from 'drizzle-orm';
-import { logger, LogLevel, LogAction } from '../src/core/logger';
+import { logger, LogLevel, LogAction } from '@core/logger';
 
 // Constants for DGT token economy
 const TOTAL_DGT_SUPPLY = 1000000000n * 1000000n; // 1 billion tokens with 6 decimal places

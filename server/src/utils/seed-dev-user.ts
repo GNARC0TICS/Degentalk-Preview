@@ -4,7 +4,7 @@ import { users, roles } from '@schema';
 import { eq } from 'drizzle-orm';
 import { pool } from '../src/core/db';
 import * as crypto from 'crypto';
-import { logger } from '../src/core/logger';
+import { logger } from '@core/logger';
 import bcrypt from 'bcrypt';
 import { config } from 'dotenv';
 

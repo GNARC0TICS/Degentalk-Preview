@@ -40,6 +40,11 @@ import { router } from './Router';
 import { GlobalErrorBoundary } from './components/errors/GlobalErrorBoundary';
 import { initializeApp } from './lib/app-init';
 
+// Import debug utilities in development
+if (import.meta.env.DEV) {
+  import('./utils/debug-widgets');
+}
+
 // Initialize app services (Sentry, error handlers, etc.)
 initializeApp();
 

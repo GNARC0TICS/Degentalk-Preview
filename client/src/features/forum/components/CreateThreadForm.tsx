@@ -362,7 +362,6 @@ export function CreateThreadForm({
 		const newThreadPayload: CreateThreadParams = {
 			title: values.title,
 			content: values.content,
-			structureId: activeForumData.id,
 			forumSlug: activeForumData.slug,
 			prefixId:
 				values.prefixId && values.prefixId.trim() !== '' && values.prefixId !== 'none'

@@ -7,7 +7,7 @@ export const threadPrefixes = pgTable('thread_prefixes', {
 	color: varchar('color', { length: 20 }),
 	isActive: boolean('is_active').notNull().default(true),
 	position: integer('position').notNull().default(0),
-	structureId: integer('structure_id').references(() => forumStructure.id, {
+	structureId: uuid('structure_id').references(() => forumStructure.id, {
 		onDelete: 'set null'
 	}),
 	createdAt: timestamp('created_at')

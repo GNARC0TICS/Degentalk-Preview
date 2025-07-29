@@ -131,6 +131,12 @@ module.exports = {
 			rules: {
 				// 'degen/no-missing-branded-id-import': 'off'
 			}
+		},
+		{
+			files: ['tools/**/*.ts'],
+			parserOptions: {
+				project: null
+			}
 		}
 	],
 	rules: {

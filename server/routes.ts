@@ -21,6 +21,7 @@ import profileRoutes from './src/domains/profile/profile.routes';
 import devRoutes from './src/routes/dev.routes';
 import relationshipsRoutes from './src/domains/social/relationships.routes';
 import whaleWatchRoutes from './src/domains/social/whale-watch.routes';
+import { socialRoutes } from './src/domains/social/social.routes';
 import messageRoutes from './src/domains/messaging/message.routes';
 import vaultRoutes from './src/domains/engagement/vault/vault.routes';
 import ccpaymentWebhookRoutes from './src/domains/wallet/webhooks/ccpayment-webhook.routes';
@@ -279,7 +280,7 @@ export async function registerRoutes(app: Express): Promise<void> {
 	const apiRouter = express.Router();
 	// registerPathRoutes(apiRouter); // Commented out - evaluating if path SQL tables exist
 	registerAdminRoutes(apiRouter);
-	registerAnnouncementRoutes(apiRouter);
+	registerAnnouncementRoutes(app); // Register directly with app to expose /api/announcements
 	apiRouter.use('/auth', authRoutes);
 	apiRouter.use('/ads', adRoutes);
 	apiRouter.use('/wallet', walletRoutes);
@@ -294,6 +295,7 @@ export async function registerRoutes(app: Express): Promise<void> {
 	apiRouter.use('/profile', profileRoutes);
 	apiRouter.use('/relationships', relationshipsRoutes);
 	apiRouter.use('/whale-watching', whaleWatchRoutes);
+	apiRouter.use('/social', socialRoutes);
 	apiRouter.use('/messages', messageRoutes);
 	apiRouter.use('/vault', vaultRoutes);
 	apiRouter.use('/feature-gates', featureGatesRoutes);

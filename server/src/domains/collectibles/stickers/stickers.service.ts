@@ -5,7 +5,7 @@
  */
 
 import { eq, and, like, desc, asc, count, sql, inArray, isNull } from 'drizzle-orm';
-import { db } from '@core/db';
+import { db } from '@db';
 import {
 	stickers,
 	stickerPacks,

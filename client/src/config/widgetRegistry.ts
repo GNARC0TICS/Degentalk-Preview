@@ -44,8 +44,7 @@ import {
 export const widgetRegistry: Record<string, WidgetConfig> = {
 	// Profile & User Widgets
 	profileCard: {
-		component: () =>
-			import('@/components/shared/ProfileCard').then((module) => ({ default: module.ProfileCard || module.default })),
+		component: () => import('@/components/widgets/ProfileCardWidget'),
 		metadata: {
 			id: 'profileCard',
 			name: 'Profile Card',
@@ -80,10 +79,7 @@ export const widgetRegistry: Record<string, WidgetConfig> = {
 
 	// Economy & Wallet Widgets
 	walletSummary: {
-		component: () =>
-			import('@/components/sidebar/wallet-summary-widget').then((module) => ({
-				default: module.default
-			})),
+		component: () => import('@/components/widgets/WalletSummaryWidgetWrapper'),
 		metadata: {
 			id: 'walletSummary',
 			name: 'Wallet Summary',

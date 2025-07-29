@@ -96,6 +96,7 @@ export interface LayoutStoreState extends LayoutStateV1 {
 	) => void;
 	removeWidget: (instanceId: string) => void;
 	reorderWidget: (slot: SlotId, oldIndex: number, newIndex: number) => void;
+	resetToDefaults: () => void;
 }
 
 export const useLayoutStore = create<LayoutStoreState>()(
@@ -180,14 +181,52 @@ export const useLayoutStore = create<LayoutStoreState>()(
 							}
 						})
 					);
+				},
+
+				// Reset to default layout
+				resetToDefaults: () => {
+					set({
+						...defaultLayout,
+						version: 1,
+						_hasHydrated: true
+					});
 				}
 			}),
 			{
 				name: 'dgt-layout-preferences', // Key for localStorage
 				onRehydrateStorage: () => {
-					return () => {
-						// Mark hydration complete after persistence rehydrated
-						useLayoutStore.setState({ _hasHydrated: true });
+					return (state, error) => {
+						if (error) {
+							console.error('Failed to rehydrate layout state:', error);
+							// Reset to defaults on error
+							useLayoutStore.setState({ ...defaultLayout, _hasHydrated: true });
+						} else if (state) {
+							// Validate and merge with defaults to ensure all required fields exist
+							const validatedState = {
+								...defaultLayout,
+								...state,
+								// Ensure order and instances are properly merged, not replaced
+								order: {
+									...defaultLayout.order,
+									...(state.order || {})
+								},
+								instances: {
+									...defaultLayout.instances,
+									...(state.instances || {})
+								}
+							};
+							
+							// If no instances exist in persisted state, use defaults
+							if (!state.instances || Object.keys(state.instances).length === 0) {
+								validatedState.instances = defaultLayout.instances;
+								validatedState.order = defaultLayout.order;
+							}
+							
+							useLayoutStore.setState({ ...validatedState, _hasHydrated: true });
+						} else {
+							// No persisted state, use defaults
+							useLayoutStore.setState({ _hasHydrated: true });
+						}
 					};
 				}
 			}

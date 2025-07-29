@@ -5,7 +5,7 @@
  * Implements security checks and validation to prevent dangerous operations.
  */
 
-import { db } from '@core/db';
+import { db } from '@db';
 import { logger } from '@core/logger';
 import { sql, eq, like, asc, desc, count } from 'drizzle-orm';
 import * as schema from '@schema';

@@ -33,7 +33,7 @@ export class AdminForumService {
 			// Get thread counts for each category
 			const threadCountsResult = await db
 				.select({
-					categoryId: threads.structureId,
+					structureId: threads.structureId,
 					threadCount: count()
 				})
 				.from(threads)
@@ -41,8 +41,8 @@ export class AdminForumService {
 
 			const countMap = new Map<number, number>();
 			threadCountsResult.forEach((row) => {
-				if (row.categoryId !== null) {
-					countMap.set(row.categoryId, Number(row.threadCount));
+				if (row.structureId !== null) {
+					countMap.set(row.structureId, Number(row.threadCount));
 				}
 			});
 
@@ -56,7 +56,7 @@ export class AdminForumService {
 		}
 	}
 
-	async getCategoryById(id: Id<'id'>) {
+	async getStructureById(id: Id<'id'>) {
 		try {
 			const [category] = await db.select().from(forumStructure).where(eq(forumStructure.id, id));
 
@@ -129,7 +129,7 @@ export class AdminForumService {
 		}
 	}
 
-	async updateCategory(id: Id<'id'>, data: CategoryInput) {
+	async updateStructure(id: Id<'id'>, data: CategoryInput) {
 		try {
 			// Check category exists
 			const [existingCategory] = await db
@@ -196,7 +196,7 @@ export class AdminForumService {
 		}
 	}
 
-	async deleteCategory(id: Id<'id'>) {
+	async deleteStructure(id: Id<'id'>) {
 		try {
 			// Check category exists
 			const [existingCategory] = await db
@@ -264,28 +264,28 @@ export class AdminForumService {
 				.where(
 					and(
 						eq(threadPrefixes.name, data.name),
-						data.categoryId
-							? eq(threadPrefixes.categoryId, data.categoryId)
-							: isNull(threadPrefixes.categoryId)
+						data.structureId
+							? eq(threadPrefixes.structureId, data.structureId)
+							: isNull(threadPrefixes.structureId)
 					)
 				);
 
 			if (existingPrefix) {
-				const errorMessage = data.categoryId
-					? 'A prefix with this name already exists for this category'
+				const errorMessage = data.structureId
+					? 'A prefix with this name already exists for this structure'
 					: 'A global prefix with this name already exists';
 				throw AdminError.duplicate('Prefix', 'name', data.name);
 			}
 
-			// If category-specific, verify category exists
-			if (data.categoryId) {
-				const [category] = await db
+			// If structure-specific, verify structure exists
+			if (data.structureId) {
+				const [structure] = await db
 					.select({ id: forumStructure.id })
 					.from(forumStructure)
-					.where(eq(forumStructure.id, data.categoryId));
+					.where(eq(forumStructure.id, data.structureId));
 
-				if (!category) {
-					throw AdminError.notFound('Category', data.categoryId);
+				if (!structure) {
+					throw AdminError.notFound('Structure', data.structureId);
 				}
 			}
 
@@ -295,7 +295,7 @@ export class AdminForumService {
 					name: data.name,
 					color: data.color,
 					icon: data.icon,
-					categoryId: data.categoryId,
+					structureId: data.structureId,
 					isHidden: data.isHidden,
 					position: data.position ?? 0
 				})
@@ -443,19 +443,19 @@ export class AdminForumService {
 				throw AdminError.notFound('Thread', threadId);
 			}
 
-			// If changing category, verify category exists and allows threads
-			if (data.categoryId && data.categoryId !== existingThread.categoryId) {
-				const [category] = await db
+			// If changing structure, verify structure exists and allows threads
+			if (data.structureId && data.structureId !== existingThread.structureId) {
+				const [structure] = await db
 					.select({ id: forumStructure.id, allowThreads: forumStructure.allowThreads })
 					.from(forumStructure)
-					.where(eq(forumStructure.id, data.categoryId));
+					.where(eq(forumStructure.id, data.structureId));
 
-				if (!category) {
-					throw AdminError.notFound('Target category', data.categoryId);
+				if (!structure) {
+					throw AdminError.notFound('Target structure', data.structureId);
 				}
 
-				if (!category.allowThreads) {
-					throw AdminError.validation('Target category does not allow threads');
+				if (!structure.allowThreads) {
+					throw AdminError.validation('Target structure does not allow threads');
 				}
 			}
 
@@ -478,7 +478,7 @@ export class AdminForumService {
 					isSticky: data.isSticky !== undefined ? data.isSticky : existingThread.isSticky,
 					isHidden: data.isHidden !== undefined ? data.isHidden : existingThread.isHidden,
 					prefixId: data.prefixId !== undefined ? data.prefixId : existingThread.prefixId,
-					categoryId: data.categoryId !== undefined ? data.categoryId : existingThread.categoryId,
+					structureId: data.structureId !== undefined ? data.structureId : existingThread.structureId,
 					updatedAt: new Date()
 				})
 				.where(eq(threads.id, threadId))

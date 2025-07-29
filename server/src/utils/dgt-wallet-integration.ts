@@ -1,8 +1,8 @@
-import { db } from '../db';
+import { db } from '@db';
 import { sql } from 'drizzle-orm';
 import type { UserId } from '@shared/types/ids';
 import Stripe from 'stripe';
-import { logger } from '../src/core/logger';
+import { logger } from '@core/logger';
 
 // Initialize Stripe with secret key if available
 let stripe: Stripe | null = null;

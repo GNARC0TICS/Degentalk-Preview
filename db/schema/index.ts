@@ -163,6 +163,8 @@ export * from './dictionary/upvotes';
 // Social domain exports
 export * from './social/mentions';
 export * from './social/user-follows';
+export * from './social/user-follow-preferences';
+export * from './social/follow-requests';
 export * from './social/friends';
 // Wallet domain exports - CCPayment integration
 export * from './wallet/ccpayment-users';

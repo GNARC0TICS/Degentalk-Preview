@@ -98,8 +98,7 @@ export const useThread = (slugOrId: string | number | undefined) => {
 export interface CreateThreadParams {
 	title: string;
 	content: string;
-	structureId: string;
-	forumSlug?: string; // Optional, not used by API but handy for cache keys / XP logic
+	forumSlug: string; // Required - the API needs this to find the forum
 	prefixId?: PrefixId;
 	tags?: string[];
 	editorState?: Record<string, unknown>;
@@ -111,9 +110,12 @@ export const useCreateThread = () => {
 
 	return useMutation({
 		mutationFn: (data: CreateThreadParams) => {
-			const { forumSlug, ...apiData } = data;
 			return forumApi.createThread({
-				...apiData,
+				title: data.title,
+				content: data.content,
+				forumSlug: data.forumSlug,
+				prefixId: data.prefixId,
+				editorState: data.editorState,
 				tagIds: data.tags
 			});
 		},

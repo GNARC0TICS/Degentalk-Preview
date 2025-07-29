@@ -10,6 +10,15 @@ export const SlotRenderer = ({ slotId, className }: SlotRendererProps) => {
 	const order = useLayoutStore((s) => s.order);
 	const hasHydrated = useLayoutStore((s) => s._hasHydrated);
 
+	// Debug logging
+	if (typeof window !== 'undefined' && import.meta.env.DEV) {
+		console.log(`[SlotRenderer] Rendering slot: ${slotId}`, {
+			hasHydrated,
+			instances: order[slotId] || [],
+			allOrder: order
+		});
+	}
+
 	// Avoid rendering until hydration is done on the client to prevent SSR mismatch flashes.
 	// On the server (no window) we allow rendering so SSR markup shows up.
 	if (typeof window !== 'undefined' && !hasHydrated) return null;

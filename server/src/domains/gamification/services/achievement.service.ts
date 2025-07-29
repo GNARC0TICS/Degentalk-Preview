@@ -5,7 +5,7 @@
  * for the comprehensive gamification system.
  */
 
-import { db } from '@core/db';
+import { db } from '@db';
 import { eq, and, desc, asc, gte, lte, count, sum, sql, inArray, isNull } from 'drizzle-orm';
 import {
 	achievements,

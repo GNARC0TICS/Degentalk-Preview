@@ -1,0 +1,88 @@
+/**
+ * Frontend-Safe ID Types
+ *
+ * String-based branded types for frontend use.
+ * These provide type safety without exposing database internals.
+ */
+export type Id<Tag extends string> = string & {
+    readonly __tag: Tag;
+};
+export type UserId = Id<'UserId'>;
+export type AdminId = Id<'AdminId'>;
+export type AdminUserId = Id<'AdminUserId'>;
+export type ModeratorId = Id<'ModeratorId'>;
+export type ThreadId = Id<'ThreadId'>;
+export type PostId = Id<'PostId'>;
+export type ForumId = Id<'ForumId'>;
+export type CategoryId = Id<'CategoryId'>;
+export type StructureId = Id<'StructureId'>;
+export type PrefixId = Id<'PrefixId'>;
+export type TagId = Id<'TagId'>;
+export type DraftId = Id<'DraftId'>;
+export type ContentId = Id<'ContentId'>;
+export type MessageId = Id<'MessageId'>;
+export type ConversationId = Id<'ConversationId'>;
+export type NotificationId = Id<'NotificationId'>;
+export type AnnouncementId = Id<'AnnouncementId'>;
+export type MentionId = Id<'MentionId'>;
+export type FriendId = Id<'FriendId'>;
+export type FollowId = Id<'FollowId'>;
+export type RequestId = Id<'RequestId'>;
+export type WhaleId = Id<'WhaleId'>;
+export type WalletId = Id<'WalletId'>;
+export type TransactionId = Id<'TransactionId'>;
+export type TipId = Id<'TipId'>;
+export type CryptoWalletId = Id<'CryptoWalletId'>;
+export type RainEventId = Id<'RainEventId'>;
+export type WithdrawalId = Id<'WithdrawalId'>;
+export type DgtPackageId = Id<'DgtPackageId'>;
+export type PurchaseOrderId = Id<'PurchaseOrderId'>;
+export type DgtAmount = Id<'DgtAmount'>;
+export type UsdAmount = Id<'UsdAmount'>;
+export type XpAmount = Id<'XpAmount'>;
+export type TipAmount = Id<'TipAmount'>;
+export type WithdrawalAmount = Id<'WithdrawalAmount'>;
+export type TransactionType = Id<'TransactionType'>;
+export type TransactionStatus = Id<'TransactionStatus'>;
+export type WithdrawalStatus = Id<'WithdrawalStatus'>;
+export type ItemId = Id<'ItemId'>;
+export type ProductId = Id<'ProductId'>;
+export type OrderId = Id<'OrderId'>;
+export type InventoryId = Id<'InventoryId'>;
+export type InventoryItemId = Id<'InventoryItemId'>;
+export type PackageId = Id<'PackageId'>;
+export type MissionId = Id<'MissionId'>;
+export type AchievementId = Id<'AchievementId'>;
+export type PathId = Id<'PathId'>;
+export type LevelId = Id<'LevelId'>;
+export type FrameId = Id<'FrameId'>;
+export type BadgeId = Id<'BadgeId'>;
+export type TitleId = Id<'TitleId'>;
+export type EmojiId = Id<'EmojiId'>;
+export type EmojiPackId = Id<'EmojiPackId'>;
+export type CosmeticId = Id<'CosmeticId'>;
+export type StickerId = Id<'StickerId'>;
+export type PackId = Id<'PackId'>;
+export type MediaId = Id<'MediaId'>;
+export type ReportId = Id<'ReportId'>;
+export type ReporterId = Id<'ReporterId'>;
+export type BanId = Id<'BanId'>;
+export type WarningId = Id<'WarningId'>;
+export type RoleId = Id<'RoleId'>;
+export type PermissionId = Id<'PermissionId'>;
+export type EntityId = Id<'EntityId'>;
+export type VaultId = Id<'VaultId'>;
+export type ActionId = Id<'ActionId'>;
+export type RoomId = Id<'RoomId'>;
+export type GroupId = Id<'GroupId'>;
+export type TemplateId = Id<'TemplateId'>;
+export type SubscriptionId = Id<'SubscriptionId'>;
+export type DictionaryEntryId = Id<'DictionaryEntryId'>;
+export type EntryId = Id<'EntryId'>;
+export type RuleId = Id<'RuleId'>;
+export type SettingId = Id<'SettingId'>;
+export type ConfigId = Id<'ConfigId'>;
+export type LogEntryId = Id<'LogEntryId'>;
+export type AuditLogId = Id<'AuditLogId'>;
+export declare const isValidUUID: (id: string) => boolean;
+export { isValidId, createIdValidator, isUserId, isThreadId, isPostId, isWalletId, isTransactionId, isForumId, isItemId, isFrameId, isBadgeId, isTitleId } from '../utils/id.js';

@@ -80,3 +80,34 @@ class XpReputationService {
 }
 
 export const xpReputationService = new XpReputationService();
+
+/**
+ * React hook for XP reputation settings
+ * Stub implementation for now
+ */
+export function useXpReputationSettings() {
+  return {
+    data: {
+      xpPerPost: 10,
+      xpPerReply: 5,
+      xpPerUpvote: 2,
+      reputationThreshold: 100
+    },
+    isLoading: false,
+    error: null
+  };
+}
+
+/**
+ * React hook for updating XP reputation settings
+ * Stub implementation for now
+ */
+export function useUpdateXpReputationSettings() {
+  return {
+    mutate: (settings: any) => {
+      console.log('Updating XP reputation settings:', settings);
+    },
+    isLoading: false,
+    error: null
+  };
+}

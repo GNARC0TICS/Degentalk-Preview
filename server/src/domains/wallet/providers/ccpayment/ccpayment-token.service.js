@@ -1,0 +1,326 @@
+/**
+ * CCPayment Token Service
+ *
+ * Handles token information, pricing, and metadata from CCPayment API
+ * Provides coin details, logos, pricing, and network information
+ */
+import { logger } from '@core/logger';
+import { WalletError, ErrorCodes } from '@core/errors';
+import { ccpaymentApiService } from './ccpayment-api.service';
+export class CCPaymentTokenService {
+    tokenCache = new Map();
+    priceCache = new Map();
+    feeCache = new Map();
+    supportedTokensCache = null;
+    // Cache TTL in milliseconds
+    CACHE_TTL = {
+        TOKEN_INFO: 60 * 60 * 1000, // 1 hour
+        PRICE: 5 * 60 * 1000, // 5 minutes
+        FEE: 30 * 60 * 1000, // 30 minutes
+        SUPPORTED_TOKENS: 6 * 60 * 60 * 1000 // 6 hours
+    };
+    /**
+     * Get detailed token information including logo and networks
+     */
+    async getTokenInfo(coinId) {
+        try {
+            // Check cache first
+            const cached = this.tokenCache.get(coinId);
+            if (cached) {
+                logger.debug('CCPaymentTokenService', 'Token info cache hit', { coinId });
+                return cached;
+            }
+            logger.info('CCPaymentTokenService', 'Fetching token info from CCPayment', { coinId });
+            const response = await ccpaymentApiService.makeRequest('/ccpayment/v2/getCoin', { coinId });
+            if (!response.coin) {
+                throw new WalletError(`Token information not found for coinId: ${coinId}`, ErrorCodes.NOT_FOUND, 404, { coinId });
+            }
+            // Cache the result
+            this.tokenCache.set(coinId, response.coin);
+            // Auto-cleanup cache after TTL
+            setTimeout(() => {
+                this.tokenCache.delete(coinId);
+            }, this.CACHE_TTL.TOKEN_INFO);
+            logger.info('CCPaymentTokenService', 'Token info retrieved successfully', {
+                coinId,
+                symbol: response.coin.symbol,
+                status: response.coin.status
+            });
+            return response.coin;
+        }
+        catch (error) {
+            logger.error('CCPaymentTokenService', 'Error fetching token info', {
+                coinId,
+                error
+            });
+            if (error instanceof WalletError) {
+                throw error;
+            }
+            throw new WalletError('Failed to fetch token information', ErrorCodes.PAYMENT_PROVIDER_ERROR, 500, { coinId, originalError: error });
+        }
+    }
+    /**
+     * Get list of all supported tokens
+     */
+    async getSupportedTokens() {
+        try {
+            if (this.supportedTokensCache) {
+                logger.debug('CCPaymentTokenService', 'Supported tokens cache hit');
+                return this.supportedTokensCache;
+            }
+            logger.info('CCPaymentTokenService', 'Fetching supported tokens from CCPayment');
+            const response = await ccpaymentApiService.makeRequest('/ccpayment/v2/getSupportCoinList');
+            if (!response.list) {
+                throw new WalletError('Failed to parse supported tokens from CCPayment response', ErrorCodes.PAYMENT_PROVIDER_ERROR, 500, { response });
+            }
+            this.supportedTokensCache = response.list;
+            setTimeout(() => {
+                this.supportedTokensCache = null;
+            }, this.CACHE_TTL.SUPPORTED_TOKENS);
+            logger.info('CCPaymentTokenService', 'Supported tokens retrieved successfully', {
+                count: response.list.length
+            });
+            return response.list;
+        }
+        catch (error) {
+            logger.error('CCPaymentTokenService', 'Error fetching supported tokens', { error });
+            if (error instanceof WalletError) {
+                throw error;
+            }
+            throw new WalletError('Failed to fetch supported tokens', ErrorCodes.PAYMENT_PROVIDER_ERROR, 500, { originalError: error });
+        }
+    }
+    /**
+     * Get current USDT price for tokens
+     */
+    async getTokenPrices(coinIds) {
+        try {
+            // Filter out cached prices that are still valid
+            const uncachedCoinIds = [];
+            const result = {};
+            for (const coinId of coinIds) {
+                const cached = this.priceCache.get(coinId);
+                if (cached && Date.now() - cached.timestamp < this.CACHE_TTL.PRICE) {
+                    result[coinId] = cached.usdtPrice;
+                }
+                else {
+                    uncachedCoinIds.push(coinId);
+                }
+            }
+            // Fetch uncached prices
+            if (uncachedCoinIds.length > 0) {
+                logger.info('CCPaymentTokenService', 'Fetching token prices from CCPayment', {
+                    coinIds: uncachedCoinIds
+                });
+                const response = await ccpaymentApiService.makeRequest('/ccpayment/v2/getCoinUSDTPrice', { coinIds: uncachedCoinIds });
+                // Process and cache the prices
+                for (const [coinIdStr, price] of Object.entries(response.prices)) {
+                    const coinId = parseInt(coinIdStr);
+                    result[coinId] = price;
+                    // Cache the price
+                    this.priceCache.set(coinId, {
+                        coinId,
+                        usdtPrice: price,
+                        timestamp: Date.now()
+                    });
+                    // Auto-cleanup cache after TTL
+                    setTimeout(() => {
+                        this.priceCache.delete(coinId);
+                    }, this.CACHE_TTL.PRICE);
+                }
+                logger.info('CCPaymentTokenService', 'Token prices retrieved successfully', {
+                    fetchedCount: uncachedCoinIds.length,
+                    totalCount: coinIds.length
+                });
+            }
+            return result;
+        }
+        catch (error) {
+            logger.error('CCPaymentTokenService', 'Error fetching token prices', {
+                coinIds,
+                error
+            });
+            if (error instanceof WalletError) {
+                throw error;
+            }
+            throw new WalletError('Failed to fetch token prices', ErrorCodes.PAYMENT_PROVIDER_ERROR, 500, { coinIds, originalError: error });
+        }
+    }
+    /**
+     * Get withdrawal fee for specific token and chain
+     */
+    async getWithdrawFee(coinId, chain) {
+        try {
+            const cacheKey = `${coinId}-${chain}`;
+            const cached = this.feeCache.get(cacheKey);
+            if (cached) {
+                logger.debug('CCPaymentTokenService', 'Withdraw fee cache hit', { coinId, chain });
+                return cached;
+            }
+            logger.info('CCPaymentTokenService', 'Fetching withdraw fee from CCPayment', {
+                coinId,
+                chain
+            });
+            const response = await ccpaymentApiService.makeRequest('/ccpayment/v2/getWithdrawFee', { coinId, chain });
+            if (!response.fee) {
+                throw new WalletError(`Withdrawal fee not found for coinId: ${coinId}, chain: ${chain}`, ErrorCodes.NOT_FOUND, 404, { coinId, chain });
+            }
+            const fee = {
+                coinId: response.fee.coinId,
+                coinSymbol: response.fee.coinSymbol,
+                amount: response.fee.amount,
+                chain
+            };
+            // Cache the result
+            this.feeCache.set(cacheKey, fee);
+            // Auto-cleanup cache after TTL
+            setTimeout(() => {
+                this.feeCache.delete(cacheKey);
+            }, this.CACHE_TTL.FEE);
+            logger.info('CCPaymentTokenService', 'Withdraw fee retrieved successfully', {
+                coinId,
+                chain,
+                amount: fee.amount,
+                symbol: fee.coinSymbol
+            });
+            return fee;
+        }
+        catch (error) {
+            logger.error('CCPaymentTokenService', 'Error fetching withdraw fee', {
+                coinId,
+                chain,
+                error
+            });
+            if (error instanceof WalletError) {
+                throw error;
+            }
+            throw new WalletError('Failed to fetch withdrawal fee', ErrorCodes.PAYMENT_PROVIDER_ERROR, 500, { coinId, chain, originalError: error });
+        }
+    }
+    /**
+     * Get app coin balance list (merchant balance)
+     */
+    async getAppBalanceList() {
+        try {
+            logger.info('CCPaymentTokenService', 'Fetching app balance list from CCPayment');
+            const response = await ccpaymentApiService.makeRequest('/ccpayment/v2/getAppCoinAssetList');
+            logger.info('CCPaymentTokenService', 'App balance list retrieved successfully', {
+                assetCount: response.assets?.length || 0
+            });
+            return response.assets || [];
+        }
+        catch (error) {
+            logger.error('CCPaymentTokenService', 'Error fetching app balance list', { error });
+            if (error instanceof WalletError) {
+                throw error;
+            }
+            throw new WalletError('Failed to fetch app balance list', ErrorCodes.PAYMENT_PROVIDER_ERROR, 500, { originalError: error });
+        }
+    }
+    /**
+     * Get specific app coin balance
+     */
+    async getAppCoinBalance(coinId) {
+        try {
+            logger.info('CCPaymentTokenService', 'Fetching app coin balance from CCPayment', { coinId });
+            const response = await ccpaymentApiService.makeRequest('/ccpayment/v2/getAppCoinAsset', { coinId });
+            if (!response.asset) {
+                throw new WalletError(`App balance not found for coinId: ${coinId}`, ErrorCodes.NOT_FOUND, 404, { coinId });
+            }
+            logger.info('CCPaymentTokenService', 'App coin balance retrieved successfully', {
+                coinId,
+                symbol: response.asset.coinSymbol,
+                available: response.asset.available
+            });
+            return response.asset;
+        }
+        catch (error) {
+            logger.error('CCPaymentTokenService', 'Error fetching app coin balance', {
+                coinId,
+                error
+            });
+            if (error instanceof WalletError) {
+                throw error;
+            }
+            throw new WalletError('Failed to fetch app coin balance', ErrorCodes.PAYMENT_PROVIDER_ERROR, 500, { coinId, originalError: error });
+        }
+    }
+    /**
+     * Check withdrawal address validity
+     */
+    async checkWithdrawalAddressValidity(chain, address) {
+        try {
+            logger.info('CCPaymentTokenService', 'Checking withdrawal address validity', {
+                chain,
+                address: address.substring(0, 10) + '...' // Log partial address for security
+            });
+            const response = await ccpaymentApiService.makeRequest('/ccpayment/v2/checkWithdrawalAddressValidity', { chain, address });
+            logger.info('CCPaymentTokenService', 'Address validity check completed', {
+                chain,
+                isValid: response.addrIsValid
+            });
+            return response.addrIsValid;
+        }
+        catch (error) {
+            logger.error('CCPaymentTokenService', 'Error checking address validity', {
+                chain,
+                error
+            });
+            if (error instanceof WalletError) {
+                throw error;
+            }
+            throw new WalletError('Failed to check withdrawal address validity', ErrorCodes.PAYMENT_PROVIDER_ERROR, 500, { chain, originalError: error });
+        }
+    }
+    /**
+     * Rescan lost transaction
+     */
+    async rescanLostTransaction(params) {
+        try {
+            logger.info('CCPaymentTokenService', 'Rescanning lost transaction', {
+                chain: params.chain,
+                txId: params.txId
+            });
+            const response = await ccpaymentApiService.makeRequest('/ccpayment/v2/rescanLostTransaction', params);
+            logger.info('CCPaymentTokenService', 'Transaction rescan initiated', {
+                chain: params.chain,
+                txId: params.txId,
+                description: response.description
+            });
+            return response.description;
+        }
+        catch (error) {
+            logger.error('CCPaymentTokenService', 'Error rescanning transaction', {
+                params,
+                error
+            });
+            if (error instanceof WalletError) {
+                throw error;
+            }
+            throw new WalletError('Failed to rescan transaction', ErrorCodes.PAYMENT_PROVIDER_ERROR, 500, { params, originalError: error });
+        }
+    }
+    /**
+     * Clear all caches (useful for testing or manual refresh)
+     */
+    clearCaches() {
+        this.tokenCache.clear();
+        this.priceCache.clear();
+        this.feeCache.clear();
+        this.supportedTokensCache = null;
+        logger.info('CCPaymentTokenService', 'All caches cleared');
+    }
+    /**
+     * Get cache statistics
+     */
+    getCacheStats() {
+        return {
+            tokenInfo: this.tokenCache.size,
+            prices: this.priceCache.size,
+            fees: this.feeCache.size,
+            supportedTokens: this.supportedTokensCache ? this.supportedTokensCache.length : 0
+        };
+    }
+}
+// Export singleton instance
+export const ccpaymentTokenService = new CCPaymentTokenService();

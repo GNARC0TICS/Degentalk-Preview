@@ -1,6 +1,6 @@
 import type { Request, Response } from 'express';
 import { userService } from '@core/services/user.service';
-import type { CategoryId, TagId, ThreadId, EntityId } from '@shared/types/ids';
+import type { StructureId, TagId, ThreadId, EntityId } from '@shared/types/ids';
 import { adminForumService } from './forum.service';
 import { AdminError, AdminErrorCodes } from '../../admin/admin.errors';
 import { getUserId } from '../../admin/admin.middleware';
@@ -41,13 +41,13 @@ export class AdminForumController {
 
 	async getCategoryById(req: Request, res: Response) {
 		try {
-			const categoryId = validateAndConvertId(req.params.id, 'Category');
-			if (!categoryId) {
-				return sendErrorResponse(res, 'Invalid category ID format', 400);
+			const structureId = validateAndConvertId(req.params.id, 'Category');
+			if (!structureId) {
+				return sendErrorResponse(res, 'Invalid structure ID format', 400);
 			}
 
-			const category = await adminForumService.getCategoryById(categoryId);
-			sendSuccessResponse(res, ForumTransformer.toModerationForumStructure(category));
+			const structure = await adminForumService.getStructureById(structureId);
+			sendSuccessResponse(res, ForumTransformer.toModerationForumStructure(structure));
 		} catch (error) {
 			if (error instanceof AdminError)
 				return sendErrorResponse(res, error.message, error.httpStatus || 500);
@@ -78,22 +78,22 @@ export class AdminForumController {
 
 	async updateCategory(req: Request, res: Response) {
 		try {
-			const categoryId = validateAndConvertId(req.params.id, 'Category');
-			if (!categoryId) {
-				return sendErrorResponse(res, 'Invalid category ID format', 400);
+			const structureId = validateAndConvertId(req.params.id, 'Category');
+			if (!structureId) {
+				return sendErrorResponse(res, 'Invalid structure ID format', 400);
 			}
 
 			const data = validateRequestBody(req, res, CategorySchema);
 			if (!data) return;
-			const category = await adminForumService.updateCategory(categoryId, data);
+			const structure = await adminForumService.updateStructure(structureId, data);
 			await adminController.logAction(
 				req,
-				'UPDATE_CATEGORY',
-				'category',
-				categoryId.toString(),
+				'UPDATE_STRUCTURE',
+				'structure',
+				structureId.toString(),
 				data
 			);
-			sendSuccessResponse(res, ForumTransformer.toModerationForumStructure(category));
+			sendSuccessResponse(res, ForumTransformer.toModerationForumStructure(structure));
 		} catch (error) {
 			if (error instanceof AdminError)
 				return sendErrorResponse(res, error.message, error.httpStatus || 500);
@@ -103,17 +103,17 @@ export class AdminForumController {
 
 	async deleteCategory(req: Request, res: Response) {
 		try {
-			const categoryId = validateAndConvertId(req.params.id, 'Category');
-			if (!categoryId) {
-				return sendErrorResponse(res, 'Invalid category ID format', 400);
+			const structureId = validateAndConvertId(req.params.id, 'Category');
+			if (!structureId) {
+				return sendErrorResponse(res, 'Invalid structure ID format', 400);
 			}
 
-			const result = await adminForumService.deleteCategory(categoryId);
+			const result = await adminForumService.deleteStructure(structureId);
 			await adminController.logAction(
 				req,
-				'DELETE_CATEGORY',
-				'category',
-				categoryId.toString(),
+				'DELETE_STRUCTURE',
+				'structure',
+				structureId.toString(),
 				{}
 			);
 			sendSuccessResponse(res, result);
@@ -252,7 +252,7 @@ export class AdminForumController {
 		if (data.isSticky === false) return 'UNPIN_THREAD';
 		if (data.isHidden === true) return 'HIDE_THREAD';
 		if (data.isHidden === false) return 'UNHIDE_THREAD';
-		if (data.categoryId) return 'MOVE_THREAD';
+		if (data.structureId) return 'MOVE_THREAD';
 		if (data.prefixId) return 'UPDATE_PREFIX';
 
 		return 'MODERATE_THREAD';

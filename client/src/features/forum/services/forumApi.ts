@@ -154,7 +154,7 @@ export const forumApi = {
 
 	createThread: async (data: {
 		title: string;
-		structureId: string;
+		forumSlug: string;
 		content: string;
 		prefixId?: PrefixId;
 		editorState?: Record<string, unknown>;

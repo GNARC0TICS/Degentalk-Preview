@@ -72,6 +72,70 @@ router.use('/tags', tagsRoutes);
 
 // Get tags
 
+// Active members endpoint - get currently active forum members
+router.get(
+	'/active-members',
+	asyncHandler(async (req: Request, res: Response) => {
+		try {
+			// Get recently active users (within last 15 minutes)
+			const fifteenMinutesAgo = new Date(Date.now() - 15 * 60 * 1000);
+			
+			const activeMembers = await db
+				.select({
+					id: users.id,
+					username: users.username,
+					displayName: users.displayName,
+					avatarUrl: users.avatarUrl,
+					lastSeenAt: users.lastSeenAt,
+					isOnline: users.isOnline
+				})
+				.from(users)
+				.where(
+					and(
+						gt(users.lastSeenAt, fifteenMinutesAgo),
+						eq(users.isOnline, true)
+					)
+				)
+				.orderBy(desc(users.lastSeenAt))
+				.limit(20);
+
+			sendSuccessResponse(res, activeMembers);
+		} catch (error) {
+			logger.error('Forum', 'Error fetching active members', { error });
+			sendErrorResponse(res, 'Failed to fetch active members', 500);
+		}
+	})
+);
+
+// Featured forum stats endpoint - get statistics for featured forums
+router.get(
+	'/featured-forum-stats',
+	asyncHandler(async (req: Request, res: Response) => {
+		try {
+			// Get featured forums with their stats
+			const featuredForums = await db
+				.select({
+					id: forumStructure.id,
+					name: forumStructure.name,
+					slug: forumStructure.slug,
+					threadCount: forumStructure.threadCount,
+					postCount: forumStructure.postCount,
+					lastPostAt: forumStructure.lastPostAt,
+					isFeatured: forumStructure.isFeatured,
+					themePreset: forumStructure.themePreset
+				})
+				.from(forumStructure)
+				.where(eq(forumStructure.isFeatured, true))
+				.orderBy(asc(forumStructure.position));
+
+			sendSuccessResponse(res, featuredForums);
+		} catch (error) {
+			logger.error('Forum', 'Error fetching featured forum stats', { error });
+			sendErrorResponse(res, 'Failed to fetch featured forum stats', 500);
+		}
+	})
+);
+
 // Health check endpoint
 router.get(
 	'/health',

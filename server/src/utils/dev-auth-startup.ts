@@ -1,7 +1,7 @@
 import { existsSync, readFileSync, writeFileSync, mkdirSync } from 'fs';
 import { dirname } from 'path';
 import { logger } from '@core/logger';
-import { db } from '@core/db';
+import { db } from '@db';
 import { users } from '@schema';
 import { eq, inArray } from 'drizzle-orm';
 import { generateToken } from '../domains/auth/utils/jwt.utils';

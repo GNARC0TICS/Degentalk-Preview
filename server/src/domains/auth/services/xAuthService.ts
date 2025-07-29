@@ -1,7 +1,7 @@
 import { userService } from '@core/services/user.service';
 import type { Request, Response, NextFunction } from 'express';
 import { TwitterApi } from 'twitter-api-v2';
-import { db } from '@core/db';
+import { db } from '@db';
 import { users } from '@schema/user/users';
 import { eq } from 'drizzle-orm';
 import { logger } from '@core/logger';

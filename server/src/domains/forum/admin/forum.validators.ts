@@ -32,7 +32,7 @@ export const PrefixSchema = z.object({
 		.regex(/^#([0-9A-F]{3,6})$/i, 'Must be a valid hex color (e.g., #RRGGBB or #RGB)')
 		.default('#3366ff'),
 	icon: z.string().optional().nullable(),
-	categoryId: z.string().uuid().nullable().optional(), // Null if global
+	structureId: z.string().uuid().nullable().optional(), // Null if global
 	isHidden: z.boolean().default(false).optional(),
 	position: z.number().int().min(0).default(0)
 });
@@ -43,7 +43,7 @@ export const ModerateThreadSchema = z.object({
 	isSticky: z.boolean().optional(), // Using isSticky field from schema instead of isPinned
 	isHidden: z.boolean().optional(),
 	prefixId: z.string().uuid().nullable().optional(),
-	categoryId: z.string().uuid().optional(),
+	structureId: z.string().uuid().optional(),
 	moderationReason: z.string().max(255).optional()
 });
 
