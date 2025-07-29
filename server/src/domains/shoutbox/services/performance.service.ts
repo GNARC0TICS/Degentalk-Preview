@@ -9,7 +9,7 @@
  * - Performance metrics collection
  */
 
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import type { UserId } from '@shared/types/ids';
 import { logger } from '@core/logger';
 import { ShoutboxCacheService } from './cache.service';

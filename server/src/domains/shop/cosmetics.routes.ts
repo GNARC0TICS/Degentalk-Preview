@@ -12,7 +12,7 @@ import { userService } from '@core/services/user.service';
 import { isAuthenticated } from '@domains/auth/middleware/auth.middleware';
 import { logger } from '@core/logger';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { userInventory, transactions } from '@schema';
 import { eq, and, inArray } from 'drizzle-orm';
 import { CosmeticsTransformer } from './transformers/cosmetics.transformer';

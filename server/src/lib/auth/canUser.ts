@@ -1,5 +1,5 @@
 import { roles as rolesTable, userRoles as userRolesTable } from '@schema';
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { and, eq, inArray } from 'drizzle-orm';
 import type { UserId } from '@shared/types';
 

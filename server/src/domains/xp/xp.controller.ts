@@ -11,7 +11,7 @@ import { xpService } from './xp.service'; // Changed from XpService to xpService
 // import { xpAdjustmentLog } from '@schema'; // Removed as unused
 import { logger } from '@core/logger';
 import { XP_ACTION } from './xp-actions';
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { xpActionLogs } from './xp-actions-schema';
 import { desc, eq, and, gte, sql } from 'drizzle-orm';
 import { xpActionSettings, users, xpAdjustmentLogs, levels } from '@schema'; // Adjusted path

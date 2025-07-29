@@ -3,7 +3,7 @@ import { userService } from '@core/services/user.service';
 import { users } from '@schema';
 import { eq } from 'drizzle-orm';
 import { WalletError, ErrorCodes as WalletErrorCodes } from '@core/errors';
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { logger } from '@core/logger';
 import { sendErrorResponse } from '@core/utils/transformer.helpers';
 

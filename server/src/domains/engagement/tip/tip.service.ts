@@ -6,7 +6,7 @@
  * // [REFAC-TIP]
  */
 
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import type { UserId, TipId, TransactionId } from '@shared/types/ids';
 import { users, transactions } from '@schema';
 import { eq, and, sql } from 'drizzle-orm';

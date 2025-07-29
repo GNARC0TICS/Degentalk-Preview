@@ -6,7 +6,7 @@ import passport from 'passport';
 import { insertUserSchema } from '@schema';
 import { users, verificationTokens } from '@schema';
 import { logger } from '@core/logger';
-import { db } from '@db'; // Will be refactored in a future step
+import { db } from '@degentalk/db'; // Will be refactored in a future step
 import { eq } from 'drizzle-orm';
 import {
 	hashPassword,

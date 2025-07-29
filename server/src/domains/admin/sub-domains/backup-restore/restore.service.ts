@@ -4,7 +4,7 @@
  * Handles database restore operations with safety validations
  */
 
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { adminBackups, restoreOperations, backupSettings } from '@schema';
 import { eq, desc } from 'drizzle-orm';
 import { AdminError, AdminErrorCodes } from '../../admin.errors';

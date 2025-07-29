@@ -5,7 +5,7 @@
  * Handles thread-specific operations with proper separation of concerns
  */
 
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { logger } from '@core/logger';
 import { postService } from './post.service';
 import { cacheService, CacheCategory, CacheMinute } from '@core/cache/unified-cache.service';

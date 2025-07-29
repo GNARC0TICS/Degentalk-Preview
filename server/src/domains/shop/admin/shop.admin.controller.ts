@@ -1,4 +1,4 @@
-import { db } from '@db'; // Adjust path to your db instance
+import { db } from '@degentalk/db'; // Adjust path to your db instance
 import { products } from '@schema'; // Adjust path to your schema
 import { eq, desc, and } from 'drizzle-orm';
 import { ShopTransformer } from '@domains/shop/transformers/shop.transformer';

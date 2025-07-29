@@ -7,7 +7,7 @@
 
 import { xpActionSettings, users } from '@schema';
 import { eq, and, sql } from 'drizzle-orm';
-import { db } from '@db';
+import { db } from '@degentalk/db';
 // Removed unused imports from xp-actions-schema
 import { logger } from '@core/logger';
 

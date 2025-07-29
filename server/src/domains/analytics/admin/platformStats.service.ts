@@ -4,7 +4,7 @@
  * Provides methods to calculate and update platform statistics
  */
 
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { platformStatistics, users, threads, posts, postReactions } from '@schema';
 import { eq, sql, count, countDistinct } from 'drizzle-orm';
 

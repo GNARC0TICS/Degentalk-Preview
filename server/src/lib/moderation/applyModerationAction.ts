@@ -1,4 +1,4 @@
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { eq } from 'drizzle-orm';
 import { threads, posts, contentModerationActions } from '@schema';
 import { EntityId } from '@shared/types';

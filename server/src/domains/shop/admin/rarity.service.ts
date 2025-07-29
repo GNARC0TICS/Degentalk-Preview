@@ -1,4 +1,4 @@
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { rarities } from '@schema';
 import type { Id } from '@shared/types/ids';
 import { eq, asc } from 'drizzle-orm';

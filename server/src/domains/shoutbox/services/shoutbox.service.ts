@@ -9,7 +9,7 @@
  * - Analytics tracking
  */
 
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import type { UserId } from '@shared/types/ids';
 import {
 	shoutboxMessages,

@@ -5,7 +5,7 @@
  * including purchases, renewals, cancellations, and benefit tracking.
  */
 
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import {
 	subscriptions,
 	subscriptionBenefits,

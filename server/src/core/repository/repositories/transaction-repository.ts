@@ -5,7 +5,7 @@
  * Implements ITransactionRepository interface with proper error handling and type safety
  */
 
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import type { UserId } from '@shared/types/ids';
 import { transactions } from '@schema';
 import { eq, and, desc, asc, sum, sql } from 'drizzle-orm';

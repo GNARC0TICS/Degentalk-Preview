@@ -1,4 +1,4 @@
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { products, avatarFrames, userOwnedFrames } from '@schema';
 import type { UserId } from '@shared/types/ids';
 import { eq, and } from 'drizzle-orm';

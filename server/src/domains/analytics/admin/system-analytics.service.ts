@@ -6,7 +6,7 @@
  */
 
 import { eq, desc, count, avg, sum, sql, and, gte, lte } from 'drizzle-orm';
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { cacheService, CacheCategory } from '@core/cache/unified-cache.service';
 import { CacheStandard, CacheExtended } from '@core/cache/decorators';
 import { invalidateCache } from '@core/cache/invalidateCache';

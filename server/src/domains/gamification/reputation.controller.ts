@@ -1,5 +1,5 @@
 import type { Request, Response, NextFunction } from 'express';
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { reputationAchievements, userReputationLog, users } from '@schema';
 import { eq, desc } from 'drizzle-orm';
 import { logger } from '@core/logger';

@@ -1,4 +1,4 @@
-import { db } from '@db'; // Adjust
+import { db } from '@degentalk/db'; // Adjust
 import { userInventory, products } from '@schema'; // Adjust
 import { eq, and, getTableColumns } from 'drizzle-orm';
 import { logger } from '@core/logger';

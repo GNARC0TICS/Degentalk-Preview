@@ -5,7 +5,7 @@
  * such as seeding the database with initial items.
  */
 
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { products } from '@db/schema';
 import { logger, LogAction } from '@core/logger';
 import slugify from 'slugify';

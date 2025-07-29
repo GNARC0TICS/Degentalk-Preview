@@ -10,7 +10,7 @@ import { Router } from 'express'
 import type { Router as RouterType } from 'express';
 import type { Request, Response } from 'express';
 import { z } from 'zod';
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { userThreadBookmarks } from '@schema';
 import { eq, and } from 'drizzle-orm';
 import { isAuthenticated as requireAuth } from '@domains/auth/middleware/auth.middleware';

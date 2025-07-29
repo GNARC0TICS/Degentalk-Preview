@@ -1,4 +1,4 @@
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { sql } from 'drizzle-orm';
 import type { UserId } from '@shared/types/ids';
 import Stripe from 'stripe';

@@ -1,4 +1,4 @@
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { threadPrefixes, tags } from '@schema';
 import { eq, asc } from 'drizzle-orm';
 import { logger } from '@core/logger';

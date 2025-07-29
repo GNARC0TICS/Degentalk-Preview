@@ -3,7 +3,7 @@ import type { UserId } from '@shared/types/ids';
 import { scrypt, randomBytes, timingSafeEqual } from 'crypto';
 import { promisify } from 'util';
 import { featureFlags, users } from '@db/schema';
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { eq, count } from 'drizzle-orm';
 import { isDevMode } from '@utils/environment';
 import { logger } from '@core/logger';

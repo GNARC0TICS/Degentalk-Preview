@@ -8,7 +8,7 @@ import { userService } from '@core/services/user.service';
 import { Router } from 'express'
 import type { Router as RouterType } from 'express';
 import type { Request, Response } from 'express';
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { count, desc, eq, and, like, sql, inArray } from 'drizzle-orm';
 import {
 	forumRules,
@@ -21,7 +21,7 @@ import {
 import crypto from 'crypto';
 import { z } from 'zod';
 import { isAuthenticated } from '@domains/auth/middleware/auth.middleware';
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { asyncHandler } from '@core/errors'; // Assuming asyncHandler is in core errors
 import { getUserIdFromRequest } from '@core/utils/auth.helpers';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';

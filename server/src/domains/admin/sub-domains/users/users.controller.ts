@@ -7,7 +7,7 @@ import { getUserId } from '../../admin.middleware';
 import { AdminPaginationQuery, AdminUserUpdateSchema } from '@shared/validators/admin';
 import { validateQueryParams, validateRequestBody } from '../../admin.validation';
 import { z } from 'zod';
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { users } from '@schema';
 import { ilike } from 'drizzle-orm';
 import type { UserId, AdminId } from '@shared/types/ids';

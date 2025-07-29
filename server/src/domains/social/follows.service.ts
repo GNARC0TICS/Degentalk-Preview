@@ -1,4 +1,4 @@
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { userFollows, userFollowPreferences, followRequests, users } from '@schema';
 import { eq, and, desc, sql, count, inArray } from 'drizzle-orm';
 import type { FollowNotificationSettings, UserStats } from './follows.types';

@@ -6,7 +6,7 @@ import { getUser } from '@core/utils/auth.helpers';
 import { threadService } from '@domains/forum/services/thread.service';
 import { ThreadTransformer } from '@domains/forum/transformers/thread.transformer';
 import type { StructureId, ThreadId, UserId, TagId } from '@shared/types/ids';
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { forumStructure } from '@schema';
 import { eq } from 'drizzle-orm';
 import { ForumTransformer } from '@domains/forum/transformers/forum.transformer';

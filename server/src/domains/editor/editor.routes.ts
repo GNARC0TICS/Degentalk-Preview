@@ -10,7 +10,7 @@ import type { Request, Response } from 'express';
 import axios from 'axios';
 import { z } from 'zod';
 import { isAuthenticated } from '@domains/auth/middleware/auth.middleware';
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { logger } from '@core/logger';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 

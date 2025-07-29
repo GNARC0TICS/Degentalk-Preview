@@ -5,7 +5,7 @@
  * Focused on organizing settings into logical groups for better admin UX
  */
 
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { siteSettings } from '@schema';
 import { eq, sql, and, ne } from 'drizzle-orm';
 import { logger } from '@core/logger';

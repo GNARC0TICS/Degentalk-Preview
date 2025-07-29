@@ -7,7 +7,7 @@
 
 import { Lucia } from "lucia";
 import { DrizzlePostgreSQLAdapter } from "@lucia-auth/adapter-drizzle";
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { users, sessions } from "@schema";
 import type { User } from "@shared/types/user.types";
 

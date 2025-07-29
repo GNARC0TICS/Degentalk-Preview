@@ -4,7 +4,7 @@
  * Handles background processing of achievement events and other asynchronous tasks.
  */
 
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { eq } from 'drizzle-orm';
 import { achievementEvents } from '@schema';
 import { AchievementProcessorService } from '../domains/gamification/achievements/achievement-processor.service';

@@ -5,7 +5,7 @@
  * Supports hierarchical theme resolution: User → Forum → Global
  */
 
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { uiThemes, type UiTheme } from '@schema/admin/uiThemes';
 import { eq, and, or } from 'drizzle-orm';
 import { cacheService } from '@core/cache/unified-cache.service';

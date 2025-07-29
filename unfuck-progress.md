@@ -15,8 +15,8 @@ Total TS Errors: BROKEN
 ## Agent Status
 - Agent 1 (Schema): NOT_STARTED
 - Agent 2 (Imports): NOT_STARTED  
-- Agent 3 (Types): NOT_STARTED
-- Agent 4 (Schema & Types): ACTIVE - Fixed 50+ errors
+- Agent 3 (Build & Module Resolution): ACTIVE - Fixed 216+ errors
+- Agent 4 (Schema & Types): COMPLETED - Fixed 50+ errors
 - Agent 5 (Config): NOT_STARTED
 
 ## Progress Log
@@ -24,6 +24,26 @@ Tue Jul 29 07:55:11 UTC 2025: Baseline captured
 
 Tue Jul 29 08:04:53 UTC 2025: BUILD FAILED at Server TypeScript
 Tue Jul 29 08:05:51 UTC 2025: BUILD FAILED at Server TypeScript
+
+### Agent 3 Progress (Build & Module Resolution)
+- Started with 1,797 errors
+- Fixed module resolution by changing to 'bundler' mode
+- Fixed duplicate @lib/* path mappings
+- Fixed @db imports by updating to @degentalk/db (165 files updated)
+- Fixed lib folder not being included in build
+- Current: 1,581 errors (216 errors fixed!)
+
+#### Key Findings:
+1. TypeScript path mappings (@db) don't work reliably with composite projects
+2. Using workspace package names (@degentalk/db) is more reliable
+3. Module resolution 'bundler' is required for ESM compatibility
+4. Build configs must include all source directories (lib was missing)
+
+#### Remaining Issues:
+1. Shared types importing from @db/schema/core/enums (needs investigation)
+2. Some transformers importing non-existent types from schema
+3. Schema boolean assignment errors in db package
+4. Missing properties in relations files
 
 ### Agent 4 Progress (Schema & Type Overloads)
 - Started with 1797 errors (after other agents' work)

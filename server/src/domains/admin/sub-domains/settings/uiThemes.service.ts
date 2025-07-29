@@ -1,5 +1,5 @@
 import { eq } from 'drizzle-orm';
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { uiThemes, type UiTheme, type NewUiTheme } from '@schema/admin/uiThemes';
 import { FORUM_THEMES as forumThemesConfig } from '@shared/config/forumThemes.config';
 

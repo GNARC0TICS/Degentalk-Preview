@@ -1,6 +1,6 @@
 import { economyConfig } from '@shared/config/economy.config';
 import { economyConfigOverrides } from '@schema';
-import { db } from '@db';
+import { db } from '@degentalk/db';
 
 /**
  * Returns the merged economy configuration used throughout the backend.

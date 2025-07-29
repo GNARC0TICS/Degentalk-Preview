@@ -5,7 +5,7 @@
  * for the comprehensive gamification system.
  */
 
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { eq, and, desc, asc, gte, lte, count, sum, sql, inArray, isNull } from 'drizzle-orm';
 import {
 	achievements,

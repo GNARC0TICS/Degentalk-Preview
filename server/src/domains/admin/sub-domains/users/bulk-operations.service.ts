@@ -5,7 +5,7 @@
  * and rate limiting for performance and safety
  */
 
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import type { UserId } from '@shared/types/ids';
 import { eq, inArray, sql } from 'drizzle-orm';
 import { users, userBans, auditLogs } from '@schema';

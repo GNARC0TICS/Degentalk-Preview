@@ -4,7 +4,7 @@
  * Handles business logic for content reporting.
  */
 
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { reportedContent } from '@schema';
 import type { ContentId } from '@shared/types/ids';
 

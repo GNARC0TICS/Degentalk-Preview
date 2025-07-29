@@ -6,7 +6,7 @@
  */
 
 import { sql, eq, desc, and, count } from 'drizzle-orm';
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import type { UserId, ThreadId } from '@shared/types/ids';
 import { threads, posts, users, forumStructure } from '@db/schema';
 import { logger } from '@core/logger';

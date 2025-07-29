@@ -7,7 +7,7 @@
 
 import { hash, verify } from "@node-rs/argon2";
 import { generateIdFromEntropySize } from "lucia";
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { users } from "@schema";
 import { eq, and } from "drizzle-orm";
 import { lucia } from "./lucia";

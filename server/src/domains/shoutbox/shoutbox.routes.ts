@@ -16,7 +16,7 @@ import { Router } from 'express'
 import type { Router as RouterType } from 'express';
 import type { Request, Response } from 'express';
 import type { MessageId, RoomId, UserId } from '@shared/types/ids';
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import {
 	shoutboxMessages,
 	shoutboxConfig,

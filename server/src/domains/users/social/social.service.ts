@@ -1,4 +1,4 @@
-import { db } from '@db';
+import { db } from '@degentalk/db';
 // TODO: Fix schema imports - temporarily disabled to get backend running
 // import { economySettings } from '../../../../../../db/schema/economy/settings';
 import { eq, count, sql as drizzleSql } from 'drizzle-orm';

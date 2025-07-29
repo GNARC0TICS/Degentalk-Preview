@@ -40,7 +40,7 @@ export const dgtPackages = pgTable(
 	})
 );
 // Create insert schema with custom validations
-const baseInsertDgtPackageSchema = createInsertSchema(dgtPackages, {
+export const insertDgtPackageSchema = z.object({
 	name: z.string().min(1).max(100),
 	description: z.string().optional(),
 	dgtAmount: z.number().min(1),
@@ -50,19 +50,6 @@ const baseInsertDgtPackageSchema = createInsertSchema(dgtPackages, {
 	imageUrl: z.string().optional(),
 	isActive: z.boolean().default(true),
 	sortOrder: z.number().default(0)
-});
-
-// Use pick instead of omit to avoid type issues
-export const insertDgtPackageSchema = baseInsertDgtPackageSchema.pick({
-	name: true,
-	description: true,
-	dgtAmount: true,
-	usdPrice: true,
-	discountPercentage: true,
-	isFeatured: true,
-	imageUrl: true,
-	isActive: true,
-	sortOrder: true
 });
 export type DgtPackage = typeof dgtPackages.$inferSelect;
 export type InsertDgtPackage = z.infer<typeof insertDgtPackageSchema>;

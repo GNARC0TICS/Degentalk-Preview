@@ -5,7 +5,7 @@
  */
 
 import type { Request, Response, NextFunction } from 'express';
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { xpActionSettings } from '@schema';
 import { eq } from 'drizzle-orm';
 import { logger } from '@core/logger';

@@ -5,7 +5,7 @@
  * Handles post-specific operations with proper separation of concerns
  */
 
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { logger } from '@core/logger';
 import { eventLogger } from '../../activity/services/event-logger.service';
 import { AchievementEventEmitter } from '@core/events/achievement-events.service';

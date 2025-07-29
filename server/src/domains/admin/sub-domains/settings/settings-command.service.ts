@@ -5,7 +5,7 @@
  * Focused on create, update, delete operations with proper validation
  */
 
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { siteSettings, featureFlags } from '@schema';
 import { eq } from 'drizzle-orm';
 import { logger } from '@core/logger';

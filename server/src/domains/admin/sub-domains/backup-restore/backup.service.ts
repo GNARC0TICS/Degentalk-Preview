@@ -4,7 +4,7 @@
  * Handles database backup operations using PostgreSQL pg_dump
  */
 
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { adminBackups, backupSettings } from '@schema';
 import { eq, desc, and, gte, lte, ilike, or } from 'drizzle-orm';
 import { AdminError, AdminErrorCodes } from '../../admin.errors';

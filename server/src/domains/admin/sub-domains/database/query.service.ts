@@ -5,7 +5,7 @@
  * Implements security restrictions and query analysis to prevent dangerous operations.
  */
 
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import type { UserId } from '@shared/types/ids';
 import { logger } from '@core/logger';
 import { sql } from 'drizzle-orm';

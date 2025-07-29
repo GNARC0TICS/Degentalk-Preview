@@ -154,30 +154,30 @@ export const users = pgTable(
 // Zod schema for validation (example, adjust as needed)
 import { createInsertSchema } from 'drizzle-zod';
 import { z } from 'zod';
-// @ts-ignore - drizzle-zod type inference issue with cross-workspace builds
-export const insertUserSchema = createInsertSchema(users, {
+// Create insert schema with only fields needed for user creation
+export const insertUserSchema = z.object({
 	email: z.string().email(),
 	username: z.string().min(3).max(50),
 	password: z.string().min(8),
 	tosAgreedAt: z.date().optional(),
-	privacyAgreedAt: z.date().optional()
-}).omit({
-	id: true,
-	isActive: true,
-	isVerified: true,
-	isDeleted: true,
-	isBanned: true,
-	createdAt: true,
-	lastLogin: true,
-	referralLevel: true,
-	xp: true,
-	level: true,
-	dgtPoints: true,
-	pointsVersion: true,
-	verifyToken: true,
-	resetToken: true,
-	resetTokenExpiresAt: true,
-	gdprConsentedAt: true
+	privacyAgreedAt: z.date().optional(),
+	referredBy: z.string().uuid().optional(),
+	groupId: z.string().uuid().optional(),
+	avatarUrl: z.string().url().optional(),
+	bio: z.string().optional(),
+	location: z.string().optional(),
+	website: z.string().url().optional(),
+	birthday: z.date().optional(),
+	gender: z.enum(['male', 'female', 'other']).optional(),
+	interests: z.array(z.string()).optional(),
+	dgtWalletBalance: z.number().default(0),
+	activeTitleId: z.string().uuid().optional(),
+	preferences: z.any().optional(),
+	reputation: z.number().default(0),
+	weeklyRewardsClaimed: z.number().default(0),
+	monthlyRewardsClaimed: z.number().default(0),
+	yearlyRewardsClaimed: z.number().default(0),
+	lastActive: z.date().optional()
 });
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;

@@ -8,7 +8,7 @@
 import { Router } from 'express'
 import type { Router as RouterType } from 'express';
 import type { Request, Response } from 'express';
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { z } from 'zod';
 import {
 	users,

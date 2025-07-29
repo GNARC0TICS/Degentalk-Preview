@@ -6,7 +6,7 @@ import { userService } from '@core/services/user.service';
  * Handles user roles, ownership, and moderation privileges
  */
 
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { posts, threads, forumStructure } from '@schema';
 import { eq } from 'drizzle-orm';
 import { logger } from '@core/logger';

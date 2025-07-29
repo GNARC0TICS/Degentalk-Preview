@@ -4,7 +4,7 @@
  * Manages scheduled backup operations and cron-based automation
  */
 
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { backupSchedules, adminBackups } from '@schema';
 import { eq, desc, and, lte } from 'drizzle-orm';
 import { AdminError, AdminErrorCodes } from '../../admin.errors';

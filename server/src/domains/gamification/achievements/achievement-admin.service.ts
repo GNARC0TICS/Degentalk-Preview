@@ -5,7 +5,7 @@
  * bulk management, and validation. Provides backend support for admin panel.
  */
 
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { eq, and, desc, count, sql, ilike, inArray } from 'drizzle-orm';
 import { achievements, userAchievements, users } from '@schema';
 import type {

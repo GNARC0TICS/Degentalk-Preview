@@ -5,7 +5,7 @@
  */
 import { Router } from 'express'
 import type { Router as RouterType } from 'express';
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { platformStatistics } from '@schema';
 import { eq } from 'drizzle-orm';
 import { platformStatsService } from './platformStats.service';

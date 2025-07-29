@@ -5,7 +5,7 @@
  * with admin configuration and multi-room support
  */
 
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import type { UserId } from '@shared/types/ids';
 import { chatRooms, users, shoutboxConfig, shoutboxMessages, shoutboxUserIgnores } from '@schema';
 import { eq, and, or, desc, asc, sql, gt, lt, isNull, inArray, not, count } from 'drizzle-orm';

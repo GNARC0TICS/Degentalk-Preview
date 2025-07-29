@@ -1,4 +1,4 @@
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import type { UserId } from '@shared/types/ids';
 import { featureFlags, users } from '@schema'; // Corrected import
 import { logger, LogLevel } from '@core/logger';

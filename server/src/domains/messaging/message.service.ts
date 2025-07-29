@@ -4,7 +4,7 @@
  * Business logic for messaging functionality
  */
 
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { eq, and, or, sql, desc } from 'drizzle-orm';
 import { messages, users, directMessages } from '@schema';
 import type { UserId, MessageId } from '@shared/types/ids';

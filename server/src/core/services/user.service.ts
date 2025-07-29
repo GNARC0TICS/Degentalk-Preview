@@ -5,7 +5,7 @@
  * Provides consistent user fetching, validation, and management
  */
 
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { users } from '@schema';
 import { eq, and } from 'drizzle-orm';
 import { logger } from '../logger';

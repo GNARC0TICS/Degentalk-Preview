@@ -31,21 +31,13 @@ export const dictionaryEntries = pgTable('dictionary_entries', {
 		.default(sql`CURRENT_TIMESTAMP`)
 });
 // Create insert schema with custom validations
-const baseInsertSchema = createInsertSchema(dictionaryEntries, {
+export const insertDictionaryEntrySchema = z.object({
+	slug: z.string(),
 	word: z.string().min(2).max(50),
 	definition: z.string().min(20).max(5000),
 	usageExample: z.string().optional(),
-	tags: z.array(z.string()).max(5).optional()
-});
-
-// Use pick instead of omit to avoid type issues
-export const insertDictionaryEntrySchema = baseInsertSchema.pick({
-	slug: true,
-	word: true,
-	definition: true,
-	usageExample: true,
-	tags: true,
-	authorId: true
+	tags: z.array(z.string()).max(5).optional(),
+	authorId: z.string().uuid()
 });
 export type DictionaryEntry = typeof dictionaryEntries.$inferSelect;
 export type NewDictionaryEntry = z.infer<typeof insertDictionaryEntrySchema>;

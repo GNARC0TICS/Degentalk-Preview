@@ -12,7 +12,7 @@
 
 import { logger } from '@core/logger';
 import type { UserId } from '@shared/types/ids';
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { walletService } from '../wallet/services/wallet.service';
 import { tipService } from './tip/tip.service';
 import { rainService } from './rain/rain.service';

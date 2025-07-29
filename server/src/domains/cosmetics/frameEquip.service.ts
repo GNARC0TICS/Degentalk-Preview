@@ -1,4 +1,4 @@
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { avatarFrames, userOwnedFrames, users } from '@schema';
 import { eq } from 'drizzle-orm';
 import { xpService } from '@domains/xp/xp.service';

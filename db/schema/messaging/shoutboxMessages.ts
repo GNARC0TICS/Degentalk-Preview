@@ -28,19 +28,11 @@ export const shoutboxMessages = pgTable(
 		createdAtIdx: index('idx_shoutbox_messages_created_at').on(table.createdAt)
 	})
 );
-// @ts-ignore - drizzle-zod type inference issue with cross-workspace builds
-export const insertShoutboxMessageSchema = createInsertSchema(shoutboxMessages, {
+// Create insert schema with only fields needed for message creation
+export const insertShoutboxMessageSchema = z.object({
+	userId: z.string().uuid(),
 	content: z.string().min(2).max(250),
-	roomId: z.string().uuid().optional() // Updated to uuid
-}).omit({
-	id: true,
-	createdAt: true,
-	editedAt: true,
-	isDeleted: true,
-	isPinned: true,
-	tipAmount: true,
-	type: true,
-	metadata: true
+	roomId: z.string().uuid().optional()
 });
 export type ShoutboxMessage = typeof shoutboxMessages.$inferSelect;
 export type InsertShoutboxMessage = z.infer<typeof insertShoutboxMessageSchema>;

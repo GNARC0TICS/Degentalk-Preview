@@ -8,7 +8,7 @@ import { Router } from 'express'
 import type { Router as RouterType } from 'express';
 import type { Request, Response } from 'express';
 import type { UserId } from '@shared/types/ids';
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { users, userRelationships } from '@schema';
 import { eq, and, sql, desc, not, or, count, gt, isNull } from 'drizzle-orm';
 import { isValidId } from '@shared/types';

@@ -1,4 +1,4 @@
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { reputationAchievements, userReputationLog } from '@schema';
 import { users } from '@schema';
 import { eq, and } from 'drizzle-orm';

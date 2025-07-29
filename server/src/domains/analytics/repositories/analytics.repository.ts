@@ -3,7 +3,7 @@
  * TODO: Implement proper analytics data access
  */
 
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { logger } from '@core/logger';
 
 export interface DateRange {

@@ -5,7 +5,7 @@
  * Implements IThreadRepository interface with proper error handling and type safety
  */
 
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { threads, posts } from '@schema';
 import { eq, desc, asc, ilike, and, sql } from 'drizzle-orm';
 import { BaseRepository, RepositoryError, type QueryOptions, type PaginatedResult } from '../base-repository';

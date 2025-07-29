@@ -1,4 +1,4 @@
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { sql } from 'drizzle-orm';
 import { logger, LogLevel, LogAction } from '@core/logger';
 

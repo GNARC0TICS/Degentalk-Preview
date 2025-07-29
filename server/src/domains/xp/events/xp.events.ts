@@ -5,7 +5,7 @@
  * This separates event logic from service logic for better modularity.
  */
 
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import {
 	users,
 	levels,

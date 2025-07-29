@@ -3,6 +3,7 @@ import { sql } from 'drizzle-orm';
 import { posts } from '../forum/posts';
 import { users } from '../user/users';
 import { createInsertSchema } from 'drizzle-zod';
+import { z } from 'zod';
 export const postTips = pgTable('post_tips', {
 	id: uuid('id').primaryKey().defaultRandom(),
 	postId: uuid('post_id')
@@ -16,10 +17,12 @@ export const postTips = pgTable('post_tips', {
 		.notNull()
 		.default(sql`now()`)
 });
-// @ts-ignore - drizzle-zod type inference issue with cross-workspace builds
-export const insertPostTipSchema = createInsertSchema(postTips).omit({
-	id: true,
-	createdAt: true
+// Create insert schema with fields needed for creation
+export const insertPostTipSchema = z.object({
+	fromUserId: z.string().uuid(),
+	toUserId: z.string().uuid(),
+	postId: z.string().uuid(),
+	amount: z.number().positive()
 });
 export type PostTip = typeof postTips.$inferSelect;
 // export type InsertPostTip = typeof postTips.$inferInsert; // Already created by Zod

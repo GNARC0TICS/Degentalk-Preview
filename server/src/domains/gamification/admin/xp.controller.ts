@@ -4,7 +4,7 @@ import { xpAdminService } from './xp.service';
 import { logger } from '@core/logger';
 import { xpService } from '../../xp/xp.service';
 import { XP_ACTION } from '../../xp/xp-actions';
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { xpAdjustmentLogs } from '@schema';
 import { eq, desc } from 'drizzle-orm';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';

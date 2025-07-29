@@ -1,6 +1,6 @@
 import { eq } from 'drizzle-orm';
 import type { UserId } from '@shared/types/ids';
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { users } from '@schema/user/users';
 
 /**

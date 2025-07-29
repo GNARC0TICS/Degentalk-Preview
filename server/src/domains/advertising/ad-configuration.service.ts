@@ -1,5 +1,5 @@
 import { eq, and, sql, desc, asc } from 'drizzle-orm';
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import {
 	adPlacements,
 	campaignRules,

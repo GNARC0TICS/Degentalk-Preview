@@ -3,7 +3,7 @@ import { userService } from '@core/services/user.service';
 import { logger } from '@core/logger';
 import { xpService } from '@domains/xp/xp.service';
 import { XP_ACTION } from '@domains/xp/xp-actions';
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { xpAdjustmentLogs } from '@schema';
 import { eq, desc } from 'drizzle-orm';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';

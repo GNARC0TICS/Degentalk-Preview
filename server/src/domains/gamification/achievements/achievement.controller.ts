@@ -25,7 +25,7 @@ import {
 	sendTransformedListResponse
 } from '@core/utils/transformer.helpers';
 import { logger } from '@core/logger';
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { eq, and, desc, count } from 'drizzle-orm';
 import { achievements, userAchievements } from '@schema';
 import type { AchievementEventType } from '@schema';

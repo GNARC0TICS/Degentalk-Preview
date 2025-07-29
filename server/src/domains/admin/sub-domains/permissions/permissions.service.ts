@@ -1,4 +1,4 @@
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { permissions as permissionsTable } from '@schema';
 import { asc } from 'drizzle-orm';
 

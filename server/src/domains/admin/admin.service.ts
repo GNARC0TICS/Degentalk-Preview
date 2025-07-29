@@ -4,7 +4,7 @@
  * Provides centralized admin functionality
  */
 
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { count, desc, eq, sql, and, like, isNull, or, ne, sum } from 'drizzle-orm';
 import { users, auditLogs, transactions } from '@schema';
 import { AdminError, AdminErrorCodes } from './admin.errors';

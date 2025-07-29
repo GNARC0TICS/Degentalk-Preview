@@ -5,7 +5,7 @@
  * Integrates with existing forum events to track user behavior.
  */
 
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { achievementEvents } from '@schema';
 import { logger } from '../logger';
 import type { AchievementEventType } from '@schema';

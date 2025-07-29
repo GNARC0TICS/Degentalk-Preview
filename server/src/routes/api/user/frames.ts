@@ -6,7 +6,7 @@ import { userService } from '@core/services/user.service';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 import { validateAndConvertId } from '@core/helpers/validate-controller-ids';
 import { toFrameId } from '@shared/utils/id';
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { userOwnedFrames, avatarFrames } from '@schema';
 import { eq } from 'drizzle-orm';
 import { defaultFrames } from '@shared/config/default-frames.config';

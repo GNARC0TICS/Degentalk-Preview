@@ -8,7 +8,7 @@
  * - System performance monitoring
  */
 
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { eq, and, desc, gte, count, sum, avg, sql } from 'drizzle-orm';
 import {
 	users,

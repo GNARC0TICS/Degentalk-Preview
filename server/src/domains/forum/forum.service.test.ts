@@ -9,7 +9,7 @@ import {
 	TEST_UUIDS
 } from '@shared/test-utils/mock-uuid';
 import { forumCategories } from '@schema';
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { eq } from 'drizzle-orm';
 
 // Mock the logger to prevent actual logging during tests and allow assertions

@@ -8,7 +8,7 @@ import { Router } from 'express'
 import type { Router as RouterType } from 'express';
 import type { Request, Response } from 'express';
 import { z } from 'zod';
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { sql, eq } from 'drizzle-orm';
 import { vaults, transactions } from '@schema';
 import { VaultService } from './vault.service';

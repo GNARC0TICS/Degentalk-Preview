@@ -5,7 +5,7 @@
  * This file now orchestrates between specialized services rather than handling everything
  */
 
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { logger } from '@core/logger';
 import { forumStructure, threads, threadPrefixes, tags } from '@schema';
 import { sql, desc, asc, and, eq, inArray } from 'drizzle-orm';

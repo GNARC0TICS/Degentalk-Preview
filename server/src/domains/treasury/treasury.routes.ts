@@ -9,7 +9,7 @@ import { userService } from '@core/services/user.service';
 import { Router } from 'express'
 import type { Router as RouterType } from 'express';
 import type { Request, Response } from 'express';
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { sql } from 'drizzle-orm';
 import { users, transactions } from '@schema';
 import { eq } from 'drizzle-orm';

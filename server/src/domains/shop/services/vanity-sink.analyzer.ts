@@ -7,7 +7,7 @@
  */
 
 import { logger, LogAction } from '@core/logger';
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { transactions, userInventory, products } from '@schema';
 import { eq, and, gte, lte, desc, sql, inArray } from 'drizzle-orm';
 import { reportErrorServer } from "@lib/report-error";

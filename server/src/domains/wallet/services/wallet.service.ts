@@ -32,7 +32,7 @@ import { reportErrorServer } from "@lib/report-error";
 import { ccpaymentAdapter } from '../adapters/ccpayment.adapter';
 import { CacheAdapter } from '../adapters/cache.adapter';
 import type { WalletAdapter } from '../adapters/ccpayment.adapter';
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { wallets, transactions, supportedTokens, cryptoWallets, swapRecords, users } from '@schema';
 import { and, eq, sql } from 'drizzle-orm';
 import { ccpaymentService } from '../providers/ccpayment/ccpayment.service';

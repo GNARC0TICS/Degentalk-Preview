@@ -1,4 +1,4 @@
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { userFollows, users } from '@schema';
 import { eq, and, desc, count, sql as drizzleSql } from 'drizzle-orm';
 

@@ -1,4 +1,4 @@
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import {
 	users,
 	userSettings as userPreferencesSchema,

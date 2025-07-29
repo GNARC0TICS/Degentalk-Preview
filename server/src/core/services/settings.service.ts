@@ -6,7 +6,7 @@
  */
 
 import { logger } from '@core/logger';
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { adminSettings } from '@schema';
 import { eq } from 'drizzle-orm';
 import { EventEmitter } from 'events';

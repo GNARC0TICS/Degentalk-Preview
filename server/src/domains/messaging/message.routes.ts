@@ -9,7 +9,7 @@ import type { Router as RouterType } from 'express';
 import type { Request, Response } from 'express';
 import type { UserId } from '@shared/types/ids';
 import { z } from 'zod';
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { eq } from 'drizzle-orm';
 import { users } from '@schema';
 import { getUserIdFromRequest } from '@core/utils/auth.helpers';

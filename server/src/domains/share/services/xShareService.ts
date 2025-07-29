@@ -1,6 +1,6 @@
 import { TwitterApi } from 'twitter-api-v2';
 import type { UserId } from '@shared/types/ids';
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { users } from '@schema/user/users';
 import { xShares } from '@schema/user/xShares';
 import { eq } from 'drizzle-orm';

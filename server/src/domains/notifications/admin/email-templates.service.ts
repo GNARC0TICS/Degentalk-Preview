@@ -5,7 +5,7 @@
  * and version control for the admin panel
  */
 
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { emailTemplates, emailTemplateVersions, emailTemplateLogs } from '@schema';
 import { eq, desc, and, ilike, or } from 'drizzle-orm';
 import { marked } from 'marked';

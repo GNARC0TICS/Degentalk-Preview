@@ -4,7 +4,7 @@ import { requireAuth } from '@middleware/auth.unified';
 import { frameEquipService } from '@domains/cosmetics/frameEquip.service';
 import { dgtService } from '@domains/wallet/services/dgtService';
 import { userService } from '@core/services/user.service';
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { products, avatarFrames } from '@schema';
 import { eq } from 'drizzle-orm';
 import { z } from 'zod';

@@ -31,7 +31,7 @@ import { logger } from '@core/logger';
 import { WalletError, ErrorCodes } from '@core/errors';
 
 // Import Drizzle and schemas
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { users, wallets, transactions } from '@schema';
 import { eq, sql } from 'drizzle-orm';
 

@@ -6,7 +6,7 @@
  * CCPayment cryptocurrency ledger.
  */
 
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { wallets, transactions, users, ccpaymentUsers } from '@schema';
 import { eq, sql } from 'drizzle-orm';
 import type { UserId } from '@shared/types/ids';

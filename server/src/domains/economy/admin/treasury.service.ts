@@ -4,7 +4,7 @@
  * Handles business logic for treasury operations in the admin panel.
  */
 
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import type { UserId } from '@shared/types/ids';
 import {
 	users,

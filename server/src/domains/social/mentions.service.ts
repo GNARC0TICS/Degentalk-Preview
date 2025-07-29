@@ -1,4 +1,4 @@
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { mentions, userMentionPreferences, users, friendships, userFollows } from '@schema';
 import { eq, and, desc, sql, inArray, or } from 'drizzle-orm';
 import type { MentionType } from './mentions.types';

@@ -5,7 +5,7 @@
  * Configurable messages based on events, time, and user activity
  */
 
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { shoutboxMessages, users } from '@schema';
 import { logger } from '@core/logger';
 import type { RoomId } from '@shared/types/ids';

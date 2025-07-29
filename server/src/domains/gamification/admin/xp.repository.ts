@@ -1,4 +1,4 @@
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import type { UserId, AdminId } from '@shared/types/ids';
 import {
 	users,

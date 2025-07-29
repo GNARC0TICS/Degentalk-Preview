@@ -1,4 +1,4 @@
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { mentionsIndex } from '@schema';
 import { eq, and, desc } from 'drizzle-orm';
 import { logger } from '@core/logger';

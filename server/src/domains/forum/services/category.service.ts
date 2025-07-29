@@ -5,7 +5,7 @@
  * Handles category-specific operations with proper separation of concerns
  */
 
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { logger } from '@core/logger';
 import { forumStructure, threads, posts, users as usersTable } from '@schema';
 import { sql, desc, eq, count, isNull } from 'drizzle-orm';

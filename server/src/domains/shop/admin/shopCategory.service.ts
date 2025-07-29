@@ -1,4 +1,4 @@
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { productCategories as shopCategories } from '@schema';
 import { eq, desc, asc } from 'drizzle-orm';
 import { AdminError } from '../../admin/admin.errors';

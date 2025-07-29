@@ -5,7 +5,7 @@
  * Provides common CRUD operations with proper error handling and type safety
  */
 
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { sql, eq, and, or, SQL, count, desc, asc } from 'drizzle-orm';
 import type { AnyPgColumn, AnyPgTable } from 'drizzle-orm/pg-core';
 import { logger } from '../logger';

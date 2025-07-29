@@ -5,7 +5,7 @@
  * Focused on data retrieval with filtering, search, and formatting
  */
 
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { siteSettings, featureFlags } from '@schema';
 import { eq, and, or, ilike, asc } from 'drizzle-orm';
 import { logger } from '@core/logger';

@@ -5,7 +5,7 @@
  * for comprehensive retention analysis
  */
 
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { eq, and, gte, desc, count, avg, sql } from 'drizzle-orm';
 import { logger } from '@core/logger';
 import { redisCacheService, CacheMinute } from '@core/cache/redis.service';

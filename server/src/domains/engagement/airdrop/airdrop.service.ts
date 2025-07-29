@@ -6,7 +6,7 @@
  * // [REFAC-AIRDROP]
  */
 
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { transactions, users, airdropSettings, airdropRecords } from '@schema';
 import { eq, and, gt, sql, desc, between } from 'drizzle-orm';
 import { logger } from '@core/logger';

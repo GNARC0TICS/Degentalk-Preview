@@ -3,7 +3,7 @@
  * N+1 query elimination for getForumInfo calls
  */
 
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { forumStructure } from '@schema';
 import { inArray } from 'drizzle-orm';
 import { logger } from '@core/logger';

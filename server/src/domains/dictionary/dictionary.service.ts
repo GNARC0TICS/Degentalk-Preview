@@ -1,4 +1,4 @@
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { and, count, desc, eq, ilike, or, sql } from 'drizzle-orm';
 import { dictionaryEntries, dictionaryUpvotes, insertDictionaryEntrySchema } from '@schema';
 import { XP_ACTION } from '../xp/xp-actions';

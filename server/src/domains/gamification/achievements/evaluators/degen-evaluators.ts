@@ -5,7 +5,7 @@
  * complex logic beyond simple counting or thresholds.
  */
 
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { eq, and, count, desc, sql, gte, lte, between } from 'drizzle-orm';
 import { achievementEvents, users } from '@schema';
 import { logger } from '@core/logger';

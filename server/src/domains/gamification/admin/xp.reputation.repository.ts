@@ -1,4 +1,4 @@
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { eq } from 'drizzle-orm';
 import { xpActionSettings } from '@schema';
 import { BaseRepository } from '@core/repositories/base.repository';

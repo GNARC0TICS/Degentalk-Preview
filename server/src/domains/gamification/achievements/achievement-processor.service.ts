@@ -5,7 +5,7 @@
  * Handles the core logic for checking requirements and awarding achievements.
  */
 
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { eq, and, desc, count, sql } from 'drizzle-orm';
 import { achievements, userAchievements, achievementEvents } from '@schema';
 import type { Achievement, UserAchievement } from '@schema';

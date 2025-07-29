@@ -1,4 +1,4 @@
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { titles as titlesTable, roles as rolesTable, userTitles, users } from '@schema';
 import type { CreateTitleInput, UpdateTitleInput } from './titles.validators';
 import { eq, desc, asc, isNull, isNotNull, and } from 'drizzle-orm';

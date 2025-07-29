@@ -4,7 +4,7 @@
  * Handles signature management, validation, and retrieval for user profiles.
  */
 
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { users, signatureShopItems, userSignatureItems } from '@schema';
 import { eq, and } from 'drizzle-orm';
 import { getSignatureTierForLevel } from '@shared/signature/SignatureTierConfig';

@@ -40,19 +40,11 @@ export const dgtPurchaseOrders = pgTable(
 	})
 );
 // Create insert schema with custom validations
-const baseInsertDgtPurchaseOrderSchema = createInsertSchema(dgtPurchaseOrders, {
+export const insertDgtPurchaseOrderSchema = z.object({
 	dgtAmountRequested: z.number().min(1),
 	cryptoAmountExpected: z.number().min(0.00000001),
 	cryptoCurrencyExpected: z.string().min(1).max(10),
 	ccpaymentReference: z.string().min(1).max(255)
-});
-
-// Use pick instead of omit to avoid type issues
-export const insertDgtPurchaseOrderSchema = baseInsertDgtPurchaseOrderSchema.pick({
-	dgtAmountRequested: true,
-	cryptoAmountExpected: true,
-	cryptoCurrencyExpected: true,
-	ccpaymentReference: true
 });
 export type DgtPurchaseOrder = typeof dgtPurchaseOrders.$inferSelect;
 export type InsertDgtPurchaseOrder = z.infer<typeof insertDgtPurchaseOrderSchema>;

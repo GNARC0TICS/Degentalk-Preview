@@ -8,7 +8,7 @@ import { userService } from '@core/services/user.service';
 import type { Request, Response } from 'express';
 import { subscriptionService } from '../subscription.service';
 import { logger } from '@core/logger';
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { subscriptions, cosmeticDrops, users } from '@schema';
 import { eq, sql, desc, count, sum } from 'drizzle-orm';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';

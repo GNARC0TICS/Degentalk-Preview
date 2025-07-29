@@ -10,7 +10,7 @@ import { logger } from '@core/logger';
 import { WalletError, ErrorCodes } from '@core/errors';
 import type { UserId } from '@shared/types/ids';
 import { ccpaymentApiService } from './ccpayment-api.service';
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { ccpaymentUsers, users } from '@schema';
 import { eq } from 'drizzle-orm';
 

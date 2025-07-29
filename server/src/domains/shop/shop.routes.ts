@@ -2,7 +2,7 @@ import type { UserId } from '@shared/types/ids';
 import { userService } from '@core/services/user.service';
 import { Router } from 'express'
 import type { Router as RouterType } from 'express';
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { products, userInventory, transactions, avatarFrames, productCategories } from '@schema';
 import { eq, isNull, or, and, gte, lte, sql } from 'drizzle-orm';
 import { dgtService } from '@domains/wallet/services/dgtService';

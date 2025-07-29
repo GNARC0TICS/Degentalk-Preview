@@ -1,4 +1,4 @@
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { roles as rolesTable } from '@schema';
 import type { CreateRoleInput, UpdateRoleInput } from './roles.validators';
 import { eq, desc } from 'drizzle-orm';

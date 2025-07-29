@@ -1,6 +1,6 @@
 import type { RuntimeBrandConfig, BrandConfigUpdate } from '@shared/types';
 import { brandConfigurations } from '@schema/admin/brandConfig';
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { eq, desc } from 'drizzle-orm';
 
 // Simple in-memory cache (invalidate on update)

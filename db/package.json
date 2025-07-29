@@ -3,8 +3,12 @@
 	"version": "1.0.0",
 	"type": "module",
 	"main": "./index.ts",
+	"types": "./index.d.ts",
 	"exports": {
-		".": "./index.ts",
+		".": {
+			"types": "./index.d.ts",
+			"default": "./index.ts"
+		},
 		"./schema": "./schema/index.ts",
 		"./schema/*": "./schema/*.ts",
 		"./types": "./types/index.ts",

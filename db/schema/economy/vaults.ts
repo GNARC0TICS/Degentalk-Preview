@@ -66,8 +66,8 @@ const walletAddressSchema = z.union([
 			{ message: 'Invalid wallet address format for dev/test specific values' }
 		)
 ]);
-// @ts-ignore - drizzle-zod type inference issue with cross-workspace builds
-export const insertVaultSchema = createInsertSchema(vaults, {
+// Create insert schema with only fields needed for creation
+export const insertVaultSchema = z.object({
 	walletAddress: walletAddressSchema,
 	amount: z.number().positive(),
 	unlockTime: z
@@ -78,20 +78,6 @@ export const insertVaultSchema = createInsertSchema(vaults, {
 		.optional()
 		.nullable(),
 	notes: z.string().optional()
-}).omit({
-	id: true,
-	userId: true,
-	initialAmount: true,
-	lockedAt: true,
-	status: true,
-	unlockedAt: true,
-	lockTransactionId: true,
-	unlockTransactionId: true,
-	blockchainTxId: true,
-	unlockBlockchainTxId: true,
-	metadata: true,
-	createdAt: true,
-	updatedAt: true
 });
 export type Vault = typeof vaults.$inferSelect;
 export type InsertVault = z.infer<typeof insertVaultSchema>;

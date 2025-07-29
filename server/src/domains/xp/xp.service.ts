@@ -19,7 +19,7 @@ import {
 } from '@schema';
 import type { UserId } from '@shared/types/ids';
 import { eq, sql, and, desc, gte, lt, asc, gt, count } from 'drizzle-orm';
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { logger } from '@core/logger';
 import { getXpAction, XP_ACTION } from './xp-actions';
 import { LevelUpEvent, XpGainEvent, XpLossEvent } from './xp.events';

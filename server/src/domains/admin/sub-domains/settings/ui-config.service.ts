@@ -1,6 +1,6 @@
 import { eq, and, or, like, inArray, gte, lte, desc, asc, sql } from 'drizzle-orm';
 import type { NodePgDatabase } from 'drizzle-orm/node-postgres';
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import {
 	uiQuotes,
 	uiCollections,
