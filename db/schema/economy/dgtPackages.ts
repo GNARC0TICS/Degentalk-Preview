@@ -39,6 +39,7 @@ export const dgtPackages = pgTable(
 		featuredIdx: index('idx_dgt_packages_featured').on(table.isFeatured)
 	})
 );
+// @ts-ignore - drizzle-zod type inference issue with cross-workspace builds
 export const insertDgtPackageSchema = createInsertSchema(dgtPackages, {
 	name: z.string().min(1).max(100),
 	description: z.string().optional(),

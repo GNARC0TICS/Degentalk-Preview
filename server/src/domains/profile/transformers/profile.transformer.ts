@@ -6,6 +6,7 @@
  */
 
 import type { UserId, DgtAmount } from '@shared/types/ids';
+import { toDgtAmount } from '@shared/types';
 import { createHash } from 'crypto';
 import { logger } from '@core/logger';
 
@@ -255,7 +256,8 @@ export class ProfileTransformer {
 	// Private helper methods
 	private static sanitizeDgtAmount(amount: any): DgtAmount {
 		const num = Number(amount);
-		return Math.max(0, isNaN(num) ? 0 : num) as DgtAmount;
+		const sanitized = Math.max(0, isNaN(num) ? 0 : num);
+		return toDgtAmount(sanitized);
 	}
 
 	private static shouldShowRole(role: string): boolean {

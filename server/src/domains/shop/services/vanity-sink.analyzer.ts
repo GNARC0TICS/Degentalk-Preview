@@ -11,6 +11,7 @@ import { db } from '@db';
 import { transactions, userInventory, products } from '@schema';
 import { eq, and, gte, lte, desc, sql, inArray } from 'drizzle-orm';
 import { reportErrorServer } from "@lib/report-error";
+import { toDgtAmount } from '@shared/types';
 import type {
 	VanitySinkMetrics,
 	VanitySinkEvent,
@@ -179,8 +180,8 @@ export class VanitySinkAnalyzer {
 			const totalTransactions = burnTransactions.length;
 			const averageBurnPerTransaction =
 				totalTransactions > 0
-					? ((totalDgtBurned / totalTransactions) as DgtAmount)
-					: (0 as DgtAmount);
+					? toDgtAmount(totalDgtBurned / totalTransactions)
+					: toDgtAmount(0);
 
 			// Generate category breakdown
 			const burnByCategory = await this.generateCategoryBreakdown(burnTransactions);
@@ -192,7 +193,7 @@ export class VanitySinkAnalyzer {
 			const burnTrend = await this.calculateBurnTrend(params.startDate, params.endDate);
 			const projectedMonthlyBurn = params.includeProjections
 				? await this.projectMonthlyBurn(burnTransactions)
-				: (0 as DgtAmount);
+				: toDgtAmount(0);
 
 			// Economic impact calculations
 			const burnUsdValue = this.calculateUsdValue(totalDgtBurned);
@@ -323,7 +324,7 @@ export class VanitySinkAnalyzer {
 					return {
 						userId: spender.userId as UserId,
 						username: userData?.username || 'Unknown',
-						totalBurned: spender.totalBurned as DgtAmount,
+						totalBurned: toDgtAmount(spender.totalBurned),
 						transactionCount: spender.transactionCount,
 						favoriteCategory: favoriteCategory as ItemCategory
 					};
@@ -407,7 +408,7 @@ export class VanitySinkAnalyzer {
 	}
 
 	private calculateTotalBurned(transactions: any[]): DgtAmount {
-		return transactions.reduce((total, tx) => total + (tx.amount || 0), 0) as DgtAmount;
+		return toDgtAmount(transactions.reduce((total, tx) => total + (tx.amount || 0), 0));
 	}
 
 	private async generateCategoryBreakdown(burnTransactions: any[]): Promise<any> {
@@ -419,7 +420,7 @@ export class VanitySinkAnalyzer {
 
 			if (!breakdown[category]) {
 				breakdown[category] = {
-					amount: 0 as DgtAmount,
+					amount: toDgtAmount(0),
 					transactions: 0,
 					topItems: []
 				};
@@ -455,7 +456,7 @@ export class VanitySinkAnalyzer {
 			.map((item) => ({
 				itemId: item.itemId as ItemId,
 				name: item.name,
-				burned: item.burned as DgtAmount
+				burned: toDgtAmount(item.burned)
 			}));
 	}
 
@@ -481,7 +482,7 @@ export class VanitySinkAnalyzer {
 	}
 
 	private async projectMonthlyBurn(recentTransactions: any[]): Promise<DgtAmount> {
-		if (recentTransactions.length === 0) return 0 as DgtAmount;
+		if (recentTransactions.length === 0) return toDgtAmount(0);
 
 		// Simple projection based on recent velocity
 		const totalBurned = this.calculateTotalBurned(recentTransactions);
@@ -493,7 +494,7 @@ export class VanitySinkAnalyzer {
 			(1000 * 60 * 60 * 24);
 		const dailyBurnRate = periodDays > 0 ? totalBurned / periodDays : 0;
 
-		return (dailyBurnRate * 30) as DgtAmount; // 30-day projection
+		return toDgtAmount(dailyBurnRate * 30); // 30-day projection
 	}
 
 	private calculateBurnVelocity(totalBurned: DgtAmount, startDate: Date, endDate: Date): number {
@@ -537,7 +538,7 @@ export class VanitySinkAnalyzer {
 				.from(transactions)
 				.where(and(eq(transactions.fromUserId, userId), eq(transactions.type, 'SHOP_PURCHASE')));
 
-			return (result[0]?.total || 0) as DgtAmount;
+			return toDgtAmount(result[0]?.total || 0);
 		} catch (error) {
 			await reportErrorServer(error, {
 				service: 'VanitySinkAnalyzer',
@@ -545,7 +546,7 @@ export class VanitySinkAnalyzer {
 				action: LogAction.FAILURE,
 				data: { userId }
 			});
-			return 0 as DgtAmount;
+			return toDgtAmount(0);
 		}
 	}
 

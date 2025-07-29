@@ -19,6 +19,7 @@ import type {
 } from '../types';
 
 import type { MessageId, ConversationId, DgtAmount } from '@shared/types/ids';
+import { toDgtAmount } from '@shared/types';
 
 import { UserTransformer } from '../../users/transformers/user.transformer';
 import { createHash } from 'crypto';
@@ -402,7 +403,8 @@ export class MessageTransformer {
 
 	private static sanitizeDgtAmount(amount: any): DgtAmount {
 		const parsed = parseFloat(amount?.toString() || '0');
-		return (isNaN(parsed) ? 0 : Math.max(0, parsed)) as DgtAmount;
+		const sanitized = isNaN(parsed) ? 0 : Math.max(0, parsed);
+		return toDgtAmount(sanitized);
 	}
 
 	private static anonymizeIP(ip?: string): string {
