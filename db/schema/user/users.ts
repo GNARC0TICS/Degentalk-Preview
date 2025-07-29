@@ -154,6 +154,7 @@ export const users = pgTable(
 // Zod schema for validation (example, adjust as needed)
 import { createInsertSchema } from 'drizzle-zod';
 import { z } from 'zod';
+// @ts-ignore - drizzle-zod type inference issue with cross-workspace builds
 export const insertUserSchema = createInsertSchema(users, {
 	email: z.string().email(),
 	username: z.string().min(3).max(50),

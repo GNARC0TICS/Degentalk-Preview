@@ -26,6 +26,7 @@ export const directMessages = pgTable(
 		timestampIdx: index('idx_direct_messages_timestamp').on(table.timestamp)
 	})
 );
+// @ts-ignore - drizzle-zod type inference issue with cross-workspace builds
 export const insertDirectMessageSchema = createInsertSchema(directMessages, {
 	// id: undefined, // Auto-generated UUID primary key
 	// timestamp: undefined, // defaultNow should handle this

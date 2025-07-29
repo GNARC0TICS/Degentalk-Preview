@@ -95,6 +95,7 @@ export const threads = pgTable(
 // }));
 import { createInsertSchema } from 'drizzle-zod';
 import { z } from 'zod';
+// @ts-ignore - drizzle-zod type inference issue with cross-workspace builds
 export const insertThreadSchema = createInsertSchema(threads)
 	.extend({
 		title: z.string().min(3).max(255)

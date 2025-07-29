@@ -39,6 +39,7 @@ export const forumRules = pgTable(
 		statusIdx: index('idx_forum_rules_status').on(table.status)
 	})
 );
+// @ts-ignore - drizzle-zod type inference issue with cross-workspace builds
 export const insertForumRuleSchema = createInsertSchema(forumRules, {
 	title: z.string().min(3).max(255),
 	content: z.string().min(10),

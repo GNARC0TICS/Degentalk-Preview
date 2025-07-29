@@ -43,6 +43,7 @@ export const withdrawalRequests = pgTable(
 		createdAtIdx: index('idx_withdrawal_requests_created_at').on(table.createdAt)
 	})
 );
+// @ts-ignore - drizzle-zod type inference issue with cross-workspace builds
 export const insertWithdrawalRequestSchema = createInsertSchema(withdrawalRequests, {
 	amount: z.number().min(1),
 	walletAddress: z.string().min(1).max(255)

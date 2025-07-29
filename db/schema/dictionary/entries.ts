@@ -30,6 +30,7 @@ export const dictionaryEntries = pgTable('dictionary_entries', {
 		.notNull()
 		.default(sql`CURRENT_TIMESTAMP`)
 });
+// @ts-ignore - drizzle-zod type inference issue with cross-workspace builds
 export const insertDictionaryEntrySchema = createInsertSchema(dictionaryEntries, {
 	word: z.string().min(2).max(50),
 	definition: z.string().min(20).max(5000),

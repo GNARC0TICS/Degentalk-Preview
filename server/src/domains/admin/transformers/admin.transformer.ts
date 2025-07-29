@@ -8,7 +8,7 @@
 import type { AdminId, UserId, DgtAmount } from '@shared/types/ids';
 import { createHash } from 'crypto';
 import { logger } from '@core/logger';
-import { toId } from '@shared/types';
+import { toId, toDgtAmount } from '@shared/types';
 
 // Admin Dashboard Interfaces
 export interface AdminDashboardStats {
@@ -312,7 +312,8 @@ export class AdminTransformer {
 	// Private helper methods
 	private static sanitizeDgtAmount(amount: any): DgtAmount {
 		const num = Number(amount);
-		return Math.max(0, isNaN(num) ? 0 : num) as DgtAmount;
+		const sanitized = Math.max(0, isNaN(num) ? 0 : num);
+		return toDgtAmount(sanitized);
 	}
 
 	private static calculatePlatformRisk(metrics: any): 'low' | 'medium' | 'high' {

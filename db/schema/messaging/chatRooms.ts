@@ -40,6 +40,7 @@ export const chatRooms = pgTable(
 		orderIdx: index('idx_chat_rooms_order').on(table.order)
 	})
 );
+// @ts-ignore - drizzle-zod type inference issue with cross-workspace builds
 export const insertChatRoomSchema = createInsertSchema(chatRooms, {
 	name: z.string().min(2).max(100),
 	description: z.string().optional()

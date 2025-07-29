@@ -74,6 +74,7 @@ export const posts = pgTable(
 // }));
 import { createInsertSchema } from 'drizzle-zod';
 import { z } from 'zod';
+// @ts-ignore - drizzle-zod type inference issue with cross-workspace builds
 export const insertPostSchema = createInsertSchema(posts, {
 	content: z.string().min(1)
 }).omit({

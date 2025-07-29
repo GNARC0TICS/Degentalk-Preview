@@ -43,6 +43,7 @@ export const announcements = pgTable(
 		createdAtIdx: index('idx_announcements_created_at').on(table.createdAt)
 	})
 );
+// @ts-ignore - drizzle-zod type inference issue with cross-workspace builds
 export const insertAnnouncementSchema = createInsertSchema(announcements, {
 	content: z.string().min(1, 'Content is required'),
 	isActive: z.boolean().default(true),
