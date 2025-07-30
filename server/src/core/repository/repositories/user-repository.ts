@@ -11,7 +11,7 @@ import { eq, ilike, asc, sql } from 'drizzle-orm';
 import { BaseRepository, RepositoryError } from '../base-repository';
 import type { IUserRepository } from '../interfaces';
 import type { User } from '@schema';
-import type { UserId } from '@shared/types/ids';
+import type { UserId, EntityId } from '@shared/types/ids';
 import { logger } from '@core/logger';
 
 export class UserRepository extends BaseRepository<User> implements IUserRepository {
@@ -245,6 +245,6 @@ export class UserRepository extends BaseRepository<User> implements IUserReposit
 	 */
 	async update(id: UserId, data: Partial<User>): Promise<User> {
 		this.validateUserData(data);
-		return super.update(id, data);
+		return super.update(id as unknown as EntityId, data);
 	}
 }

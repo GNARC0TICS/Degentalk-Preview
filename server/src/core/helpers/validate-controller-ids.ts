@@ -35,23 +35,19 @@ export function validateAndConvertId<T extends string>(
 	type: T
 ): Id<T> | null {
 	if (!id) {
-		logger.warn('ID validation failed: undefined or empty ID', { type });
+		logger.warn('ID validation failed: undefined or empty ID', `Type: ${type}`);
 		return null;
 	}
 
 	if (!isValidId(id)) {
-		logger.warn('ID validation failed: invalid UUID format', { 
-			id, 
-			type,
-			pattern: 'Expected UUID v4 format'
-		});
+		logger.warn('ID validation failed: invalid UUID format', `ID: ${id}, Type: ${type}, Expected UUID v4 format`);
 		return null;
 	}
 
 	try {
 		return toId<T>(id);
 	} catch (error) {
-		logger.error('ID conversion failed after validation', { id, type, error });
+		logger.error('ID conversion failed after validation', `ID: ${id}, Type: ${type}, Error: ${error}`);
 		return null;
 	}
 }
@@ -142,14 +138,7 @@ export function logInvalidIdAttempt(
 	type: string,
 	context?: Record<string, any>
 ): void {
-	logger.warn('Invalid ID attempt detected', {
-		attemptedId,
-		type,
-		method: req.method,
-		path: req.path,
-		ip: req.ip,
-		userAgent: req.get('user-agent'),
-		authenticatedUser: req.user?.id,
-		...context
-	});
+	logger.warn('Invalid ID attempt detected', 
+		`Attempted ID: ${attemptedId}, Type: ${type}, Method: ${req.method}, Path: ${req.path}, IP: ${req.ip}, UserAgent: ${req.get('user-agent')}, AuthUser: ${req.user?.id}`
+	);
 }

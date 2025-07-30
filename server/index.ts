@@ -112,16 +112,26 @@ async function bootstrap() {
 			initEventNotificationListener();
 			logger.info('SERVER', 'Event notification listener initialized');
 
+			// Initialize admin monitoring
+			logger.info('SERVER', 'Initializing admin monitoring...');
+			const { AdminMonitorService } = await import('./src/domains/admin/services/admin-monitor.service');
+			AdminMonitorService.initializeMonitoring();
+			
+			// Initialize admin error listener
+			const { AdminErrorListener } = await import('./src/domains/admin/listeners/error-handler.listener');
+			AdminErrorListener.initialize();
+			logger.info('SERVER', 'Admin monitoring initialized');
+
 			// Start scheduled tasks (fire and forget)
 			logger.info('SERVER', 'Starting scheduled tasks...');
 			runScheduledTasks()
 				.then(() => logger.info('TASK_SCHEDULER', 'Initial scheduled tasks completed'))
-				.catch(err => logger.error('TASK_SCHEDULER', 'Error in initial scheduled tasks', err));
+				.catch(err => logger.error('TASK_SCHEDULER', 'Error in initial scheduled tasks', { error: err }));
 
 			// Set up recurring tasks
 			setInterval(() => {
 				runScheduledTasks()
-					.catch(err => logger.error('TASK_SCHEDULER', 'Error in recurring scheduled tasks', err));
+					.catch(err => logger.error('TASK_SCHEDULER', 'Error in recurring scheduled tasks', { error: err }));
 			}, 5 * 60 * 1000); // Every 5 minutes
 
 			logger.info('SERVER', '✅ Server initialization complete!');
@@ -153,13 +163,13 @@ async function bootstrap() {
 			logger.info('SERVER', 'Initializing development authentication...');
 			import('./src/utils/dev-auth-startup')
 				.then(({ initializeDevAuth }) => initializeDevAuth())
-				.catch(error => logger.warn('SERVER', 'Dev auth initialization failed:', error));
+				.catch(error => logger.warn('SERVER', 'Dev auth initialization failed', { error }));
 		}
 
 		// Fire and forget basic maintenance
 		if (process.env.NODE_ENV !== 'production') {
 			runScheduledTasks()
-				.catch(err => logger.error('TASK_SCHEDULER', 'Error running basic maintenance', err));
+				.catch(err => logger.error('TASK_SCHEDULER', 'Error running basic maintenance', { error: err }));
 		}
 
 	} catch (error) {

@@ -26,6 +26,7 @@ import type {
 	AdminId,
 	ReportId,
 	ConversationId,
+	MessageId,
 	RoomId,
 	LevelId,
 	EntityId
@@ -211,6 +212,7 @@ export const toPathId = (id: string): PathId => id as PathId;
 export const toAdminId = (id: string): AdminId => id as AdminId;
 export const toReportId = (id: string): ReportId => id as ReportId;
 export const toConversationId = (id: string): ConversationId => id as ConversationId;
+export const toMessageId = (id: string): MessageId => id as MessageId;
 export const toRoomId = (id: string): RoomId => id as RoomId;
 export const toLevelId = (id: string): LevelId => id as LevelId;
 export const toEntityId = (id: string): EntityId => id as EntityId;

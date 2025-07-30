@@ -50,8 +50,8 @@ import type { Tag, ThreadPrefix as Prefix } from '@/types/forum';
 import { useForumStructure } from '@/features/forum/contexts/ForumStructureContext';
 import type { MergedRules } from '@/features/forum/contexts/ForumStructureContext';
 import { usePermission } from '@/hooks/usePermission';
-import type { DraftId, PrefixId } from '@shared/types/ids';
-import { isValidId, toId } from '@shared/utils/id';
+import type { DraftId, PrefixId, TagId } from '@shared/types/ids';
+import { isValidId, toId, toTagId } from '@shared/utils/id';
 
 interface DraftData {
 	id: DraftId;
@@ -588,7 +588,7 @@ export function CreateThreadForm({
 								<TagInput
 									value={(field.value || []).map((tagName) => ({
 										name: tagName,
-										id: crypto.randomUUID(),
+										id: toTagId(crypto.randomUUID()),
 										slug: tagName.toLowerCase().replace(/\s+/g, '-')
 									}))}
 									onChange={(tagsFromInput: Tag[]) =>

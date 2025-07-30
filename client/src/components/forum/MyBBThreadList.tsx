@@ -94,7 +94,7 @@ function ThreadRow({ thread, isEven, forumSlug, getPrefixClass }: ThreadRowProps
 								{prefix.name}
 							</span>
 						)}
-						<Link to={thread.forum?.slug ? `/forums/${thread.forum.slug}/${thread.slug}` : `/threads/${thread.slug}`} className="mybb-thread-title">
+						<Link to={thread.structure?.slug ? `/forums/${thread.structure.slug}/${thread.slug}` : `/threads/${thread.slug}`} className="mybb-thread-title">
 							{thread.title}
 						</Link>
 					</div>
@@ -123,7 +123,7 @@ function ThreadRow({ thread, isEven, forumSlug, getPrefixClass }: ThreadRowProps
 				{thread.lastPostAt ? (
 					<div>
 						<div className="truncate">
-							<Link to={`${thread.forum?.slug ? `/forums/${thread.forum.slug}/${thread.slug}` : `/threads/${thread.slug}`}#latest`} className="text-blue-400 hover:underline text-xs">
+							<Link to={`${thread.structure?.slug ? `/forums/${thread.structure.slug}/${thread.slug}` : `/threads/${thread.slug}`}#latest`} className="text-blue-400 hover:underline text-xs">
 								Last reply
 							</Link>
 						</div>

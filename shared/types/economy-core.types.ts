@@ -1,5 +1,5 @@
 import type { UserId, WalletId, TransactionId, ProductId } from './ids.js';
-import type { TransactionType, TransactionStatus } from '@db/schema/core/enums';
+import type { TransactionType, TransactionStatus } from './enums/economy.enums.js';
 
 /**
  * Economy Domain Types

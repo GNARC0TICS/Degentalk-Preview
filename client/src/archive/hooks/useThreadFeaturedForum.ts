@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { forumApi } from '@/features/forum/services/forumApi';
 import { useForumStructure } from '@/features/forum/contexts/ForumStructureContext';
-import type { MergedFeaturedForum } from '@/features/forum/contexts/ForumStructureContext'; // Use MergedFeaturedForum as type-only import
+import type { MergedForum } from '@/features/forum/contexts/ForumStructureContext';
 import type { Thread } from '@shared/types/thread.types';
 import type { CanonicalPost } from '@/types/canonical.types';
 
@@ -19,7 +19,7 @@ export interface ThreadWithPosts {
 
 interface UseThreadFeaturedForumReturn {
 	threadWithPosts: ThreadWithPosts | null | undefined;
-	featuredForum: MergedFeaturedForum | undefined;
+	featuredForum: MergedForum | undefined;
 	isLoading: boolean;
 	error: Error | null;
 	threadParentForumSlug?: string | null;
@@ -48,9 +48,9 @@ export function useThreadFeaturedForum(
 	});
 
 	const { getFeaturedForumByForumSlug, isLoading: isStructureLoading } = useForumStructure();
-	const [featuredForum, setFeaturedForum] = useState<MergedFeaturedForum | undefined>(undefined);
+	const [featuredForum, setFeaturedForum] = useState<MergedForum | undefined>(undefined);
 
-	const parentForumSlug = threadData?.thread?.parentForumSlug;
+	const parentForumSlug = threadData?.thread?.structure?.slug;
 
 	useEffect(() => {
 		if (parentForumSlug && !isStructureLoading) {

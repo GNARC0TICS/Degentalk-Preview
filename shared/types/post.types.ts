@@ -21,6 +21,11 @@ export interface PostAuthor {
   isVerified?: boolean;
   isBanned?: boolean;
   
+  // Convenience properties
+  isAdmin?: boolean;
+  isModerator?: boolean;
+  signature?: string;
+  
   // Forum-specific stats
   forumStats?: {
     level: number;
@@ -63,6 +68,7 @@ export interface Post {
   editCount: number;
   likeCount: number;
   tipAmount?: number;
+  postNumber?: number; // Position in thread
   
   // User-specific fields
   hasLiked?: boolean;

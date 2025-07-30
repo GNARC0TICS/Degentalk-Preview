@@ -23,7 +23,8 @@
 	},
 	"include": [
 		"./**/*.ts",
-		"../drizzle.config.ts"
+		"../drizzle.config.ts",
+		"../shared/types/**/*.ts"
 	],
 	"exclude": [
 		"node_modules", 

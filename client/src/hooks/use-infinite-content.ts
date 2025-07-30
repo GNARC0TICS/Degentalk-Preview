@@ -60,6 +60,7 @@ export function useInfiniteContent({
     queryKey: ['infinite-content', tab, forumId, pageSize],
     queryFn: fetchContent,
     getNextPageParam: (lastPage) => lastPage.nextCursor,
+    initialPageParam: 1,
     enabled,
     staleTime: 1000 * 60 * 5, // 5 minutes
     gcTime: 1000 * 60 * 10, // 10 minutes (previously cacheTime)

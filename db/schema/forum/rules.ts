@@ -45,15 +45,6 @@ export const insertForumRuleSchema = createInsertSchema(forumRules, {
 	content: z.string().min(10),
 	section: z.string().min(1).max(100),
 	isRequired: z.boolean().default(false)
-}).omit({
-	id: true,
-	status: true,
-	contentHtml: true,
-	lastAgreedVersionHash: true,
-	createdAt: true,
-	updatedAt: true,
-	createdBy: true,
-	updatedBy: true
 });
 export type ForumRule = typeof forumRules.$inferSelect;
-export type InsertForumRule = z.infer<typeof insertForumRuleSchema>;
+export type InsertForumRule = typeof forumRules.$inferInsert;

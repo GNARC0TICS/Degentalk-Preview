@@ -70,5 +70,5 @@ logger.info('LOAD_ENV', 'DATABASE_PROVIDER after all attempts', {
 });
 
 if (!process.env.DATABASE_URL) {
-	logger.error('[LOAD_ENV] CRITICAL: DATABASE_URL is still not set after loading attempts!');
+	logger.error('LOAD_ENV', 'CRITICAL: DATABASE_URL is still not set after loading attempts!');
 }

@@ -203,6 +203,8 @@ export type ThreadListItem = Pick<Thread,
   | 'lastPostAt'
   | 'isSticky'
   | 'isLocked'
+  | 'isSolved'
+  | 'isPinned'
   | 'viewCount'
   | 'postCount'
   | 'user'
@@ -212,6 +214,7 @@ export type ThreadListItem = Pick<Thread,
   | 'relativeTime'
   | 'isHot'
   | 'hasNewReplies'
+  | 'structure'
 >;
 
 /**

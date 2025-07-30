@@ -12,7 +12,14 @@ import {
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { createInsertSchema } from 'drizzle-zod';
-import type { UnlockRequirements } from '@shared/types/entities/title.types';
+// Type import from shared - tsconfig needs reference update
+type UnlockRequirements = {
+	type: 'level' | 'achievement' | 'purchase' | 'quest' | 'event';
+	level?: number;
+	achievementId?: string;
+	questId?: string;
+	eventId?: string;
+};
 export const titles = pgTable('titles', {
 	id: uuid('id').primaryKey().defaultRandom(),
 	name: varchar('name', { length: 100 }).notNull(),

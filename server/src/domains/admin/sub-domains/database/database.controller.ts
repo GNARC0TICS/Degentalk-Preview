@@ -54,11 +54,13 @@ export async function getTables(req: Request, res: Response) {
 		const tables = await databaseService.getTables();
 
 		// Log access
-		await adminCreateAuditLogEntry({
-			adminUserId: userId,
-			action: 'database_tables_viewed',
-			details: `Viewed database table list (${tables.length} tables)`
-		});
+		await adminCreateAuditLogEntry(
+			'database_tables_viewed',
+			'database',
+			'tables',
+			userId,
+			{ details: `Viewed database table list (${tables.length} tables)` }
+		);
 
 		sendSuccessResponse(res, tables);
 	} catch (error: any) {
@@ -82,11 +84,13 @@ export async function getTableSchema(req: Request, res: Response) {
 		const schema = await databaseService.getTableSchema(table);
 
 		// Log access
-		await adminCreateAuditLogEntry({
-			adminUserId: userId,
-			action: 'database_schema_viewed',
-			details: `Viewed schema for table: ${table}`
-		});
+		await adminCreateAuditLogEntry(
+			'database_schema_viewed',
+			'database',
+			table,
+			userId,
+			{ details: `Viewed schema for table: ${table}` }
+		);
 
 		sendSuccessResponse(res, schema);
 	} catch (error: any) {
@@ -115,11 +119,13 @@ export async function getTableData(req: Request, res: Response) {
 
 		// Log access (only log periodically to avoid spam)
 		if (queryParams.page === 1) {
-			await adminCreateAuditLogEntry({
-				adminUserId: userId,
-				action: 'database_table_browsed',
-				details: `Browsed table: ${table} (${result.total} total rows)`
-			});
+			await adminCreateAuditLogEntry(
+				'database_table_browsed',
+				'database',
+				table,
+				userId,
+				{ details: `Browsed table: ${table} (${result.total} total rows)` }
+			);
 		}
 
 		sendSuccessResponse(res, result);
@@ -170,17 +176,19 @@ export async function updateRow(req: Request, res: Response) {
 		);
 
 		// Log the update
-		await adminCreateAuditLogEntry({
-			adminUserId: userId,
-			action: 'database_row_updated',
-			details: `Updated row ${requestData.rowId} in table ${requestData.table}`,
-			metadata: {
+		await adminCreateAuditLogEntry(
+			'database_row_updated',
+			'database',
+			String(requestData.rowId),
+			userId,
+			{
+				details: `Updated row ${requestData.rowId} in table ${requestData.table}`,
 				table: requestData.table,
 				rowId: requestData.rowId,
 				updatedFields: Object.keys(requestData.data),
 				newData: requestData.data
 			}
-		});
+		);
 
 		sendSuccessResponse(res, result);
 	} catch (error: any) {
@@ -223,16 +231,18 @@ export async function createRow(req: Request, res: Response) {
 		const result = await databaseService.createRow(requestData.table, requestData.data);
 
 		// Log the creation
-		await adminCreateAuditLogEntry({
-			adminUserId: userId,
-			action: 'database_row_created',
-			details: `Created new row in table ${requestData.table}`,
-			metadata: {
+		await adminCreateAuditLogEntry(
+			'database_row_created',
+			'database',
+			String(result.id),
+			userId,
+			{
+				details: `Created new row in table ${requestData.table}`,
 				table: requestData.table,
 				newRowId: result.id,
 				data: requestData.data
 			}
-		});
+		);
 
 		sendSuccessResponse(res, result);
 	} catch (error: any) {
@@ -272,16 +282,18 @@ export async function deleteRow(req: Request, res: Response) {
 		const result = await databaseService.deleteRow(requestData.table, requestData.rowId);
 
 		// Log the deletion
-		await adminCreateAuditLogEntry({
-			adminUserId: userId,
-			action: 'database_row_deleted',
-			details: `Deleted row ${requestData.rowId} from table ${requestData.table}`,
-			metadata: {
+		await adminCreateAuditLogEntry(
+			'database_row_deleted',
+			'database',
+			String(requestData.rowId),
+			userId,
+			{
+				details: `Deleted row ${requestData.rowId} from table ${requestData.table}`,
 				table: requestData.table,
 				deletedRowId: requestData.rowId,
 				deletedData: rowData
 			}
-		});
+		);
 
 		sendSuccessResponse(res, result);
 	} catch (error: any) {
@@ -328,18 +340,20 @@ export async function bulkOperation(req: Request, res: Response) {
 		);
 
 		// Log the bulk operation
-		await adminCreateAuditLogEntry({
-			adminUserId: userId,
-			action: `database_bulk_${requestData.operation}`,
-			details: `Performed bulk ${requestData.operation} on ${requestData.rowIds.length} rows in table ${requestData.table}`,
-			metadata: {
+		await adminCreateAuditLogEntry(
+			`database_bulk_${requestData.operation}`,
+			'database',
+			requestData.table,
+			userId,
+			{
+				details: `Performed bulk ${requestData.operation} on ${requestData.rowIds.length} rows in table ${requestData.table}`,
 				table: requestData.table,
 				operation: requestData.operation,
 				rowCount: requestData.rowIds.length,
 				rowIds: requestData.rowIds,
 				data: requestData.data
 			}
-		});
+		);
 
 		sendSuccessResponse(res, result);
 	} catch (error: any) {
@@ -363,11 +377,13 @@ export async function exportTableCSV(req: Request, res: Response) {
 		const csvData = await databaseService.exportTableAsCSV(table);
 
 		// Log the export
-		await adminCreateAuditLogEntry({
-			adminUserId: userId,
-			action: 'database_table_exported',
-			details: `Exported table ${table} as CSV`
-		});
+		await adminCreateAuditLogEntry(
+			'database_table_exported',
+			'database',
+			table,
+			userId,
+			{ details: `Exported table ${table} as CSV` }
+		);
 
 		res.setHeader('Content-Type', 'text/csv');
 		res.setHeader('Content-Disposition', `attachment; filename="${table}_export.csv"`);
@@ -396,11 +412,13 @@ export async function getTableRelationships(req: Request, res: Response) {
 		const relationships = await databaseService.getTableRelationships(table);
 
 		// Log access
-		await adminCreateAuditLogEntry({
-			adminUserId: userId,
-			action: 'database_relationships_viewed',
-			details: `Viewed relationships for table: ${table}`
-		});
+		await adminCreateAuditLogEntry(
+			'database_relationships_viewed',
+			'database',
+			table,
+			userId,
+			{ details: `Viewed relationships for table: ${table}` }
+		);
 
 		sendSuccessResponse(res, relationships);
 	} catch (error: any) {
@@ -422,11 +440,13 @@ export async function getDatabaseStats(req: Request, res: Response) {
 		const stats = await databaseService.getDatabaseStats();
 
 		// Log access
-		await adminCreateAuditLogEntry({
-			adminUserId: userId,
-			action: 'database_stats_viewed',
-			details: 'Viewed database statistics'
-		});
+		await adminCreateAuditLogEntry(
+			'database_stats_viewed',
+			'database',
+			'stats',
+			userId,
+			{ details: 'Viewed database statistics' }
+		);
 
 		sendSuccessResponse(res, stats);
 	} catch (error: any) {

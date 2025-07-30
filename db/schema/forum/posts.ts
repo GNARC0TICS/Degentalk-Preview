@@ -77,27 +77,6 @@ import { z } from 'zod';
 // @ts-ignore - drizzle-zod type inference issue with cross-workspace builds
 export const insertPostSchema = createInsertSchema(posts, {
 	content: z.string().min(1)
-}).omit({
-	id: true,
-	uuid: true,
-	likeCount: true,
-	tipCount: true,
-	totalTips: true,
-	isFirstPost: true,
-	isHidden: true,
-	isDeleted: true,
-	deletedAt: true,
-	deletedBy: true,
-	isEdited: true,
-	editedAt: true,
-	editedBy: true,
-	createdAt: true,
-	updatedAt: true,
-	quarantineData: true,
-	pluginData: true,
-	visibilityStatus: true,
-	moderationReason: true,
-	depth: true
 });
 export type Post = typeof posts.$inferSelect;
-export type InsertPost = z.infer<typeof insertPostSchema>;
+export type InsertPost = typeof posts.$inferInsert;

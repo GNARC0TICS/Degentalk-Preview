@@ -5,76 +5,14 @@
  * for the comprehensive gamification system.
  */
 
-import { db } from '@degentalk/db';
-import { eq, and, desc, asc, gte, lte, count, sum, sql, inArray, isNull } from 'drizzle-orm';
-import {
-	achievements,
-	userAchievements,
-	users,
-	badges,
-	userBadges,
-	titles,
-	userTitles,
-	transactions,
-	posts,
-	threads,
-	xpAdjustmentLogs
-} from '@schema';
 import { logger, LogAction } from '@core/logger';
 import { XpService } from '../../xp/xp.service';
 import type { UserId, AchievementId } from '@shared/types/ids';
 import { reportErrorServer } from "@lib/report-error";
+import { gamificationRepository } from '../repositories/gamification.repository';
+import type { AchievementDefinition, AchievementRequirement, UserAchievementProgress, AchievementStats } from '../repositories/gamification.repository';
 
-export interface AchievementDefinition {
-	id: AchievementId;
-	name: string;
-	description: string;
-	iconUrl?: string;
-	rewardXp: number;
-	rewardPoints: number;
-	requirement: AchievementRequirement;
-	isActive: boolean;
-	rarity: 'common' | 'rare' | 'epic' | 'legendary' | 'mythic';
-	category: 'social' | 'content' | 'economy' | 'progression' | 'special';
-}
-
-export interface AchievementRequirement {
-	type: 'count' | 'threshold' | 'streak' | 'composite';
-	action: string;
-	target: number;
-	timeframe?: 'daily' | 'weekly' | 'monthly' | 'lifetime';
-	conditions?: Record<string, any>;
-}
-
-export interface UserAchievementProgress {
-	userId: UserId;
-	achievementId: AchievementId;
-	currentProgress: number;
-	isCompleted: boolean;
-	earnedAt?: Date;
-	progressPercentage: number;
-	achievement: AchievementDefinition;
-}
-
-export interface AchievementStats {
-	totalAchievements: number;
-	completedAchievements: number;
-	completionRate: number;
-	totalRewardXp: number;
-	totalRewardPoints: number;
-	recentEarned: Array<{
-		achievement: AchievementDefinition;
-		earnedAt: Date;
-	}>;
-	categories: Record<
-		string,
-		{
-			total: number;
-			completed: number;
-			rate: number;
-		}
-	>;
-}
+// Interfaces are now imported from the repository
 
 export class AchievementService {
 	private xpService: XpService;
@@ -88,13 +26,7 @@ export class AchievementService {
 	 */
 	async getAllAchievements(activeOnly: boolean = true): Promise<AchievementDefinition[]> {
 		try {
-			let query = db.select().from(achievements);
-
-			if (activeOnly) {
-				query = query.where(eq(achievements.isActive, true));
-			}
-
-			const achievementsData = await query.orderBy(achievements.name);
+			const achievementsData = await gamificationRepository.findAllAchievements(activeOnly);
 
 			return achievementsData.map((a) => ({
 				id: a.id,
@@ -233,18 +165,9 @@ export class AchievementService {
 
 			for (const achievement of targetAchievements) {
 				// Check if user already has this achievement
-				const existingAchievement = await db
-					.select()
-					.from(userAchievements)
-					.where(
-						and(
-							eq(userAchievements.userId, userId),
-							eq(userAchievements.achievementId, achievement.id)
-						)
-					)
-					.limit(1);
+				const existingAchievement = await gamificationRepository.getUserAchievementProgress(userId, achievement.id);
 
-				if (existingAchievement.length > 0) {
+				if (existingAchievement.length > 0 && existingAchievement[0].isCompleted) {
 					// Already earned
 					progress.push({
 						userId,
@@ -409,7 +332,7 @@ export class AchievementService {
 
 			// Award DGT points if specified
 			if (achievementData.rewardPoints > 0) {
-				await db.insert(transactions).values({
+				await gamificationRepository.createTransaction({
 					userId,
 					amount: achievementData.rewardPoints,
 					type: 'ACHIEVEMENT_REWARD',
@@ -567,25 +490,19 @@ export class AchievementService {
 	 * Helper methods for progress calculation
 	 */
 	private async countUserPosts(userId: UserId, timeFilter?: Date): Promise<number> {
-		let query = db.select({ count: count() }).from(posts).where(eq(posts.userId, userId));
-
 		if (timeFilter) {
-			query = query.where(and(eq(posts.userId, userId), gte(posts.createdAt, timeFilter)));
+			// TODO: Extend repository to support time filters
+			logger.warn('AchievementService', 'Time filter not yet supported for post counts, using total count');
 		}
-
-		const result = await query;
-		return result[0]?.count || 0;
+		return await gamificationRepository.getUserPostCount(userId);
 	}
 
 	private async countUserThreads(userId: UserId, timeFilter?: Date): Promise<number> {
-		let query = db.select({ count: count() }).from(threads).where(eq(threads.userId, userId));
-
 		if (timeFilter) {
-			query = query.where(and(eq(threads.userId, userId), gte(threads.createdAt, timeFilter)));
+			// TODO: Extend repository to support time filters
+			logger.warn('AchievementService', 'Time filter not yet supported for thread counts, using total count');
 		}
-
-		const result = await query;
-		return result[0]?.count || 0;
+		return await gamificationRepository.getUserThreadCount(userId);
 	}
 
 	private async sumUserXp(userId: UserId, timeFilter?: Date): Promise<number> {

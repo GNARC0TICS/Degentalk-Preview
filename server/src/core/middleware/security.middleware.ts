@@ -362,11 +362,6 @@ export const requestSizeLimits = {
 export { cors, helmet };
 
 // Log security configuration on startup
-logger.info('Security middleware configured', {
-	environment: env.NODE_ENV,
-	corsEnabled: true,
-	csrfEnabled: true,
-	securityHeaders: true,
-	rateLimitEnabled: env.RATE_LIMIT_ENABLED,
-	hasAllowedOrigins: !!env.ALLOWED_ORIGINS
-});
+logger.info('Security middleware configured', 
+	`Environment: ${env.NODE_ENV}, CORS: enabled, CSRF: enabled, Security Headers: enabled, Rate Limit: ${env.RATE_LIMIT_ENABLED ? 'enabled' : 'disabled'}, Allowed Origins: ${env.ALLOWED_ORIGINS ? 'configured' : 'none'}`
+);

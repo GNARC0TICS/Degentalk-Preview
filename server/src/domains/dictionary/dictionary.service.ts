@@ -1,6 +1,7 @@
 import { db } from '@degentalk/db';
 import { and, count, desc, eq, ilike, or, sql } from 'drizzle-orm';
 import { dictionaryEntries, dictionaryUpvotes, insertDictionaryEntrySchema } from '@schema';
+import { DictionaryRepository } from './repositories/dictionary.repository';
 import { XP_ACTION } from '../xp/xp-actions';
 import { xpService } from '../xp/xp.service';
 import slugify from 'slugify';
@@ -11,6 +12,9 @@ export const DictionaryStatus = {
 	APPROVED: 'approved',
 	REJECTED: 'rejected'
 } as const;
+
+// Initialize repository instance
+const dictionaryRepo = new DictionaryRepository();
 
 export class DictionaryService {
 	/** Fetch paginated entries with optional filters */
@@ -23,6 +27,23 @@ export class DictionaryService {
 		authorId?: string;
 		sort?: 'newest' | 'oldest' | 'popular' | 'alphabetical';
 	}) {
+		// For simple cases with no complex filtering, use repository method
+		if (!params.status && !params.tag && !params.authorId && !params.sort) {
+			const page = params.page ?? 1;
+			const limit = params.limit ?? 20;
+			const offset = (page - 1) * limit;
+			
+			const entries = await dictionaryRepo.findAll({ 
+				limit, 
+				offset, 
+				search: params.search 
+			});
+			const total = await dictionaryRepo.getCount();
+			
+			return { entries, total };
+		}
+
+		// For complex filtering, maintain existing direct DB access logic
 		const page = params.page ?? 1;
 		const limit = params.limit ?? 20;
 		const offset = (page - 1) * limit;
@@ -78,12 +99,8 @@ export class DictionaryService {
 
 	/** Fetch single entry by slug */
 	static async getBySlug(slug: string) {
-		const [entry] = await db
-			.select()
-			.from(dictionaryEntries)
-			.where(eq(dictionaryEntries.slug, slug))
-			.limit(1);
-		return entry;
+		const result = await dictionaryRepo.findBySlug(slug);
+		return result?.entry || null;
 	}
 
 	/** Create a new dictionary entry */
@@ -95,23 +112,16 @@ export class DictionaryService {
 		let slug = slugBase;
 		let counter = 1;
 		while (true) {
-			const existing = await db
-				.select({ id: dictionaryEntries.id })
-				.from(dictionaryEntries)
-				.where(eq(dictionaryEntries.slug, slug))
-				.limit(1);
-			if (existing.length === 0) break;
+			const existing = await dictionaryRepo.findBySlug(slug);
+			if (!existing) break;
 			slug = `${slugBase}-${counter++}`;
 		}
 
-		const [inserted] = await db
-			.insert(dictionaryEntries)
-			.values({
-				...parsed,
-				slug,
-				authorId: data.authorId
-			})
-			.returning();
+		const inserted = await dictionaryRepo.create({
+			...parsed,
+			slug,
+			authorId: data.authorId
+		});
 
 		// Award XP to author
 		await xpService.awardXp(
@@ -124,11 +134,11 @@ export class DictionaryService {
 
 	/** Approve or reject entry (moderation) */
 	static async moderate(entryId: EntryId, status: 'approved' | 'rejected', approverId: string) {
-		const [updated] = await db
-			.update(dictionaryEntries)
-			.set({ status, approverId, updatedAt: new Date() })
-			.where(eq(dictionaryEntries.id, entryId))
-			.returning();
+		const updated = await dictionaryRepo.update(entryId, { 
+			status, 
+			approverId, 
+			updatedAt: new Date() 
+		});
 
 		if (status === 'approved') {
 			// Award XP to author & moderator
@@ -150,43 +160,25 @@ export class DictionaryService {
 
 	/** Upvote toggle */
 	static async toggleUpvote(entryId: EntryId, userId: string) {
-		// Check existing
-		const existing = await db
-			.select()
-			.from(dictionaryUpvotes)
-			.where(and(eq(dictionaryUpvotes.entryId, entryId), eq(dictionaryUpvotes.userId, userId)))
-			.limit(1);
+		// Check if user has already upvoted
+		const hasUpvoted = await dictionaryRepo.hasUserUpvoted(entryId, userId);
 
 		let upvoted = false;
 
-		await db.transaction(async (tx) => {
-			if (existing.length) {
-				// Remove upvote
-				await tx.delete(dictionaryUpvotes).where(eq(dictionaryUpvotes.id, existing[0].id));
-				await tx
-					.update(dictionaryEntries)
-					.set({ upvoteCount: sql`${dictionaryEntries.upvoteCount} - 1` })
-					.where(eq(dictionaryEntries.id, entryId));
-			} else {
-				// Add upvote
-				await tx.insert(dictionaryUpvotes).values({ entryId, userId });
-				await tx
-					.update(dictionaryEntries)
-					.set({ upvoteCount: sql`${dictionaryEntries.upvoteCount} + 1` })
-					.where(eq(dictionaryEntries.id, entryId));
-				upvoted = true;
-			}
-		});
-
-		if (upvoted) {
-			const [entry] = await db
-				.select({ authorId: dictionaryEntries.authorId })
-				.from(dictionaryEntries)
-				.where(eq(dictionaryEntries.id, entryId))
-				.limit(1);
-			if (entry) {
+		if (hasUpvoted) {
+			// Remove upvote
+			await dictionaryRepo.removeUpvote(entryId, userId);
+			upvoted = false;
+		} else {
+			// Add upvote
+			await dictionaryRepo.addUpvote(entryId, userId);
+			upvoted = true;
+			
+			// Award XP to entry author
+			const entry = await dictionaryRepo.findById(entryId);
+			if (entry?.entry) {
 				await xpService.awardXp(
-					entry.authorId as unknown as number,
+					entry.entry.authorId as unknown as number,
 					XP_ACTION.DICTIONARY_ENTRY_UPVOTED
 				);
 			}

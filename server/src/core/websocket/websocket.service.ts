@@ -63,7 +63,7 @@ export class WebSocketService {
     // Start heartbeat
     this.startHeartbeat();
 
-    logger.info('WebSocket service initialized');
+    logger.info('WEBSOCKET', 'WebSocket service initialized');
   }
 
   private async handleConnection(ws: AuthenticatedWebSocket, req: IncomingMessage) {
@@ -330,7 +330,7 @@ export class WebSocketService {
     });
     
     this.wss?.close();
-    logger.info('WebSocket service shut down');
+    logger.info('WEBSOCKET', 'WebSocket service shut down');
   }
 }
 

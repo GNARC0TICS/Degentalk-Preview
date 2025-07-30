@@ -53,7 +53,7 @@ export function HotTopicsWidget({
 
 						{/* Thread content */}
 						<div className="flex-1 min-w-0">
-							<Link to={thread.forum?.slug ? `/forums/${thread.forum.slug}/${thread.slug}` : `/threads/${thread.slug}`}>
+							<Link to={thread.structure?.slug ? `/forums/${thread.structure.slug}/${thread.slug}` : `/threads/${thread.slug}`}>
 								<h4 className="font-medium text-zinc-100 text-sm leading-snug group-hover:text-emerald-400 transition-colors line-clamp-1">
 									{thread.title}
 								</h4>

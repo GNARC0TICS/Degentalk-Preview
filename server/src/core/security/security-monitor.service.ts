@@ -178,16 +178,16 @@ class SecurityMonitorService {
 
 		switch (event.severity) {
 			case 'critical':
-				logger.error('[SECURITY CRITICAL]', logData);
+				logger.error('[SECURITY CRITICAL]', `Security event: ${logData.securityEvent}`, logData);
 				break;
 			case 'high':
-				logger.error('[SECURITY HIGH]', logData);
+				logger.error('[SECURITY HIGH]', `Security event: ${logData.securityEvent}`, logData);
 				break;
 			case 'medium':
-				logger.warn('[SECURITY MEDIUM]', logData);
+				logger.warn('[SECURITY MEDIUM]', `Security event: ${logData.securityEvent}`, logData);
 				break;
 			case 'low':
-				logger.info('[SECURITY LOW]', logData);
+				logger.info('[SECURITY LOW]', `Security event: ${logData.securityEvent}`, logData);
 				break;
 		}
 	}

@@ -12,6 +12,7 @@ import {
 } from '@schema';
 import { eq, and, sql } from 'drizzle-orm';
 import { logger } from '@core/logger';
+import { PreferencesRepository } from './repositories/preferences.repository';
 import type {
 	ProfileSettingsInput,
 	AccountSettingsInput,
@@ -22,12 +23,15 @@ import type {
 import type { UserId } from '@shared/types/ids';
 import bcrypt from 'bcrypt';
 
+// Initialize repository instance
+const preferencesRepo = new PreferencesRepository();
+
 /**
  * Fetches all preferences for a user (profile, account, notifications, display)
  * @param userId The user ID
  */
 export const getAllPreferences = async (userId: UserId) => {
-	// Fetch the user's profile data
+	// Fetch the user's profile data (still need direct access for user table)
 	const user = await db.query.users.findFirst({
 		where: eq(users.id, userId),
 		columns: {
@@ -52,26 +56,14 @@ export const getAllPreferences = async (userId: UserId) => {
 		throw new Error('User not found');
 	}
 
-	// Fetch the user's preferences (account settings)
-	const preferences = await db.query.userSettings.findFirst({
-		where: eq(userPreferencesSchema.userId, userId)
-	});
-
-	// Fetch the user's notification preferences
-	const notifPreferences = await db.query.notificationSettings.findFirst({
-		where: eq(notificationPreferencesSchema.userId, userId)
-	});
-
-	// Fetch the user's display preferences
-	const displayPreferences = await db.query.displayPreferences.findFirst({
-		where: eq(displayPreferencesSchema.userId, userId)
-	});
+	// Use repository to fetch all preference types
+	const allPreferences = await preferencesRepo.findAllByUserId(userId);
 
 	return {
 		profile: user,
-		preferences: preferences || {},
-		notifications: notifPreferences || {},
-		display: displayPreferences || {}
+		preferences: allPreferences.userSettings || {},
+		notifications: allPreferences.notificationSettings || {},
+		display: allPreferences.displayPreferences || {}
 	};
 };
 
@@ -143,18 +135,14 @@ export const updateAccountPreferences = async (
 	data: AccountSettingsInput,
 	ipAddress?: string
 ) => {
-	// Check if preferences exist
-	const existingPreferences = await db.query.userPreferencesSchema.findFirst({
-		where: eq(userPreferencesSchema.userId, userId)
-	});
+	// Use repository to check if preferences exist
+	const existingPreferences = await preferencesRepo.findUserSettingsByUserId(userId);
 
 	// If no preferences exist yet, create them
 	if (!existingPreferences) {
-		await db.insert(userPreferencesSchema).values({
+		await preferencesRepo.createUserSettings({
 			userId,
-			...data,
-			createdAt: new Date(),
-			updatedAt: new Date()
+			...data
 		});
 		return { success: true };
 	}
@@ -168,14 +156,13 @@ export const updateAccountPreferences = async (
 			data[field as keyof AccountSettingsInput] !==
 				existingPreferences[field as keyof UserPreference]
 		) {
-			await db.insert(userSettingsHistory).values({
+			await preferencesRepo.logPreferenceChange(
 				userId,
-				settingKey: `account.${field}`,
-				oldValue: existingPreferences[field as keyof UserPreference]?.toString() || null,
-				newValue: data[field as keyof AccountSettingsInput]?.toString() || null,
-				changedAt: new Date(),
-				changedByIp: ipAddress
-			});
+				`account.${field}`,
+				existingPreferences[field as keyof UserPreference]?.toString() || null,
+				data[field as keyof AccountSettingsInput]?.toString() || null,
+				ipAddress
+			);
 		}
 	}
 
@@ -184,24 +171,17 @@ export const updateAccountPreferences = async (
 		data.sidebarState &&
 		JSON.stringify(data.sidebarState) !== JSON.stringify(existingPreferences.sidebarState)
 	) {
-		await db.insert(userSettingsHistory).values({
+		await preferencesRepo.logPreferenceChange(
 			userId,
-			settingKey: 'account.sidebarState',
-			oldValue: JSON.stringify(existingPreferences.sidebarState),
-			newValue: JSON.stringify(data.sidebarState),
-			changedAt: new Date(),
-			changedByIp: ipAddress
-		});
+			'account.sidebarState',
+			JSON.stringify(existingPreferences.sidebarState),
+			JSON.stringify(data.sidebarState),
+			ipAddress
+		);
 	}
 
-	// Update the preferences
-	await db
-		.update(userPreferencesSchema)
-		.set({
-			...data,
-			updatedAt: new Date()
-		})
-		.where(eq(userPreferencesSchema.userId, userId));
+	// Use repository to update preferences
+	await preferencesRepo.updateUserSettings(userId, data);
 
 	return { success: true };
 };
@@ -217,18 +197,14 @@ export const updateNotificationPreferences = async (
 	data: NotificationSettingsInput,
 	ipAddress?: string
 ) => {
-	// Check if notification preferences exist
-	const existingPreferences = await db.query.notificationPreferencesSchema.findFirst({
-		where: eq(notificationPreferencesSchema.userId, userId)
-	});
+	// Use repository to check if notification preferences exist
+	const existingPreferences = await preferencesRepo.findNotificationSettingsByUserId(userId);
 
 	// If no preferences exist yet, create them
 	if (!existingPreferences) {
-		await db.insert(notificationPreferencesSchema).values({
+		await preferencesRepo.createNotificationSettings({
 			userId,
-			...data,
-			createdAt: new Date(),
-			updatedAt: new Date()
+			...data
 		});
 		return { success: true };
 	}
@@ -249,25 +225,18 @@ export const updateNotificationPreferences = async (
 			data[field as keyof NotificationSettingsInput] !==
 				existingPreferences[field as keyof NotificationPreference]
 		) {
-			await db.insert(userSettingsHistory).values({
+			await preferencesRepo.logPreferenceChange(
 				userId,
-				settingKey: `notifications.${field}`,
-				oldValue: existingPreferences[field as keyof NotificationPreference]?.toString() || null,
-				newValue: data[field as keyof NotificationSettingsInput]?.toString() || null,
-				changedAt: new Date(),
-				changedByIp: ipAddress
-			});
+				`notifications.${field}`,
+				existingPreferences[field as keyof NotificationPreference]?.toString() || null,
+				data[field as keyof NotificationSettingsInput]?.toString() || null,
+				ipAddress
+			);
 		}
 	}
 
-	// Update the notification preferences
-	await db
-		.update(notificationPreferencesSchema)
-		.set({
-			...data,
-			updatedAt: new Date()
-		})
-		.where(eq(notificationPreferencesSchema.userId, userId));
+	// Use repository to update notification preferences
+	await preferencesRepo.updateNotificationSettings(userId, data);
 
 	return { success: true };
 };
@@ -283,18 +252,14 @@ export const updateDisplayPreferences = async (
 	data: DisplayPreferencesInput,
 	ipAddress?: string
 ) => {
-	// Check if display preferences exist
-	const existingPreferences = await db.query.displayPreferencesSchema.findFirst({
-		where: eq(displayPreferencesSchema.userId, userId)
-	});
+	// Use repository to check if display preferences exist
+	const existingPreferences = await preferencesRepo.findDisplayPreferencesByUserId(userId);
 
 	// If no preferences exist yet, create them
 	if (!existingPreferences) {
-		await db.insert(displayPreferencesSchema).values({
+		await preferencesRepo.createDisplayPreferences({
 			userId,
-			...data,
-			createdAt: new Date(),
-			updatedAt: new Date()
+			...data
 		});
 		return { success: true };
 	}
@@ -312,25 +277,18 @@ export const updateDisplayPreferences = async (
 
 	for (const field of trackedFields) {
 		if (field in data && data[field] !== existingPreferences[field as keyof DisplayPreference]) {
-			await db.insert(userSettingsHistory).values({
+			await preferencesRepo.logPreferenceChange(
 				userId,
-				settingKey: `display.${field}`,
-				oldValue: existingPreferences[field as keyof DisplayPreference]?.toString() || null,
-				newValue: data[field]?.toString() || null,
-				changedAt: new Date(),
-				changedByIp: ipAddress
-			});
+				`display.${field}`,
+				existingPreferences[field as keyof DisplayPreference]?.toString() || null,
+				data[field]?.toString() || null,
+				ipAddress
+			);
 		}
 	}
 
-	// Update the display preferences
-	await db
-		.update(displayPreferencesSchema)
-		.set({
-			...data,
-			updatedAt: new Date()
-		})
-		.where(eq(displayPreferencesSchema.userId, userId));
+	// Use repository to update display preferences
+	await preferencesRepo.updateDisplayPreferences(userId, data);
 
 	return { success: true };
 };
@@ -389,62 +347,6 @@ export const changePassword = async (
  * @param userId The ID of the user to create preferences for
  */
 export const createDefaultPreferences = async (userId: UserId) => {
-	const defaultProfilePreferences = {
-		userId,
-		bio: null,
-		signature: null,
-		avatarUrl: null,
-		profileBannerUrl: null,
-		discordHandle: null,
-		twitterHandle: null,
-		website: null,
-		telegramHandle: null,
-		activeTitleId: null,
-		activeBadgeId: null,
-		activeFrameId: null
-	};
-
-	const defaultUserPreferences = {
-		userId,
-		theme: 'auto',
-		shoutboxPosition: 'sidebar-top',
-		sidebarState: {},
-		profileVisibility: 'public',
-		language: 'en',
-		timezone: 'UTC',
-		createdAt: new Date(),
-		updatedAt: new Date()
-	};
-
-	const defaultNotificationPreferences = {
-		userId,
-		receiveEmailNotifications: true,
-		notifyOnMentions: true,
-		notifyOnNewReplies: true,
-		notifyOnLevelUp: true,
-		notifyOnMissionUpdates: true,
-		notifyOnWalletTransactions: true,
-		createdAt: new Date(),
-		updatedAt: new Date()
-	};
-
-	const defaultDisplayPreferences = {
-		userId,
-		theme: 'system',
-		fontSize: 'medium',
-		threadDisplayMode: 'card',
-		reducedMotion: false,
-		hideNsfw: true,
-		showMatureContent: false,
-		showOfflineUsers: true,
-		createdAt: new Date(),
-		updatedAt: new Date()
-	};
-
-	await db.transaction(async (tx) => {
-		await tx.insert(users).values(defaultProfilePreferences); // Assuming users table is for profile preferences
-		await tx.insert(userPreferencesSchema).values(defaultUserPreferences);
-		await tx.insert(notificationPreferencesSchema).values(defaultNotificationPreferences);
-		await tx.insert(displayPreferencesSchema).values(defaultDisplayPreferences);
-	});
+	// Use repository to create default preferences
+	return await preferencesRepo.createDefaultPreferences(userId);
 };

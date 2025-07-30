@@ -24,9 +24,9 @@ export const postReactions = pgTable(
 	})
 );
 import { createInsertSchema } from 'drizzle-zod';
+import { z } from 'zod';
 // @ts-ignore - drizzle-zod type inference issue with cross-workspace builds
-export const insertPostReactionSchema = createInsertSchema(postReactions).omit({
-	createdAt: true
-});
+export const insertPostReactionSchema = createInsertSchema(postReactions);
+export type InsertPostReactionSchema = z.infer<typeof insertPostReactionSchema>;
 export type PostReaction = typeof postReactions.$inferSelect;
 export type InsertPostReaction = typeof postReactions.$inferInsert;

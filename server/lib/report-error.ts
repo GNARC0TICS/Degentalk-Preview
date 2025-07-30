@@ -12,8 +12,7 @@ export interface ErrorContext {
 }
 
 export function reportErrorServer(error: Error, context?: ErrorContext): void {
-  logger.error('Error reported', { 
-    error: error.message, 
+  logger.error('Error reported', error.message, { 
     stack: error.stack,
     ...context 
   });

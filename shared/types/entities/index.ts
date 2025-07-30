@@ -3,7 +3,8 @@
  * Single source of truth for all entity types
  */
 
-// Role types have been consolidated to shared/types/role.types.ts\nexport { type RoleEntity, type RoleFormData, type RoleWithUsers } from '../role.types.js';
+// Role types have been consolidated to shared/types/role.types.ts
+export { type RoleEntity, type RoleFormData, type RoleWithUsers } from '../role.types.js';
 export * from './title.types.js';
 export * from './reputation.types.js';
 

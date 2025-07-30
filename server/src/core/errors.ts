@@ -346,9 +346,8 @@ export function globalErrorHandler(err: Error, req: Request, res: Response, next
 	// Alert for critical errors (integrate with monitoring service)
 	if (appError.severity === ErrorSeverity.CRITICAL) {
 		// TODO: Integrate with alerting service (PagerDuty, Slack, etc.)
-		logger.error('CRITICAL_ERROR_ALERT', {
+		logger.error('CRITICAL_ERROR_ALERT', `Critical error: ${appError.message}`, {
 			code: appError.code,
-			message: appError.message,
 			context: appError.context
 		});
 	}

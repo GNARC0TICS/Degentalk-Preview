@@ -32,7 +32,7 @@ type UserSeedData = {
 };
 
 export async function seedUsers() {
-  logger.info('Seeding users...');
+  logger.info('SEED_USERS', 'Seeding users...');
   const passwordHash = await bcrypt.hash('password123', 10);
   const mockUsers: UserSeedData[] = [
     {
@@ -129,7 +129,7 @@ export async function seedUsers() {
       updatedAt: sql`CURRENT_TIMESTAMP`
     }
   });
-  logger.info(`Upserted ${uniqueUsers.length} users (inserted or updated).`);
+  logger.info('SEED_USERS', `Upserted ${uniqueUsers.length} users (inserted or updated).`);
 }
 
 seedUsers().then(() => process.exit(0));

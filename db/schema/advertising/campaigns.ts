@@ -81,7 +81,7 @@ export const campaigns = pgTable('campaigns', {
 		revenue?: number;
 		roas?: number;
 		lastUpdated?: string;
-	}>().default('{}'),
+	}>().default({}),
 	// Metadata
 	isActive: boolean('is_active').notNull().default(true),
 	createdAt: timestamp('created_at')

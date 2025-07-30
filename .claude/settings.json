@@ -4,7 +4,7 @@
     "DEGENTALK_ROOT": "/home/developer/Degentalk-BETA",
     "PROJECT_ROOT": "/home/developer/Degentalk-BETA"
   },
-  "includeCoAuthoredBy": true,
+  "includeCoAuthoredBy": false,
   "permissions": {
     "allow": [
       "Bash(cd *)",

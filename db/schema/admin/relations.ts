@@ -59,10 +59,6 @@ export const emailTemplatesRelations = relations(emailTemplates, ({ one, many })
 	previousVersion: one(emailTemplates, {
 		fields: [emailTemplates.previousVersionId],
 		references: [emailTemplates.id]
-	}),
-	recipientUser: one(users, {
-		fields: [emailTemplates.recipientUserId],
-		references: [users.id]
 	})
 }));
 export const featureFlagsRelations = relations(featureFlags, ({ one, many }) => ({
@@ -98,12 +94,12 @@ export const seoMetadataRelations = relations(seoMetadata, ({ one, many }) => ({
 	})
 }));
 export const shoutboxConfigRelations = relations(shoutboxConfig, ({ one, many }) => ({
-	updatedBy: one(users, {
-		fields: [shoutboxConfig.updatedBy],
+	createdBy: one(users, {
+		fields: [shoutboxConfig.createdBy],
 		references: [users.id]
 	}),
-	user: one(users, {
-		fields: [shoutboxConfig.userId],
+	updatedBy: one(users, {
+		fields: [shoutboxConfig.updatedBy],
 		references: [users.id]
 	})
 }));
@@ -128,10 +124,6 @@ export const adminThemesRelations = relations(adminThemes, ({ one, many }) => ({
 export const uiQuotesRelations = relations(uiQuotes, ({ one, many }) => ({
 	createdBy: one(users, {
 		fields: [uiQuotes.createdBy],
-		references: [users.id]
-	}),
-	user: one(users, {
-		fields: [uiQuotes.userId],
 		references: [users.id]
 	})
 }));

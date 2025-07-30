@@ -107,11 +107,13 @@ export async function getImportTemplate(req: Request, res: Response) {
 		const csvContent = [headers.join(','), sampleRow.join(',')].join('\n');
 
 		// Log access
-		await adminCreateAuditLogEntry({
-			adminUserId: userId,
-			action: 'database_template_downloaded',
-			details: `Downloaded import template for table: ${table}`
-		});
+		await adminCreateAuditLogEntry(
+			'database_template_downloaded',
+			'database',
+			table,
+			userId,
+			{ details: `Downloaded import template for table: ${table}` }
+		);
 
 		res.setHeader('Content-Type', 'text/csv');
 		res.setHeader('Content-Disposition', `attachment; filename="${table}_import_template.csv"`);
@@ -153,11 +155,13 @@ export async function validateImportData(req: Request, res: Response) {
 		}
 
 		// Log validation
-		await adminCreateAuditLogEntry({
-			adminUserId: userId,
-			action: 'database_data_validated',
-			details: `Validated ${data.length} rows for table ${table}`
-		});
+		await adminCreateAuditLogEntry(
+			'database_data_validated',
+			'database',
+			table,
+			userId,
+			{ details: `Validated ${data.length} rows for table ${table}` }
+		);
 
 		sendSuccessResponse(res, {
 			success: true,

@@ -65,7 +65,8 @@ const EXCLUDE_FILES = [
 const EXCLUDE_EXTENSIONS = ['.map', '.d.ts', '.log', '.env', '.env.local'];
 
 // Maximum depth to traverse (0 means no limit)
-const MAX_DEPTH = 4;
+// Can be overridden with --depth command line argument
+let MAX_DEPTH = 4;
 
 /**
  * Context object to pass through recursion
@@ -194,6 +195,11 @@ async function generateTree(dir, basePath = '', depth = 0, prefix = '') {
  */
 async function main() {
   const argv = minimist(process.argv.slice(2));
+
+  // Override MAX_DEPTH if --depth is provided
+  if (argv.depth !== undefined) {
+    MAX_DEPTH = parseInt(argv.depth, 10);
+  }
 
   // Determine project root reliably even when called from sub-directories
   const __filename = fileURLToPath(import.meta.url);

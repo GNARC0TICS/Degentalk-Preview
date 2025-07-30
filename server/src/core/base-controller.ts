@@ -101,9 +101,8 @@ export abstract class BaseController {
 		try {
 			return SafeIdConverter.toUserId(authUser.id);
 		} catch (error) {
-			logger.error('Invalid user ID in authenticated request', { 
-				userId: authUser.id,
-				error 
+			logger.error('Invalid user ID in authenticated request', String(error), { 
+				userId: authUser.id
 			});
 			throw new UnauthorizedError('Invalid user authentication data');
 		}

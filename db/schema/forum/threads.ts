@@ -96,43 +96,8 @@ export const threads = pgTable(
 import { createInsertSchema } from 'drizzle-zod';
 import { z } from 'zod';
 // @ts-ignore - drizzle-zod type inference issue with cross-workspace builds
-export const insertThreadSchema = createInsertSchema(threads)
-	.extend({
-		title: z.string().min(3).max(255)
-	})
-	.omit({
-		id: true,
-		uuid: true,
-		slug: true,
-		isSticky: true,
-		isLocked: true,
-		isHidden: true,
-		isFeatured: true,
-		featuredAt: true,
-		featuredBy: true,
-		featuredExpiresAt: true,
-		isDeleted: true,
-		deletedAt: true,
-		deletedBy: true,
-		viewCount: true,
-		postCount: true,
-		firstPostLikeCount: true,
-		dgtStaked: true,
-		hotScore: true,
-		isBoosted: true,
-		boostAmountDgt: true,
-		boostExpiresAt: true,
-		lastPostId: true,
-		lastPostAt: true,
-		createdAt: true,
-		updatedAt: true,
-		isArchived: true,
-		pollId: true,
-		pluginData: true,
-		visibilityStatus: true,
-		moderationReason: true,
-		xpMultiplier: true,
-		rewardRules: true
-	});
+export const insertThreadSchema = createInsertSchema(threads, {
+	title: z.string().min(3).max(255)
+});
 export type Thread = typeof threads.$inferSelect;
-export type InsertThread = z.infer<typeof insertThreadSchema>;
+export type InsertThread = typeof threads.$inferInsert;

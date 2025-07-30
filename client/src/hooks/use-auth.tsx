@@ -5,8 +5,8 @@ import { apiRequest } from '@/utils/api-request';
 import { getUserPermissions } from '@/utils/roles';
 import type { Role } from '@/utils/roles';
 import type { User } from '@shared/types/user.types';
-import type { UserId, FrameId } from '@shared/types/ids';
-import { toId } from '@shared/types/index';
+import type { UserId, FrameId, WalletId } from '@shared/types/ids';
+import { toId, toWalletId } from '@shared/types/index';
 import { setAuthToken, removeAuthToken } from '@/utils/auth-token';
 import { logger } from '@/lib/logger';
 
@@ -57,7 +57,7 @@ const mockUsers: Record<MockRole, User> = {
 		email: 'dev@example.com',
 		avatarUrl: null,
 		role: 'user',
-		walletId: 'dev-wallet-123',
+		walletId: toWalletId('dev-wallet-123'),
 		walletAddress: '0xDevWalletAddressUser',
 		createdAt: new Date().toISOString(),
 		level: 5,
@@ -88,7 +88,7 @@ const mockUsers: Record<MockRole, User> = {
 		email: 'devmod@example.com',
 		avatarUrl: null,
 		role: 'moderator',
-		walletId: 'dev-wallet-456',
+		walletId: toWalletId('dev-wallet-456'),
 		walletAddress: '0xDevWalletAddressMod',
 		createdAt: new Date().toISOString(),
 		level: 10,
@@ -119,7 +119,7 @@ const mockUsers: Record<MockRole, User> = {
 		email: 'admin@degentalk.dev',
 		avatarUrl: '/images/avatars/admin.png',
 		role: 'admin',
-		walletId: 'dev-wallet-789',
+		walletId: toWalletId('dev-wallet-789'),
 		walletAddress: '0xAdminWalletAddress',
 		createdAt: new Date().toISOString(),
 		level: 99,
@@ -150,7 +150,7 @@ const mockUsers: Record<MockRole, User> = {
 		email: 'superadmin@degentalk.dev',
 		avatarUrl: '/images/avatars/super-admin.png',
 		role: 'super_admin',
-		walletId: 'dev-wallet-super',
+		walletId: toWalletId('dev-wallet-super'),
 		walletAddress: '0xSuperAdminWalletAddress',
 		createdAt: new Date().toISOString(),
 		level: 100,

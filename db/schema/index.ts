@@ -71,6 +71,8 @@ export * from './economy/transactions';
 export * from './economy/levels';
 export * from './economy/xpAdjustmentLogs';
 export * from './economy/xpActionSettings';
+export * from './economy/xpActionLogs';
+export * from './economy/xpActionLimits';
 export * from './economy/titles';
 export * from './economy/badges';
 export * from './economy/userTitles';

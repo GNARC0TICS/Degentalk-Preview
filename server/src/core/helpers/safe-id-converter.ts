@@ -11,7 +11,22 @@
  * - Maintain type safety with branded IDs
  */
 
-import { toId, isValidId } from '@shared/types';
+import { 
+	isValidId,
+	toId,
+	toUserId as _toUserId,
+	toThreadId as _toThreadId,
+	toPostId as _toPostId,
+	toForumId as _toForumId,
+	toWalletId as _toWalletId,
+	toTransactionId as _toTransactionId,
+	toItemId as _toItemId,
+	toFrameId as _toFrameId,
+	toBadgeId as _toBadgeId,
+	toTitleId as _toTitleId,
+	toMessageId as _toMessageId,
+	toConversationId as _toConversationId
+} from '@shared/types';
 import type {
 	UserId,
 	ThreadId,
@@ -43,10 +58,10 @@ export class IdValidationError extends Error {
 export function safeToUserId(id: string | number): UserId {
 	const stringId = String(id);
 	if (!isValidId(stringId)) {
-		logger.error('Invalid UserId conversion attempt', { attemptedId: id });
+		logger.error('Invalid UserId conversion attempt', `Attempted ID: ${id}`);
 		throw new IdValidationError(id, 'User');
 	}
-	return toId<'User'>(stringId);
+	return _toUserId(stringId);
 }
 
 /**
@@ -55,10 +70,10 @@ export function safeToUserId(id: string | number): UserId {
 export function safeToThreadId(id: string | number): ThreadId {
 	const stringId = String(id);
 	if (!isValidId(stringId)) {
-		logger.error('Invalid ThreadId conversion attempt', { attemptedId: id });
+		logger.error('Invalid ThreadId conversion attempt', `Attempted ID: ${id}`);
 		throw new IdValidationError(id, 'Thread');
 	}
-	return toId<'Thread'>(stringId);
+	return _toThreadId(stringId);
 }
 
 /**
@@ -67,10 +82,10 @@ export function safeToThreadId(id: string | number): ThreadId {
 export function safeToPostId(id: string | number): PostId {
 	const stringId = String(id);
 	if (!isValidId(stringId)) {
-		logger.error('Invalid PostId conversion attempt', { attemptedId: id });
+		logger.error('Invalid PostId conversion attempt', `Attempted ID: ${id}`);
 		throw new IdValidationError(id, 'Post');
 	}
-	return toId<'Post'>(stringId);
+	return _toPostId(stringId);
 }
 
 /**
@@ -79,10 +94,10 @@ export function safeToPostId(id: string | number): PostId {
 export function safeToForumId(id: string | number): ForumId {
 	const stringId = String(id);
 	if (!isValidId(stringId)) {
-		logger.error('Invalid ForumId conversion attempt', { attemptedId: id });
+		logger.error('Invalid ForumId conversion attempt', `Attempted ID: ${id}`);
 		throw new IdValidationError(id, 'Forum');
 	}
-	return toId<'Forum'>(stringId);
+	return _toForumId(stringId);
 }
 
 /**
@@ -91,10 +106,10 @@ export function safeToForumId(id: string | number): ForumId {
 export function safeToWalletId(id: string | number): WalletId {
 	const stringId = String(id);
 	if (!isValidId(stringId)) {
-		logger.error('Invalid WalletId conversion attempt', { attemptedId: id });
+		logger.error('Invalid WalletId conversion attempt', `Attempted ID: ${id}`);
 		throw new IdValidationError(id, 'Wallet');
 	}
-	return toId<'Wallet'>(stringId);
+	return _toWalletId(stringId);
 }
 
 /**
@@ -103,10 +118,10 @@ export function safeToWalletId(id: string | number): WalletId {
 export function safeToTransactionId(id: string | number): TransactionId {
 	const stringId = String(id);
 	if (!isValidId(stringId)) {
-		logger.error('Invalid TransactionId conversion attempt', { attemptedId: id });
+		logger.error('Invalid TransactionId conversion attempt', `Attempted ID: ${id}`);
 		throw new IdValidationError(id, 'Transaction');
 	}
-	return toId<'Transaction'>(stringId);
+	return _toTransactionId(stringId);
 }
 
 /**
@@ -115,10 +130,10 @@ export function safeToTransactionId(id: string | number): TransactionId {
 export function safeToItemId(id: string | number): ItemId {
 	const stringId = String(id);
 	if (!isValidId(stringId)) {
-		logger.error('Invalid ItemId conversion attempt', { attemptedId: id });
+		logger.error('Invalid ItemId conversion attempt', `Attempted ID: ${id}`);
 		throw new IdValidationError(id, 'Item');
 	}
-	return toId<'Item'>(stringId);
+	return _toItemId(stringId);
 }
 
 /**
@@ -127,10 +142,10 @@ export function safeToItemId(id: string | number): ItemId {
 export function safeToFrameId(id: string | number): FrameId {
 	const stringId = String(id);
 	if (!isValidId(stringId)) {
-		logger.error('Invalid FrameId conversion attempt', { attemptedId: id });
+		logger.error('Invalid FrameId conversion attempt', `Attempted ID: ${id}`);
 		throw new IdValidationError(id, 'Frame');
 	}
-	return toId<'Frame'>(stringId);
+	return _toFrameId(stringId);
 }
 
 /**
@@ -139,10 +154,10 @@ export function safeToFrameId(id: string | number): FrameId {
 export function safeToBadgeId(id: string | number): BadgeId {
 	const stringId = String(id);
 	if (!isValidId(stringId)) {
-		logger.error('Invalid BadgeId conversion attempt', { attemptedId: id });
+		logger.error('Invalid BadgeId conversion attempt', `Attempted ID: ${id}`);
 		throw new IdValidationError(id, 'Badge');
 	}
-	return toId<'Badge'>(stringId);
+	return _toBadgeId(stringId);
 }
 
 /**
@@ -151,10 +166,10 @@ export function safeToBadgeId(id: string | number): BadgeId {
 export function safeToTitleId(id: string | number): TitleId {
 	const stringId = String(id);
 	if (!isValidId(stringId)) {
-		logger.error('Invalid TitleId conversion attempt', { attemptedId: id });
+		logger.error('Invalid TitleId conversion attempt', `Attempted ID: ${id}`);
 		throw new IdValidationError(id, 'Title');
 	}
-	return toId<'Title'>(stringId);
+	return _toTitleId(stringId);
 }
 
 /**
@@ -163,10 +178,10 @@ export function safeToTitleId(id: string | number): TitleId {
 export function safeToMessageId(id: string | number): MessageId {
 	const stringId = String(id);
 	if (!isValidId(stringId)) {
-		logger.error('Invalid MessageId conversion attempt', { attemptedId: id });
+		logger.error('Invalid MessageId conversion attempt', `Attempted ID: ${id}`);
 		throw new IdValidationError(id, 'Message');
 	}
-	return toId<'Message'>(stringId);
+	return _toMessageId(stringId);
 }
 
 /**
@@ -175,10 +190,10 @@ export function safeToMessageId(id: string | number): MessageId {
 export function safeToConversationId(id: string | number): ConversationId {
 	const stringId = String(id);
 	if (!isValidId(stringId)) {
-		logger.error('Invalid ConversationId conversion attempt', { attemptedId: id });
+		logger.error('Invalid ConversationId conversion attempt', `Attempted ID: ${id}`);
 		throw new IdValidationError(id, 'Conversation');
 	}
-	return toId<'Conversation'>(stringId);
+	return _toConversationId(stringId);
 }
 
 /**
@@ -187,7 +202,7 @@ export function safeToConversationId(id: string | number): ConversationId {
 export function safeToId<T extends string>(id: string | number, type: T): Id<T> {
 	const stringId = String(id);
 	if (!isValidId(stringId)) {
-		logger.error(`Invalid ${type}Id conversion attempt`, { attemptedId: id, type });
+		logger.error(`Invalid ${type}Id conversion attempt`, `Attempted ID: ${id}, Type: ${type}`);
 		throw new IdValidationError(id, type);
 	}
 	return toId<T>(stringId);
@@ -203,12 +218,12 @@ export function tryConvertId<T extends string>(id: string | number | null | unde
 	try {
 		const stringId = String(id);
 		if (!isValidId(stringId)) {
-			logger.warn(`Invalid ${type}Id in optional field`, { attemptedId: id, type });
+			logger.warn(`Invalid ${type}Id in optional field`, `Attempted ID: ${id}, Type: ${type}`);
 			return null;
 		}
 		return toId<T>(stringId);
 	} catch (error) {
-		logger.warn(`Failed to convert optional ${type}Id`, { attemptedId: id, type, error });
+		logger.warn(`Failed to convert optional ${type}Id`, `Attempted ID: ${id}, Type: ${type}, Error: ${error}`);
 		return null;
 	}
 }
@@ -263,11 +278,7 @@ export function safeTransformRecord<T extends Record<string, any>>(
 				transformed[field] = converter(transformed[field]);
 			} catch (error) {
 				if (error instanceof IdValidationError) {
-					logger.error(`Failed to transform ${field} in record`, {
-						field,
-						value: transformed[field],
-						error: error.message
-					});
+					logger.error(`Failed to transform ${field} in record`, `Field: ${field}, Value: ${transformed[field]}, Error: ${error.message}`);
 					// Re-throw to prevent returning invalid data
 					throw error;
 				}

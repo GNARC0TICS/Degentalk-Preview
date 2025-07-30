@@ -11,9 +11,11 @@ import {
 	validateRequestBody,
 	validateQueryParams,
 	validateNumberParam
-} from '../../admin/admin.validation';
+} from '../shared/forum.validation';
 import { logger } from '@core/logger';
-import { AdminError, AdminErrorCodes } from '../../admin/admin.errors';
+import { eventEmitter } from '@domains/notifications/event-notification-listener';
+import { AppError } from '@core/errors';
+
 import {
 	toPublicList,
 	sendSuccessResponse,
@@ -55,7 +57,19 @@ export const getAllEmojis = async (req: Request, res: Response) => {
 	} catch (error) {
 		logger.error('EMOJI_CONTROLLER', 'Error fetching emojis:', error);
 
-		if (error instanceof AdminError) {
+		// Emit admin error event for monitoring
+		setImmediate(() => {
+			eventEmitter.emit('admin.error.occurred', {
+				domain: 'forum',
+				error: {
+					message: error instanceof Error ? error.message : String(error),
+					name: error instanceof Error ? error.name : 'UnknownError'
+				},
+				timestamp: new Date()
+			});
+		});
+
+		if (error instanceof AppError) {
 			return sendErrorResponse(res, error.message, error.httpStatus || 500);
 		}
 
@@ -85,7 +99,19 @@ export const getEmojiById = async (req: Request, res: Response) => {
 	} catch (error) {
 		logger.error('EMOJI_CONTROLLER', 'Error fetching emoji by ID:', error);
 
-		if (error instanceof AdminError) {
+		// Emit admin error event for monitoring
+		setImmediate(() => {
+			eventEmitter.emit('admin.error.occurred', {
+				domain: 'forum',
+				error: {
+					message: error instanceof Error ? error.message : String(error),
+					name: error instanceof Error ? error.name : 'UnknownError'
+				},
+				timestamp: new Date()
+			});
+		});
+
+		if (error instanceof AppError) {
 			return sendErrorResponse(res, error.message, error.httpStatus || 500);
 		}
 
@@ -124,7 +150,19 @@ export const createEmoji = async (req: Request, res: Response) => {
 	} catch (error) {
 		logger.error('EMOJI_CONTROLLER', 'Error creating emoji:', error);
 
-		if (error instanceof AdminError) {
+		// Emit admin error event for monitoring
+		setImmediate(() => {
+			eventEmitter.emit('admin.error.occurred', {
+				domain: 'forum',
+				error: {
+					message: error instanceof Error ? error.message : String(error),
+					name: error instanceof Error ? error.name : 'UnknownError'
+				},
+				timestamp: new Date()
+			});
+		});
+
+		if (error instanceof AppError) {
 			return sendErrorResponse(res, error.message, error.httpStatus || 500);
 		}
 
@@ -173,7 +211,19 @@ export const updateEmoji = async (req: Request, res: Response) => {
 	} catch (error) {
 		logger.error('EMOJI_CONTROLLER', 'Error updating emoji:', error);
 
-		if (error instanceof AdminError) {
+		// Emit admin error event for monitoring
+		setImmediate(() => {
+			eventEmitter.emit('admin.error.occurred', {
+				domain: 'forum',
+				error: {
+					message: error instanceof Error ? error.message : String(error),
+					name: error instanceof Error ? error.name : 'UnknownError'
+				},
+				timestamp: new Date()
+			});
+		});
+
+		if (error instanceof AppError) {
 			return sendErrorResponse(res, error.message, error.httpStatus || 500);
 		}
 
@@ -213,7 +263,19 @@ export const deleteEmoji = async (req: Request, res: Response) => {
 	} catch (error) {
 		logger.error('EMOJI_CONTROLLER', 'Error deleting emoji:', error);
 
-		if (error instanceof AdminError) {
+		// Emit admin error event for monitoring
+		setImmediate(() => {
+			eventEmitter.emit('admin.error.occurred', {
+				domain: 'forum',
+				error: {
+					message: error instanceof Error ? error.message : String(error),
+					name: error instanceof Error ? error.name : 'UnknownError'
+				},
+				timestamp: new Date()
+			});
+		});
+
+		if (error instanceof AppError) {
 			return sendErrorResponse(res, error.message, error.httpStatus || 500);
 		}
 
@@ -260,7 +322,19 @@ export const bulkDeleteEmojis = async (req: Request, res: Response) => {
 	} catch (error) {
 		logger.error('EMOJI_CONTROLLER', 'Error bulk deleting emojis:', error);
 
-		if (error instanceof AdminError) {
+		// Emit admin error event for monitoring
+		setImmediate(() => {
+			eventEmitter.emit('admin.error.occurred', {
+				domain: 'forum',
+				error: {
+					message: error instanceof Error ? error.message : String(error),
+					name: error instanceof Error ? error.name : 'UnknownError'
+				},
+				timestamp: new Date()
+			});
+		});
+
+		if (error instanceof AppError) {
 			return sendErrorResponse(res, error.message, error.httpStatus || 500);
 		}
 
@@ -287,7 +361,19 @@ export const getEmojiCategories = async (req: Request, res: Response) => {
 	} catch (error) {
 		logger.error('EMOJI_CONTROLLER', 'Error fetching emoji categories:', error);
 
-		if (error instanceof AdminError) {
+		// Emit admin error event for monitoring
+		setImmediate(() => {
+			eventEmitter.emit('admin.error.occurred', {
+				domain: 'forum',
+				error: {
+					message: error instanceof Error ? error.message : String(error),
+					name: error instanceof Error ? error.name : 'UnknownError'
+				},
+				timestamp: new Date()
+			});
+		});
+
+		if (error instanceof AppError) {
 			return sendErrorResponse(res, error.message, error.httpStatus || 500);
 		}
 

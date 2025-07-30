@@ -189,7 +189,7 @@ export function ModernThreadList({
                   "hover:bg-zinc-800/50 cursor-pointer transition-colors",
                   index % 2 === 0 ? "bg-zinc-900/30" : "bg-zinc-900/50"
                 )}
-                onClick={() => navigate(thread.forum?.slug ? `/forums/${thread.forum.slug}/${thread.slug}` : `/threads/${thread.slug}`)}
+                onClick={() => navigate(thread.structure?.slug ? `/forums/${thread.structure.slug}/${thread.slug}` : `/threads/${thread.slug}`)}
               >
                 {/* Icon */}
                 <TableCell className="py-3">
@@ -219,7 +219,7 @@ export function ModernThreadList({
                       )}
                       
                       <Link 
-                        to={thread.forum?.slug ? `/forums/${thread.forum.slug}/${thread.slug}` : `/threads/${thread.slug}`}
+                        to={thread.structure?.slug ? `/forums/${thread.structure.slug}/${thread.slug}` : `/threads/${thread.slug}`}
                         className="text-sm font-medium text-white hover:text-emerald-400 transition-colors"
                         onClick={(e) => e.stopPropagation()}
                       >

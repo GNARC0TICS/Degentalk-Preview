@@ -1,1 +1,0 @@
-{"version":3,"file":"prefixEngine.d.ts","sourceRoot":"","sources":["prefixEngine.ts"],"names":[],"mappings":"AAAA,MAAM,MAAM,qBAAqB,GAAG;IACnC,OAAO,EAAE,MAAM,CAAC;IAChB,KAAK,EAAE,MAAM,CAAC;CACd,CAAC;AAKF,wBAAgB,YAAY,CAAC,SAAS,EAAE,MAAM,EAAE,KAAK,EAAE,qBAAqB,GAAG,MAAM,EAAE,CAEtF"}

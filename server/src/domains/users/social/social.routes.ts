@@ -1,10 +1,42 @@
 import { Router } from 'express'
-import type { Router as RouterType } from 'express';
+import type { Router as RouterType, Request, Response, NextFunction, RequestHandler } from 'express';
+import { randomUUID } from 'crypto';
 import { z } from 'zod';
 import { socialController } from './social.controller';
-import { asyncHandler } from '../../admin/admin.middleware';
+import { eventEmitter } from '@domains/notifications/event-notification-listener';
 
 const router: RouterType = Router();
+
+// Local async handler that emits admin events
+
+const socialAsyncHandler = (
+	routeHandler: RequestHandler
+): RequestHandler => {
+	return async (req: Request, res: Response, next: NextFunction) => {
+		const correlationId = (req.headers['x-correlation-id'] as string) || randomUUID();
+		try {
+			await routeHandler(req, res, next);
+		} catch (error) {
+			// Emit asynchronously to not block response
+			setImmediate(() => {
+				eventEmitter.emit('admin.route.error', {
+					domain: 'users',
+					error: error instanceof Error ? {
+						message: error.message,
+						stack: error.stack,
+						name: error.name
+					} : String(error),
+					timestamp: new Date(),
+					userId: req.user?.id || null,
+					correlationId,
+					path: req.path,
+					method: req.method
+				});
+			});
+			next(error);
+		}
+	};
+};
 
 // Validation schemas
 const updateSocialConfigSchema = z.object({
@@ -93,7 +125,7 @@ const updateSocialConfigSchema = z.object({
  * GET /api/admin/social/config
  * Get current social configuration
  */
-router.get('/config', asyncHandler(socialController.getSocialConfig));
+router.get('/config', socialAsyncHandler(socialController.getSocialConfig));
 
 /**
  * PUT /api/admin/social/config
@@ -101,7 +133,7 @@ router.get('/config', asyncHandler(socialController.getSocialConfig));
  */
 router.put(
 	'/config',
-	asyncHandler(async (req, res) => {
+	socialAsyncHandler(async (req, res) => {
 		const validatedData = updateSocialConfigSchema.parse(req.body);
 		await socialController.updateSocialConfig(req, res, validatedData);
 	})
@@ -111,24 +143,24 @@ router.put(
  * GET /api/admin/social/stats
  * Get social feature usage statistics
  */
-router.get('/stats', asyncHandler(socialController.getSocialStats));
+router.get('/stats', socialAsyncHandler(socialController.getSocialStats));
 
 /**
  * POST /api/admin/social/reset
  * Reset social configuration to defaults
  */
-router.post('/reset', asyncHandler(socialController.resetSocialConfig));
+router.post('/reset', socialAsyncHandler(socialController.resetSocialConfig));
 
 /**
  * GET /api/admin/social/feature-status
  * Get current status of all social features
  */
-router.get('/feature-status', asyncHandler(socialController.getFeatureStatus));
+router.get('/feature-status', socialAsyncHandler(socialController.getFeatureStatus));
 
 /**
  * POST /api/admin/social/emergency-disable
  * Emergency disable all social features
  */
-router.post('/emergency-disable', asyncHandler(socialController.emergencyDisableSocial));
+router.post('/emergency-disable', socialAsyncHandler(socialController.emergencyDisableSocial));
 
 export default router;

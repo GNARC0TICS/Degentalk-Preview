@@ -363,7 +363,7 @@ class GoogleCloudStorageService implements IStorageService {
 		// TODO: Implement GCS public URL construction
 		// Example: return `https://storage.googleapis.com/${bucket}/${relativePath}`;
 		// eslint-disable-next-line no-console
-		logger.info(`GCS_STORAGE_SERVICE: STUB - getPublicUrl for ${bucket}/${relativePath}`);
+		logger.info('GCS_STORAGE', `STUB - getPublicUrl for ${bucket}/${relativePath}`);
 		return `gcs-public-url-for-${bucket}/${relativePath}`;
 	}
 
@@ -371,7 +371,7 @@ class GoogleCloudStorageService implements IStorageService {
 		// TODO: Implement GCS file existence check
 		// Example: const [exists] = await storage.bucket(bucket).file(relativePath).exists();
 		// eslint-disable-next-line no-console
-		logger.info(`GCS_STORAGE_SERVICE: STUB - verifyFileExists for ${bucket}/${relativePath}`);
+		logger.info('GCS_STORAGE', `STUB - verifyFileExists for ${bucket}/${relativePath}`);
 		if (relativePath.includes('nonexistent')) return false; // For testing
 		return true;
 	}

@@ -91,12 +91,19 @@ export const cosmeticTypeEnum = pgEnum('cosmetic_type', [
 	'emoji_pack',
 	'profile_theme'
 ]);
-// Type exports for use in application code
-export type TransactionType = (typeof transactionTypeEnum.enumValues)[number];
-export type TransactionStatus = (typeof transactionStatusEnum.enumValues)[number];
-export type ThreadStatus = (typeof contentVisibilityStatusEnum.enumValues)[number];
-export type PostStatus = (typeof contentVisibilityStatusEnum.enumValues)[number];
-export type UserRole = (typeof userRoleEnum.enumValues)[number];
+// Import shared types and re-export for backward compatibility
+import type { 
+  TransactionType, 
+  TransactionStatus 
+} from '@shared/types/enums/economy.enums';
+import type { 
+  ThreadStatus, 
+  PostStatus 
+} from '@shared/types/enums/forum.enums';
+import type { UserRole } from '@shared/types/enums/user.enums';
+
+// Export shared types
+export type { TransactionType, TransactionStatus, ThreadStatus, PostStatus, UserRole };
 export type NotificationType = (typeof notificationTypeEnum.enumValues)[number];
 export type ReactionType = (typeof reactionTypeEnum.enumValues)[number];
 export type WithdrawalStatus = (typeof withdrawalStatusEnum.enumValues)[number];

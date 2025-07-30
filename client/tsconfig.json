@@ -10,11 +10,8 @@
 		"baseUrl": ".",
 		"composite": true,
 		"paths": {
-			// NEW paths (target state)
-			"@app/*": ["src/*"],
-			
-			// OLD paths (temporary - for transition)
 			"@/*": ["src/*"],
+			// OLD paths (temporary - for transition)
 			"@config/*": ["src/config/*"],
 			"@config/forumMap": ["../shared/config/forum-map.config.ts"],
 			"@config/forumEconomy": ["../shared/config/forum-economy.config.ts"],

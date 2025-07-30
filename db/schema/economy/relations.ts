@@ -33,6 +33,8 @@ import { wallets } from './wallets';
 import { withdrawalRequests } from './withdrawalRequests';
 import { xpActionSettings } from './xpActionSettings';
 import { xpAdjustmentLogs } from './xpAdjustmentLogs';
+import { xpActionLogs } from './xpActionLogs';
+import { xpActionLimits } from './xpActionLimits';
 import { xpLogs } from './xpLogs';
 import { users } from '../user/users';
 export const airdropRecordsRelations = relations(airdropRecords, ({ one, many }) => ({

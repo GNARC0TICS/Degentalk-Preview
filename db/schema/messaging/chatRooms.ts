@@ -44,11 +44,6 @@ export const chatRooms = pgTable(
 export const insertChatRoomSchema = createInsertSchema(chatRooms, {
 	name: z.string().min(2).max(100),
 	description: z.string().optional()
-}).omit({
-	id: true,
-	createdAt: true,
-	updatedAt: true,
-	isDeleted: true
 });
 export type ChatRoom = typeof chatRooms.$inferSelect;
-export type InsertChatRoom = z.infer<typeof insertChatRoomSchema>;
+export type InsertChatRoom = typeof chatRooms.$inferInsert;

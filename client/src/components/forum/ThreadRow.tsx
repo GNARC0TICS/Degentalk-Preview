@@ -27,7 +27,7 @@ const ThreadRow: React.FC<ThreadRowProps> = ({ thread, index }) => {
 
 			{/* Thread title & author */}
 			<td className="px-3 py-2">
-				<Link to={thread.forum?.slug ? `/forums/${thread.forum.slug}/${thread.slug}` : `/threads/${thread.slug}`} className="text-blue-400 hover:underline">
+				<Link to={thread.structure?.slug ? `/forums/${thread.structure.slug}/${thread.slug}` : `/threads/${thread.slug}`} className="text-blue-400 hover:underline">
 					{thread.title}
 				</Link>
 				<div className="text-zinc-500 text-xs">by {thread.user.username}</div>

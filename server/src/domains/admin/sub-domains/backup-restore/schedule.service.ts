@@ -340,11 +340,11 @@ export class BackupScheduleService {
 			try {
 				await this.processDueSchedules();
 			} catch (error) {
-				logger.error('Error processing backup schedules:', error);
+				logger.error('BackupScheduler', 'Error processing backup schedules:', error);
 			}
 		}, 60 * 1000); // 1 minute
 
-		logger.info('Backup scheduler started');
+		logger.info('BackupScheduler', 'Backup scheduler started');
 		return { message: 'Backup scheduler started successfully' };
 	}
 
@@ -358,7 +358,7 @@ export class BackupScheduleService {
 		}
 
 		this.schedulerRunning = false;
-		logger.info('Backup scheduler stopped');
+		logger.info('BackupScheduler', 'Backup scheduler stopped');
 		return { message: 'Backup scheduler stopped' };
 	}
 
@@ -392,7 +392,7 @@ export class BackupScheduleService {
 
 		for (const schedule of dueSchedules) {
 			try {
-				logger.info(`Executing scheduled backup: ${schedule.name}`);
+				logger.info('BackupScheduler', `Executing scheduled backup: ${schedule.name}`);
 
 				// Execute the backup
 				const result = await this.executeScheduledBackup(schedule, schedule.createdBy);
@@ -411,9 +411,9 @@ export class BackupScheduleService {
 					})
 					.where(eq(backupSchedules.id, schedule.id));
 
-				logger.info(`Scheduled backup completed: ${schedule.name}, next run: ${nextRun}`);
+				logger.info('BackupScheduler', `Scheduled backup completed: ${schedule.name}, next run: ${nextRun}`);
 			} catch (error) {
-				logger.error(`Scheduled backup failed: ${schedule.name}`, error);
+				logger.error('BackupScheduler', `Scheduled backup failed: ${schedule.name}`, error);
 
 				// Update failure count and error
 				await db
@@ -432,7 +432,7 @@ export class BackupScheduleService {
 				// Send notification if configured
 				if (schedule.notifyOnFailure) {
 					// Implementation would send email/webhook notification
-					logger.info(`Backup failure notification for schedule: ${schedule.name}`);
+					logger.info('BackupScheduler', `Backup failure notification for schedule: ${schedule.name}`);
 				}
 			}
 		}
