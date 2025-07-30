@@ -14,6 +14,7 @@ import { sql, desc, asc, eq, and, count } from 'drizzle-orm';
 import type { PostWithUser } from '@shared/types/forum.types';
 import type { ThreadId, UserId, PostId } from '@shared/types/ids';
 import { MentionsService } from '../../social/mentions.service';
+import { forumRepository } from '../repositories/forum.repository';
 
 export interface PostCreateInput {
 	content: string;
@@ -286,19 +287,10 @@ export class PostService {
 	 */
 	async likePost(postId: PostId, userId: UserId): Promise<void> {
 		try {
-			// Check if user already liked this post
-			const [existingReaction] = await db
-				.select()
-				.from(postReactions)
-				.where(
-					and(
-						eq(postReactions.postId, postId),
-						eq(postReactions.userId, userId),
-						eq(postReactions.reactionType, 'like')
-					)
-				);
+			// Check if user already liked this post using repository
+			const existingReaction = await forumRepository.findPostReaction(postId, userId);
 
-			if (existingReaction) {
+			if (existingReaction && existingReaction.reactionType === 'like') {
 				throw new Error('User already liked this post');
 			}
 
@@ -310,14 +302,8 @@ export class PostService {
 				createdAt: new Date()
 			});
 
-			// Update post like count
-			await db
-				.update(posts)
-				.set({
-					likeCount: sql`${posts.likeCount} + 1`,
-					updatedAt: new Date()
-				})
-				.where(eq(posts.id, postId));
+			// Update post like count using repository
+			await forumRepository.incrementLikeCount(postId);
 
 			logger.debug('PostService', 'Post liked successfully', { postId, userId });
 		} catch (error) {
@@ -346,14 +332,8 @@ export class PostService {
 				throw new Error('Like not found');
 			}
 
-			// Update post like count
-			await db
-				.update(posts)
-				.set({
-					likeCount: sql`${posts.likeCount} - 1`,
-					updatedAt: new Date()
-				})
-				.where(eq(posts.id, postId));
+			// Update post like count using repository
+			await forumRepository.decrementLikeCount(postId);
 
 			logger.debug('PostService', 'Post unliked successfully', { postId, userId });
 		} catch (error) {

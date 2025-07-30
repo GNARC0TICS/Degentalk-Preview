@@ -6,6 +6,7 @@
  */
 
 import { db } from '@degentalk/db';
+import { forumRepository } from '../repositories/forum.repository';
 import { logger } from '@core/logger';
 import { postService } from './post.service';
 import { cacheService, CacheCategory, CacheMinute } from '@core/cache/unified-cache.service';
@@ -807,13 +808,7 @@ export class ThreadService {
 	 */
 	async incrementViewCount(threadId: ThreadId): Promise<void> {
 		try {
-			await db
-				.update(threads)
-				.set({
-					viewCount: sql`${threads.viewCount} + 1`,
-					updatedAt: new Date()
-				})
-				.where(eq(threads.id, threadId));
+			await forumRepository.incrementThreadViewCount(threadId);
 
 			logger.debug('ThreadService', 'Thread view count incremented', { threadId });
 		} catch (error) {
