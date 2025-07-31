@@ -4,7 +4,7 @@ import { Users } from 'lucide-react';
 import './HeroCTAButton.css';
 
 interface HeroCTAButtonProps {
-  onClick: () => void;
+  onClick?: () => void;
   className?: string;
 }
 

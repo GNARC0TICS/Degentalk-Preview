@@ -1,7 +1,0 @@
-🚀 Starting numeric ID migration codemod 
-
-Transformed 0 numeric ID types in 0 files
-
-🔍 Validating TypeScript compilation before bridge removal...
-❌ TypeScript compilation failed - bridge file removal aborted
-💡 Fix compilation errors first, then re-run with --remove-bridge

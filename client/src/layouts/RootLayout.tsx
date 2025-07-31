@@ -2,20 +2,14 @@ import React from 'react';
 import { Outlet } from 'react-router-dom';
 import { SiteHeader, HeaderProvider } from '@/components/header';
 import { SiteFooter } from '@/components/footer';
-import { AuthRedirectHandler } from '@/components/auth/AuthRedirectHandler';
-import { useTheme } from '@/hooks/useTheme';
 
 /**
- * Root Layout - Main application shell
+ * Root Layout - Static landing page shell
  * Contains the site header, footer, and renders child pages via Outlet
  */
 export default function RootLayout() {
-  // Apply theme CSS variables to document root
-  useTheme();
-  
   return (
     <HeaderProvider>
-      <AuthRedirectHandler />
       <div className="min-h-screen bg-black text-white flex flex-col">
         <SiteHeader />
         <main className="flex-1">

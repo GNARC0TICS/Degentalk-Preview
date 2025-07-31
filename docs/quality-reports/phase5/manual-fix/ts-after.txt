@@ -1,1 +1,0 @@
-TypeScript check completed but has many client-side errors outside of scope

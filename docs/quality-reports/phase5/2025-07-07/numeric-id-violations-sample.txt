@@ -1,5 +1,0 @@
-server/src//domains/economy/services/cloutService.ts:	async grantClout(userId: UserId, amount: number, reason: string, achievementId?: AchievementId) {
-server/src//domains/collectibles/stickers/stickers.service.ts:	async getSticker(id: number): Promise<Sticker & { packName?: string }> {
-server/src//domains/collectibles/stickers/stickers.service.ts:		id: number,
-server/src//domains/collectibles/stickers/stickers.service.ts:	async deleteSticker(id: number, adminId: string): Promise<{ message: string }> {
-server/src//domains/collectibles/stickers/stickers.service.ts:	async getStickerPack(id: number): Promise<StickerPack> {

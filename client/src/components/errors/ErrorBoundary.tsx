@@ -3,7 +3,6 @@ import { AlertTriangle, RefreshCw, Home, Bug } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { logger } from '@/lib/logger';
-import { captureException } from '@/lib/sentry';
 
 interface Props {
 	children: ReactNode;
@@ -58,26 +57,7 @@ export class ErrorBoundary extends Component<Props, State> {
 	}
 
 	private logErrorToService = (error: Error, errorInfo: ErrorInfo) => {
-		// Send to Sentry in production
-		if (process.env.NODE_ENV === 'production') {
-			captureException(error, {
-				level: this.props.level === 'critical' ? 'fatal' : 'error',
-				tags: {
-					errorBoundary: 'true',
-					errorLevel: this.props.level || 'component',
-					context: this.props.context || 'unknown'
-				},
-				extra: {
-					componentStack: errorInfo.componentStack,
-					errorBoundaryProps: {
-						level: this.props.level,
-						context: this.props.context
-					}
-				}
-			});
-		}
-
-		// Log to console in development
+		// Log to console
 		console.group('🚨 Error Boundary Report');
 		logger.error('ErrorBoundary', 'Error: ' + error.toString());
 		logger.error('ErrorBoundary', 'Component Stack: ' + errorInfo.componentStack);

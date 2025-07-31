@@ -1,29 +1,23 @@
 {
-  "extends": [
-    "../tsconfig.base.json",
-    "../tsconfig.paths.json"
-  ],
   "compilerOptions": {
-    "composite": true,
-    "incremental": true,
-    "tsBuildInfoFile": "./.tscache/client.tsbuildinfo",
-    "declaration": true,
-    "declarationMap": true,
-    "emitDeclarationOnly": true,
-    "outDir": "./dist",
-    "jsx": "react-jsx",
-    "lib": [
-      "ES2022",
-      "DOM",
-      "DOM.Iterable"
-    ],
+    "target": "ES2022",
     "module": "ESNext",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "jsx": "react-jsx",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
-    "types": [
-      "node",
-      "vite/client"
-    ],
+    "resolveJsonModule": true,
+    "noEmit": true,
+    "types": ["node", "vite/client"],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@shared/*": ["../shared/*"]
+    }
   },
   "include": [
     "src/**/*",
@@ -41,10 +35,5 @@
     "**/*.spec.ts",
     "**/*.spec.tsx",
     ".tscache"
-  ],
-  "references": [
-    {
-      "path": "../shared/tsconfig.json"
-    }
   ]
 }

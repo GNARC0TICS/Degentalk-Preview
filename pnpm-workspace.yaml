@@ -1,6 +1,3 @@
 packages:
   - 'client'
-  - 'server'
   - 'shared'
-  - 'db'
-  - 'scripts'

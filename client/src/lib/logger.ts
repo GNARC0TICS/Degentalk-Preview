@@ -3,8 +3,6 @@
  * Provides structured logging with different levels and environments
  */
 
-import { reportError } from '@/services/error.service';
-
 type LogLevel = 'debug' | 'info' | 'warn' | 'error';
 
 interface LogContext {
@@ -18,66 +16,52 @@ class ClientLogger {
 	private shouldLog(level: LogLevel): boolean {
 		const levels: LogLevel[] = ['debug', 'info', 'warn', 'error'];
 		const currentLevelIndex = levels.indexOf(this.logLevel);
-		const messageLevelIndex = levels.indexOf(level);
-		return messageLevelIndex >= currentLevelIndex;
+		const requestedLevelIndex = levels.indexOf(level);
+		return requestedLevelIndex >= currentLevelIndex;
 	}
 
-	private formatMessage(level: LogLevel, component: string, message: string, context?: LogContext): string {
+	private formatMessage(component: string, message: string, context?: LogContext): string {
 		const timestamp = new Date().toISOString();
-		const contextStr = context ? ` ${JSON.stringify(context)}` : '';
-		return `[${timestamp}] [${level.toUpperCase()}] [${component}] ${message}${contextStr}`;
+		let formatted = `[${timestamp}] [${component}] ${message}`;
+		
+		if (context && Object.keys(context).length > 0) {
+			formatted += ' | Context: ' + JSON.stringify(context);
+		}
+		
+		return formatted;
 	}
 
 	debug(component: string, message: string, context?: LogContext): void {
 		if (this.shouldLog('debug')) {
-			console.log(this.formatMessage('debug', component, message, context));
+			console.debug(this.formatMessage(component, message, context));
 		}
 	}
 
 	info(component: string, message: string, context?: LogContext): void {
 		if (this.shouldLog('info')) {
-			console.info(this.formatMessage('info', component, message, context));
+			console.info(this.formatMessage(component, message, context));
 		}
 	}
 
 	warn(component: string, message: string, context?: LogContext): void {
 		if (this.shouldLog('warn')) {
-			console.warn(this.formatMessage('warn', component, message, context));
+			console.warn(this.formatMessage(component, message, context));
 		}
 	}
 
-	error(component: string, message: string, context?: LogContext): void {
-		const error = new Error(message);
-		error.name = component;
-		
-		// Use unified error reporter
-		reportError(error, {
-			service: component,
-			level: 'error',
-			...context
-		});
-	}
-
-	// Utility method for logging API errors
-	apiError(component: string, endpoint: string, error: any): void {
-		this.error(component, `API request failed: ${endpoint}`, {
-			endpoint,
-			message: error.message,
-			status: error.status,
-			response: error.response
-		});
-	}
-
-	// Utility method for performance logging
-	performance(component: string, operation: string, duration: number): void {
-		if (this.isDevelopment) {
-			this.debug(component, `Performance: ${operation}`, { duration: `${duration}ms` });
+	error(component: string, message: string, context?: LogContext | Error): void {
+		if (this.shouldLog('error')) {
+			const errorContext = context instanceof Error ? 
+				{ message: context.message, stack: context.stack } : 
+				context;
+			
+			console.error(this.formatMessage(component, message, errorContext));
 		}
+	}
+
+	setLogLevel(level: LogLevel): void {
+		this.logLevel = level;
 	}
 }
 
-// Export singleton instance
 export const logger = new ClientLogger();
-
-// Export type for use in other files
-export type { LogContext };

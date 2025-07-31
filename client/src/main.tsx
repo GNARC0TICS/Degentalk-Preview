@@ -1,32 +1,7 @@
 /**
  * @file client/src/main.tsx
- * @description Main entry point for the Degentalk frontend application.
- * @purpose Initializes the React application, sets up the root DOM element, and configures global providers and routing.
- * @dependencies
- * - React: Core library for building user interfaces.
- * - ReactDOM: For DOM-specific rendering methods.
- * - RouterProvider: React Router v6 provider for routing.
- * - router: Main router configuration.
- * - index.css: Global CSS styles.
- * - styles/animations.css: Application-wide animation styles.
- * - RootProvider: Aggregates all global context providers.
- * @environment Client-side (browser).
- * @important_notes All global providers are managed by `RootProvider`. Router is now handled by react-router-dom.
- * @status Updated to react-router-dom v6.
- * @last_reviewed 2025-07-16
- * @owner Claude
+ * @description Main entry point for the Degentalk static landing page.
  */
-
-// Polyfill for crypto.randomUUID in older browsers
-if (typeof crypto !== 'undefined' && !crypto.randomUUID) {
-  crypto.randomUUID = function() {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-      const r = Math.random() * 16 | 0;
-      const v = c == 'x' ? r : (r & 0x3) | 0x8;
-      return v.toString(16);
-    });
-  };
-}
 
 import React from 'react';
 import ReactDOM from 'react-dom/client';
@@ -34,27 +9,53 @@ import { RouterProvider } from 'react-router-dom';
 import App from './App';
 import './index.css';
 import './styles/animations.css';
-import './features/admin/styles/admin-theme.css'; // Import admin theme
-import { RootProvider } from './providers/root-provider';
 import { router } from './Router';
-import { GlobalErrorBoundary } from './components/errors/GlobalErrorBoundary';
-import { initializeApp } from './lib/app-init';
+import { UIConfigProvider } from './contexts/UIConfigContext';
+import { initGA } from './lib/analytics';
 
-// Import debug utilities in development
-if (import.meta.env.DEV) {
-  import('./utils/debug-widgets');
+// Initialize Google Analytics
+initGA();
+
+// Simple error boundary for the static site
+const ErrorFallback = () => (
+  <div className="min-h-screen flex items-center justify-center bg-zinc-950 text-white">
+    <div className="text-center">
+      <h1 className="text-2xl font-bold mb-4">Something went wrong</h1>
+      <button 
+        onClick={() => window.location.reload()} 
+        className="px-4 py-2 bg-blue-600 rounded hover:bg-blue-700"
+      >
+        Reload Page
+      </button>
+    </div>
+  </div>
+);
+
+class SimpleErrorBoundary extends React.Component<{children: React.ReactNode}, {hasError: boolean}> {
+  constructor(props: any) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return <ErrorFallback />;
+    }
+    return this.props.children;
+  }
 }
 
-// Initialize app services (Sentry, error handlers, etc.)
-initializeApp();
-
-// IMPORTANT: All providers are now managed by RootProvider.
-// Routing is now handled by react-router-dom RouterProvider.
-
 ReactDOM.createRoot(document.getElementById('root')!).render(
-	<GlobalErrorBoundary>
-		<RootProvider>
-			<RouterProvider router={router} />
-		</RootProvider>
-	</GlobalErrorBoundary>
+  <React.StrictMode>
+    <SimpleErrorBoundary>
+      <UIConfigProvider>
+        <RouterProvider router={router} />
+        <App />
+      </UIConfigProvider>
+    </SimpleErrorBoundary>
+  </React.StrictMode>
 );

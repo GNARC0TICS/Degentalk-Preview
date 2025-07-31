@@ -1,1 +1,0 @@
-ALTER TABLE "shoutbox_pins" ALTER COLUMN "message_id" SET DATA TYPE integer;

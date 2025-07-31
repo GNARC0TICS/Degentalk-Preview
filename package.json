@@ -1,5 +1,5 @@
 {
-	"name": "@degentalk/monorepo",
+	"name": "degentalk-landing",
 	"version": "1.0.0",
 	"private": true,
 	"type": "module",
@@ -9,259 +9,42 @@
 		"pnpm": ">=9.0.0"
 	},
 	"scripts": {
-		"dev": "pnpm run kill-port:5001 && pnpm --parallel --filter @degentalk/server --filter @degentalk/client dev",
-		"dev:client": "pnpm --filter @degentalk/client dev",
-		"dev:server": "pnpm --filter @degentalk/server dev",
-		"dev:seed": "pnpm run kill-port:5001 && pnpm --filter @degentalk/scripts seed:all && pnpm dev",
-		"dev:frames": "tsx -r tsconfig-paths/register scripts/ensure-default-frames.ts && pnpm dev",
-		"dev:quick": "pnpm run kill-ports && pnpm --parallel --filter @degentalk/server --filter @degentalk/client dev",
-		"dev:login": "tsx scripts/dev-login.ts",
-		"dev:logout": "tsx scripts/dev-logout.ts",
-		"docker:dev": "./scripts/docker-dev.sh dev",
-		"docker:claude": "./scripts/docker-dev.sh claude",
-		"docker:prod": "./scripts/docker-dev.sh prod",
-		"docker:build": "./scripts/docker-dev.sh build",
-		"docker:clean": "./scripts/docker-dev.sh clean",
-		"validate:workspace": "pnpm -r exec pnpm why @degentalk/shared",
-		"validate:boundaries": "node scripts/validation/validate-boundaries.cjs",
-		"validate:dependencies": "node scripts/validation/validate-dependencies.cjs",
-		"cache:smoke": "FEATURE_CACHING=true tsx scripts/cache-smoke.ts",
-		"cache:health": "tsx scripts/cache-smoke.ts --health",
-		"cache:test-decorators": "tsx scripts/cache-decorator-test.ts",
-		"clean:artifacts": "find . -name 'package-lock.json' -not -path './node_modules/*' -delete",
-		"build": "pnpm --filter @degentalk/server build",
-		"build:client": "pnpm --filter @degentalk/client build",
-		"build:server": "pnpm --filter @degentalk/server build",
-		"start": "pnpm --filter @degentalk/server start",
-		"test": "pnpm -r test",
-		"test:e2e": "playwright test",
-		"test:unit": "pnpm --filter @degentalk/client test",
-		"lint": "pnpm -r lint && eslint . --ext .ts,.tsx",
-		"lint:client": "pnpm --filter @degentalk/client lint",
-		"lint:server": "pnpm --filter @degentalk/server lint",
-		"typecheck": "node ./tools/typecheck-fast.js",
-		"typecheck:all": "tsc -b --clean && tsc -b",
-		"typecheck:watch": "tsc -b --watch",
-		"typecheck:clean": "tsc -b --clean && rm -rf .tscache",
-		"format": "prettier --write .",
-		"format:check": "prettier --check .",
-		"clean": "pnpm -r exec rm -rf node_modules dist build .turbo && rm -rf node_modules",
-		"install:clean": "pnpm clean && pnpm install",
-		"kill-ports": "echo 'skipping kill-ports in Docker'; exit 0",
-		"kill-port:5001": "lsof -ti:5001 | xargs kill -9 2>/dev/null || echo 'Port 5001 clear'",
-		"kill-port:5173": "lsof -ti:5173 | xargs kill -9 2>/dev/null || echo 'Port 5173 clear'",
-		"db:migrate": "pnpm --filter @degentalk/db migrate",
-		"db:migrate:apply": "pnpm --filter @degentalk/db migrate:apply",
-		"db:studio": "pnpm --filter @degentalk/db studio",
-		"db:push": "pnpm --filter @degentalk/db push",
-		"db:push:force": "pnpm --filter @degentalk/db push:force",
-		"db:drop": "pnpm --filter @degentalk/db drop",
-		"seed:all": "pnpm --filter @degentalk/scripts seed:all",
-		"seed:users": "pnpm --filter @degentalk/scripts seed:users",
-		"seed:users:tokens": "tsx -r tsconfig-paths/register scripts/db/seed-users-with-tokens.ts",
-		"seed:forums:only": "pnpm --filter @degentalk/scripts seed:forums:only",
-		"seed:enhanced": "tsx scripts/seed/run-enhanced-seed.ts",
-		"seed:enhanced:dev": "tsx scripts/seed/run-enhanced-seed.ts --dev",
-		"seed:enhanced:staging": "tsx scripts/seed/run-enhanced-seed.ts --staging",
-		"seed:enhanced:quick": "tsx scripts/seed/run-enhanced-seed.ts --quick",
-		"sync:forums": "pnpm --filter @degentalk/scripts sync:forums",
-		"validate": "pnpm --filter @degentalk/scripts validate",
-		"validate:uuid": "tsx scripts/validation/validate-uuid-migration.ts",
-		"audit:uuid": "tsx scripts/migration/generate-uuid-audit.ts",
-		"generate:id-aliases": "tsx scripts/migration/generate-id-aliases.ts",
-		"codemod:plan": "tsx scripts/codemods/generate-id-codemod-plan.ts",
-		"codemod:legacy-dry": "tsx scripts/codemods/apply-id-codemod.ts --dry",
-		"codemod:apply": "tsx scripts/codemods/apply-id-codemod.ts",
-		"codemod:tsmorph:dry": "tsx scripts/codemods/apply-id-codemod-tsmorph.ts --dry",
-		"codemod:tsmorph:apply": "tsx scripts/codemods/apply-id-codemod-tsmorph.ts",
-		"migration:analyze": "tsx scripts/migration/analyze-codebase.ts",
-		"migration:detect-ids": "tsx scripts/migration/identify-numeric-ids.ts",
-		"migration:check-ids": "tsx scripts/migration/check-ids-ci.ts",
-		"migration:update-baseline": "tsx scripts/migration/update-baseline.ts",
-		"migration:test-baseline": "tsx scripts/migration/test-update-baseline.ts",
-		"migration:forum-core:dry": "tsx scripts/migration/domain-migrations/forum-core-migration.ts",
-		"migration:forum-core:live": "tsx scripts/migration/domain-migrations/forum-core-migration.ts --live",
-		"migration:client-types:dry": "tsx scripts/migration/domain-migrations/client-types-migration.ts",
-		"migration:client-types:live": "tsx scripts/migration/domain-migrations/client-types-migration.ts --live",
-		"migration:client-api:dry": "tsx scripts/migration/domain-migrations/client-api-migration.ts",
-		"migration:client-api:live": "tsx scripts/migration/domain-migrations/client-api-migration.ts --live",
-		"generate:tree": "node scripts/tools/generate-tree.js",
-		"prepare": "simple-git-hooks",
-		"db:generate": "drizzle-kit generate --dialect postgresql --schema \"./db/schema/**/*.ts\" --out ./migrations/postgres",
-		"db:migrate:dev": "pnpm run db:push && pnpm run db:studio",
-		"phase5:validate": "tsx scripts/phase5/validate-phase5.ts",
-		"phase5:rollback": "tsx scripts/phase5/rollback.ts",
-		"codemod:console": "tsx scripts/codemods/phase5/console-to-logger.ts",
-		"codemod:req-user": "tsx scripts/codemods/phase5/req-user-removal.ts",
-		"codemod:transformers": "tsx scripts/codemods/phase5/enforce-transformers.ts",
-		"codemod:numeric-ids": "tsx scripts/codemods/phase5/numeric-id-migration.ts",
-		"codemod:all": "tsx scripts/codemods/phase5/run-all.ts",
-		"codemod:dry": "tsx scripts/codemods/phase5/run-all.ts --dry-run",
-		"codemod:test": "tsx scripts/codemods/phase5/test-compilation.ts",
-		"lint:staged": "lint-staged",
-		"commit:no-hooks": "./scripts/commit-no-hooks.sh",
-		"hooks:disable": "git config core.hooksPath /dev/null",
-		"hooks:enable": "git config --unset core.hooksPath",
-		"db:sync:forums": "tsx -r tsconfig-paths/register scripts/db/sync-forum-config.ts",
-		"claude": "claude",
-		"run:prompt": "ts-node tools/runClaude.ts",
-		"unfuck:baseline": "bash scripts/unfuck-baseline.sh",
-		"unfuck:status": "bash scripts/unfuck-status.sh",
-		"unfuck:build": "bash scripts/unfuck-build.sh",
-		"unfuck:lint-autofix": "bash scripts/unfuck-lint-autofix.sh"
+		"dev": "cd client && pnpm dev",
+		"build": "cd client && pnpm build",
+		"preview": "cd client && pnpm preview",
+		"clean": "pnpm -r exec rm -rf node_modules dist build && rm -rf node_modules",
+		"install:clean": "pnpm clean && pnpm install"
 	},
 	"devDependencies": {
-		"@anthropic-ai/claude-code": "^1.0.62",
-		"@faker-js/faker": "^9.8.0",
 		"@paralleldrive/cuid2": "^2.2.2",
 		"@tailwindcss/container-queries": "^0.1.1",
 		"@tailwindcss/typography": "^0.5.15",
-		"@types/jsonwebtoken": "^9.0.9",
 		"@types/node": "^20.19.7",
 		"@types/react": "^18.3.20",
 		"@types/uuid": "^10.0.0",
-		"@types/ws": "^8.5.13",
 		"@typescript-eslint/eslint-plugin": "6.21.0",
 		"@typescript-eslint/parser": "6.21.0",
 		"autoprefixer": "^10.4.20",
-		"chalk": "^5.3.0",
-		"concurrently": "^8.2.2",
-		"dotenv": "^16.5.0",
-		"dotenv-cli": "^8.0.0",
-		"drizzle-kit": "0.31.4",
-		"drizzle-orm": "0.44.2",
-		"drizzle-zod": "^0.7.0",
 		"eslint": "^8.57.0",
-		"eslint-plugin-degen": "file:./tools/eslint/plugins/degen",
-		"eslint-plugin-drizzle": "^0.2.3",
-		"fast-glob": "^3.3.3",
-		"gel": "^2.1.1",
-		"glob": "^10.3.10",
-		"jsonc-parser": "^3.3.1",
-		"jsonwebtoken": "^9.0.2",
-		"lint-staged": "^15.2.10",
-		"minimist": "^1.2.8",
-		"mysql2": "^3.14.2",
-		"ora": "8.1.1",
-		"pg-protocol": "^1.10.3",
 		"postcss": "^8.4.47",
 		"prettier": "^3.5.3",
-		"recast": "^0.23.4",
-		"simple-git-hooks": "^2.12.0",
 		"tailwindcss": "^3.4.17",
 		"tailwindcss-animate": "^1.0.7",
-		"ts-morph": "^26.0.0",
-		"ts-node": "^10.9.2",
-		"tsconfig-paths": "^4.2.0",
-		"tsx": "^4.19.4",
 		"typescript": "5.6.3",
-		"utility-types": "^3.10.0",
 		"uuid": "^11.1.0"
-	},
-	"simple-git-hooks": {
-		"pre-commit": "pnpm lint:staged && pnpm typecheck"
 	},
 	"pnpm": {
 		"overrides": {
-			"typescript": "5.6.3",
-			"drizzle-orm": "0.44.2",
-			"drizzle-kit": "0.31.4",
-			"esbuild@<=0.24.2": ">=0.25.0",
-			"multer@>=1.4.4-lts.1 <2.0.2": ">=2.0.2",
-			"on-headers@<1.1.0": ">=1.1.0",
-			"form-data@>=4.0.0 <4.0.4": ">=4.0.4"
+			"typescript": "5.6.3"
 		},
 		"peerDependencyRules": {
 			"allowedVersions": {
 				"react": "18",
 				"react-dom": "18"
 			}
-		},
-		"publicHoistPattern": [
-			"*eslint*",
-			"*prettier*",
-			"@types/*",
-			"typescript"
-		],
-		"updateConfig": {
-			"ignoreDependencies": [
-				"@degentalk/*"
-			]
-		},
-		"patchedDependencies": {},
-		"allowNonAppliedPatches": true,
-		"packageExtensions": {
-			"@degentalk/client": {
-				"peerDependencies": {
-					"@degentalk/shared": "workspace:*"
-				}
-			},
-			"@degentalk/server": {
-				"peerDependencies": {
-					"@degentalk/shared": "workspace:*",
-					"@degentalk/db": "workspace:*"
-				}
-			},
-			"@degentalk/scripts": {
-				"peerDependencies": {
-					"@degentalk/shared": "workspace:*",
-					"@degentalk/db": "workspace:*"
-				}
-			}
-		},
-		"dependencyRules": {
-			"@degentalk/shared": {
-				"allowedDependencies": [],
-				"disallowedDependencies": [
-					"@degentalk/*"
-				]
-			},
-			"@degentalk/db": {
-				"allowedDependencies": [
-					"@degentalk/shared"
-				],
-				"disallowedDependencies": [
-					"@degentalk/client",
-					"@degentalk/server",
-					"@degentalk/scripts"
-				]
-			},
-			"@degentalk/client": {
-				"allowedDependencies": [
-					"@degentalk/shared"
-				],
-				"disallowedDependencies": [
-					"@degentalk/db",
-					"@degentalk/server",
-					"@degentalk/scripts"
-				]
-			},
-			"@degentalk/server": {
-				"allowedDependencies": [
-					"@degentalk/shared",
-					"@degentalk/db"
-				],
-				"disallowedDependencies": [
-					"@degentalk/client",
-					"@degentalk/scripts"
-				]
-			},
-			"@degentalk/scripts": {
-				"allowedDependencies": [
-					"@degentalk/shared",
-					"@degentalk/db",
-					"@degentalk/server"
-				],
-				"disallowedDependencies": [
-					"@degentalk/client"
-				]
-			}
 		}
 	},
 	"dependencies": {
-		"pg": "^8.11.0",
-		"redis": "^5.6.0",
-		"tippy.js": "^6.3.7",
 		"zod": "^3.24.2"
 	}
 }

@@ -18,9 +18,6 @@
 	"include": [],
 	"references": [
 		{ "path": "./shared/tsconfig.json" },
-		{ "path": "./db/tsconfig.json" },
-		{ "path": "./server/tsconfig.json" },
-		{ "path": "./client/tsconfig.json" },
-		{ "path": "./scripts/tsconfig.json" }
+		{ "path": "./client/tsconfig.json" }
 	]
 }

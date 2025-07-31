@@ -1,15 +1,4 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { useAuth } from '@/hooks/use-auth';
-
-export type AuthStatus = 'loading' | 'guest' | 'user' | 'admin';
-
-export interface HeaderUser {
-	username: string;
-	level: number;
-	xp: number;
-	isAdmin?: boolean;
-	isModerator?: boolean;
-}
 
 export interface HeaderTheme {
 	color: string;
@@ -18,19 +7,11 @@ export interface HeaderTheme {
 }
 
 export interface HeaderContextValue {
-	// Auth state
-	authStatus: AuthStatus;
-	user?: HeaderUser;
-
 	// UI state
-	unreadNotifications: number;
-	walletOpen: boolean;
 	isScrolled: boolean;
 	theme?: HeaderTheme;
 
 	// Actions
-	toggleWallet(): void;
-	toggleNotifications(): void;
 	setTheme(theme: HeaderTheme): void;
 }
 
@@ -42,62 +23,8 @@ interface HeaderProviderProps {
 }
 
 export function HeaderProvider({ children, theme }: HeaderProviderProps) {
-	// CRITICAL: Use the auth hook to get the auth state
-	// This ensures the header UI is always in sync with the main auth state
-	const { user, isLoading, isAuthenticated } = useAuth();
-	
-	// Debug logging
-	console.log('[HeaderProvider] Auth state from useAuth:', { user, isLoading, isAuthenticated });
-
-	// Local UI state (not auth-related)
-	const [walletOpen, setWalletOpen] = useState(false);
-	const [notificationsOpen, setNotificationsOpen] = useState(false);
 	const [isScrolled, setIsScrolled] = useState(false);
 	const [currentTheme, setCurrentTheme] = useState<HeaderTheme | undefined>(theme);
-
-	// AUTH STATE MAPPING: Convert auth hook state to header-specific auth status
-	// This function maps the boolean auth state to the header's enum-based status
-	const getAuthStatus = (): AuthStatus => {
-		const status = (() => {
-			if (isLoading) {
-				return 'loading';
-			}
-
-			// CRITICAL: Use isAuthenticated flag to ensure consistency with useAuth
-			// This prevents the "login button → authenticated UI" bug by using the same
-			// auth determination logic as the main auth hook
-			if (!isAuthenticated || !user) {
-				return 'guest';
-			}
-
-			if (user.isAdmin) {
-				return 'admin';
-			}
-
-			return 'user';
-		})();
-		
-		// Debug logging
-		console.log('[HeaderContext] getAuthStatus:', {
-			isLoading,
-			isAuthenticated,
-			user: user?.username,
-			status
-		});
-		
-		return status;
-	};
-
-	// DEFENSIVE USER DATA: Only show user when actually authenticated
-	// This prevents stale user data from being displayed when auth state is invalid
-	console.log('[HeaderContext] User object:', user);
-	console.log('[HeaderContext] User has required fields?', {
-		hasUsername: !!user?.username,
-		hasLevel: user?.level !== undefined,
-		hasXp: user?.xp !== undefined,
-		user
-	});
-	const displayUser = isAuthenticated && user ? (user as HeaderUser) : undefined;
 
 	// Scroll detection
 	useEffect(() => {
@@ -117,15 +44,8 @@ export function HeaderProvider({ children, theme }: HeaderProviderProps) {
 	}, [theme]);
 
 	const contextValue: HeaderContextValue = {
-		authStatus: getAuthStatus(),
-		user: displayUser,
-		unreadNotifications: 3, // TODO: Get from API
-		walletOpen,
 		isScrolled,
 		theme: currentTheme,
-
-		toggleWallet: () => setWalletOpen(!walletOpen),
-		toggleNotifications: () => setNotificationsOpen(!notificationsOpen),
 		setTheme: setCurrentTheme
 	};
 

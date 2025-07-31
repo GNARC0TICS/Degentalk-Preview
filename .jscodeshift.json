@@ -1,7 +1,0 @@
-{
-	"extensions": ["ts", "tsx"],
-	"parser": "tsx",
-	"parserConfig": {
-		"plugins": ["typescript", "jsx"]
-	}
-}

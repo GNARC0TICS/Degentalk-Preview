@@ -1,2 +1,0 @@
-ALTER TABLE "user_achievements" DROP CONSTRAINT "user_achievement_unique";--> statement-breakpoint
-CREATE UNIQUE INDEX "user_achievement_unique" ON "user_achievements" USING btree ("user_id","achievement_id");
