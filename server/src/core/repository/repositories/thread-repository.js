@@ -4,7 +4,7 @@
  * QUALITY IMPROVEMENT: Repository pattern for Thread data access
  * Implements IThreadRepository interface with proper error handling and type safety
  */
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { threads, posts } from '@schema';
 import { eq, desc, asc, ilike, and, sql } from 'drizzle-orm';
 import { BaseRepository, RepositoryError } from '../base-repository';

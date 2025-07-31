@@ -5,7 +5,8 @@ module.exports = {
 		'no-number-id': require('./rules/no-number-id'),
 		'no-cross-context-imports': require('./rules/no-cross-context-imports'),
 		'no-undeclared-branded-id': require('./rules/no-undeclared-branded-id'),
-		'no-missing-branded-id-import': require('./rules/no-missing-branded-id-import')
+		'no-missing-branded-id-import': require('./rules/no-missing-branded-id-import'),
+		'enforce-path-aliases': require('../../eslint-rules/enforce-path-aliases')
 	},
 	configs: {
 		recommended: {
@@ -15,7 +16,8 @@ module.exports = {
 				'degen/no-raw-container-auto': 'warn',
 				'degen/no-cross-context-imports': 'error',
 				'degen/no-undeclared-branded-id': 'error',
-				'degen/no-missing-branded-id-import': 'error'
+				'degen/no-missing-branded-id-import': 'error',
+				'degen/enforce-path-aliases': 'error'
 			}
 		}
 	}

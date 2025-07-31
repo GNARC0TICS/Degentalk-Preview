@@ -33,7 +33,7 @@ export function SiteFooter() {
 				</div>
 
 				{/* Bottom Section */}
-				<div className="border-t border-zinc-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-zinc-500">
+				<div className="border-t border-zinc-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-zinc-500">
 					<motion.div
 						className="order-2 md:order-1"
 						initial={{ opacity: 0 }}

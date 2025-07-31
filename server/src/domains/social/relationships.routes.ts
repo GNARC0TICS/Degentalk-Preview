@@ -11,7 +11,7 @@ import type { UserId } from '@shared/types/ids';
 import { db } from '@degentalk/db';
 import { users, userRelationships } from '@schema';
 import { eq, and, sql, desc, not, or, count, gt, isNull } from 'drizzle-orm';
-import { isValidId } from '@shared/types';
+import { isValidId } from '@shared/utils/id';
 
 import {
 	isAuthenticated,

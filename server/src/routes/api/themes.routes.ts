@@ -6,7 +6,7 @@
 
 import { Router } from 'express';
 import { asyncHandler } from '@core/errors';
-import { requireAdmin } from '@middleware/auth.unified';
+import { luciaAuth } from '@middleware/lucia-auth.middleware';
 import { themeService } from '@domains/themes/services/theme.service';
 import type { Request, Response } from 'express';
 import { parseId } from '@shared/utils/id';
@@ -83,7 +83,7 @@ router.get('/:themeKey', asyncHandler(async (req: Request, res: Response) => {
  * Clear theme cache (admin only)
  */
 router.post('/clear-cache', 
-  requireAdmin,
+  luciaAuth.requireAdmin,
   asyncHandler(async (req: Request, res: Response) => {
     try {
       await themeService.clearCache();

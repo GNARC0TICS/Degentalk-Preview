@@ -1,36 +1,39 @@
 {
-  "extends": "../tsconfig.base.json",
+  "extends": [
+    "../tsconfig.base.json",
+    "../tsconfig.paths.json"
+  ],
   "compilerOptions": {
-    "module": "ESNext",
-    "target": "ES2022",
-    "lib": ["ES2022"],
-    "moduleResolution": "bundler",
-    "resolveJsonModule": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "allowImportingTsExtensions": true,
     "composite": true,
-    "outDir": "./dist",
-    "baseUrl": ".",
-    "paths": {
-      "@degentalk/db": ["../db/index.ts"],
-      "@degentalk/shared": ["../shared/index.ts"],
-      "@shared/*": ["../shared/*"],
-      "@config/forumMap": ["../shared/config/forum-map.config.ts"],
-      "@config/forumEconomy": ["../shared/config/forum-economy.config.ts"],
-      "@db": ["../db/index.ts"],
-      "@db/*": ["../db/*"],
-      "@schema": ["../db/schema/index.ts"],
-      "@schema/*": ["../db/schema/*"],
-      "@server/*": ["../server/src/*"],
-      "@core/*": ["../server/src/core/*"],
-      "@domains/*": ["../server/src/domains/*"],
-      "@utils/*": ["../server/src/utils/*"]
-    }
+    "incremental": true,
+    "tsBuildInfoFile": "./.tscache/scripts.tsbuildinfo",
+    "noEmit": true,
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "types": [
+      "node"
+    ]
   },
-  "include": ["./**/*.ts"],
-  "exclude": ["node_modules"]
+  "include": [
+    "**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "**/*.test.ts",
+    "**/*.spec.ts",
+    ".tscache"
+  ],
+  "references": [
+    {
+      "path": "../shared/tsconfig.json"
+    },
+    {
+      "path": "../db/tsconfig.json"
+    },
+    {
+      "path": "../server/tsconfig.json"
+    }
+  ]
 }

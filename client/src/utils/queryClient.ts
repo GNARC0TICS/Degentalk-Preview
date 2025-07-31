@@ -52,7 +52,15 @@ export const getQueryFn: <T>(options: { on401: UnauthorizedBehavior }) => QueryF
 		}
 
 		await throwIfResNotOk(res);
-		return await res.json();
+		const data = await res.json();
+		
+		// Extract data from API response wrapper if needed
+		// This handles the standard API response format { success: true, data: T }
+		if (data && typeof data === 'object' && 'success' in data && 'data' in data) {
+			return data.data;
+		}
+		
+		return data;
 	};
 
 // Function to check for XP gain in API responses and trigger toast

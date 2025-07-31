@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { z } from 'zod';
-import { authenticate } from '@middleware/auth';
+import { luciaAuth } from '@middleware/lucia-auth.middleware';
 import { validateRequest } from '@middleware/validate-request';
 import { dailyBonusService } from '../services/daily-bonus.service';
 import { asyncHandler } from '@core/errors';
@@ -16,7 +16,7 @@ const router = Router();
 // Check and claim daily bonus
 router.post(
   '/claim',
-  authenticate,
+  luciaAuth.require,
   asyncHandler(async (req, res) => {
     const userId = req.user!.id;
     
@@ -39,7 +39,7 @@ router.post(
 // Get current streak
 router.get(
   '/streak',
-  authenticate,
+  luciaAuth.require,
   asyncHandler(async (req, res) => {
     const userId = req.user!.id;
     const streak = await dailyBonusService.getCurrentStreak(userId);
@@ -54,7 +54,7 @@ router.get(
 // Admin: Get today's claim count
 router.get(
   '/admin/stats',
-  authenticate,
+  luciaAuth.require,
   asyncHandler(async (req, res) => {
     // Check admin permission
     if (req.user!.role !== 'ADMIN') {
@@ -85,7 +85,7 @@ const resetStreakSchema = z.object({
 
 router.post(
   '/admin/reset-streak',
-  authenticate,
+  luciaAuth.require,
   validateRequest(resetStreakSchema),
   asyncHandler(async (req, res) => {
     // Check admin permission

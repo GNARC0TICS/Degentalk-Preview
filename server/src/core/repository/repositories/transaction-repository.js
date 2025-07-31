@@ -4,7 +4,7 @@
  * QUALITY IMPROVEMENT: Repository pattern for Transaction data access
  * Implements ITransactionRepository interface with proper error handling and type safety
  */
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { transactions } from '@schema';
 import { eq, and, sql } from 'drizzle-orm';
 import { BaseRepository, RepositoryError } from '../base-repository';

@@ -11,8 +11,9 @@
 import express from 'express'
 import type { Router as RouterType } from 'express';
 import { rainController } from './rain.controller';
-import { authenticateJWT as requireAuth } from '@middleware/authenticate-jwt';
-import { isAdmin as requireAdmin } from '@domains/auth/middleware/auth.middleware';
+import { luciaAuth } from '@middleware/lucia-auth.middleware';
+const requireAuth = luciaAuth.require;
+const requireAdmin = luciaAuth.requireAdmin;
 import { validateRequest } from '@middleware/validate-request';
 import { z } from 'zod';
 
@@ -51,7 +52,7 @@ router.get('/settings', rainController.getRainSettings);
 // PATCH /api/engagement/rain/settings - Update rain settings (admin only)
 router.patch(
 	'/settings',
-	requireAdmin,
+	luciaAuth.requireAdmin,
 	validateRequest(rainSettingsSchema),
 	rainController.updateRainSettings
 );

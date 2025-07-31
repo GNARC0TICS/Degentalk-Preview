@@ -4,7 +4,7 @@
  * QUALITY IMPROVEMENT: Repository pattern implementation for consistent data access
  * Provides common CRUD operations with proper error handling and type safety
  */
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { sql, eq, and, count, desc, asc } from 'drizzle-orm';
 import { logger } from '../logger';
 export class RepositoryError extends Error {

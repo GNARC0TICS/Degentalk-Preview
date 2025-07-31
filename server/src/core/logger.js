@@ -1,43 +1,20 @@
-"use strict";
 /**
  * ForumFusion - Consolidated Logging System
  *
  * This is the centralized logging utility for the entire application.
  * It handles different log levels, formats, and outputs (console, file).
  */
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.logger = exports.LogAction = exports.LogLevel = void 0;
-exports.initLogger = initLogger;
-exports.log = log;
-exports.debug = debug;
-exports.info = info;
-exports.warn = warn;
-exports.error = error;
-exports.critical = critical;
 /* eslint-disable no-console */
-var fs_1 = require("fs");
-var path_1 = require("path");
-var fs_2 = require("fs");
-var logger_config_1 = require("./logger-config");
-var logger_control_1 = require("./logger-control");
-var logger_types_1 = require("./logger-types");
+import fs from 'fs';
+import path from 'path';
+import { createWriteStream } from 'fs';
+import { getLoggerConfig } from './logger-config';
+import { loggerControl } from './logger-control';
+import { LogLevel, LogAction } from './logger-types';
 // Re-export for convenience
-var logger_types_2 = require("./logger-types");
-Object.defineProperty(exports, "LogLevel", { enumerable: true, get: function () { return logger_types_2.LogLevel; } });
-Object.defineProperty(exports, "LogAction", { enumerable: true, get: function () { return logger_types_2.LogAction; } });
+export { LogLevel, LogAction } from './logger-types';
 // Default configuration
-var DEFAULT_CONFIG = {
+const DEFAULT_CONFIG = {
     console: process.env.NODE_ENV !== 'production',
     file: process.env.NODE_ENV !== 'test',
     jsonOutput: process.env.NODE_ENV === 'production',
@@ -46,42 +23,41 @@ var DEFAULT_CONFIG = {
     maxFileSize: 10 * 1024 * 1024, // 10MB
     maxFiles: 10,
     formatTimestamp: true,
-    minLevel: process.env.NODE_ENV === 'production' ? logger_types_1.LogLevel.INFO : logger_types_1.LogLevel.DEBUG
+    minLevel: process.env.NODE_ENV === 'production' ? LogLevel.INFO : LogLevel.DEBUG
 };
 // Logger configuration
-var config = __assign({}, DEFAULT_CONFIG);
-var logStream = null;
-var currentLogFile = null;
-var currentFileSize = 0;
+let config = { ...DEFAULT_CONFIG };
+let logStream = null;
+let currentLogFile = null;
+let currentFileSize = 0;
 /**
  * Initialize the logger with custom configuration
  */
-function initLogger(customConfig) {
-    if (customConfig === void 0) { customConfig = {}; }
-    config = __assign(__assign({}, DEFAULT_CONFIG), customConfig);
+export function initLogger(customConfig = {}) {
+    config = { ...DEFAULT_CONFIG, ...customConfig };
     // Create log directory if it doesn't exist
     if (config.file) {
         try {
-            if (!fs_1.default.existsSync(config.filePath)) {
-                fs_1.default.mkdirSync(config.filePath, { recursive: true });
+            if (!fs.existsSync(config.filePath)) {
+                fs.mkdirSync(config.filePath, { recursive: true });
             }
-            var logFilePath = path_1.default.join(config.filePath, config.fileName);
+            const logFilePath = path.join(config.filePath, config.fileName);
             currentLogFile = logFilePath;
             // Check current file size for rotation
-            if (fs_1.default.existsSync(logFilePath)) {
-                currentFileSize = fs_1.default.statSync(logFilePath).size;
+            if (fs.existsSync(logFilePath)) {
+                currentFileSize = fs.statSync(logFilePath).size;
             }
-            logStream = (0, fs_2.createWriteStream)(logFilePath, { flags: 'a' });
+            logStream = createWriteStream(logFilePath, { flags: 'a' });
             // Ensure logs are flushed on process exit
-            process.on('exit', function () {
+            process.on('exit', () => {
                 if (logStream) {
                     logStream.end();
                 }
             });
             // Log initial startup message
             log({
-                level: logger_types_1.LogLevel.INFO,
-                action: logger_types_1.LogAction.SYSTEM_STARTUP,
+                level: LogLevel.INFO,
+                action: LogAction.SYSTEM_STARTUP,
                 message: 'Logger initialized',
                 data: {
                     env: process.env.NODE_ENV,
@@ -104,24 +80,24 @@ function rotateLogFile() {
         // Close current stream
         logStream.end();
         // Rotate existing files
-        for (var i = config.maxFiles - 1; i > 0; i--) {
-            var oldFile = currentLogFile + (i === 1 ? '' : ".".concat(i - 1));
-            var newFile = currentLogFile + ".".concat(i);
-            if (fs_1.default.existsSync(oldFile)) {
+        for (let i = config.maxFiles - 1; i > 0; i--) {
+            const oldFile = currentLogFile + (i === 1 ? '' : `.${i - 1}`);
+            const newFile = currentLogFile + `.${i}`;
+            if (fs.existsSync(oldFile)) {
                 if (i === config.maxFiles - 1) {
-                    fs_1.default.unlinkSync(oldFile); // Delete oldest
+                    fs.unlinkSync(oldFile); // Delete oldest
                 }
                 else {
-                    fs_1.default.renameSync(oldFile, newFile);
+                    fs.renameSync(oldFile, newFile);
                 }
             }
         }
         // Create new log stream
-        logStream = (0, fs_2.createWriteStream)(currentLogFile, { flags: 'w' });
+        logStream = createWriteStream(currentLogFile, { flags: 'w' });
         currentFileSize = 0;
         log({
-            level: logger_types_1.LogLevel.INFO,
-            action: logger_types_1.LogAction.SYSTEM_STARTUP,
+            level: LogLevel.INFO,
+            action: LogAction.SYSTEM_STARTUP,
             message: 'Log file rotated',
             data: { file: currentLogFile }
         });
@@ -134,36 +110,35 @@ function rotateLogFile() {
  * Format a log message with timestamp, level, and namespace
  */
 function formatLogMessage(level, namespace, message) {
-    var timestamp = config.formatTimestamp ? "[".concat(new Date().toISOString(), "] ") : '';
-    return "".concat(timestamp, "[").concat(level, "] [").concat(namespace, "] ").concat(message);
+    const timestamp = config.formatTimestamp ? `[${new Date().toISOString()}] ` : '';
+    return `${timestamp}[${level}] [${namespace}] ${message}`;
 }
 /**
  * Main logging function
  */
-function log(options) {
-    var _a, _b;
-    var level = options.level, action = options.action, namespace = options.namespace, message = options.message, data = options.data;
+export function log(options) {
+    const { level, action, namespace, message, data } = options;
     // Skip if level is below minimum
-    var levels = Object.values(logger_types_1.LogLevel);
+    const levels = Object.values(LogLevel);
     if (levels.indexOf(level) < levels.indexOf(config.minLevel)) {
         return;
     }
     // Use action as namespace if no namespace is provided
-    var logNamespace = namespace || (action ? action : 'APP');
+    const logNamespace = namespace || (action ? action : 'APP');
     // Apply development mode filtering
-    var baseConfig = (0, logger_config_1.getLoggerConfig)();
-    var loggerConfig = logger_control_1.loggerControl.applyToConfig(baseConfig);
+    const baseConfig = getLoggerConfig();
+    const loggerConfig = loggerControl.applyToConfig(baseConfig);
     // Check minimum level with overrides
-    var minLevel = loggerConfig.minLevel || config.minLevel;
+    const minLevel = loggerConfig.minLevel || config.minLevel;
     if (levels.indexOf(level) < levels.indexOf(minLevel)) {
         return;
     }
     // Check if category is suppressed
-    if ((_a = loggerConfig.suppressCategories) === null || _a === void 0 ? void 0 : _a.includes(logNamespace)) {
+    if (loggerConfig.suppressCategories?.includes(logNamespace)) {
         return;
     }
     // Check if message matches suppression patterns
-    if ((_b = loggerConfig.suppressPatterns) === null || _b === void 0 ? void 0 : _b.some(function (pattern) { return pattern.test(message); })) {
+    if (loggerConfig.suppressPatterns?.some(pattern => pattern.test(message))) {
         return;
     }
     // Check if we're only showing specific categories
@@ -172,9 +147,9 @@ function log(options) {
         !loggerConfig.onlyShowCategories.includes(logNamespace)) {
         return;
     }
-    var formattedMessage = formatLogMessage(level, logNamespace, message);
+    const formattedMessage = formatLogMessage(level, logNamespace, message);
     // Format data if present
-    var dataString = '';
+    let dataString = '';
     if (data) {
         try {
             if (typeof data === 'object') {
@@ -190,40 +165,40 @@ function log(options) {
     }
     // Log to console
     if (config.console) {
-        var logArgs = data !== undefined ? [formattedMessage, data] : [formattedMessage];
+        const logArgs = data !== undefined ? [formattedMessage, data] : [formattedMessage];
         switch (level) {
-            case logger_types_1.LogLevel.DEBUG:
+            case LogLevel.DEBUG:
                 // eslint-disable-next-line no-console
-                console.debug.apply(console, logArgs);
+                console.debug(...logArgs);
                 break;
-            case logger_types_1.LogLevel.INFO:
+            case LogLevel.INFO:
                 // eslint-disable-next-line no-console
-                console.info.apply(console, logArgs);
+                console.info(...logArgs);
                 break;
-            case logger_types_1.LogLevel.WARN:
+            case LogLevel.WARN:
                 // eslint-disable-next-line no-console
-                console.warn.apply(console, logArgs);
+                console.warn(...logArgs);
                 break;
-            case logger_types_1.LogLevel.ERROR:
-            case logger_types_1.LogLevel.CRITICAL:
+            case LogLevel.ERROR:
+            case LogLevel.CRITICAL:
                 // eslint-disable-next-line no-console
-                console.error.apply(console, logArgs);
+                console.error(...logArgs);
                 break;
             default:
                 // eslint-disable-next-line no-console
-                console.log.apply(console, logArgs);
+                console.log(...logArgs);
         }
     }
     // Log to file
     if (config.file && logStream) {
-        var logEntry = config.jsonOutput
+        const logEntry = config.jsonOutput
             ? JSON.stringify({
                 timestamp: new Date().toISOString(),
-                level: level,
+                level,
                 namespace: logNamespace,
-                message: message,
-                action: action,
-                data: data,
+                message,
+                action,
+                data,
                 pid: process.pid,
                 env: process.env.NODE_ENV
             }) + '\n'
@@ -239,66 +214,66 @@ function log(options) {
 /**
  * Debug level logger
  */
-function debug(namespace, message, data) {
+export function debug(namespace, message, data) {
     log({
-        level: logger_types_1.LogLevel.DEBUG,
-        namespace: namespace,
-        message: message,
-        data: data
+        level: LogLevel.DEBUG,
+        namespace,
+        message,
+        data
     });
 }
 /**
  * Info level logger
  */
-function info(namespace, message, data) {
+export function info(namespace, message, data) {
     log({
-        level: logger_types_1.LogLevel.INFO,
-        namespace: namespace,
-        message: message,
-        data: data
+        level: LogLevel.INFO,
+        namespace,
+        message,
+        data
     });
 }
 /**
  * Warning level logger
  */
-function warn(namespace, message, data) {
+export function warn(namespace, message, data) {
     log({
-        level: logger_types_1.LogLevel.WARN,
-        namespace: namespace,
-        message: message,
-        data: data
+        level: LogLevel.WARN,
+        namespace,
+        message,
+        data
     });
 }
 /**
  * Error level logger
  */
-function error(namespace, message, data) {
+export function error(namespace, message, data) {
     log({
-        level: logger_types_1.LogLevel.ERROR,
-        namespace: namespace,
-        message: message,
-        data: data
+        level: LogLevel.ERROR,
+        namespace,
+        message,
+        data
     });
 }
 /**
  * Critical error level logger
  */
-function critical(namespace, message, data) {
+export function critical(namespace, message, data) {
     log({
-        level: logger_types_1.LogLevel.CRITICAL,
-        namespace: namespace,
-        message: message,
-        data: data
+        level: LogLevel.CRITICAL,
+        namespace,
+        message,
+        data
     });
 }
 // Initialize the logger with default config
 initLogger();
 // Create and export a logger instance with convenient methods
-exports.logger = {
-    debug: debug,
-    info: info,
-    warn: warn,
-    error: error,
-    critical: critical,
+export const logger = {
+    debug,
+    info,
+    warn,
+    error,
+    critical,
     init: initLogger
 };

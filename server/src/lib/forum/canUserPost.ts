@@ -25,4 +25,4 @@ export function canUserPost(forumSlug: string, user: User): boolean {
 		default:
 			return true;
 	}
-}
+} 

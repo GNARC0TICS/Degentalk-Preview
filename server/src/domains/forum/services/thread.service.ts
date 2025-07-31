@@ -1062,7 +1062,7 @@ export class ThreadService {
 					and(
 						inArray(posts.threadId, threadIds),
 						// Only get posts that are the earliest for their thread
-						sql`${posts.createdAt} = (SELECT MIN(${posts.createdAt}) FROM ${posts} p2 WHERE p2.${posts.threadId} = ${posts.threadId})`
+						sql`${posts.createdAt} = (SELECT MIN(created_at) FROM posts p2 WHERE p2.thread_id = posts.thread_id)`
 					)
 				);
 

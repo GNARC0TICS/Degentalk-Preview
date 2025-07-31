@@ -12,7 +12,7 @@ import { SignatureService } from './signature.service';
 import { z } from 'zod';
 import { validateRequest } from '@middleware/validate-request';
 import { getUserIdFromRequest } from '@core/utils/auth.helpers';
-import { isValidId } from '@shared/types';
+import { isValidId } from '@shared/utils/id';
 import { logger } from '@core/logger';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 

@@ -130,10 +130,10 @@ export function UserMenu({ className, onLogout }: UserMenuProps) {
 						{/* Progress Utility */}
 						<DropdownMenuItem disabled className="opacity-100 cursor-default">
 							<div className="flex flex-col w-full">
-								<span className="text-xs text-zinc-400 mb-1">Level {user.level}</span>
+								<span className="text-xs text-zinc-400 mb-1">Level {user.level || 1}</span>
 								<Progress value={progressPercentage} className="h-2" />
 								<span className="text-[10px] text-zinc-500 mt-1">
-									{user.xp.toLocaleString()}/{nextLevelXp.toLocaleString()} XP
+									{(user.xp || 0).toLocaleString()}/{nextLevelXp.toLocaleString()} XP
 								</span>
 							</div>
 						</DropdownMenuItem>

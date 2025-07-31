@@ -9,14 +9,8 @@ import { and, eq, sql } from 'drizzle-orm';
 import type { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { getDatabase } from '@degentalk/db';
 import { wallets, transactions } from '@db/schema';
-import {
-  type WalletId,
-  type UserId,
-  type DgtAmount,
-  type TransactionId,
-  toDgtAmount,
-  toWalletId
-} from '@shared/types';
+import { toWalletId } from '@shared/utils/id';
+import { type WalletId, type UserId, type DgtAmount, type TransactionId, toDgtAmount } from '@shared/types';
 import { logger } from '@core/logger';
 import { AmountCalculator, AmountValidator } from '../utils/amount.utils';
 import type { BuiltTransaction } from '../builders/transaction.builder';

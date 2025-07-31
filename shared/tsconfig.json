@@ -1,26 +1,34 @@
 {
-	"extends": "../tsconfig.base.json",
+	"extends": ["../tsconfig.base.json", "../tsconfig.paths.json"],
 	"compilerOptions": {
+		// Project reference settings
 		"composite": true,
+		"incremental": true,
+		"tsBuildInfoFile": "./.tscache/shared.tsbuildinfo",
+		
+		// Shared needs to emit declarations for other packages
 		"declaration": true,
+		"declarationMap": true,
 		"emitDeclarationOnly": true,
-		"allowImportingTsExtensions": true,
-		"outDir": "dist",
-		"module": "NodeNext",
-		"moduleResolution": "NodeNext",
-		"types": ["node"],
-		"baseUrl": "./",
-		"paths": {
-			"@schema": ["shims/schema.d.ts"],
-			"@schema/*": ["shims/schema.d.ts"],
-			"@db": ["shims/db.d.ts"],
-			"@db/*": ["shims/db.d.ts"]
-		}
+		"outDir": "./dist",
+		"rootDir": ".",
+		
+		// Module settings for shared package
+		"module": "ESNext",
+		"moduleResolution": "bundler",
+		
+		// Shared is foundation - no external dependencies
+		"types": ["node"]
 	},
 	"include": [
 		"**/*.ts",
-		"**/*.tsx",
-		"shims/**/*.d.ts"
+		"**/*.tsx"
 	],
-	"exclude": ["dist/**/*"]
+	"exclude": [
+		"node_modules",
+		"dist",
+		"**/*.test.ts",
+		"**/*.spec.ts",
+		".tscache"
+	]
 }

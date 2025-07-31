@@ -16,15 +16,6 @@ const brandedId = (tag: string) => z.string().uuid().brand(tag);
 // Event priority levels for migration planning
 type EventPriority = 'CRITICAL' | 'HIGH' | 'MEDIUM' | 'LOW';
 
-// Event definition interface
-interface EventDefinition<TPayload = unknown, TResponse = unknown> {
-  payload: z.ZodSchema<TPayload>;
-  response: z.ZodSchema<TResponse>;
-  priority: EventPriority;
-  violations: number; // Number of boundary violations this event fixes
-  description: string;
-}
-
 // ===== WALLET DOMAIN EVENTS =====
 // Highest priority - 15+ violations, critical for economy
 

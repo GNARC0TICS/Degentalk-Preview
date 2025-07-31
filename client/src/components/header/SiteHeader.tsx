@@ -23,6 +23,11 @@ export function SiteHeader() {
 	const { authStatus, user, walletOpen, toggleWallet } = useHeader();
 
 	const isAuthenticated = authStatus !== 'guest' && authStatus !== 'loading';
+	
+	// Debug logging
+	if (typeof window !== 'undefined') {
+		console.log('[SiteHeader] Auth status:', authStatus, 'User:', user?.username, 'isAuthenticated:', isAuthenticated);
+	}
 
 	// Handle logout
 	const handleLogout = () => {
@@ -56,7 +61,10 @@ export function SiteHeader() {
 					  This ensures a clean switch between desktop and mobile views at the 768px breakpoint.
 					*/}
 					<div className="hidden md:flex items-center">
-						{isAuthenticated ? (
+						{authStatus === 'loading' ? (
+							// Show nothing or a loading spinner during auth check
+							<div className="animate-pulse w-32 h-10 bg-zinc-800 rounded" />
+						) : isAuthenticated ? (
 							<div className="flex items-center space-x-2 lg:space-x-3 xl:space-x-4">
 								{/* Left Plugin Slot */}
 								<HeaderPluginSlot position="left" />

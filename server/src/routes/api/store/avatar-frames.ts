@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { avatarFrameStoreService } from '@domains/cosmetics/avatarFrameStore.service';
-import { requireAuth } from '@middleware/auth.unified';
+import { luciaAuth } from '@middleware/lucia-auth.middleware';
 import { frameEquipService } from '@domains/cosmetics/frameEquip.service';
 import { dgtService } from '@domains/wallet/services/dgtService';
 import { userService } from '@core/services/user.service';
@@ -36,7 +36,7 @@ router.get('/', async (_req, res) => {
 });
 
 // POST /api/store/avatar-frames/:id/purchase
-router.post('/:id/purchase', requireAuth, async (req, res) => {
+router.post('/:id/purchase', luciaAuth.require, async (req, res) => {
 	const authUser = userService.getUserFromRequest(req);
 	if (!authUser) return sendErrorResponse(res, 'Not authenticated', 401);
 	const userId = String(authUser.id);

@@ -2,7 +2,7 @@ import { userService } from '@core/services/user.service';
 import { Router } from 'express'
 import type { Router as RouterType } from 'express';
 import { MentionsService } from './mentions.service';
-import { requireAuth } from '@middleware/auth';
+import { luciaAuth } from '@middleware/lucia-auth.middleware';
 import { z } from 'zod';
 import { logger } from '@core/logger';
 import { UserTransformer } from '@domains/users/transformers/user.transformer';
@@ -46,7 +46,7 @@ const searchUsersSchema = z.object({
  * GET /api/social/mentions
  * Get user's mentions with pagination
  */
-router.get('/', requireAuth, async (req, res) => {
+router.get('/', luciaAuth.require, async (req, res) => {
 	try {
 		const { page, limit } = getUserMentionsSchema.parse(req.query);
 		const userId = userService.getUserFromRequest(req)!.id;
@@ -73,7 +73,7 @@ router.get('/', requireAuth, async (req, res) => {
  * GET /api/social/mentions/unread-count
  * Get count of unread mentions
  */
-router.get('/unread-count', requireAuth, async (req, res) => {
+router.get('/unread-count', luciaAuth.require, async (req, res) => {
 	try {
 		const userId = userService.getUserFromRequest(req)!.id;
 		const count = await MentionsService.getUnreadMentionCount(userId);
@@ -89,7 +89,7 @@ router.get('/unread-count', requireAuth, async (req, res) => {
  * POST /api/social/mentions/mark-read
  * Mark mentions as read
  */
-router.post('/mark-read', requireAuth, async (req, res) => {
+router.post('/mark-read', luciaAuth.require, async (req, res) => {
 	try {
 		const { mentionIds } = markAsReadSchema.parse(req.body);
 		const userId = userService.getUserFromRequest(req)!.id;
@@ -107,7 +107,7 @@ router.post('/mark-read', requireAuth, async (req, res) => {
  * GET /api/social/mentions/preferences
  * Get user's mention preferences
  */
-router.get('/preferences', requireAuth, async (req, res) => {
+router.get('/preferences', luciaAuth.require, async (req, res) => {
 	try {
 		const userId = userService.getUserFromRequest(req)!.id;
 		const preferences = await MentionsService.getUserMentionPreferences(userId);
@@ -123,7 +123,7 @@ router.get('/preferences', requireAuth, async (req, res) => {
  * PUT /api/social/mentions/preferences
  * Update user's mention preferences
  */
-router.put('/preferences', requireAuth, async (req, res) => {
+router.put('/preferences', luciaAuth.require, async (req, res) => {
 	try {
 		const preferences = updatePreferencesSchema.parse(req.body);
 		const userId = userService.getUserFromRequest(req)!.id;
@@ -141,7 +141,7 @@ router.put('/preferences', requireAuth, async (req, res) => {
  * GET /api/social/mentions/search-users
  * Search users for mention autocomplete
  */
-router.get('/search-users', requireAuth, async (req, res) => {
+router.get('/search-users', luciaAuth.require, async (req, res) => {
 	try {
 		const { q, limit } = searchUsersSchema.parse(req.query);
 

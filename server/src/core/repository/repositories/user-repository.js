@@ -4,7 +4,7 @@
  * QUALITY IMPROVEMENT: Repository pattern for User data access
  * Implements IUserRepository interface with proper error handling and type safety
  */
-import { db } from '@db';
+import { db } from '@degentalk/db';
 import { users } from '@schema';
 import { eq, ilike, asc, sql } from 'drizzle-orm';
 import { BaseRepository, RepositoryError } from '../base-repository';

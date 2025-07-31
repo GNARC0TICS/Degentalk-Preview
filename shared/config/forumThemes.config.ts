@@ -25,7 +25,7 @@ export interface ForumTheme {
 	rarityOverlay?: RarityOverlay;
 }
 
-export const FORUM_THEMES: Record<string, ForumTheme> = {
+export const FORUM_THEMES = {
 	pit: {
 		gradient: 'from-red-900/40 via-red-800/20 to-red-700/10',
 		accent: 'text-red-400',
@@ -176,14 +176,18 @@ export const FORUM_THEMES: Record<string, ForumTheme> = {
 export type ForumThemeKey = keyof typeof FORUM_THEMES;
 
 // Utility helper – safely fetch a theme by id with graceful fallback
-export const getForumTheme = (themeId?: string | null) =>
-	FORUM_THEMES[themeId as ForumThemeKey] ?? FORUM_THEMES.default;
+export const getForumTheme = (themeId?: string | null): ForumTheme => {
+	if (themeId && themeId in FORUM_THEMES) {
+		return FORUM_THEMES[themeId as ForumThemeKey];
+	}
+	return FORUM_THEMES.default;
+};
 
 // Fallback theme selector for forums without custom artwork
 // Uses a deterministic hash of the forum ID to assign consistent themes
 export const getFallbackForumTheme = (forumId: string): ForumTheme => {
 	// Array of fallback theme keys (excluding specific zone themes)
-	const fallbackThemeKeys = [
+	const fallbackThemeKeys: ForumThemeKey[] = [
 		'ocean', 'sunset', 'forest', 'cosmic', 'volcanic',
 		'arctic', 'neon', 'desert', 'twilight', 'default'
 	];
@@ -194,5 +198,9 @@ export const getFallbackForumTheme = (forumId: string): ForumTheme => {
 	// Select a theme based on the hash
 	const themeKey = fallbackThemeKeys[hash % fallbackThemeKeys.length];
 	
-	return FORUM_THEMES[themeKey];
+	if (themeKey && themeKey in FORUM_THEMES) {
+		return FORUM_THEMES[themeKey];
+	}
+
+	return FORUM_THEMES.default;
 };

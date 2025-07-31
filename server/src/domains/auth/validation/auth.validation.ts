@@ -53,10 +53,61 @@ export const resendVerificationValidation = z.object({
 	})
 });
 
+// Forgot password validation
+export const forgotPasswordValidation = z.object({
+	body: z.object({
+		email: z.string().email('Invalid email format')
+	})
+});
+
+// Reset password validation
+export const resetPasswordValidation = z.object({
+	body: z.object({
+		token: z.string().min(1, 'Reset token is required'),
+		newPassword: z
+			.string()
+			.min(8, 'Password must be at least 8 characters')
+			.max(100, 'Password too long'),
+		confirmNewPassword: z.string()
+	}).refine((data) => data.newPassword === data.confirmNewPassword, {
+		message: "Passwords don't match",
+		path: ['confirmNewPassword']
+	})
+});
+
+// Update password validation
+export const updatePasswordValidation = z.object({
+	body: z.object({
+		currentPassword: z.string().min(1, 'Current password is required'),
+		newPassword: z
+			.string()
+			.min(8, 'Password must be at least 8 characters')
+			.max(100, 'Password too long'),
+		confirmNewPassword: z.string()
+	}).refine((data) => data.newPassword === data.confirmNewPassword, {
+		message: "Passwords don't match",
+		path: ['confirmNewPassword']
+	})
+});
+
+// Delete account validation
+export const deleteAccountValidation = z.object({
+	body: z.object({
+		password: z.string().min(1, 'Password is required'),
+		confirmDelete: z.literal('DELETE', {
+			errorMap: () => ({ message: 'Please type DELETE to confirm' })
+		})
+	})
+});
+
 // Export for route usage
 export const authValidation = {
 	login: loginValidation,
 	register: registerValidation,
 	verifyEmail: verifyEmailValidation,
-	resendVerification: resendVerificationValidation
+	resendVerification: resendVerificationValidation,
+	forgotPassword: forgotPasswordValidation,
+	resetPassword: resetPasswordValidation,
+	updatePassword: updatePasswordValidation,
+	deleteAccount: deleteAccountValidation
 };

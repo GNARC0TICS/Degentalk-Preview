@@ -11,7 +11,7 @@ import { forumStructure, threads, posts } from '@schema';
 import { sql, desc, eq, count, isNull, and, inArray, gt } from 'drizzle-orm';
 import type { PublicForumStructure } from '../types';
 import type { StructureId } from '@shared/types/ids';
-import { forumMap, type RootForum as Zone, type Forum } from '@config/forumMap';
+import { forumMap, type RootForum as Zone, type Forum } from '@shared/config/forum-map.config';
 
 // Simple in-memory cache for forum structure
 const CACHE_DURATION_MS = 30 * 1000; // 30 seconds

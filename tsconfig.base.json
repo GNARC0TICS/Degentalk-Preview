@@ -1,28 +1,68 @@
 {
 	"compilerOptions": {
+		// Language and Environment
 		"target": "ES2022",
+		"lib": ["ES2022", "DOM", "DOM.Iterable"],
+		"jsx": "react-jsx",
+		
+		// Module System
 		"module": "ES2022",
-		"moduleResolution": "nodenext",
-		"baseUrl": ".",
-		"paths": {
-			// NEW paths (target state)
-			"@api/*": ["server/src/*"],
-			"@core/*": ["server/src/core/*"],
-			"@shared/*": ["shared/*"],
-			"@db": ["db/index.ts"],
-			"@db/*": ["db/*"],
-			"@schema": ["db/schema/index.ts"],
-			"@schema/*": ["db/schema/*"],
-			
-			// OLD paths (temporary - for transition)
-			"@server-core/*": ["server/src/core/*"],
-			"@server/core/*": ["server/src/core/*"],
-			"@types/*": ["shared/types/*"]
-		},
+		"moduleResolution": "bundler",
 		"resolveJsonModule": true,
-		"esModuleInterop": true
-		/* "noImplicitAny": true,
-    "strictNullChecks": true,
-    "noUncheckedIndexedAccess": true */
+		
+		// JavaScript Support
+		"allowJs": false,
+		"checkJs": false,
+		
+		// Type Checking - Full Strict Mode
+		"strict": true,
+		"noImplicitAny": true,
+		"strictNullChecks": true,
+		"strictFunctionTypes": true,
+		"strictBindCallApply": true,
+		"strictPropertyInitialization": true,
+		"noImplicitThis": true,
+		"useUnknownInCatchVariables": true,
+		"alwaysStrict": true,
+		"noUncheckedIndexedAccess": true,
+		"noImplicitReturns": true,
+		"noFallthroughCasesInSwitch": true,
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+		"exactOptionalPropertyTypes": false,
+		"noImplicitOverride": true,
+		"noPropertyAccessFromIndexSignature": false,
+		"allowUnusedLabels": false,
+		"allowUnreachableCode": false,
+		
+		// Module Compatibility
+		"esModuleInterop": true,
+		"allowSyntheticDefaultImports": true,
+		"forceConsistentCasingInFileNames": true,
+		
+		// Output Control
+		"sourceMap": true,
+		"removeComments": false,
+		"importHelpers": false,
+		"downlevelIteration": true,
+		"preserveWatchOutput": true,
+		
+		// Interop Constraints
+		"isolatedModules": true,
+		"verbatimModuleSyntax": false,
+		"allowArbitraryExtensions": false,
+		
+		// Skip Type Checking for Dependencies
+		"skipLibCheck": true,
+		"skipDefaultLibCheck": true,
+		
+		// Advanced
+		"useDefineForClassFields": true,
+		"experimentalDecorators": true,
+		"emitDecoratorMetadata": true,
+		
+		// Incremental Build
+		"incremental": true,
+		"composite": false
 	}
 }

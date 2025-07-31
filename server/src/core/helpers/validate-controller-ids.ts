@@ -12,7 +12,7 @@
  * - Unauthorized access via ID manipulation
  */
 
-import { toId, isValidId } from '@shared/types';
+import { toId, isValidId } from '@shared/utils/id';
 import type { Id } from '@shared/types/ids';
 import { logger } from '@core/logger';
 

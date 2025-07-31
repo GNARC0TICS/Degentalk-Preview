@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { initiateXLogin, handleXCallback, unlinkXAccount } from '../services/xAuthService';
-import { isAuthenticated } from '../auth.routes';
+import { isAuthenticated } from '../index';
 
 const router: Router = Router();
 

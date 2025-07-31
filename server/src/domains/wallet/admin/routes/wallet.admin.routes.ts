@@ -8,7 +8,7 @@
 import { Router } from 'express'
 import type { Router as RouterType } from 'express';
 import { adminWalletController } from '../controllers/wallet.controller';
-import { requireAdmin } from '@middleware/auth.unified';
+import { luciaAuth } from '@middleware/lucia-auth.middleware';
 
 const router: RouterType = Router();
 

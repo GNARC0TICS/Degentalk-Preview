@@ -7,7 +7,7 @@ import { userService } from '@core/services/user.service';
  */
 
 import express from 'express';
-import { authenticate } from '@middleware/authenticate';
+import { luciaAuth } from '@middleware/lucia-auth.middleware';
 import { validateRequest } from '@middleware/validate-request';
 import { preferencesValidation } from './validation/preferences.validation';
 import {
@@ -43,7 +43,7 @@ const router: RouterType = express.Router();
  * GET /api/users/me/preferences-all
  * Get all preferences for the authenticated user
  */
-router.get('/me/preferences-all', authenticate, async (req, res) => {
+router.get('/me/preferences-all', luciaAuth.require, async (req, res) => {
 	try {
 		const userId = userService.getUserFromRequest(req).id;
 		const preferences = await getAllPreferences(userId);
@@ -60,7 +60,7 @@ router.get('/me/preferences-all', authenticate, async (req, res) => {
  */
 router.put(
 	'/me/preferences/profile',
-	authenticate,
+	luciaAuth.require,
 	validateRequest(preferencesValidation.profileSettings),
 	async (req, res) => {
 		try {
@@ -81,7 +81,7 @@ router.put(
  */
 router.put(
 	'/me/preferences/account',
-	authenticate,
+	luciaAuth.require,
 	validateRequest(preferencesValidation.accountSettings),
 	async (req, res) => {
 		try {
@@ -102,7 +102,7 @@ router.put(
  */
 router.put(
 	'/me/preferences/notifications',
-	authenticate,
+	luciaAuth.require,
 	validateRequest(preferencesValidation.notificationSettings),
 	async (req, res) => {
 		try {
@@ -123,7 +123,7 @@ router.put(
  */
 router.put(
 	'/me/preferences/display',
-	authenticate,
+	luciaAuth.require,
 	validateRequest(preferencesValidation.displayPreferences),
 	async (req, res) => {
 		try {
@@ -144,7 +144,7 @@ router.put(
  */
 router.post(
 	'/me/security/change-password',
-	authenticate,
+	luciaAuth.require,
 	validateRequest(preferencesValidation.passwordChange),
 	async (req, res) => {
 		try {

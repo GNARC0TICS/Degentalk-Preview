@@ -53,7 +53,7 @@ export function RandomTagline({ className }: RandomTaglineProps) {
 
 	return (
 		<motion.div
-			className={`italic cursor-pointer select-none ${className}`}
+			className={`italic cursor-pointer select-none min-h-[1rem] ${className}`}
 			onHoverStart={handleTaglineHover}
 			initial={{ opacity: 0 }}
 			animate={{ opacity: 1 }}
@@ -65,7 +65,7 @@ export function RandomTagline({ className }: RandomTaglineProps) {
 					initial={{ opacity: 0, y: 10 }}
 					animate={{ opacity: 1, y: 0 }}
 					exit={{ opacity: 0, y: -10 }}
-					className={`${isGlitching ? 'animate-glitch' : ''} hover:text-emerald-400 transition-colors text-center md:text-right`}
+					className={`text-xs hover:text-emerald-400 transition-colors text-center md:text-right`}
 				>
 					{tagline}
 				</motion.p>

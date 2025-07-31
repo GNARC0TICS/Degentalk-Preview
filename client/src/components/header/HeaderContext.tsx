@@ -45,6 +45,9 @@ export function HeaderProvider({ children, theme }: HeaderProviderProps) {
 	// CRITICAL: Use the auth hook to get the auth state
 	// This ensures the header UI is always in sync with the main auth state
 	const { user, isLoading, isAuthenticated } = useAuth();
+	
+	// Debug logging
+	console.log('[HeaderProvider] Auth state from useAuth:', { user, isLoading, isAuthenticated });
 
 	// Local UI state (not auth-related)
 	const [walletOpen, setWalletOpen] = useState(false);
@@ -55,26 +58,45 @@ export function HeaderProvider({ children, theme }: HeaderProviderProps) {
 	// AUTH STATE MAPPING: Convert auth hook state to header-specific auth status
 	// This function maps the boolean auth state to the header's enum-based status
 	const getAuthStatus = (): AuthStatus => {
-		if (isLoading) {
-			return 'loading';
-		}
+		const status = (() => {
+			if (isLoading) {
+				return 'loading';
+			}
 
-		// CRITICAL: Use isAuthenticated flag to ensure consistency with useAuth
-		// This prevents the "login button → authenticated UI" bug by using the same
-		// auth determination logic as the main auth hook
-		if (!isAuthenticated || !user) {
-			return 'guest';
-		}
+			// CRITICAL: Use isAuthenticated flag to ensure consistency with useAuth
+			// This prevents the "login button → authenticated UI" bug by using the same
+			// auth determination logic as the main auth hook
+			if (!isAuthenticated || !user) {
+				return 'guest';
+			}
 
-		if (user.isAdmin) {
-			return 'admin';
-		}
+			if (user.isAdmin) {
+				return 'admin';
+			}
 
-		return 'user';
+			return 'user';
+		})();
+		
+		// Debug logging
+		console.log('[HeaderContext] getAuthStatus:', {
+			isLoading,
+			isAuthenticated,
+			user: user?.username,
+			status
+		});
+		
+		return status;
 	};
 
 	// DEFENSIVE USER DATA: Only show user when actually authenticated
 	// This prevents stale user data from being displayed when auth state is invalid
+	console.log('[HeaderContext] User object:', user);
+	console.log('[HeaderContext] User has required fields?', {
+		hasUsername: !!user?.username,
+		hasLevel: user?.level !== undefined,
+		hasXp: user?.xp !== undefined,
+		user
+	});
 	const displayUser = isAuthenticated && user ? (user as HeaderUser) : undefined;
 
 	// Scroll detection

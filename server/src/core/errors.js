@@ -25,30 +25,37 @@ export var ErrorCodes;
     ErrorCodes["CONFLICT"] = "CONFLICT";
     ErrorCodes["VALIDATION_FAILED"] = "VALIDATION_FAILED";
     ErrorCodes["RATE_LIMITED"] = "RATE_LIMITED";
+    ErrorCodes["INVALID_REQUEST"] = "INVALID_REQUEST";
     // Business Logic (1000-1999)
     ErrorCodes["INSUFFICIENT_PERMISSIONS"] = "INSUFFICIENT_PERMISSIONS";
     ErrorCodes["RESOURCE_LOCKED"] = "RESOURCE_LOCKED";
     ErrorCodes["OPERATION_NOT_ALLOWED"] = "OPERATION_NOT_ALLOWED";
     ErrorCodes["BUSINESS_RULE_VIOLATION"] = "BUSINESS_RULE_VIOLATION";
+    ErrorCodes["VALIDATION_ERROR"] = "VALIDATION_ERROR";
+    ErrorCodes["DUPLICATE_ENTRY"] = "DUPLICATE_ENTRY";
     // Authentication (2000-2099)
     ErrorCodes["INVALID_CREDENTIALS"] = "INVALID_CREDENTIALS";
     ErrorCodes["TOKEN_EXPIRED"] = "TOKEN_EXPIRED";
     ErrorCodes["TOKEN_INVALID"] = "TOKEN_INVALID";
     ErrorCodes["SESSION_EXPIRED"] = "SESSION_EXPIRED";
+    ErrorCodes["USER_NOT_FOUND"] = "USER_NOT_FOUND";
     // Database (3000-3099)
     ErrorCodes["DB_CONNECTION_FAILED"] = "DB_CONNECTION_FAILED";
     ErrorCodes["DB_QUERY_FAILED"] = "DB_QUERY_FAILED";
     ErrorCodes["DB_CONSTRAINT_VIOLATION"] = "DB_CONSTRAINT_VIOLATION";
     ErrorCodes["DB_TRANSACTION_FAILED"] = "DB_TRANSACTION_FAILED";
+    ErrorCodes["DB_ERROR"] = "DB_ERROR";
     // External Services (4000-4099)
     ErrorCodes["EXTERNAL_API_ERROR"] = "EXTERNAL_API_ERROR";
     ErrorCodes["PAYMENT_PROVIDER_ERROR"] = "PAYMENT_PROVIDER_ERROR";
     ErrorCodes["EMAIL_SERVICE_ERROR"] = "EMAIL_SERVICE_ERROR";
+    ErrorCodes["EXTERNAL_SERVICE_ERROR"] = "EXTERNAL_SERVICE_ERROR";
     // System (5000-5099)
     ErrorCodes["SERVER_ERROR"] = "SERVER_ERROR";
     ErrorCodes["SERVICE_UNAVAILABLE"] = "SERVICE_UNAVAILABLE";
     ErrorCodes["TIMEOUT"] = "TIMEOUT";
     ErrorCodes["MEMORY_LIMIT"] = "MEMORY_LIMIT";
+    ErrorCodes["INTERNAL_ERROR"] = "INTERNAL_ERROR";
     // Domain Specific
     ErrorCodes["WALLET_INSUFFICIENT_FUNDS"] = "WALLET_INSUFFICIENT_FUNDS";
     ErrorCodes["WALLET_TRANSACTION_FAILED"] = "WALLET_TRANSACTION_FAILED";
@@ -228,9 +235,8 @@ export function globalErrorHandler(err, req, res, next) {
     // Alert for critical errors (integrate with monitoring service)
     if (appError.severity === ErrorSeverity.CRITICAL) {
         // TODO: Integrate with alerting service (PagerDuty, Slack, etc.)
-        logger.error('CRITICAL_ERROR_ALERT', {
+        logger.error('CRITICAL_ERROR_ALERT', `Critical error: ${appError.message}`, {
             code: appError.code,
-            message: appError.message,
             context: appError.context
         });
     }

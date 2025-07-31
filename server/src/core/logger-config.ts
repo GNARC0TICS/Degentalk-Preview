@@ -20,7 +20,11 @@ export const devLoggerConfig: LoggerConfig = {
     'LOAD_ENV',          // Environment loading details
     'TASK_SCHEDULER',    // Recurring task logs
     'DevAuth',           // Dev authentication logs
-    'SERVER'             // Reduce startup verbosity
+    'SERVER',             // Reduce startup verbosity
+    'ThreadService',      // Thread loading logs
+    'Audit',             // Audit logs
+    'REQUEST_ERROR',     // Request error details
+    'Forum'              // Forum stats logs
   ],
   
   // Patterns to suppress (regex)

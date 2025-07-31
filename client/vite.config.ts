@@ -29,15 +29,8 @@ export default defineConfig(async () => {
 			},
 			resolve: {
 				alias: [
-					// NEW patterns
-					{ find: '@app', replacement: path.resolve(projectRoot, 'client/src') },
-					{ find: '@api', replacement: path.resolve(projectRoot, 'server/src') },
-					{ find: '@core', replacement: path.resolve(projectRoot, 'server/src/core') },
-					{ find: '@config', replacement: path.resolve(projectRoot, 'client/src/config') },
-					
 					// OLD patterns (temporary)
 					{ find: '@', replacement: path.resolve(projectRoot, 'client/src') },
-					{ find: '@server', replacement: path.resolve(projectRoot, 'server/src') },
 					
 					// Shared patterns (keep)
 					{ find: '@shared/types/ids', replacement: path.resolve(projectRoot, 'shared/types/ids.ts') },

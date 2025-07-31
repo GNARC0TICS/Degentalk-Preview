@@ -8,7 +8,7 @@
 import { Router } from 'express'
 import type { Router as RouterType } from 'express';
 import { analyticsController } from '../controllers/analytics.controller';
-import { authenticate } from '@middleware/auth.unified';
+import { luciaAuth } from '@middleware/lucia-auth.middleware';
 import { validateRequest } from '@middleware/validate-request';
 import { z } from 'zod';
 
@@ -30,34 +30,34 @@ const clearCacheSchema = z.object({
 // Session metrics endpoints
 router.get(
   '/sessions/metrics',
-  authenticate,
+  luciaAuth.require,
   validateRequest({ query: sessionMetricsSchema }),
   analyticsController.getSessionMetrics
 );
 
 router.get(
   '/sessions/cohorts',
-  authenticate,
+  luciaAuth.require,
   validateRequest({ query: retentionCohortsSchema }),
   analyticsController.getRetentionCohorts
 );
 
 router.get(
   '/sessions/realtime',
-  authenticate,
+  luciaAuth.require,
   analyticsController.getRealtimeStats
 );
 
 // Cache performance endpoints
 router.get(
   '/cache/metrics',
-  authenticate,
+  luciaAuth.require,
   analyticsController.getCacheMetrics
 );
 
 router.post(
   '/cache/clear',
-  authenticate,
+  luciaAuth.require,
   validateRequest({ query: clearCacheSchema }),
   analyticsController.clearCache
 );
@@ -65,7 +65,7 @@ router.post(
 // Performance dashboard
 router.get(
   '/dashboard',
-  authenticate,
+  luciaAuth.require,
   validateRequest({ query: sessionMetricsSchema }),
   analyticsController.getPerformanceDashboard
 );

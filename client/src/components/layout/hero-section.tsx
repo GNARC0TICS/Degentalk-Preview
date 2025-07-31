@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { Users, ArrowRight } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { motion, AnimatePresence } from 'framer-motion';
 import { uiConfig } from '@/config/ui.config';
 import type { HeroQuote } from '@/config/ui.config';
+import { HeroCTAButton } from './HeroCTAButton';
+import { BrowseTopicsLink } from './BrowseTopicsLink';
 
 // Fisher-Yates shuffle
 function shuffleArray<T>(array: readonly T[]): T[] {
@@ -74,7 +73,7 @@ export function HeroSection() {
 				<div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-cyan-500/5 rounded-full blur-3xl" />
 			</div>
 
-			<div className="container mx-auto px-4 py-16 md:py-24 lg:py-32 relative z-10">
+			<div className="container mx-auto px-4 py-16 md:py-24 lg:py-32 relative z-10" style={{ isolation: 'isolate' }}>
 				<motion.div
 					className="max-w-3xl mx-auto text-center"
 					initial={{ opacity: 0, y: 20 }}
@@ -82,7 +81,7 @@ export function HeroSection() {
 					transition={{ duration: 0.8 }}
 				>
 					{/* Animated headline */}
-					<div className="h-[120px] md:h-[140px] lg:h-[168px] flex items-center justify-center mb-4">
+					<div className="h-[120px] md:h-[140px] lg:h-[168px] flex items-center justify-center mb-8 relative z-30">
 						<AnimatePresence mode="wait">
 							<motion.h1
 								key={currentQuoteIndex}
@@ -108,46 +107,31 @@ export function HeroSection() {
 							animate={{ opacity: 1, y: 0 }}
 							exit={{ opacity: 0, y: -20 }}
 							transition={{ duration: 0.5, delay: 0.1 }}
-							className="text-lg md:text-xl text-white mb-8 md:mb-10 flex items-center gap-2 justify-center font-semibold"
+							className="text-lg md:text-xl text-white mb-14 md:mb-20 flex items-center gap-2 justify-center font-semibold relative z-30"
 							style={{ textShadow: '0 0 8px rgba(255,255,255,0.1)' }}
 						>
 							{currentQuote.subheader}
 						</motion.p>
 					</AnimatePresence>
 
+					{/* CTA Button - proper z-index for production */}
 					<motion.div
-						className="flex flex-wrap gap-4 justify-center"
+						className="flex flex-wrap gap-4 justify-center relative z-20"
 						initial={{ opacity: 0, y: 20 }}
 						animate={{ opacity: 1, y: 0 }}
 						transition={{ delay: 0.6, duration: 0.8 }}
 					>
-						<motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-							<Button
-								size="lg"
-								className="bg-gradient-to-r from-emerald-600 to-cyan-600 hover:from-emerald-500 hover:to-cyan-500 text-white shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 transition-all duration-300"
-								onClick={() => (window.location.href = '/auth?mode=signup')}
-							>
-								<Users className="w-5 h-5 mr-2" />
-								Join Community
-							</Button>
-						</motion.div>
+						<HeroCTAButton onClick={() => window.location.href = '/auth?mode=signup'} />
 					</motion.div>
 
+					{/* Browse Topics Link */}
 					<motion.div
-						className="mt-8 md:mt-12 flex justify-center"
+						className="mt-10 md:mt-12 flex justify-center relative z-20"
 						initial={{ opacity: 0 }}
 						animate={{ opacity: 1 }}
 						transition={{ delay: 0.9, duration: 0.8 }}
 					>
-						<Link to="/forums">
-							<motion.div
-								className="flex items-center text-emerald-400 hover:text-emerald-300 transition-colors text-sm group"
-								whileHover={{ x: 5 }}
-							>
-								<span>Browse our topics</span>
-								<ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
-							</motion.div>
-						</Link>
+						<BrowseTopicsLink variant="shimmer" />
 					</motion.div>
 				</motion.div>
 

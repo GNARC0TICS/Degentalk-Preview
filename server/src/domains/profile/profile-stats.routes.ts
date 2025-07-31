@@ -2,7 +2,7 @@ import { Router } from 'express'
 import type { Router as RouterType } from 'express';
 import { ProfileStatsController } from './profile-stats.controller';
 import { createCustomRateLimiter } from '@core/services/rate-limit.service';
-import { optionalAuth } from '@middleware/auth.unified';
+import { luciaAuth } from '@middleware/lucia-auth.middleware';
 
 const router: RouterType = Router();
 
@@ -14,7 +14,7 @@ const router: RouterType = Router();
 // GET /api/profile/:username/stats - Extended profile statistics
 router.get(
 	'/:username/stats',
-	optionalAuth, // Allow both authenticated and anonymous access
+	luciaAuth.optional, // Allow both authenticated and anonymous access
 	createCustomRateLimiter({ windowMs: 60000, max: 30 }), // 30 requests per minute
 	ProfileStatsController.getExtendedProfileStats
 );
@@ -22,7 +22,7 @@ router.get(
 // GET /api/profile/:username/quick-stats - Minimal stats for previews
 router.get(
 	'/:username/quick-stats',
-	optionalAuth,
+	luciaAuth.optional,
 	createCustomRateLimiter({ windowMs: 60000, max: 60 }), // 60 requests per minute (higher for previews)
 	ProfileStatsController.getQuickProfileStats
 );
@@ -33,7 +33,7 @@ const analyticsRouter: RouterType = Router();
 // POST /api/analytics/profile-engagement - Track profile engagement
 analyticsRouter.post(
 	'/profile-engagement',
-	optionalAuth,
+	luciaAuth.optional,
 	createCustomRateLimiter({ windowMs: 60000, max: 100 }), // 100 analytics events per minute
 	ProfileStatsController.trackProfileEngagement
 );

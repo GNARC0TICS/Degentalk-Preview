@@ -112,17 +112,18 @@ router.get(
 	'/featured-forum-stats',
 	asyncHandler(async (req: Request, res: Response) => {
 		try {
-			// Get featured forums with their stats
+			// Get featured forums with their basic info
+			// Note: threadCount, postCount, and lastPostAt would need to be computed separately
 			const featuredForums = await db
 				.select({
 					id: forumStructure.id,
 					name: forumStructure.name,
 					slug: forumStructure.slug,
-					threadCount: forumStructure.threadCount,
-					postCount: forumStructure.postCount,
-					lastPostAt: forumStructure.lastPostAt,
 					isFeatured: forumStructure.isFeatured,
-					themePreset: forumStructure.themePreset
+					themePreset: forumStructure.themePreset,
+					position: forumStructure.position,
+					icon: forumStructure.icon,
+					color: forumStructure.color
 				})
 				.from(forumStructure)
 				.where(eq(forumStructure.isFeatured, true))

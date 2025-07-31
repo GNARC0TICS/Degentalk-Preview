@@ -10,7 +10,8 @@ import type { Router as RouterType } from 'express';
 import { walletController } from '../controllers/wallet.controller';
 import { walletValidation } from '../validation/wallet.validation';
 import { validateRequest } from '@middleware/validate-request';
-import { authenticateJWT as requireAuth } from '@middleware/authenticate-jwt';
+import { luciaAuth } from '@middleware/lucia-auth.middleware';
+const requireAuth = luciaAuth.require;
 import { createCustomRateLimiter as rateLimit } from '@core/services/rate-limit.service';
 import webhookRoutes from '../webhooks/ccpayment-webhook.routes';
 import {

@@ -1,8 +1,8 @@
 import { createContext, useContext, useMemo, useState, useEffect } from 'react';
 import type { ReactNode } from 'react';
 import { z } from 'zod';
-import { forumMap } from '@config/forumMap';
-import type { RootForum as Zone } from '@config/forumMap';
+import { forumMap } from '@shared/config/forum-map.config';
+import type { RootForum as Zone } from '@shared/config/forum-map.config';
 import type { ForumId, GroupId } from '@shared/types/ids';
 import { toId, parseId } from '@shared/types/index';
 import { logger } from '@/lib/logger';

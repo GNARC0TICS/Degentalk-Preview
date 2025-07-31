@@ -17,4 +17,4 @@ export function getForumRules(forumSlug: string): MergedRules | undefined {
 }
 
 // Export the type for backward compatibility
-export type { MergedRules as ForumRules };
+export type { MergedRules as ForumRules }; 

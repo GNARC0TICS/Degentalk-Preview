@@ -1,78 +1,48 @@
 {
-	"extends": "../tsconfig.base.json",
-	"include": ["src/**/*"],
-	"references": [
-		{ "path": "../shared" },
-		{ "path": "../db" }
-	],
-	"exclude": [
-		"../node_modules",
-		"build",
-		"dist",
-		"../client/**/*",
-		"**/*.bak.ts",
-		"**/*.bak.tsx",
-		"../UIVERSE",
-		"../archive/**/*",
-		"../shared/fixtures/**",
-		"../scripts/templates/**",
-		"../scripts/auth/auth-refactor.ts",
-		"../scripts/codemods/**",
-		"../scripts/wallet/**",
-		"../scripts/validate-*.ts",
-		"../scripts/ops/validate-safe-migrations.ts",
-		"../scripts/testing/validate-forum-fks.ts",
-		"../scripts/migration/cleanup-old-category-schema.ts",
-		"../scripts/migration/generate-id-aliases.ts",
-		"../scripts/migration/generate-uuid-audit.ts",
-		"test/**",
-		"tests/**",
-		"**/*.test.ts",
-		"**/*.spec.ts",
-		"utils/**",
-		"src/domains/_new-wallet/**"
-	],
-	"compilerOptions": {
-		"baseUrl": ".",
-		"module": "ESNext",
-		"moduleResolution": "bundler",
-		"composite": true,
-		"allowImportingTsExtensions": true,
-		"emitDeclarationOnly": true,
-		"experimentalDecorators": true,
-		"emitDecoratorMetadata": true,
-		"outDir": "./dist",
-		"types": ["node"],
-		"paths": {
-			// Server-specific explicit paths
-			"@core/*": ["src/core/*"],
-			"@domains/*": ["src/domains/*"],
-			"@middleware/*": ["src/middleware/*"],
-			"@utils/*": ["src/utils/*"],
-			"@lib/*": ["lib/*"],
-			"@lib/report-error": ["lib/report-error.ts"],
-			
-			// OLD paths (temporary - for transition)
-			"@config/*": ["../config/*"],
-			"@config/forumMap": ["../shared/config/forum-map.config.ts"],
-			"@config/forumEconomy": ["../shared/config/forum-economy.config.ts"],
-			"@shared/types": ["../shared/types/index.ts"],
-			"@shared/types/ids": ["../shared/types/ids.ts"],
-			"@shared/*": ["../shared/*"],
-			"@server/*": ["src/*"],
-			"@server-core/*": ["src/core/*"],
-			"@server-utils/*": ["src/utils/*"],
-			"@server-middleware/*": ["src/middleware/*"],
-			"@db": ["../db/index.ts"],
-			"@db/schema": ["../db/schema/index.ts"],
-			"@schema": ["../db/schema/index.ts"],
-			"@schema/*": ["../db/schema/*"],
-			"@db_types/*": ["../db/types/*"],
-			"@db/types": ["../db/types/index.ts"],
-			"@db/types/*": ["../db/types/*"],
-			"@db/schema/core/enums": ["../db/schema/core/enums/index.ts"],
-			"@degentalk/db/types": ["../db/types/index.ts"],
-			"@forum-sdk/*": ["../forum-sdk/*"]
-		}
-	}
+  "extends": [
+    "../tsconfig.base.json",
+    "../tsconfig.paths.json"
+  ],
+  "compilerOptions": {
+    "composite": true,
+    "incremental": true,
+    "tsBuildInfoFile": "./.tscache/server.tsbuildinfo",
+    "declaration": true,
+    "declarationMap": true,
+    "emitDeclarationOnly": false,
+    "outDir": "./dist",
+    "rootDir": ".",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "types": [
+      "node"
+    ]
+  },
+  "include": [
+    "src/**/*",
+    "lib/**/*",
+    "index.ts",
+    "register-path-aliases.ts",
+    "routes.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "build",
+    "**/*.test.ts",
+    "**/*.spec.ts",
+    "**/*.bak.ts",
+    ".tscache",
+    "src/domains/_new-wallet/**"
+  ],
+  "references": [
+    {
+      "path": "../shared/tsconfig.json"
+    },
+    {
+      "path": "../db/tsconfig.json"
+    }
+  ]
 }

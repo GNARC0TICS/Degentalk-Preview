@@ -6,7 +6,7 @@
  */
 
 import type { UserId, DgtAmount } from '@shared/types/ids';
-import { toDgtAmount } from '@shared/types';
+import { toDgtAmount } from '@shared/types/economy';
 import { createHash } from 'crypto';
 import { logger } from '@core/logger';
 

@@ -6,6 +6,7 @@ export { LiveStats } from './LiveStats';
 export { FooterBrand } from './FooterBrand';
 export { FooterSection } from './FooterSection';
 export { RandomTagline } from './RandomTagline';
+export { AnimatedStatCard } from './AnimatedStatCard';
 
 // Configuration (re-export for convenience)
 export {

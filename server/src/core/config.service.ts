@@ -1,4 +1,4 @@
-import { forumEconomyConfig } from '@config/forumEconomy';
+import { forumEconomyConfig } from '@shared/config/forum-economy.config';
 
 /**
  * Retrieves a nested property from the forumConfig object via dot-notation path.

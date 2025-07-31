@@ -29,7 +29,8 @@ import type {
 	MessageId,
 	RoomId,
 	LevelId,
-	EntityId
+	EntityId,
+	EntryId
 } from '../types/ids.js';
 /**
  * Validates if a string is a valid UUID format
@@ -216,3 +217,4 @@ export const toMessageId = (id: string): MessageId => id as MessageId;
 export const toRoomId = (id: string): RoomId => id as RoomId;
 export const toLevelId = (id: string): LevelId => id as LevelId;
 export const toEntityId = (id: string): EntityId => id as EntityId;
+export const toEntryId = (id: string): EntryId => id as EntryId;

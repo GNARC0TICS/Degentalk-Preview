@@ -4,7 +4,6 @@ import {
 	userSettings as userPreferencesSchema,
 	notificationSettings as notificationPreferencesSchema,
 	displayPreferences as displayPreferencesSchema,
-	userSettingsHistory,
 	type User,
 	type UserSetting as UserPreference,
 	type NotificationSetting as NotificationPreference,
@@ -102,19 +101,13 @@ export const updateProfilePreferences = async (
 		'activeFrameId'
 	];
 
+	// Note: History tracking removed - userSettingsHistory table not implemented
 	for (const field of trackedFields) {
 		if (
 			field in data &&
 			data[field as keyof ProfileSettingsInput] !== currentProfile[field as keyof User]
 		) {
-			await db.insert(userSettingsHistory).values({
-				userId,
-				settingKey: `profile.${field}`,
-				oldValue: currentProfile[field as keyof User]?.toString() || null,
-				newValue: data[field as keyof ProfileSettingsInput]?.toString() || null,
-				changedAt: new Date(),
-				changedByIp: ipAddress
-			});
+			// History tracking disabled - userSettingsHistory table not implemented
 		}
 	}
 

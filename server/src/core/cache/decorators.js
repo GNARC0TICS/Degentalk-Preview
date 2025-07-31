@@ -29,7 +29,7 @@ function logCacheOperation(operation) {
         cacheOperations.push(...recentOps);
         const cleaned = beforeLength - cacheOperations.length;
         if (cleaned > 0 && process.env.NODE_ENV === 'development') {
-            logger.debug('CACHE_CLEANUP', `Cleaned ${cleaned} old cache operations`);
+            logger.debug('Cache', 'CACHE_CLEANUP', `Cleaned ${cleaned} old cache operations`);
         }
     }
     // Development logging
@@ -75,7 +75,7 @@ function createCacheDecorator(policy, policyKey) {
             const policies = getCachePolicies();
             const ttl = policies[policy][policyKey];
             if (typeof ttl !== 'number') {
-                logger.warn(`Invalid cache policy: ${policy}.${policyKey}, falling back to original method`);
+                logger.warn('Cache', `Invalid cache policy: ${policy}.${policyKey}, falling back to original method`);
                 return await originalMethod.apply(this, args);
             }
             try {

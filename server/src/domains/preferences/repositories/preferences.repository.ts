@@ -3,8 +3,7 @@ import { db } from '@db';
 import { 
   userSettings,
   notificationSettings,
-  displayPreferences,
-  userSettingsHistory
+  displayPreferences
 } from '@db/schema/user/preferences';
 import type { UserId } from '@shared/types/ids';
 
@@ -166,26 +165,6 @@ export class PreferencesRepository {
       .returning();
     
     return updated;
-  }
-
-  /**
-   * Log preference change to history
-   */
-  async logPreferenceChange(
-    userId: UserId,
-    settingKey: string,
-    oldValue: string | null,
-    newValue: string | null,
-    ipAddress?: string
-  ) {
-    await db.insert(userSettingsHistory).values({
-      userId,
-      settingKey,
-      oldValue,
-      newValue,
-      changedAt: new Date(),
-      changedByIp: ipAddress
-    });
   }
 
   /**

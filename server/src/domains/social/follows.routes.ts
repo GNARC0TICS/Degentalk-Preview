@@ -3,7 +3,7 @@ import { Router } from 'express'
 import type { Router as RouterType } from 'express';
 import type { EntityId } from '@shared/types/ids';
 import { FollowsService } from './follows.service';
-import { requireAuth } from '@middleware/auth';
+import { luciaAuth } from '@middleware/lucia-auth.middleware';
 import { z } from 'zod';
 import { logger } from '@core/logger';
 import { UserTransformer } from '@domains/users/transformers/user.transformer';
@@ -73,7 +73,7 @@ const searchUsersSchema = z.object({
  * POST /api/social/follows
  * Follow a user
  */
-router.post('/', requireAuth, async (req, res) => {
+router.post('/', luciaAuth.require, async (req, res) => {
 	try {
 		const { userId: followedId, notificationSettings } = followUserSchema.parse(req.body);
 		const followerId = userService.getUserFromRequest(req)!.id;
@@ -100,7 +100,7 @@ router.post('/', requireAuth, async (req, res) => {
  * DELETE /api/social/follows
  * Unfollow a user
  */
-router.delete('/', requireAuth, async (req, res) => {
+router.delete('/', luciaAuth.require, async (req, res) => {
 	try {
 		const { userId: followedId } = unfollowUserSchema.parse(req.body);
 		const followerId = userService.getUserFromRequest(req)!.id;
@@ -122,7 +122,7 @@ router.delete('/', requireAuth, async (req, res) => {
  * GET /api/social/follows/following
  * Get user's following list
  */
-router.get('/following', requireAuth, async (req, res) => {
+router.get('/following', luciaAuth.require, async (req, res) => {
 	try {
 		const { page, limit } = getPaginationSchema.parse(req.query);
 		const userId = userService.getUserFromRequest(req)!.id;
@@ -147,7 +147,7 @@ router.get('/following', requireAuth, async (req, res) => {
  * GET /api/social/follows/followers
  * Get user's followers list
  */
-router.get('/followers', requireAuth, async (req, res) => {
+router.get('/followers', luciaAuth.require, async (req, res) => {
 	try {
 		const { page, limit } = getPaginationSchema.parse(req.query);
 		const userId = userService.getUserFromRequest(req)!.id;
@@ -172,7 +172,7 @@ router.get('/followers', requireAuth, async (req, res) => {
  * GET /api/social/follows/counts
  * Get user's follow counts
  */
-router.get('/counts', requireAuth, async (req, res) => {
+router.get('/counts', luciaAuth.require, async (req, res) => {
 	try {
 		const userId = userService.getUserFromRequest(req)!.id;
 		const counts = await FollowsService.getUserFollowCounts(userId);
@@ -188,7 +188,7 @@ router.get('/counts', requireAuth, async (req, res) => {
  * GET /api/social/follows/check/:userId
  * Check if current user is following another user
  */
-router.get('/check/:userId', requireAuth, async (req, res) => {
+router.get('/check/:userId', luciaAuth.require, async (req, res) => {
 	try {
 		const followedId = req.params.userId;
 		const followerId = userService.getUserFromRequest(req)!.id;
@@ -206,7 +206,7 @@ router.get('/check/:userId', requireAuth, async (req, res) => {
  * GET /api/social/follows/requests
  * Get follow requests for current user
  */
-router.get('/requests', requireAuth, async (req, res) => {
+router.get('/requests', luciaAuth.require, async (req, res) => {
 	try {
 		const userId = userService.getUserFromRequest(req)!.id;
 		const requests = await FollowsService.getFollowRequests(userId);
@@ -222,7 +222,7 @@ router.get('/requests', requireAuth, async (req, res) => {
  * POST /api/social/follows/requests/:requestId/respond
  * Respond to a follow request
  */
-router.post('/requests/:requestId/respond', requireAuth, async (req, res) => {
+router.post('/requests/:requestId/respond', luciaAuth.require, async (req, res) => {
 	try {
 		const requestId = req.params.requestId as EntityId;
 		const { approve } = respondToRequestSchema.parse(req.body);
@@ -248,7 +248,7 @@ router.post('/requests/:requestId/respond', requireAuth, async (req, res) => {
  * GET /api/social/follows/whales
  * Get whale candidates for following
  */
-router.get('/whales', requireAuth, async (req, res) => {
+router.get('/whales', luciaAuth.require, async (req, res) => {
 	try {
 		const { limit } = z
 			.object({
@@ -269,7 +269,7 @@ router.get('/whales', requireAuth, async (req, res) => {
  * GET /api/social/follows/activity
  * Get activity feed from followed users
  */
-router.get('/activity', requireAuth, async (req, res) => {
+router.get('/activity', luciaAuth.require, async (req, res) => {
 	try {
 		const { page, limit } = getPaginationSchema.parse(req.query);
 		const userId = userService.getUserFromRequest(req)!.id;
@@ -287,7 +287,7 @@ router.get('/activity', requireAuth, async (req, res) => {
  * GET /api/social/follows/search
  * Search users to follow
  */
-router.get('/search', requireAuth, async (req, res) => {
+router.get('/search', luciaAuth.require, async (req, res) => {
 	try {
 		const { q, limit } = searchUsersSchema.parse(req.query);
 		const currentUserId = userService.getUserFromRequest(req)!.id;
@@ -305,7 +305,7 @@ router.get('/search', requireAuth, async (req, res) => {
  * GET /api/social/follows/preferences
  * Get user's follow preferences
  */
-router.get('/preferences', requireAuth, async (req, res) => {
+router.get('/preferences', luciaAuth.require, async (req, res) => {
 	try {
 		const userId = userService.getUserFromRequest(req)!.id;
 		const preferences = await FollowsService.getUserFollowPreferences(userId);
@@ -321,7 +321,7 @@ router.get('/preferences', requireAuth, async (req, res) => {
  * PUT /api/social/follows/preferences
  * Update user's follow preferences
  */
-router.put('/preferences', requireAuth, async (req, res) => {
+router.put('/preferences', luciaAuth.require, async (req, res) => {
 	try {
 		const preferences = updatePreferencesSchema.parse(req.body);
 		const userId = userService.getUserFromRequest(req)!.id;
@@ -339,7 +339,7 @@ router.put('/preferences', requireAuth, async (req, res) => {
  * PUT /api/social/follows/:userId/notifications
  * Update notification settings for a specific follow
  */
-router.put('/:userId/notifications', requireAuth, async (req, res) => {
+router.put('/:userId/notifications', luciaAuth.require, async (req, res) => {
 	try {
 		const followedId = req.params.userId;
 		const followerId = userService.getUserFromRequest(req)!.id;

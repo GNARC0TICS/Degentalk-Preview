@@ -5,8 +5,8 @@
  * for secure session management.
  */
 
-import { pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
-import { sql } from 'drizzle-orm';
+import { pgTable, text, timestamp, uuid, inet, index } from 'drizzle-orm/pg-core';
+import { sql, relations } from 'drizzle-orm';
 import { users } from '../user/users';
 
 /**
@@ -45,27 +45,41 @@ export const sessions = pgTable('user_session', {
     .default(sql`CURRENT_TIMESTAMP`),
 
   /**
-   * Optional: Last activity timestamp
-   * Can be used for inactive session cleanup
+   * Optional: IP address from which session was created
    */
-  lastActivityAt: timestamp('last_activity_at', { withTimezone: true })
-    .default(sql`CURRENT_TIMESTAMP`),
+  ipAddress: inet('ip_address'),
 
   /**
-   * Optional: Session metadata
-   * Can store additional session information like IP, user agent, etc.
+   * Optional: User agent string of the client
    */
-  metadata: text('metadata'), // JSON string for flexibility
-});
+  userAgent: text('user_agent'),
+
+  /**
+   * Optional: Generated device identifier for session tracking
+   */
+  deviceId: text('device_id'),
+
+  /**
+   * Optional: Last time this session was active
+   */
+  lastActiveAt: timestamp('last_active_at', { withTimezone: true })
+    .default(sql`CURRENT_TIMESTAMP`),
+}, (table) => ({
+  // Indexes for performance
+  userIdIdx: index('idx_user_sessions_user_id').on(table.userId),
+  expiresAtIdx: index('idx_user_sessions_expires_at').on(table.expiresAt),
+  deviceIdIdx: index('idx_user_sessions_device_id').on(table.deviceId)
+}));
 
 /**
- * Indexes for performance optimization
- * 
- * These are applied via migration scripts:
- * - idx_user_session_user_id: Fast lookup of user's sessions
- * - idx_user_session_expires_at: Efficient cleanup of expired sessions
- * - idx_user_session_last_activity: For inactive session management
+ * Relations
  */
+export const sessionsRelations = relations(sessions, ({ one }) => ({
+  user: one(users, {
+    fields: [sessions.userId],
+    references: [users.id]
+  })
+}));
 
 // Type exports for use in other modules
 export type Session = typeof sessions.$inferSelect;
@@ -86,18 +100,5 @@ export type SessionWithUser = Session & {
   };
 };
 
-/**
- * Session metadata structure
- * Define the shape of data stored in the metadata field
- */
-export interface SessionMetadata {
-  ipAddress?: string;
-  userAgent?: string;
-  device?: string;
-  location?: {
-    country?: string;
-    city?: string;
-  };
-  loginMethod?: 'password' | 'oauth' | 'dev_mock';
-  // Add other metadata fields as needed
-}
+// Re-export with the correct name for Lucia compatibility
+export const userSessions = sessions;

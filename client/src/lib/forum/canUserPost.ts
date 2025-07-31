@@ -1,4 +1,4 @@
-import type { AdminId } from '../../types/ids.js';
+import type { AdminId } from '@shared/types/ids';
 import { getForumRules } from './getForumRules.js';
 
 export type User = {
@@ -9,7 +9,7 @@ export type User = {
 };
 
 export function canUserPost(forumSlug: string, user: User): boolean {
-	const rules = getForumRules(forumSlug);
+	const rules = getForumRules(forumSlug as AdminId);
 	if (!rules) return false;
 	if (!rules.allowPosting) return false;
 	switch (rules.accessLevel) {
@@ -26,4 +26,4 @@ export function canUserPost(forumSlug: string, user: User): boolean {
 		default:
 			return true;
 	}
-}
+} 

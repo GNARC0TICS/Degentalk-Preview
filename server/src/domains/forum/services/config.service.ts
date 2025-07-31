@@ -11,7 +11,7 @@ import {
 	getForumBySlug as getForumBySlugFromConfig,
 	type Forum as ConfigForum,
 	type RootForum as ConfigZone
-} from '@config/forumMap';
+} from '@shared/config/forum-map.config';
 import type { PublicForumStructure } from '../types';
 import type { StructureId } from '@shared/types/ids';
 

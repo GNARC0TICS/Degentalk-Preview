@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import type { Router as RouterType } from 'express';
-import { requireAuth } from '@middleware/auth.unified';
+import { luciaAuth } from '@middleware/lucia-auth.middleware';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 import { logger } from '@core/logger';
 
@@ -11,7 +11,7 @@ const router: RouterType = Router();
  * Returns user preferences for the authenticated user
  * This is a stub endpoint to prevent 401 errors in the client
  */
-router.get('/', requireAuth, async (req, res) => {
+router.get('/', luciaAuth.require, async (req, res) => {
 	try {
 		// TODO: Implement actual preferences service
 		// For now, return default preferences
@@ -43,7 +43,7 @@ router.get('/', requireAuth, async (req, res) => {
  * PUT /api/preferences
  * Updates user preferences
  */
-router.put('/', requireAuth, async (req, res) => {
+router.put('/', luciaAuth.require, async (req, res) => {
 	try {
 		// TODO: Implement actual preferences update
 		// For now, just return success

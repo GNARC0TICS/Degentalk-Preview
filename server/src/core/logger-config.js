@@ -1,17 +1,13 @@
-"use strict";
 /**
  * Logger Configuration for Development
  *
  * Controls which log categories are enabled/disabled in development mode
  * to reduce console noise while maintaining useful debugging information.
  */
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.prodLoggerConfig = exports.devLoggerConfig = void 0;
-exports.getLoggerConfig = getLoggerConfig;
-var logger_types_1 = require("./logger-types");
+import { LogLevel } from './logger-types';
 // Development mode logger configuration
-exports.devLoggerConfig = {
-    minLevel: logger_types_1.LogLevel.INFO,
+export const devLoggerConfig = {
+    minLevel: LogLevel.INFO,
     // Categories to suppress in development
     suppressCategories: [
         'WebSocket', // Connection/disconnection spam
@@ -33,21 +29,21 @@ exports.devLoggerConfig = {
     ]
 };
 // Production logger configuration
-exports.prodLoggerConfig = {
-    minLevel: logger_types_1.LogLevel.INFO,
+export const prodLoggerConfig = {
+    minLevel: LogLevel.INFO,
     // In production, we want all logs
     suppressCategories: [],
     suppressPatterns: []
 };
 // Get config based on environment
-function getLoggerConfig() {
+export function getLoggerConfig() {
     // Allow verbose logging override via environment variable
     if (process.env.VERBOSE_LOGS === 'true') {
         return {
-            minLevel: logger_types_1.LogLevel.DEBUG,
+            minLevel: LogLevel.DEBUG,
             suppressCategories: [],
             suppressPatterns: []
         };
     }
-    return process.env.NODE_ENV === 'production' ? exports.prodLoggerConfig : exports.devLoggerConfig;
+    return process.env.NODE_ENV === 'production' ? prodLoggerConfig : devLoggerConfig;
 }

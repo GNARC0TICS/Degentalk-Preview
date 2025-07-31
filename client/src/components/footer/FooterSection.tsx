@@ -12,8 +12,8 @@ interface FooterSectionProps {
 export function FooterSection({ title, links, animationDelay = 0 }: FooterSectionProps) {
 	return (
 		<div>
-			<h4 className="font-medium mb-3 text-zinc-300">{title}</h4>
-			<ul className="space-y-2 text-sm">
+			<h4 className="text-sm font-medium mb-3 text-zinc-300">{title}</h4>
+			<ul className="space-y-2 text-sm list-none">
 				{links.map((item, index) => (
 					<motion.li
 						key={item.label}

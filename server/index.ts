@@ -34,7 +34,7 @@ import { wsService } from './src/core/websocket/websocket.service';
 import { sentinelBot } from './src/domains/shoutbox/services/sentinel-bot.service';
 import { initEventNotificationListener } from './src/domains/notifications/event-notification-listener';
 import { runScheduledTasks } from './src/utils/task-scheduler';
-import './src/core/background-processor';
+// import './src/core/background-processor'; // Temporarily disabled for auth testing
 
 const port = process.env.PORT ? parseInt(process.env.PORT) : 5001;
 
@@ -90,7 +90,7 @@ async function bootstrap() {
 		});
 
 		// 9. Server listening handler
-		server.on('listening', () => {
+		server.on('listening', async () => {
 			const address = server.address();
 			logger.info('SERVER', `Backend API running on http://0.0.0.0:${port}`, address);
 

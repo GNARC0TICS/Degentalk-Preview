@@ -6,7 +6,8 @@ import express, { type Express, type Request, type Response } from 'express';
 import { db, pool } from './src/core/db';
 import connectPGSink from 'connect-pg-simple';
 const PGStore = connectPGSink(session);
-import { setupAuthPassport, authRoutes } from './src/domains/auth';
+import { authRoutes } from './src/domains/auth';
+import { luciaAuth } from './src/middleware/lucia-auth.middleware';
 import { registerAdminRoutes } from './src/domains/admin/admin.routes';
 import walletRoutes from './src/domains/wallet/routes/wallet.routes';
 import tipRoutes from './src/domains/engagement/tip/tip.routes';
@@ -44,15 +45,13 @@ import userInventoryRoutes from './src/routes/api/user/inventory';
 import notificationStubRoutes from './src/routes/api/notifications';
 // Path system deprecated - removed path-utils and path-config imports
 import { PlatformAnalyticsService } from './src/domains/analytics/services/platform.service';
-import { db } from './src/core/db';
 import { and, eq, sql } from 'drizzle-orm';
 import {
 	isAuthenticated,
 	isAuthenticatedOptional,
 	isAdminOrModerator,
 	isAdmin
-} from './src/domains/auth/middleware/auth.middleware';
-import passport from 'passport';
+} from './src/domains/auth';
 import session from 'express-session';
 import {
 	corsMiddleware,
@@ -255,27 +254,11 @@ export async function registerRoutes(app: Express): Promise<void> {
 	});
 
 
-	const sessionMiddleware = session({
-		store: new PGStore({
-			pool: pool,
-			tableName: 'user_sessions',
-			createTableIfMissing: true
-		}),
-		secret: process.env.SESSION_SECRET || 'supersecret',
-		resave: false,
-		saveUninitialized: false,
-		cookie: {
-			secure: process.env.NODE_ENV === 'production',
-			httpOnly: true,
-			maxAge: 1000 * 60 * 60 * 24 * 7 // 1 week
-		}
-	});
-
-	app.use(sessionMiddleware);
-	setupAuthPassport(app);
-
-	app.use(passport.initialize());
-	app.use(passport.session());
+	// Lucia auth middleware - validates sessions on every request
+	app.use(luciaAuth.validate);
+	
+	// Dev mode auth support
+	app.use(luciaAuth.devMode);
 
 	const apiRouter = express.Router();
 	// registerPathRoutes(apiRouter); // Commented out - evaluating if path SQL tables exist

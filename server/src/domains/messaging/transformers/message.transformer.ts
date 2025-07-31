@@ -19,7 +19,7 @@ import type {
 } from '../types';
 
 import type { MessageId, ConversationId, DgtAmount } from '@shared/types/ids';
-import { toDgtAmount } from '@shared/types';
+import { toDgtAmount } from '@shared/types/economy';
 
 import { UserTransformer } from '../../users/transformers/user.transformer';
 import { createHash } from 'crypto';

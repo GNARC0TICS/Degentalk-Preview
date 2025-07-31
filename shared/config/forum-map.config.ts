@@ -68,7 +68,7 @@ export type Forum = {
 };
 
 // Forum schema with recursive subforums - using simpler approach
-const ForumSchema = z.lazy(() => 
+const ForumSchema: z.ZodType<Forum> = z.lazy(() => 
 	z.object({
 		slug: z.string(),
 		name: z.string(),
@@ -602,28 +602,29 @@ export const getRegularForums = () => forumMap.forums.filter((f) => !f.isFeature
 
 // --- Validation ---
 
+// Helper function for validation
+function validateForumSlugs(forums: Forum[], parentPath: string, allSlugs: Set<string>) {
+	forums.forEach((forum) => {
+		const currentPath = `${parentPath} > ${forum.name} (${forum.slug})`;
+		if (allSlugs.has(forum.slug)) {
+			throw new Error(
+				`Duplicate forum slug detected: '${forum.slug}' at path: ${currentPath}. Slugs must be globally unique.`
+			);
+		}
+		allSlugs.add(forum.slug);
+
+		if (forum.forums && forum.forums.length > 0) {
+			validateForumSlugs(forum.forums, currentPath, allSlugs);
+		}
+	});
+}
+
 // Validate on module load
 try {
 	forumMapSchema.parse(forumMap);
 	
 	// Additional validation: ensure unique slugs
 	const allSlugs = new Set<string>();
-	
-	function validateForumSlugs(forums: Forum[], parentPath: string) {
-		forums.forEach((forum) => {
-			const currentPath = `${parentPath} > ${forum.name} (${forum.slug})`;
-			if (allSlugs.has(forum.slug)) {
-				throw new Error(
-					`Duplicate forum slug detected: '${forum.slug}' at path: ${currentPath}. Slugs must be globally unique.`
-				);
-			}
-			allSlugs.add(forum.slug);
-
-			if (forum.forums && forum.forums.length > 0) {
-				validateForumSlugs(forum.forums, currentPath);
-			}
-		});
-	}
 
 	forumMap.forums.forEach((rootForum) => {
 		const rootPath = `Forum: ${rootForum.name} (${rootForum.slug})`;
@@ -633,7 +634,7 @@ try {
 		allSlugs.add(rootForum.slug);
 
 		if (rootForum.forums && rootForum.forums.length > 0) {
-			validateForumSlugs(rootForum.forums, rootPath);
+			validateForumSlugs(rootForum.forums, rootPath, allSlugs);
 		}
 	});
 } catch (error) {

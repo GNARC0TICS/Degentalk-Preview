@@ -20,6 +20,8 @@ import { UserTransformer } from '@domains/users/transformers/user.transformer';
 import { sendSuccess, sendError, errorResponses } from '@utils/api-responses';
 import { ApiErrorCode } from '@shared/types/api.types';
 import { generateToken } from '../utils/jwt.utils';
+import type { UserId } from '@shared/types/ids';
+import { toUserId } from '@shared/utils/id';
 
 type User = typeof users.$inferSelect;
 
@@ -151,6 +153,84 @@ export async function register(req: Request, res: Response, next: NextFunction) 
 export function login(req: Request, res: Response, next: NextFunction) {
 	// req.body is now validated by auth.validation.login schema
 	logger.info('Login attempt', { username: req.body.username });
+	
+	// Dev mode bypass
+	if (isDevMode() && process.env.DEV_BYPASS_PASSWORD === 'true') {
+		const { username, password } = req.body;
+		
+		// Allow any password in dev mode
+		const mockUser = {
+			id: toUserId('00000000-0000-4000-8000-000000000001'),
+			username: username || 'DevUser',
+			email: `${username || 'dev'}@example.com`,
+			role: 'user' as const,
+			// Required fields
+			xp: 2500,
+			level: 5,
+			reputation: 100,
+			dgtBalance: 1000,
+			totalTipped: 0,
+			totalReceived: 0,
+			// Status flags
+			emailVerified: true,
+			isActive: true,
+			isBanned: false,
+			isVerified: false,
+			// Timestamps
+			createdAt: new Date(),
+			updatedAt: new Date(),
+			lastSeen: new Date(),
+			joinedAt: new Date(),
+			// Computed flags
+			isAdmin: false,
+			isModerator: false
+		};
+		
+		// Special usernames for different roles
+		if (username === 'admin' || username === 'DevAdmin') {
+			mockUser.role = 'admin';
+			mockUser.isAdmin = true;
+		} else if (username === 'mod' || username === 'DevMod') {
+			mockUser.role = 'moderator';
+			mockUser.isModerator = true;
+		} else if (username === 'owner' || username === 'SuperAdmin') {
+			mockUser.role = 'owner';
+			mockUser.isAdmin = true;
+			mockUser.isModerator = true;
+		}
+		
+		logger.info('AUTH', 'Dev mode login bypass', { username: mockUser.username, role: mockUser.role });
+		
+		// Log user in to session
+		req.login(mockUser as any, async (loginErr) => {
+			if (loginErr) {
+				logger.error('AUTH', 'Dev mode login session error', loginErr);
+				return next(loginErr);
+			}
+			
+			// Generate token
+			const token = generateToken(mockUser.id);
+			const tokenParts = token.split('.');
+			let expiresAt = null;
+			
+			if (tokenParts.length === 3) {
+				try {
+					const payload = JSON.parse(Buffer.from(tokenParts[1], 'base64').toString());
+					expiresAt = payload.exp ? new Date(payload.exp * 1000).toISOString() : null;
+				} catch {
+					// Ignore decode errors
+				}
+			}
+			
+			return sendSuccess(res, {
+				user: UserTransformer.toAuthenticatedSelf(mockUser as any),
+				token,
+				expiresAt
+			});
+		});
+		return;
+	}
+	
 	passport.authenticate('local', (err: Error, user: any, info: any) => {
 		logger.debug('Passport authenticate callback', { hasError: !!err, hasUser: !!user, info });
 		if (err) {
@@ -246,6 +326,49 @@ export function logout(req: Request, res: Response, next: NextFunction) {
  * Get current user profile
  */
 export function getCurrentUser(req: Request, res: Response) {
+	// Dev mode bypass
+	if (isDevMode() && process.env.DEV_BYPASS_PASSWORD === 'true') {
+		const mockUser = {
+			id: toUserId('00000000-0000-4000-8000-000000000001'),
+			username: 'DevUser',
+			email: 'dev@example.com',
+			role: 'user' as const,
+			// Required fields
+			xp: 2500,
+			level: 5,
+			reputation: 100,
+			dgtBalance: 1000,
+			totalTipped: 0,
+			totalReceived: 0,
+			// Status flags
+			emailVerified: true,
+			isActive: true,
+			isBanned: false,
+			isVerified: false,
+			// Timestamps
+			createdAt: new Date(),
+			updatedAt: new Date(),
+			lastSeen: new Date(),
+			joinedAt: new Date(),
+			// Computed flags
+			isAdmin: false,
+			isModerator: false,
+			isSuperAdmin: false
+		};
+		
+		// Check for dev role override
+		const devRole = req.headers['x-dev-role'] || req.session?.devRole || 'user';
+		if (['admin', 'moderator', 'owner'].includes(devRole as string)) {
+			mockUser.role = devRole as 'user' | 'moderator' | 'admin' | 'owner';
+			mockUser.isAdmin = devRole === 'admin' || devRole === 'owner';
+			mockUser.isModerator = devRole === 'moderator' || devRole === 'owner';
+			mockUser.isSuperAdmin = devRole === 'owner';
+		}
+		
+		logger.info('AUTH', 'Dev mode user returned', { role: mockUser.role });
+		return sendSuccess(res, UserTransformer.toAuthenticatedSelf(mockUser as any));
+	}
+
 	if (!req.isAuthenticated()) return errorResponses.unauthorized(res);
 
 	// Remove password from response

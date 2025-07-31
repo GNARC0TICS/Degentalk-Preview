@@ -8,14 +8,14 @@
 import { sendSuccess, sendError } from '@utils/api-responses';
 import { ApiErrorCode } from '@shared/types/api.types';
 
-export {
-  requireAuth as isAuthenticated,
-  requireAdmin as isAdmin,
-  requireModerator as isModerator,
-  requireModerator as isAdminOrModerator,
-  optionalAuth as isAuthenticatedOptional,
-  authenticate as requireAuth
-} from '@middleware/auth.unified';
+import { luciaAuth } from '@middleware/lucia-auth.middleware';
+
+export const isAuthenticated = luciaAuth.require;
+export const isAdmin = luciaAuth.requireAdmin;
+export const isModerator = luciaAuth.requireModerator;
+export const isAdminOrModerator = luciaAuth.requireAdminOrModerator;
+export const isAuthenticatedOptional = luciaAuth.optional;
+export const requireAuth = luciaAuth.require;
 
 // Additional domain-specific auth utilities can be added here if needed
 

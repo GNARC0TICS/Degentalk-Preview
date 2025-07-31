@@ -3,7 +3,7 @@ import { Router } from 'express'
 import type { Router as RouterType } from 'express';
 import type { EntityId } from '@shared/types/ids';
 import { FriendsService } from './friends.service';
-import { requireAuth } from '@middleware/auth';
+import { luciaAuth } from '@middleware/lucia-auth.middleware';
 import { z } from 'zod';
 import { logger } from '@core/logger';
 import { UserTransformer } from '@domains/users/transformers/user.transformer';
@@ -69,7 +69,7 @@ const searchUsersSchema = z.object({
  * POST /api/social/friends/request
  * Send a friend request
  */
-router.post('/request', requireAuth, async (req, res) => {
+router.post('/request', luciaAuth.require, async (req, res) => {
 	try {
 		const { userId: addresseeId, message } = sendRequestSchema.parse(req.body);
 		const requesterId = userService.getUserFromRequest(req)!.id;
@@ -96,7 +96,7 @@ router.post('/request', requireAuth, async (req, res) => {
  * POST /api/social/friends/requests/:requestId/respond
  * Respond to a friend request
  */
-router.post('/requests/:requestId/respond', requireAuth, async (req, res) => {
+router.post('/requests/:requestId/respond', luciaAuth.require, async (req, res) => {
 	try {
 		const requestId = req.params.requestId as EntityId;
 		const { response } = respondToRequestSchema.parse(req.body);
@@ -118,7 +118,7 @@ router.post('/requests/:requestId/respond', requireAuth, async (req, res) => {
  * DELETE /api/social/friends
  * Remove a friend
  */
-router.delete('/', requireAuth, async (req, res) => {
+router.delete('/', luciaAuth.require, async (req, res) => {
 	try {
 		const { userId: friendId } = removeFriendSchema.parse(req.body);
 		const userId = userService.getUserFromRequest(req)!.id;
@@ -140,7 +140,7 @@ router.delete('/', requireAuth, async (req, res) => {
  * GET /api/social/friends
  * Get user's friends list
  */
-router.get('/', requireAuth, async (req, res) => {
+router.get('/', luciaAuth.require, async (req, res) => {
 	try {
 		const { page, limit } = getPaginationSchema.parse(req.query);
 		const userId = userService.getUserFromRequest(req)!.id;
@@ -165,7 +165,7 @@ router.get('/', requireAuth, async (req, res) => {
  * GET /api/social/friends/requests/incoming
  * Get incoming friend requests
  */
-router.get('/requests/incoming', requireAuth, async (req, res) => {
+router.get('/requests/incoming', luciaAuth.require, async (req, res) => {
 	try {
 		const userId = userService.getUserFromRequest(req)!.id;
 		const requests = await FriendsService.getIncomingFriendRequests(userId);
@@ -181,7 +181,7 @@ router.get('/requests/incoming', requireAuth, async (req, res) => {
  * GET /api/social/friends/requests/outgoing
  * Get outgoing friend requests
  */
-router.get('/requests/outgoing', requireAuth, async (req, res) => {
+router.get('/requests/outgoing', luciaAuth.require, async (req, res) => {
 	try {
 		const userId = userService.getUserFromRequest(req)!.id;
 		const requests = await FriendsService.getOutgoingFriendRequests(userId);
@@ -197,7 +197,7 @@ router.get('/requests/outgoing', requireAuth, async (req, res) => {
  * GET /api/social/friends/counts
  * Get friend counts
  */
-router.get('/counts', requireAuth, async (req, res) => {
+router.get('/counts', luciaAuth.require, async (req, res) => {
 	try {
 		const userId = userService.getUserFromRequest(req)!.id;
 		const counts = await FriendsService.getFriendCounts(userId);
@@ -213,7 +213,7 @@ router.get('/counts', requireAuth, async (req, res) => {
  * GET /api/social/friends/check/:userId
  * Check friendship status with another user
  */
-router.get('/check/:userId', requireAuth, async (req, res) => {
+router.get('/check/:userId', luciaAuth.require, async (req, res) => {
 	try {
 		const friendId = req.params.userId;
 		const userId = userService.getUserFromRequest(req)!.id;
@@ -231,7 +231,7 @@ router.get('/check/:userId', requireAuth, async (req, res) => {
  * GET /api/social/friends/mutual/:userId
  * Get mutual friends with another user
  */
-router.get('/mutual/:userId', requireAuth, async (req, res) => {
+router.get('/mutual/:userId', luciaAuth.require, async (req, res) => {
 	try {
 		const otherUserId = req.params.userId;
 		const userId = userService.getUserFromRequest(req)!.id;
@@ -251,7 +251,7 @@ router.get('/mutual/:userId', requireAuth, async (req, res) => {
  * GET /api/social/friends/search
  * Search users for friend requests
  */
-router.get('/search', requireAuth, async (req, res) => {
+router.get('/search', luciaAuth.require, async (req, res) => {
 	try {
 		const { q, limit } = searchUsersSchema.parse(req.query);
 		const currentUserId = userService.getUserFromRequest(req)!.id;
@@ -269,7 +269,7 @@ router.get('/search', requireAuth, async (req, res) => {
  * GET /api/social/friends/preferences
  * Get user's friend preferences
  */
-router.get('/preferences', requireAuth, async (req, res) => {
+router.get('/preferences', luciaAuth.require, async (req, res) => {
 	try {
 		const userId = userService.getUserFromRequest(req)!.id;
 		const preferences = await FriendsService.getUserFriendPreferences(userId);
@@ -285,7 +285,7 @@ router.get('/preferences', requireAuth, async (req, res) => {
  * PUT /api/social/friends/preferences
  * Update user's friend preferences
  */
-router.put('/preferences', requireAuth, async (req, res) => {
+router.put('/preferences', luciaAuth.require, async (req, res) => {
 	try {
 		const preferences = updatePreferencesSchema.parse(req.body);
 		const userId = userService.getUserFromRequest(req)!.id;
@@ -303,7 +303,7 @@ router.put('/preferences', requireAuth, async (req, res) => {
  * PUT /api/social/friends/:userId/permissions
  * Update permissions for a specific friendship
  */
-router.put('/:userId/permissions', requireAuth, async (req, res) => {
+router.put('/:userId/permissions', luciaAuth.require, async (req, res) => {
 	try {
 		const friendId = req.params.userId;
 		const userId = userService.getUserFromRequest(req)!.id;
@@ -326,7 +326,7 @@ router.put('/:userId/permissions', requireAuth, async (req, res) => {
  * GET /api/social/friends/whisper-permission/:userId
  * Check if user can send whisper to another user
  */
-router.get('/whisper-permission/:userId', requireAuth, async (req, res) => {
+router.get('/whisper-permission/:userId', luciaAuth.require, async (req, res) => {
 	try {
 		const recipientId = req.params.userId;
 		const senderId = userService.getUserFromRequest(req)!.id;

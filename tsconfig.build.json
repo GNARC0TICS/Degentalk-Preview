@@ -1,0 +1,26 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    // Production build optimizations
+    "incremental": false,
+    "tsBuildInfoFile": null,
+    
+    // Strip development helpers
+    "removeComments": true,
+    "sourceMap": false,
+    "declarationMap": false,
+    
+    // Optimize output
+    "noEmitOnError": true,
+    "preserveConstEnums": false,
+    
+    // Skip unused checks in production
+    "noUnusedLocals": false,
+    "noUnusedParameters": false
+  },
+  "references": [
+    { "path": "./shared/tsconfig.build.json" },
+    { "path": "./db/tsconfig.build.json" },
+    { "path": "./server/tsconfig.build.json" }
+  ]
+}

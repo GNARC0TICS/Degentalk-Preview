@@ -7,7 +7,7 @@ import { userPromotionRoutes } from './user-promotion.routes';
 import { logger } from '@core/logger';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 import { getUser } from '@core/utils/auth.helpers';
-import { authenticate, requireAdmin } from '@middleware/auth';
+import { luciaAuth } from '@middleware/lucia-auth.middleware';
 import { rateLimiters } from '@core/services/rate-limit.service';
 
 const router: RouterType = Router();
@@ -64,31 +64,31 @@ router.get('/config', adController.getPublicConfig.bind(adController));
  * Create campaign
  * POST /api/ads/campaigns
  */
-router.post('/campaigns', authenticate, adController.createCampaign.bind(adController));
+router.post('/campaigns', luciaAuth.require, adController.createCampaign.bind(adController));
 
 /**
  * List user's campaigns
  * GET /api/ads/campaigns
  */
-router.get('/campaigns', authenticate, adController.listCampaigns.bind(adController));
+router.get('/campaigns', luciaAuth.require, adController.listCampaigns.bind(adController));
 
 /**
  * Get campaign details
  * GET /api/ads/campaigns/:campaignId
  */
-router.get('/campaigns/:campaignId', authenticate, adController.getCampaign.bind(adController));
+router.get('/campaigns/:campaignId', luciaAuth.require, adController.getCampaign.bind(adController));
 
 /**
  * Update campaign
  * PUT /api/ads/campaigns/:campaignId
  */
-router.put('/campaigns/:campaignId', authenticate, adController.updateCampaign.bind(adController));
+router.put('/campaigns/:campaignId', luciaAuth.require, adController.updateCampaign.bind(adController));
 
 /**
  * Delete campaign
  * DELETE /api/ads/campaigns/:campaignId
  */
-router.delete('/campaigns/:campaignId', authenticate, adController.deleteCampaign.bind(adController));
+router.delete('/campaigns/:campaignId', luciaAuth.require, adController.deleteCampaign.bind(adController));
 
 /**
  * Get campaign analytics
@@ -96,7 +96,7 @@ router.delete('/campaigns/:campaignId', authenticate, adController.deleteCampaig
  */
 router.get(
 	'/campaigns/:campaignId/analytics',
-	authenticate,
+	luciaAuth.require,
 	adController.getCampaignAnalytics.bind(adController)
 );
 
@@ -106,7 +106,7 @@ router.get(
  */
 router.get(
 	'/campaigns/:campaignId/bid-recommendations',
-	authenticate,
+	luciaAuth.require,
 	adController.getBidRecommendations.bind(adController)
 );
 
@@ -114,7 +114,7 @@ router.get(
  * Optimize campaign automatically
  * POST /api/ads/campaigns/:campaignId/optimize
  */
-router.post('/campaigns/:campaignId/optimize', authenticate, adController.optimizeCampaign.bind(adController));
+router.post('/campaigns/:campaignId/optimize', luciaAuth.require, adController.optimizeCampaign.bind(adController));
 
 // ============================================================================
 // GOVERNANCE ROUTES (PUBLIC VOTING)
@@ -124,7 +124,7 @@ router.post('/campaigns/:campaignId/optimize', authenticate, adController.optimi
  * Vote on governance proposal
  * POST /api/ads/governance/proposals/:proposalId/vote
  */
-router.post('/governance/proposals/:proposalId/vote', authenticate, async (req, res) => {
+router.post('/governance/proposals/:proposalId/vote', luciaAuth.require, async (req, res) => {
 	try {
 		const { proposalId } = req.params;
 		const { vote, reason } = req.body;
@@ -153,19 +153,19 @@ router.post('/governance/proposals/:proposalId/vote', authenticate, async (req, 
  * Get system configuration (admin)
  * GET /api/ads/admin/config
  */
-router.get('/admin/config', rateLimiters.admin, requireAdmin, adAdminController.getSystemConfiguration.bind(adAdminController));
+router.get('/admin/config', rateLimiters.admin, luciaAuth.requireAdmin, adAdminController.getSystemConfiguration.bind(adAdminController));
 
 /**
  * Update system configuration (admin)
  * PUT /api/ads/admin/config
  */
-router.put('/admin/config', rateLimiters.admin, requireAdmin, adAdminController.updateSystemConfiguration.bind(adAdminController));
+router.put('/admin/config', rateLimiters.admin, luciaAuth.requireAdmin, adAdminController.updateSystemConfiguration.bind(adAdminController));
 
 /**
  * Create ad placement (admin)
  * POST /api/ads/admin/placements
  */
-router.post('/admin/placements', rateLimiters.admin, requireAdmin, adAdminController.createPlacement.bind(adAdminController));
+router.post('/admin/placements', rateLimiters.admin, luciaAuth.requireAdmin, adAdminController.createPlacement.bind(adAdminController));
 
 /**
  * Update ad placement (admin)
@@ -174,7 +174,7 @@ router.post('/admin/placements', rateLimiters.admin, requireAdmin, adAdminContro
 router.put(
 	'/admin/placements/:placementId',
 	rateLimiters.admin,
-	requireAdmin,
+	luciaAuth.requireAdmin,
 	adAdminController.updatePlacement.bind(adAdminController)
 );
 
@@ -185,7 +185,7 @@ router.put(
 router.delete(
 	'/admin/placements/:placementId',
 	rateLimiters.admin,
-	requireAdmin,
+	luciaAuth.requireAdmin,
 	adAdminController.deletePlacement.bind(adAdminController)
 );
 
@@ -193,37 +193,37 @@ router.delete(
  * List all placements with analytics (admin)
  * GET /api/ads/admin/placements
  */
-router.get('/admin/placements', rateLimiters.admin, requireAdmin, adAdminController.listAllPlacements.bind(adAdminController));
+router.get('/admin/placements', rateLimiters.admin, luciaAuth.requireAdmin, adAdminController.listAllPlacements.bind(adAdminController));
 
 /**
  * Create global rule (admin)
  * POST /api/ads/admin/rules
  */
-router.post('/admin/rules', rateLimiters.admin, requireAdmin, adAdminController.createGlobalRule.bind(adAdminController));
+router.post('/admin/rules', rateLimiters.admin, luciaAuth.requireAdmin, adAdminController.createGlobalRule.bind(adAdminController));
 
 /**
  * Update global rule (admin)
  * PUT /api/ads/admin/rules/:ruleId
  */
-router.put('/admin/rules/:ruleId', rateLimiters.admin, requireAdmin, adAdminController.updateGlobalRule.bind(adAdminController));
+router.put('/admin/rules/:ruleId', rateLimiters.admin, luciaAuth.requireAdmin, adAdminController.updateGlobalRule.bind(adAdminController));
 
 /**
  * List global rules (admin)
  * GET /api/ads/admin/rules
  */
-router.get('/admin/rules', rateLimiters.admin, requireAdmin, adAdminController.listGlobalRules.bind(adAdminController));
+router.get('/admin/rules', rateLimiters.admin, luciaAuth.requireAdmin, adAdminController.listGlobalRules.bind(adAdminController));
 
 /**
  * Get platform analytics (admin)
  * GET /api/ads/admin/analytics
  */
-router.get('/admin/analytics', rateLimiters.admin, requireAdmin, adAdminController.getPlatformAnalytics.bind(adAdminController));
+router.get('/admin/analytics', rateLimiters.admin, luciaAuth.requireAdmin, adAdminController.getPlatformAnalytics.bind(adAdminController));
 
 /**
  * Get all campaigns (admin)
  * GET /api/ads/admin/campaigns
  */
-router.get('/admin/campaigns', rateLimiters.admin, requireAdmin, adAdminController.getAllCampaigns.bind(adAdminController));
+router.get('/admin/campaigns', rateLimiters.admin, luciaAuth.requireAdmin, adAdminController.getAllCampaigns.bind(adAdminController));
 
 /**
  * Review campaign (admin)
@@ -232,7 +232,7 @@ router.get('/admin/campaigns', rateLimiters.admin, requireAdmin, adAdminControll
 router.post(
 	'/admin/campaigns/:campaignId/review',
 	rateLimiters.admin,
-	requireAdmin,
+	luciaAuth.requireAdmin,
 	adAdminController.reviewCampaign.bind(adAdminController)
 );
 
@@ -243,7 +243,7 @@ router.post(
 router.post(
 	'/admin/governance/proposals',
 	rateLimiters.admin,
-	requireAdmin,
+	luciaAuth.requireAdmin,
 	adAdminController.createGovernanceProposal.bind(adAdminController)
 );
 
@@ -254,7 +254,7 @@ router.post(
 router.post(
 	'/admin/governance/proposals/:proposalId/execute',
 	rateLimiters.admin,
-	requireAdmin,
+	luciaAuth.requireAdmin,
 	adAdminController.executeGovernanceProposal.bind(adAdminController)
 );
 
@@ -262,19 +262,19 @@ router.post(
  * Get fraud alerts (admin)
  * GET /api/ads/admin/fraud/alerts
  */
-router.get('/admin/fraud/alerts', rateLimiters.admin, requireAdmin, adAdminController.getFraudAlerts.bind(adAdminController));
+router.get('/admin/fraud/alerts', rateLimiters.admin, luciaAuth.requireAdmin, adAdminController.getFraudAlerts.bind(adAdminController));
 
 /**
  * Get revenue report (admin)
  * GET /api/ads/admin/reports/revenue
  */
-router.get('/admin/reports/revenue', rateLimiters.admin, requireAdmin, adAdminController.getRevenueReport.bind(adAdminController));
+router.get('/admin/reports/revenue', rateLimiters.admin, luciaAuth.requireAdmin, adAdminController.getRevenueReport.bind(adAdminController));
 
 /**
  * Export analytics (admin)
  * GET /api/ads/admin/export
  */
-router.get('/admin/export', rateLimiters.admin, requireAdmin, adAdminController.exportAnalytics.bind(adAdminController));
+router.get('/admin/export', rateLimiters.admin, luciaAuth.requireAdmin, adAdminController.exportAnalytics.bind(adAdminController));
 
 // ============================================================================
 // MIDDLEWARE FOR RATE LIMITING AND AUTHENTICATION

@@ -3,7 +3,7 @@ import { Outlet } from 'react-router-dom';
 import { SiteHeader, HeaderProvider } from '@/components/header';
 import { SiteFooter } from '@/components/footer';
 import { AuthRedirectHandler } from '@/components/auth/AuthRedirectHandler';
-import { useTheme } from '@/hooks/use-theme';
+import { useTheme } from '@/hooks/useTheme';
 
 /**
  * Root Layout - Main application shell

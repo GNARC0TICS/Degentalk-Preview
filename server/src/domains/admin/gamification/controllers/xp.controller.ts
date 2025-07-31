@@ -9,7 +9,7 @@ import { eq, desc } from 'drizzle-orm';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 import { z } from 'zod';
 import type { UserId } from '@shared/types/ids';
-import { toId } from '@shared/types';
+import { toId } from '@shared/utils/id';
 
 // Zod schemas for validation
 const CreateLevelSchema = z.object({

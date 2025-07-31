@@ -16,7 +16,7 @@ import { xpActionLogs } from './xp-actions-schema';
 import { desc, eq, and, gte, sql } from 'drizzle-orm';
 import { xpActionSettings, users, xpAdjustmentLogs, levels } from '@schema'; // Adjusted path
 import { handleXpAward } from './events/xp.events'; // Assuming this handles level ups and logging
-import { isValidId } from '@shared/types';
+import { isValidId } from '@shared/utils/id';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 // import { z } from 'zod'; // Removed as unused
 // import { x } from 'drizzle-orm/select-builder/select'; // Removed as unused
@@ -70,6 +70,32 @@ export const awardXpForAction = async (req: Request, res: Response, next: NextFu
 		);
 		if (error.message && error.message.includes('not found')) {
 			// This check might need adjustment if error is not Error instance
+			return sendErrorResponse(res, error.message, 404);
+		}
+		next(error);
+	}
+};
+
+/**
+ * Get current user's XP info
+ */
+export const getCurrentUserXpInfo = async (req: Request, res: Response, next: NextFunction) => {
+	try {
+		const user = userService.getUserFromRequest(req);
+		
+		if (!user || !isValidId(user.id)) {
+			return sendErrorResponse(res, 'User not authenticated', 401);
+		}
+
+		const xpInfo = await xpService.getUserXpInfo(user.id);
+
+		sendSuccessResponse(res, xpInfo);
+	} catch (error: any) {
+		logger.error(
+			'Error getting current user XP info:',
+			error instanceof Error ? error.message : String(error)
+		);
+		if (error.message && error.message.includes('not found')) {
 			return sendErrorResponse(res, error.message, 404);
 		}
 		next(error);

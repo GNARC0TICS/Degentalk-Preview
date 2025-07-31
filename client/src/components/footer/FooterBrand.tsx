@@ -9,7 +9,7 @@ export function FooterBrand({ className }: FooterBrandProps) {
 	return (
 		<div className={className}>
 			<motion.h3
-				className="text-lg font-bold mb-4 text-white"
+				className="text-xl font-bold mb-4 text-white"
 				whileHover={{ scale: 1.05 }}
 				transition={{ type: 'spring', stiffness: 400 }}
 			>

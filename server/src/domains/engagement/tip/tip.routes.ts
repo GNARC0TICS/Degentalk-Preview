@@ -9,8 +9,9 @@
 import express from 'express'
 import type { Router as RouterType } from 'express';
 import { tipController } from './tip.controller';
-import { authenticateJWT as requireAuth } from '@middleware/authenticate-jwt';
-import { isAdmin as requireAdmin } from '@domains/auth/middleware/auth.middleware';
+import { luciaAuth } from '@middleware/lucia-auth.middleware';
+const requireAuth = luciaAuth.require;
+const requireAdmin = luciaAuth.requireAdmin;
 import { validateRequest } from '@middleware/validate-request';
 import { z } from 'zod';
 
@@ -50,7 +51,7 @@ router.get('/settings', tipController.getTipSettings);
 // PATCH /api/engagement/tip/settings - Update tip settings (admin only)
 router.patch(
 	'/settings',
-	requireAdmin,
+	luciaAuth.requireAdmin,
 	validateRequest(tipSettingsSchema),
 	tipController.updateTipSettings
 );

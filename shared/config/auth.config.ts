@@ -182,11 +182,13 @@ export const authConfig = {
 				minLevel: 50,
 				minDGTBalance: 100000,
 				requiresInvite: false,
+				requiredRoles: undefined,
 			},
 			'high-stakes': {
 				minLevel: 20,
 				minDGTBalance: 10000,
 				requiresInvite: false,
+				requiredRoles: undefined,
 			},
 			'mod-lounge': {
 				minLevel: 1,
@@ -264,14 +266,14 @@ export type AuthScope =
 
 // Helper functions for client
 export const getRateLimitForEndpoint = (endpoint: string) => {
-	return authConfig.rateLimit.endpointOverrides[endpoint] || {
+	return authConfig.rateLimit.endpointOverrides[endpoint as keyof typeof authConfig.rateLimit.endpointOverrides] || {
 		maxRequests: authConfig.rateLimit.maxRequests,
 		windowMs: authConfig.rateLimit.windowMs,
 	};
 };
 
 export const getRateLimitForForum = (forumSlug: string) => {
-	return authConfig.rateLimit.forumOverrides[forumSlug] || {
+	return authConfig.rateLimit.forumOverrides[forumSlug as keyof typeof authConfig.rateLimit.forumOverrides] || {
 		maxRequests: authConfig.rateLimit.maxRequests,
 		windowMs: authConfig.rateLimit.windowMs,
 	};
@@ -283,7 +285,7 @@ export const canUserAccessForum = (
 	userRoles: UserRole[],
 	forumSlug: string
 ): { allowed: boolean; reason?: string } => {
-	const restrictions = authConfig.forumAuth.restrictedForums[forumSlug];
+	const restrictions = authConfig.forumAuth.restrictedForums[forumSlug as keyof typeof authConfig.forumAuth.restrictedForums];
 	if (!restrictions) return { allowed: true };
 
 	if (userLevel < restrictions.minLevel) {
@@ -294,7 +296,7 @@ export const canUserAccessForum = (
 		return { allowed: false, reason: `${restrictions.minDGTBalance} DGT required` };
 	}
 
-	if (restrictions.requiredRoles && !restrictions.requiredRoles.some(role => userRoles.includes(role))) {
+	if (restrictions.requiredRoles && !restrictions.requiredRoles.some((role: UserRole) => userRoles.includes(role))) {
 		return { allowed: false, reason: 'Insufficient permissions' };
 	}
 

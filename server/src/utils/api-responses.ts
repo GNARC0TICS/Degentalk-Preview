@@ -8,9 +8,9 @@ import type {
   ApiResponse, 
   ApiSuccess, 
   ApiError, 
-  ApiErrorCode,
   PaginationMeta 
 } from '@shared/types/api.types';
+import { ApiErrorCode } from '@shared/types/api.types';
 
 /**
  * Create a successful API response

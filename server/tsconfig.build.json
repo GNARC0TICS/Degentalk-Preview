@@ -1,34 +1,23 @@
 {
 	"extends": "./tsconfig.json",
 	"compilerOptions": {
-		"rootDir": ".",
-		"outDir": "./dist",
+		// Production build optimizations
+		"incremental": false,
+		"tsBuildInfoFile": null,
+		"removeComments": true,
+		"sourceMap": false,
+		"declarationMap": false,
+		
+		// Ensure we emit for production
 		"noEmit": false,
 		"declaration": true,
-		"declarationMap": true,
-		"sourceMap": true,
-		"composite": true,
-		"tsBuildInfoFile": "./dist/.tsbuildinfo",
-		"allowImportingTsExtensions": false,
-		"module": "ES2022",
-		"moduleResolution": "bundler",
-		"skipLibCheck": true,
-		"strict": false,
-		"noImplicitAny": false
+		"outDir": "./dist",
+		
+		// Production doesn't support .ts extensions
+		"allowImportingTsExtensions": false
 	},
-	"include": [
-		"src/**/*.ts",
-		"lib/**/*.ts"
-	],
-	"exclude": [
-		"node_modules",
-		"dist",
-		"**/*.test.ts",
-		"**/*.spec.ts",
-		"src/test/**/*"
-	],
 	"references": [
-		{ "path": "../db/tsconfig.build.json" },
-		{ "path": "../shared/tsconfig.json" }
+		{ "path": "../shared/tsconfig.build.json" },
+		{ "path": "../db/tsconfig.build.json" }
 	]
 }

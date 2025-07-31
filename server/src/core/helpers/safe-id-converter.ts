@@ -11,22 +11,8 @@
  * - Maintain type safety with branded IDs
  */
 
-import { 
-	isValidId,
-	toId,
-	toUserId as _toUserId,
-	toThreadId as _toThreadId,
-	toPostId as _toPostId,
-	toForumId as _toForumId,
-	toWalletId as _toWalletId,
-	toTransactionId as _toTransactionId,
-	toItemId as _toItemId,
-	toFrameId as _toFrameId,
-	toBadgeId as _toBadgeId,
-	toTitleId as _toTitleId,
-	toMessageId as _toMessageId,
-	toConversationId as _toConversationId
-} from '@shared/types';
+import { isValidId, toId } from '@shared/utils/id';
+import { toUserId as _toUserId, toThreadId as _toThreadId, toPostId as _toPostId, toForumId as _toForumId, toWalletId as _toWalletId, toTransactionId as _toTransactionId, toItemId as _toItemId, toFrameId as _toFrameId, toBadgeId as _toBadgeId, toTitleId as _toTitleId, toMessageId as _toMessageId, toConversationId as _toConversationId } from '@shared/types';
 import type {
 	UserId,
 	ThreadId,

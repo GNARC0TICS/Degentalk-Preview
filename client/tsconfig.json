@@ -1,38 +1,50 @@
 {
-	"extends": "../tsconfig.base.json",
-	"compilerOptions": {
-		"outDir": "dist",
-		"skipLibCheck": true,
-
-		"module": "ESNext",
-		"moduleResolution": "bundler",
-		"jsx": "react-jsx",
-		"baseUrl": ".",
-		"composite": true,
-		"paths": {
-			"@/*": ["src/*"],
-			// OLD paths (temporary - for transition)
-			"@config/*": ["src/config/*"],
-			"@config/forumMap": ["../shared/config/forum-map.config.ts"],
-			"@config/forumEconomy": ["../shared/config/forum-economy.config.ts"],
-			"@shared/*": ["../shared/*"],
-			"@shared/types/ids": ["../shared/types/ids.ts"],
-			"@shared/types/index": ["../shared/types/index.ts"],
-			"@shared/types/entities": ["../shared/types/entities/index.ts"],
-			"@shared/config/zoneThemes.config": ["../shared/config/zoneThemes.config.ts"],
-			"@shared/utils/id": ["../shared/utils/id.ts"],
-			"@assets/*": ["../attached_assets/*"],
-			"@db": ["../db/index.ts"],
-			"@db_types/*": ["../db/types/*"],
-			"@schema": ["../db/schema/index.ts"],
-			"@schema/*": ["../db/schema/*"]
-		},
-		"allowImportingTsExtensions": true,
-		"emitDeclarationOnly": true
-	},
-	"include": ["src"],
-	"exclude": ["../shared/**/*", "../db/**/*", "../server/**/*"],
-	"references": [
-		{ "path": "../shared" }
-	]
+  "extends": [
+    "../tsconfig.base.json",
+    "../tsconfig.paths.json"
+  ],
+  "compilerOptions": {
+    "composite": true,
+    "incremental": true,
+    "tsBuildInfoFile": "./.tscache/client.tsbuildinfo",
+    "declaration": true,
+    "declarationMap": true,
+    "emitDeclarationOnly": true,
+    "outDir": "./dist",
+    "jsx": "react-jsx",
+    "lib": [
+      "ES2022",
+      "DOM",
+      "DOM.Iterable"
+    ],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "types": [
+      "node",
+      "vite/client"
+    ],
+  },
+  "include": [
+    "src/**/*",
+    "src/**/*.tsx",
+    "src/**/*.ts",
+    "src/**/*.jsx",
+    "src/**/*.js"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "build",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "**/*.spec.ts",
+    "**/*.spec.tsx",
+    ".tscache"
+  ],
+  "references": [
+    {
+      "path": "../shared/tsconfig.json"
+    }
+  ]
 }

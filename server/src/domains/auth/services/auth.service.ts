@@ -1,5 +1,6 @@
 import { userService } from '@core/services/user.service';
 import type { UserId } from '@shared/types/ids';
+import { toUserId } from '@shared/utils/id';
 import { scrypt, randomBytes, timingSafeEqual } from 'crypto';
 import { promisify } from 'util';
 import { featureFlags, users } from '@db/schema';
@@ -114,7 +115,7 @@ export async function verifyEmailToken(token: string): Promise<{ userId: UserId 
 
 		// For demo purposes, we're returning a fake userId
 		// In production, you would query the actual token from the database
-		return { userId: '1' as UserId }; // Return userId if token is valid
+		return { userId: toUserId('00000000-0000-4000-8000-000000000001') }; // Return userId if token is valid
 	} catch (error) {
 		// Report error but don't throw - invalid token is expected behavior
 		await reportError(error, 'verifyEmailToken', {

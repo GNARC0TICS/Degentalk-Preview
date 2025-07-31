@@ -1,72 +1,26 @@
 {
+	"extends": ["./tsconfig.base.json", "./tsconfig.paths.json"],
 	"compilerOptions": {
+		// Root orchestrator specific settings
+		"composite": true,
 		"incremental": true,
 		"tsBuildInfoFile": "./.tscache/root.tsbuildinfo",
 		"noEmit": true,
+		
+		// Override module settings for root
 		"module": "ESNext",
-		"target": "ES2022",
-		"lib": ["esnext", "dom", "dom.iterable"],
-		"jsx": "react-jsx",
 		"moduleResolution": "bundler",
-		"resolveJsonModule": true,
-		"esModuleInterop": true,
-		"allowSyntheticDefaultImports": true,
-		"skipLibCheck": true,
-		"strict": true,
-		"noImplicitAny": true,
-		"strictNullChecks": true,
-		"strictFunctionTypes": true,
-		"noImplicitReturns": true,
-		"noImplicitThis": true,
-		"noUncheckedIndexedAccess": true,
-		"exactOptionalPropertyTypes": false, // TODO: Re-enable after fixing undefined handling in components
-		"forceConsistentCasingInFileNames": true,
-		"allowImportingTsExtensions": true,
-		"verbatimModuleSyntax": false,
-		"types": ["node"],
-		"isolatedModules": true,
-		"baseUrl": ".",
-		"paths": {
-			"@/*": ["client/src/*"],
-			"@admin/*": ["client/src/features/admin/*"],
-			"@server/*": ["server/src/*"],
-			"@db": ["db/index.ts"],
-			"@schema": ["db/schema/index.ts"],
-			"@shared/*": ["shared/*"],
-			"@utils/*": ["client/src/utils/*"],
-			"@db/*": ["db/*"],
-			"@schema/*": ["db/schema/*"]
-		},
-		"composite": true
+		
+		// Root-level type imports
+		"types": ["node"]
 	},
-	"exclude": [
-		"node_modules",
-		"tests",
-		"test",
-		"dist",
-		"tmp",
-		"eslint-plugins",
-		"eslint-rules",
-		".*",
-		"**/*.config.js",
-		"**/*.config.ts",
-		"**/*.cjs"
-	],
+	"files": [],
+	"include": [],
 	"references": [
-		{
-			"path": "./client"
-		},
-		{
-			"path": "./server"
-		},
-		{
-			"path": "./shared"
-		},
-		{
-			"path": "./db"
-		},
-		{
-			"path": "./scripts"
-		}
+		{ "path": "./shared/tsconfig.json" },
+		{ "path": "./db/tsconfig.json" },
+		{ "path": "./server/tsconfig.json" },
+		{ "path": "./client/tsconfig.json" },
+		{ "path": "./scripts/tsconfig.json" }
 	]
 }

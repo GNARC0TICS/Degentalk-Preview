@@ -2,7 +2,7 @@ import { userService } from '@core/services/user.service';
 import type { Request, Response, NextFunction } from 'express';
 import { logger, LogLevel } from '@core/logger';
 import { featureGatesService } from './feature-gates.service';
-import { isValidId, toId } from '@shared/types';
+import { isValidId, toId } from '@shared/utils/id';
 import type { UserId } from '@shared/types/ids';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 

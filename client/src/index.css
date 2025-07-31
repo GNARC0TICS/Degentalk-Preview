@@ -694,7 +694,7 @@ button {
 }
 
 /* App-level motion toggle via MotionContext */
-body.no-motion *:not(.announcement-ticker-content),
+body.no-motion *:not(.announcement-ticker-content):not(.hero-cta-button):not(.hero-cta-button *):not(.browse-topics-shimmer):not(.browse-topics-shimmer *),
 body.no-motion *::before,
 body.no-motion *::after {
 	animation: none !important;
@@ -702,9 +702,18 @@ body.no-motion *::after {
 	scroll-behavior: auto !important;
 }
 
-/* EXCEPTION: Announcement ticker always animates */
+/* EXCEPTIONS: Elements that always animate */
 body.no-motion .announcement-ticker-content {
 	animation: ticker-scroll 25s linear infinite !important;
+}
+
+/* Hero CTA animations preserved */
+body.no-motion .hero-cta-button,
+body.no-motion .hero-cta-button *,
+body.no-motion .browse-topics-shimmer,
+body.no-motion .browse-topics-shimmer * {
+	animation: unset !important;
+	transition: unset !important;
 }
 
 @layer components {

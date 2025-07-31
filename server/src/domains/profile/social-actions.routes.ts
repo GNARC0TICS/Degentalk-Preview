@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import type { Router as RouterType } from 'express';
 import { SocialActionsController } from './social-actions.controller';
-import { requireAuth } from '@middleware/auth.unified';
+import { luciaAuth } from '@middleware/lucia-auth.middleware';
 import { createCustomRateLimiter } from '@core/services/rate-limit.service';
 
 const router: RouterType = Router();
