@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import gsap from 'gsap';
 import { NavLink } from './NavLink';
+import { ForumNavButton } from './ForumNavButton';
 import { primaryNavigation, filterNavItems } from '@/config/navigation';
 import { useHeader } from './HeaderContext';
 
@@ -144,6 +145,28 @@ export function PrimaryNav({ className }: PrimaryNavProps) {
 				const viewBoxWidth = isLeaderboard ? 100 : 70;
 				const defaultPath = isLeaderboard ? 'M5 10Q50 12 95 10' : 'M5 10Q35 12 65 10';
 				
+				// Special handling for Forum button
+				if (item.label === 'Forum') {
+					return (
+						<div key={item.label} className="relative">
+							<ForumNavButton
+								isActive={isActive}
+								onMouseEnter={() => handleMouseEnter(index)}
+								onMouseLeave={() => handleMouseLeave(index)}
+								navPath={navPaths[index]}
+								defaultPath={defaultPath}
+								navRef={(el) => {
+									if (navRefs.current) {
+										navRefs.current[index] = el;
+									}
+								}}
+							>
+								{item.label}
+							</ForumNavButton>
+						</div>
+					);
+				}
+
 				return (
 					<NavLink
 						key={item.label}

@@ -180,3 +180,9 @@
 .tracking-balanced {
   letter-spacing: -0.01em;
 }
+
+/* Handwritten font style for annotations */
+.font-handwritten {
+  font-family: 'Kalam', 'Permanent Marker', 'Caveat', cursive;
+  letter-spacing: 0.05em;
+}
