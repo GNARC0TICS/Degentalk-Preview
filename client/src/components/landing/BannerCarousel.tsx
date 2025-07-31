@@ -18,25 +18,11 @@ export function BannerCarousel() {
   // Banner data with custom WebP images
   const banners = [
     {
-      title: "Community Hub",
-      description: "Connect with fellow degens and build your network",
-      image: "/banners/Community.webp",
-      color: "from-purple-600/20 to-pink-600/20",
-      stats: { users: 2420, threads: 869, trending: true }
-    },
-    {
       title: "Rain Events",
       description: "Catch the crypto rain and share the wealth",
       image: "/banners/RainEvents.png.webp",
       color: "from-blue-600/20 to-cyan-600/20",
       stats: { users: 1337, threads: 420, trending: true }
-    },
-    {
-      title: "Degen Shop",
-      description: "Exclusive gear and cosmetics for true degens",
-      image: "/banners/Shop1.webp",
-      color: "from-yellow-600/20 to-orange-600/20",
-      stats: { users: 888, threads: 234 }
     },
     {
       title: "Premium Shop",
