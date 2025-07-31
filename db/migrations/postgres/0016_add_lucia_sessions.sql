@@ -17,9 +17,7 @@ CREATE INDEX IF NOT EXISTS idx_user_sessions_expires_at ON user_session(expires_
 CREATE INDEX IF NOT EXISTS idx_user_sessions_device_id ON user_session(device_id);
 
 -- Create index for session cleanup
-CREATE INDEX IF NOT EXISTS idx_user_sessions_expires_at_partial 
-    ON user_session(expires_at) 
-    WHERE expires_at < CURRENT_TIMESTAMP;
+-- Note: Removed partial index as CURRENT_TIMESTAMP is not immutable
 
 -- Add comment to table
 COMMENT ON TABLE user_session IS 'Lucia Auth session storage';

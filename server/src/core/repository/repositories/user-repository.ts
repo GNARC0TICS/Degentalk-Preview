@@ -159,7 +159,7 @@ export class UserRepository extends BaseRepository<User> implements IUserReposit
 					isVerified: users.isVerified,
 					createdAt: users.createdAt,
 					updatedAt: users.updatedAt,
-					lastLoginAt: users.lastLoginAt,
+					lastLoginAt: users.lastLogin,
 					lastActiveAt: users.lastActiveAt,
 					isOnline: users.isOnline,
 					bio: users.bio,

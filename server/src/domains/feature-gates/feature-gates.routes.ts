@@ -1,6 +1,8 @@
 import { Router } from 'express'
 import type { Router as RouterType } from 'express';
-import { isAuthenticated, isAdmin } from '@domains/auth/middleware/auth.middleware';
+import { luciaAuth } from '@middleware/lucia-auth.middleware';
+const isAuthenticated = luciaAuth.require;
+const isAdmin = luciaAuth.requireAdmin;
 import * as featureGatesController from './feature-gates.controller';
 
 const router: RouterType = Router();

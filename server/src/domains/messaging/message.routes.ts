@@ -13,11 +13,10 @@ import { db } from '@degentalk/db';
 import { eq } from 'drizzle-orm';
 import { users } from '@schema';
 import { getUserIdFromRequest } from '@core/utils/auth.helpers';
-import {
-	isAuthenticated,
-	isAdminOrModerator,
-	isAdmin
-} from '@domains/auth/middleware/auth.middleware';
+import { luciaAuth } from '@middleware/lucia-auth.middleware';
+const isAuthenticated = luciaAuth.require;
+const isAdminOrModerator = luciaAuth.requireAdminOrModerator;
+const isAdmin = luciaAuth.requireAdmin;
 import { MessageTransformer } from './transformers/message.transformer';
 import { MessageService } from './message.service';
 import { logger } from '@core/logger';

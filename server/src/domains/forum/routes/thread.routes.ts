@@ -5,7 +5,9 @@
 
 import { Router } from 'express'
 import type { Router as RouterType } from 'express';
-import { isAuthenticated, isAdminOrModerator } from '@domains/auth/middleware/auth.middleware';
+import { luciaAuth } from '@middleware/lucia-auth.middleware';
+const isAuthenticated = luciaAuth.require;
+const isAdminOrModerator = luciaAuth.requireAdminOrModerator;
 import {
 	requireThreadSolvePermission,
 	requireThreadTagPermission

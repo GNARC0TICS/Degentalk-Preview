@@ -1,5 +1,4 @@
 import type { PostId, ThreadId, UserId } from './ids.js';
-import type { User } from './user.types.js';
 
 /**
  * Post Type

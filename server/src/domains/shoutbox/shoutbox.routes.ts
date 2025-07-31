@@ -27,12 +27,11 @@ import {
 } from '@schema';
 import { sql, desc, eq, and, isNull, inArray, asc, not, or, gt } from 'drizzle-orm';
 import { z } from 'zod';
-import {
-	isAuthenticated,
-	isAuthenticatedOptional,
-	isAdminOrModerator,
-	isAdmin
-} from '@domains/auth/middleware/auth.middleware';
+import { luciaAuth } from '@middleware/lucia-auth.middleware';
+const isAuthenticated = luciaAuth.require;
+const isAuthenticatedOptional = luciaAuth.optional;
+const isAdminOrModerator = luciaAuth.requireAdminOrModerator;
+const isAdmin = luciaAuth.requireAdmin;
 import { getUserId } from '../auth/services/auth.service';
 import { logger } from '@core/logger';
 import { ShoutboxService } from './services/shoutbox.service';

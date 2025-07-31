@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import type { FrameId } from '@shared/types/ids';
-import { isAuthenticated } from '@domains/auth/middleware/auth.middleware';
+import { luciaAuth } from '@middleware/lucia-auth.middleware';
+const isAuthenticated = luciaAuth.require;
 import { frameEquipService } from '@domains/cosmetics/frameEquip.service';
 import { userService } from '@core/services/user.service';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';

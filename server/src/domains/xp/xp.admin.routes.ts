@@ -7,7 +7,9 @@
 import { Router } from 'express'
 import type { Router as RouterType } from 'express';
 import * as adminXpController from './xp.controller';
-import { isAuthenticated, isAdmin } from '@domains/auth/middleware/auth.middleware';
+import { luciaAuth } from '@middleware/lucia-auth.middleware';
+const isAuthenticated = luciaAuth.require;
+const isAdmin = luciaAuth.requireAdmin;
 import { asyncHandler } from '@core/errors';
 
 const router: RouterType = Router();

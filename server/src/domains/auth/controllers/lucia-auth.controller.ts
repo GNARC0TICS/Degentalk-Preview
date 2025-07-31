@@ -45,7 +45,7 @@ export async function register(req: Request, res: Response, next: NextFunction) 
     const result = await luciaAuthService.register(userData, req);
 
     if (!result.success || !result.user) {
-      return errorResponses.badRequest(res, result.error || 'Registration failed');
+      return errorResponses.validationError(res, result.error || 'Registration failed');
     }
 
     const { user, session, sessionCookie } = result;
@@ -115,7 +115,7 @@ export async function login(req: Request, res: Response, next: NextFunction) {
 
     // Validate input
     if (!username || !password) {
-      return errorResponses.badRequest(res, 'Username and password are required');
+      return errorResponses.validationError(res, 'Username and password are required');
     }
 
     // Dev mode bypass
@@ -292,7 +292,7 @@ export async function verifyEmail(req: Request, res: Response, next: NextFunctio
     const { token } = req.query;
 
     if (!token || typeof token !== 'string') {
-      return errorResponses.badRequest(res, 'Verification token is required');
+      return errorResponses.validationError(res, 'Verification token is required');
     }
 
     // Find token in database
@@ -303,12 +303,12 @@ export async function verifyEmail(req: Request, res: Response, next: NextFunctio
       .limit(1);
 
     if (!verificationToken) {
-      return errorResponses.badRequest(res, 'Invalid verification token');
+      return errorResponses.validationError(res, 'Invalid verification token');
     }
 
     // Check if token is expired
     if (new Date() > verificationToken.expiresAt) {
-      return errorResponses.badRequest(res, 'Verification token has expired');
+      return errorResponses.validationError(res, 'Verification token has expired');
     }
 
     // Activate user
@@ -333,7 +333,7 @@ export async function resendVerification(req: Request, res: Response, next: Next
     const { email } = req.body;
 
     if (!email) {
-      return errorResponses.badRequest(res, 'Email is required');
+      return errorResponses.validationError(res, 'Email is required');
     }
 
     // Find user by email
@@ -350,7 +350,7 @@ export async function resendVerification(req: Request, res: Response, next: Next
 
     // Check if already active
     if (user.isActive) {
-      return errorResponses.badRequest(res, 'This account is already active');
+      return errorResponses.validationError(res, 'This account is already active');
     }
 
     // Generate new verification token
@@ -394,15 +394,15 @@ export async function updatePassword(req: Request, res: Response, next: NextFunc
 
     // Validate input
     if (!currentPassword || !newPassword || !confirmNewPassword) {
-      return errorResponses.badRequest(res, 'All password fields are required');
+      return errorResponses.validationError(res, 'All password fields are required');
     }
 
     if (newPassword !== confirmNewPassword) {
-      return errorResponses.badRequest(res, 'New passwords do not match');
+      return errorResponses.validationError(res, 'New passwords do not match');
     }
 
     if (newPassword.length < 6) {
-      return errorResponses.badRequest(res, 'New password must be at least 6 characters');
+      return errorResponses.validationError(res, 'New password must be at least 6 characters');
     }
 
     // Verify current password
@@ -441,7 +441,7 @@ export async function forgotPassword(req: Request, res: Response, next: NextFunc
     const { email } = req.body;
 
     if (!email) {
-      return errorResponses.badRequest(res, 'Email is required');
+      return errorResponses.validationError(res, 'Email is required');
     }
 
     // Find user by email
@@ -493,15 +493,15 @@ export async function resetPassword(req: Request, res: Response, next: NextFunct
 
     // Validate input
     if (!token || !newPassword || !confirmNewPassword) {
-      return errorResponses.badRequest(res, 'All fields are required');
+      return errorResponses.validationError(res, 'All fields are required');
     }
 
     if (newPassword !== confirmNewPassword) {
-      return errorResponses.badRequest(res, 'Passwords do not match');
+      return errorResponses.validationError(res, 'Passwords do not match');
     }
 
     if (newPassword.length < 6) {
-      return errorResponses.badRequest(res, 'Password must be at least 6 characters');
+      return errorResponses.validationError(res, 'Password must be at least 6 characters');
     }
 
     // Hash the token to match stored version
@@ -515,12 +515,12 @@ export async function resetPassword(req: Request, res: Response, next: NextFunct
       .limit(1);
 
     if (!resetToken) {
-      return errorResponses.badRequest(res, 'Invalid or expired reset token');
+      return errorResponses.validationError(res, 'Invalid or expired reset token');
     }
 
     // Check if token is expired
     if (new Date() > resetToken.expiresAt) {
-      return errorResponses.badRequest(res, 'Reset token has expired');
+      return errorResponses.validationError(res, 'Reset token has expired');
     }
 
     // Update password
@@ -561,11 +561,11 @@ export async function deleteAccount(req: Request, res: Response, next: NextFunct
 
     // Validate input
     if (!password) {
-      return errorResponses.badRequest(res, 'Password is required to delete account');
+      return errorResponses.validationError(res, 'Password is required to delete account');
     }
 
     if (confirmDelete !== 'DELETE') {
-      return errorResponses.badRequest(res, 'Please type DELETE to confirm account deletion');
+      return errorResponses.validationError(res, 'Please type DELETE to confirm account deletion');
     }
 
     // Verify password

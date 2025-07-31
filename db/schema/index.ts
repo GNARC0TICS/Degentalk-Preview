@@ -24,8 +24,8 @@
 export * from './core/enums';
 // User domain exports
 export * from './user/users';
-export * from './auth/sessions';  // Lucia auth sessions
-export * from './user/sessions';
+export * from './auth/sessions';  // Lucia auth sessions (exports userSessions)
+// export * from './user/sessions';  // Old session system - commented out to avoid duplicate export
 export * from './user/preferences';
 export * from './user/permissions';
 export * from './user/roles';

@@ -10,7 +10,9 @@ import {
 	getRecentSecurityEvents,
 	triggerTestSecurityEvent 
 } from '../controllers/security-monitor.controller';
-import { isAuthenticated, isAdmin } from '@domains/auth/middleware/auth.middleware';
+import { luciaAuth } from '@middleware/lucia-auth.middleware';
+const isAuthenticated = luciaAuth.require;
+const isAdmin = luciaAuth.requireAdmin;
 
 const router: RouterType = Router();
 

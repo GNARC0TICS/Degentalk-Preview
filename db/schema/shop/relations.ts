@@ -68,10 +68,6 @@ export const userInventoryRelations = relations(userInventory, ({ one, many }) =
 	transaction: one(transactions, {
 		fields: [userInventory.transactionId],
 		references: [transactions.id]
-	}),
-	dgtTransaction: one(transactions, {
-		fields: [userInventory.dgtTransactionId],
-		references: [transactions.id]
 	})
 }));
 export const animationPacksRelations = relations(animationPacks, ({ one, many }) => ({

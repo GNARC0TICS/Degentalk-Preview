@@ -7,7 +7,8 @@ import { products, userInventory, transactions, avatarFrames, productCategories 
 import { eq, isNull, or, and, gte, lte, sql } from 'drizzle-orm';
 import { dgtService } from '@domains/wallet/services/dgtService';
 import { walletService } from '@domains/wallet/services/wallet.service';
-import { isAuthenticated } from '@domains/auth/middleware/auth.middleware';
+import { luciaAuth } from '@middleware/lucia-auth.middleware';
+const isAuthenticated = luciaAuth.require;
 import { walletConfig } from '@shared/config/wallet.config';
 import { logger } from '@core/logger';
 import { z } from 'zod';

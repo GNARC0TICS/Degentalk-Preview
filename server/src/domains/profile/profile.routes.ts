@@ -25,7 +25,8 @@ import {
 } from '@schema';
 import { eq, and, sql, desc, not, or, count, gt, isNull } from 'drizzle-orm';
 import signatureRoutes from './signature.routes'; // Import signature routes
-import { isAuthenticated } from '@domains/auth/middleware/auth.middleware';
+import { luciaAuth } from '@middleware/lucia-auth.middleware';
+const isAuthenticated = luciaAuth.require;
 import { profileService } from './profile.service';
 import { referralsService } from './referrals.service';
 import { logger } from '@core/logger';

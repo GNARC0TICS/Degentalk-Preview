@@ -3,7 +3,8 @@ import { Router } from 'express'
 import type { Router as RouterType } from 'express';
 import { z } from 'zod';
 import { WhaleWatchService } from './whale-watch.service';
-import { isAuthenticated } from '@domains/auth/middleware/auth.middleware';
+import { luciaAuth } from '@middleware/lucia-auth.middleware';
+const isAuthenticated = luciaAuth.require;
 import { logger } from '@core/logger';
 import { UserTransformer } from '@domains/users/transformers/user.transformer';
 import {

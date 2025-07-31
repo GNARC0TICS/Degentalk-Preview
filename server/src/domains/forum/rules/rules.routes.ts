@@ -20,7 +20,8 @@ import {
 } from '@schema';
 import crypto from 'crypto';
 import { z } from 'zod';
-import { isAuthenticated } from '@domains/auth/middleware/auth.middleware';
+import { luciaAuth } from '@middleware/lucia-auth.middleware';
+const isAuthenticated = luciaAuth.require;
 import { db } from '@degentalk/db';
 import { asyncHandler } from '@core/errors'; // Assuming asyncHandler is in core errors
 import { getUserIdFromRequest } from '@core/utils/auth.helpers';

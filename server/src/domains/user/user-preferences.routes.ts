@@ -3,7 +3,8 @@ import { Router } from 'express'
 import type { Router as RouterType } from 'express';
 import { z } from 'zod';
 import { UserPreferencesService } from './user-preferences.service';
-import { requireAuth } from '@domains/auth/middleware/auth.middleware';
+import { luciaAuth } from '@middleware/lucia-auth.middleware';
+const requireAuth = luciaAuth.require;
 import { logger } from '@core/logger';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 

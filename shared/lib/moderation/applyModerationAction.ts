@@ -15,7 +15,7 @@ export type { VisibilityStatus, ApplyModerationActionParams };
  * Use ModerationActionService.applyModerationAction() on the server side.
  * For client-side usage, call the appropriate API endpoint.
  */
-export function applyModerationAction(params: ApplyModerationActionParams): Promise<void> {
+export function applyModerationAction(_params: ApplyModerationActionParams): Promise<void> {
 	throw new Error(
 		'applyModerationAction() has been moved to server-only service. ' +
 		'Use ModerationActionService.applyModerationAction() on server or call API endpoint from client.'

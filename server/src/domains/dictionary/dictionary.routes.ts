@@ -3,10 +3,9 @@ import { Router } from 'express'
 import type { Router as RouterType } from 'express';
 import type { EntityId } from '@shared/types/ids';
 import { DictionaryService, DictionaryStatus } from './dictionary.service';
-import {
-	isAuthenticated as requireAuth,
-	isAdminOrModerator
-} from '@domains/auth/middleware/auth.middleware';
+import { luciaAuth } from '@middleware/lucia-auth.middleware';
+const requireAuth = luciaAuth.require;
+const isAdminOrModerator = luciaAuth.requireAdminOrModerator;
 import { insertDictionaryEntrySchema } from '@schema';
 import rateLimit from 'express-rate-limit';
 import { logger } from '@core/logger';

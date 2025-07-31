@@ -7,7 +7,8 @@
 import { Router } from 'express'
 import type { Router as RouterType } from 'express';
 import { subscriptionController } from './subscription.controller';
-import { isAuthenticated } from '@domains/auth/middleware/auth.middleware';
+import { luciaAuth } from '@middleware/lucia-auth.middleware';
+const isAuthenticated = luciaAuth.require;
 
 const router: RouterType = Router();
 

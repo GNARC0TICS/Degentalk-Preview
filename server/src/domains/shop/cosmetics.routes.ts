@@ -9,7 +9,8 @@ import type { UserId } from '@shared/types/ids';
 import { Router } from 'express'
 import type { Router as RouterType } from 'express';
 import { userService } from '@core/services/user.service';
-import { isAuthenticated } from '@domains/auth/middleware/auth.middleware';
+import { luciaAuth } from '@middleware/lucia-auth.middleware';
+const isAuthenticated = luciaAuth.require;
 import { logger } from '@core/logger';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 import { db } from '@degentalk/db';

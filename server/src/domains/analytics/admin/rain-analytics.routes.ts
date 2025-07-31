@@ -7,7 +7,8 @@
 import express from 'express'
 import type { Router as RouterType } from 'express';
 import { rainAnalyticsController } from './rain-analytics.controller';
-import { isAdmin } from '@domains/auth/middleware/auth.middleware';
+import { luciaAuth } from '@middleware/lucia-auth.middleware';
+const isAdmin = luciaAuth.requireAdmin;
 
 const router: RouterType = express.Router();
 

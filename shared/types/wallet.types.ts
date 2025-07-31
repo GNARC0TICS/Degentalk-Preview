@@ -14,10 +14,10 @@ import type {
 	UsdAmount,
 	XpAmount,
 	TipAmount,
-	WithdrawalAmount,
+	WithdrawalAmount, // Used in other parts of codebase
+	WithdrawalStatus, // Used in other parts of codebase
 	TransactionType,
 	TransactionStatus,
-	WithdrawalStatus,
 	EntityId
 } from './ids.js';
 

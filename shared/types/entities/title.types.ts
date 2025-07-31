@@ -3,7 +3,7 @@
  * Single source of truth for Title entity across the platform
  */
 
-import type { TitleId, RoleId, UserId } from '../ids.js';
+import type { TitleId, UserId } from '../ids.js';
 
 /**
  * Title unlock requirements

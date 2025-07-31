@@ -3,7 +3,9 @@ import { Router } from 'express'
 import type { Router as RouterType } from 'express';
 import { z } from 'zod';
 import { userPromotionService } from './user-promotion.service';
-import { isAuthenticated, isAdmin } from '@domains/auth/middleware/auth.middleware';
+import { luciaAuth } from '@middleware/lucia-auth.middleware';
+const isAuthenticated = luciaAuth.require;
+const isAdmin = luciaAuth.requireAdmin;
 import { logger } from '@core/logger';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 

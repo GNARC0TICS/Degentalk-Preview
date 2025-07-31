@@ -9,7 +9,8 @@ import { db } from '@degentalk/db';
 import { platformStatistics } from '@schema';
 import { eq } from 'drizzle-orm';
 import { platformStatsService } from './platformStats.service';
-import { isAdmin } from '@domains/auth/middleware/auth.middleware';
+import { luciaAuth } from '@middleware/lucia-auth.middleware';
+const isAdmin = luciaAuth.requireAdmin;
 import { logger } from '@core/logger';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 

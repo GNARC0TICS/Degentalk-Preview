@@ -6,7 +6,7 @@
 
 import { db } from '@degentalk/db';
 import { eq } from 'drizzle-orm';
-import { achievementEvents } from '@schema';
+import { achievementEvents, users } from '@schema';
 import { AchievementProcessorService } from '../domains/gamification/achievements/achievement-processor.service';
 import { logger } from './logger';
 import type { AchievementEventType } from '@schema';
@@ -33,7 +33,13 @@ export class BackgroundProcessor {
 				.select()
 				.from(achievementEvents)
 				.where(eq(achievementEvents.processingStatus, 'pending'))
-				.limit(100);
+				.limit(100)
+				.catch((dbError: unknown) => {
+					logger.error('BACKGROUND_PROCESSOR', 'Database error fetching achievement events', {
+						error: dbError instanceof Error ? dbError.message : String(dbError)
+					});
+					return [];
+				});
 
 			if (pendingEvents.length === 0) {
 				return;
@@ -151,7 +157,41 @@ export const backgroundProcessor = new BackgroundProcessor();
 
 // Auto-start in production and development (but not in tests)
 if (process.env.NODE_ENV !== 'test') {
-	backgroundProcessor.start();
+	// Wait for database to be ready before starting
+	const startWithHealthCheck = async () => {
+		const maxRetries = 10;
+		let retries = 0;
+		
+		while (retries < maxRetries) {
+			try {
+				// Health check query using core users table
+				await db.select().from(users).limit(1);
+				logger.info('BACKGROUND_PROCESSOR', 'Database health check passed, starting processor');
+				backgroundProcessor.start();
+				break;
+			} catch (error) {
+				retries++;
+				if (retries >= maxRetries) {
+					logger.error('BACKGROUND_PROCESSOR', 'Failed to start after max retries', {
+						error: error instanceof Error ? error.message : String(error)
+					});
+					break;
+				}
+				logger.warn('BACKGROUND_PROCESSOR', `Database not ready, retry ${retries}/${maxRetries}`);
+				// Wait before retrying (exponential backoff)
+				await new Promise(resolve => setTimeout(resolve, Math.min(1000 * Math.pow(2, retries - 1), 10000)));
+			}
+		}
+	};
+
+	// Use setImmediate to defer execution until after the current event loop
+	setImmediate(() => {
+		startWithHealthCheck().catch((error) => {
+			logger.error('BACKGROUND_PROCESSOR', 'Failed to start background processor', {
+				error: error instanceof Error ? error.message : String(error)
+			});
+		});
+	});
 
 	// Graceful shutdown
 	process.on('SIGINT', () => {

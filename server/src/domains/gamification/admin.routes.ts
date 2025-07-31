@@ -8,7 +8,9 @@
 import { Router } from 'express'
 import type { Router as RouterType } from 'express';
 import { gamificationAdminController } from './admin.controller';
-import { isAuthenticated, isAdmin } from '@domains/auth/middleware/auth.middleware';
+import { luciaAuth } from '@middleware/lucia-auth.middleware';
+const isAuthenticated = luciaAuth.require;
+const isAdmin = luciaAuth.requireAdmin;
 import rateLimit from 'express-rate-limit';
 
 const router: RouterType = Router();

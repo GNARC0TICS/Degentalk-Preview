@@ -8,11 +8,10 @@
 import { Router } from 'express'
 import type { Router as RouterType } from 'express';
 import { AchievementController } from './achievement.controller';
-import {
-	isAuthenticated,
-	isAdmin,
-	isAdminOrModerator
-} from '@domains/auth/middleware/auth.middleware';
+import { luciaAuth } from '@middleware/lucia-auth.middleware';
+const isAuthenticated = luciaAuth.require;
+const isAdmin = luciaAuth.requireAdmin;
+const isAdminOrModerator = luciaAuth.requireAdminOrModerator;
 
 const router: RouterType = Router();
 const controller = new AchievementController();

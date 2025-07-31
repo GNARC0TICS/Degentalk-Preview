@@ -8,6 +8,8 @@ import { userService } from '@core/services/user.service';
 
 import express from 'express';
 import { luciaAuth } from '@middleware/lucia-auth.middleware';
+const isAuthenticated = luciaAuth.require;
+const isAuthenticatedOptional = luciaAuth.optional;
 import { validateRequest } from '@middleware/validate-request';
 import { preferencesValidation } from './validation/preferences.validation';
 import {
@@ -27,10 +29,7 @@ import { eq, and } from 'drizzle-orm';
 import { sql } from 'drizzle-orm';
 import { z } from 'zod';
 import { WebSocket } from 'ws';
-import {
-	isAuthenticated,
-	isAuthenticatedOptional
-} from '@domains/auth/middleware/auth.middleware';
+import { luciaAuth } from '@middleware/lucia-auth.middleware';
 import { logger, LogLevel, LogAction } from '@core/logger';
 import { displayPreferencesSchema } from './preferences.validators';
 import { getUserIdFromRequest } from '@core/utils/auth.helpers';

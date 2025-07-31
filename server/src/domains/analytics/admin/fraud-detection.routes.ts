@@ -7,7 +7,9 @@
 import express from 'express'
 import type { Router as RouterType } from 'express';
 import { fraudDetectionController } from './fraud-detection.controller';
-import { isAuthenticated, isAdmin } from '@domains/auth/middleware/auth.middleware';
+import { luciaAuth } from '@middleware/lucia-auth.middleware';
+const isAuthenticated = luciaAuth.require;
+const isAdmin = luciaAuth.requireAdmin;
 
 const router: RouterType = express.Router();
 

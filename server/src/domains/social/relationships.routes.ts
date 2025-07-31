@@ -13,11 +13,10 @@ import { users, userRelationships } from '@schema';
 import { eq, and, sql, desc, not, or, count, gt, isNull } from 'drizzle-orm';
 import { isValidId } from '@shared/utils/id';
 
-import {
-	isAuthenticated,
-	isAdminOrModerator,
-	isAdmin
-} from '@domains/auth/middleware/auth.middleware';
+import { luciaAuth } from '@middleware/lucia-auth.middleware';
+const isAuthenticated = luciaAuth.require;
+const isAdminOrModerator = luciaAuth.requireAdminOrModerator;
+const isAdmin = luciaAuth.requireAdmin;
 import { getUserIdFromRequest } from '@core/utils/auth.helpers';
 import { logger } from '@core/logger';
 import { UserTransformer } from '@domains/users/transformers/user.transformer';

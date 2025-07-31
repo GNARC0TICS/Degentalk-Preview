@@ -4,7 +4,8 @@ import { spawn } from 'child_process';
 
 // Re-use existing admin auth middleware
 // IMPORTANT: Adjust relative path based on file location (three levels up to auth middleware)
-import { isAdmin } from '@domains/auth/middleware/auth.middleware';
+import { luciaAuth } from '@middleware/lucia-auth.middleware';
+const isAdmin = luciaAuth.requireAdmin;
 import { asyncHandler } from '../../admin.middleware';
 import { sendSuccessResponse, sendErrorResponse } from '@core/utils/transformer.helpers';
 import { logger } from '@core/logger';

@@ -34,7 +34,7 @@ import { wsService } from './src/core/websocket/websocket.service';
 import { sentinelBot } from './src/domains/shoutbox/services/sentinel-bot.service';
 import { initEventNotificationListener } from './src/domains/notifications/event-notification-listener';
 import { runScheduledTasks } from './src/utils/task-scheduler';
-// import './src/core/background-processor'; // Temporarily disabled for auth testing
+import './src/core/background-processor';
 
 const port = process.env.PORT ? parseInt(process.env.PORT) : 5001;
 

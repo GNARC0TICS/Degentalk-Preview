@@ -7,7 +7,8 @@
 import { Router } from 'express'
 import type { Router as RouterType } from 'express';
 import { cacheMetricsController } from '../controllers/cache-metrics.controller';
-import { isAdmin } from '@domains/auth/middleware/auth.middleware';
+import { luciaAuth } from '@middleware/lucia-auth.middleware';
+const isAdmin = luciaAuth.requireAdmin;
 
 const router: RouterType = Router();
 

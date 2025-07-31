@@ -137,6 +137,15 @@ module.exports = {
 			parserOptions: {
 				project: null
 			}
+		},
+		{
+			// Drizzle ORM schema files use imports that appear unused to TypeScript
+			files: ['db/schema/**/*.ts'],
+			rules: {
+				'@typescript-eslint/no-unused-vars': ['error', { 
+					varsIgnorePattern: '^(relations|index|sql|many|one|createInsertSchema|primaryKey|unique|integer|boolean|varchar|text|decimal)$'
+				}]
+			}
 		}
 	],
 	rules: {

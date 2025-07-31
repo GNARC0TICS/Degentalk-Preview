@@ -20,7 +20,7 @@ export function isValidUserId(value: unknown): value is UserId {
 }
 
 // Generic ID validator factory
-export function createIdValidator<T extends string>(brand: string) {
+export function createIdValidator<T extends string>(_brand: string) {
 	return (value: unknown): value is T => isValidUuid(value);
 }
 

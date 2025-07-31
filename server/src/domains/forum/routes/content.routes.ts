@@ -10,7 +10,8 @@ import { Router } from 'express'
 import type { Router as RouterType } from 'express';
 import type { Request, Response } from 'express';
 import { logger } from '@core/logger';
-import { isAuthenticatedOptional } from '@domains/auth/middleware/auth.middleware';
+import { luciaAuth } from '@middleware/lucia-auth.middleware';
+const isAuthenticatedOptional = luciaAuth.optional;
 import { threadService } from '../services/thread.service';
 import { asyncHandler } from '@core/errors';
 import type { ForumId } from '@shared/types/ids';

@@ -5,7 +5,9 @@
  */
 
 import express from 'express';
-import { isAuthenticated, isAdmin } from '@domains/auth/middleware/auth.middleware';
+import { luciaAuth } from '@middleware/lucia-auth.middleware';
+const isAuthenticated = luciaAuth.require;
+const isAdmin = luciaAuth.requireAdmin;
 import rainAnalyticsRoutes from './rain-analytics.routes';
 import tippingAnalyticsRoutes from './tipping-analytics.routes';
 import platformStatsRoutes from './stats.routes';

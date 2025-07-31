@@ -14,6 +14,7 @@ import { toUserId } from '@shared/utils/id';
 import * as argon2 from "@node-rs/argon2";
 import { generateIdFromEntropySize } from "lucia";
 import { BaseRepository } from '@core/repository/base-repository';
+import { v4 as uuidv4 } from 'uuid';
 
 export class AuthRepository extends BaseRepository {
   // Expose for direct access in dev-auth.ts
@@ -85,7 +86,7 @@ export class AuthRepository extends BaseRepository {
     password: string;
   }): Promise<User> {
     const passwordHash = await this.hashPassword(data.password);
-    const userId = toUserId(generateIdFromEntropySize(10));
+    const userId = toUserId(uuidv4());
     
     const [user] = await db
       .insert(users)
