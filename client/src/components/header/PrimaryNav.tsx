@@ -148,22 +148,12 @@ export function PrimaryNav({ className }: PrimaryNavProps) {
 				// Special handling for Forum button
 				if (item.label === 'Forum') {
 					return (
-						<div key={item.label} className="relative">
-							<ForumNavButton
-								isActive={isActive}
-								onMouseEnter={() => handleMouseEnter(index)}
-								onMouseLeave={() => handleMouseLeave(index)}
-								navPath={navPaths[index]}
-								defaultPath={defaultPath}
-								navRef={(el) => {
-									if (navRefs.current) {
-										navRefs.current[index] = el;
-									}
-								}}
-							>
-								{item.label}
-							</ForumNavButton>
-						</div>
+						<ForumNavButton
+							key={item.label}
+							isActive={isActive}
+							onMouseEnter={() => handleMouseEnter(index)}
+							onMouseLeave={() => handleMouseLeave(index)}
+						/>
 					);
 				}
 
