@@ -29,7 +29,7 @@ export function HeroCTAButton({ onClick, className = '' }: HeroCTAButtonProps) {
         
         {/* Icon and text */}
         <Users className="hero-cta-icon" />
-        <span className="hero-cta-text">Join Community</span>
+        <span className="hero-cta-text">Join Waitlist</span>
         
         {/* Pulse rings for attention */}
         <div className="hero-cta-pulse-ring" />

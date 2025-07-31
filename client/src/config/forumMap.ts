@@ -1,1 +1,0 @@
-export * from '../../../shared/config/forum-map.config'; 

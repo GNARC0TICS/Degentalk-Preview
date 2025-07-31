@@ -68,7 +68,7 @@
 
 /* Animations */
 .fade-in {
-	@apply animate-fade-in;
+	@apply animate-fadeIn;
 }
 
 .shimmer {

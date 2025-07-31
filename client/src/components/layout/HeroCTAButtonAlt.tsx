@@ -55,7 +55,7 @@ export function HeroCTAButtonAlt({ onClick, className = '', variant = 'aurora' }
 
         {/* Text with gradient */}
         <span className="hero-cta-alt-text">
-          <span className="hero-cta-alt-text-main">Join Community</span>
+          <span className="hero-cta-alt-text-main">Join Waitlist</span>
           <span className="hero-cta-alt-text-sub">
             <AnimatePresence mode="wait">
               {isHovered && (

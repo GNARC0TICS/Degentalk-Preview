@@ -15,7 +15,7 @@ export function BrowseTopicsLink({ variant = 'pill', className = '' }: BrowseTop
       <Link to="/forums">
         <motion.div
           className={`browse-topics-shimmer ${className}`}
-          whileHover={{ x: 5 }}
+          whileHover={{ scale: 1.05 }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.9, duration: 0.8 }}

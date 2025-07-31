@@ -3,10 +3,7 @@
 @import './styles/layout.css';
 @import './styles/design-system.css';
 @import './styles/animations.css';
-@import './styles/content-feed.css';
 @import './styles/underline-links.css';
-@import './styles/mybb-classic.css';
-@import './styles/titles.css';
 
 @tailwind base;
 @tailwind components;
@@ -679,9 +676,9 @@ button {
 /* OS-level reduced motion preference */
 @media (prefers-reduced-motion: reduce) {
 	/* Disable all animations except exempted components */
-	*:not(.announcement-ticker-content),
-	*::before,
-	*::after {
+	*:not(.announcement-ticker-content):not(.force-animation),
+	*::before:not(.force-animation),
+	*::after:not(.force-animation) {
 		animation: none !important;
 		transition: none !important;
 		scroll-behavior: auto !important;
@@ -694,7 +691,7 @@ button {
 }
 
 /* App-level motion toggle via MotionContext */
-body.no-motion *:not(.announcement-ticker-content):not(.hero-cta-button):not(.hero-cta-button *):not(.browse-topics-shimmer):not(.browse-topics-shimmer *),
+body.no-motion *:not(.announcement-ticker-content):not(.hero-cta-button):not(.hero-cta-button *):not(.browse-topics-shimmer):not(.browse-topics-shimmer *):not(.force-animation),
 body.no-motion *::before,
 body.no-motion *::after {
 	animation: none !important;

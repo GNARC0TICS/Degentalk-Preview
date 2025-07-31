@@ -68,7 +68,7 @@ export function PrimaryNav({ className }: PrimaryNavProps) {
 				if (path) {
 					const pathLength = path.getTotalLength();
 					const isActive = visibleNavigation[index].href === location.pathname;
-					const isForum = visibleNavigation[index].label === 'Forums';
+					const isForum = visibleNavigation[index].label === 'Forum';
 					
 					// Forum button always shows red underline
 					if (isForum) {
@@ -94,7 +94,7 @@ export function PrimaryNav({ className }: PrimaryNavProps) {
 			if (path) {
 				const pathLength = path.getTotalLength();
 				const isActive = visibleNavigation[index].href === currentLocation;
-				const isForum = visibleNavigation[index].label === 'Forums';
+				const isForum = visibleNavigation[index].label === 'Forum';
 
 				gsap.killTweensOf(path);
 
@@ -131,7 +131,7 @@ export function PrimaryNav({ className }: PrimaryNavProps) {
 
 	const handleMouseEnter = (index: number) => {
 		const path = navRefs.current[index];
-		const isForum = visibleNavigation[index].label === 'Forums';
+		const isForum = visibleNavigation[index].label === 'Forum';
 		
 		// Skip hover effects for Forum button (always red)
 		if (path && !isForum && visibleNavigation[index].href !== location.pathname) {
@@ -147,7 +147,7 @@ export function PrimaryNav({ className }: PrimaryNavProps) {
 
 	const handleMouseLeave = (index: number) => {
 		const path = navRefs.current[index];
-		const isForum = visibleNavigation[index].label === 'Forums';
+		const isForum = visibleNavigation[index].label === 'Forum';
 		
 		// Skip hover effects for Forum button (always red)
 		if (path && !isForum && visibleNavigation[index].href !== location.pathname) {
@@ -167,7 +167,7 @@ export function PrimaryNav({ className }: PrimaryNavProps) {
 			{visibleNavigation.map((item, index) => {
 				const isActive = item.href === location.pathname;
 				const isLeaderboard = item.label === 'Leaderboard';
-				const isForum = item.label === 'Forums';
+				const isForum = item.label === 'Forum';
 				const viewBoxWidth = isLeaderboard ? 100 : 70;
 				const defaultPath = isLeaderboard ? 'M5 10Q50 12 95 10' : 'M5 10Q35 12 65 10';
 				

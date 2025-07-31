@@ -1,1 +1,0 @@
-export type PreferenceSection = 'profile' | 'account' | 'notifications' | 'display';
