@@ -15,35 +15,63 @@ export function BannerCarousel() {
     []
   );
 
-  // Hardcoded banner data - no external dependencies!
+  // Banner data with custom WebP images
   const banners = [
     {
-      title: "Crypto Casino",
-      description: "High stakes crypto gambling discussion",
-      icon: "🎰",
-      color: "from-yellow-600/20 to-orange-600/20",
-      stats: { users: 420, threads: 69, trending: true }
+      title: "Community Hub",
+      description: "Connect with fellow degens and build your network",
+      image: "/banners/Community.webp",
+      color: "from-purple-600/20 to-pink-600/20",
+      stats: { users: 2420, threads: 869, trending: true }
     },
     {
-      title: "Shitcoin Alley",
-      description: "The wild west of crypto moonshots",
-      icon: "🚀",
-      color: "from-purple-600/20 to-pink-600/20",
+      title: "Rain Events",
+      description: "Catch the crypto rain and share the wealth",
+      image: "/banners/RainEvents.png.webp",
+      color: "from-blue-600/20 to-cyan-600/20",
       stats: { users: 1337, threads: 420, trending: true }
     },
     {
-      title: "General Discussion",
-      description: "Everything crypto and beyond",
-      icon: "💬",
-      color: "from-blue-600/20 to-cyan-600/20",
+      title: "Degen Shop",
+      description: "Exclusive gear and cosmetics for true degens",
+      image: "/banners/Shop1.webp",
+      color: "from-yellow-600/20 to-orange-600/20",
       stats: { users: 888, threads: 234 }
     },
     {
-      title: "Trading Analysis",
-      description: "Technical analysis and trading strategies",
-      icon: "📈",
+      title: "Premium Shop",
+      description: "Level up your profile with premium items",
+      image: "/banners/Shop2.webp",
       color: "from-green-600/20 to-emerald-600/20",
-      stats: { users: 555, threads: 123, trending: true }
+      stats: { users: 555, threads: 123 }
+    },
+    {
+      title: "Live Shoutbox",
+      description: "Real-time chaos and unfiltered discussion",
+      image: "/banners/Shoutbox.webp",
+      color: "from-red-600/20 to-pink-600/20",
+      stats: { users: 3210, threads: 999, trending: true }
+    },
+    {
+      title: "Unhinged Mode",
+      description: "Where the real degens come to play",
+      image: "/banners/Unhinged.webp",
+      color: "from-purple-600/20 to-indigo-600/20",
+      stats: { users: 666, threads: 69, trending: true }
+    },
+    {
+      title: "User Roles",
+      description: "Climb the ranks and earn your badges",
+      image: "/banners/UserRoles.webp",
+      color: "from-indigo-600/20 to-purple-600/20",
+      stats: { users: 1500, threads: 450 }
+    },
+    {
+      title: "XP System",
+      description: "Level up and unlock exclusive features",
+      image: "/banners/XP.webp",
+      color: "from-emerald-600/20 to-green-600/20",
+      stats: { users: 2100, threads: 678, trending: true }
     }
   ];
 

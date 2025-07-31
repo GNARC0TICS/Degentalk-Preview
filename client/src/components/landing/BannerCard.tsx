@@ -6,7 +6,8 @@ import { Users, MessageSquare, TrendingUp } from 'lucide-react';
 interface BannerCardProps {
   title: string;
   description: string;
-  icon: string;
+  icon?: string;
+  image?: string;
   color: string;
   stats?: {
     users?: number;
@@ -15,7 +16,7 @@ interface BannerCardProps {
   };
 }
 
-export function BannerCard({ title, description, icon, color, stats }: BannerCardProps) {
+export function BannerCard({ title, description, icon, image, color, stats }: BannerCardProps) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -23,16 +24,33 @@ export function BannerCard({ title, description, icon, color, stats }: BannerCar
       className="p-2"
     >
       <Card className={`
-        relative overflow-hidden aspect-[9/4] p-6
-        bg-gradient-to-br ${color}
+        relative overflow-hidden aspect-[16/9] 
         border border-zinc-800 hover:border-zinc-400
-        transition-colors duration-300 cursor-pointer
+        transition-all duration-300 cursor-pointer group
       `}>
-        <div className="flex flex-col justify-between h-full">
+        {/* Background Image */}
+        {image && (
+          <div className="absolute inset-0">
+            <img 
+              src={image} 
+              alt={title}
+              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+            />
+            {/* Gradient Overlay */}
+            <div className={`absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent`} />
+          </div>
+        )}
+        
+        {/* If no image, use color background */}
+        {!image && (
+          <div className={`absolute inset-0 bg-gradient-to-br ${color}`} />
+        )}
+        
+        <div className="relative z-10 flex flex-col justify-between h-full p-6">
           <div>
-            <span className="text-4xl mb-3 block">{icon}</span>
-            <h3 className="text-xl font-bold text-white mb-2">{title}</h3>
-            <p className="text-sm text-zinc-300">{description}</p>
+            {icon && <span className="text-4xl mb-3 block">{icon}</span>}
+            <h3 className="text-xl font-bold text-white mb-2 drop-shadow-lg">{title}</h3>
+            <p className="text-sm text-zinc-200 drop-shadow-md">{description}</p>
           </div>
           
           {stats && (
