@@ -151,8 +151,6 @@ export function PrimaryNav({ className }: PrimaryNavProps) {
 						<ForumNavButton
 							key={item.label}
 							isActive={isActive}
-							onMouseEnter={() => handleMouseEnter(index)}
-							onMouseLeave={() => handleMouseLeave(index)}
 						/>
 					);
 				}

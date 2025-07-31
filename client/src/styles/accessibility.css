@@ -250,7 +250,8 @@ select:focus-visible {
 }
 
 /* Animation preferences respect */
-@media (prefers-reduced-motion: reduce) {
+/* Disabled prefers-reduced-motion for full animation experience */
+/* @media (prefers-reduced-motion: reduce) {
 	*,
 	*::before,
 	*::after {
@@ -259,7 +260,7 @@ select:focus-visible {
 		transition-duration: 0.01ms !important;
 		scroll-behavior: auto !important;
 	}
-}
+} */
 
 /* Improved loading states */
 .loading-shimmer {

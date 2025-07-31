@@ -334,10 +334,11 @@
 /* Accessibility                                                       */
 /* ------------------------------------------------------------------ */
 
-@media (prefers-reduced-motion: reduce) {
+/* Disabled prefers-reduced-motion for full animation experience */
+/* @media (prefers-reduced-motion: reduce) {
 	*:not(.particle) {
 		animation-duration: 0.01ms !important;
 		animation-iteration-count: 1 !important;
 		transition-duration: 0.01ms !important;
 	}
-}
+} */

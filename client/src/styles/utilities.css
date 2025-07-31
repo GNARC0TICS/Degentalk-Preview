@@ -89,7 +89,8 @@
 }
 
 /* Accessibility */
-@media (prefers-reduced-motion: reduce) {
+/* Disabled prefers-reduced-motion for full animation experience */
+/* @media (prefers-reduced-motion: reduce) {
 	.hover-scale:hover {
 		transform: none;
 	}
@@ -103,4 +104,4 @@
 	.animate-bounce {
 		animation: none;
 	}
-}
+} */

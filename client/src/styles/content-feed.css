@@ -107,7 +107,8 @@
 }
 
 /* Reduced motion preferences */
-@media (prefers-reduced-motion: reduce) {
+/* Disabled prefers-reduced-motion for full animation experience */
+/* @media (prefers-reduced-motion: reduce) {
 	.animate-fade-in,
 	.animate-shimmer,
 	.animate-pulse-glow,
@@ -125,7 +126,7 @@
 		transition-duration: 0.01ms !important;
 		animation-duration: 0.01ms !important;
 	}
-}
+} */
 
 /* Focus styles for keyboard navigation */
 .focus-ring:focus-visible {
