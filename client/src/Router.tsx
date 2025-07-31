@@ -1,19 +1,25 @@
 import { createBrowserRouter } from 'react-router-dom';
 import RootLayout from './layouts/RootLayout';
 
-// Import only the home page
+// Import pages
 import HomePage from './pages/home';
+import { PrivacyPolicy } from './pages/legal/privacy';
+import { TermsOfService } from './pages/legal/terms';
+import { Contact } from './pages/contact';
 
 /**
- * Simplified Router Configuration for Static Landing Page
- * Only includes the home page route
+ * Router Configuration for Landing Page
+ * Includes home and legal pages
  */
 export const router = createBrowserRouter([
   {
     path: '/',
     element: <RootLayout />,
     children: [
-      { index: true, element: <HomePage /> }
+      { index: true, element: <HomePage /> },
+      { path: 'legal/privacy', element: <PrivacyPolicy /> },
+      { path: 'legal/terms', element: <TermsOfService /> },
+      { path: 'contact', element: <Contact /> },
     ],
   }
 ]);

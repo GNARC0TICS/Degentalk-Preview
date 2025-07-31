@@ -46,10 +46,9 @@ export const footerNavigation: FooterNavigationSection[] = [
 		title: 'Legal',
 		animationDelay: 0.6,
 		links: [
-			{ label: 'Forum Rules', href: '/forum-rules' },
 			{ label: 'Privacy Policy', href: '/legal/privacy' },
-			{ label: 'Terms of Use', href: '/legal/terms' },
-			{ label: 'Disclaimer', href: '/legal/disclaimer' }
+			{ label: 'Terms of Service', href: '/legal/terms' },
+			{ label: 'Contact Us', href: '/contact' }
 		]
 	}
 ];
