@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import gsap from 'gsap';
 import { NavLink } from './NavLink';
-import { ForumNavButton } from './ForumNavButton';
 import { primaryNavigation, filterNavItems } from '@/config/navigation';
 import { useHeader } from './HeaderContext';
 
@@ -148,10 +147,39 @@ export function PrimaryNav({ className }: PrimaryNavProps) {
 				// Special handling for Forum button
 				if (item.label === 'Forum') {
 					return (
-						<ForumNavButton
+						<div
 							key={item.label}
-							isActive={isActive}
-						/>
+							className={`nav-item group px-3 py-2 rounded-md text-sm font-medium cursor-not-allowed transition-all duration-200 ${
+								isActive ? 'text-white nav-active' : 'text-zinc-500 hover:text-zinc-600'
+							}`}
+							onMouseEnter={() => handleMouseEnter(index)}
+							onMouseLeave={() => handleMouseLeave(index)}
+							onClick={(e) => e.preventDefault()}
+						>
+							<span className="relative z-10">Forum</span>
+							{/* SVG strike-through with randomized path */}
+							<svg
+								className="underline-svg w-full"
+								viewBox={`0 0 ${viewBoxWidth} 20`}
+								fill="none"
+								preserveAspectRatio="none"
+								style={{ overflow: 'visible' }}
+							>
+								<path
+									ref={(el) => {
+										if (navRefs.current) {
+											navRefs.current[index] = el;
+										}
+									}}
+									className="nav-underline"
+									d={navPaths[index] || 'M5 10Q35 10 65 10'}
+									stroke="#dc2626"
+									strokeWidth="4"
+									strokeLinecap="round"
+									style={{ transform: 'translateY(-5px)' }}
+								/>
+							</svg>
+						</div>
 					);
 				}
 
