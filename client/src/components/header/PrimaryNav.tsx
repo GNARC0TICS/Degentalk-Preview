@@ -68,11 +68,22 @@ export function PrimaryNav({ className }: PrimaryNavProps) {
 				if (path) {
 					const pathLength = path.getTotalLength();
 					const isActive = visibleNavigation[index].href === location.pathname;
-					gsap.set(path, {
-						strokeDasharray: pathLength,
-						strokeDashoffset: isActive ? 0 : pathLength,
-						opacity: isActive ? 1 : 0
-					});
+					const isForum = visibleNavigation[index].label === 'Forums';
+					
+					// Forum button always shows red underline
+					if (isForum) {
+						gsap.set(path, {
+							strokeDasharray: pathLength,
+							strokeDashoffset: 0,
+							opacity: 1
+						});
+					} else {
+						gsap.set(path, {
+							strokeDasharray: pathLength,
+							strokeDashoffset: isActive ? 0 : pathLength,
+							opacity: isActive ? 1 : 0
+						});
+					}
 				}
 			});
 		}, 100);
@@ -83,10 +94,19 @@ export function PrimaryNav({ className }: PrimaryNavProps) {
 			if (path) {
 				const pathLength = path.getTotalLength();
 				const isActive = visibleNavigation[index].href === currentLocation;
+				const isForum = visibleNavigation[index].label === 'Forums';
 
 				gsap.killTweensOf(path);
 
-				if (isActive) {
+				// Forum button always shows red underline
+				if (isForum) {
+					gsap.to(path, {
+						strokeDashoffset: 0,
+						opacity: 1,
+						duration: isInitialSetup ? 0.01 : 0.3,
+						ease: 'power2.out'
+					});
+				} else if (isActive) {
 					gsap.to(path, {
 						strokeDashoffset: 0,
 						opacity: 1,
@@ -111,7 +131,10 @@ export function PrimaryNav({ className }: PrimaryNavProps) {
 
 	const handleMouseEnter = (index: number) => {
 		const path = navRefs.current[index];
-		if (path && visibleNavigation[index].href !== location.pathname) {
+		const isForum = visibleNavigation[index].label === 'Forums';
+		
+		// Skip hover effects for Forum button (always red)
+		if (path && !isForum && visibleNavigation[index].href !== location.pathname) {
 			gsap.killTweensOf(path);
 			gsap.to(path, {
 				strokeDashoffset: 0,
@@ -124,7 +147,10 @@ export function PrimaryNav({ className }: PrimaryNavProps) {
 
 	const handleMouseLeave = (index: number) => {
 		const path = navRefs.current[index];
-		if (path && visibleNavigation[index].href !== location.pathname) {
+		const isForum = visibleNavigation[index].label === 'Forums';
+		
+		// Skip hover effects for Forum button (always red)
+		if (path && !isForum && visibleNavigation[index].href !== location.pathname) {
 			const pathLength = path.getTotalLength();
 			gsap.killTweensOf(path);
 			gsap.to(path, {
@@ -141,6 +167,7 @@ export function PrimaryNav({ className }: PrimaryNavProps) {
 			{visibleNavigation.map((item, index) => {
 				const isActive = item.href === location.pathname;
 				const isLeaderboard = item.label === 'Leaderboard';
+				const isForum = item.label === 'Forums';
 				const viewBoxWidth = isLeaderboard ? 100 : 70;
 				const defaultPath = isLeaderboard ? 'M5 10Q50 12 95 10' : 'M5 10Q35 12 65 10';
 				
@@ -152,10 +179,15 @@ export function PrimaryNav({ className }: PrimaryNavProps) {
 						prefetch={item.prefetch}
 						analyticsLabel={item.analyticsLabel}
 						aria-label={`Navigate to ${item.label}`}
+						disabled={isForum}
 					>
 						<div
-							className={`nav-item group px-3 py-2 rounded-md text-sm font-medium cursor-pointer transition-all duration-200 ${
-								isActive ? 'text-white nav-active' : 'text-zinc-300 hover:text-emerald-400'
+							className={`nav-item group px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 ${
+								isForum 
+									? 'text-zinc-500 cursor-not-allowed opacity-60' 
+									: isActive 
+										? 'text-white nav-active cursor-pointer' 
+										: 'text-zinc-300 hover:text-emerald-400 cursor-pointer'
 							}`}
 							onMouseEnter={() => handleMouseEnter(index)}
 							onMouseLeave={() => handleMouseLeave(index)}
@@ -177,7 +209,7 @@ export function PrimaryNav({ className }: PrimaryNavProps) {
 									}}
 									className="nav-underline"
 									d={navPaths[index] || defaultPath}
-									stroke={isActive ? '#e55050' : '#10b981'}
+									stroke={isForum ? '#e55050' : (isActive ? '#10b981' : '#10b981')}
 									strokeWidth="3"
 									strokeLinecap="round"
 								/>
