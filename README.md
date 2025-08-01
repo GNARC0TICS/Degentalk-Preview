@@ -1,6 +1,6 @@
 # DegenTalk Landing Page
 
-A beautiful, animated landing page for the DegenTalk crypto community platform.
+A beautiful, animated landing page for the Degentalk crypto community platform.
 
 ## 🚀 Quick Start
 
