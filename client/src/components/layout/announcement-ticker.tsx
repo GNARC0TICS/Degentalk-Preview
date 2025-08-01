@@ -1,41 +1,31 @@
 import React from 'react';
 import { Megaphone } from 'lucide-react';
+import { getRandomQuotes } from '@/config/announcement-quotes';
 
 export function AnnouncementTicker() {
-	const announcements = [
-		{
-			id: '1',
-			content: '🚀 Welcome to Degentalk! The premier crypto community forum',
-		},
-		{
-			id: '2',
-			content: '💎 Diamond hands only! HODL through the storm',
-		},
-		{
-			id: '3',
-			content: '🔥 Hot topics: Memecoin season is back!',
-		},
-		{
-			id: '4',
-			content: '🎯 Join the conversation and earn XP',
-		}
-	];
+	// Get random quotes for variety
+	const announcements = getRandomQuotes(8);
 
 	return (
-		<div className="bg-zinc-900/80 border-y border-zinc-800 h-10 relative overflow-hidden">
-			{/* Static icon container */}
-			<div className="absolute left-0 top-0 h-full flex items-center px-4 bg-zinc-900/80 z-10">
-				<Megaphone className="w-4 h-4 text-emerald-400" />
+		<div 
+			className="bg-zinc-900/80 border-y border-zinc-800 h-10 relative overflow-hidden"
+			role="region"
+			aria-label="Site announcements"
+			aria-live="off"
+		>
+			{/* Static icon container with solid background */}
+			<div className="absolute left-0 top-0 h-full flex items-center px-4 bg-zinc-900 z-20">
+				<Megaphone className="w-4 h-4 text-emerald-400" aria-hidden="true" />
 			</div>
 
-			{/* Left fade overlay */}
-			<div className="absolute inset-y-0 left-12 w-12 bg-gradient-to-r from-zinc-900/80 to-transparent z-[5]" />
+			{/* Enhanced left fade overlay - starts closer to icon */}
+			<div className="absolute inset-y-0 left-12 w-12 bg-gradient-to-r from-zinc-900 via-zinc-900/80 to-transparent z-10 pointer-events-none" />
 
-			{/* Right fade overlay */}
-			<div className="absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-zinc-900/60 to-transparent z-[5]" />
+			{/* Enhanced right fade overlay */}
+			<div className="absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-zinc-900 via-zinc-900/80 to-transparent z-10 pointer-events-none" />
 
-			{/* Scrolling text container */}
-			<div className="h-full ml-16">
+			{/* Scrolling text container - adjusted margin */}
+			<div className="h-full ml-14 mr-4">
 					<style>{`
 						@keyframes ticker-scroll {
 							0% { transform: translateX(0); }
@@ -45,8 +35,7 @@ export function AnnouncementTicker() {
 							display: flex;
 							align-items: center;
 							height: 100%;
-							animation: ticker-scroll 30s linear infinite !important;
-							animation-duration: 30s !important;
+							animation: ticker-scroll 20s linear infinite !important;
 							white-space: nowrap;
 						}
 						.ticker-content:hover {
@@ -56,26 +45,52 @@ export function AnnouncementTicker() {
 							display: inline-flex;
 							align-items: center;
 							height: 100%;
-							padding: 0 3rem;
+							padding: 0 2rem;
 							font-size: 0.875rem;
-							line-height: 1;
+							line-height: 1.2;
 							color: #e5e7eb;
 							white-space: nowrap;
+							position: relative;
+							font-family: ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo, monospace;
+							letter-spacing: -0.02em;
+						}
+						.ticker-separator {
+							display: inline-flex;
+							align-items: center;
+							justify-content: center;
+							color: #6b7280;
+							margin: 0 1.5rem;
+							flex-shrink: 0;
+							opacity: 0.5;
+							font-size: 0.875rem;
+							user-select: none;
+						}
+						/* Terminal-like faster speed */
+						.ticker-content {
+							animation-timing-function: linear !important;
 						}
 						/* Override any reduced motion settings for this ticker */
 						@media (prefers-reduced-motion: reduce) {
 							.ticker-content {
-								animation: ticker-scroll 30s linear infinite !important;
-								animation-duration: 30s !important;
+								animation: ticker-scroll 40s linear infinite !important;
 							}
 						}
 					`}</style>
 					<div className="ticker-content">
 						{/* Triple the content for seamless scrolling */}
 						{[...announcements, ...announcements, ...announcements].map((announcement, index) => (
-							<span key={`ann-${index}`} className="ticker-item">
-								{announcement.content}
-							</span>
+							<React.Fragment key={`ann-${index}`}>
+								<span 
+									className="ticker-item"
+									data-announcement-type={announcement.type}
+								>
+									{announcement.content}
+								</span>
+								{/* Add separator between items, but not after the last one in each set */}
+								{index % announcements.length !== announcements.length - 1 && (
+									<span className="ticker-separator" aria-hidden="true">—</span>
+								)}
+							</React.Fragment>
 						))}
 					</div>
 			</div>

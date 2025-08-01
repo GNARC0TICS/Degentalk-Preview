@@ -3,7 +3,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown, HelpCircle } from 'lucide-react';
 import { SectionBackground } from '@/components/ViewportBackground';
 import { trackFAQInteraction, trackCTAClick } from '@/lib/analytics';
-import { useAnimationConfig } from '@/hooks/useReducedMotion';
 
 interface FAQItem {
   question: string;
@@ -55,7 +54,6 @@ const faqData: FAQItem[] = [
 ];
 
 export function FAQ() {
-  const animConfig = useAnimationConfig();
   const [openItems, setOpenItems] = useState<Set<string>>(new Set());
 
   const toggleItem = (id: string) => {
@@ -97,15 +95,34 @@ export function FAQ() {
           </motion.div>
 
           {/* FAQ Items */}
-          <div className="space-y-4">
+          <motion.div 
+            className="space-y-4"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.1 }}
+            variants={{
+              visible: {
+                transition: {
+                  staggerChildren: 0.05
+                }
+              }
+            }}
+          >
             {faqData.map((item, index) => (
               <motion.div
                 key={item.id}
-                className="bg-zinc-800/50 backdrop-blur-sm rounded-lg border border-zinc-700/50 hover:border-emerald-500/30 transition-all duration-300"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: animConfig.enableHeavyAnimations ? index * 0.1 : 0 }}
-                viewport={{ once: true }}
+                className="bg-zinc-800/50 rounded-lg border border-zinc-700/50 hover:border-emerald-500/30"
+                variants={{
+                  hidden: { opacity: 0, y: 20 },
+                  visible: { 
+                    opacity: 1, 
+                    y: 0,
+                    transition: {
+                      duration: 0.5,
+                      ease: "easeOut"
+                    }
+                  }
+                }}
               >
                 <button
                   onClick={() => toggleItem(item.id)}
@@ -113,29 +130,32 @@ export function FAQ() {
                   aria-expanded={openItems.has(item.id)}
                   aria-controls={`faq-answer-${item.id}`}
                 >
-                  <h3 className="text-lg font-bold text-white group-hover:text-emerald-400 transition-colors duration-200 pr-4">
+                  <h3 className="text-lg font-bold text-white group-hover:text-emerald-400 transition-colors pr-4">
                     {item.question}
                   </h3>
                   <motion.div
                     animate={{ rotate: openItems.has(item.id) ? 180 : 0 }}
-                    transition={{ duration: 0.3 }}
+                    transition={{ duration: 0.3, ease: "easeInOut" }}
                     className="flex-shrink-0"
                   >
-                    <ChevronDown className="w-5 h-5 text-emerald-400 group-hover:text-emerald-300" />
+                    <ChevronDown className="w-5 h-5 text-emerald-400 group-hover:text-emerald-300 transition-colors" />
                   </motion.div>
                 </button>
                 
-                <AnimatePresence>
+                <AnimatePresence initial={false}>
                   {openItems.has(item.id) && (
                     <motion.div
                       id={`faq-answer-${item.id}`}
                       initial={{ height: 0, opacity: 0 }}
                       animate={{ height: "auto", opacity: 1 }}
                       exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
-                      className="overflow-hidden"
+                      transition={{ 
+                        height: { duration: 0.3, ease: "easeInOut" },
+                        opacity: { duration: 0.2, ease: "easeInOut" }
+                      }}
+                      style={{ overflow: 'hidden' }}
                     >
-                      <div className="px-6 pb-6">
+                      <div className="px-6 pb-6 pt-2">
                         <p className="text-zinc-300 leading-relaxed font-medium">
                           {item.answer}
                         </p>
@@ -145,7 +165,7 @@ export function FAQ() {
                 </AnimatePresence>
               </motion.div>
             ))}
-          </div>
+          </motion.div>
 
           {/* CTA Section */}
           <motion.div

@@ -122,7 +122,7 @@ export function About() {
                   We built this because every other platform got neutered. Sanitized interfaces. Soft mods. "Community guidelines." Years of watching brilliant degenerates get buried under waves of "gm" posts and pinned whitepapers no one reads.
                 </p>
                 <p className="mb-4">
-                  I've been in the trenches — sketchy Telegrams with usernames like 1xLongKidneyCalls, backchannels where real alpha leaks at 3am, forums where one wrong take gets you socially liquidated before the market even opens.
+                  I've been in the trenches — sketchy Telegrams groups like "1xLongKidneyCalls", backchannels where real alpha leaks at 3am, forums where one wrong take gets you socially liquidated before the market even opens.
                 </p>
                 <p className="font-bold text-gray-900">
                   So we said f*** it. Let's build the last stop to the moon.
@@ -248,7 +248,7 @@ export function About() {
                   We didn't launch to moon. <RoughNotation type="underline" color="#dc2626" animationDelay={2300} animationDuration={400}>We launched to last</RoughNotation>.
                 </p>
                 <p className="mb-4">
-                  To be the forum people screenshot at 4am. The place where your not alone — Even after making a horrible financial decision. The arena where being right matters less than being memorable.
+                  To be the forum people screenshot at 4am. The place where your not alone — Even after making some questionable financial decisions. The arena where being right matters less than being memorable.
                 </p>
                 <p className="mb-4">
                   Degentalk isn't perfect. But it's honest.

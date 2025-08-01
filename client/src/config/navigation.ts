@@ -49,17 +49,17 @@ export const primaryNavigation: NavItemConfig[] = [
 		analyticsLabel: 'nav_home'
 	},
 	{
+		label: 'About',
+		href: '/about',
+		icon: React.createElement(IconRenderer, { icon: 'document', size: 16, className: 'h-4 w-4' }),
+		analyticsLabel: 'nav_about'
+	},
+	{
 		label: 'Forum',
 		href: '/forums',
 		icon: React.createElement(IconRenderer, { icon: 'forum', size: 16, className: 'h-4 w-4' }),
 		prefetch: true,
 		analyticsLabel: 'nav_forum'
-	},
-	{
-		label: 'About',
-		href: '/about',
-		icon: React.createElement(IconRenderer, { icon: 'document', size: 16, className: 'h-4 w-4' }),
-		analyticsLabel: 'nav_about'
 	},
 	{
 		label: 'Shop',

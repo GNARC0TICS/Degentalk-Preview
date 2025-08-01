@@ -1,13 +1,12 @@
 import React from 'react';
 import { HeaderThemeWrapper } from './HeaderThemeWrapper';
 import { Logo } from './Logo';
-import { PrimaryNav } from './PrimaryNav';
+import { PrimaryNavOptimized } from './PrimaryNavOptimized';
 import { SearchBox } from './SearchBox';
 import { MobileNavSimple } from './MobileNavSimple';
-import { PremiumContactButtonCSS } from './PremiumContactButtonCSS';
 import { trackCTAClick } from '@/lib/analytics';
 
-export function SiteHeader() {
+export function SiteHeaderOptimized() {
 	return (
 		<HeaderThemeWrapper>
 			<div className="w-full max-w-7xl mx-auto px-6 lg:px-8">
@@ -15,7 +14,7 @@ export function SiteHeader() {
 					{/* Left Section: Logo + Navigation */}
 					<div className="flex items-center space-x-3 lg:space-x-4">
 						<Logo />
-						<PrimaryNav />
+						<PrimaryNavOptimized />
 					</div>
 
 					{/* Search Box - Center with better responsive sizing */}
@@ -36,20 +35,19 @@ export function SiteHeader() {
 									window.location.href = '/#faq';
 								}
 							}}
-							className="
-								px-4 py-2 
-								text-sm font-medium 
-								text-zinc-300 
-								hover:text-white hover:bg-zinc-800/50
-								transition-colors duration-200
-								rounded-md
-								focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 focus:ring-offset-zinc-900
-							"
+							className="px-4 py-2 text-sm font-medium text-zinc-300 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 focus:ring-offset-zinc-900 rounded-md"
 							aria-label="Frequently Asked Questions"
 						>
 							FAQ
 						</button>
-						<PremiumContactButtonCSS />
+						<a
+							href="/contact"
+							onClick={() => trackCTAClick('contact_header', 'header')}
+							className="px-4 py-2 text-sm font-medium bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 focus:ring-offset-zinc-900"
+							aria-label="Contact Us"
+						>
+							Contact Us
+						</a>
 					</div>
 
 					{/* Mobile Navigation */}

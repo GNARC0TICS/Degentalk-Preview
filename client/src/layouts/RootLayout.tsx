@@ -2,6 +2,7 @@ import React from 'react';
 import { Outlet } from 'react-router-dom';
 import { SiteHeader, HeaderProvider } from '@/components/header';
 import { SiteFooter } from '@/components/footer';
+import { Toaster } from '@/components/ui/toaster';
 
 /**
  * Root Layout - Static landing page shell
@@ -16,6 +17,7 @@ export default function RootLayout() {
           <Outlet />
         </main>
         <SiteFooter />
+        <Toaster />
       </div>
     </HeaderProvider>
   );

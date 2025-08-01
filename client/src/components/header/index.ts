@@ -10,6 +10,7 @@ export { Logo } from './Logo';
 export { PrimaryNav } from './PrimaryNav';
 export { SearchBox } from './SearchBox';
 export { MobileNav } from './MobileNav';
+export { MobileNavSimple } from './MobileNavSimple';
 export { NavLink } from './NavLink';
 
 // Theme wrapper
