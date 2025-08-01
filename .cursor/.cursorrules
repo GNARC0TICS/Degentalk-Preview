@@ -1,0 +1,107 @@
+# Degentalk Codebase Rules for Cursor AI
+
+## Project Context
+This is a monorepo for Degentalk, a crypto forum platform with integrated wallet and marketplace.
+
+## Critical Import Rules
+
+### Client imports (client/src/*)
+- ALWAYS use `@/` for client imports: `import { Button } from '@/components/ui/button'`
+- NEVER use `@app/` - this is deprecated and banned
+- NEVER use relative imports except for same-directory files
+
+### Server imports (server/src/*)
+- ALWAYS use `@core/` for core utilities: `import { logger } from '@core/logger'`
+- ALWAYS use `@domains/` for business logic: `import { userService } from '@domains/users/user.service'`
+- ALWAYS use `@middleware/` for middleware: `import { authenticate } from '@middleware/auth'`
+- ALWAYS use `@utils/` for utilities: `import { isDevMode } from '@utils/environment'`
+- ALWAYS use `@lib/` for lib code: `import { reportError } from '@lib/report-error'`
+- NEVER use `@/` in server code - it's ambiguous
+- NEVER use `@api/`, `@server/`, `@server-core/` - all deprecated
+
+### Shared imports
+- Use `@shared/` from any workspace: `import type { UserId } from '@shared/types/ids'`
+- In shared files, add .js extension: `import { toId } from './ids.js'`
+
+### Database imports
+- Use `@db` or `@schema`: `import { users } from '@db'`
+
+### Scripts imports (scripts/*)
+- Use `@db/` for database: `import { db } from '@db'`
+- Use `@shared/` for shared types: `import { UserId } from '@shared/types/ids'`
+- Use `@server/` for server code: `import { logger } from '@server/src/core/logger'`
+- NEVER use relative paths to reach outside scripts directory
+
+## Architecture Rules
+
+### Repository Pattern (MANDATORY)
+- Services MUST NOT contain database queries
+- All DB operations MUST go through repositories
+- Example:
+  ```typescript
+  // ❌ WRONG - Service with direct DB access
+  class UserService {
+    async getUser(id: string) {
+      return db.select().from(users)...  // NO!
+    }
+  }
+  
+  // ✅ CORRECT - Service uses repository
+  class UserService {
+    constructor(private userRepository: UserRepository) {}
+    
+    async getUser(id: string) {
+      return this.userRepository.findById(id);
+    }
+  }
+  ```
+
+### Domain Boundaries
+- Server CANNOT import from client/
+- Client CANNOT import from server/
+- Cross-domain communication ONLY via EventBus
+
+### File Creation
+- NO new files without explicit user approval
+- Use existing components/files when possible
+- Exception: Stub files for missing imports
+
+## Database Rules
+- NEVER use `pnpm db:push` (hangs with Neon)
+- ALWAYS use `pnpm db:migrate` for schema changes
+- Schema field `threads.categoryId` is now `threads.structureId`
+
+## Type Safety
+- Use branded IDs: `UserId`, `ForumId`, `ThreadId`
+- Validate with `isValidId()` not `> 0`
+- Use `toId()` functions for conversions
+
+## Terminology
+- Use "forum" not "zone" (legacy term being phased out)
+- Forum hierarchy: Featured Forums → Forums → Sub-forums
+
+## Code Style
+- NO console.log - use logger instead
+- NO comments unless explicitly requested
+- Follow existing patterns in neighboring files
+
+## Git Commits
+- Git hooks are active - they enforce these rules
+- Use `SKIP_HOOKS=1 git commit` only in emergencies
+- Import violations will block commits
+
+## Common Commands
+```bash
+pnpm dev              # Start development
+pnpm typecheck        # Check TypeScript
+pnpm lint            # Run linting
+pnpm db:migrate      # Run migrations
+pnpm test            # Run tests
+```
+
+## When Suggesting Code
+1. Check existing patterns first
+2. Use approved import aliases only
+3. Follow repository pattern strictly
+4. Respect domain boundaries
+5. No new files without permission

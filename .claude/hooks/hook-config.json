@@ -1,0 +1,160 @@
+{
+  "typescript": {
+    "enabled": true,
+    "strict": true,
+    "checkBrandedIds": true,
+    "configCache": ".claude/hooks/.tscache"
+  },
+  "eslint": {
+    "enabled": true,
+    "autoFix": true,
+    "extensions": [".ts", ".tsx"],
+    "ignorePatterns": ["*.test.ts", "*.spec.ts"]
+  },
+  "rules": {
+    "no-console": {
+      "enabled": true,
+      "severity": "error",
+      "autoFix": true,
+      "replacement": "logger"
+    },
+    "check-branded-ids": {
+      "enabled": true,
+      "severity": "error",
+      "autoFix": true,
+      "importFrom": "@shared/types/ids"
+    },
+    "validate-imports": {
+      "enabled": true,
+      "severity": "error",
+      "autoFix": true,
+      "allowedAliases": ["@/", "@shared/", "@config/"]
+    },
+    "no-any-types": {
+      "enabled": true,
+      "severity": "error",
+      "autoFix": false,
+      "exceptions": {
+        "ccpayment": {
+          "patterns": [
+            "ccpayment.*",
+            "CCPayment.*",
+            "processCCPayment",
+            "ccpaymentApi",
+            "ccpaymentRequest",
+            "ccpaymentResponse"
+          ],
+          "comments": [
+            "CCPayment API",
+            "ccpayment integration",
+            "@ccpayment-api"
+          ]
+        },
+        "eslintDisable": {
+          "patterns": [
+            "eslint-disable.*no-explicit-any",
+            "@ts-ignore"
+          ]
+        }
+      }
+    },
+    "security-checks": {
+      "enabled": true,
+      "severity": "error",
+      "autoFix": false
+    },
+    "production-readiness": {
+      "enabled": true,
+      "severity": "warning",
+      "autoFix": false,
+      "excludeFromProduction": true
+    },
+    "performance-checks": {
+      "enabled": true,
+      "severity": "warning", 
+      "autoFix": false,
+      "reactOnly": true
+    },
+    "check-api-request-signature": {
+      "enabled": true,
+      "severity": "warning",
+      "autoFix": false
+    },
+    "check-tooltip-usage": {
+      "enabled": true,
+      "severity": "error",
+      "autoFix": false
+    },
+    "check-id-conversions": {
+      "enabled": true,
+      "severity": "error",
+      "autoFix": false
+    },
+    "prevent-duplicate-directories": {
+      "enabled": true,
+      "severity": "error",
+      "autoFix": false,
+      "description": "Prevents creating duplicate directories in shared workspace",
+      "hooks": ["pre-edit", "pre-create"]
+    },
+    "enforce-repository-pattern": {
+      "enabled": true,
+      "severity": "error",
+      "autoFix": false,
+      "description": "Services cannot directly access database - must use repositories"
+    },
+    "enforce-domain-boundaries": {
+      "enabled": true,
+      "severity": "error",
+      "autoFix": false,
+      "description": "Prevents cross-domain internal imports - must use index.ts exports"
+    },
+    "no-duplicate-layout-components": {
+      "enabled": true,
+      "severity": "error",
+      "autoFix": false,
+      "description": "Prevents pages from importing SiteHeader/SiteFooter - use RootLayout instead",
+      "hooks": ["pre-edit", "pre-create"],
+      "filePattern": "**/pages/**/*.tsx"
+    },
+    "enforce-test-file-placement": {
+      "enabled": true,
+      "severity": "error",
+      "autoFix": false,
+      "description": "Ensures test files are created in correct directories (__tests__/)",
+      "hooks": ["pre-create"],
+      "filePattern": "**/*.{test,spec}.{ts,tsx,js,jsx}"
+    },
+    "cleanup-debug-artifacts": {
+      "enabled": true,
+      "severity": "info",
+      "autoFix": false,
+      "description": "Reminds to clean up debugging code and temporary artifacts",
+      "hooks": ["post-edit"],
+      "filePattern": "**/*.{ts,tsx,js,jsx}"
+    },
+    "final-cleanup-reminder": {
+      "enabled": true,
+      "severity": "info",
+      "autoFix": false,
+      "description": "Session-end reminder to clean up all debugging artifacts",
+      "hooks": ["session-end", "response-complete"],
+      "filePattern": "*"
+    }
+  },
+  "projectType": "monorepo",
+  "workspaces": {
+    "client": {
+      "type": "react-app",
+      "tsconfig": "./client/tsconfig.json"
+    },
+    "server": {
+      "type": "node-app", 
+      "tsconfig": "./server/tsconfig.json"
+    },
+    "shared": {
+      "type": "library",
+      "tsconfig": "./shared/tsconfig.json"
+    }
+  }
+}

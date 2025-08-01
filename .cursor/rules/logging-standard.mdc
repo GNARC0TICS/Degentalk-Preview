@@ -1,0 +1,37 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# Logging Standard
+
+## Objective
+Replace ad-hoc `console.*` calls with the central structured logger to ensure consistent log format, log-level control, and PII redaction.
+
+---
+
+## Canonical Logger
+`server/src/core/logger.ts` (pino-based wrapper).  Client-side uses `client/src/utils/logger.ts` (console proxy with dev filters).
+
+```ts
+import { logger } from '@/server/src/core/logger';
+logger.info({ userId, route: req.originalUrl }, 'User request');
+```
+
+---
+
+## Rules
+1. **No `console.*` in production code** – ESLint rule `degen/no-console-prod: error`.
+2. Allow console only in:
+   * Files that end with `.dev.ts`, `.test.ts`, `.spec.ts(x)`.  ESLint override downgrades to warn.
+3. Structured log fields **must not** include PII (`email`, `ip`, tokens).  Use user IDs instead.
+4. Always include a `msg` string (pino practice) in structured objects.
+
+---
+
+## Migration
+Run codemod `scripts/codemods/phase5/console-to-logger.ts` then manually review edge cases (stack traces, performance timers).
+
+---
+
+**Status:** Active after Phase-5 hardening

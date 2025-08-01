@@ -1,0 +1,53 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# Response Transformer Gate Rule
+
+## Objective
+Ensure every outbound JSON payload from the backend is produced via a typed transformer function that
+1. Enforces role-based visibility (Public / Authenticated / Admin tiers)
+2. Removes PII (IP addresses, e-mails, internal moderation flags)
+3. Converts raw DB rows to stable DTO contracts with branded IDs and value objects (`DgtAmount`, `XpAmount`).
+
+---
+
+## Tiered Transformers
+| Tier | Function Prefix | Visibility |
+|------|-----------------|------------|
+| Public | `toPublicX` | Anonymous visitors & crawlers |
+| Authenticated | `toAuthenticatedX` | Logged-in users (their own perspective) |
+| Admin | `toAdminX` | Staff & moderators |
+
+Each transformer lives under `server/src/domains/<domain>/transformers/`.
+
+```ts
+export const toPublicThread = (row: ThreadRow): PublicThreadDTO => ({
+  id: row.id as ThreadId,
+  title: row.title,
+  authorId: row.authorId as UserId,
+  // …redacted fields
+});
+```
+
+---
+
+## Forbidden Patterns
+1. `res.json(dbRow)` – raw Drizzle result
+2. Returning Drizzle branded types without mapping to DTOs
+3. Mixing tier fields (e.g. `isFlagged` from admin tier in `toPublicThread`)
+
+ESLint Rule: `degen/no-raw-response` (error)
+
+---
+
+## Agent Checklist
+1. Identify the correct transformer for the route; if missing, create it.
+2. Guarantee PII removal (`ip`, `email`, `lastIp`) and GDPR compliance.
+3. Use branded ID helpers from `@shared/types/ids`.
+4. Return DTO via `res.json(dto)`.
+
+---
+
+**Status:** Active after Phase-5 hardening

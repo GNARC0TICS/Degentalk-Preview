@@ -1,0 +1,34 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# Request User Access Rule
+
+## Objective
+Ban direct `req.user` access to enforce a single point-of-truth for authentication state and to avoid leaking partial user objects.
+
+---
+
+## Canonical Helper
+`server/src/utils/request-user.ts`:
+```ts
+import type { Request } from 'express';
+export const getAuthenticatedUser = (req: Request) => req.auth?.user; // or domain-specific logic
+```
+
+---
+
+## Rules
+1. **`req.user` Forbidden** – ESLint rule `degen/no-direct-req-user: error`.
+2. All middleware/controllers must call `getAuthenticatedUser(req)` (or injected `userService.getUserFromRequest`).
+3. Transformers must accept a `viewerUserId` param, **not** the whole user object.
+
+---
+
+## Migration Path
+Run codemod `scripts/codemods/phase5/req-user-removal.ts` to rewrite expressions automatically.
+
+---
+
+**Status:** Active after Phase-5 hardening

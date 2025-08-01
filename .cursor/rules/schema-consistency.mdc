@@ -1,0 +1,276 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Schema Consistency & Type Safety Rule
+
+## Objective
+Prevent `undefined`/`null` field reference errors and guarantee that **all environments (local ➜ staging ➜ production) share identical PostgreSQL schema definitions generated via Drizzle ORM**.
+
+## Core Principles
+1. **No Undefined Fields** – Every column referenced in services **must** exist in `db/schema/**`.
+2. **Single Source of Truth** – All tables are declared with `pgTable()`; `sqliteTable()` is now forbidden (legacy files must be migrated).
+3. **Explicit Typing & Nullability** – Columns must be explicitly `.notNull()` or intentionally nullable with default `null`.
+4. **UUID-First Keys** – Primary / foreign keys use `uuid('id').primaryKey().defaultRandom()` and branded ID types.
+5. **JSONB for Arbitrary Data** – Use `jsonb()` (not `text`) for structured plugin/config columns like `pluginData`.
+
+## Enforced Patterns
+
+### 1. Schema Table Consistency
+**REQUIRED**: All tables must be defined with identical fields for both SQLite and PostgreSQL:
+
+```typescript
+// ✅ CORRECT: Consistent table definition (PostgreSQL)
+export const forumStructure = pgTable('forum_structure', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  name: text('name').notNull(),
+  slug: text('slug').notNull().unique(),
+  description: text('description'),
+  parentId: uuid('parent_id').references(() => forumStructure.id),
+  minGroupIdRequired: integer('min_group_id_required'), // ✅ Explicitly defined
+  pluginData: jsonb('plugin_data').default('{}'), // ✅ JSONB with default
+  position: integer('position').notNull().default(0),
+  createdAt: timestamp('created_at').notNull().default(sql`CURRENT_TIMESTAMP`),
+  updatedAt: timestamp('updated_at').notNull().default(sql`CURRENT_TIMESTAMP`)
+});
+
+// ❌ INCORRECT: Missing fields that services expect
+export const forumStructure = pgTable('forum_structure', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  name: text('name').notNull(),
+  // ❌ Missing pluginData, minGroupIdRequired, etc.
+});
+```
+
+**REQUIRED**: All tables must be declared with `pgTable()` and contain every field referenced by services:
+
+### 2. Service Query Safety
+**REQUIRED**: Services must only reference fields that exist in the schema:
+
+```typescript
+// ✅ CORRECT: All referenced fields exist in schema
+const categoriesData = await db.select({
+  id: forumCategories.id,
+  name: forumCategories.name,
+  minGroupIdRequired: forumCategories.minGroupIdRequired, // ✅ Exists in schema
+  pluginData: forumCategories.pluginData, // ✅ Exists in schema
+}).from(forumCategories);
+
+// ❌ INCORRECT: Referencing undefined fields
+const categoriesData = await db.select({
+  id: forumCategories.id,
+  name: forumCategories.name,
+  someUndefinedField: forumCategories.someUndefinedField, // ❌ Does not exist
+}).from(forumCategories);
+```
+
+### 3. Null Safety in Field Definitions
+**REQUIRED**: Explicit null handling for all database fields:
+
+```typescript
+// ✅ CORRECT: Explicit null/non-null declarations
+export const users = pgTable('users', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  username: text('username').notNull(), // ✅ Required field
+  email: text('email').notNull(), // ✅ Required field
+  bio: text('bio'), // ✅ Implicitly nullable, but intentional
+  avatarUrl: text('avatar_url'), // Nullable by design
+});
+
+// ❌ INCORRECT: Ambiguous null handling
+export const users = pgTable('users', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  username: text('username'), // ❌ Should be .notNull() if required
+  bio: text('bio').notNull(), // ❌ Should allow null if optional
+});
+```
+
+### 4. Schema Migration Consistency
+**REQUIRED**: Every schema change **must** be captured by an explicit Drizzle migration generated via `pnpm db:generate`.  Never apply ad-hoc `ALTER TABLE` calls in code.
+
+```bash
+# 1. Update the table definition in db/schema/...ts
+# 2. Generate a migration
+pnpm db:generate "add_min_group_id_required_to_forum_structure"
+
+# 3. Inspect & commit the generated SQL under db/migrations/<timestamp>_add_min_group_id_required.sql
+
+# 4. Run locally to verify
+pnpm db:migrate:dev
+```
+
+### 5. UUID-First Enforcement (@uuidFirst)
+All primary keys and foreign keys **must** be UUIDs.  Numeric surrogate keys are disallowed except for legacy read-only views.
+
+*   **Schema:**  use `uuid('id').defaultRandom().primaryKey()`.
+*   **Services:** branded ID types (`UserId`, `ThreadId`, etc.) map to `string & { __brand: 'UserId' }`.
+*   **Lint:** `degen/no-number-id: error` blocks `: number` ID fields.
+
+Migration scripts live under `scripts/migration/uuid-first/`; run `generate-uuid-audit.ts` before altering tables.
+
+## Common Violations & Fixes
+
+### Violation 1: Mixed Table Definitions
+**Error**: `TypeError: Cannot convert undefined or null to object`
+
+**Cause**: Schema has `sqliteTable` for some tables and `pgTable` for others
+
+**Fix**: 
+```typescript
+// ❌ BEFORE: Mixed definitions
+export const forumStructure = sqliteTable(/* legacy */);
+export const threads = pgTable(/* ... */); // ❌ Inconsistent
+
+// ✅ AFTER: Consistent definitions
+export const forumStructure = pgTable(/* ... */);
+export const threads = pgTable(/* ... */); // ✅ All pgTable
+```
+
+### Violation 2: Missing Schema Fields
+**Error**: `forumCategories.minGroupIdRequired is undefined`
+
+**Cause**: Service references fields not defined in schema
+
+**Fix**:
+```typescript
+// ✅ Add missing fields to schema
+export const forumStructure = pgTable('forum_structure', {
+  // ... existing fields
+  minGroupIdRequired: integer('min_group_id_required'),
+  pluginData: jsonb('plugin_data').default('{}'),
+});
+```
+
+### Violation 3: Implicit Null Handling
+**Error**: Runtime null pointer exceptions
+
+**Cause**: Fields that can be null but aren't handled properly
+
+**Fix**:
+```typescript
+// ✅ Explicit null handling in services
+const categories = categoriesData.map(c => ({
+  ...c,
+  pluginData: c.pluginData || {}, // ✅ Handle potential null
+  minGroupIdRequired: c.minGroupIdRequired ?? null, // ✅ Explicit null coalescing
+}));
+```
+
+## Development Workflow
+
+### 1. Schema Changes
+When modifying any file in `db/schema/**`:
+1. **MUST** update the `pgTable` definition with new columns or constraints.
+2. **MUST** run `pnpm db:generate` to scaffold a migration and commit it.
+3. **MUST** run `pnpm db:migrate:dev` locally to verify the migration applies.
+4. **MUST** ensure services compile against updated types (`pnpm typecheck`).
+
+### 2. Service Development
+When writing database queries:
+1. **MUST** verify all referenced fields exist in schema using TypeScript intellisense (Drizzle type-safety will surface errors).
+2. **MUST** handle nullable fields explicitly with null coalescing or default values.
+3. **MUST** run unit / integration tests against the local Postgres instance.
+
+### 3. Error Prevention
+Before deploying:
+1. **MUST** run full test suite with `pnpm test` (uses Testcontainers Postgres).
+2. **MUST** verify no `undefined` field references in console.
+3. **MUST** check that all TypeScript types are properly inferred (`pnpm typecheck`).
+
+## Automated Checks
+
+### Pre-commit Hooks (Recommended)
+```bash
+# Check for undefined field references
+npm run lint
+npm run type-check
+
+# Verify database queries work
+npm run test:db
+```
+
+### IDE Integration
+- Enable TypeScript strict mode
+- Use ESLint rules for null safety
+- Configure editor to show type errors immediately
+
+## Migration Strategy
+
+### Current State Fix
+For the immediate forum API error:
+1. Add missing fields to SQLite schema in `create-missing-tables.ts`
+2. Update forum service to handle nullable fields properly
+3. Test API endpoints return data without errors
+
+### Long-term Consistency
+1. Standardize all schema definitions to use consistent table builders
+2. Create schema validation tests
+3. Implement automated schema comparison between SQLite and PostgreSQL
+
+## Examples
+
+### ✅ Good Schema Pattern
+```typescript
+export const forumStructure = pgTable('forum_structure', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  name: text('name').notNull(),
+  slug: text('slug').notNull(),
+  description: text('description'), // Nullable by design
+  parentId: uuid('parent_id'), // Nullable by design  
+  minGroupIdRequired: integer('min_group_id_required'), // Explicitly defined
+  pluginData: jsonb('plugin_data').notNull().default('{}'), // Required with default
+  isVip: boolean('is_vip').notNull().default(false),
+  isLocked: boolean('is_locked').notNull().default(false),
+  minXp: integer('min_xp').notNull().default(0),
+  color: text('color'), // Nullable by design
+  icon: text('icon'), // Nullable by design
+  isHidden: boolean('is_hidden').notNull().default(false),
+  createdAt: timestamp('created_at').notNull().default(sql`CURRENT_TIMESTAMP`),
+  updatedAt: timestamp('updated_at').notNull().default(sql`CURRENT_TIMESTAMP`)
+});
+```
+
+### ✅ Good Service Pattern
+```typescript
+export const forumService = {
+  async getCategoriesWithStats(): Promise<ForumCategoryWithStats[]> {
+    const categoriesData = await db.select({
+      id: forumStructure.id,
+      name: forumStructure.name,
+      description: forumStructure.description,
+      slug: forumStructure.slug,
+      position: forumStructure.position,
+      isVip: forumStructure.isVip,
+      isLocked: forumStructure.isLocked,
+      minGroupIdRequired: forumStructure.minGroupIdRequired,
+      parentId: forumStructure.parentId,
+      pluginData: forumStructure.pluginData,
+      minXp: forumStructure.minXp,
+      color: forumStructure.color,
+      icon: forumStructure.icon,
+      isHidden: forumStructure.isHidden,
+    })
+    .from(forumStructure)
+    // ... rest of query
+
+    return categoriesData.map(c => ({
+      ...c,
+      pluginData: JSON.parse(c.pluginData || '{}'), // ✅ Safe null handling
+      minGroupIdRequired: c.minGroupIdRequired ?? null, // ✅ Explicit null handling
+      threadCount: Number(c.threadCount || 0),
+      postCount: Number(c.postCount || 0)
+    }));
+  }
+};
+```
+
+## Rule Violations = Immediate Fix Required
+
+Any code that violates these patterns must be fixed immediately:
+- Services referencing undefined schema fields
+- Schema definitions missing fields that services expect  
+- Implicit null handling that could cause runtime errors
+- Inconsistent table definitions between environments
+
+This rule is **ALWAYS APPLIED** and violations should block development until resolved.

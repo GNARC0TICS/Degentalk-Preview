@@ -1,0 +1,82 @@
+{
+  "description": "DegenTalk Branded ID Validation Patterns",
+  "version": "1.0.0",
+  "patterns": {
+    "numericComparisons": [
+      {
+        "pattern": "\\b(userId|forumId|threadId|postId|walletId|frameId|badgeId|titleId|draftId)\\s*[><=]+\\s*\\d+",
+        "message": "Use isValidId() instead of numeric comparison with branded IDs",
+        "fix": {
+          "template": "isValidId($1)",
+          "imports": ["import { isValidId } from '@shared/utils/id';"]
+        }
+      }
+    ],
+    "useStateTypes": [
+      {
+        "pattern": "useState<(number|string|any)>\\s*\\([^)]*\\).*(?:set(?:User|Forum|Thread|Post|Wallet|Frame|Badge|Title|Draft)Id)",
+        "message": "Use branded ID type instead of $1",
+        "fix": {
+          "replacements": {
+            "number": "Id<'$TypeId'>",
+            "string": "Id<'$TypeId'>",
+            "any": "Id<'$TypeId'>"
+          },
+          "imports": ["import type { Id } from '@shared/types/ids';"]
+        }
+      }
+    ],
+    "directIdCasts": [
+      {
+        "pattern": "as\\s+(?:User|Forum|Thread|Post|Wallet|Frame|Badge|Title|Draft)Id\\b",
+        "message": "Use toId() function instead of type assertion",
+        "fix": {
+          "template": "toId<'$1Id'>(value)",
+          "imports": ["import { toId } from '@shared/utils/id';"]
+        }
+      }
+    ],
+    "wrongImports": [
+      {
+        "pattern": "from\\s+['\"]@db/types['\"]",
+        "message": "Import ID types from @shared/types/ids instead of @db/types",
+        "fix": {
+          "replacement": "from '@shared/types/ids'"
+        }
+      }
+    ],
+    "missingValidation": [
+      {
+        "pattern": "\\b(?:user|forum|thread|post|wallet|frame|badge|title|draft)Id\\s*&&\\s*(?!isValidId)",
+        "message": "Add isValidId() check for branded ID validation",
+        "severity": "warning"
+      }
+    ]
+  },
+  "autoFixRules": {
+    "numericToValidation": {
+      "from": "(\\w+Id)\\s*>\\s*0",
+      "to": "isValidId($1)"
+    },
+    "nullCheckToValidation": {
+      "from": "(\\w+Id)\\s*!==?\\s*null",
+      "to": "isValidId($1)"
+    },
+    "typeAssertionToFunction": {
+      "from": "as\\s+(\\w+Id)",
+      "to": "toId<'$1'>"
+    }
+  },
+  "exceptions": {
+    "files": [
+      "**/migrations/**",
+      "**/scripts/**",
+      "**/*.test.ts",
+      "**/*.spec.ts"
+    ],
+    "patterns": [
+      "// @ts-ignore-branded-id",
+      "// eslint-disable-next-line branded-id-check"
+    ]
+  }
+}

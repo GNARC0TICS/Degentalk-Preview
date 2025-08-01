@@ -1,0 +1,32 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# Forum Permission Enforcement Rule
+
+## Purpose
+Ensure that frontend components respect forum‐level business rules (posting locks, min XP, access levels) defined in `forumMap.config.ts` and delivered by `/api/forum/structure`.
+
+## Core Principles
+1. **Single Source of Truth**: The `rules` object inside `MergedForum` (from `ForumStructureContext`) is authoritative.
+2. **Centralised Logic**: All permission checks MUST go through a shared hook `usePermission(forum: MergedForum)` located in `client/src/hooks/usePermission.ts`.
+3. **UI Feedback**: When an action is disallowed:
+   • Primary button turns disabled with tooltip/message equal to `reason` from the hook.
+   • For list items (`ForumListItem`) a 🔒 icon & CSS class `forum-locked` appear.
+4. **Route Guards**: Pages rendered under `/threads/create`, `/threads/[threadSlug]/reply` etc. must call `usePermission` on mount and redirect to `/login` or show 403 if blocked.
+5. **Min-XP & Access Level**:
+   • `rules.minXpRequired` vs user.xp decides gating.
+   • `rules.accessLevel` ('public' | 'registered' | 'level_X+' | 'mod' | 'admin') evaluated against user role.
+6. **Testing**: Add cypress tests covering: guest, low-xp user, vip user, mod.
+
+## Implementation Checklist
+- [ ] Implement `usePermission` (returns `{ canPost, reason }`).
+- [ ] Replace inline checks in `CreateThreadForm`, `CreatePostForm`, and `CreateThreadButton`.
+- [ ] Update `ForumListItem` for lock badge.
+- [ ] Add route guard HOC `withForumGuard`.
+
+## Success Metrics
+- 100 % of thread/post creation flows respect permissions.
+- Cypress suite passes with role simulation.
+- No regressions in analytics for blocked posting attempts.

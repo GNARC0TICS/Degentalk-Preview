@@ -1,0 +1,131 @@
+{
+  "mcpServers": {
+    "degentalk-fs": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "/home/developer/Degentalk-BETA"
+      ],
+      "env": {}
+    },
+    "postgres": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-postgres",
+        "-e",
+        "DATABASE_URL=${DATABASE_URL}",
+        "/home/developer/Degentalk-BETA"
+      ],
+      "env": {
+        "DATABASE_URL": "postgresql://neondb_owner:npg_eZTUNmt3h5YE@ep-steep-field-a4mgmi29-pooler.us-east-1.aws.neon.tech/neondb?sslmode=require"
+      }
+    },
+    "eslint": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y", 
+        "@eslint/mcp@latest",
+        "/home/developer/Degentalk-BETA"
+      ]
+    },
+    "puppeteer": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y", 
+        "@modelcontextprotocol/server-puppeteer@latest",
+        "/home/developer/Degentalk-BETA"
+      ]
+    },
+    "fetch": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y", 
+        "@modelcontextprotocol/server-fetch@latest",
+        "/home/developer/Degentalk-BETA"
+      ]
+    },
+    "sequential-thinking": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y", 
+        "mcp-server-sequential-thinking",
+        "/home/developer/Degentalk-BETA"
+      ]
+    },
+    "context7": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y", 
+        "@upstash/context7-mcp@latest",
+        "/home/developer/Degentalk-BETA"
+      ]
+    },
+    "Neon": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@neondatabase/mcp-server-neon",
+        "start",
+        "${NEON_API_KEY}",
+        "/home/developer/Degentalk-BETA"
+      ],
+      "env": {
+        "NEON_API_KEY": "napi_64010heeqqly1w5t5eg1dpjposfjcqpdg0lu4bc7yvnci0vh7qyivoo04i3j036x"
+      }
+    },
+    "BraveSearch": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y", 
+        "@modelcontextprotocol/server-brave-search",
+        "/home/developer/Degentalk-BETA"
+      ]
+    },
+    "filesystem": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "/home/developer/Documents",
+        "/home/developer/Desktop",
+        "/home/developer/Downloads",
+        "/home/developer/Projects"
+      ],
+      "env": {}
+    },
+    "ide": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-vscode",
+        "/home/developer/Degentalk-BETA"
+      ],
+      "env": {}
+    },
+    "magic": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@21st-dev/magic-ui-mcp",
+        "/home/developer/Degentalk-BETA"
+      ],
+      "env": {
+        "TWENTYFIRST_API_KEY": "${TWENTYFIRST_API_KEY}"
+      }
+    }
+  }
+}

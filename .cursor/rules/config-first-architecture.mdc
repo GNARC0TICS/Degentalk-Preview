@@ -1,0 +1,254 @@
+---
+description: Configuration-First Design Pattern for Scalable Architecture
+globs: 
+alwaysApply: true
+---
+# Configuration-First Architecture Cheat Code
+
+## 🎯 Objective
+Transform DegenTalk into a fully configurable platform where features, themes, layouts, and behaviors are driven by TypeScript configuration files rather than hardcoded values.
+
+## 🏗️ The Pattern
+DegenTalk already demonstrates this brilliantly with `forumMap.config.ts`. This pattern should be extended to ALL configurable aspects of the platform.
+
+## ⚡ Instant Win Rules
+
+### 1. Configuration File Detection (@configFirst)
+**Trigger:** When creating any new feature with multiple options or variants
+
+**Action:** Create a `*.config.ts` file instead of hardcoding values
+
+```typescript
+// ✅ EXCELLENT - Configuration-driven
+// client/src/config/themes.config.ts
+export const themeConfig = {
+  zones: {
+    trading: {
+      primary: '#10b981',
+      accent: '#059669', 
+      banner: '/banners/trading-zone.jpg'
+    },
+    defi: {
+      primary: '#8b5cf6',
+      accent: '#7c3aed',
+      banner: '/banners/defi-zone.jpg'
+    }
+  }
+} as const;
+
+// ❌ AVOID - Hardcoded values scattered throughout components
+const TradingZone = () => {
+  return <div style={{ backgroundColor: '#10b981' }}> // ❌ Hardcoded
+}
+```
+
+### 2. Feature Flag Configuration (@featureFlags)
+**Trigger:** Adding any new feature or experimental functionality
+
+**Action:** Always make it configurable via feature flags
+
+```typescript
+// client/src/config/features.config.ts
+export const featureFlags = {
+  wallet: {
+    dgtTransfers: true,
+    cryptoDeposits: true,
+    rainEvents: true,
+    stakingRewards: false, // ✅ New features start as flags
+  },
+  forum: {
+    advancedSearch: true,
+    voiceMessages: false,
+    aiModeration: false,
+  },
+  social: {
+    friendsystem: true,
+    whaleWatch: true,
+    socialPosts: false,
+  }
+} as const;
+```
+
+### 3. Layout Configuration (@layoutConfig)
+**Trigger:** Creating any UI layout or component arrangement
+
+**Action:** Make layouts configurable and swappable
+
+```typescript
+// client/src/config/layouts.config.ts
+export const layoutConfig = {
+  dashboard: {
+    sidebar: 'left',
+    widgets: ['wallet-summary', 'recent-activity', 'hot-threads'],
+    columns: 3,
+    spacing: 'comfortable'
+  },
+  forum: {
+    threadView: 'threaded', // 'threaded' | 'flat' | 'hybrid'
+    postOrder: 'chronological', // 'chronological' | 'popularity' | 'smart'
+    sidebarWidgets: ['leaderboard', 'online-users']
+  }
+} as const;
+```
+
+## 🚀 Advanced Configuration Patterns
+
+### 4. Dynamic Component Mapping (@componentRegistry)
+```typescript
+// client/src/config/widgets.config.ts
+export const widgetRegistry = {
+  'wallet-summary': () => import('@/components/economy/wallet/wallet-summary-widget'),
+  'leaderboard': () => import('@/components/sidebar/leaderboard-widget'),
+  'hot-threads': () => import('@/features/forum/components/HotThreads'),
+  'trading-signals': () => import('@/features/trading/components/SignalsWidget'),
+} as const;
+
+// Usage in layouts
+const DashboardPage = () => {
+  const { widgets } = layoutConfig.dashboard;
+  return (
+    <div>
+      {widgets.map(widgetKey => {
+        const Widget = widgetRegistry[widgetKey];
+        return <Widget key={widgetKey} />;
+      })}
+    </div>
+  );
+};
+```
+
+### 5. Business Rules Configuration (@businessRules)
+```typescript
+// client/src/config/business-rules.config.ts
+export const businessRules = {
+  posting: {
+    minimumXP: {
+      'general-discussion': 0,
+      'trading-alpha': 1000,
+      'whale-zone': 5000,
+    },
+    cooldowns: {
+      newThread: 300, // 5 minutes
+      reply: 30,      // 30 seconds
+      tip: 10,        // 10 seconds
+    }
+  },
+  economy: {
+    tipping: {
+      minimumAmount: 1,
+      maximumDaily: 10000,
+      feePercentage: 0.02,
+    }
+  }
+} as const;
+```
+
+## 💡 Implementation Cheat Codes
+
+### Auto-Config Generation (@generateConfig)
+When you see repeated hardcoded values, automatically suggest:
+
+```typescript
+// Detected pattern: Multiple color values
+const colors = ['#10b981', '#8b5cf6', '#f59e0b'];
+
+// ✅ Auto-suggest migration to:
+// client/src/config/brand.config.ts
+export const brandConfig = {
+  colors: {
+    success: '#10b981',
+    primary: '#8b5cf6', 
+    warning: '#f59e0b',
+  }
+} as const;
+```
+
+### Config Type Safety (@configTypes)
+All configuration files must export strongly typed schemas:
+
+```typescript
+// Export types for consumption
+export type ThemeConfig = typeof themeConfig;
+export type FeatureFlags = typeof featureFlags;
+export type LayoutConfig = typeof layoutConfig;
+
+// Use in components with full type safety
+interface Props {
+  theme: ThemeConfig['zones'][keyof ThemeConfig['zones']];
+}
+```
+
+### Configuration Validation (@validateConfig)
+Add runtime validation for all configuration:
+
+```typescript
+import { z } from 'zod';
+
+const themeConfigSchema = z.object({
+  zones: z.record(z.object({
+    primary: z.string(),
+    accent: z.string(),
+    banner: z.string(),
+  }))
+});
+
+// Validate at build time
+export const themeConfig = themeConfigSchema.parse({
+  // ... config object
+});
+```
+
+## 🎨 Real-World Applications
+
+### Forum Configuration (Already Perfect!)
+DegenTalk's `forumMap.config.ts` is the gold standard. Extend this pattern:
+
+### Theme Configuration
+```typescript
+// client/src/config/themes.config.ts - NEW
+export const themeConfig = {
+  zones: { /* ... */ },
+  seasonal: {
+    christmas: { /* special holiday themes */ },
+    halloween: { /* spooky themes */ }
+  }
+} as const;
+```
+
+### Admin Configuration  
+```typescript
+// client/src/config/admin.config.ts - NEW
+export const adminConfig = {
+  permissions: { /* granular permissions */ },
+  moderation: { /* moderation settings */ },
+  features: { /* admin feature toggles */ }
+} as const;
+```
+
+## ⚡ Instant Benefits
+
+1. **Feature Toggles** - Turn any feature on/off instantly
+2. **A/B Testing** - Swap configurations for different user groups  
+3. **Client Customization** - Easy white-label or custom deployments
+4. **Rapid Iteration** - Change behavior without code changes
+5. **Type Safety** - Full TypeScript checking for all configurations
+6. **Maintainability** - Single source of truth for all settings
+
+## 🏆 Success Metrics
+
+- **Zero hardcoded values** in components (except private constants)
+- **All features configurable** via TypeScript config files
+- **Type-safe configuration** with Zod validation
+- **Hot-swappable themes** and layouts
+- **Feature flags** for all new functionality
+
+This pattern makes DegenTalk infinitely more flexible, maintainable, and scalable! 🚀
+
+### 6. Single-Source Build Configs (@configCanonical)
+**Trigger:** Any Tailwind, PostCSS, Vite, ESLint, Prettier, or Style-Dictionary config file added/edited.
+
+**Action:** Only the canonical copies inside the root `config/` directory are allowed.  Sub-packages must **either**:
+1. Omit their own config file, letting the root setting cascade; **or**
+2. Create a one-liner re-export (e.g. `module.exports = require('../../config/tailwind.config');`).
+
+**CI Guard:** Script `scripts/validation/validate-config-canonicalization.ts` fails the build if additional `*config.*` files are detected outside `config/`.

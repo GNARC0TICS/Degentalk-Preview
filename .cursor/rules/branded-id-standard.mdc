@@ -1,0 +1,80 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# Branded ID Standard
+
+## Objective
+Guarantee type-safe, opaque identifiers across the entire codebase, preventing accidental mixing of entity IDs and enforcing UUID-first database schema.
+
+---
+
+## Canonical Module
+`@shared/types/ids.ts` exports all branded ID helpers:
+```ts
+export type UserId = string & { __brand: 'UserId' };
+export type ThreadId = string & { __brand: 'ThreadId' };
+// …etc.
+```
+
+Legacy bridge `db/types/id.types.ts` re-exports from this file **but is deprecated**.
+
+---
+
+## Rules
+1. **Import Only from `@shared/types/ids`** – ESLint `degen/no-missing-branded-id-import`.
+2. **No Numeric IDs** – ESLint `degen/no-number-id: error`.
+3. **UUID Storage** – DB columns must be `uuid` type; migrations enforce.
+4. **DTOs & Transformers** – expose branded IDs, never raw strings.
+
+---
+
+## Migration Checklist
+1. Run codemod `scripts/codemods/move-db-id-imports.ts`.
+2. Execute `scripts/codemods/phase5/numeric-id-migration.ts` to replace `number` IDs.
+3. Delete `db/types/id.types.ts` when `git grep "@db/types/id.types"` returns 0.
+
+---
+
+**Status:** Active after Phase-5 hardening
+
+---
+
+## Extended Guidelines (2025-Q3)
+
+1. **Value Objects Over Primitives**
+   • Monetary and XP fields use `DgtAmount`, `XpAmount` branded value objects exported from `@shared/types/economy.ts`.
+   • Never expose `number` or raw `string` for these domains.
+
+2. **Cross-Domain Mapping Helper**
+   • `shared/lib/id-mapper.ts` provides `mapId<TFrom extends BrandedId, TTo extends BrandedId>(id: TFrom): TTo` for safe conversions (rare cases).
+   • Direct casting (`as unknown as`) is banned – flagged by `degen/no-double-assert`.
+
+3. **GraphQL & External API Boundaries**
+   • Outbound GraphQL uses `ID` scalar -> `string` but **reimport** as branded type at the gateway layer.
+   • Add `parser.parseValue` that validates UUID format.
+
+4. **Runtime Validation**
+   • All incoming IDs from request params must go through `validateUuid(id)` util before cast to branded type.
+
+5. **Code-gen Sync**
+   • `pnpm codegen:prisma-types` re-generates DTO → branded‐ID mappings for generated Prisma or OpenAPI clients.
+   • CI fails if `git diff --exit-code` after codegen shows uncommitted changes.
+
+6. **TypeScript Config**
+   • `exactOptionalPropertyTypes` and `noUncheckedIndexedAccess` enabled to prevent silent mixing.
+
+7. **Deprecation Clock**
+   • `db/types/id.types.ts` bridge deleted on **2025-09-01**. ESLint rule `degen/no-bridge-id-import` already in warn mode—flips to error after the date.
+
+---
+
+### Sample DTO
+```ts
+export interface PublicWalletEntry {
+  id: WalletId;
+  balance: DgtAmount;
+  ownerId: UserId;
+}
+```
