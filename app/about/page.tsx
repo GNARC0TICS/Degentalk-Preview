@@ -9,7 +9,7 @@ export const metadata: Metadata = {
     title: 'About Degentalk™ - The Satirical Crypto Community',
     description: 'Discover the story behind Degentalk, where strategy meets community in the world of cryptocurrency trading.',
     type: 'website',
-    url: 'https://degentalk.io/about',
+    url: 'https://degentalk.net/about',
   },
   twitter: {
     card: 'summary_large_image',
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     description: 'Learn about the most addictive crypto trading community platform.',
   },
   alternates: {
-    canonical: 'https://degentalk.io/about',
+    canonical: 'https://degentalk.net/about',
   },
 };
 

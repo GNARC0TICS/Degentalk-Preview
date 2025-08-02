@@ -39,7 +39,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Degentalk™ - Where Strategy Meets Community',
     description: 'The premier crypto community forum for serious traders and enthusiasts.',
-    url: 'https://degentalk.io',
+    url: 'https://degentalk.net',
     siteName: 'Degentalk™',
     locale: 'en_US',
     type: 'website',
