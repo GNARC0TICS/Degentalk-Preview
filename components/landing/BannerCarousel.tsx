@@ -8,7 +8,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from '@/components/ui/carousel';
-import { BannerCard } from './BannerCard-optimized';
+import { BannerCard } from './BannerCard';
 
 export function BannerCarousel() {
   const [autoplay, setAutoplay] = React.useState<any[]>([]);

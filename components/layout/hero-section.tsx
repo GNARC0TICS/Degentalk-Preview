@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { uiConfig } from '@/config/ui.config';
 import type { HeroQuote } from '@/config/ui.config';
-import { HeroCTAButton } from './HeroCTAButton-optimized';
+import { HeroCTAButton } from './HeroCTAButton';
 import { BrowseTopicsLink } from './BrowseTopicsLink';
 
 // Fisher-Yates shuffle
