@@ -1,8 +1,8 @@
 'use client';
 
-import { usePathname, useSearchParams, useRouter as useNextRouter } from 'next/navigation';
+import { usePathname, useRouter as useNextRouter } from 'next/navigation';
 import Link from 'next/link';
-import { ReactNode } from 'react';
+import { ReactNode, useMemo } from 'react';
 import { cn } from '@/lib/utils';
 
 // Compatibility layer for React Router hooks
@@ -10,8 +10,14 @@ import { cn } from '@/lib/utils';
 
 export function useLocation() {
   const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const search = searchParams.toString() ? `?${searchParams.toString()}` : '';
+  
+  // Use window.location.search directly to avoid useSearchParams during SSR
+  const search = useMemo(() => {
+    if (typeof window === 'undefined') {
+      return '';
+    }
+    return window.location.search;
+  }, [pathname]); // Re-compute when pathname changes
   
   return {
     pathname,
