@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document provides detailed API documentation for all components, hooks, utilities, and configuration modules in the DegenTalk Landing project.
+This document provides detailed API documentation for all components, hooks, utilities, and configuration modules in the DegenTalk Landing project..
 
 ## Table of Contents
 
