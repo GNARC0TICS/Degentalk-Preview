@@ -65,6 +65,7 @@ export const metadata: Metadata = {
   },
 };
 
+import { Analytics } from '@vercel/analytics/react';
 import { Providers } from './providers';
 import { SiteHeader } from '@/components/header/SiteHeader';
 import { SiteFooter } from '@/components/footer/SiteFooter';
@@ -138,6 +139,7 @@ export default function RootLayout({
       <body className="bg-zinc-950 text-white">
         <WebVitals />
         <Providers>
+          <Analytics />
           <ScrollToTop />
           <SiteHeader />
           <main className="min-h-screen">
