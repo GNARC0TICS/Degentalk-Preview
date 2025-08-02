@@ -1,101 +1,48 @@
-# DegenTalk Landing Page
+# Next.js Migration - Safe Implementation
 
-A beautiful, animated landing page for the Degentalk crypto community platform.
+This directory contains the Next.js migration setup that preserves ALL existing React components without modification.
 
-## 🚀 Quick Start
-
-```bash
-# Install dependencies
-pnpm install
-
-# Start development server
-pnpm dev
-
-# Build for production
-pnpm build
-
-# Preview production build
-pnpm preview
-```
-
-## 📁 Project Structure
+## Structure
 
 ```
-.
-├── client/           # React/Vite frontend
-│   ├── src/         # Source code
-│   ├── public/      # Static assets
-│   └── dist/        # Production build
-├── shared/          # Shared types and configs
-└── package.json     # Root package configuration
+degentalk-landing/
+├── package.json              # Next.js dependencies
+├── next.config.js           # Next.js configuration
+├── tsconfig.json            # TypeScript config (Next.js compatible)
+├── app/                     # Next.js App Router (minimal wrappers only)
+│   ├── layout.tsx          # Root layout wrapper
+│   ├── page.tsx            # Home page wrapper
+│   ├── contact/
+│   │   └── page.tsx        # Contact page wrapper
+│   ├── about/
+│   │   └── page.tsx        # About page wrapper
+│   └── legal/
+│       ├── privacy/
+│       │   └── page.tsx    # Privacy page wrapper
+│       └── terms/
+│           └── page.tsx    # Terms page wrapper
+├── lib/
+│   └── router-compat.tsx   # React Router compatibility layer
+└── scripts/
+    └── migrate.sh          # Migration script to copy files
 ```
 
-## 🎨 Features
+## Migration Process
 
-- **Animated Hero Section** - Rotating quotes with smooth transitions
-- **Announcement Ticker** - Scrolling announcements bar
-- **Banner Carousel** - Featured community banners with auto-rotation
-- **Fully Responsive** - Mobile-first design
-- **Framer Motion Animations** - Smooth, performant animations
-- **Static Build** - No backend required
+1. **Install dependencies**: `npm install`
+2. **Copy existing files**: `./scripts/migrate.sh`
+3. **Start development**: `npm run dev`
+4. **Verify**: Compare with original site side-by-side
 
-## 🛠️ Tech Stack
+## Key Features
 
-- React 18
-- Vite
-- TypeScript
-- Tailwind CSS
-- Framer Motion
-- Lucide Icons
+- **Zero component changes** - All React components remain untouched
+- **Preserved routing** - React Router hooks work via compatibility layer
+- **Same styling** - All CSS/Tailwind classes work identically
+- **SEO benefits** - Server-side rendering for better search visibility
+- **Performance** - Automatic code splitting and optimization
 
-## 🏗️ Development
+## Deployment
 
-From the root directory:
-
-```bash
-# Start dev server (http://localhost:5173)
-pnpm dev
-
-# Type checking
-cd client && pnpm typecheck
-
-# Build for production
-pnpm build
-```
-
-## 📦 Deployment
-
-The production build is a static site that can be deployed anywhere:
-
-```bash
-# Build the site
-pnpm build
-
-# The output is in client/dist/
-# Deploy this folder to any static hosting service
-```
-
-## 🎯 Components
-
-- **Hero Section** - Eye-catching hero with CTA button
-- **Announcement Ticker** - News and updates
-- **Banner Cards** - Community showcase cards
-- **Site Header** - Navigation and branding
-- **Site Footer** - Links and information
-
-## ⚡ Performance
-
-- Optimized bundle size (~440KB gzipped)
-- Code splitting for faster loads
-- Lazy loading for images
-- CSS-in-JS optimization
-
-## 🔧 Configuration
-
-- `client/src/config/` - UI and theme configuration
-- `client/tailwind.config.js` - Tailwind customization
-- `client/vite.config.ts` - Build configuration
-
----
-
-Built with ❤️ for the DegenTalk community
+Build for production: `npm run build`
+Start production server: `npm start`

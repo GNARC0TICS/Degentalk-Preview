@@ -8,8 +8,10 @@
 /coverage
 
 # next.js
-/.next/
-/out/
+.next/
+.vercel/
+node_modules/
+out/
 
 # production
 /build
