@@ -1,0 +1,108 @@
+/* Browse Topics Link Styles */
+
+/* Shimmer variant */
+.browse-topics-shimmer {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 9999px;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(6, 95, 70, 0.05) 100%);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.browse-topics-shimmer:hover {
+  border-color: rgba(16, 185, 129, 0.4);
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(6, 95, 70, 0.08) 100%);
+}
+
+.browse-topics-shimmer-text {
+  font-size: 14px;
+  font-weight: 500;
+  color: #10b981;
+  z-index: 2;
+}
+
+.browse-topics-shimmer-arrow {
+  width: 16px;
+  height: 16px;
+  color: #10b981;
+  z-index: 2;
+  transition: transform 0.3s ease;
+}
+
+.browse-topics-shimmer:hover .browse-topics-shimmer-arrow {
+  transform: translateX(3px);
+}
+
+.browse-topics-shimmer-effect {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 40%,
+    rgba(16, 185, 129, 0.2) 50%,
+    transparent 60%
+  );
+  animation: shimmer 8s infinite;
+}
+
+/* Pill variant */
+.browse-topics-pill {
+  display: inline-flex;
+  align-items: center;
+  position: relative;
+  padding: 2px;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.browse-topics-pill-glow {
+  position: absolute;
+  inset: -4px;
+  border-radius: 9999px;
+  background: radial-gradient(circle at center, rgba(16, 185, 129, 0.3), transparent);
+  filter: blur(12px);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.browse-topics-pill:hover .browse-topics-pill-glow {
+  opacity: 1;
+}
+
+.browse-topics-pill-content {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 9999px;
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  font-size: 14px;
+  font-weight: 500;
+  color: #10b981;
+  backdrop-filter: blur(10px);
+}
+
+.browse-topics-pill-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Shimmer animation with delay */
+@keyframes shimmer {
+  0%, 70% {
+    transform: translateX(-100%);
+  }
+  80%, 100% {
+    transform: translateX(200%);
+  }
+}

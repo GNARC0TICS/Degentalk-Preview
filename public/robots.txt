@@ -1,0 +1,80 @@
+# Robots.txt for Degentalk™ - Satirical Trading Community
+# Primary domains: degentalk.net, degentalk.io, degentalk.app, degentalk.org, degentalk.info, degentalk.ca
+
+User-agent: *
+Allow: /
+Allow: /about
+Allow: /contact
+Allow: /legal/privacy
+Allow: /legal/terms
+
+# Disallow admin and private areas (future-proofing)
+Disallow: /admin/
+Disallow: /private/
+Disallow: /_next/
+Disallow: /api/internal/
+
+# Allow important SEO files
+Allow: /sitemap.xml
+Allow: /favicon.ico
+Allow: /manifest.json
+Allow: /og-image.png
+Allow: /api/newsletter
+
+# Sitemap locations for all domains
+Sitemap: https://degentalk.net/sitemap.xml
+Sitemap: https://degentalk.io/sitemap.xml
+Sitemap: https://degentalk.app/sitemap.xml
+Sitemap: https://degentalk.org/sitemap.xml
+Sitemap: https://degentalk.info/sitemap.xml
+Sitemap: https://degentalk.ca/sitemap.xml
+
+# Specific bot instructions
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0
+
+User-agent: Googlebot-Image
+Allow: /
+Allow: *.jpg
+Allow: *.jpeg
+Allow: *.gif
+Allow: *.png
+Allow: *.webp
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Slurp
+Allow: /
+Crawl-delay: 1
+
+User-agent: DuckDuckBot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Twitterbot
+Allow: /
+
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: LinkedInBot
+Allow: /
+
+# Block problematic bots
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /
+
+User-agent: SemrushBot
+Crawl-delay: 10
+
+# Host directive (primary indexed domain)
+Host: degentalk.net

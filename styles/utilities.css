@@ -1,0 +1,107 @@
+/* 
+ * Design System Utility Classes 
+ * Shared across all Degentalk UI components
+ * 
+ * Import this file in global.css once
+ */
+
+@import './tokens/animations.css';
+
+/* Glass Cards & Containers */
+.glass-card {
+	@apply bg-zinc-900/60 backdrop-blur-md border border-zinc-800;
+}
+
+.glass-card-light {
+	@apply bg-zinc-800/60 backdrop-blur-sm border border-zinc-700/80;
+}
+
+.glass-drawer {
+	@apply bg-zinc-950/80 backdrop-blur-xl border-l border-zinc-800/50;
+}
+
+/* Hover States */
+.hover-scale {
+	@apply transition-transform duration-300 hover:scale-[1.02];
+}
+
+.hover-glow {
+	@apply transition-shadow hover:shadow-lg;
+	box-shadow: 0 10px 15px -3px rgba(var(--forum-accent-rgb, 16, 185, 129), 0.15);
+}
+
+/* Focus States */
+.accent-ring {
+	@apply focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-900;
+	--tw-ring-color: var(--forum-accent, #10b981);
+}
+
+/* Typography */
+.heading-1 {
+	@apply text-3xl font-bold text-zinc-200;
+}
+
+.heading-2 {
+	@apply text-2xl font-bold text-zinc-300;
+}
+
+.heading-3 {
+	@apply text-xl font-semibold text-zinc-300;
+}
+
+.body-text {
+	@apply text-zinc-400;
+}
+
+/* Gradients */
+.accent-gradient {
+	background: linear-gradient(
+		135deg,
+		var(--forum-accent-gradient-start, rgba(16, 185, 129, 0.8)) 0%,
+		var(--forum-accent-gradient-end, rgba(16, 185, 129, 0.4)) 100%
+	);
+}
+
+.accent-border-left {
+	border-left: 3px solid var(--forum-accent, #10b981);
+}
+
+/* Animations */
+.fade-in {
+	@apply animate-fadeIn;
+}
+
+.shimmer {
+	@apply relative overflow-hidden;
+}
+
+.shimmer::after {
+	@apply absolute inset-0;
+	content: '';
+	background: linear-gradient(
+		90deg,
+		rgba(24, 24, 27, 0) 0%,
+		rgba(39, 39, 42, 0.2) 20%,
+		rgba(39, 39, 42, 0.5) 60%,
+		rgba(24, 24, 27, 0) 100%
+	);
+	animation: shimmer 1.5s infinite;
+}
+
+/* Accessibility */
+/* Disabled prefers-reduced-motion for full animation experience */
+/* @media (prefers-reduced-motion: reduce) {
+	.hover-scale:hover {
+		transform: none;
+	}
+
+	.shimmer::after {
+		animation: none;
+	}
+
+	.animate-pulse,
+	.animate-fade-in,
+	.animate-bounce {
+		animation: none;
+	}
+} */

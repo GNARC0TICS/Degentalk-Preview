@@ -1,0 +1,918 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import './styles/globals.css';
+@import './styles/typography.css';
+@import './styles/layout.css';
+@import './styles/design-system.css';
+@import './styles/animations.css';
+@import './styles/underline-links.css';
+
+@layer base {
+	/* Dark theme is default - Degentalk brand identity */
+	:root {
+		/* Core palette - True black OLED optimized */
+		--background: 0 0% 0%; /* Pure black #000000 */
+		--foreground: 0 0% 95%; /* Bright white #F2F2F2 */
+
+		--card: 0 0% 5%; /* Elevated surface #0D0D0D */
+		--card-foreground: 0 0% 95%;
+
+		--popover: 0 0% 8%; /* #141414 */
+		--popover-foreground: 0 0% 95%;
+
+		--primary: 158 84% 39%; /* Emerald green - main brand color */
+		--primary-foreground: 0 0% 98%;
+
+		--secondary: 240 3.7% 15.9%; /* Dark gray */
+		--secondary-foreground: 0 0% 98%;
+
+		--muted: 240 3.7% 15.9%;
+		--muted-foreground: 240 5% 64.9%;
+
+		--accent: 158 84% 39%; /* Match primary for consistency */
+		--accent-foreground: 0 0% 98%;
+
+		--destructive: 0 84% 60%;
+		--destructive-foreground: 0 0% 98%;
+
+		--border: 240 3.7% 15.9%;
+		--input: 240 3.7% 15.9%;
+		--ring: 158 84% 39%;
+
+		--radius: 0.75rem;
+		
+		/* Forum accent color variables */
+		--forum-accent: #10b981;
+		--forum-accent-rgb: 16, 185, 129;
+		--forum-accent-faded: rgba(16, 185, 129, 0.3);
+		--forum-accent-gradient-start: rgba(16, 185, 129, 0.8);
+		--forum-accent-gradient-end: rgba(16, 185, 129, 0.4);
+		
+		/* Additional design tokens */
+		--glow-color: rgba(16, 185, 129, 0.5);
+		--glow-color-subtle: rgba(16, 185, 129, 0.2);
+		--shadow-color: rgba(0, 0, 0, 0.5);
+		--overlay-bg: rgba(0, 0, 0, 0.8);
+		
+		/* Admin specific overrides */
+		--admin-bg-page: 0 0% 3.5%; /* #090909 */
+		--admin-bg-surface: 0 0% 7%; /* #121212 */
+		--admin-bg-surface-hover: 0 0% 10%; /* #1A1A1A */
+		--admin-bg-element: 0 0% 10%;
+		--admin-bg-element-hover: 0 0% 15%;
+		
+		--admin-border-subtle: 0 0% 10%;
+		--admin-border-strong: 0 0% 25%;
+		--admin-border-interactive: 158 84% 39%;
+		
+		--admin-text-primary: 0 0% 98%;
+		--admin-text-secondary: 0 0% 64%;
+		--admin-text-accent: 158 84% 45%;
+		--admin-text-destructive: 0 84% 60%;
+	}
+	
+	/* Light theme override if needed */
+	.light {
+		--background: 0 0% 100%;
+		--foreground: 240 10% 3.9%;
+		
+		--card: 0 0% 100%;
+		--card-foreground: 240 10% 3.9%;
+		
+		--popover: 0 0% 100%;
+		--popover-foreground: 240 10% 3.9%;
+		
+		--primary: 158 84% 39%;
+		--primary-foreground: 0 0% 100%;
+		
+		--secondary: 240 4.8% 95.9%;
+		--secondary-foreground: 240 5.9% 10%;
+		
+		--muted: 240 4.8% 95.9%;
+		--muted-foreground: 240 3.8% 46.1%;
+		
+		--accent: 158 84% 39%;
+		--accent-foreground: 0 0% 100%;
+		
+		--destructive: 0 84% 60%;
+		--destructive-foreground: 0 0% 98%;
+		
+		--border: 240 5.9% 90%;
+		--input: 240 5.9% 90%;
+		--ring: 158 84% 39%;
+	}
+}
+
+@layer base {
+	* {
+		@apply border-border;
+	}
+	body {
+		@apply bg-background text-foreground;
+		font-feature-settings:
+			'rlig' 1,
+			'calt' 1;
+	}
+	.bg-gradient-text {
+		background-size: 200% 200%;
+		animation: gradient 8s ease infinite;
+	}
+}
+
+@keyframes gradient {
+	0% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
+	100% {
+		background-position: 0% 50%;
+	}
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+	width: 6px;
+	height: 6px;
+}
+
+::-webkit-scrollbar-track {
+	background: #27272a;
+}
+
+::-webkit-scrollbar-thumb {
+	background: #4c4c52;
+	border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background: #10b981;
+}
+
+/* Pulse animation for highlighted elements */
+.pulse-animation {
+	animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+	0% {
+		box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4);
+	}
+	70% {
+		box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);
+	}
+	100% {
+		box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+	}
+}
+
+/* Glow effect for highlighted text */
+.text-glow {
+	text-shadow: 0 0 10px rgba(16, 185, 129, 0.7);
+}
+
+/* Input focus overrides */
+input:focus,
+select:focus,
+textarea:focus {
+	@apply border-emerald-500 ring-1 ring-emerald-500 ring-opacity-50;
+	outline: none;
+}
+
+/* Button transitions */
+button {
+	@apply transition-all duration-200;
+}
+
+/* Ticker animation removed - defined in announcement-ticker.css */
+
+/* Ticker animation moved to announcement-ticker-simple.css */
+
+/* Custom scrollbar for the shoutbox */
+.custom-scrollbar::-webkit-scrollbar {
+	width: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+	background: rgba(39, 39, 42, 0.5);
+	border-radius: 2px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+	background: rgba(16, 185, 129, 0.6);
+	border-radius: 2px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+	background: rgba(16, 185, 129, 0.8);
+}
+
+/* Shoutbox message animations */
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+		transform: translateY(10px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+.shoutbox-message-new {
+	animation: fadeIn 0.3s ease-out forwards;
+}
+
+/* Custom Hamburger Menu Styles */
+/* Hamburger Menu - Legacy Component */
+.hamburger {
+	width: 40px;
+	height: 36px;
+	position: relative;
+	cursor: pointer;
+	display: inline-block;
+	padding: 8px;
+}
+
+.hamburger .line {
+	width: 36px;
+	height: 3px;
+	background-color: #9ca3af;
+	display: block;
+	margin: 6px auto;
+	transition: all 0.3s ease-in-out;
+	position: relative;
+	border-radius: 1px;
+}
+
+/* Candlestick Tips */
+.hamburger .line::before,
+.hamburger .line::after {
+	content: '';
+	position: absolute;
+	width: 7px;
+	height: 2px;
+	background: rgba(156, 163, 175, 0.6);
+	opacity: 0;
+	transition:
+		opacity 0.4s ease-in-out,
+		transform 0.3s ease-in-out;
+	top: 0;
+	border-radius: 2px;
+}
+
+.hamburger .line::before {
+	left: -4px;
+}
+
+.hamburger .line::after {
+	right: -4px;
+}
+
+/* Animation */
+#hamburger-10 {
+	transition: all 0.3s ease-in-out;
+}
+
+#hamburger-10.is-active {
+	transform: rotate(90deg);
+}
+
+#hamburger-10.is-active .line::before,
+#hamburger-10.is-active .line::after {
+	opacity: 1;
+}
+
+/* Line 1 tip positioning */
+#hamburger-10.is-active .line:nth-child(1)::before {
+	width: 4px;
+	height: 3px;
+}
+#hamburger-10.is-active .line:nth-child(1)::after {
+	width: 4px;
+	height: 3px;
+}
+
+/* Line 2 tip positioning */
+#hamburger-10.is-active .line:nth-child(2)::before {
+	width: 4px;
+	height: 3px;
+}
+#hamburger-10.is-active .line:nth-child(2)::after {
+	width: 4px;
+	height: 3px;
+}
+
+/* Line 3 tip positioning */
+#hamburger-10.is-active .line:nth-child(3)::before {
+	width: 4px;
+	height: 3px;
+}
+#hamburger-10.is-active .line:nth-child(3)::after {
+	width: 4px;
+	height: 3px;
+}
+
+#hamburger-10.is-active .line:nth-child(1) {
+	width: 28px;
+	transform: translateX(-5px);
+	background-color: #10b981;
+}
+
+#hamburger-10.is-active .line:nth-child(2) {
+	width: 20px;
+	transform: translateX(0);
+	background-color: #10b981;
+}
+
+#hamburger-10.is-active .line:nth-child(3) {
+	width: 32px;
+	transform: translateX(5px);
+	background-color: #ef4444;
+}
+
+/* Candlestick Chart Menu - Exact match from gist */
+
+/* Base Variables */
+:root {
+	/* Core colors - can be customized */
+	--bullish-color: #10b981;
+	--bearish-color: #ef4444;
+	--wick-color: #1e293b;
+
+	/* Animation settings */
+	--transition-speed: 0.4s;
+}
+
+/* Component Container */
+.chart-menu {
+	/* Core sizing and positioning */
+	width: 40px; /* Adjusted size from original */
+	height: 40px; /* Adjusted size from original */
+	position: relative;
+	cursor: pointer;
+	display: inline-block;
+	padding: 5px; /* Adjusted size from original */
+	transform-origin: center;
+}
+
+/* Base Line Styles */
+.chart-menu .line {
+	/* Only handle positioning and dimensions */
+	width: 30px; /* Adjusted size from original */
+	height: 3px; /* Adjusted size from original */
+	background-color: transparent; /* Color handled by inner */
+	display: block;
+	margin: 6px auto; /* Adjusted size from original */
+	transition:
+		width var(--transition-speed) ease-in-out,
+		height var(--transition-speed) ease-in-out,
+		transform var(--transition-speed) ease-in-out; /* Animate specific props */
+	position: absolute; /* Use absolute for easier positioning */
+	top: 0;
+	left: 0;
+	transform-origin: center;
+	z-index: 2; /* Ensure lines (bodies) are above wicks */
+}
+
+/* Inner Line for Color and Hover Animation */
+.chart-menu .line-inner {
+	display: block;
+	width: 100%;
+	height: 100%;
+	background-color: var(--wick-color); /* Default hamburger color */
+	transition: background-color var(--transition-speed) ease-in-out;
+	transform-origin: center; /* Ensure hover scales from center */
+	border-radius: 1px; /* Subtle rounded edges */
+	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.08); /* Subtle inner shadow for depth */
+}
+
+/* Wick Styles - Hidden by default */
+.chart-menu .wick {
+	width: 2px;
+	height: 0;
+	background-color: var(--wick-color);
+	position: absolute;
+	opacity: 0;
+	/* Animate specific properties for wicks, add delay */
+	transition:
+		height var(--transition-speed) ease-in-out calc(var(--transition-speed) * 0.5),
+		top var(--transition-speed) ease-in-out,
+		left var(--transition-speed) ease-in-out,
+		opacity var(--transition-speed) ease-in-out calc(var(--transition-speed) * 0.5);
+	z-index: 1; /* Wicks behind bodies */
+	top: 0;
+	left: 0;
+}
+
+/* Additional Elements - Hidden initially */
+.chart-menu .line-4,
+.chart-menu .line-5 {
+	opacity: 0;
+	transform: scale(0);
+}
+
+/* Hamburger State (Default) - Position lines absolutely */
+.chart-menu:not(.is-active) .line {
+	width: 30px; /* Adjusted size from original */
+	height: 3px; /* Adjusted size from original */
+}
+.chart-menu:not(.is-active) .line-inner {
+	background-color: #9ca3af; /* Match original color */
+}
+.chart-menu:not(.is-active) .line-1 {
+	transform: translate(5px, 8px); /* Adjusted for our container */
+}
+.chart-menu:not(.is-active) .line-2 {
+	transform: translate(5px, 17px); /* Adjusted for our container */
+}
+.chart-menu:not(.is-active) .line-3 {
+	transform: translate(5px, 26px); /* Adjusted for our container */
+}
+
+/* Pattern Base State - Shared properties when active */
+.chart-menu.is-active .wick {
+	opacity: 1;
+}
+
+/* ======== PATTERN: THREE INSIDE UP ======== */
+/* Candle 1 (Large Red) */
+.chart-menu.is-active.pattern-three-inside-up .line-1 {
+	width: 10px; /* Adjusted size from original */
+	height: 20px; /* Adjusted size from original */
+	transform: translate(5px, 5px); /* Adjusted for our container */
+}
+.chart-menu.is-active.pattern-three-inside-up .line-1 .line-inner {
+	background-color: var(--bearish-color);
+}
+.chart-menu.is-active.pattern-three-inside-up .wick-1 {
+	height: 25px; /* Adjusted size from original */
+	top: 2px; /* Adjusted for our container */
+	left: 9px; /* Center wick on body */
+}
+
+/* Candle 2 (Small Green) */
+.chart-menu.is-active.pattern-three-inside-up .line-2 {
+	width: 8px; /* Adjusted size from original */
+	height: 10px; /* Adjusted size from original */
+	transform: translate(17px, 10px); /* Adjusted for our container */
+}
+.chart-menu.is-active.pattern-three-inside-up .line-2 .line-inner {
+	background-color: var(--bullish-color);
+}
+.chart-menu.is-active.pattern-three-inside-up .wick-2 {
+	height: 15px; /* Adjusted size from original */
+	top: 8px; /* Adjusted for our container */
+	left: 21px; /* Center wick on body */
+}
+
+/* Candle 3 (Larger Green) */
+.chart-menu.is-active.pattern-three-inside-up .line-3 {
+	width: 10px; /* Adjusted size from original */
+	height: 15px; /* Adjusted size from original */
+	transform: translate(28px, 5px); /* Adjusted for our container */
+}
+.chart-menu.is-active.pattern-three-inside-up .line-3 .line-inner {
+	background-color: var(--bullish-color);
+}
+.chart-menu.is-active.pattern-three-inside-up .wick-3 {
+	height: 20px; /* Adjusted size from original */
+	top: 2px; /* Adjusted for our container */
+	left: 32px; /* Center wick on body */
+}
+
+/* Hide unused elements */
+.chart-menu.is-active.pattern-three-inside-up .line-4,
+.chart-menu.is-active.pattern-three-inside-up .line-5,
+.chart-menu.is-active.pattern-three-inside-up .wick-4,
+.chart-menu.is-active.pattern-three-inside-up .wick-5 {
+	opacity: 0;
+	transform: scale(0);
+	height: 0;
+	width: 0;
+}
+
+/* ======== PATTERN: WHITE SOLDIERS ======== */
+.chart-menu.is-active.pattern-white-soldiers .line-1 {
+	width: 8px; /* Adjusted size from original */
+	height: 12px; /* Adjusted size from original */
+	transform: translate(5px, 12px); /* Adjusted for our container */
+}
+.chart-menu.is-active.pattern-white-soldiers .line-1 .line-inner {
+	background-color: var(--bullish-color);
+}
+.chart-menu.is-active.pattern-white-soldiers .wick-1 {
+	height: 18px; /* Adjusted size from original */
+	top: 9px; /* Adjusted for our container */
+	left: 9px; /* Center wick on body */
+}
+
+.chart-menu.is-active.pattern-white-soldiers .line-2 {
+	width: 9px; /* Adjusted size from original */
+	height: 15px; /* Adjusted size from original */
+	transform: translate(16px, 8px); /* Adjusted for our container */
+}
+.chart-menu.is-active.pattern-white-soldiers .line-2 .line-inner {
+	background-color: var(--bullish-color);
+}
+.chart-menu.is-active.pattern-white-soldiers .wick-2 {
+	height: 20px; /* Adjusted size from original */
+	top: 5px; /* Adjusted for our container */
+	left: 20px; /* Center wick on body */
+}
+
+.chart-menu.is-active.pattern-white-soldiers .line-3 {
+	width: 10px; /* Adjusted size from original */
+	height: 18px; /* Adjusted size from original */
+	transform: translate(28px, 4px); /* Adjusted for our container */
+}
+.chart-menu.is-active.pattern-white-soldiers .line-3 .line-inner {
+	background-color: var(--bullish-color);
+}
+.chart-menu.is-active.pattern-white-soldiers .wick-3 {
+	height: 22px; /* Adjusted size from original */
+	top: 2px; /* Adjusted for our container */
+	left: 32px; /* Center wick on body */
+}
+
+/* Hide unused elements */
+.chart-menu.is-active.pattern-white-soldiers .line-4,
+.chart-menu.is-active.pattern-white-soldiers .line-5,
+.chart-menu.is-active.pattern-white-soldiers .wick-4,
+.chart-menu.is-active.pattern-white-soldiers .wick-5 {
+	opacity: 0;
+	transform: scale(0);
+	height: 0;
+	width: 0;
+}
+
+/* ======== PATTERN: BULLISH ENGULFING ======== */
+.chart-menu.is-active.pattern-bullish-engulfing .line-1 {
+	width: 9px; /* Adjusted size from original */
+	height: 15px; /* Adjusted size from original */
+	transform: translate(7px, 8px); /* Adjusted for our container */
+}
+.chart-menu.is-active.pattern-bullish-engulfing .line-1 .line-inner {
+	background-color: var(--bearish-color);
+}
+.chart-menu.is-active.pattern-bullish-engulfing .wick-1 {
+	height: 20px; /* Adjusted size from original */
+	top: 5px; /* Adjusted for our container */
+	left: 11px; /* Center wick on body */
+}
+
+.chart-menu.is-active.pattern-bullish-engulfing .line-2 {
+	width: 12px; /* Adjusted size from original */
+	height: 18px; /* Adjusted size from original */
+	transform: translate(22px, 5px); /* Adjusted for our container */
+}
+.chart-menu.is-active.pattern-bullish-engulfing .line-2 .line-inner {
+	background-color: var(--bullish-color);
+}
+.chart-menu.is-active.pattern-bullish-engulfing .wick-2 {
+	height: 22px; /* Adjusted size from original */
+	top: 3px; /* Adjusted for our container */
+	left: 28px; /* Center wick on body */
+}
+
+/* Hide unused elements */
+.chart-menu.is-active.pattern-bullish-engulfing .line-3,
+.chart-menu.is-active.pattern-bullish-engulfing .line-4,
+.chart-menu.is-active.pattern-bullish-engulfing .line-5,
+.chart-menu.is-active.pattern-bullish-engulfing .wick-3,
+.chart-menu.is-active.pattern-bullish-engulfing .wick-4,
+.chart-menu.is-active.pattern-bullish-engulfing .wick-5 {
+	opacity: 0;
+	transform: scale(0);
+	height: 0;
+	width: 0;
+}
+
+/* ======== PATTERN: THREE OUTSIDE UP ======== */
+/* Candle 1 (Red) */
+.chart-menu.is-active.pattern-three-outside-up .line-1 {
+	width: 9px; /* Adjusted size from original */
+	height: 15px; /* Adjusted size from original */
+	transform: translate(4px, 8px); /* Adjusted for our container */
+}
+.chart-menu.is-active.pattern-three-outside-up .line-1 .line-inner {
+	background-color: var(--bearish-color);
+}
+.chart-menu.is-active.pattern-three-outside-up .wick-1 {
+	height: 20px; /* Adjusted size from original */
+	top: 5px; /* Adjusted for our container */
+	left: 8px; /* Center wick on body */
+}
+
+/* Candle 2 (Large Green, engulfing) */
+.chart-menu.is-active.pattern-three-outside-up .line-2 {
+	width: 10px; /* Adjusted size from original */
+	height: 16px; /* Adjusted size from original */
+	transform: translate(15px, 7px); /* Adjusted for our container */
+}
+.chart-menu.is-active.pattern-three-outside-up .line-2 .line-inner {
+	background-color: var(--bullish-color);
+}
+.chart-menu.is-active.pattern-three-outside-up .wick-2 {
+	height: 22px; /* Adjusted size from original */
+	top: 4px; /* Adjusted for our container */
+	left: 19px; /* Center wick on body */
+}
+
+/* Candle 3 (Green, closes higher) */
+.chart-menu.is-active.pattern-three-outside-up .line-3 {
+	width: 10px; /* Adjusted size from original */
+	height: 14px; /* Adjusted size from original */
+	transform: translate(28px, 5px); /* Adjusted for our container */
+}
+.chart-menu.is-active.pattern-three-outside-up .line-3 .line-inner {
+	background-color: var(--bullish-color);
+}
+.chart-menu.is-active.pattern-three-outside-up .wick-3 {
+	height: 18px; /* Adjusted size from original */
+	top: 3px; /* Adjusted for our container */
+	left: 32px; /* Center wick on body */
+}
+
+/* Hide unused elements */
+.chart-menu.is-active.pattern-three-outside-up .line-4,
+.chart-menu.is-active.pattern-three-outside-up .line-5,
+.chart-menu.is-active.pattern-three-outside-up .wick-4,
+.chart-menu.is-active.pattern-three-outside-up .wick-5 {
+	opacity: 0;
+	transform: scale(0);
+	height: 0;
+	width: 0;
+}
+
+/* Hide unused elements in hamburger state */
+.chart-menu:not(.is-active) .line-4,
+.chart-menu:not(.is-active) .line-5,
+.chart-menu:not(.is-active) .wick {
+	width: 0;
+	height: 0;
+	opacity: 0;
+	transform: scale(0);
+}
+
+/* ========================================
+   MOTION PREFERENCES SYSTEM
+   ========================================
+   This system respects user accessibility preferences while allowing
+   critical animations (like announcements) to continue.
+   
+   How it works:
+   1. OS-level: Detects prefers-reduced-motion media query
+   2. App-level: Uses .no-motion class on <body> (controlled by MotionContext)
+   3. Exceptions: Use :not() selector to exempt specific components
+   
+   To add exceptions: Add :not(.your-class) to the selectors below
+   See /client/src/docs/MOTION_PREFERENCES.md for full documentation
+   ======================================== */
+
+/* OS-level reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+	/* Disable all animations except exempted components */
+	*:not(.announcement-ticker-content):not(.force-animation),
+	*::before:not(.force-animation),
+	*::after:not(.force-animation) {
+		animation: none !important;
+		transition: none !important;
+		scroll-behavior: auto !important;
+	}
+	
+	/* EXCEPTION: Allow announcement ticker to animate for important updates */
+	.announcement-ticker-content {
+		animation: ticker-scroll 25s linear infinite !important;
+	}
+}
+
+/* App-level motion toggle via MotionContext */
+body.no-motion *:not(.announcement-ticker-content):not(.hero-cta-button):not(.hero-cta-button *):not(.browse-topics-shimmer):not(.browse-topics-shimmer *):not(.force-animation),
+body.no-motion *::before,
+body.no-motion *::after {
+	animation: none !important;
+	transition: none !important;
+	scroll-behavior: auto !important;
+}
+
+/* EXCEPTIONS: Elements that always animate */
+body.no-motion .announcement-ticker-content {
+	animation: ticker-scroll 25s linear infinite !important;
+}
+
+/* Hero CTA animations preserved */
+body.no-motion .hero-cta-button,
+body.no-motion .hero-cta-button *,
+body.no-motion .browse-topics-shimmer,
+body.no-motion .browse-topics-shimmer * {
+	animation: unset !important;
+	transition: unset !important;
+}
+
+@layer components {
+	/* Primary badge driven by zone theme variable */
+	.badge--primary {
+		@apply inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors;
+		border-color: hsl(var(--zone-primary, 0 0% 100%));
+		color: hsl(var(--zone-primary, 0 0% 100%));
+		background-color: hsl(var(--zone-primary, 0 0% 100%) / 0.15);
+	}
+	
+	/* Card styles with depth */
+	.card-base {
+		@apply bg-card border border-border rounded-lg p-4 transition-all duration-200;
+	}
+	
+	.card-hover {
+		@apply hover:shadow-card-hover hover:scale-[1.02] hover:border-accent/30;
+	}
+	
+	.card-glow {
+		@apply shadow-glow hover:shadow-glow-lg transition-all duration-300;
+	}
+	
+	/* Button variants */
+	.btn-primary {
+		@apply bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2 rounded-md font-medium transition-all duration-200 hover:scale-105 hover:shadow-glow-sm;
+	}
+	
+	.btn-secondary {
+		@apply bg-secondary text-secondary-foreground hover:bg-secondary/80 px-4 py-2 rounded-md font-medium transition-all duration-200;
+	}
+	
+	.btn-ghost {
+		@apply hover:bg-accent/10 hover:text-accent px-4 py-2 rounded-md transition-all duration-200;
+	}
+	
+	/* Text styles */
+	.text-gradient {
+		@apply bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent;
+	}
+	
+	.text-shadow {
+		text-shadow: 0 2px 4px var(--shadow-color);
+	}
+	
+	/* Input styles */
+	.input-base {
+		@apply bg-input border border-border rounded-md px-3 py-2 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent transition-all duration-200;
+	}
+	
+	/* Loading states */
+	.skeleton {
+		@apply animate-pulse bg-muted rounded;
+	}
+	
+	/* Glass morphism */
+	.glass {
+		@apply bg-white/5 backdrop-blur-md border border-white/10;
+	}
+	
+	.glass-dark {
+		@apply bg-black/20 backdrop-blur-md border border-white/5;
+	}
+	
+	/* Forum-specific styles */
+	.forum-card {
+		@apply relative overflow-hidden rounded-xl border bg-gradient-to-br p-6 transition-all duration-300;
+	}
+	
+	.forum-glow::before {
+		content: '';
+		@apply absolute inset-0 opacity-0 transition-opacity duration-300;
+		background: linear-gradient(135deg, var(--forum-gradient-from, rgba(139, 92, 246, 0.2)), var(--forum-gradient-to, rgba(139, 92, 246, 0.1)));
+	}
+	
+	.forum-glow:hover::before {
+		@apply opacity-10;
+	}
+	
+	/* Forum specific */
+	.forum-category {
+		@apply bg-zinc-900/50 border border-zinc-800 rounded-lg p-4 hover:border-zinc-700 transition-all duration-200;
+	}
+	
+	.thread-row {
+		@apply border-b border-zinc-800/50 py-3 hover:bg-zinc-900/30 transition-colors duration-150;
+	}
+	
+	/* Admin panel */
+	.admin-section {
+		@apply bg-admin-surface border border-admin-border rounded-lg p-6;
+	}
+	
+	.admin-table {
+		@apply w-full border-collapse;
+	}
+	
+	.admin-table th {
+		@apply text-left text-admin-text-secondary text-sm font-medium p-3 border-b border-admin-border;
+	}
+	
+	.admin-table td {
+		@apply text-admin-text-primary p-3 border-b border-admin-border/50;
+	}
+}
+
+@layer utilities {
+	/* Animation utilities */
+	.animate-in {
+		animation: fadeIn 0.3s ease-out forwards;
+	}
+	
+	.animate-out {
+		animation: fadeOut 0.3s ease-out forwards;
+	}
+	
+	/* Hover lift effect */
+	.hover-lift {
+		@apply transition-transform duration-200 hover:-translate-y-1;
+	}
+	
+	/* Focus visible */
+	.focus-ring {
+		@apply focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background;
+	}
+	
+	/* Truncate with lines */
+	.line-clamp-1 {
+		overflow: hidden;
+		display: -webkit-box;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 1;
+	}
+	
+	.line-clamp-2 {
+		overflow: hidden;
+		display: -webkit-box;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 2;
+	}
+	
+	.line-clamp-3 {
+		overflow: hidden;
+		display: -webkit-box;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 3;
+	}
+	
+	/* Gradient borders */
+	.gradient-border {
+		position: relative;
+		background: linear-gradient(var(--background), var(--background)) padding-box,
+					linear-gradient(to right, var(--zone-accent), var(--accent)) border-box;
+		border: 2px solid transparent;
+	}
+	
+	/* Noise texture overlay */
+	.noise-overlay {
+		position: relative;
+	}
+	
+	.noise-overlay::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+		background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+		opacity: 0.03;
+		mix-blend-mode: overlay;
+		pointer-events: none;
+	}
+	
+	/* Grid background */
+	.grid-bg {
+		background-image: var(--grid-pattern);
+		background-size: var(--grid);
+	}
+	
+	/* Safe area padding for mobile */
+	.safe-top {
+		padding-top: env(safe-area-inset-top);
+	}
+	
+	.safe-bottom {
+		padding-bottom: env(safe-area-inset-bottom);
+	}
+	
+	.safe-left {
+		padding-left: env(safe-area-inset-left);
+	}
+	
+	.safe-right {
+		padding-right: env(safe-area-inset-right);
+	}
+
+	/* No scrollbar utility */
+	.no-scrollbar {
+		-ms-overflow-style: none; /* IE and Edge */
+		scrollbar-width: none; /* Firefox */
+	}
+	
+	.no-scrollbar::-webkit-scrollbar {
+		display: none; /* Chrome, Safari and Opera */
+	}
+}
