@@ -1,10 +1,24 @@
 // Stub implementations for visitor storage used in edge functions
-export async function getVisitorStats() {
-  return { total: 0 };
+interface VisitorStats {
+  pageVisits: number;
+  waitlistSignups: number;
 }
+
+let stats: VisitorStats = {
+  pageVisits: 0,
+  waitlistSignups: 0,
+};
+
+export async function getVisitorStats(): Promise<VisitorStats> {
+  return stats;
+}
+
 export async function incrementPageVisits() {
-  return;
+  stats.pageVisits += 1;
+  return stats.pageVisits;
 }
+
 export async function incrementWaitlistSignups() {
-  return;
+  stats.waitlistSignups += 1;
+  return stats.waitlistSignups;
 }
