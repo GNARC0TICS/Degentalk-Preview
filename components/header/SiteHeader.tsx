@@ -5,21 +5,30 @@ import { Logo } from './Logo';
 import { PrimaryNav } from './PrimaryNav';
 import { LandingSearchBox } from './LandingSearchBox';
 import { trackCTAClick } from '@/lib/analytics';
-import { Menu as MenuIcon, X as XIcon } from 'lucide-react';
+
 
 export function SiteHeader() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
-  // Lock body scroll when mobile nav is open
+  // Lock scroll when mobile nav is open (html & body)
   useEffect(() => {
+    const htmlEl = document.documentElement;
     if (mobileOpen) {
       document.body.classList.add('overflow-hidden');
+      htmlEl.classList.add('overflow-hidden');
     } else {
       document.body.classList.remove('overflow-hidden');
+      htmlEl.classList.remove('overflow-hidden');
     }
+    // Cleanup on unmount
+    return () => {
+      document.body.classList.remove('overflow-hidden');
+      htmlEl.classList.remove('overflow-hidden');
+    };
   }, [mobileOpen]);
 
   return (
+    <>
     <header className="bg-zinc-900/80 backdrop-blur-sm border-b border-zinc-800 sticky top-0 z-50 shadow-md relative">
       <nav
         aria-label="Main navigation"
@@ -58,13 +67,22 @@ export function SiteHeader() {
 
           {/* Hamburger */}
           <button
-            className="lg:hidden p-2 text-zinc-300 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500/50 rounded-lg"
+            className="lg:hidden relative w-8 h-8 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-emerald-500/50 rounded"
             aria-label="Toggle navigation menu"
             aria-expanded={mobileOpen}
             aria-controls="mobile-nav"
             onClick={() => setMobileOpen((prev) => !prev)}
           >
-            {mobileOpen ? <XIcon className="w-6 h-6" /> : <MenuIcon className="w-6 h-6" />}
+            {/* Hamburger / X lines */}
+            <span
+              className={`absolute block w-6 h-0.5 bg-white transform transition-transform duration-300 ease-in-out ${mobileOpen ? 'rotate-45' : '-translate-y-2'}`}
+            />
+            <span
+              className={`absolute block w-6 h-0.5 bg-white transition-opacity duration-300 ${mobileOpen ? 'opacity-0' : 'opacity-100'}`}
+            />
+            <span
+              className={`absolute block w-6 h-0.5 bg-white transform transition-transform duration-300 ease-in-out ${mobileOpen ? '-rotate-45' : 'translate-y-2'}`}
+            />
           </button>
         </div>
       </nav>
@@ -102,14 +120,16 @@ export function SiteHeader() {
         </div>
       </div>
 
-      {/* Overlay */}
-      {mobileOpen && (
-        <div
-          className="lg:hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-40"
-          onClick={() => setMobileOpen(false)}
-          aria-hidden="true"
-        />
-      )}
     </header>
+
+    {/* Overlay */}
+    {mobileOpen && (
+      <div
+        className="lg:hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-40"
+        onClick={() => setMobileOpen(false)}
+        aria-hidden="true"
+      />
+    )}
+    </>
   );
 }
