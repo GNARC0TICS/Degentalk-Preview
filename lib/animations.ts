@@ -5,6 +5,13 @@ export const fadeIn = () => {};
 export const fadeOut = () => {};
 
 export function useHoverAnimation(_opts: { scale?: number } = {}) {
-  // Return a ref that does nothing; real animation can be added later
+  return useRef<HTMLElement | null>(null);
+}
+
+export function useScrollAnimation() {
+  return useRef<HTMLElement | null>(null);
+}
+
+export function useInitialAnimation() {
   return useRef<HTMLElement | null>(null);
 }
