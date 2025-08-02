@@ -8,10 +8,8 @@
 /coverage
 
 # next.js
-.next/
-.vercel/
-node_modules/
-out/
+/.next/
+/out/
 
 # production
 /build
@@ -36,5 +34,17 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# copied files during migration (removed ignore so source can be committed)
-# (no paths here anymore)
+# copied files during migration
+/components
+/pages
+/styles
+/config
+/lib
+/features
+/hooks
+/contexts
+/assets
+/public
+index.css
+tailwind.config.ts
+postcss.config.js

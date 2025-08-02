@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://degentalk.net';
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://degentalk.com';
   
   // Define all static routes
   const routes = [

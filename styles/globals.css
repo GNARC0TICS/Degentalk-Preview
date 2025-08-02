@@ -1,0 +1,630 @@
+/* Tailwind Directives - Must be first */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Font imports removed - now using next/font for optimized loading */
+
+/* Import other style files */
+@import './utilities.css';
+@import './animations.css';
+@import './underline-links.css';
+/* Removed unused imports: typography.css, layout.css, design-system.css (631 lines of forum-specific styles) */
+
+@layer base {
+	/* Dark theme is default - Degentalk brand identity */
+	:root {
+		/* Font families */
+		--font-sans: var(--font-inter), system-ui, -apple-system, sans-serif;
+		--font-display: var(--font-bebas), var(--font-inter), system-ui, sans-serif;
+		/* Core palette - True black OLED optimized */
+		--background: 0 0% 0%; /* Pure black #000000 */
+		--foreground: 0 0% 95%; /* Bright white #F2F2F2 */
+
+		--card: 0 0% 5%; /* Elevated surface #0D0D0D */
+		--card-foreground: 0 0% 95%;
+
+		--popover: 0 0% 8%; /* #141414 */
+		--popover-foreground: 0 0% 95%;
+
+		--primary: 158 84% 39%; /* Emerald green - main brand color */
+		--primary-foreground: 0 0% 98%;
+
+		--secondary: 240 3.7% 15.9%; /* Dark gray */
+		--secondary-foreground: 0 0% 98%;
+
+		--muted: 240 3.7% 15.9%;
+		--muted-foreground: 240 5% 64.9%;
+
+		--accent: 158 84% 39%; /* Match primary for consistency */
+		--accent-foreground: 0 0% 98%;
+
+		--destructive: 0 84% 60%;
+		--destructive-foreground: 0 0% 98%;
+
+		--border: 240 3.7% 15.9%;
+		--input: 240 3.7% 15.9%;
+		--ring: 158 84% 39%;
+
+		--radius: 0.75rem;
+		
+		/* Forum accent color variables */
+		--forum-accent: #10b981;
+		--forum-accent-rgb: 16, 185, 129;
+		--forum-accent-faded: rgba(16, 185, 129, 0.3);
+		--forum-accent-gradient-start: rgba(16, 185, 129, 0.8);
+		--forum-accent-gradient-end: rgba(16, 185, 129, 0.4);
+		
+		/* Additional design tokens */
+		--glow-color: rgba(16, 185, 129, 0.5);
+		--glow-color-subtle: rgba(16, 185, 129, 0.2);
+		--shadow-color: rgba(0, 0, 0, 0.5);
+		--overlay-bg: rgba(0, 0, 0, 0.8);
+		
+		/* Admin specific overrides */
+		--admin-bg-page: 0 0% 3.5%; /* #090909 */
+		--admin-bg-surface: 0 0% 7%; /* #121212 */
+		--admin-bg-surface-hover: 0 0% 10%; /* #1A1A1A */
+		--admin-bg-element: 0 0% 10%;
+		--admin-bg-element-hover: 0 0% 15%;
+		
+		--admin-border-subtle: 0 0% 10%;
+		--admin-border-strong: 0 0% 25%;
+		--admin-border-interactive: 158 84% 39%;
+		
+		--admin-text-primary: 0 0% 98%;
+		--admin-text-secondary: 0 0% 64%;
+		--admin-text-accent: 158 84% 45%;
+		--admin-text-destructive: 0 84% 60%;
+	}
+	
+	/* Light theme override if needed */
+	.light {
+		--background: 0 0% 100%;
+		--foreground: 240 10% 3.9%;
+		
+		--card: 0 0% 100%;
+		--card-foreground: 240 10% 3.9%;
+		
+		--popover: 0 0% 100%;
+		--popover-foreground: 240 10% 3.9%;
+		
+		--primary: 158 84% 39%;
+		--primary-foreground: 0 0% 100%;
+		
+		--secondary: 240 4.8% 95.9%;
+		--secondary-foreground: 240 5.9% 10%;
+		
+		--muted: 240 4.8% 95.9%;
+		--muted-foreground: 240 3.8% 46.1%;
+		
+		--accent: 158 84% 39%;
+		--accent-foreground: 0 0% 100%;
+		
+		--destructive: 0 84% 60%;
+		--destructive-foreground: 0 0% 98%;
+		
+		--border: 240 5.9% 90%;
+		--input: 240 5.9% 90%;
+		--ring: 158 84% 39%;
+	}
+}
+
+@layer base {
+	* {
+		@apply border-border;
+	}
+	body {
+		@apply bg-background text-foreground;
+		font-feature-settings:
+			'rlig' 1,
+			'calt' 1;
+	}
+	.bg-gradient-text {
+		background-size: 200% 200%;
+		animation: gradient 8s ease infinite;
+	}
+}
+
+/* Typography styles from typography.css */
+@layer base {
+  /* Headings */
+  h1 {
+    @apply text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight;
+  }
+  
+  h2 {
+    @apply text-3xl md:text-4xl lg:text-5xl font-semibold tracking-tight;
+  }
+  
+  h3 {
+    @apply text-2xl md:text-3xl lg:text-4xl font-semibold;
+  }
+  
+  h4 {
+    @apply text-lg md:text-xl font-medium;
+  }
+  
+  h5 {
+    @apply text-base md:text-lg font-medium;
+  }
+  
+  h6 {
+    @apply text-sm md:text-base font-medium;
+  }
+  
+  /* Body text */
+  p {
+    @apply text-base leading-relaxed;
+  }
+  
+  /* Links */
+  a {
+    @apply text-primary hover:text-primary/80 transition-colors;
+  }
+  
+  /* Lists */
+  ul {
+    @apply list-disc list-inside space-y-2;
+  }
+  
+  ol {
+    @apply list-decimal list-inside space-y-2;
+  }
+  
+  /* Code */
+  code {
+    @apply bg-muted px-1.5 py-0.5 rounded text-sm font-mono;
+  }
+  
+  pre {
+    @apply bg-muted p-4 rounded-lg overflow-x-auto;
+  }
+  
+  pre code {
+    @apply bg-transparent p-0;
+  }
+  
+  /* Blockquotes */
+  blockquote {
+    @apply border-l-4 border-primary pl-4 italic;
+  }
+}
+
+/* Custom animations for enhanced profile components */
+@keyframes shimmer {
+	0% {
+		transform: translateX(-100%);
+	}
+	100% {
+		transform: translateX(100%);
+	}
+}
+
+@keyframes float {
+	0%,
+	100% {
+		transform: translateY(0px);
+	}
+	50% {
+		transform: translateY(-3px);
+	}
+}
+
+.animate-shimmer {
+	animation: shimmer 3s infinite linear;
+}
+
+.animate-float {
+	animation: float 4s ease-in-out infinite;
+}
+
+/* Enhanced gradient text effects */
+.text-gradient-purple {
+	background: linear-gradient(135deg, #a855f7, #ec4899);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	background-clip: text;
+}
+
+.text-gradient-blue {
+	background: linear-gradient(135deg, #3b82f6, #06b6d4);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	background-clip: text;
+}
+
+.text-gradient-green {
+	background: linear-gradient(135deg, #10b981, #22c55e);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	background-clip: text;
+}
+
+.text-gradient-gold {
+	background: linear-gradient(135deg, #f59e0b, #eab308);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	background-clip: text;
+}
+
+/* Scrollbar styling for profile components */
+.scrollbar-thin {
+	scrollbar-width: thin;
+	scrollbar-color: rgb(63 63 70) rgb(39 39 42);
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+	width: 6px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+	background: rgb(39 39 42);
+	border-radius: 3px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+	background: rgb(63 63 70);
+	border-radius: 3px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+	background: rgb(82 82 91);
+}
+
+.scrollbar-track-zinc-800 {
+	scrollbar-color: rgb(63 63 70) rgb(39 39 42);
+}
+
+.scrollbar-thumb-zinc-700 {
+	scrollbar-color: rgb(63 63 70) rgb(39 39 42);
+}
+
+/* Degentalk Design System - Core Components */
+@layer components {
+  /* Cards & Containers */
+  .card-base {
+    @apply bg-card rounded-xl border border-border/50 backdrop-blur-sm;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+  }
+  
+  .card-hover {
+    @apply card-base transition-all duration-200 hover:border-primary/30;
+    @apply hover:shadow-lg hover:shadow-primary/10 hover:-translate-y-1;
+  }
+  
+  .card-glow {
+    @apply card-base;
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.1), 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+  }
+  
+  .forum-card {
+    @apply card-base p-6 space-y-4;
+    background: linear-gradient(145deg, hsl(var(--card)) 0%, hsl(var(--background)) 100%);
+  }
+  
+  /* Glass morphism */
+  .glass {
+    @apply backdrop-blur-xl bg-white/5 border border-white/10;
+  }
+  
+  .glass-dark {
+    @apply backdrop-blur-xl bg-black/20 border border-white/5;
+  }
+  
+  /* Forum Components */
+  .forum-category {
+    @apply card-hover p-6 space-y-4;
+    background: linear-gradient(135deg, hsl(var(--card)) 0%, rgba(16, 185, 129, 0.05) 100%);
+  }
+  
+  .thread-row {
+    @apply border-b border-border/30 py-4 px-6 hover:bg-muted/20 transition-colors;
+  }
+  
+  .thread-row-active {
+    @apply thread-row bg-primary/5 border-l-4 border-primary;
+  }
+  
+  /* Buttons */
+  .btn-base {
+    @apply inline-flex items-center justify-center rounded-lg px-4 py-2.5;
+    @apply font-medium transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background;
+  }
+  
+  .btn-primary {
+    @apply btn-base bg-primary text-primary-foreground hover:bg-primary/90;
+    @apply shadow-lg shadow-primary/25 hover:shadow-primary/40;
+  }
+  
+  .btn-secondary {
+    @apply btn-base bg-secondary text-secondary-foreground hover:bg-secondary/80;
+  }
+  
+  .btn-ghost {
+    @apply btn-base hover:bg-muted/20 text-foreground;
+  }
+  
+  .btn-destructive {
+    @apply btn-base bg-destructive text-destructive-foreground hover:bg-destructive/90;
+  }
+  
+  .btn-glow {
+    @apply btn-primary;
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.4), 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+  }
+  
+  /* Form Elements */
+  .input-base {
+    @apply w-full rounded-lg border border-input bg-background px-4 py-2.5;
+    @apply text-foreground placeholder:text-muted-foreground;
+    @apply focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent;
+    @apply transition-all duration-200;
+  }
+  
+  .input-glow {
+    @apply input-base;
+    @apply focus:shadow-lg focus:shadow-primary/20;
+  }
+  
+  .select-base {
+    @apply input-base cursor-pointer;
+  }
+  
+  .textarea-base {
+    @apply input-base min-h-[100px] resize-y;
+  }
+  
+  /* Labels & Text */
+  .label-base {
+    @apply text-sm font-medium text-foreground mb-2 block;
+  }
+  
+  .text-muted {
+    @apply text-muted-foreground text-sm;
+  }
+  
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent;
+  }
+  
+  .text-shadow {
+    text-shadow: 0 2px 4px var(--shadow-color);
+  }
+  
+  .text-glow {
+    text-shadow: 0 0 20px rgba(16, 185, 129, 0.5);
+  }
+  
+  /* Badges */
+  .badge-base {
+    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium;
+  }
+  
+  .badge-primary {
+    @apply badge-base bg-primary/20 text-primary border border-primary/30;
+  }
+  
+  .badge-secondary {
+    @apply badge-base bg-secondary text-secondary-foreground;
+  }
+  
+  .badge-destructive {
+    @apply badge-base bg-destructive/20 text-destructive border border-destructive/30;
+  }
+  
+  .badge-success {
+    @apply badge-base bg-emerald-500/20 text-emerald-400 border border-emerald-500/30;
+  }
+  
+  /* Navigation */
+  .nav-link {
+    @apply text-muted-foreground hover:text-foreground transition-colors duration-200;
+    @apply relative px-3 py-2 rounded-lg hover:bg-muted/20;
+  }
+  
+  .nav-link-active {
+    @apply nav-link text-primary;
+    @apply after:absolute after:bottom-0 after:left-3 after:right-3 after:h-0.5 after:bg-primary;
+  }
+  
+  /* Sections & Layout */
+  .section-base {
+    @apply py-12 md:py-16 lg:py-24;
+  }
+  
+  .container-base {
+    @apply container mx-auto px-4 sm:px-6 lg:px-8;
+  }
+  
+  .page-header {
+    @apply border-b border-border pb-8 mb-8;
+  }
+  
+  .page-title {
+    @apply text-3xl md:text-4xl font-bold text-foreground mb-2;
+  }
+  
+  /* Dividers */
+  .divider {
+    @apply h-px bg-border my-8;
+  }
+  
+  .divider-vertical {
+    @apply w-px bg-border mx-4 h-full;
+  }
+  
+  /* Loading States */
+  .skeleton {
+    @apply animate-pulse bg-muted/50 rounded;
+  }
+  
+  .spinner {
+    @apply animate-spin h-5 w-5 border-2 border-primary border-t-transparent rounded-full;
+  }
+  
+  /* Overlays */
+  .overlay {
+    @apply fixed inset-0 bg-background/80 backdrop-blur-sm z-50;
+  }
+  
+  .modal-content {
+    @apply card-base p-6 max-w-lg mx-auto mt-20 relative z-50;
+  }
+  
+  /* Effects */
+  .noise-overlay {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .noise-overlay::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    opacity: 0.03;
+    mix-blend-mode: overlay;
+    pointer-events: none;
+  }
+  
+  .gradient-border {
+    position: relative;
+    background: hsl(var(--card));
+    border-radius: var(--radius);
+  }
+  
+  .gradient-border::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
+    border-radius: var(--radius);
+    z-index: -1;
+    opacity: 0.5;
+  }
+  
+  /* Admin Components */
+  .admin-section {
+    @apply card-base p-6 space-y-6;
+    background: var(--admin-bg-surface);
+    border-color: var(--admin-border);
+  }
+  
+  .admin-header {
+    @apply flex items-center justify-between pb-4 border-b;
+    border-color: var(--admin-border);
+  }
+  
+  .admin-stat-card {
+    @apply p-4 rounded-lg bg-background/50 border;
+    border-color: var(--admin-border);
+  }
+  
+  /* Table Styles */
+  .table-base {
+    @apply w-full divide-y divide-border;
+  }
+  
+  .table-header {
+    @apply bg-muted/30 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider;
+  }
+  
+  .table-cell {
+    @apply px-6 py-4 whitespace-nowrap text-sm;
+  }
+  
+  /* Forum Themes */
+  .forum-pit {
+    --forum-color: theme('colors.red.500');
+    --forum-bg: theme('colors.red.950');
+  }
+  
+  .forum-mission-control {
+    --forum-color: theme('colors.blue.500');
+    --forum-bg: theme('colors.blue.950');
+  }
+  
+  .forum-casino {
+    --forum-color: theme('colors.purple.500');
+    --forum-bg: theme('colors.purple.950');
+  }
+  
+  .forum-briefing {
+    --forum-color: theme('colors.amber.500');
+    --forum-bg: theme('colors.amber.950');
+  }
+  
+  /* Footer Specific */
+  .footer-heading {
+    @apply text-sm font-semibold text-zinc-300 uppercase tracking-wider mb-3;
+  }
+  
+  .footer-link {
+    @apply text-sm text-zinc-400 hover:text-zinc-200 transition-colors;
+  }
+  
+  .footer-text {
+    @apply text-xs text-zinc-500;
+  }
+  
+  /* Responsive Utilities */
+  .stack {
+    @apply flex flex-col space-y-4;
+  }
+  
+  .cluster {
+    @apply flex flex-wrap gap-4;
+  }
+  
+  .center {
+    @apply flex items-center justify-center;
+  }
+}
+
+/* Additional utility classes */
+@layer utilities {
+  /* Text utilities */
+  .text-balance {
+    text-wrap: balance;
+  }
+  
+  /* Interaction states */
+  .interactive {
+    @apply transition-all duration-200 cursor-pointer;
+  }
+  
+  .disabled {
+    @apply opacity-50 cursor-not-allowed pointer-events-none;
+  }
+  
+  /* Z-index scale */
+  .z-dropdown {
+    z-index: 1000;
+  }
+  
+  .z-sticky {
+    z-index: 1020;
+  }
+  
+  .z-fixed {
+    z-index: 1030;
+  }
+  
+  .z-modal-backdrop {
+    z-index: 1040;
+  }
+  
+  .z-modal {
+    z-index: 1050;
+  }
+  
+  .z-popover {
+    z-index: 1060;
+  }
+  
+  .z-tooltip {
+    z-index: 1070;
+  }
+}
