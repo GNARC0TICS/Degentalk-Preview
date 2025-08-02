@@ -1,4 +1,4 @@
-# Cursor Rules for DegenTalk Development
+# Cursor Rules for Degentalk Development
 
 ## Active Rules (Restored & Essential)
 

@@ -628,3 +628,25 @@
     z-index: 1070;
   }
 }
+
+/* Prevent layout shift on mobile menu open */
+body.mobile-menu-open {
+	overflow: hidden;
+	position: fixed;
+	width: 100%;
+}
+
+/* Better scroll lock implementation */
+body.scroll-locked {
+	overflow: hidden;
+	touch-action: none;
+}
+
+/* Ensure menu overlays are above other content */
+.mobile-menu-overlay {
+	z-index: 40;
+}
+
+.mobile-menu-container {
+	z-index: 50;
+}

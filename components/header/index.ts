@@ -9,7 +9,6 @@ export type { HeaderContextValue, HeaderTheme } from './HeaderContext';
 export { Logo } from './Logo';
 export { PrimaryNav } from './PrimaryNav';
 export { SearchBox } from './SearchBox';
-export { MobileNavSimple } from './MobileNavSimple';
 export { NavLink } from './NavLink';
 
 // Theme wrapper

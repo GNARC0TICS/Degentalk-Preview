@@ -11,6 +11,7 @@ export interface NavItemConfig {
 	mobileOnly?: boolean;
 	prefetch?: boolean;
 	analyticsLabel?: string;
+	comingSoon?: boolean;
 }
 
 // User menu item configuration
@@ -59,13 +60,15 @@ export const primaryNavigation: NavItemConfig[] = [
 		href: '/forums',
 		icon: React.createElement(IconRenderer, { icon: 'forum', size: 16, className: 'h-4 w-4' }),
 		prefetch: true,
-		analyticsLabel: 'nav_forum'
+		analyticsLabel: 'nav_forum',
+		comingSoon: true
 	},
 	{
 		label: 'Shop',
 		href: '/shop',
 		icon: React.createElement(IconRenderer, { icon: 'cart', size: 16, className: 'h-4 w-4' }),
-		analyticsLabel: 'nav_shop'
+		analyticsLabel: 'nav_shop',
+		comingSoon: true
 	},
 	{
 		label: 'Leaderboard',
@@ -75,7 +78,8 @@ export const primaryNavigation: NavItemConfig[] = [
 			size: 16,
 			className: 'h-4 w-4'
 		}),
-		analyticsLabel: 'nav_leaderboard'
+		analyticsLabel: 'nav_leaderboard',
+		comingSoon: true
 	}
 ];
 

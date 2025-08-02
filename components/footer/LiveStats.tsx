@@ -74,7 +74,7 @@ export function LiveStats() {
 
 	return (
 		<div className="border-b border-zinc-800 pb-4 mb-8">
-			<div className="flex flex-wrap items-center justify-center gap-4 sm:gap-8 text-xs sm:text-sm">
+			<div className="flex flex-wrap items-center justify-center gap-4 sm:gap-8 text-sm sm:text-base">
 				<div className="flex items-center gap-2">
 					<div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
 					<span className="text-zinc-500 font-display uppercase tracking-wide">

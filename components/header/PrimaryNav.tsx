@@ -45,26 +45,31 @@ const generateRandomPath = (isWide = false) => {
 
 interface PrimaryNavProps {
 	className?: string;
+	orientation?: 'horizontal' | 'vertical';
+	showOnMobile?: boolean;
 }
 
-export function PrimaryNav({ className }: PrimaryNavProps) {
+export function PrimaryNav({ className, orientation = 'horizontal', showOnMobile = false }: PrimaryNavProps) {
 	const location = useLocation();
 	const [navPaths, setNavPaths] = useState<string[]>([]);
 	const navRefs = useRef<(SVGPathElement | null)[]>([]);
 	// For static landing page - no authentication needed
 	const visibleNavigation = primaryNavigation;
 
-	// Generate random paths on component mount
+	// Generate paths on client side only (SSR-safe)
 	useEffect(() => {
-		const paths = visibleNavigation.map((item) => {
-			// Use static handwritten paths for coming soon items
-			if (HANDWRITTEN_PATHS[item.label as keyof typeof HANDWRITTEN_PATHS]) {
-				return HANDWRITTEN_PATHS[item.label as keyof typeof HANDWRITTEN_PATHS];
-			}
-			const isLeaderboard = item.label === 'Leaderboard';
-			return generateRandomPath(isLeaderboard);
-		});
-		setNavPaths(paths);
+		// Only generate paths on client to avoid hydration mismatch
+		if (typeof window !== 'undefined') {
+			const paths = visibleNavigation.map((item) => {
+				// Use static handwritten paths for coming soon items
+				if (HANDWRITTEN_PATHS[item.label as keyof typeof HANDWRITTEN_PATHS]) {
+					return HANDWRITTEN_PATHS[item.label as keyof typeof HANDWRITTEN_PATHS];
+				}
+				const isLeaderboard = item.label === 'Leaderboard';
+				return generateRandomPath(isLeaderboard);
+			});
+			setNavPaths(paths);
+		}
 	}, []);
 
 	// Initial setup without animation
@@ -76,7 +81,7 @@ export function PrimaryNav({ className }: PrimaryNavProps) {
 			if (path && visibleNavigation[index]) {
 				const pathLength = path.getTotalLength();
 				const isActive = visibleNavigation[index].href === location.pathname;
-				const isComingSoon = ['Forum', 'Shop', 'Leaderboard'].includes(visibleNavigation[index].label);
+				const isComingSoon = visibleNavigation[index].comingSoon ?? ['Forum', 'Shop', 'Leaderboard'].includes(visibleNavigation[index].label);
 				
 				if (isComingSoon) {
 					// Coming soon items show static underline immediately
@@ -105,7 +110,7 @@ export function PrimaryNav({ className }: PrimaryNavProps) {
 		// First, animate OUT any currently visible underlines (except coming soon items)
 		navRefs.current.forEach((path, index) => {
 			if (path && visibleNavigation[index]) {
-				const isComingSoon = ['Forum', 'Shop', 'Leaderboard'].includes(visibleNavigation[index].label);
+				const isComingSoon = visibleNavigation[index].comingSoon ?? ['Forum', 'Shop', 'Leaderboard'].includes(visibleNavigation[index].label);
 				const isActive = visibleNavigation[index].href === location.pathname;
 				
 				// If it's visible and not coming soon and not the new active item, animate it out
@@ -126,7 +131,7 @@ export function PrimaryNav({ className }: PrimaryNavProps) {
 			if (path && visibleNavigation[index]) {
 				const pathLength = path.getTotalLength();
 				const isActive = visibleNavigation[index].href === location.pathname;
-				const isComingSoon = ['Forum', 'Shop', 'Leaderboard'].includes(visibleNavigation[index].label);
+				const isComingSoon = visibleNavigation[index].comingSoon ?? ['Forum', 'Shop', 'Leaderboard'].includes(visibleNavigation[index].label);
 				
 				// Set initial state for all paths
 				gsap.set(path, {
@@ -160,10 +165,7 @@ export function PrimaryNav({ className }: PrimaryNavProps) {
 
 	const handleMouseEnter = (index: number) => {
 		const path = navRefs.current[index];
-		const isForum = visibleNavigation[index].label === 'Forum';
-		const isShop = visibleNavigation[index].label === 'Shop';
-		const isLeaderboard = visibleNavigation[index].label === 'Leaderboard';
-		const isComingSoon = isForum || isShop || isLeaderboard;
+		const isComingSoon = visibleNavigation[index].comingSoon ?? ['Forum', 'Shop', 'Leaderboard'].includes(visibleNavigation[index].label);
 		
 		// Skip hover effects for coming soon buttons (always show underline)
 		if (path && !isComingSoon && visibleNavigation[index].href !== location.pathname) {
@@ -179,10 +181,7 @@ export function PrimaryNav({ className }: PrimaryNavProps) {
 
 	const handleMouseLeave = (index: number) => {
 		const path = navRefs.current[index];
-		const isForum = visibleNavigation[index].label === 'Forum';
-		const isShop = visibleNavigation[index].label === 'Shop';
-		const isLeaderboard = visibleNavigation[index].label === 'Leaderboard';
-		const isComingSoon = isForum || isShop || isLeaderboard;
+		const isComingSoon = visibleNavigation[index].comingSoon ?? ['Forum', 'Shop', 'Leaderboard'].includes(visibleNavigation[index].label);
 		
 		// Skip hover effects for coming soon buttons (always show underline)
 		if (path && !isComingSoon && visibleNavigation[index].href !== location.pathname) {
@@ -198,13 +197,13 @@ export function PrimaryNav({ className }: PrimaryNavProps) {
 	};
 
 	return (
-		<nav className={`hidden md:flex items-center space-x-1 ${className || ''}`}>
+		<nav
+		className={`${showOnMobile ? 'flex lg:hidden' : 'hidden lg:flex'} ${orientation === 'vertical' ? 'flex flex-col space-y-4' : 'flex items-center space-x-1'} ${className || ''}`}
+	>
 			{visibleNavigation.map((item, index) => {
 				const isActive = item.href === location.pathname;
+				const isComingSoon = item.comingSoon ?? ['Forum', 'Shop', 'Leaderboard'].includes(item.label);
 				const isLeaderboard = item.label === 'Leaderboard';
-				const isForum = item.label === 'Forum';
-				const isShop = item.label === 'Shop';
-				const isComingSoon = isForum || isShop || isLeaderboard;
 				const viewBoxWidth = isLeaderboard ? 100 : 70;
 				const defaultPath = isLeaderboard ? 'M5 10Q50 12 95 10' : 'M5 10Q35 12 65 10';
 				
