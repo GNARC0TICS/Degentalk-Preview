@@ -35,16 +35,6 @@ yarn-error.log*
 next-env.d.ts
 
 # copied files during migration
-/components
-/pages
-/styles
-/config
-/lib
-/features
-/hooks
-/contexts
-/assets
-/public
 index.css
 tailwind.config.ts
 postcss.config.js
