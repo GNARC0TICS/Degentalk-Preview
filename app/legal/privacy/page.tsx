@@ -1,6 +1,7 @@
 // This is a wrapper that imports the existing Privacy Policy component
 // No modifications to the original component are needed
 import { PrivacyPolicy } from '@/components/pages/legal/privacy';
+export const dynamic = 'force-dynamic';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {

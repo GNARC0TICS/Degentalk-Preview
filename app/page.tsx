@@ -1,5 +1,6 @@
 // This is a wrapper that imports the existing Home component
 // No modifications to the original component are needed
+export const dynamic = 'force-dynamic';
 import Home from '@/components/pages/home';
 import type { Metadata } from 'next';
 
