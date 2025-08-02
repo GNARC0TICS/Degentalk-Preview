@@ -8,10 +8,10 @@ export function useHoverAnimation(_opts: { scale?: number } = {}) {
   return useRef<HTMLElement | null>(null);
 }
 
-export function useScrollAnimation() {
+export function useScrollAnimation(_animation: string = 'fadeInUp', _options: Record<string, any> = {}) {
   return useRef<HTMLElement | null>(null);
 }
 
-export function useInitialAnimation() {
+export function useInitialAnimation(_delay: number = 0, _options: Record<string, any> = {}) {
   return useRef<HTMLElement | null>(null);
 }
