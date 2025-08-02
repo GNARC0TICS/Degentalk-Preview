@@ -1,6 +1,4 @@
 // Placeholder for future optimized Hero CTA Button
 'use client';
 import React from 'react';
-export function HeroCTAButton() {
-  return null;
-}
+export const HeroCTAButton: React.FC<{ className?: string }> = () => null;
