@@ -15,7 +15,7 @@ export function FooterBrand({ className }: FooterBrandProps) {
 			>
 				Degentalk<sup className="text-xs text-zinc-400 font-normal">™</sup>
 			</motion.h3>
-			<p className="text-zinc-400 text-sm">
+			<p className="text-zinc-400 text-sm leading-relaxed">
 				The premier crypto-native forum and social platform for enthusiasts, traders, and
 				developers. Where chaos meets community.
 			</p>

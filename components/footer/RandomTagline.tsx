@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useHydrated } from '@/lib/use-hydrated';
 
@@ -43,19 +43,20 @@ interface RandomTaglineProps {
 	className?: string;
 }
 
-// Get a deterministic "random" index based on the current minute
-function getDeterministicIndex() {
-	const now = new Date();
-	const seed = now.getMinutes() + now.getHours();
-	return seed % funnyTaglines.length;
-}
-
 export function RandomTagline({ className }: RandomTaglineProps) {
 	const hydrated = useHydrated();
-	const [currentIndex, setCurrentIndex] = useState(getDeterministicIndex());
+	// Always start with index 0 for consistent SSR/CSR
+	const [currentIndex, setCurrentIndex] = useState(0);
 	const [isGlitching, setIsGlitching] = useState(false);
 	
-	// Use deterministic tagline until hydrated, then allow randomization
+	// Set initial random tagline only after hydration
+	useEffect(() => {
+		if (hydrated) {
+			const randomIndex = Math.floor(Math.random() * funnyTaglines.length);
+			setCurrentIndex(randomIndex);
+		}
+	}, [hydrated]);
+	
 	const tagline = funnyTaglines[currentIndex];
 
 	const handleTaglineHover = useCallback(() => {

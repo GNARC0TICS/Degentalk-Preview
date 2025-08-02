@@ -1,8 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { AnimatedStatCard } from './AnimatedStatCard';
-import { trackAnalyticsInteraction, trackAnalyticsMilestone, trackSocialProofView } from '@/lib/analytics';
+import { trackAnalyticsMilestone, trackSocialProofView } from '@/lib/analytics';
 
 interface LiveStatsData {
 	pageVisits: number;
@@ -54,25 +53,13 @@ export function LiveStats() {
 		// Initial fetch
 		fetchStats();
 
-		// Poll every 10 seconds
-		const interval = setInterval(fetchStats, 10000);
-
-		// Track analytics interaction periodically
-		const trackingInterval = setInterval(() => {
-			if (Math.random() > 0.9) {
-				trackAnalyticsInteraction('view', {
-					totalVisitors: stats.pageVisits,
-					currentVisitors: stats.currentVisitors,
-					isUpdating: true
-				});
-			}
-		}, 30000);
+		// Poll every 60 seconds (more reasonable for a waitlist)
+		const interval = setInterval(fetchStats, 60000);
 
 		return () => {
 			clearInterval(interval);
-			clearInterval(trackingInterval);
 		};
-	}, [fetchStats, stats.pageVisits, stats.currentVisitors]);
+	}, [fetchStats]);
 
 	const formatNumber = (num: number): string => {
 		if (num >= 1000000) {
@@ -85,25 +72,23 @@ export function LiveStats() {
 	};
 
 	return (
-		<div className="flex flex-wrap justify-center gap-3 sm:gap-4 lg:gap-6 mb-6 lg:mb-8">
-			<AnimatedStatCard
-				value={formatNumber(stats.pageVisits)}
-				label="Page Visits"
-				variant="online"
-				display="pill"
-			/>
-			<AnimatedStatCard
-				value={formatNumber(stats.waitlistSignups)}
-				label="Waitlist Signups"
-				variant="posts"
-				display="pill"
-			/>
-			<AnimatedStatCard
-				value={formatNumber(stats.currentVisitors)}
-				label="Live Now"
-				variant="tips"
-				display="pill"
-			/>
+		<div className="border-b border-zinc-800 pb-4 mb-8">
+			<div className="flex flex-wrap items-center justify-center gap-4 sm:gap-8 text-xs sm:text-sm">
+				<div className="flex items-center gap-2">
+					<div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
+					<span className="text-zinc-500 font-display uppercase tracking-wide">
+						{formatNumber(stats.currentVisitors)} Live
+					</span>
+				</div>
+				<div className="text-zinc-600">•</div>
+				<div className="text-zinc-500 font-display uppercase tracking-wide">
+					{formatNumber(stats.pageVisits)} Visits
+				</div>
+				<div className="text-zinc-600">•</div>
+				<div className="text-zinc-500 font-display uppercase tracking-wide">
+					{formatNumber(stats.waitlistSignups)} Joined
+				</div>
+			</div>
 		</div>
 	);
 }

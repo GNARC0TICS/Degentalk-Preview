@@ -2,28 +2,29 @@
 
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { IconRenderer } from '@/components/icons/iconRenderer';
+import { getCachedSearchResponse } from '@/lib/search-easter-eggs';
 
 const funnyPlaceholders = [
-  "Type 'wen moon' for disappointment",
   "Search for your lost gains...",
   "Find who rugged you",
   "Locate exit liquidity",
   "Search for financial advice (don't)",
-  "Type 'gm' to get banned",
   "Find the next 100x (lol)",
   "Search for cope strategies",
   "Look up 'buy high sell low'",
   "Find your bags",
-  "Search 'why am I poor'",
   "Locate the bottom (it's lower)",
   "Find Satoshi (good luck)",
   "Search for green candles",
-  "Type 'HODL' if you hate money",
   "Find the sell button (broken)",
-  "Search 'wen recovery'",
   "Locate smart money (not here)",
   "Find the top (you bought it)",
-  "Search for hopium dealers"
+  "Search for hopium dealers",
+  "Discover hidden alpha",
+  "Find the dip (this isn't it)",
+  "Search for exit strategies",
+  "Locate diamond hands",
+  "Find paper hands anonymous"
 ];
 
 interface LandingSearchBoxProps {
@@ -36,8 +37,11 @@ export function LandingSearchBox({ className = '' }: LandingSearchBoxProps) {
   const [isTyping, setIsTyping] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
 
-  // Memoize the current placeholder to prevent unnecessary re-renders
-  const currentPlaceholder = useMemo(() => funnyPlaceholders[placeholderIndex], [placeholderIndex]);
+  // Always use the first placeholder until mounted to avoid hydration mismatch
+  const currentPlaceholder = useMemo(() => {
+    if (!isMounted) return funnyPlaceholders[0];
+    return funnyPlaceholders[placeholderIndex];
+  }, [placeholderIndex, isMounted]);
 
   // Handle client-side mounting to avoid hydration issues
   useEffect(() => {
@@ -61,16 +65,21 @@ export function LandingSearchBox({ className = '' }: LandingSearchBoxProps) {
     // Don't process empty searches
     if (!searchValue.trim()) return;
     
-    // Easter egg responses for specific searches
-    const searchLower = searchValue.toLowerCase().trim();
+    // Get intelligent response based on search query
+    const response = getCachedSearchResponse(searchValue);
     
-    // Use a more subtle notification instead of alert
+    // Show the response
     const showMessage = (message: string) => {
-      // For now, we'll use console.log - in production, you'd use a toast notification
-      console.log('Easter egg:', message);
+      // Only show on client side
+      if (typeof window !== 'undefined') {
+        console.log('Search response:', message);
+        
+        // TODO: In production, show this in a toast notification
+        // For now, we'll use console.log
+      }
       
       // Visual feedback: briefly highlight the search box
-      const input = e.currentTarget.querySelector('input');
+      const input = document.getElementById('landing-search-input');
       if (input) {
         input.classList.add('ring-2', 'ring-emerald-500');
         setTimeout(() => {
@@ -79,18 +88,7 @@ export function LandingSearchBox({ className = '' }: LandingSearchBoxProps) {
       }
     };
     
-    if (searchLower === 'wen moon') {
-      showMessage('After you sell, obviously.');
-    } else if (searchLower === 'gm') {
-      showMessage('BANNED! (just kidding... or am I?)');
-    } else if (searchLower === 'wagmi') {
-      showMessage('Narrator: They were not all gonna make it.');
-    } else if (searchLower.includes('lambo')) {
-      showMessage('Sir, this is a Wendy\'s.');
-    } else if (searchValue) {
-      showMessage(`"${searchValue}"? Never heard of it. Probably rugged already.`);
-    }
-    
+    showMessage(response);
     setSearchValue('');
   }, [searchValue]);
 
@@ -111,11 +109,12 @@ export function LandingSearchBox({ className = '' }: LandingSearchBoxProps) {
         <IconRenderer icon="search" size={16} className="h-4 w-4 text-zinc-500" />
       </div>
       <input
+        id="landing-search-input"
         type="search"
         value={searchValue}
         onChange={handleChange}
         onBlur={handleBlur}
-        placeholder={isMounted ? currentPlaceholder : funnyPlaceholders[0]}
+        placeholder={currentPlaceholder}
         className="pl-10 pr-4 py-2 bg-zinc-800/50 border border-zinc-700 rounded-md text-sm w-full text-zinc-300 placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-300"
         aria-label="Search"
         autoComplete="off"

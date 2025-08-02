@@ -40,7 +40,7 @@ export function SiteHeader() {
 							}}
 							className="
 								px-4 py-2 
-								text-sm font-medium 
+								text-sm font-medium
 								text-zinc-300 
 								hover:text-white hover:bg-zinc-800/50
 								transition-colors duration-200
@@ -56,7 +56,7 @@ export function SiteHeader() {
 							onClick={() => trackCTAClick('contact_header', 'header')}
 							className="
 								px-4 py-2 
-								text-sm font-medium 
+								text-sm font-medium
 								text-zinc-300 
 								hover:text-white hover:bg-zinc-800/50
 								transition-colors duration-200

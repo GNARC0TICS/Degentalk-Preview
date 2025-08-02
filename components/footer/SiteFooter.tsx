@@ -35,9 +35,9 @@ export function SiteFooter() {
 				</div>
 
 				{/* Bottom Section */}
-				<div className="border-t border-zinc-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-zinc-500">
+				<div className="border-t border-zinc-800 pt-6 mt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs">
 					<motion.div
-						className="order-2 md:order-1 font-display uppercase tracking-wider text-zinc-400"
+						className="order-2 md:order-1 text-zinc-500"
 						initial={{ opacity: 0 }}
 						animate={{ opacity: 1 }}
 						transition={{ delay: 0.6 }}
@@ -46,7 +46,7 @@ export function SiteFooter() {
 					</motion.div>
 
 					{/* Random Tagline Easter Egg */}
-					<RandomTagline className="order-1 md:order-2 md:max-w-md" />
+					<RandomTagline className="order-1 md:order-2 md:max-w-md text-zinc-400" />
 				</div>
 			</div>
 		</footer>

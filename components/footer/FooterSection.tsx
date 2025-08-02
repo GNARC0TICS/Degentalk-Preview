@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Link } from '@/lib/router-compat';
+import { Lock } from 'lucide-react';
 import type { FooterLink } from '@/config/footer-navigation';
 
 interface FooterSectionProps {
@@ -9,27 +10,16 @@ interface FooterSectionProps {
 	animationDelay?: number | undefined;
 }
 
-// List of pages that actually exist
-const EXISTING_PAGES = [
-	'/legal/privacy',
-	'/legal/terms',
-	'/contact',
-	'/'
-];
-
 export function FooterSection({ title, links, animationDelay = 0 }: FooterSectionProps) {
 	const handleDisabledClick = (e: React.MouseEvent) => {
 		e.preventDefault();
-		window.scrollTo({ top: 0, behavior: 'smooth' });
 	};
+
 	return (
 		<div>
-			<h4 className="text-lg font-display uppercase tracking-wider mb-3 text-zinc-200">{title}</h4>
-			<ul className="space-y-2 text-sm list-none">
+			<h4 className="text-lg font-semibold mb-4 text-zinc-200">{title}</h4>
+			<ul className="space-y-2.5 text-sm list-none">
 				{links.map((item, index) => {
-					const isExistingPage = EXISTING_PAGES.includes(item.href);
-					const isDisabled = !isExistingPage;
-					
 					return (
 						<motion.li
 							key={item.label}
@@ -37,24 +27,26 @@ export function FooterSection({ title, links, animationDelay = 0 }: FooterSectio
 							animate={{ opacity: 1, x: 0 }}
 							transition={{ delay: index * 0.1 + animationDelay }}
 						>
-							{item.external ? (
-								<motion.a
-									href="#"
-									onClick={handleDisabledClick}
-									className="text-zinc-600 hover:text-zinc-500 transition-colors cursor-not-allowed inline-block"
+							{item.comingSoon ? (
+								<motion.span
+									className="text-zinc-600 cursor-not-allowed inline-flex items-center gap-1.5"
 									whileHover={{ x: 0 }}
 								>
-									{item.label} ↗
-								</motion.a>
-							) : isDisabled ? (
-								<motion.a
-									href="#"
-									onClick={handleDisabledClick}
-									className="text-zinc-600 hover:text-zinc-500 transition-colors cursor-not-allowed inline-block"
-									whileHover={{ x: 0 }}
-								>
+									<Lock className="w-3 h-3" />
 									{item.label}
-								</motion.a>
+									<span className="text-xs ml-1 opacity-60">soon</span>
+								</motion.span>
+							) : item.external ? (
+								<a
+									href={item.href}
+									target="_blank"
+									rel="noopener noreferrer"
+									className="text-zinc-400 hover:text-emerald-400 transition-colors inline-flex items-center gap-1"
+								>
+									<motion.span whileHover={{ x: 5 }}>
+										{item.label} ↗
+									</motion.span>
+								</a>
 							) : (
 								<Link href={item.href}>
 									<motion.span

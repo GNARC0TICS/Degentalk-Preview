@@ -46,3 +46,53 @@ degentalk-landing/
 
 Build for production: `npm run build`
 Start production server: `npm start`
+
+## Search Bar Easter Eggs
+
+The landing page search bar includes an intelligent response system that provides humorous, crypto-themed responses to any search query.
+
+### How It Works
+
+The system uses pattern matching to provide contextual responses based on what users type:
+- **Crypto terms** (BTC, ETH, pump, moon) → Specific crypto humor
+- **Emotions** (broke, rich, rekt) → Relatable trader experiences  
+- **Questions** (how, what, when) → Meta-commentary on seeking advice
+- **Any other input** → Falls back to generic degen responses
+
+### Adding New Responses
+
+To add or modify search responses, edit `/lib/search-easter-eggs.ts`:
+
+```typescript
+// Add a new category
+{
+  priority: 8,  // Higher = checked first (1-10)
+  patterns: [/your-pattern/i, 'exact-match'],
+  responses: [
+    "Your witty response here...",
+    "Alternative response for variety..."
+  ]
+}
+```
+
+### Response Guidelines
+
+1. **Keep it satirical** - Self-aware humor about crypto trading
+2. **Be relatable** - Reference common trader experiences
+3. **Stay safe** - Avoid anything that could be construed as financial advice
+4. **Add variety** - Multiple responses per pattern prevent repetition
+
+### Testing Responses
+
+In development, responses appear in the console. Test with:
+- Common crypto terms: "bitcoin", "pump", "moon"
+- Emotions: "broke", "lambo", "rekt"
+- Questions: "how to trade", "when moon"
+- Random text to test fallbacks
+
+### Production Considerations
+
+- Responses are cached for 1 minute to improve performance
+- Consider adding toast notifications for better UX
+- Monitor which responses users engage with
+- Add new categories based on common searches

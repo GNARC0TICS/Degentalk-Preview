@@ -2,6 +2,7 @@ export interface FooterLink {
 	label: string;
 	href: string;
 	external?: boolean;
+	comingSoon?: boolean;
 }
 
 export interface FooterNavigationSection {
@@ -16,30 +17,30 @@ export const footerNavigation: FooterNavigationSection[] = [
 		animationDelay: 0,
 		links: [
 			{ label: 'Home', href: '/' },
-			{ label: 'Forums', href: '/forums' },
-			{ label: 'Shop', href: '/shop' },
-			{ label: 'Degen Index', href: '/degen-index' },
-			{ label: 'Leaderboard', href: '/leaderboard' }
+			{ label: 'Forums', href: '#', comingSoon: true },
+			{ label: 'Shop', href: '#', comingSoon: true },
+			{ label: 'Degen Index', href: '#', comingSoon: true },
+			{ label: 'Leaderboard', href: '#', comingSoon: true }
 		]
 	},
 	{
 		title: 'Resources',
 		animationDelay: 0.2,
 		links: [
-			{ label: 'Degen Dictionary', href: '/dictionary' },
-			{ label: 'API Docs', href: '/docs', external: true },
-			{ label: 'FAQ', href: '/help/faq' },
-			{ label: 'Status', href: 'https://status.degentalk.com', external: true }
+			{ label: 'Degen Dictionary', href: '#', comingSoon: true },
+			{ label: 'API Docs', href: '#', comingSoon: true },
+			{ label: 'FAQ', href: '#', comingSoon: true },
+			{ label: 'Status', href: '#', comingSoon: true }
 		]
 	},
 	{
 		title: 'Community',
 		animationDelay: 0.4,
 		links: [
-			{ label: 'Discord', href: 'https://discord.gg/degentalk', external: true },
-			{ label: 'Twitter', href: 'https://twitter.com/degentalk', external: true },
-			{ label: 'Telegram', href: 'https://t.me/degentalk', external: true },
-			{ label: 'GitHub', href: 'https://github.com/degentalk', external: true }
+			{ label: 'Discord', href: '#', comingSoon: true },
+			{ label: 'Twitter', href: '#', comingSoon: true },
+			{ label: 'Telegram', href: '#', comingSoon: true },
+			{ label: 'GitHub', href: '#', comingSoon: true }
 		]
 	},
 	{

@@ -24,23 +24,30 @@ function shuffleArray<T>(array: readonly T[]): T[] {
 
 export function HeroSection() {
 	const [currentQuoteIndex, setCurrentQuoteIndex] = useState(0);
-	const [shuffledQuotes, setShuffledQuotes] = useState<HeroQuote[]>(() =>
-		shuffleArray([...uiConfig.heroQuotes])
-	);
+	const [shuffledQuotes, setShuffledQuotes] = useState<HeroQuote[]>([]);
+	const [isMounted, setIsMounted] = useState(false);
 
+	// Use first quote until mounted to avoid hydration mismatch
 	useEffect(() => {
-		// Shuffle once per mount/session
+		setIsMounted(true);
+		// Shuffle quotes only on client side after mount
 		setShuffledQuotes(shuffleArray([...uiConfig.heroQuotes]));
 	}, []);
 
 	useEffect(() => {
+		// Only start rotation after mounted and quotes are shuffled
+		if (!isMounted || shuffledQuotes.length === 0) return;
+		
 		const interval = setInterval(() => {
 			setCurrentQuoteIndex((prev) => (prev + 1) % shuffledQuotes.length);
 		}, 30000);
 		return () => clearInterval(interval);
-	}, [shuffledQuotes.length]);
+	}, [shuffledQuotes.length, isMounted]);
 
-	const currentQuote: HeroQuote | undefined = shuffledQuotes[currentQuoteIndex];
+	// Use the first quote from config during SSR, shuffled quotes after mount
+	const currentQuote: HeroQuote | undefined = isMounted && shuffledQuotes.length > 0
+		? shuffledQuotes[currentQuoteIndex]
+		: uiConfig.heroQuotes[0];
 	
 	// Don't render if no quote available
 	if (!currentQuote) {

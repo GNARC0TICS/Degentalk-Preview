@@ -34,7 +34,7 @@ export function Contact() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white mb-4 tracking-tight">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-display uppercase tracking-wide text-white mb-4">
             Contact Us
           </h1>
           <p className="text-lg text-zinc-300 max-w-2xl mx-auto">
@@ -86,23 +86,20 @@ export function Contact() {
             </p>
             <div className="space-y-2">
               <a 
-                href="https://twitter.com/degentalk"
+                href="https://twitter.com/Degentalk_"
                 className="flex items-center text-emerald-400 hover:text-emerald-300 transition-colors duration-200"
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 <Twitter className="w-4 h-4 mr-2" />
-                @degentalk
+                @Degentalk_
               </a>
-              <a 
-                href="https://github.com/degentalk"
-                className="flex items-center text-emerald-400 hover:text-emerald-300 transition-colors duration-200"
-                target="_blank"
-                rel="noopener noreferrer"
+              <span 
+                className="flex items-center text-zinc-600 cursor-not-allowed"
               >
                 <Github className="w-4 h-4 mr-2" />
-                GitHub
-              </a>
+                GitHub (Coming Soon)
+              </span>
               <div className="text-xs text-zinc-500 mt-2">
                 <strong>Mirror Sites:</strong> degentalk.io • degentalk.xyz • degentalk.net • degentalk.org • degentalk.info • degentalk.app
               </div>
@@ -227,10 +224,10 @@ export function Contact() {
             <div>
               <h3 className="font-semibold text-white mb-2">Common Questions:</h3>
               <ul className="text-zinc-300 space-y-2 text-sm">
-                <li>• <strong>When will Degentalk™ launch?</strong> We're in active development. Waitlist members get first access.</li>
-                <li>• <strong>How do I get DGT tokens?</strong> Early community members receive token allocations at launch.</li>
-                <li>• <strong>Is this financial advice?</strong> No, everything on Degentalk™ is for entertainment and community purposes only.</li>
-                <li>• <strong>Can I invest in Degentalk™?</strong> We're not currently raising funds. Focus is on building the best community platform.</li>
+                <li><strong>When will Degentalk™ launch?</strong> We're in active development. Waitlist members get first access.</li>
+                <li><strong>How do I get DGT tokens?</strong> Early community members receive token allocations at launch.</li>
+                <li><strong>Is this financial advice?</strong> No, everything on Degentalk™ is for entertainment and community purposes only.</li>
+                <li><strong>Can I invest in Degentalk™?</strong> We're not currently raising funds. Focus is on building the best community platform.</li>
               </ul>
             </div>
             <div className="pt-4 border-t border-zinc-700">

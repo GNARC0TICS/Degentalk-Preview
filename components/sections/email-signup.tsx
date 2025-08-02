@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Mail, ArrowRight, CheckCircle } from 'lucide-react';
 import { trackNewsletterSignup, trackCTAClick } from '@/lib/analytics';
@@ -14,6 +14,19 @@ export function EmailSignup() {
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
+  const [waitlistCount, setWaitlistCount] = useState(742); // Default value
+
+  // Fetch waitlist count on mount
+  useEffect(() => {
+    fetch('/api/visitors')
+      .then(res => res.json())
+      .then(data => {
+        if (data.waitlistSignups) {
+          setWaitlistCount(data.waitlistSignups);
+        }
+      })
+      .catch(console.error);
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,6 +50,9 @@ export function EmailSignup() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action: 'incrementWaitlist' })
       }).catch(console.error);
+      
+      // Optimistically update the local count
+      setWaitlistCount(prev => prev + 1);
       
       // Open Google Form in new tab with pre-filled email
       const formUrl = new URL(GOOGLE_FORM_URL);
@@ -183,7 +199,7 @@ export function EmailSignup() {
             viewport={{ once: true }}
           >
             <p className="text-zinc-400 text-sm">
-              Join <span className="text-emerald-400 font-semibold">742</span> degens already on the waitlist
+              Join <span className="text-emerald-400 font-display text-lg">{waitlistCount.toLocaleString()}</span> degens already on the waitlist
             </p>
           </motion.div>
         </div>

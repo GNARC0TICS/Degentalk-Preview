@@ -15,7 +15,7 @@ export function StrategyMeetsCommunity() {
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-white tracking-tight flex items-center justify-center gap-2 whitespace-nowrap">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-display uppercase tracking-wide text-white flex items-center justify-center gap-3 whitespace-nowrap">
               <motion.span
                 className="inline-block flex-shrink-0"
                 animate={{ 
