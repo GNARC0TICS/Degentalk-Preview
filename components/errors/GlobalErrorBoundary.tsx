@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * Global Error Boundary with Sentry Integration
  * Wraps the entire application for comprehensive error handling

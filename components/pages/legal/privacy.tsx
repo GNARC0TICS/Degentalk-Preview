@@ -1,23 +1,13 @@
-'use client';
-
 import React from 'react';
-import { motion } from 'framer-motion';
-import { SectionBackground } from '@/components/ViewportBackground';
 import { ArrowLeft } from 'lucide-react';
-import { Link } from '@/lib/router-compat';
 
 export function PrivacyPolicy() {
   return (
-    <SectionBackground variant="solid" intensity={0.15} className="min-h-screen py-16 sm:py-20 md:py-24">
+    <div className="min-h-screen bg-gradient-to-b from-zinc-950 to-black py-16 sm:py-20 md:py-24">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
         
         {/* Back to Home */}
-        <motion.div
-          className="mb-8"
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6 }}
-        >
+        <div className="mb-8">
           <a 
             href="/"
             className="inline-flex items-center text-emerald-400 hover:text-emerald-300 transition-colors duration-200 group"
@@ -25,15 +15,10 @@ export function PrivacyPolicy() {
             <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform duration-200" />
             Back to Degentalk
           </a>
-        </motion.div>
+        </div>
 
         {/* Header */}
-        <motion.div
-          className="text-center mb-12"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-        >
+        <div className="text-center mb-12">
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white mb-4 tracking-tight">
             Privacy Policy
           </h1>
@@ -43,15 +28,10 @@ export function PrivacyPolicy() {
           <p className="text-sm text-zinc-400 mt-2">
             Last updated: December 19, 2024
           </p>
-        </motion.div>
+        </div>
 
         {/* Content */}
-        <motion.div
-          className="prose prose-invert prose-emerald max-w-none"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-        >
+        <div className="prose prose-invert prose-emerald max-w-none">
           <div className="space-y-8 text-zinc-300">
 
             <section>
@@ -176,8 +156,8 @@ export function PrivacyPolicy() {
             </section>
 
           </div>
-        </motion.div>
+        </div>
       </div>
-    </SectionBackground>
+    </div>
   );
 }

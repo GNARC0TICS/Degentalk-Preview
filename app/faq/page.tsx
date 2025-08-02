@@ -1,10 +1,15 @@
 import { FAQ } from '@/components/sections/faq';
+import { FAQFull } from '@/components/sections/faq-full';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Frequently Asked Questions - Degentalk',
+  title: 'Frequently Asked Questions - Degentalk | Community Crypto Forum',
   description: 'Get answers to common questions about Degentalk, the premier crypto community platform. Learn about features, launch dates, and how to join.',
   keywords: 'degentalk faq, crypto forum questions, cryptocurrency community faq, degentalk help',
+  robots: {
+    index: true,
+    follow: true,
+  },
   openGraph: {
     title: 'Degentalk FAQ - Your Questions Answered',
     description: 'Everything you need to know about joining Degentalk, the future of crypto forums.',
@@ -164,23 +169,11 @@ export default function FAQPage() {
                 Frequently Asked Questions
               </h1>
               <p className="text-lg text-zinc-400">
-                Everything you need to know about Degentalk
+                Everything you need to know about joining the most satirical crypto forum on the internet
               </p>
             </div>
             
-            <FAQ />
-            
-            <div className="mt-12 text-center">
-              <p className="text-zinc-400 mb-6">
-                Still have questions? We're here to help.
-              </p>
-              <a
-                href="/contact"
-                className="inline-flex items-center px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-lg transition-colors"
-              >
-                Contact Us
-              </a>
-            </div>
+            <FAQFull />
           </div>
         </div>
       </div>

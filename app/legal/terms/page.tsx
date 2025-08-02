@@ -4,8 +4,8 @@ import { TermsOfService } from '@/components/pages/legal/terms';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Terms of Service - Degentalk | Satirical Trading Community',
-  description: 'Read Degentalk\'s terms of service. By using our crypto trading community platform, you agree to these terms and conditions.',
+  title: 'Terms of Service - Degentalk | Community Crypto Forum',
+  description: 'Read Degentalk\'s terms of service. By using our crypto community forum platform, you agree to these terms and conditions.',
   keywords: 'degentalk terms, terms of service, user agreement, crypto forum terms, platform rules, community guidelines',
   robots: {
     index: true,
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: 'Terms of Service - Degentalk',
-    description: 'Terms and conditions for using the Degentalk crypto trading community platform.',
+    description: 'Terms and conditions for using the Degentalk crypto community forum platform.',
     type: 'website',
     url: 'https://degentalk.net/legal/terms',
   },

@@ -54,7 +54,11 @@ const faqData: FAQItem[] = [
   }
 ];
 
-export function FAQ() {
+interface FAQProps {
+  showHeader?: boolean;
+}
+
+export function FAQ({ showHeader = true }: FAQProps = {}) {
   const [openItems, setOpenItems] = useState<Set<string>>(new Set());
 
   const toggleItem = (id: string) => {
@@ -93,27 +97,29 @@ export function FAQ() {
           __html: JSON.stringify(faqSchema),
         }}
       />
-      <section id="faq" className="py-16 sm:py-20 md:py-24 relative scroll-mt-16">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl relative z-10">
+      <section id="faq" className={showHeader ? "py-16 sm:py-20 md:py-24 relative scroll-mt-16" : ""}>
+        <div className={showHeader ? "container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl relative z-10" : ""}>
           
           {/* Section Header */}
-          <motion.div
-            className="text-center mb-12 sm:mb-16"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-          >
-            <div className="flex items-center justify-center gap-3 mb-6">
-              <HelpCircle className="w-8 h-8 text-emerald-400" />
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white tracking-tight">
-                Frequently Asked Questions
-              </h2>
-            </div>
-            <p className="text-base sm:text-lg text-zinc-300 max-w-2xl mx-auto font-medium">
-              Everything you need to know about joining the most satirical crypto forum on the internet.
-            </p>
-          </motion.div>
+          {showHeader && (
+            <motion.div
+              className="text-center mb-12 sm:mb-16"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+              viewport={{ once: true }}
+            >
+              <div className="flex items-center justify-center gap-3 mb-6">
+                <HelpCircle className="w-8 h-8 text-emerald-400" />
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white tracking-tight">
+                  Frequently Asked Questions
+                </h2>
+              </div>
+              <p className="text-base sm:text-lg text-zinc-300 max-w-2xl mx-auto font-medium">
+                Everything you need to know about joining the most satirical crypto forum on the internet.
+              </p>
+            </motion.div>
+          )}
 
           {/* FAQ Items */}
           <motion.div 
@@ -189,30 +195,32 @@ export function FAQ() {
           </motion.div>
 
           {/* CTA Section */}
-          <motion.div
-            className="text-center mt-12"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            viewport={{ once: true }}
-          >
-            <p className="text-zinc-400 text-sm mb-4">
-              Still have questions? Join our community and ask away.
-            </p>
-            <motion.button
-              onClick={() => {
-                trackCTAClick('join_waitlist', 'faq_section');
-                document.getElementById('newsletter-signup')?.scrollIntoView({ 
-                  behavior: 'smooth' 
-                });
-              }}
-              className="inline-flex items-center px-6 py-3 text-sm font-semibold text-emerald-400 border border-emerald-500/30 rounded-lg hover:bg-emerald-500/10 hover:border-emerald-500/50 transition-all duration-200"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
+          {showHeader && (
+            <motion.div
+              className="text-center mt-12"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+              viewport={{ once: true }}
             >
-              Join the Waitlist
-            </motion.button>
-          </motion.div>
+              <p className="text-zinc-400 text-sm mb-4">
+                Still have questions? Join our community and ask away.
+              </p>
+              <motion.button
+                onClick={() => {
+                  trackCTAClick('join_waitlist', 'faq_section');
+                  document.getElementById('newsletter-signup')?.scrollIntoView({ 
+                    behavior: 'smooth' 
+                  });
+                }}
+                className="inline-flex items-center px-6 py-3 text-sm font-semibold text-emerald-400 border border-emerald-500/30 rounded-lg hover:bg-emerald-500/10 hover:border-emerald-500/50 transition-all duration-200"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                Join the Waitlist
+              </motion.button>
+            </motion.div>
+          )}
         </div>
       </section>
     </>

@@ -4,8 +4,8 @@ import { PrivacyPolicy } from '@/components/pages/legal/privacy';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Privacy Policy - Degentalk | Satirical Trading Community',
-  description: 'Read Degentalk\'s privacy policy to understand how we collect, use, and protect your personal information on our crypto trading community platform.',
+  title: 'Privacy Policy - Degentalk | Community Crypto Forum',
+  description: 'Read Degentalk\'s privacy policy to understand how we collect, use, and protect your personal information on our crypto community forum platform.',
   keywords: 'degentalk privacy policy, data protection, user privacy, crypto forum privacy, gdpr compliance',
   robots: {
     index: true,
