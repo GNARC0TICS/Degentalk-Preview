@@ -196,11 +196,15 @@ export function PrimaryNav({ className, orientation = 'horizontal', showOnMobile
 		}
 	};
 
+	const navigationToRender = orientation === 'vertical' ? visibleNavigation.filter((it) => !(it.comingSoon ?? ['Forum','Shop','Leaderboard'].includes(it.label))) : visibleNavigation;
+
 	return (
 		<nav
 		className={`${showOnMobile ? 'flex lg:hidden' : 'hidden lg:flex'} ${orientation === 'vertical' ? 'flex flex-col space-y-4' : 'flex items-center space-x-1'} ${className || ''}`}
 	>
-			{visibleNavigation.map((item, index) => {
+			{navigationToRender.map((item, index) => {
+				// Determine base classes for item wrapper based on orientation
+				const itemBase = orientation === 'vertical' ? 'w-full text-left py-3 text-lg' : 'px-3 py-2 text-sm';
 				const isActive = item.href === location.pathname;
 				const isComingSoon = item.comingSoon ?? ['Forum', 'Shop', 'Leaderboard'].includes(item.label);
 				const isLeaderboard = item.label === 'Leaderboard';
@@ -221,7 +225,7 @@ export function PrimaryNav({ className, orientation = 'horizontal', showOnMobile
 						disabled={isComingSoon}
 					>
 						<div
-							className={`nav-item group px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 relative ${
+							className={`nav-item group ${itemBase} rounded-md font-medium transition-all duration-200 relative ${
 								isComingSoon 
 									? 'text-zinc-500 cursor-not-allowed opacity-60' 
 									: isActive 
@@ -247,7 +251,7 @@ export function PrimaryNav({ className, orientation = 'horizontal', showOnMobile
 								</div>
 							)}
 							{/* SVG underline with randomized path - only for non-coming-soon items */}
-							{!isComingSoon && (
+							{!isComingSoon && orientation === 'horizontal' && (
 								<svg
 									className="underline-svg w-full"
 									viewBox={`0 0 ${viewBoxWidth} 20`}

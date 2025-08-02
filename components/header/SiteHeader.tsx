@@ -5,7 +5,7 @@ import { Logo } from './Logo';
 import { PrimaryNav } from './PrimaryNav';
 import { LandingSearchBox } from './LandingSearchBox';
 import { trackCTAClick } from '@/lib/analytics';
-import { Search as SearchIcon, Menu as MenuIcon, X as XIcon } from 'lucide-react';
+import { Menu as MenuIcon, X as XIcon } from 'lucide-react';
 
 export function SiteHeader() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -20,7 +20,7 @@ export function SiteHeader() {
   }, [mobileOpen]);
 
   return (
-    <header className="bg-zinc-900/80 backdrop-blur-sm border-b border-zinc-800 sticky top-0 z-50 shadow-md">
+    <header className="bg-zinc-900/80 backdrop-blur-sm border-b border-zinc-800 sticky top-0 z-50 shadow-md relative">
       <nav
         aria-label="Main navigation"
         className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
@@ -56,18 +56,6 @@ export function SiteHeader() {
             </a>
           </div>
 
-          {/* Mobile Search Button */}
-          <button
-            className="lg:hidden p-2 text-zinc-300 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500/50 rounded-lg mr-2"
-            aria-label="Search"
-            onClick={() => {
-              // TODO: Implement search modal for mobile if needed
-              console.log('Mobile search clicked');
-            }}
-          >
-            <SearchIcon className="w-5 h-5" />
-          </button>
-
           {/* Hamburger */}
           <button
             className="lg:hidden p-2 text-zinc-300 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500/50 rounded-lg"
@@ -84,7 +72,7 @@ export function SiteHeader() {
       {/* Mobile dropdown */}
       <div
         id="mobile-nav"
-        className={`lg:hidden bg-black w-full overflow-hidden transition-all duration-300 ease-in-out ${mobileOpen ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0'}`}
+        className={`lg:hidden bg-black absolute left-0 top-full w-full overflow-hidden transition-all duration-300 ease-in-out ${mobileOpen ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0'} z-50`}
       >
         <div className="px-6 py-4">
           <PrimaryNav orientation="vertical" showOnMobile />
