@@ -8,6 +8,7 @@ import { ErrorBoundary } from './ErrorBoundary';
 // import * as Sentry from '@sentry/react';
 import { AlertTriangle, RefreshCw, Home } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { logger } from '@/lib/logger';
 
 interface GlobalErrorBoundaryProps {
   children: React.ReactNode;
@@ -90,14 +91,8 @@ export function GlobalErrorBoundary({ children }: GlobalErrorBoundaryProps) {
     <ErrorBoundary
       level="critical"
       context="global"
-      fallback={
-        <GlobalErrorFallback
-          error={new Error('Application Error')}
-          resetError={() => window.location.reload()}
-        />
-      }
       onError={(error, errorInfo) => {
-        console.error('[Global Error Boundary]', error, errorInfo);
+        logger.error('GlobalErrorBoundary', 'Global error caught', { error, errorInfo });
       }}
     >
       {children}
@@ -120,7 +115,7 @@ export function RouteErrorBoundary({
       level="page"
       context={`route:${routeName}`}
       onError={(error, errorInfo) => {
-        console.error(`[Route Error: ${routeName}]`, error, errorInfo);
+        logger.error('RouteErrorBoundary', `Route error: ${routeName}`, { error, errorInfo });
       }}
     >
       {children}

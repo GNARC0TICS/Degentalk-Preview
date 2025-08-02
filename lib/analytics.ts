@@ -1,47 +1,25 @@
-// Google Analytics 4 Configuration
-export const GA_TRACKING_ID = process.env.NEXT_PUBLIC_GA_TRACKING_ID || '';
+/**
+ * Analytics tracking using Vercel Analytics
+ * Replace Google Analytics with Vercel's built-in analytics
+ */
 
-// Initialize Google Analytics
-export const initGA = () => {
-  if (!GA_TRACKING_ID) {
-    console.warn('Google Analytics tracking ID not configured. Add VITE_GA_TRACKING_ID to environment variables.');
-    return;
-  }
+import { track } from '@vercel/analytics';
+import { logger } from './logger';
 
-  // Load gtag script
-  const script = document.createElement('script');
-  script.async = true;
-  script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`;
-  document.head.appendChild(script);
-
-  // Initialize gtag
-  script.onload = () => {
-    (window as any).dataLayer = (window as any).dataLayer || [];
-    function gtag(...args: any[]) {
-      (window as any).dataLayer.push(args);
-    }
-    
-    gtag('js', new Date());
-    gtag('config', GA_TRACKING_ID, {
-      page_title: 'Degentalk Landing Page',
-      page_location: window.location.href,
-      send_page_view: true
-    });
-
-    // Store gtag globally for custom events
-    (window as any).gtag = gtag;
-  };
-};
-
-// Track custom events
+/**
+ * Track custom events using Vercel Analytics
+ */
 export const trackEvent = (eventName: string, parameters?: Record<string, any>) => {
-  if (typeof window !== 'undefined' && (window as any).gtag) {
-    (window as any).gtag('event', eventName, {
-      custom_parameter: true,
-      ...parameters
-    });
-  } else {
-    console.log('Analytics event:', eventName, parameters);
+  try {
+    // Vercel Analytics track function
+    track(eventName, parameters);
+    
+    // Also log in development for debugging
+    if (process.env.NODE_ENV === 'development') {
+      logger.debug('Analytics', 'Event tracked', { eventName, parameters });
+    }
+  } catch (error) {
+    logger.error('Analytics', 'Failed to track event', { eventName, error });
   }
 };
 
@@ -142,3 +120,5 @@ export const trackSocialProofView = (section: string, visitorCount: number) => {
     credibility_factor: visitorCount > 1000 ? 'high' : visitorCount > 100 ? 'medium' : 'low'
   });
 };
+
+// No need for initGA - Vercel Analytics initializes automatically via the Analytics component

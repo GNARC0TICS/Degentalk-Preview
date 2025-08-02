@@ -101,21 +101,16 @@ export function MobileNavSimple() {
 						{/* Footer Actions */}
 						<div className="p-6 border-t border-zinc-800">
 							<div className="space-y-4">
-								<button 
+								<a
+									href="/faq"
 									onClick={() => {
 										trackCTAClick('faq_mobile', 'mobile_nav');
-										const faqSection = document.getElementById('faq');
-										if (faqSection) {
-											faqSection.scrollIntoView({ behavior: 'smooth' });
-											setIsOpen(false);
-										} else {
-											window.location.href = '/#faq';
-										}
+										setIsOpen(false);
 									}}
-									className="w-full px-4 py-3 text-sm font-medium text-zinc-300 hover:text-white transition-colors border border-zinc-700 rounded-lg"
+									className="block w-full px-4 py-3 text-sm font-medium text-zinc-300 hover:text-white transition-colors border border-zinc-700 rounded-lg text-center"
 								>
 									FAQ
-								</button>
+								</a>
 								<a
 									href="/contact"
 									onClick={() => trackCTAClick('contact_mobile', 'mobile_nav')}

@@ -1,6 +1,5 @@
 import React from 'react';
 import type { LucideIcon } from 'lucide-react';
-import Player from 'react-lottie-player';
 import { iconMap, type IconKey } from './iconMap.config';
 import type { Theme } from './types';
 import { logger } from '@/lib/logger';
@@ -72,17 +71,10 @@ export const IconRenderer: React.FC<IconRendererProps> = ({
 		return <Lucide width={size} height={size} {...rest} />;
 	}
 
-	// 2. Lottie animation (requires lottie-player web component globally available)
+	// 2. Lottie animation (not supported in waitlist page)
 	if ((config as any).lottie) {
-		return (
-			<Player
-				autoplay
-				loop
-				src={(config as any).lottie}
-				style={{ width: size, height: size }}
-				{...(rest as any)}
-			/>
-		);
+		logger.warn('IconRenderer', `Lottie animations are not supported in the waitlist page for icon "${icon}"`);
+		// Fall through to SVG/PNG fallback
 	}
 
 	// 3. SVG fallback

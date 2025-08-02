@@ -2,8 +2,6 @@
 
 import dynamic from 'next/dynamic';
 import { HeroSection } from '@/components/layout/hero-section';
-import { AnnouncementTicker } from '@/components/layout/announcement-ticker';
-import { EmailSignup } from '@/components/sections/email-signup';
 import { ErrorBoundary } from '@/components/errors/ErrorBoundary';
 
 // Code-split heavy components that are below the fold
@@ -23,6 +21,23 @@ const StrategyMeetsCommunity = dynamic(
 const FAQ = dynamic(
   () => import('@/components/sections/faq').then(mod => ({ default: mod.FAQ })),
   { ssr: true }
+);
+
+// Dynamically import components that are not immediately visible
+const AnnouncementTicker = dynamic(
+  () => import('@/components/layout/announcement-ticker').then(mod => ({ default: mod.AnnouncementTicker })),
+  { 
+    ssr: true,
+    loading: () => <div className="h-12 bg-zinc-900/50 animate-pulse" />
+  }
+);
+
+const EmailSignup = dynamic(
+  () => import('@/components/sections/email-signup').then(mod => ({ default: mod.EmailSignup })),
+  { 
+    ssr: true,
+    loading: () => <div className="h-96 bg-zinc-900/50 animate-pulse" />
+  }
 );
 
 function HomePage() {

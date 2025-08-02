@@ -1,15 +1,17 @@
 // Mock auth hook for static landing page
 
+import { logger } from '@/lib/logger';
+
 export const useAuth = () => {
   return {
     user: null,
     isAuthenticated: false,
     isLoading: false,
-    login: () => console.log('Login clicked'),
-    logout: () => console.log('Logout clicked'),
-    register: () => console.log('Register clicked'),
+    login: () => logger.info('Auth', 'Login clicked'),
+    logout: () => logger.info('Auth', 'Logout clicked'),
+    register: () => logger.info('Auth', 'Register clicked'),
     logoutMutation: {
-      mutate: () => console.log('Logout mutation')
+      mutate: () => logger.info('Auth', 'Logout mutation')
     }
   };
 };

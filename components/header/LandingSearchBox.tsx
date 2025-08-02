@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { IconRenderer } from '@/components/icons/iconRenderer';
 import { getCachedSearchResponse } from '@/lib/search-easter-eggs';
+import { logger } from '@/lib/logger';
 
 const funnyPlaceholders = [
   "Search for your lost gains...",
@@ -72,10 +73,9 @@ export function LandingSearchBox({ className = '' }: LandingSearchBoxProps) {
     const showMessage = (message: string) => {
       // Only show on client side
       if (typeof window !== 'undefined') {
-        console.log('Search response:', message);
+        logger.info('Search', 'Easter egg response', { message });
         
         // TODO: In production, show this in a toast notification
-        // For now, we'll use console.log
       }
       
       // Visual feedback: briefly highlight the search box

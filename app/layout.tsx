@@ -39,7 +39,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Degentalk™ - Where Strategy Meets Community',
     description: 'The premier crypto community forum for serious traders and enthusiasts.',
-    url: 'https://degentalk.io',
+    url: 'https://degentalk.net',
     siteName: 'Degentalk™',
     locale: 'en_US',
     type: 'website',
@@ -71,6 +71,7 @@ import { SiteHeader } from '@/components/header/SiteHeader';
 import { SiteFooter } from '@/components/footer/SiteFooter';
 import { WebVitals } from '@/components/WebVitals';
 import { ScrollToTop } from '@/components/ScrollToTop';
+import { GlobalErrorBoundary } from '@/components/errors/GlobalErrorBoundary';
 
 export default function RootLayout({
   children,
@@ -123,6 +124,14 @@ export default function RootLayout({
           </>
         )}
         
+        {/* Preload first carousel image for better LCP */}
+        <link
+          rel="preload"
+          as="image"
+          href="/banners/RainEvents.png.webp"
+          type="image/webp"
+        />
+        
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -137,16 +146,21 @@ export default function RootLayout({
         />
       </head>
       <body className="bg-zinc-950 text-white">
+        <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-emerald-600 text-white px-4 py-2 rounded-md z-50">
+          Skip to main content
+        </a>
         <WebVitals />
-        <Providers>
-          <Analytics />
-          <ScrollToTop />
-          <SiteHeader />
-          <main className="min-h-screen">
-            {children}
-          </main>
-          <SiteFooter />
-        </Providers>
+        <GlobalErrorBoundary>
+          <Providers>
+            <Analytics />
+            <ScrollToTop />
+            <SiteHeader />
+            <main id="main-content" className="min-h-screen">
+              {children}
+            </main>
+            <SiteFooter />
+          </Providers>
+        </GlobalErrorBoundary>
       </body>
     </html>
   );

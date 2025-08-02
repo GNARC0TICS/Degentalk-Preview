@@ -59,12 +59,13 @@ export class ErrorBoundary extends Component<Props, State> {
 	}
 
 	private logErrorToService = (error: Error, errorInfo: ErrorInfo) => {
-		// Log to console
-		console.group('🚨 Error Boundary Report');
-		logger.error('ErrorBoundary', 'Error: ' + error.toString());
-		logger.error('ErrorBoundary', 'Component Stack: ' + errorInfo.componentStack);
-		logger.error('ErrorBoundary', 'Context: ' + (this.props.context || 'Unknown'));
-		console.groupEnd();
+		// Log error details
+		logger.error('ErrorBoundary', '🚨 Error Boundary Report', {
+			error: error.toString(),
+			componentStack: errorInfo.componentStack,
+			context: this.props.context || 'Unknown',
+			timestamp: new Date().toISOString()
+		});
 	};
 
 	private generateEventId = (): string => {

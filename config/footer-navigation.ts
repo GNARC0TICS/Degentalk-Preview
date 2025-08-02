@@ -29,7 +29,7 @@ export const footerNavigation: FooterNavigationSection[] = [
 		links: [
 			{ label: 'Degen Dictionary', href: '#', comingSoon: true },
 			{ label: 'API Docs', href: '#', comingSoon: true },
-			{ label: 'FAQ', href: '#', comingSoon: true },
+			{ label: 'FAQ', href: '/faq' },
 			{ label: 'Status', href: '#', comingSoon: true }
 		]
 	},

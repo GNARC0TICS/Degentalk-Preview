@@ -1,4 +1,7 @@
 import { NextResponse } from 'next/server';
+import { logger } from '@/lib/logger';
+import { getVisitorStats, incrementPageVisits, incrementWaitlistSignups } from '@/lib/visitor-storage';
+import { checkRateLimit, createRateLimitHeaders } from '@/lib/rate-limiter';
 
 export const runtime = 'edge';
 
@@ -27,7 +30,7 @@ async function fetchAnalyticsData(): Promise<VisitorData> {
     const token = process.env.VERCEL_TOKEN;
     
     if (!projectId || !token) {
-      console.error('Missing VERCEL_PROJECT_ID or VERCEL_TOKEN');
+      logger.error('Analytics', 'Missing VERCEL_PROJECT_ID or VERCEL_TOKEN');
       // Return fallback data
       return {
         pageVisits: 3847,
@@ -72,7 +75,7 @@ async function fetchAnalyticsData(): Promise<VisitorData> {
     
     return result;
   } catch (error) {
-    console.error('Error fetching analytics:', error);
+    logger.error('Analytics', 'Error fetching analytics', error as Error);
     
     // Return fallback data on error
     return {
@@ -83,23 +86,36 @@ async function fetchAnalyticsData(): Promise<VisitorData> {
   }
 }
 
-// In-memory counter for waitlist signups (replace with database in production)
-let waitlistCounter = 742;
+// Visitor data is now managed by visitor-storage.ts
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
+    // Check rate limit
+    const rateLimit = await checkRateLimit(request, '/api/visitors');
+    if (!rateLimit.allowed) {
+      return NextResponse.json(
+        { error: 'Too many requests' },
+        { 
+          status: 429,
+          headers: createRateLimitHeaders(rateLimit.remaining, rateLimit.resetTime)
+        }
+      );
+    }
     const data = await fetchAnalyticsData();
+    const stats = await getVisitorStats();
     
-    // Override waitlist count with our counter
-    data.waitlistSignups = waitlistCounter;
+    // Override with persistent storage values
+    data.waitlistSignups = stats.waitlistSignups;
+    data.pageVisits = stats.pageVisits;
     
     return NextResponse.json(data, {
       headers: {
         'Cache-Control': 'public, s-maxage=10, stale-while-revalidate=30',
+        ...createRateLimitHeaders(rateLimit.remaining, rateLimit.resetTime),
       },
     });
   } catch (error) {
-    console.error('Error in /api/visitors:', error);
+    logger.error('Analytics', 'Error in GET /api/visitors', error as Error);
     
     // Return error response
     return NextResponse.json(
@@ -114,14 +130,14 @@ export async function POST(request: Request) {
     const body = await request.json();
     
     if (body.action === 'incrementWaitlist') {
-      waitlistCounter++;
+      const newCount = await incrementWaitlistSignups();
       
       // Clear cache to reflect new count
       cachedData = null;
       
       return NextResponse.json({ 
         success: true, 
-        newCount: waitlistCounter 
+        newCount 
       });
     }
     
@@ -130,7 +146,7 @@ export async function POST(request: Request) {
       { status: 400 }
     );
   } catch (error) {
-    console.error('Error in POST /api/visitors:', error);
+    logger.error('Analytics', 'Error in POST /api/visitors', error as Error);
     
     return NextResponse.json(
       { error: 'Failed to process request' },

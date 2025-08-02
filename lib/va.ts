@@ -1,4 +1,5 @@
 import { track } from '@vercel/analytics';
+import { logger } from './logger';
 
 /**
  * Thin wrapper around Vercel Analytics track function
@@ -10,7 +11,7 @@ export function vaTrack(eventName: string, properties?: Record<string, any>) {
   } catch (error) {
     // Fail silently in production to avoid breaking user experience
     if (process.env.NODE_ENV === 'development') {
-      console.error('Analytics tracking error:', error);
+      logger.error('Analytics', 'Analytics tracking error', error as Error);
     }
   }
 }

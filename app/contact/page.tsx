@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     title: 'Contact Degentalk - Get in Touch',
     description: 'Reach out to the Degentalk team for support, partnerships, or general inquiries.',
     type: 'website',
-    url: 'https://degentalk.io/contact',
+    url: 'https://degentalk.net/contact',
   },
   twitter: {
     card: 'summary',
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     description: 'Get in touch with the Degentalk crypto community team.',
   },
   alternates: {
-    canonical: 'https://degentalk.io/contact',
+    canonical: 'https://degentalk.net/contact',
   },
 };
 

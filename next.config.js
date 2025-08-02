@@ -7,26 +7,28 @@ const nextConfig = {
 
   // Webpack configuration to maintain import aliases
   webpack: (config) => {
-    // Preserve @/ import alias to src/
+    // Preserve @/ import alias to root directory
     config.resolve.alias['@'] = path.join(__dirname, './');
-    
-    // Preserve @shared/ import alias
-    config.resolve.alias['@shared'] = path.join(__dirname, '../shared');
     
     return config;
   },
 
-  // Allow images from any domain (for development)
+  // Only allow images from trusted domains
   images: {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: '**',
+        hostname: 'degentalk.net',
       },
       {
-        protocol: 'http',
-        hostname: '**',
+        protocol: 'https',
+        hostname: '*.degentalk.net', // Allow subdomains like cdn.degentalk.net
       },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com', // If using Unsplash for placeholder images
+      },
+      // Add other trusted image CDNs as needed
     ],
   },
 

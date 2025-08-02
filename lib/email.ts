@@ -1,4 +1,5 @@
 import emailjs from '@emailjs/browser';
+import { logger } from '@/lib/logger';
 
 // Environment variables for email service
 const emailConfig = {
@@ -26,7 +27,7 @@ export const sendNewsletterSignup = async (data: NewsletterSignup): Promise<{ su
   try {
     // Ensure EmailJS is fully configured
     if (!emailConfig.serviceId || !emailConfig.templateId || !emailConfig.publicKey) {
-      console.error('[Email] EmailJS credentials missing. Set VITE_EMAILJS_SERVICE_ID, VITE_EMAILJS_TEMPLATE_ID, VITE_EMAILJS_PUBLIC_KEY');
+      logger.error('Email', 'EmailJS credentials missing', { required: 'NEXT_PUBLIC_EMAILJS_SERVICE_ID, NEXT_PUBLIC_EMAILJS_TEMPLATE_ID, NEXT_PUBLIC_EMAILJS_PUBLIC_KEY' });
       return {
         success: false,
         message: 'Email service not configured. Please try again later.'
@@ -57,7 +58,7 @@ export const sendNewsletterSignup = async (data: NewsletterSignup): Promise<{ su
       throw new Error(`EmailJS error: ${response.status}`);
     }
   } catch (error) {
-    console.error('Newsletter signup error:', error);
+    logger.error('Email', 'Newsletter signup error', error as Error);
     return {
       success: false,
       message: 'Failed to join waitlist. Please try again later.'
@@ -71,7 +72,7 @@ export const sendToConvertKit = async (data: NewsletterSignup): Promise<{ succes
   const formId = process.env.NEXT_PUBLIC_CONVERTKIT_FORM_ID;
 
   if (!apiKey || !formId) {
-    console.error('[Email] ConvertKit credentials missing. Set VITE_CONVERTKIT_API_KEY and VITE_CONVERTKIT_FORM_ID');
+    logger.error('Email', 'ConvertKit credentials missing', { required: 'NEXT_PUBLIC_CONVERTKIT_API_KEY, NEXT_PUBLIC_CONVERTKIT_FORM_ID' });
     return {
       success: false,
       message: 'Email service not configured. Please try again later.'
@@ -100,7 +101,7 @@ export const sendToConvertKit = async (data: NewsletterSignup): Promise<{ succes
       throw new Error(`ConvertKit error: ${response.status}`);
     }
   } catch (error) {
-    console.error('ConvertKit signup error:', error);
+    logger.error('Email', 'ConvertKit signup error', error as Error);
     return {
       success: false,
       message: 'Failed to join waitlist. Please try again later.'
@@ -114,7 +115,7 @@ export const sendToMailchimp = async (): Promise<{ success: boolean; message: st
   const audienceId = process.env.NEXT_PUBLIC_MAILCHIMP_AUDIENCE_ID;
 
   if (!apiKey || !audienceId) {
-    console.error('[Email] Mailchimp credentials missing. Set VITE_MAILCHIMP_API_KEY and VITE_MAILCHIMP_AUDIENCE_ID');
+    logger.error('Email', 'Mailchimp credentials missing', { required: 'NEXT_PUBLIC_MAILCHIMP_API_KEY, NEXT_PUBLIC_MAILCHIMP_AUDIENCE_ID' });
     return {
       success: false,
       message: 'Email service not configured. Please try again later.'
@@ -124,14 +125,14 @@ export const sendToMailchimp = async (): Promise<{ success: boolean; message: st
   try {
     // Note: Direct Mailchimp API calls from frontend are not recommended due to CORS
     // This would typically require a backend proxy
-    console.warn('Mailchimp requires backend proxy for security. Consider using EmailJS or ConvertKit instead.');
+    logger.warn('Email', 'Mailchimp requires backend proxy for security', { suggestion: 'Consider using EmailJS or ConvertKit instead' });
     
     return {
       success: true,
       message: 'Mailchimp integration requires backend setup. Email saved locally.'
     };
   } catch (error) {
-    console.error('Mailchimp signup error:', error);
+    logger.error('Email', 'Mailchimp signup error', error as Error);
     return {
       success: false,
       message: 'Failed to join waitlist. Please try again later.'
@@ -158,7 +159,7 @@ export const handleNewsletterSignup = async (email: string): Promise<{ success: 
   }
 
   // No email service configured
-  console.error('[Email] No email service configured – unable to process signup.');
+  logger.error('Email', 'No email service configured – unable to process signup');
   return {
     success: false,
     message: 'Email service not configured. Please try again later.'

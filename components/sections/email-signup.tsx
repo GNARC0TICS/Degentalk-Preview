@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { Mail, ArrowRight, CheckCircle } from 'lucide-react';
 import { trackNewsletterSignup, trackCTAClick } from '@/lib/analytics';
 import { cn } from '@/lib/utils';
+import { logger } from '@/lib/logger';
 
 // Google Form configuration
 // TODO: Replace with actual Google Form URL
@@ -25,7 +26,7 @@ export function EmailSignup() {
           setWaitlistCount(data.waitlistSignups);
         }
       })
-      .catch(console.error);
+      .catch(err => logger.error('EmailSignup', 'Failed to fetch waitlist count', err));
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -102,7 +103,7 @@ export function EmailSignup() {
             transition={{ duration: 0.8, delay: 0.2 }}
             viewport={{ once: true }}
           >
-            <form onSubmit={handleSubmit} className="relative">
+            <form onSubmit={handleSubmit} className="relative" aria-label="Email newsletter signup">
               <div className="relative group">
                 {/* Background glow effect */}
                 <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/20 to-purple-500/20 rounded-xl blur-xl opacity-50 group-hover:opacity-75 transition-opacity" />
@@ -116,6 +117,10 @@ export function EmailSignup() {
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="Enter your email"
                       disabled={status === 'loading' || status === 'success'}
+                      aria-label="Email address"
+                      aria-required="true"
+                      aria-invalid={status === 'error'}
+                      aria-describedby={status === 'error' ? 'email-error' : undefined}
                       className={cn(
                         "flex-1 px-4 py-3 bg-zinc-900/50 border border-zinc-700/50 rounded-lg",
                         "text-white placeholder-zinc-400",
@@ -127,6 +132,7 @@ export function EmailSignup() {
                     <button
                       type="submit"
                       disabled={status === 'loading' || status === 'success'}
+                      aria-label={status === 'loading' ? 'Joining waitlist...' : status === 'success' ? 'Successfully joined' : 'Join the waitlist'}
                       className={cn(
                         "px-6 py-3 rounded-lg font-semibold",
                         "bg-gradient-to-r from-emerald-500 to-emerald-600",
@@ -162,6 +168,9 @@ export function EmailSignup() {
               {/* Status messages */}
               {status === 'error' && (
                 <motion.p
+                  id="email-error"
+                  role="alert"
+                  aria-live="polite"
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   className="mt-2 text-sm text-red-400 text-center"

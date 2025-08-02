@@ -2,13 +2,14 @@
 
 import { useEffect } from 'react';
 import { onCLS, onFCP, onLCP, onTTFB, onINP } from 'web-vitals';
+import { logger } from '@/lib/logger';
 
 export function WebVitals() {
   useEffect(() => {
     function sendToAnalytics(metric: any) {
-      // Log to console in development
+      // Log to logger in development
       if (process.env.NODE_ENV === 'development') {
-        console.log('[Web Vitals]', metric.name, Math.round(metric.value), {
+        logger.debug('WebVitals', `${metric.name}: ${Math.round(metric.value)}`, {
           rating: metric.rating,
           path: window.location.pathname,
         });

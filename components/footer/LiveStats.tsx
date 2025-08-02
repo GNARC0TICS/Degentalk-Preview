@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { trackAnalyticsMilestone, trackSocialProofView } from '@/lib/analytics';
+import { logger } from '@/lib/logger';
 
 interface LiveStatsData {
 	pageVisits: number;
@@ -36,7 +37,7 @@ export function LiveStats() {
 				}
 			}
 		} catch (error) {
-			console.error('Failed to fetch visitor stats:', error);
+			logger.error('LiveStats', 'Failed to fetch visitor stats', error as Error);
 		}
 	}, []);
 

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { IconRenderer } from '@/components/icons/iconRenderer';
+import { logger } from '@/lib/logger';
 
 interface SearchBoxProps {
 	className?: string;
@@ -12,7 +13,7 @@ export function SearchBox({ className, placeholder = 'Search threads...' }: Sear
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
 		// For landing page - just log the search
-		console.log('Search submitted:', searchValue);
+		logger.info('SearchBox', 'Search submitted', { searchValue });
 	};
 
 	return (

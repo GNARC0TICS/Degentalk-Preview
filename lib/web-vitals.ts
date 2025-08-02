@@ -1,4 +1,5 @@
 import { onCLS, onFCP, onLCP, onTTFB, onINP, CLSMetric, FCPMetric, LCPMetric, TTFBMetric, INPMetric } from 'web-vitals';
+import { logger } from '@/lib/logger';
 
 type Metric = CLSMetric | FCPMetric | LCPMetric | TTFBMetric | INPMetric;
 
@@ -23,10 +24,11 @@ export function sendToAnalytics(metric: Metric) {
 
   // Log to console in development
   if (process.env.NODE_ENV === 'development') {
-    console.log('[Web Vitals]', metric.name, metric.value, {
+    logger.debug('WebVitals', `${metric.name}: ${metric.value}`, {
       rating: metric.rating,
       delta: metric.delta,
       id: metric.id,
+      path: window.location.pathname,
     });
   }
 
@@ -55,6 +57,6 @@ export function reportWebVitals() {
     onTTFB(sendToAnalytics);
     onINP(sendToAnalytics);
   } catch (err) {
-    console.error('[Web Vitals] Failed to initialize:', err);
+    logger.error('WebVitals', 'Failed to initialize', err as Error);
   }
 }

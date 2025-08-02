@@ -8,7 +8,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from '@/components/ui/carousel';
-import { BannerCard } from './BannerCard';
+import { BannerCard } from './BannerCard-optimized';
 
 export function BannerCarousel() {
   const [autoplay, setAutoplay] = React.useState<any[]>([]);
@@ -74,7 +74,7 @@ export function BannerCarousel() {
         >
           <CarouselContent className="-ml-4">
             {banners.map((banner, index) => (
-              <CarouselItem key={index} className="pl-4 md:basis-1/2 lg:basis-1/3">
+              <CarouselItem key={index} className="pl-4 basis-full md:basis-1/2">
                 <BannerCard {...banner} />
               </CarouselItem>
             ))}
