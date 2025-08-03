@@ -18,10 +18,19 @@ const bebasNeue = Bebas_Neue({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://degentalk.net'),
   title: 'Degentalk™ - Where Strategy Meets Community',
   description: 'The premier crypto community forum for serious traders and enthusiasts. Join discussions, share strategies, and stay ahead of the market.',
   keywords: 'crypto, trading, forum, community, bitcoin, ethereum, defi, nft',
   authors: [{ name: 'Degentalk Team' }],
+  alternates: {
+    canonical: '/',
+  },
+  viewport: {
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 5,
+  },
   icons: {
     icon: [
       { url: '/favicon.ico', sizes: '256x256' },
@@ -43,10 +52,11 @@ export const metadata: Metadata = {
     siteName: 'Degentalk™',
     images: [
       {
-        url: 'https://degentalk.net/opengraph-image',
+        url: '/opengraph-image.png',
         width: 1200,
         height: 630,
         alt: 'Degentalk – The future of Crypto Forums',
+        type: 'image/png',
       },
     ],
     locale: 'en_US',
@@ -56,7 +66,9 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Degentalk™ - Where Strategy Meets Community',
     description: 'The premier crypto community forum for serious traders and enthusiasts.',
-    images: ['https://degentalk.net/opengraph-image'],
+    images: ['/twitter-image.png'],
+    creator: '@degentalk',
+    site: '@degentalk',
   },
   robots: {
     index: true,
