@@ -106,7 +106,7 @@ export default async function Image() {
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <span style={{ color: '#10b981' }}>150K+</span> Degens
+              <span style={{ color: '#10b981' }}>Thousands+</span> Degens
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <span style={{ color: '#10b981' }}>$DGT</span> Economy
