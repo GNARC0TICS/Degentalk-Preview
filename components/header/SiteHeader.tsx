@@ -133,7 +133,7 @@ export function SiteHeader() {
         id="mobile-nav"
         className={cn(
           'lg:hidden bg-zinc-900 absolute inset-x-0 top-full origin-top transform-gpu overflow-y-auto',
-          !prefersReducedMotion && 'transition-transform transition-opacity duration-300 ease-[cubic-bezier(0.4,0,0.2,1)]',
+          !prefersReducedMotion && 'transition-transform transition-opacity duration-300 ease-out',
           mobileOpen ? 'translate-y-0 opacity-100' : '-translate-y-4 opacity-0 pointer-events-none',
           'z-50 shadow-2xl'
         )}

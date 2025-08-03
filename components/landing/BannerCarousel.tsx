@@ -29,37 +29,37 @@ export function BannerCarousel() {
   const banners = [
     {
       title: "Rain Events",
-      description: "Catch the crypto rain and share the wealth with the community",
+      description: "Join spontaneous $DGT rain events where whales shower the community. Set your umbrellas, compete in mini-games, and watch the chat explode as tokens fall from the sky.",
       image: "/banners/RainEvents.png.webp",
       color: "from-blue-600/20 to-cyan-600/20"
     },
     {
-      title: "Premium Shop",
-      description: "Level up your profile with exclusive items and cosmetics",
+      title: "Cosmetic Shop",
+      description: "Spend your hard-earned $DGT on legendary titles, username flair, custom emojis, XP boosts, profile bling, and VIP passes. Stand out from the crowd with exclusive cosmetics.",
       image: "/banners/Shop2.webp",
       color: "from-green-600/20 to-emerald-600/20"
     },
     {
       title: "Live Shoutbox",
-      description: "Real-time chaos and unfiltered discussion 24/7",
+      description: "The heartbeat of Degentalk. Real-time chat where deals are made, tips are shared, and legends are born. Join live events, mini-games, and establish your degen identity.",
       image: "/banners/Shoutbox.webp",
       color: "from-red-600/20 to-pink-600/20"
     },
     {
       title: "Unhinged Mode",
-      description: "Where the real degens come to play without limits",
+      description: "Toggle the chaos. No filters, no censorship, pure degeneracy. Enable profanity and NSFW content for the full Degentalk experience. Not for the faint of heart.",
       image: "/banners/Unhinged.webp",
       color: "from-purple-600/20 to-indigo-600/20"
     },
     {
       title: "User Roles",
-      description: "Climb the ranks and earn exclusive badges and privileges",
+      description: "Rise through the ranks from Degen to VIP to Moderator and beyond. Each role unlocks new powers: moderate threads, manage campaigns, run events, or join the dev team.",
       image: "/banners/UserRoles.webp",
       color: "from-indigo-600/20 to-purple-600/20"
     },
     {
       title: "XP System",
-      description: "Level up through participation and unlock new features",
+      description: "Every post, thread, reply, and daily login earns XP. Level up to unlock perks, build reputation, gain privileges, and earn $DGT rewards. The grind never stops.",
       image: "/banners/XP.webp",
       color: "from-emerald-600/20 to-green-600/20"
     }

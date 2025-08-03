@@ -1,9 +1,8 @@
 'use client';
 
-import React from 'react';
+import React, { memo } from 'react';
 import { Megaphone } from 'lucide-react';
 import { announcementQuotes } from '@/config/announcement-quotes';
-import { useHydrated } from '@/lib/use-hydrated';
 
 // Get a deterministic selection of quotes based on the current day
 function getDeterministicQuotes() {
@@ -19,8 +18,8 @@ function getDeterministicQuotes() {
 	return selected;
 }
 
-export function AnnouncementTicker() {
-	const hydrated = useHydrated();
+// Memoize the component to prevent unnecessary re-renders
+export const AnnouncementTicker = memo(function AnnouncementTicker() {
 	// Use deterministic quotes to avoid hydration mismatch
 	const announcements = getDeterministicQuotes();
 
@@ -43,7 +42,7 @@ export function AnnouncementTicker() {
 			<div className="absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-zinc-900 via-zinc-900/80 to-transparent z-10 pointer-events-none" />
 
 			{/* Scrolling text container - adjusted margin */}
-			<div className="h-full ml-14 mr-4">
+			<div className="h-full ml-14 mr-4" role="marquee" aria-label="Scrolling announcements">
 					<style>{`
 						@keyframes ticker-scroll {
 							0% { transform: translateX(0); }
@@ -53,8 +52,13 @@ export function AnnouncementTicker() {
 							display: flex;
 							align-items: center;
 							height: 100%;
-							animation: ticker-scroll 20s linear infinite !important;
+							animation: ticker-scroll 15s linear infinite !important;
 							white-space: nowrap;
+							will-change: transform;
+							backface-visibility: hidden;
+							-webkit-backface-visibility: hidden;
+							transform: translateZ(0);
+							-webkit-transform: translateZ(0);
 						}
 						.ticker-content:hover {
 							animation-play-state: paused !important;
@@ -87,14 +91,30 @@ export function AnnouncementTicker() {
 						.ticker-content {
 							animation-timing-function: linear !important;
 						}
-						/* Override any reduced motion settings for this ticker */
+						/* Reduced motion support */
 						@media (prefers-reduced-motion: reduce) {
 							.ticker-content {
-								animation: ticker-scroll 40s linear infinite !important;
+								animation-duration: 30s !important;
+							}
+						}
+						/* Optimize for mobile devices */
+						@media (max-width: 640px) {
+							.ticker-item {
+								font-size: 0.75rem;
+								padding: 0 1.5rem;
+							}
+							.ticker-separator {
+								margin: 0 1rem;
+							}
+						}
+						/* Start animation immediately - CSS handles everything */
+						@supports (animation: ticker-scroll) {
+							.ticker-content {
+								animation-play-state: running !important;
 							}
 						}
 					`}</style>
-					<div className="ticker-content">
+					<div className="ticker-content" data-testid="ticker-content">
 						{/* Triple the content for seamless scrolling */}
 						{[...announcements, ...announcements, ...announcements].map((announcement, index) => (
 							<React.Fragment key={`ann-${index}`}>
@@ -114,4 +134,4 @@ export function AnnouncementTicker() {
 			</div>
 		</div>
 	);
-}
+});

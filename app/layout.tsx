@@ -41,6 +41,14 @@ export const metadata: Metadata = {
     description: 'The premier crypto community forum for serious traders and enthusiasts.',
     url: 'https://degentalk.net',
     siteName: 'Degentalk™',
+    images: [
+      {
+        url: 'https://degentalk.net/opengraph-image',
+        width: 1200,
+        height: 630,
+        alt: 'Degentalk – The future of Crypto Forums',
+      },
+    ],
     locale: 'en_US',
     type: 'website',
   },
@@ -48,6 +56,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Degentalk™ - Where Strategy Meets Community',
     description: 'The premier crypto community forum for serious traders and enthusiasts.',
+    images: ['https://degentalk.net/opengraph-image'],
   },
   robots: {
     index: true,
