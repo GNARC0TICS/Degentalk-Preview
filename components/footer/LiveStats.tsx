@@ -78,7 +78,7 @@ export function LiveStats() {
 				<div className="flex items-center gap-2">
 					<div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
 					<span className="text-zinc-500 font-display uppercase tracking-wide">
-						{formatNumber(stats.currentVisitors)} Live
+						{formatNumber(stats.currentVisitors)} Lurking
 					</span>
 				</div>
 				<div className="text-zinc-600">•</div>

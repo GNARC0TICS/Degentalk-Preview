@@ -5,6 +5,10 @@ const WAITLIST_SIGNUPS_KEY = 'stats:waitlist_signups';
 const ONLINE_VISITORS_ZSET = 'stats:online_visitors'; // sorted-set → last-seen ts (ms)
 const ONLINE_WINDOW_MS = 5 * 60 * 1000; // 5-minute "online" window
 
+// In-memory cache to reduce KV reads (10-second TTL)
+let lastFetch = 0;
+let cachedStats: VisitorStats | null = null;
+
 export interface VisitorStats {
   pageVisits: number;
   waitlistSignups: number;
@@ -15,8 +19,10 @@ export interface VisitorStats {
 async function getCurrentVisitors(): Promise<number> {
   try {
     const threshold = Date.now() - ONLINE_WINDOW_MS;
-    // purge expired members
-    await kv.zremrangebyscore(ONLINE_VISITORS_ZSET, 0, threshold);
+    // Purge expired members only 5% of the time to save commands
+    if (Math.random() < 0.05) {
+      await kv.zremrangebyscore(ONLINE_VISITORS_ZSET, 0, threshold);
+    }
     // count remaining
     const count = await kv.zcard(ONLINE_VISITORS_ZSET);
     return count || 0;
@@ -30,8 +36,16 @@ async function getCurrentVisitors(): Promise<number> {
 export async function trackVisitor(sessionId: string) {
   try {
     // each page view gets a cryptographically random sessionId
-    await kv.zadd(ONLINE_VISITORS_ZSET, { score: Date.now(), member: sessionId });
-    await incrementPageVisits();
+    await kv
+      .pipeline()
+      .zadd(ONLINE_VISITORS_ZSET, { score: Date.now(), member: sessionId })
+      .incr(PAGE_VISITS_KEY)
+      .exec();
+
+    // Best-effort cache bump
+    if (cachedStats) {
+      cachedStats.pageVisits += 1;
+    }
   } catch (error) {
     console.error('Error tracking visitor:', error);
   }
@@ -39,10 +53,15 @@ export async function trackVisitor(sessionId: string) {
 
 export async function getVisitorStats(): Promise<VisitorStats> {
   try {
+    const now = Date.now();
     // Check if KV is available
     const isKvAvailable = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
     
     if (!isKvAvailable) {
+      // If we have a recent cache, serve it even without KV
+      if (cachedStats && now - lastFetch < 10000) {
+        return cachedStats;
+      }
       // Return stub data if KV is not configured
       return {
         pageVisits: 3847,
@@ -51,13 +70,21 @@ export async function getVisitorStats(): Promise<VisitorStats> {
       };
     }
 
+    // Serve from cache if still fresh
+    if (cachedStats && now - lastFetch < 10000) {
+      return cachedStats;
+    }
+
     const [pageVisits, waitlistSignups, currentVisitors] = await Promise.all([
       kv.get<number>(PAGE_VISITS_KEY).then(v => v ?? 0),
       kv.get<number>(WAITLIST_SIGNUPS_KEY).then(v => v ?? 134),
       getCurrentVisitors(),
     ]);
-    
-    return { pageVisits, waitlistSignups, currentVisitors };
+
+    const result = { pageVisits, waitlistSignups, currentVisitors };
+    cachedStats = result;
+    lastFetch = now;
+    return result;
   } catch (error) {
     console.error('Error getting visitor stats:', error);
     // Return fallback data on error

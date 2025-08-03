@@ -14,11 +14,13 @@ export const metadata: Metadata = {
     siteName: 'Degentalk™',
     type: 'website',
     url: 'https://degentalk.net',
+    images: ['/banners/RainEvents.png.webp'],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Degentalk - The future of Crypto Forums',
     description: 'Join the most addictive and unhinged cryptocurrency trading community.',
+    images: ['/banners/RainEvents.png.webp'],
   },
   alternates: {
     canonical: 'https://degentalk.net',

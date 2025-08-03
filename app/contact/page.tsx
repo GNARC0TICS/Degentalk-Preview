@@ -12,11 +12,13 @@ export const metadata: Metadata = {
     description: 'Reach out to the Degentalk team for support, partnerships, or general inquiries.',
     type: 'website',
     url: 'https://degentalk.net/contact',
+    images: ['/banners/UserRoles.webp'],
   },
   twitter: {
-    card: 'summary',
+    card: 'summary_large_image',
     title: 'Contact Degentalk',
     description: 'Get in touch with the Degentalk crypto community team.',
+    images: ['/banners/UserRoles.webp'],
   },
   alternates: {
     canonical: 'https://degentalk.net/contact',

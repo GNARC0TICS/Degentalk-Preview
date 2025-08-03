@@ -11,14 +11,14 @@ export async function generateMetadata(): Promise<Metadata> {
     description: 'Born in the chaos of market crashes and rug pulls, Degentalk is the most unhinged cryptocurrency forum. Built by degens, for degens.',
     openGraph: {
       images: [{ 
-        url: 'https://degentalk.net/banners/unhinged.webp',
+        url: 'https://degentalk.net/banners/Unhinged.webp',
         width: 1200,
         height: 630,
         alt: 'About Degentalk - The Most Unhinged Crypto Community'
       }]
     },
     twitter: {
-      images: ['https://degentalk.net/banners/unhinged.webp']
+      images: ['https://degentalk.net/banners/Unhinged.webp']
     }
   });
   
