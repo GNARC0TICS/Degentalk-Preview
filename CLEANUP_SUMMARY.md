@@ -5,7 +5,7 @@
 2. ✅ Converted all `import.meta.env` to Next.js `process.env`
 3. ✅ Fixed React Router imports to use Next.js Link
 4. ✅ Added missing "use client" directives
-5. ✅ Fixed router-compat Link export issue
+5. ✅ Fixed router-compat. Link export issue
 
 ## Directories Removed
 - `components/uiverse/` - Unused custom UI components
