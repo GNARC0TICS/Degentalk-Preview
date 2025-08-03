@@ -52,7 +52,7 @@ export const AnnouncementTicker = memo(function AnnouncementTicker() {
 							display: flex;
 							align-items: center;
 							height: 100%;
-							animation: ticker-scroll 15s linear infinite !important;
+							animation: ticker-scroll 8s linear infinite !important;
 							white-space: nowrap;
 							will-change: transform;
 							backface-visibility: hidden;
@@ -94,11 +94,14 @@ export const AnnouncementTicker = memo(function AnnouncementTicker() {
 						/* Reduced motion support */
 						@media (prefers-reduced-motion: reduce) {
 							.ticker-content {
-								animation-duration: 30s !important;
+								animation-duration: 16s !important;
 							}
 						}
 						/* Optimize for mobile devices */
 						@media (max-width: 640px) {
+							.ticker-content {
+								animation-duration: 6s !important;
+							}
 							.ticker-item {
 								font-size: 0.75rem;
 								padding: 0 1.5rem;

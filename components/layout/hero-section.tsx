@@ -6,6 +6,7 @@ import { uiConfig } from '@/config/ui.config';
 import type { HeroQuote } from '@/config/ui.config';
 import { HeroCTAButton } from './HeroCTAButton';
 import { BrowseTopicsLink } from './BrowseTopicsLink';
+import './hero-section.css';
 
 // Fisher-Yates shuffle
 function shuffleArray<T>(array: readonly T[]): T[] {
@@ -40,7 +41,7 @@ export function HeroSection() {
 		
 		const interval = setInterval(() => {
 			setCurrentQuoteIndex((prev) => (prev + 1) % shuffledQuotes.length);
-		}, 30000);
+		}, 20000); // 20 seconds - enough time to read and appreciate each quote
 		return () => clearInterval(interval);
 	}, [shuffledQuotes.length, isMounted]);
 
@@ -91,16 +92,35 @@ export function HeroSection() {
 				>
 					{/* Animated headline */}
 					<div className="h-[120px] md:h-[140px] lg:h-[168px] flex items-center justify-center mb-8 relative z-30">
-						<AnimatePresence mode="wait">
+						<AnimatePresence mode="popLayout">
 							<motion.h1
 								key={currentQuoteIndex}
-								initial={{ opacity: 0, y: 20 }}
-								animate={{ opacity: 1, y: 0 }}
-								exit={{ opacity: 0, y: -20 }}
-								transition={{ duration: 0.5 }}
-								className="text-4xl md:text-5xl lg:text-6xl font-bold text-white text-center"
+								initial={{ opacity: 0, scale: 0.95, filter: 'blur(10px)' }}
+								animate={{ 
+									opacity: 1, 
+									scale: 1, 
+									filter: 'blur(0px)',
+									transition: {
+										duration: 0.6,
+										ease: [0.25, 0.1, 0.25, 1.0], // Custom easing for smoothness
+									}
+								}}
+								exit={{ 
+									opacity: 0, 
+									scale: 1.05, 
+									filter: 'blur(10px)',
+									transition: {
+										duration: 0.3,
+										ease: 'easeIn'
+									}
+								}}
+								className="text-4xl md:text-5xl lg:text-6xl font-bold text-white text-center absolute inset-0 flex items-center justify-center hero-text hero-animated hero-headline"
 								style={{
-									textShadow: '0 2px 4px rgba(0,0,0,0.3), 0 8px 16px rgba(0,0,0,0.1)'
+									textShadow: '0 2px 4px rgba(0,0,0,0.3), 0 8px 16px rgba(0,0,0,0.1)',
+									willChange: 'transform, opacity, filter',
+									transform: 'translateZ(0)', // Force GPU acceleration
+									backfaceVisibility: 'hidden',
+									perspective: 1000
 								}}
 							>
 								{currentQuote.headline}
@@ -109,19 +129,43 @@ export function HeroSection() {
 					</div>
 
 					{/* Animated subheader */}
-					<AnimatePresence mode="wait">
-						<motion.p
-							key={`subheader-${currentQuoteIndex}`}
-							initial={{ opacity: 0, y: 20 }}
-							animate={{ opacity: 1, y: 0 }}
-							exit={{ opacity: 0, y: -20 }}
-							transition={{ duration: 0.5, delay: 0.1 }}
-							className="text-lg md:text-xl text-white mb-14 md:mb-20 flex items-center gap-2 justify-center font-semibold relative z-30"
-							style={{ textShadow: '0 0 8px rgba(255,255,255,0.1)' }}
-						>
-							{currentQuote.subheader}
-						</motion.p>
-					</AnimatePresence>
+					<div className="h-[32px] md:h-[40px] mb-14 md:mb-20 relative z-30">
+						<AnimatePresence mode="popLayout">
+							<motion.p
+								key={`subheader-${currentQuoteIndex}`}
+								initial={{ opacity: 0, scale: 0.95, filter: 'blur(8px)' }}
+								animate={{ 
+									opacity: 1, 
+									scale: 1, 
+									filter: 'blur(0px)',
+									transition: {
+										duration: 0.5,
+										delay: 0.1,
+										ease: [0.25, 0.1, 0.25, 1.0]
+									}
+								}}
+								exit={{ 
+									opacity: 0, 
+									scale: 1.05, 
+									filter: 'blur(8px)',
+									transition: {
+										duration: 0.25,
+										ease: 'easeIn'
+									}
+								}}
+								className="text-lg md:text-xl text-white flex items-center gap-2 justify-center font-semibold absolute inset-0 hero-text hero-animated"
+								style={{ 
+									textShadow: '0 0 8px rgba(255,255,255,0.1)',
+									willChange: 'transform, opacity, filter',
+									transform: 'translateZ(0)',
+									backfaceVisibility: 'hidden',
+									perspective: 1000
+								}}
+							>
+								{currentQuote.subheader}
+							</motion.p>
+						</AnimatePresence>
+					</div>
 
 					{/* CTA Button - proper z-index for production */}
 					<motion.div

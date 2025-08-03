@@ -15,21 +15,9 @@ export function StrategyMeetsCommunity() {
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-white flex items-center justify-center gap-3 whitespace-nowrap">
-              <motion.span
-                className="inline-block flex-shrink-0"
-                animate={{ 
-                  rotate: [0, -5, 5, -5, 0],
-                }}
-                transition={{ 
-                  duration: 2,
-                  repeat: Infinity,
-                  repeatDelay: 3
-                }}
-              >
-                <Megaphone className="w-8 h-8 sm:w-10 sm:h-10 text-emerald-400" />
-              </motion.span>
-              <span className="inline-block">Where Strategy Meets Community</span>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-white">
+              <span className="block md:hidden">Where Strategy<br />Meets Community</span>
+              <span className="hidden md:block">Where Strategy Meets Community</span>
             </h2>
           </motion.div>
 
@@ -45,6 +33,36 @@ export function StrategyMeetsCommunity() {
               {/* Glowing accent */}
               <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-emerald-500/10 via-transparent to-purple-500/10 opacity-50" />
               
+              {/* Megaphone icon for mobile - centered at top */}
+              <motion.div
+                className="relative flex justify-center mb-6 md:hidden"
+                animate={{ 
+                  rotate: [0, -5, 5, -5, 0],
+                }}
+                transition={{ 
+                  duration: 2,
+                  repeat: Infinity,
+                  repeatDelay: 3
+                }}
+              >
+                <Megaphone className="w-10 h-10 text-emerald-400" />
+              </motion.div>
+
+              {/* Megaphone icon for desktop - floating left */}
+              <motion.div
+                className="hidden md:block absolute -left-16 top-1/2 -translate-y-1/2"
+                animate={{ 
+                  rotate: [0, -5, 5, -5, 0],
+                }}
+                transition={{ 
+                  duration: 2,
+                  repeat: Infinity,
+                  repeatDelay: 3
+                }}
+              >
+                <Megaphone className="w-12 h-12 text-emerald-400" />
+              </motion.div>
+              
               <p className="relative text-lg sm:text-xl md:text-2xl text-zinc-100 leading-relaxed font-medium text-center">
                 Degentalk is the satirical casino floor of the internet—a high-octane 
                 forum-meets-terminal for degens, traders, gamblers, and contrarians who 
@@ -58,13 +76,13 @@ export function StrategyMeetsCommunity() {
                 transition={{ duration: 1, delay: 0.5 }}
                 viewport={{ once: true }}
               >
-                <div className="flex items-center justify-center gap-3">
-                  <span className="text-emerald-400 text-2xl font-light">—</span>
-                  <p className="text-base sm:text-lg md:text-xl text-emerald-400 font-bold italic">
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3">
+                  <span className="hidden sm:inline text-emerald-400 text-2xl font-light">—</span>
+                  <p className="text-base sm:text-lg md:text-xl text-emerald-400 font-bold italic px-4 sm:px-0">
                     "This isn't just a forum. This is the most addictive, gloriously unhinged 
                     hub the Web3 world has ever seen."
                   </p>
-                  <span className="text-emerald-400 text-2xl font-light">—</span>
+                  <span className="hidden sm:inline text-emerald-400 text-2xl font-light">—</span>
                 </div>
               </motion.div>
 
@@ -84,10 +102,10 @@ export function StrategyMeetsCommunity() {
             transition={{ duration: 0.8, delay: 0.4 }}
             viewport={{ once: true }}
           >
-            <h3 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-white mb-4">
+            <h3 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-white mb-4">
               Our Features
             </h3>
-            <p className="text-lg sm:text-xl text-zinc-300 max-w-2xl mx-auto">
+            <p className="text-base sm:text-lg md:text-xl text-zinc-300 max-w-2xl mx-auto px-4 sm:px-6 md:px-0">
               Explore what makes Degentalk the ultimate destination for crypto degens. 
               From rain events to XP systems, we've built everything you need to thrive in the chaos.
             </p>

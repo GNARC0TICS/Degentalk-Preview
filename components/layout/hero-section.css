@@ -1,0 +1,109 @@
+/* Hero Section - Performance optimizations for smooth animations */
+
+/* Ensure smooth text rendering on all devices */
+.hero-text {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Force hardware acceleration for animated elements */
+.hero-animated {
+  will-change: transform, opacity, filter;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+  contain: layout style paint;
+}
+
+/* Optimize large text animations */
+.hero-headline {
+  font-display: swap;
+  transform-style: preserve-3d;
+}
+
+/* Smooth blur transitions */
+@supports (backdrop-filter: blur(10px)) {
+  .hero-blur-transition {
+    transition: backdrop-filter 0.3s ease;
+  }
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .hero-animated {
+    animation: none !important;
+    transition: none !important;
+  }
+  
+  .hero-text-transition {
+    transition: opacity 0.3s ease !important;
+  }
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .hero-animated {
+    /* Reduce complexity on mobile */
+    filter: none !important;
+    transform: translateZ(0) !important;
+  }
+}
+
+/* High refresh rate displays */
+@media (min-resolution: 2dppx) {
+  .hero-animated {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
+}
+
+/* CSS-only fade animation as fallback */
+@keyframes heroFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes heroFadeOut {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-10px) scale(1.02);
+  }
+}
+
+/* Apply animations with CSS variables for timing */
+.hero-text-enter {
+  animation: heroFadeIn var(--animation-duration, 0.6s) var(--animation-easing, cubic-bezier(0.25, 0.1, 0.25, 1)) forwards;
+}
+
+.hero-text-exit {
+  animation: heroFadeOut var(--animation-duration, 0.3s) var(--animation-easing, ease-in) forwards;
+}
+
+/* Performance monitoring helper */
+.hero-performance-monitor {
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  background: rgba(0, 0, 0, 0.8);
+  color: #10b981;
+  padding: 5px 10px;
+  font-size: 12px;
+  border-radius: 4px;
+  z-index: 9999;
+  display: none;
+}
+
+.hero-performance-monitor.show {
+  display: block;
+}
