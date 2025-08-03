@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { logger } from '@/lib/logger';
-import { getVisitorStats, incrementPageVisits, incrementWaitlistSignups } from '@/lib/visitor-storage';
+import { getVisitorStats, incrementPageVisits, incrementWaitlistSignups, trackVisitor, saveSignupEmail } from '@/lib/visitor-storage';
 import { checkRateLimit, createRateLimitHeaders } from '@/lib/rate-limiter';
 
 export const runtime = 'edge';
@@ -35,7 +35,7 @@ async function fetchAnalyticsData(): Promise<VisitorData> {
       return {
         pageVisits: 3847,
         currentVisitors: Math.floor(Math.random() * 10) + 5,
-        waitlistSignups: 0 // This will be overridden in GET handler
+        waitlistSignups: 134 // This will be overridden in GET handler
       };
     }
 
@@ -101,6 +101,13 @@ export async function GET(request: Request) {
         }
       );
     }
+    
+    // Generate a 128-bit random session token per request using Web Crypto API
+    const randomBytes = new Uint8Array(16);
+    crypto.getRandomValues(randomBytes);
+    const sessionId = Array.from(randomBytes).map(b => b.toString(16).padStart(2, '0')).join('');
+    await trackVisitor(sessionId);
+    
     const data = await fetchAnalyticsData();
     const stats = await getVisitorStats();
     
@@ -130,7 +137,16 @@ export async function POST(request: Request) {
     const body = await request.json();
     
     if (body.action === 'incrementWaitlist') {
-      const newCount = await incrementWaitlistSignups();
+      const promises: Promise<any>[] = [
+        incrementWaitlistSignups()
+      ];
+      
+      // Save email if provided
+      if (body.email) {
+        promises.push(saveSignupEmail(body.email));
+      }
+      
+      const [newCount] = await Promise.all(promises);
       
       // Clear cache to reflect new count
       cachedData = null;

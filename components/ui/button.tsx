@@ -1,8 +1,11 @@
+'use client';
+
 import * as React from 'react';
 import { Slot } from '@radix-ui/react-slot';
 import { cva, type VariantProps } from 'class-variance-authority';
 
 import { cn } from '@/lib/utils';
+import { useHapticFeedback } from '@/components/hooks/useHapticFeedback';
 
 export const buttonVariants = cva(
 	'inline-flex items-center justify-center rounded-lg text-sm font-medium transition-all duration-200 !outline-none focus-within:ring-2 focus-within:ring-emerald-800 disabled:opacity-50 disabled:pointer-events-none',
@@ -56,6 +59,7 @@ export interface ButtonProps
 	leftIcon?: React.ReactNode;
 	rightIcon?: React.ReactNode;
 	isLoading?: boolean;
+	enableHaptics?: boolean;
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
@@ -70,11 +74,25 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 			rightIcon,
 			isLoading,
 			children,
+			enableHaptics = true,
 			...props
 		},
 		ref
 	) => {
 		const Comp = asChild ? Slot : 'button';
+		const { light: hapticLight, heavy: hapticHeavy } = useHapticFeedback();
+		
+		const handleClick = React.useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
+			if (enableHaptics && 'ontouchstart' in window) {
+				// Use heavier haptic for destructive actions
+				if (variant === 'destructive') {
+					hapticHeavy();
+				} else {
+					hapticLight();
+				}
+			}
+			props.onClick?.(e);
+		}, [enableHaptics, variant, hapticLight, hapticHeavy, props.onClick]);
 
 		return (
 			<Comp
@@ -82,6 +100,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 				ref={ref}
 				disabled={isLoading || props.disabled}
 				{...props}
+				onClick={handleClick}
 			>
 				{asChild ? (
 					children

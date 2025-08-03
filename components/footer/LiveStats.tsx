@@ -14,7 +14,7 @@ export function LiveStats() {
 	// Start with realistic initial values
 	const [stats, setStats] = useState<LiveStatsData>({
 		pageVisits: 3847,
-		waitlistSignups: 742,
+		waitlistSignups: 134,
 		currentVisitors: 12
 	});
 	

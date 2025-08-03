@@ -7,15 +7,13 @@ import { trackNewsletterSignup, trackCTAClick } from '@/lib/analytics';
 import { cn } from '@/lib/utils';
 import { logger } from '@/lib/logger';
 
-// Google Form configuration
-// TODO: Replace with actual Google Form URL
-const GOOGLE_FORM_URL = process.env.NEXT_PUBLIC_GOOGLE_FORM_URL || 'https://forms.gle/YOUR_FORM_ID';
+// Email signup configuration
 
 export function EmailSignup() {
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
-  const [waitlistCount, setWaitlistCount] = useState(742); // Default value
+  const [waitlistCount, setWaitlistCount] = useState(134); // Default value
 
   // Fetch waitlist count on mount
   useEffect(() => {
@@ -45,22 +43,23 @@ export function EmailSignup() {
       // Track the signup intent
       trackNewsletterSignup(email, 'email_section');
       
-      // Increment waitlist count via API
-      await fetch('/api/visitors', {
+      // Submit to our API
+      const response = await fetch('/api/visitors', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'incrementWaitlist' })
-      }).catch(console.error);
+        body: JSON.stringify({ action: 'incrementWaitlist', email })
+      });
       
-      // Optimistically update the local count
-      setWaitlistCount(prev => prev + 1);
+      if (!response.ok) {
+        throw new Error('Failed to submit');
+      }
       
-      // Open Google Form in new tab with pre-filled email
-      const formUrl = new URL(GOOGLE_FORM_URL);
-      // If the form supports pre-filling, uncomment and update the parameter name:
-      // formUrl.searchParams.append('emailAddress', email);
+      const data = await response.json();
       
-      window.open(formUrl.toString(), '_blank', 'noopener,noreferrer');
+      // Update the count with the server response
+      if (data.newCount) {
+        setWaitlistCount(data.newCount);
+      }
       
       setStatus('success');
       setEmail('');
@@ -185,7 +184,7 @@ export function EmailSignup() {
                   animate={{ opacity: 1, y: 0 }}
                   className="mt-2 text-sm text-emerald-400 text-center"
                 >
-                  Welcome to the club! Please complete your signup in the form that just opened.
+                  Welcome to the DegenTalk waitlist! We'll notify you when we launch.
                 </motion.p>
               )}
             </form>

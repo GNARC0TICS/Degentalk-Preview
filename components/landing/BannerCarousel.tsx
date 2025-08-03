@@ -9,15 +9,19 @@ import {
   CarouselPrevious,
 } from '@/components/ui/carousel';
 import { BannerCard } from './BannerCard';
+import { BannerSkeleton } from '@/components/ui/skeleton';
 
 export function BannerCarousel() {
   const [autoplay, setAutoplay] = React.useState<any[]>([]);
+  const [isLoading, setIsLoading] = React.useState(true);
 
   // Load autoplay plugin only on client side
   React.useEffect(() => {
     import('embla-carousel-autoplay').then((AutoplayModule) => {
       const Autoplay = AutoplayModule.default;
       setAutoplay([Autoplay({ delay: 5000, stopOnInteraction: true })]);
+      // Simulate loading time for images
+      setTimeout(() => setIsLoading(false), 100);
     });
   }, []);
 
@@ -64,24 +68,35 @@ export function BannerCarousel() {
   return (
     <div className="w-full overflow-hidden banner-carousel-section">
       <div className="px-4 py-4">
-        <Carousel
-          opts={{
-            align: 'start',
-            loop: true,
-          }}
-          plugins={autoplay}
-          className="w-full"
-        >
-          <CarouselContent className="-ml-4">
-            {banners.map((banner, index) => (
-              <CarouselItem key={index} className="pl-4 basis-full md:basis-1/2">
-                <BannerCard {...banner} />
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-          <CarouselPrevious className="hidden md:flex" />
-          <CarouselNext className="hidden md:flex" />
-        </Carousel>
+        {isLoading ? (
+          <div className="flex gap-4">
+            <div className="w-full md:w-1/2">
+              <BannerSkeleton />
+            </div>
+            <div className="hidden md:block w-1/2">
+              <BannerSkeleton />
+            </div>
+          </div>
+        ) : (
+          <Carousel
+            opts={{
+              align: 'start',
+              loop: true,
+            }}
+            plugins={autoplay}
+            className="w-full"
+          >
+            <CarouselContent>
+              {banners.map((banner, index) => (
+                <CarouselItem key={index} className="pl-4 basis-full md:basis-1/2">
+                  <BannerCard {...banner} />
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious className="hidden md:flex" />
+            <CarouselNext className="hidden md:flex" />
+          </Carousel>
+        )}
       </div>
     </div>
   );
