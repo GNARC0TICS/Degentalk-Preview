@@ -1,0 +1,12 @@
+.paper-bg {
+  /* Off-white paper base */
+  background-color: #f7f5f1;
+
+  /* Dual-layer noise to simulate subtle paper fibers */
+  background-image:
+    radial-gradient(rgba(0,0,0,0.04) 1px, transparent 1px),
+    radial-gradient(rgba(0,0,0,0.03) 1px, transparent 1px);
+  background-size: 3px 3px, 150px 150px; /* fine + coarse */
+  background-position: 0 0, 1px 1px;
+  background-blend-mode: multiply;
+}

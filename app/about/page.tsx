@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { About } from '@/components/pages/about';
 import { getDomainMetadata } from '@/lib/seo-config';
 
-export const dynamic = 'force-dynamic'; // Original setting restored
+// export const dynamic = 'force-dynamic'; // Removed for performance - enables static generation
 
 export async function generateMetadata(): Promise<Metadata> {
   // Use centralized SEO config

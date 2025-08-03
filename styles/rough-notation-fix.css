@@ -1,0 +1,5 @@
+/* Fix RoughNotation inline-block width issues */
+[data-rough-notation-wrapper] {
+  display: inline;
+  padding: 0 !important;
+}

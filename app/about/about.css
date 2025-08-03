@@ -1,0 +1,45 @@
+/* Performance optimizations for About page */
+
+/* Force GPU acceleration for animated elements */
+.force-animation {
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* Optimize RoughNotation rendering */
+.rough-annotation {
+  will-change: opacity, transform;
+}
+
+/* Reduce paint areas for sticky notes */
+.bg-yellow-100,
+.bg-pink-100,
+.bg-blue-100 {
+  contain: layout style paint;
+}
+
+/* Optimize shadow rendering */
+.shadow-2xl {
+  transform: translateZ(0);
+}
+
+/* Preload critical fonts */
+@font-face {
+  font-family: 'Display';
+  font-display: swap;
+  src: local('Display'), local('display');
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .rough-annotation {
+    animation-duration: 0.1s !important;
+  }
+  
+  .transform {
+    transition: none !important;
+  }
+}

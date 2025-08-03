@@ -9,6 +9,8 @@
 @import './utilities.css';
 @import './animations.css';
 @import './underline-links.css';
+@import './rough-notation-fix.css';
+@import './paper-texture.css';
 /* Removed unused imports: typography.css, layout.css, design-system.css (631 lines of forum-specific styles) */
 
 @layer base {
